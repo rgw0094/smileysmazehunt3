@@ -1,0 +1,160 @@
+#ifndef PLAYER_H_
+#define PLAYER_H_
+
+#include "smiley.h"
+#include "weaponparticle.h"
+#include "collisioncircle.h"
+#include "Tongue.h"
+
+#define KNOCKBACK_DURATION 0.2
+
+struct velocity {
+	double x,y;
+	float timeBegan,duration;
+};
+
+class Player {
+
+public:
+	Player(int x, int y);
+	~Player();
+
+	//methods
+	void draw(float dt);
+	void drawGUI(float dt);
+	void update(float dt);
+	void reset(int x, int y);
+	void move(float x, float y, float dt);
+	bool canPass(int collision);
+	void changeAbility(int direction);
+	void doAbility(float dt);
+	void doWarps();
+	void doFalling(float dt);
+	void doSprings(float dt);
+	void doArrowPads(float dt);
+	void doItems();
+	void doWater();
+	void setFacingStraight();
+	void doMovement(float dt);
+	void doIce(float dt);
+	void dealDamage(float damage, bool makesFlash);
+	void dealDamageAndKnockback(float damage, bool makesFlash, float knockbackDist, float knockbackerX, float knockbackerY);
+	void freeze(float duration);
+	void addKnockbackVelocity(double xVel, double yVel, float timeBegan, float duration);
+	void doKnockbackVelocities();
+	void doShrinkTunnels(float dt);
+
+	//Accessors/mutators
+	void setHealth(float amount);
+	float getHealth();
+	float getMaxHealth();
+	float getMaxMana();
+	float getDamage();
+	float getFireBreathDamage();
+	float getLightningOrbDamage();
+	Tongue *getTongue();
+
+	//variables
+	float scale,flyingScale,shrinkScale;	//Scales to draw smiley
+	float rotation;							//Smiley's sprite rotation angle in radians
+	float radius;
+	int facing;								//Direction Smiley is facing
+	float x, y;								//Global coordinates
+	float lastX, lastY;						//Last frame's x and y
+	int baseX, baseY;						//The coordinate of the center of smiley's shadow
+	int baseGridX, baseGridY;				//The grid coordinate of the center of smiley's shadow
+	int gridX,gridY;						//Global grid coordinates
+	int lastGridX, lastGridY;
+	float shadowX, shadowY;					//Global coordinates of Smiley's shadow
+	float screenX, screenY;					//Screen coordinates
+	int startX, startY;
+	float speed;
+	float dx, dy;
+	float shadowXOffset, shadowYOffset;
+	float alpha;
+	float mana;
+	hgeRect *weaponBox;
+	CollisionCircle *collisionCircle;
+	int selectedAbility;
+	float speedModifier;
+	int startedFallingX;					//X position where the player started falling
+	int startedFallingY;					//Y position where the player started falling
+	int enteredWaterX, int enteredWaterY;	//Grid position the player was on before entering water
+	int enteredSpringX, enteredSpringY;
+	float flyingYOffset;					//Y Offset for player sprite while flying
+	int startSpringX, startSpringY;
+	float fallingDx, fallingDy;
+
+	//Knockback linked list, used in Brian Fungus
+	std::list<velocity> theVelocities;
+
+	//Constants
+	float angles[NUM_DIRECTIONS];
+	float mouthXOffset[NUM_DIRECTIONS];
+	float mouthYOffset[NUM_DIRECTIONS];
+
+	//State info
+	bool active;					//Whether or not to update the player object
+	bool breathingFire;				//If using Fire Breath ability
+	bool breathingIce;				//If using Ice Breath ability
+	bool onWarp;					//If on a warp square
+	bool flashing;					//If flashing after being hit
+	bool knockback;					//If being knocked back by enemy
+	bool sliding;					//If sliding from arrow pads
+	bool iceSliding;				//If sliding from ice
+	bool springing;					//If airborne from spring pad
+	bool reflectionShieldActive;
+	bool falling;					//If falling into a pit
+	bool inLava;					//If the player is on a lava tile
+	bool inShallowWater;			//If the player is on a shallow water tile
+	bool waterWalk;					//If the player is in water walk mode	
+	bool onWater;					//If the player is on a water tile
+	bool drowning;
+	bool shrinkActive;
+	bool sprinting;					//If sprint boots are being used
+	bool flying;
+	bool cloaked;
+	bool usingCane;
+	bool inShrinkTunnel;
+
+	//Time variables
+	float enteredLevel;
+	float startedFlashing;
+	float startedKnockBack;
+	float timeStartedCane;
+	float startedSpringing;
+	float startedAttacking;
+	float stoppedAttacking;
+	float startedIceBreath;
+	float startedSliding;
+	float startedFalling;
+	float lastLavaDamage;			//Last time the player took damage from lava
+	float startedWaterWalk;
+	float startedDrowning;
+	float lastMove;					//Last time a movement key was pressed
+	float lastOrb;
+	float timeToSlide;
+	float startedCane;
+	float springTime;				//How long to be in the air after touching a spring pad
+	float lastHit;					//Last time smiley was hit by something
+	float timeEnteredShrinkTunnel;  //Time smiley entered the shrink tunnel
+	float timeInShrinkTunnel;		//Time to take to go through the shrink tunnel
+
+	//Graphics
+	WeaponParticleSystem *fireBreathParticle;
+	WeaponParticleSystem *iceBreathParticle;
+
+	//Sounds
+	HCHANNEL abilityChannel;		//Audio channel for player ability sound effects
+	HCHANNEL environmentChannel;	//Audio channel for environment sound effects
+
+private:
+
+	float health;
+	bool frozen;
+	float timeFrozen, freezeDuration;
+	Tongue *tongue;
+
+};
+
+#endif

@@ -1,0 +1,32 @@
+#ifndef _TONGUE_H_
+#define _TONGUE_H_
+
+#include "hge include/hgerect.h"
+
+class Tongue {
+
+public:
+	Tongue();
+	~Tongue();
+
+	//methods
+	void update(float dt);
+	void draw(float dt);
+	void startAttack();
+	bool testCollision(hgeRect *collisionBox);
+	bool isAttacking();
+
+private:
+
+	int tongueState;
+	bool attacking;
+	float timeStartedAttack;
+	float tongueOffsetAngle;
+	hgeRect *collisionBox;
+
+	//Used for calculating collision
+	float pointX, pointY, seperation, numPoints, testAngle;
+
+};
+
+#endif

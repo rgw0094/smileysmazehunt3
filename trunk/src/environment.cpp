@@ -1,0 +1,1387 @@
+#include "smiley.h"
+#include "environment.h"
+#include "enemies.h"
+#include "lootmanager.h"
+#include "projectiles.h"
+#include "SaveManager.h"
+#include "player.h"
+#include "collisioncircle.h"
+#include "inventory.h"
+#include "textbox.h"
+#include "npcmanager.h"
+#include "minimenu.h"
+#include "fireboss.h"
+#include "DesertBoss.h"
+#include "SnowBoss.h"
+#include "ForestBoss.h"
+#include "MushroomBoss.h"
+#include "DespairBoss.h"
+#include "boss.h"
+#include "EnemyGroupManager.h"
+#include "WindowManager.h"
+#include "Input.h"
+#include "SoundManager.h"
+
+//Variables
+extern bool debugMode, hasFountain;
+extern int fountainX, fountainY;
+extern int musicVolume;
+extern float gameTime;
+
+//Objects
+extern HGE *hge;
+extern Player *thePlayer;
+extern SaveManager *saveManager;
+extern Enemies *theEnemies;
+extern LootManager *lootManager;
+extern ProjectileManager *projectileManager;
+extern TextBox *theTextBox;
+extern hgeStringTable *stringTable;
+extern NPCManager *npcManager;
+extern WindowManager *windowManager;
+extern Boss *theBoss;
+extern hgeResourceManager *resources;
+extern EnemyGroupManager *enemyGroupManager;
+extern Input *input;
+extern SoundManager *soundManager;
+
+//Textures
+extern HTEXTURE animationTexture, sillyPadTexture;
+
+//Sprites
+extern hgeSprite *itemLayer[256], *mainLayer[256], *walkLayer[256], *abilitySprites[NUM_ABILITIES];
+
+/**
+ * Constructor
+ */
+Environment::Environment() {
+	
+	//Load particles
+	environmentParticles = new hgeParticleManager();
+	resources->GetParticleSystem("fountain")->Fire();
+
+	//Load animations
+	silverCylinder = new hgeAnimation(animationTexture,5,20,0,3*64,64,64);
+	silverCylinder->SetMode(HGEANIM_REV);
+	silverCylinder->Play();
+	brownCylinder = new hgeAnimation(animationTexture,5,20,0,4*64,64,64);
+	brownCylinder->SetMode(HGEANIM_REV);
+	brownCylinder->Play();
+	blueCylinder = new hgeAnimation(animationTexture,5,20,0,5*64,64,64);
+	blueCylinder->SetMode(HGEANIM_REV);
+	blueCylinder->Play();
+	greenCylinder = new hgeAnimation(animationTexture,5,20,0,6*64,64,64);
+	greenCylinder->SetMode(HGEANIM_REV);
+	greenCylinder->Play();
+	yellowCylinder = new hgeAnimation(animationTexture,5,20,0,7*64,64,64);
+	yellowCylinder->SetMode(HGEANIM_REV);
+	yellowCylinder->Play();
+	whiteCylinder = new hgeAnimation(animationTexture,5,20,0,8*64,64,64);
+	whiteCylinder->SetMode(HGEANIM_REV);
+	whiteCylinder->Play();
+	silverCylinderRev = new hgeAnimation(animationTexture,5,20,0,3*64,64,64);
+	silverCylinderRev->SetMode(HGEANIM_FWD);
+	brownCylinderRev = new hgeAnimation(animationTexture,5,20,0,4*64,64,64);
+	brownCylinderRev->SetMode(HGEANIM_FWD);
+	blueCylinderRev = new hgeAnimation(animationTexture,5,20,0,5*64,64,64);
+	blueCylinderRev->SetMode(HGEANIM_FWD);
+	greenCylinderRev = new hgeAnimation(animationTexture,5,20,0,6*64,64,64);
+	greenCylinderRev->SetMode(HGEANIM_FWD);
+	yellowCylinderRev = new hgeAnimation(animationTexture,5,20,0,7*64,64,64);
+	yellowCylinderRev->SetMode(HGEANIM_FWD);
+	whiteCylinderRev = new hgeAnimation(animationTexture,5,20,0,8*64,64,64);
+	whiteCylinderRev->SetMode(HGEANIM_FWD);
+
+	resources->GetAnimation("savePoint")->Play();
+	
+	zoneFont = new hgeFont("zone.fnt");
+	showGrid = false;
+	collisionBox = new hgeRect();
+
+}
+
+
+/**
+ * Destructor
+ */
+Environment::~Environment() {
+
+	delete environmentParticles;
+
+	delete collisionBox;
+	delete silverCylinder;
+	delete brownCylinder;
+	delete blueCylinder;
+	delete greenCylinder;
+	delete yellowCylinder;
+	delete whiteCylinder;
+	delete silverCylinderRev;
+	delete brownCylinderRev;
+	delete blueCylinderRev;
+	delete greenCylinderRev;
+	delete yellowCylinderRev;
+	delete whiteCylinderRev;
+	delete zoneFont;
+}
+
+
+/**
+ * Load an environment
+ *
+ *	id			id of the zone to load
+ *	from		id of the zone Smiley is coming from
+ *	playerX		x location to put Smiley, or 0 for default
+ *  playerY		y location to put Smiley, or 0 for default
+ */
+void Environment::loadArea(int id, int from, int playerX, int playerY) {
+
+	hge->System_Log("Loading area: %d, placing Player at (%d,%d)", id, playerX, playerY);
+
+	saveManager->currentArea = id;
+	hasFountain = false;
+	fountainOnScreen = false;
+
+	//Reset objects
+	theEnemies->reset();
+	projectileManager->reset();
+	lootManager->reset();
+	npcManager->reset();
+	enemyGroupManager->resetGroups();
+
+	if (theBoss) {
+		delete theBoss;
+		theBoss = NULL;
+	}
+	
+	//Clear old level data
+	for (int i = 0; i < 256; i++) {
+		for (int j = 0; j < 256; j++) {
+			terrain[i][j] = 0;
+			collision[i][j] = 0;
+			item[i][j] = 0;
+			activated[i][j] = -100.0f;
+			hasSillyPad[i][j] = false;
+			variable[i][j] = 0;
+			enemyLayer[i][j] = -1;
+			changed[i][j] = false;
+		}
+	}
+
+	//Set zone specific info
+	if (areaFile.is_open()) areaFile.close();
+	if (id == FOUNTAIN_AREA) {
+		soundManager->playMusic("townMusic");
+		zoneName = "Smiley Town";
+		areaFile.open("Data/Maps/fountain.smh");
+	} else if (id == OLDE_TOWNE) {
+		soundManager->playMusic("oldeTowneMusic");
+		zoneName = "Dunes of Salabia";
+		areaFile.open("Data/Maps/oldetowne.smh");
+	} else if (id == SMOLDER_HOLLOW) {
+		soundManager->playMusic("smolderHollowMusic");
+		zoneName = "Smolder Hollow";
+		areaFile.open("Data/Maps/smhollow.smh");
+	} else if (id == FOREST_OF_FUNGORIA) {
+		soundManager->playMusic("forestMusic");
+		zoneName = "Forest of Fundoria";
+		areaFile.open("Data/Maps/forest.smh");
+	} else if (id == SESSARIA_SNOWPLAINS) {
+		soundManager->playMusic("iceMusic");
+		zoneName = "Sessaria Snowplains";
+		areaFile.open("Data/Maps/snow.smh");
+	} else if (id == TUTS_TOMB) {
+		zoneName = "Tut's Tomb";
+		areaFile.open("Data/Maps/tutstomb.smh");
+	} else if (id == WORLD_OF_DESPAIR) {
+		soundManager->playMusic("realmOfDespairMusic");
+		zoneName = "Realm of Despair";
+		areaFile.open("Data/Maps/despair.smh");
+	} else if (id == CASTLE_OF_EVIL) {
+		//soundManager->playMusic("castleOfEvilMusic");
+		zoneName = "Castle Of Evil (What a gay name)";
+		areaFile.open("Data/Maps/castle.smg");
+	}
+
+	//id range - ignore it
+	areaFile.read(threeBuffer,2);
+
+	//Read area width
+	areaFile.read(threeBuffer,3);
+	areaWidth = atoi(threeBuffer);
+	areaFile.read(threeBuffer,1);	//read space
+	//Read area height
+	areaFile.read(threeBuffer,3);
+	areaHeight = atoi(threeBuffer);
+	areaFile.read(threeBuffer,1);	//read newline
+
+	//Set up screen size (64 is normal size)
+	squareSize = 64;
+	screenWidth = SCREEN_WIDTH / squareSize;
+	screenHeight = SCREEN_HEIGHT / squareSize;
+
+
+	//Load ID Layer
+	for (int row = 0; row < areaHeight; row++) {
+		for (int col = 0; col < areaWidth; col++) {
+			areaFile.read(threeBuffer,3);
+			ids[col][row] = atoi(threeBuffer);
+		}
+		//Read the newline
+		areaFile.read(threeBuffer,1);
+	}
+	areaFile.read(threeBuffer,3);	//width
+	areaFile.read(threeBuffer,1);	//space
+	areaFile.read(threeBuffer,3);	//height
+	areaFile.read(threeBuffer,1);	//newline
+
+
+	//Load Variable Layer
+	for (int row = 0; row < areaHeight; row++) {
+		for (int col = 0; col < areaWidth; col++) {
+			areaFile.read(threeBuffer,3);
+			variable[col][row] = atoi(threeBuffer);
+		}
+		//Read the newline
+		areaFile.read(threeBuffer,1);
+	}
+	areaFile.read(threeBuffer,3);	//width
+	areaFile.read(threeBuffer,1);	//space
+	areaFile.read(threeBuffer,3);	//height
+	areaFile.read(threeBuffer,1);	//newline
+
+	//Load terrain data for the area
+	for (int row = 0; row < areaHeight; row++) {
+		for (int col = 0; col < areaWidth; col++) {
+			areaFile.read(threeBuffer,3);
+			terrain[col][row] = atoi(threeBuffer);
+		}
+		//Read the newline
+		areaFile.read(threeBuffer,1);
+	}
+	areaFile.read(threeBuffer,3);	//width
+	areaFile.read(threeBuffer,1);	//space
+	areaFile.read(threeBuffer,3);	//height
+	areaFile.read(threeBuffer,1);	//newline
+
+
+	//Load collision detection data
+	for (int row = 0; row < areaHeight; row++) {
+		for (int col = 0; col < areaWidth; col++) {
+			areaFile.read(threeBuffer,3);
+			collision[col][row] = atoi(threeBuffer);
+			//Big ass fountain location
+			if (collision[col][row] == FOUNTAIN) {
+				hasFountain = true;
+				fountainX = -7;
+				fountainY = -7;
+			}
+		}
+		//Read the newline
+		areaFile.read(threeBuffer,1);
+	}
+	areaFile.read(threeBuffer,3);	//width
+	areaFile.read(threeBuffer,1);	//space
+	areaFile.read(threeBuffer,3);	//height
+	areaFile.read(threeBuffer,1);	//newline
+
+
+	//Load item data
+	for (int row = 0; row < areaHeight; row++) {
+		for (int col = 0; col < areaWidth; col++) {
+			areaFile.read(threeBuffer,3);
+			item[col][row] = atoi(threeBuffer);
+		}
+		//Read the newline
+		areaFile.read(threeBuffer,1);
+	}
+	areaFile.read(threeBuffer,3);	//width
+	areaFile.read(threeBuffer,1);	//space
+	areaFile.read(threeBuffer,3);	//height
+	areaFile.read(threeBuffer,1);	//newline
+
+
+	//Load enemy/NPC data
+	int enemy;
+	for (int row = 0; row < areaHeight; row++) {
+		for (int col = 0; col < areaWidth; col++) {
+			areaFile.read(threeBuffer,3);
+			enemy = atoi(threeBuffer); //DICKENS
+			enemyLayer[col][row] = enemy-1;
+			if (enemy != 0) {
+
+				//Fire Boss
+				if (enemy == FIRE_BOSS && !saveManager->killedBoss[FIRE_BOSS-240]) {
+					if (theBoss) delete theBoss;
+					theBoss = new FireBoss(col,row, variable[col][row]);
+					enemyGroupManager->addEnemy(variable[col][row]);
+			
+				//Forest Boss
+				} else if (enemy == FOREST_BOSS && !saveManager->killedBoss[FOREST_BOSS-240]) {
+					if (theBoss) delete theBoss;
+					theBoss = new ForestBoss(col,row, variable[col][row]);
+					enemyGroupManager->addEnemy(variable[col][row]);
+				
+				//Snow Boss
+				} else if (enemy == SNOW_BOSS && !saveManager->killedBoss[SNOW_BOSS-240]) {
+					if (theBoss) delete theBoss;
+					theBoss = new SnowBoss(col, row, variable[col][row]);
+					enemyGroupManager->addEnemy(variable[col][row]);
+
+				//Desert Boss
+				} else if (enemy == DESERT_BOSS && !saveManager->killedBoss[DESERT_BOSS-240]) {
+					if (theBoss) delete theBoss;
+					theBoss = new DesertBoss(col, row, variable[col][row]);
+					enemyGroupManager->addEnemy(variable[col][row]);
+
+				//Mushroom Boss
+				} else if (enemy == MUSHROOM_BOSS && !saveManager->killedBoss[MUSHROOM_BOSS-240]) {
+					if (theBoss) delete theBoss;
+					theBoss = new MushroomBoss(col, row, variable[col][row]);
+					enemyGroupManager->addEnemy(variable[col][row]);
+
+				//Despair Boss
+				} else if (enemy == DESPAIR_BOSS && !saveManager->killedBoss[DESPAIR_BOSS-240]) {
+					if (theBoss) delete theBoss;
+					theBoss = new DespairBoss(col, row, variable[col][row]);
+					enemyGroupManager->addEnemy(variable[col][row]);
+
+				} else if (enemy < 128) {
+					//Enemy ids under 128 are enemies
+					if (ids[col][row] == ENEMYGROUP_ENEMY) {
+						//If this enemy is part of a group, notify the manager
+						enemyGroupManager->addEnemy(variable[col][row]);
+					}
+					if (ids[col][row] != ENEMYGROUP_ENEMY_POPUP) {
+						//Don't spawn popup enemies yet
+						theEnemies->addEnemy(enemy-1,col,row, .2, .2, variable[col][row]);
+					}
+
+				} else if (enemy >= 128 && enemy < 240) {
+					//Enemy ids over 128 are NPCs
+					npcManager->addNPC(enemy-128,ids[col][row],col,row);
+				} 
+			}
+		}
+		//Read the newline
+		areaFile.read(threeBuffer,1);
+	}
+	areaFile.read(threeBuffer,3);	//width
+	areaFile.read(threeBuffer,1);	//space
+	areaFile.read(threeBuffer,3);	//height
+	areaFile.read(threeBuffer,1);	//newline
+
+
+	//Load which items are collected and which doors are opened
+	for (int row = 0; row < areaHeight; row++) {
+		for (int col = 0; col < areaWidth; col++) {
+			areaFile.read(threeBuffer,3);
+			save[col][row] = atoi(threeBuffer);
+		}
+		//Read the newline
+		areaFile.read(threeBuffer,1);
+	}
+
+
+	//Set up stuff
+	bool playerPlaced = false;
+	for (int i = 0; i < areaWidth; i++) {
+		for (int j = 0; j < areaHeight; j++) {
+
+			//Put the player in the correct starting location
+			if (playerX > 0 && playerY > 0) {
+				thePlayer->reset(playerX,playerY);
+				startX = playerX;
+				startY = playerY;
+				playerPlaced = true;
+			} else if (!playerPlaced && collision[i][j] == PLAYER_START && ids[i][j] == from) {
+				thePlayer->reset(i,j);
+				startX = i;
+				startY = j;
+				playerPlaced = true;
+			}
+
+			//Remove items that have already been collected
+			if (save[i][j] != -1 && saveManager->collectedItem[save[i][j]]) item[i][j] = 0;
+
+			//Open doors that have already been opened
+			if (save[i][j] != -1 && saveManager->openedDoor[save[i][j]] && collision[i][j] >= RED_KEYHOLE && collision[i][j] <= BLUE_KEYHOLE) {
+				collision[i][j] = WALKABLE;
+			}
+
+			//Flip cylinders that have been marked as changed
+			if (save[i][j] != -1 && saveManager->cylinderChanged[save[i][j]]) {
+				if (isCylinderUp(collision[i][j])) {
+					collision[i][j] -= 16;
+				} else if (isCylinderDown(collision[i][j])) {
+					collision[i][j] += 16;
+				}
+			}
+		}
+	}
+	
+	//Update this and the enemies once to get shit set up
+	update(0.0);
+	theEnemies->update(0.0);
+	thePlayer->update(0.0);
+
+	timeLevelLoaded = hge->Timer_GetTime();
+	zoneTextAlpha = 255;
+	zoneFont->SetColor(ARGB(255,255,255,255));
+
+}
+
+
+/**
+ * Draw the environment
+ */
+void Environment::draw(float dt) {
+
+	fountainOnScreen = false;
+	int offscreenRange = (hasFountain ? 6 : 1);
+
+	//Loop through each tile to draw shit
+	for (int j = -offscreenRange; j <= screenHeight + offscreenRange; j++) {
+		for (int i = -offscreenRange; i <= screenWidth + offscreenRange; i++) {
+			
+			drawX = int(float(i)*64.0f - xOffset);
+			drawY = int(float(j)*64.0f - yOffset);
+
+			if (inBounds(i+xGridOffset, j+yGridOffset)) {	
+
+				//Terrain
+				int theTerrain = terrain[i+xGridOffset][j+yGridOffset];
+				if (theTerrain > 0 && theTerrain < 256) {
+					mainLayer[theTerrain]->Render(drawX,drawY);
+				}
+
+				//Collision
+				int theCollision = collision[i+xGridOffset][j+yGridOffset];
+				if (theCollision != WALKABLE && theCollision != UNWALKABLE && 
+					theCollision != ENEMY_NO_WALK && theCollision != PLAYER_START && 
+					theCollision != PLAYER_END && theCollision != PIT && 
+					theCollision != UNWALKABLE_PROJECTILE && 
+					theCollision != SHRINK_TUNNEL_HORIZONTAL &&
+					theCollision != SHRINK_TUNNEL_VERTICAL &&
+					!(isWarp(theCollision) && 
+					variable[i + xGridOffset][j + yGridOffset] == 990)) {
+					
+					//Water animation
+					if (theCollision == SHALLOW_WATER) {
+						resources->GetAnimation("water")->SetColor(ARGB(125,255,255,255));
+						resources->GetAnimation("water")->Render(drawX,drawY);
+					} else if (theCollision == DEEP_WATER) {
+						resources->GetAnimation("water")->SetColor(ARGB(255,255,255,255));
+						resources->GetAnimation("water")->Render(drawX,drawY);
+					} else if (theCollision == WALK_LAVA || theCollision == NO_WALK_LAVA) {
+						resources->GetAnimation("lava")->Render(drawX,drawY);
+					} else if (theCollision == GREEN_WATER) {
+						resources->GetAnimation("greenWater")->SetColor(ARGB(255,255,255,255));
+						resources->GetAnimation("greenWater")->Render(drawX,drawY);
+					} else if (theCollision == SHALLOW_GREEN_WATER) {
+						resources->GetAnimation("greenWater")->SetColor(ARGB(125,255,255,255));
+						resources->GetAnimation("greenWater")->Render(drawX,drawY);
+					} else if (theCollision == SPRING_PAD && gameTime - 0.5f < activated[i+xGridOffset][j+yGridOffset]) {
+						resources->GetAnimation("spring")->Render(drawX,drawY);
+					
+					//Switch animations
+					} else if ((theCollision == SILVER_SWITCH_LEFT || theCollision == SILVER_SWITCH_RIGHT) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+						resources->GetAnimation("silverSwitch")->Render(drawX,drawY);
+					} else if ((theCollision == BROWN_SWITCH_LEFT || theCollision == BROWN_SWITCH_RIGHT) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+						resources->GetAnimation("brownSwitch")->Render(drawX,drawY);
+					} else if ((theCollision == BLUE_SWITCH_LEFT || theCollision == BLUE_SWITCH_RIGHT) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+						resources->GetAnimation("blueSwitch")->Render(drawX,drawY);
+					} else if ((theCollision == GREEN_SWITCH_LEFT || theCollision == GREEN_SWITCH_RIGHT) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+						resources->GetAnimation("greenSwitch")->Render(drawX,drawY);
+					} else if ((theCollision == YELLOW_SWITCH_LEFT || theCollision == YELLOW_SWITCH_RIGHT) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+						resources->GetAnimation("yellowSwitch")->Render(drawX,drawY);
+					} else if ((theCollision == WHITE_SWITCH_LEFT || theCollision == WHITE_SWITCH_RIGHT) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+						resources->GetAnimation("whiteSwitch")->Render(drawX,drawY);
+					
+					//Cylinder animations
+					} else if ((theCollision == SILVER_CYLINDER_DOWN) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+						silverCylinder->Render(drawX,drawY);
+					} else if ((theCollision == SILVER_CYLINDER_UP) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+						silverCylinderRev->Render(drawX,drawY);
+					} else if ((theCollision == BROWN_CYLINDER_DOWN) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+						brownCylinder->Render(drawX,drawY);
+					} else if ((theCollision == BROWN_CYLINDER_UP) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+						brownCylinderRev->Render(drawX,drawY);
+					} else if ((theCollision == BLUE_CYLINDER_DOWN) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+						blueCylinder->Render(drawX,drawY);
+					} else if ((theCollision == BLUE_CYLINDER_UP) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+						blueCylinderRev->Render(drawX,drawY);
+					} else if ((theCollision == GREEN_CYLINDER_DOWN) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+						greenCylinder->Render(drawX,drawY);
+					} else if ((theCollision == GREEN_CYLINDER_UP) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+						greenCylinderRev->Render(drawX,drawY);
+					} else if ((theCollision == YELLOW_CYLINDER_DOWN) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+						yellowCylinder->Render(drawX,drawY);
+					} else if ((theCollision == YELLOW_CYLINDER_UP) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+						yellowCylinderRev->Render(drawX,drawY);
+					} else if ((theCollision == WHITE_CYLINDER_DOWN) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+						whiteCylinder->Render(drawX,drawY);
+					} else if ((theCollision == WHITE_CYLINDER_UP) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+						whiteCylinderRev->Render(drawX,drawY);
+
+					//Save thing
+					} else if (theCollision == SAVE_SHRINE) {
+						resources->GetAnimation("savePoint")->Update(dt);
+						resources->GetAnimation("savePoint")->Render(drawX, drawY);
+
+					//Non-animated collision tiles
+					} else if (theCollision == FOUNTAIN) {
+						fountainOnScreen = true;
+						fountainX = i;
+						fountainY = j;
+					} else {
+						walkLayer[theCollision]->Render(drawX,drawY);
+					}
+				}
+
+				//Items
+				int theItem = item[i+xGridOffset][j+yGridOffset];
+				if (theItem != NONE && ids[i+xGridOffset][j+yGridOffset] != DRAW_AFTER_SMILEY) {
+					if (theItem == ENEMYGROUP_BLOCKGRAPHIC) {
+						//If this is an enemy block, draw it with the enemy group's
+						//block alpha
+						itemLayer[theItem]->SetColor(ARGB(
+							enemyGroupManager->groups[variable[i+xGridOffset][j+yGridOffset]].blockAlpha, 255, 255, 255));
+						itemLayer[theItem]->Render(drawX,drawY);
+						itemLayer[theItem]->SetColor(ARGB(255,255,255,255));
+					} else {
+						itemLayer[theItem]->Render(drawX,drawY);
+					}
+				}
+
+				//Silly Pads
+				if (hasSillyPad[i+xGridOffset][j+yGridOffset]) {
+					//Fade out during the last 2 seconds
+					float timeLeft = (float)SILLY_PAD_TIME - (gameTime - timeSillyPadPlaced[i+xGridOffset][j+yGridOffset]);
+					if (timeLeft < 1.0f) {
+						abilitySprites[SILLY_PAD]->SetColor(ARGB((timeLeft/1.0f)*255.0f,255,255,255));
+					}
+					abilitySprites[SILLY_PAD]->Render(drawX,drawY);
+					abilitySprites[SILLY_PAD]->SetColor(ARGB(255,255,255,255));
+				}
+			
+			}
+		}
+	}
+
+	//If the area has a big ass fountain draw the top part after the player
+	if (hasFountain && fountainOnScreen) {
+		resources->GetSprite("bigFountainBottom")->Render(fountainX*squareSize - xOffset + 32, fountainY*squareSize - yOffset + 32);
+	}
+
+	//Draw environment particles
+	environmentParticles->Update(dt);
+	environmentParticles->Transpose(-1*(xGridOffset*64 + xOffset), -1*(yGridOffset*64 + yOffset));
+	environmentParticles->Render();
+
+	//Debug mode stuff
+	if (debugMode) {
+		//Grid co-ords and fps
+		resources->GetFont("curlz")->printf(1000,5,HGETEXT_RIGHT,"(%d,%d)  FPS: %d",thePlayer->gridX,thePlayer->gridY, hge->Timer_GetFPS());
+		//Column lines
+		for (int i = 0; i <= screenWidth; i++) {
+			hge->Gfx_RenderLine(i*squareSize - xOffset,0,i*squareSize - xOffset,SCREEN_HEIGHT);
+		}
+		//Row lines
+		for (int i = 0; i <= screenHeight; i++) {
+			hge->Gfx_RenderLine(0,i*squareSize - yOffset,SCREEN_WIDTH,i*squareSize - yOffset);
+		}
+		//Draw Terrain collision boxes
+		for (int i = thePlayer->gridX - 2; i <= thePlayer->gridX + 2; i++) {
+			for (int j = thePlayer->gridY - 2; j <= thePlayer->gridY + 2; j++) {
+				if (inBounds(i,j)) {
+					//Set collision box depending on collision type
+					if (hasSillyPad[i][j]) {
+						collisionBox->SetRadius(i*64+32,j*64+32,24);
+					} else {
+						setTerrainCollisionBox(collisionBox, collision[i][j], i, j);
+					}
+					if (!thePlayer->canPass(collision[i][j]) || hasSillyPad[i][j]) drawCollisionBox(collisionBox, GREEN);
+				}
+			}
+		}
+	}
+
+}
+
+
+/**
+ * Draws stuff on the item layer that was marked to be drawn after
+ * Smiley (indicated by ID 990) as well as shrink tunnels.
+ */
+void Environment::drawAfterSmiley(float dt) {
+
+	//Loop through each tile to draw shit
+	for (int gridY = yGridOffset-1; gridY <= yGridOffset + screenHeight + 1; gridY++) {
+		for (int gridX = xGridOffset-1; gridX <= xGridOffset + screenWidth + 1; gridX++) {
+			if (inBounds(gridX, gridY)) {
+
+				drawX = getScreenX(gridX * 64);
+				drawY = getScreenY(gridY * 64);
+
+				//Marked as draw after smiley
+				if (ids[gridX][gridY] == DRAW_AFTER_SMILEY) {
+					itemLayer[item[gridX][gridY]]->Render(drawX,drawY);
+				}
+				//Shrink tunnels
+				if (collision[gridX][gridY] == SHRINK_TUNNEL_HORIZONTAL || collision[gridX][gridY] == SHRINK_TUNNEL_VERTICAL) {
+					walkLayer[collision[gridX][gridY]]->Render(drawX, drawY);
+				}
+
+				//Draw everything above a horizontal shrink tunnel after smiley so that his
+				//hat doesn't overlap it
+				if (collision[gridX][gridY+1] == SHRINK_TUNNEL_HORIZONTAL) {
+					mainLayer[terrain[gridX][gridY]]->Render(drawX, drawY);
+					itemLayer[item[gridX][gridY]]->Render(drawX, drawY);
+				}
+
+			}
+		}
+	}
+}
+
+
+/**
+ * Draws a big ass fountain. This is called after the main draw() function is called for
+ * both the Environment and the Player so that it is drawn over top of the Player. It only
+ * draws the top part of the fountain which the player can walk behind
+ */
+void Environment::drawFountain() {
+	if (!hasFountain || !fountainOnScreen) return;
+	if (-400 < getScreenX(fountainX) < 1700 && -400 < getScreenY(fountainY) < 1600) {
+		resources->GetSprite("bigFountainTop")->Render(fountainX*squareSize - xOffset + 32, fountainY*squareSize - yOffset + 32);
+		resources->GetAnimation("fountainRipple")->Render(fountainX*squareSize - xOffset + 32, fountainY*squareSize - yOffset - 40);
+		resources->GetSprite("smallFountain")->Render(fountainX*squareSize - xOffset + 32, fountainY*squareSize - yOffset - 83);
+		resources->GetAnimation("fountainRipple")->RenderEx(fountainX*squareSize - xOffset + 32, fountainY*squareSize - yOffset - 183,0.0f,.35f,.4f);
+		resources->GetParticleSystem("fountain")->MoveTo(fountainX*squareSize - xOffset + 32, fountainY*squareSize - yOffset - 180, true);
+		resources->GetParticleSystem("fountain")->Render();
+	}
+}
+
+
+/**
+ * Update the environment variables
+ */
+void Environment::update(float dt) {
+
+	//Update animations and shit
+	resources->GetAnimation("water")->Update(dt);
+	resources->GetAnimation("greenWater")->Update(dt);
+	resources->GetAnimation("lava")->Update(dt);
+	resources->GetAnimation("spring")->Update(dt);
+	resources->GetAnimation("silverSwitch")->Update(dt);
+	resources->GetAnimation("brownSwitch")->Update(dt);
+	resources->GetAnimation("blueSwitch")->Update(dt);
+	resources->GetAnimation("greenSwitch")->Update(dt);
+	resources->GetAnimation("yellowSwitch")->Update(dt);
+	resources->GetAnimation("whiteSwitch")->Update(dt);
+	silverCylinder->Update(dt);
+	brownCylinder->Update(dt);
+	blueCylinder->Update(dt);
+	greenCylinder->Update(dt);
+	yellowCylinder->Update(dt);
+	whiteCylinder->Update(dt);
+	silverCylinderRev->Update(dt);
+	brownCylinderRev->Update(dt);
+	blueCylinderRev->Update(dt);
+	greenCylinderRev->Update(dt);
+	yellowCylinderRev->Update(dt);
+	whiteCylinderRev->Update(dt);
+	resources->GetAnimation("fountainRipple")->Update(dt);
+	resources->GetParticleSystem("fountain")->Update(dt);
+
+	//Determine the grid offset to figure out which tiles to draw
+	xGridOffset = thePlayer->gridX - screenWidth/2;
+	yGridOffset = thePlayer->gridY - screenHeight/2;
+
+	//Determine the tile offset for smooth movement
+	xOffset = thePlayer->x - float(thePlayer->gridX) * float(squareSize);
+	yOffset = thePlayer->y - float(thePlayer->gridY) * float(squareSize);
+
+	//Update each grid square
+	for (int i = 0; i < areaWidth; i++) {
+		for (int j = 0; j < areaHeight; j++) {
+
+			//Update silly pads
+			if (timeSillyPadPlaced[i][j] + SILLY_PAD_TIME < gameTime) {
+				hasSillyPad[i][j] = false;
+			}
+
+			//Update timed switches
+			if (isCylinderSwitchLeft(collision[i][j]) || isCylinderSwitchRight(collision[i][j])) {
+				if (variable[i][j] != -1 && activated[i][j] + (float)variable[i][j] < gameTime && changed[i][j]) {
+					
+					//Make sure the player isn't on top of any of the cylinders that will pop up
+					if (!playerOnCylinder(i,j)) {
+						flipCylinderSwitch(i, j);
+					}	
+	
+				}
+			}
+		}
+	}
+
+}
+
+/**
+ * Returns what type of collision there is at point (x,y)
+ */
+int Environment::collisionAt(float x, float y) {
+	
+	//Determine grid coords of the object
+	int gridX = x / (float)squareSize;
+	int gridY = y / (float)squareSize;
+
+	//Handle out of bounds input
+	if (!inBounds(gridX,gridY)) {
+		return UNWALKABLE;
+	}
+
+	//Return the collision type
+	return collision[gridX][gridY];
+
+}
+
+
+void Environment::unlockDoor(int gridX, int gridY) {
+	bool doorOpened = false;
+
+	//If this square is a door and the player has the key, unlock it
+	if (collision[gridX][gridY] == RED_KEYHOLE && saveManager->numKeys[getKeyIndex(saveManager->currentArea)][RED_KEY-1] > 0) {
+		collision[gridX][gridY] = WALKABLE;
+		saveManager->numKeys[getKeyIndex(saveManager->currentArea)][RED_KEY-1]--;
+		doorOpened = true;
+	} else  if (collision[gridX][gridY] == BLUE_KEYHOLE && saveManager->numKeys[getKeyIndex(saveManager->currentArea)][BLUE_KEY-1] > 0) {
+		collision[gridX][gridY] = WALKABLE;
+		saveManager->numKeys[getKeyIndex(saveManager->currentArea)][BLUE_KEY-1]--;
+		doorOpened = true;
+	} else if (collision[gridX][gridY] == YELLOW_KEYHOLE && saveManager->numKeys[getKeyIndex(saveManager->currentArea)][YELLOW_KEY-1] > 0) {
+		collision[gridX][gridY] = WALKABLE;
+		saveManager->numKeys[getKeyIndex(saveManager->currentArea)][YELLOW_KEY-1]--;
+		doorOpened = true;
+	} else if (collision[gridX][gridY] == GREEN_KEYHOLE && saveManager->numKeys[getKeyIndex(saveManager->currentArea)][GREEN_KEY-1] > 0) {
+		collision[gridX][gridY] = WALKABLE;
+		saveManager->numKeys[getKeyIndex(saveManager->currentArea)][GREEN_KEY-1]--;
+		doorOpened = true;
+	}
+
+	//Remember that this door was opened!
+	if (doorOpened && save[gridX][gridY] != -1) {
+		saveManager->openedDoor[save[gridX][gridY]] = true;
+	}
+
+}
+
+
+/**
+ * Toggles any switches hit by a collision box. Returns whether or not a
+ * switch was toggled.
+ */
+bool Environment::toggleSwitches(hgeRect *box) {
+
+	//Determine what grid square the collision box is in
+	int boxGridX = (box->x1 + ((box->x2-box->x1)/2)) / 64;
+	int boxGridY = (box->y1 + ((box->y2-box->y1)/2)) / 64;
+
+	//Loop through all the adjacent grid squares
+	for (int gridX = boxGridX - 2; gridX <= boxGridX + 2; gridX++) {
+		for (int gridY = boxGridY - 2; gridY <= boxGridY + 2; gridY++) {
+
+			//Make sure the square is in bounds
+			if (inBounds(gridX,gridY)) {
+
+				//Set collision box for this square
+				setTerrainCollisionBox(collisionBox,collision[gridX][gridY],gridX,gridY);
+				
+				//Check collision with any switches
+				if (timePassedSince(activated[gridX][gridY]) > .5 && collisionBox->Intersect(box)) {
+					if (toggleSwitchAt(gridX, gridY)) return true;
+				}
+			}
+		}
+	}
+
+	//No switches were toggled so return false;
+	return false;
+
+}
+
+
+/**
+ * Toggles any switches hit by smiley's tongue. Returns whether or not a
+ * switch was toggled.
+ */
+bool Environment::toggleSwitches(Tongue *tongue) {
+	
+	bool hitSwitch = false;
+
+	//Loop through all the squares adjacent to Smiley
+	for (int gridX = thePlayer->gridX - 2; gridX <= thePlayer->gridX + 2; gridX++) {
+		for (int gridY = thePlayer->gridY - 2; gridY <= thePlayer->gridY + 2; gridY++) {
+
+			//Make sure the square is in bounds
+			if (inBounds(gridX,gridY)) {
+
+				//Set collision box for this square
+				setTerrainCollisionBox(collisionBox,collision[gridX][gridY],gridX,gridY);
+				
+				//Check collision with any switches
+				if (timePassedSince(activated[gridX][gridY]) > .5 && tongue->testCollision(collisionBox)) {			
+					if (toggleSwitchAt(gridX, gridY)) {
+						hitSwitch = true;
+					}
+				}
+			}
+		}
+	}
+
+	//No switches were toggled so return false;
+	return false;
+
+}
+
+/** 
+ * Attempts to toggle a switch at (gridX, gridY). Returns whether or not there is
+ * a switch there to toggle.
+ */
+bool Environment::toggleSwitchAt(int gridX, int gridY) {
+	
+	int switchID = ids[gridX][gridY];
+	bool hasSwitch = false;
+		
+	//Flip cylinder switch
+	if (isCylinderSwitchLeft(collision[gridX][gridY]) || isCylinderSwitchRight(collision[gridX][gridY])) {
+
+		flipCylinderSwitch(gridX, gridY);
+		hasSwitch = true;
+
+	//Rotate Shrink tunnels
+	} else if (collision[gridX][gridY] == SHRINK_TUNNEL_SWITCH) {
+
+		hasSwitch = true;
+		activated[gridX][gridY] = gameTime;
+		//Loop through the grid and look for shrink tunnels with the same id as the switch
+		for (int i = 0; i < areaWidth; i++) {
+			for (int j = 0; j < areaHeight; j++) {
+				if (ids[i][j] == switchID) {
+					//When found, rotate clockwise.
+					if (collision[i][j] == SHRINK_TUNNEL_HORIZONTAL) 
+						collision[i][j] = SHRINK_TUNNEL_VERTICAL;
+					else if (collision[i][j] == SHRINK_TUNNEL_VERTICAL) 
+						collision[i][j] = SHRINK_TUNNEL_HORIZONTAL;
+				}
+			}
+		}
+
+	//Rotate arrows switch
+	} else if (collision[gridX][gridY] == SPIN_ARROW_SWITCH) {
+
+		hasSwitch = true;
+		activated[gridX][gridY] = gameTime;
+
+		//Loop through the grid and look for arrows with the same id as the switch
+		for (int i = 0; i < areaWidth; i++) {
+			for (int j = 0; j < areaHeight; j++) {
+				if (ids[i][j] == switchID) {
+					//When found, rotate clockwise.
+					if (collision[i][j] == UP_ARROW) 
+						collision[i][j] = RIGHT_ARROW;
+					else if (collision[i][j] == RIGHT_ARROW) 
+						collision[i][j] = DOWN_ARROW;
+					else if (collision[i][j] == DOWN_ARROW) 
+						collision[i][j] = LEFT_ARROW;
+					else if (collision[i][j] == LEFT_ARROW) 
+						collision[i][j] = UP_ARROW;
+				}
+			}
+		}
+
+	//Rotate mirrors switch
+	} else if (collision[gridX][gridY] == MIRROR_SWITCH) {
+
+		hasSwitch = true;
+		activated[gridX][gridY] = gameTime;
+		
+		//Switch up and down cylinders
+		for (int i = 0; i < areaWidth; i++) {
+			for (int j = 0; j < areaHeight; j++) {
+				if (ids[i][j] == switchID) {
+					if (collision[i][j] == MIRROR_UP_LEFT) collision[i][j] = MIRROR_UP_RIGHT;
+					else if (collision[i][j] == MIRROR_UP_RIGHT) collision[i][j] = MIRROR_DOWN_RIGHT;
+					else if (collision[i][j] == MIRROR_DOWN_RIGHT) collision[i][j] = MIRROR_DOWN_LEFT;
+					else if (collision[i][j] == MIRROR_DOWN_LEFT) collision[i][j] = MIRROR_UP_LEFT;
+				}
+			}
+		}
+	}
+
+	//Play switch sound if the switch is somewhat close to Smiley
+	if (hasSwitch && distance(gridX, gridY, thePlayer->gridX, thePlayer->gridY) < 15) {
+		hge->Effect_Play(resources->GetEffect("snd_switch"));
+	}
+
+	return hasSwitch;
+}
+
+/**
+ * Flips the cylinder switch at gridX, gridY
+ */  
+void Environment::flipCylinderSwitch(int gridX, int gridY) {
+
+	activated[gridX][gridY] = gameTime;
+
+	//Flip switch in collision layer
+	if (isCylinderSwitchLeft(collision[gridX][gridY])) {
+		collision[gridX][gridY] += 16;
+		resources->GetAnimation("silverSwitch")->SetMode(HGEANIM_FWD);
+		resources->GetAnimation("brownSwitch")->SetMode(HGEANIM_FWD);
+		resources->GetAnimation("blueSwitch")->SetMode(HGEANIM_FWD);
+		resources->GetAnimation("greenSwitch")->SetMode(HGEANIM_FWD);
+		resources->GetAnimation("yellowSwitch")->SetMode(HGEANIM_FWD);
+		resources->GetAnimation("whiteSwitch")->SetMode(HGEANIM_FWD);
+		changed[gridX][gridY] = !changed[gridX][gridY];
+	} else if (isCylinderSwitchRight(collision[gridX][gridY])) {
+		collision[gridX][gridY] -= 16;
+		resources->GetAnimation("silverSwitch")->SetMode(HGEANIM_REV);
+		resources->GetAnimation("brownSwitch")->SetMode(HGEANIM_REV);
+		resources->GetAnimation("blueSwitch")->SetMode(HGEANIM_REV);
+		resources->GetAnimation("greenSwitch")->SetMode(HGEANIM_REV);
+		resources->GetAnimation("yellowSwitch")->SetMode(HGEANIM_REV);
+		resources->GetAnimation("whiteSwitch")->SetMode(HGEANIM_REV);
+		changed[gridX][gridY] = !changed[gridX][gridY];
+	}
+
+	//Play animation
+	resources->GetAnimation("silverSwitch")->Play();
+	resources->GetAnimation("brownSwitch")->Play();
+	resources->GetAnimation("blueSwitch")->Play();
+	resources->GetAnimation("greenSwitch")->Play();
+	resources->GetAnimation("yellowSwitch")->Play();
+	resources->GetAnimation("whiteSwitch")->Play();
+	activated[gridX][gridY] = gameTime;
+
+	//Switch up and down cylinders if the player isn't on top of any down cylindersw
+	if (!playerOnCylinder(gridX,gridY)) {
+		switchCylinders(ids[gridX][gridY]);
+	}
+
+}
+
+/**
+ * Switches all cylinders with the specified ID.
+ */
+void Environment::switchCylinders(int switchID) {
+
+	//Switch up and down cylinders if the player isn't on top of any down cylindersw
+	for (int i = 0; i < areaWidth; i++) {
+		for (int j = 0; j < areaHeight; j++) {
+			if (ids[i][j] == switchID) {
+				if (isCylinderUp(collision[i][j])) {
+					collision[i][j] -= 16;
+					activated[i][j] = gameTime;
+					saveManager->cylinderChanged[save[i][j]] = !saveManager->cylinderChanged[save[i][j]];
+				} else if (isCylinderDown(collision[i][j])) {
+					collision[i][j] += 16;
+					activated[i][j] = gameTime;
+					saveManager->cylinderChanged[save[i][j]] = !saveManager->cylinderChanged[save[i][j]];
+				}
+				silverCylinder->Play();
+				brownCylinder->Play();
+				blueCylinder->Play();
+				greenCylinder->Play();
+				yellowCylinder->Play();
+				whiteCylinder->Play();
+				silverCylinderRev->Play();
+				brownCylinderRev->Play();
+				blueCylinderRev->Play();
+				greenCylinderRev->Play();
+				yellowCylinderRev->Play();
+				whiteCylinderRev->Play();
+			}
+		}
+	}
+}
+
+
+/**
+ * Returns the item in a square if any and removes it.
+ */
+int Environment::gatherItem(int x, int y) {
+	int retVal = item[x][y];
+	if (retVal > 0 && retVal < 32) {
+		item[x][y] = NONE;
+		if (save[x][y] != -1) saveManager->collectedItem[save[x][y]] = true;
+		return retVal;
+	} else {
+		return NONE;
+	}
+}
+
+/**
+ * Toggle the grid and debug info
+ */
+void Environment::toggleGrid() {
+	showGrid = !showGrid;	
+}
+
+
+/**
+ * This method is fucking stupid and should be rewritten.
+ *
+ * Returns whether or not there is an unobstructed straight line from 
+ * pixel position (x1, y1) to (x2, y2).
+ *
+ *	x1, y1		point at the start of the path
+ *	x2, y2		point at the end of the path
+ *	radius		radius of the object taking the path
+ *
+ */
+bool Environment::validPath(int x1, int y1, int x2, int y2, int radius, bool canPath[256]) {
+	
+	//First get the velocities of the path
+	float angle = getAngleBetween(x1,y1,x2,y2);
+	float dx = 10.0*cos(angle);
+	float dy = 10.0*sin(angle);
+
+	//Now trace the path using dx and dy and see if you run into any SHIT
+	float xTravelled = 0;
+	float yTravelled = 0;
+	float curX = x1;
+	float curY = y1;
+
+	//This can throw an exception if the enemy is perfectly on top of the player
+	try {
+		while (abs(xTravelled) < abs(x2 - x1) && abs(yTravelled) < abs(y2 - y1)) {
+			//Top left of the object
+			if (!canPath[collisionAt(curX-radius, curY-radius)] || hasSillyPad[int(curX-radius)/64][int(curY-radius)/64]) return false;
+			//Top right of the object
+			if (!canPath[collisionAt(curX+radius, curY-radius)] || hasSillyPad[int(curX+radius)/64][int(curY-radius)/64]) return false;
+			//Bottom left of the object
+			if (!canPath[collisionAt(curX-radius, curY+radius)] || hasSillyPad[int(curX-radius)/64][int(curY+radius)/64]) return false;
+			//Bottom right of the object
+			if (!canPath[collisionAt(curX+radius, curY+radius)] || hasSillyPad[int(curX+radius)/64][int(curY+radius)/64]) return false;
+			curX += dx;
+			curY += dy;
+			xTravelled += dx;
+			yTravelled += dy;
+		}
+	} catch(int type) {
+		return true;
+	}
+
+	//You didnt hit any SHIT so return true
+	return true;
+}
+
+
+/**
+ * Returns whether or not player, when centered at (x,y)the provided collision box collides 
+ * with any terrain. Also autoadjusts the player's position to navigate corners.
+ * 
+ * @arg x		x-coord of the player
+ * @arg y		y-coord of the player
+ * @arg dt
+ */
+bool Environment::playerCollision(int x, int y, float dt) {
+	
+	//Determine the location of the collision box
+	int gridX = x / 64;
+	int gridY = y / 64;
+	bool onIce = collision[thePlayer->gridX][thePlayer->gridY] == ICE;
+
+	//Check all neighbor squares
+	for (int i = gridX - 2; i <= gridX + 2; i++) {
+		for (int j = gridY - 2; j <= gridY + 2; j++) {
+
+			//Special logic for shrink tunnels
+			bool canPass;
+			if (collision[i][j] == SHRINK_TUNNEL_HORIZONTAL) {
+				canPass = thePlayer->shrinkActive && j == thePlayer->gridY;
+			} else if (collision[i][j] == SHRINK_TUNNEL_VERTICAL) {
+				canPass = thePlayer->shrinkActive && i == thePlayer->gridX;
+			} else {
+				canPass = thePlayer->canPass(collision[i][j]);
+			}
+
+			//Ignore squares off the map
+			if (inBounds(i,j) && !canPass) {
+		
+				//Set collision box depending on collision type
+				setTerrainCollisionBox(collisionBox, collision[i][j], i, j);
+
+				//Test top and bottom of box
+				if (x > collisionBox->x1 && x < collisionBox->x2) {
+					if (abs(collisionBox->y2 - y) < thePlayer->radius) return true;
+					if (abs(collisionBox->y1 - y) < thePlayer->radius) return true;
+				}
+
+				//Test left and right side of box
+				if (y > collisionBox->y1 && y < collisionBox->y2) {
+					if (abs(collisionBox->x2 - x) < thePlayer->radius) return true;
+					if (abs(collisionBox->x1 - x) < thePlayer->radius) return true;
+				}
+
+				bool onlyDownPressed = input->keyDown(INPUT_DOWN) && !input->keyDown(INPUT_UP) && !input->keyDown(INPUT_LEFT) && !input->keyDown(INPUT_RIGHT);
+				bool onlyUpPressed = !input->keyDown(INPUT_DOWN) && input->keyDown(INPUT_UP) && !input->keyDown(INPUT_LEFT) && !input->keyDown(INPUT_RIGHT);
+				bool onlyLeftPressed = !input->keyDown(INPUT_DOWN) && !input->keyDown(INPUT_UP) && input->keyDown(INPUT_LEFT) && !input->keyDown(INPUT_RIGHT);
+				bool onlyRightPressed = !input->keyDown(INPUT_DOWN) && !input->keyDown(INPUT_UP) && !input->keyDown(INPUT_LEFT) && input->keyDown(INPUT_RIGHT);
+				float angle;
+
+				//Top left corner
+				if (distance(collisionBox->x1, collisionBox->y1, x, y) < thePlayer->radius) {
+					if (thePlayer->iceSliding) return true;
+					angle = getAngleBetween(collisionBox->x1, collisionBox->y1, thePlayer->x, thePlayer->y);
+					if (onlyDownPressed && thePlayer->facing == DOWN && x < collisionBox->x1 && thePlayer->canPass(collision[i-1][j]) && !hasSillyPad[i-1][j] && !onIce) {
+						angle -= 4.0 * PI * dt;
+					} else if (onlyRightPressed && thePlayer->facing == RIGHT && y < collisionBox->y1 && thePlayer->canPass(collision[i][j-1]) && !hasSillyPad[i][j-1] && !onIce) {
+						angle += 4.0 * PI * dt;
+					} else return true;
+					thePlayer->x = collisionBox->x1 + (thePlayer->radius+1) * cos(angle);
+					thePlayer->y = collisionBox->y1 + (thePlayer->radius+1) * sin(angle);
+					return true;
+				}
+
+				//Top right corner
+				if (distance(collisionBox->x2, collisionBox->y1, x, y) < thePlayer->radius) {
+					if (thePlayer->iceSliding) return true;
+					angle = getAngleBetween(collisionBox->x2, collisionBox->y1, thePlayer->x, thePlayer->y);
+					if (onlyDownPressed && thePlayer->facing == DOWN && x > collisionBox->x2 && thePlayer->canPass(collision[i+1][j]) && !hasSillyPad[i+1][j] && !onIce) {
+						angle += 4.0 * PI * dt;
+					} else if (onlyLeftPressed && thePlayer->facing == LEFT && y < collisionBox->y1 && thePlayer->canPass(collision[i][j-1]) && !hasSillyPad[i][j-1] && !onIce) {
+						angle -= 4.0 * PI * dt;
+					} else return true;
+					thePlayer->x = collisionBox->x2 + (thePlayer->radius+1) * cos(angle);
+					thePlayer->y = collisionBox->y1 + (thePlayer->radius+1) * sin(angle);
+					return true;
+				}
+
+				//Bottom right corner
+				if (distance(collisionBox->x2, collisionBox->y2, x, y) < thePlayer->radius) {
+					if (thePlayer->iceSliding) return true;
+					angle = getAngleBetween(collisionBox->x2, collisionBox->y2, thePlayer->x, thePlayer->y);
+					if (onlyUpPressed && thePlayer->facing == UP && x > collisionBox->x2 && thePlayer->canPass(collision[i+1][j]) && !hasSillyPad[i+1][j] && !onIce) {
+						angle -= 4.0 * PI * dt;
+					} else if (onlyLeftPressed && thePlayer->facing == LEFT && y > collisionBox->y2 && thePlayer->canPass(collision[i][j+1]) && !hasSillyPad[i][j+1] && !onIce) {
+						angle += 4.0 * PI * dt;
+					} else return true;
+					thePlayer->x = collisionBox->x2 + (thePlayer->radius+1) * cos(angle);
+					thePlayer->y = collisionBox->y2 + (thePlayer->radius+1) * sin(angle);
+					return true;
+				}
+				
+				//Bottom left corner
+				if (distance(collisionBox->x1, collisionBox->y2, x, y) < thePlayer->radius) {
+					if (thePlayer->iceSliding) return true;
+					angle = getAngleBetween(collisionBox->x1, collisionBox->y2, thePlayer->x, thePlayer->y);
+					if (onlyUpPressed && thePlayer->facing == UP && x < collisionBox->x1 && thePlayer->canPass(collision[i-1][j]) && !hasSillyPad[i-1][j] && !onIce) {
+						angle += 4.0 * PI * dt;
+					} else if (onlyRightPressed && thePlayer->facing == RIGHT && y > collisionBox->y2 && thePlayer->canPass(collision[i][j+1]) && !hasSillyPad[i][j+1] && !onIce) {
+						angle -= 4.0 * PI * dt;
+					} else return true;
+					thePlayer->x = collisionBox->x1 + (thePlayer->radius+1) * cos(angle);
+					thePlayer->y = collisionBox->y2 + (thePlayer->radius+1) * sin(angle);
+					return true;
+				}
+				
+			}
+		}
+	}
+
+	return false;
+}
+
+
+/**
+ * Bombs any bombable walls at the given coordinates
+ */
+void Environment::bombWall(int x,int y) {
+	if (inBounds(x,y) && collision[x][y] == BOMBABLE_WALL) {
+		collision[x][y]=WALKABLE;
+	}
+}
+
+/**
+ * Returns whether or not an enemy bounded by *box box collides with any terrain. Also
+ * adjusts the enemy's position to help it round corners
+ */
+bool Environment::enemyCollision(hgeRect *box, BaseEnemy *enemy, float dt) {
+	
+	//Determine the location of the collision box
+	int gridX = (box->x1 + (box->x2 - box->x1)/2) / 64;
+	int gridY = (box->y1 + (box->y2 - box->y1)/2) / 64;
+
+	//Check all neighbor squares
+	for (int i = gridX - 2; i <= gridX + 2; i++) {
+		for (int j = gridY - 2; j <= gridY + 2; j++) {
+			//Ignore squares off the map
+			if (inBounds(i,j) && (!enemy->canPass[collision[i][j]] || hasSillyPad[i][j])) {
+				//Test collision
+				setTerrainCollisionBox(collisionBox, hasSillyPad[i][j] ? UNWALKABLE : collision[i][j], i, j);
+				if (box->Intersect(collisionBox)) {
+
+					//Help the enemy round corners
+					if ((int)enemy->dx == 0 && enemy->dy > 0) {
+						//Moving down
+						if (enemy->x < collisionBox->x1) {
+							enemy->x -= enemy->speed * dt;
+						} else if (enemy->x > collisionBox->x2) {
+							enemy->x += enemy->speed * dt;
+						}
+					} else if ((int)enemy->dx == 0 && enemy->dy < 0) {
+						//Moving up
+						if (enemy->x < collisionBox->x1) {
+							enemy->x -= enemy->speed * dt;
+						} else if (enemy->x > collisionBox->x2) {
+							enemy->x += enemy->speed * dt;
+						}
+					} else if (enemy->dx < 0 && (int)enemy->dy == 0) {
+						//Moving left
+						if (enemy->y < collisionBox->y1) {
+							enemy->y -= enemy->speed * dt;
+						} else if (enemy->y > collisionBox->y2) {
+							enemy->y += enemy->speed * dt;
+						}
+					} else if (enemy->dx > 0 && (int)enemy->dy == 0) {
+						//Moving right
+						if (enemy->y < collisionBox->y1) {
+							enemy->y -= enemy->speed * dt;
+						} else if (enemy->y > collisionBox->y2) {
+							enemy->y += enemy->speed * dt;
+						}
+					}
+
+					return true;
+				}
+			}
+		}
+	}
+
+	//No collision occured, so return false
+	return false;
+}
+
+/**
+ * Destroys any silly pads within *box.
+ */
+void Environment::hitSillyPads(Tongue *tongue) {
+	for (int i = thePlayer->gridX - 2; i <= thePlayer->gridX + 2; i++) {
+		for (int j = thePlayer->gridY - 2; j <= thePlayer->gridY + 2; j++) {
+			if (hasSillyPad[i][j]) {
+				collisionBox->SetRadius(i*64+32,j*64+32,24);
+				if (tongue->testCollision(collisionBox)) {
+					hasSillyPad[i][j] = false;
+				}
+			}
+		}
+	}
+}
+
+
+/**
+ * Reads any sign within *box.
+ */
+void Environment::hitSigns(Tongue *tongue) {
+	
+	std::string paramString;
+
+	for (int i = thePlayer->gridX - 2; i <= thePlayer->gridX + 2; i++) {
+		for (int j = thePlayer->gridY - 2; j <= thePlayer->gridY + 2; j++) {
+			if (inBounds(i,j) && collision[i][j] == SIGN) {
+				collisionBox->SetRadius(i*64+32,j*64+32,24);
+				if (timePassedSince(activated[i][j]) > .5f && tongue->testCollision(collisionBox)) {
+					activated[i][j] = gameTime;
+					paramString = "Sign";
+					paramString += intToString(ids[i][j]);
+					theTextBox->set(stringTable->GetString(paramString.c_str()), false, NULL, 64);
+					return;
+				}
+			}
+		}
+	}
+}
+
+
+/**
+ * Opens the save menu if box collides with a save shrine
+ */
+void Environment::hitSaveShrine(Tongue *tongue) {
+	for (int i = thePlayer->gridX - 2; i <= thePlayer->gridX + 2; i++) {
+		for (int j = thePlayer->gridY - 2; j <= thePlayer->gridY + 2; j++) {
+			if (inBounds(i,j) && collision[i][j] == SAVE_SHRINE) {
+				collisionBox->SetRadius(i*64+32,j*64+32,24);
+				if (timePassedSince(activated[i][j]) > .5f && tongue->testCollision(collisionBox)) {
+					activated[i][j] = gameTime;
+					windowManager->openWindow(new MiniMenu(MINIMENU_SAVEGAME));
+				}
+			}
+		}
+	}
+}
+
+
+/**
+ * Returns whether or not box collides with terrain as specified by canPass.
+ */
+bool Environment::testCollision(hgeRect *box, bool canPass[256]) {
+	
+	//Determine the location of the collision box
+	int gridX = (box->x1 + (box->x2 - box->x1)/2) / 64;
+	int gridY = (box->y1 + (box->y2 - box->y1)/2) / 64;
+
+	//Check all neighbor squares
+	for (int i = gridX - 2; i <= gridX + 2; i++) {
+		for (int j = gridY - 2; j <= gridY + 2; j++) {
+			//Ignore squares off the map
+			if (inBounds(i,j) && (!canPass[collision[i][j]] || hasSillyPad[i][j])) {
+				
+				//Test collision
+				setTerrainCollisionBox(collisionBox, hasSillyPad[i][j] ? UNWALKABLE : collision[i][j], i, j);
+				if (box->Intersect(collisionBox)) {
+					return true;
+				}
+			}
+		}
+	}
+
+	//No collision occured, so return false
+	return false;
+}
+
+/**
+ * Returns whether or not the player is on top of any cylinders that will pop up
+ * when the switch at grid position (x,y) is toggled.
+ */
+bool Environment::playerOnCylinder(int x, int y) {
+	bool retVal = false;
+	//Make sure the player isn't on top of any of the cylinders that will pop up
+	for (int k = thePlayer->gridX-1; k <= thePlayer->gridX+1; k++) {
+		for (int l = thePlayer->gridY-1; l <= thePlayer->gridY+1; l++) {
+			if (ids[k][l] == ids[x][y] && isCylinderDown(collision[k][l])) {
+				collisionBox->SetRadius(k*64+32,l*64+32,32);
+				//Player collides with a cylinder
+				if (thePlayer->collisionCircle->testBox(collisionBox)) {
+					retVal = true;
+				}
+			}
+		}
+	}
+	return retVal;
+}
+
+/**
+ * Returns whether or not there is deep water of any kind at grid (x,y)
+ */
+bool Environment::isDeepWaterAt(int x, int y) {
+	return (collision[x][y] == DEEP_WATER || collision[x][y] == GREEN_WATER);
+}
+
+/**
+ * Returns whether or not there is shallow water of any kind at grid (x,y)
+ */ 
+bool Environment::isShallowWaterAt(int x, int y) {
+	return (collision[x][y] == SHALLOW_WATER || collision[x][y] == SHALLOW_GREEN_WATER);
+}
