@@ -1,0 +1,218 @@
+[HGESTRINGTABLE]
+
+GotCane = "You got Bill Clinton's Cane! You can now communicate telepathically and receive the President's wisdom whenever you wish."
+GotFireBreath = "Infused with the power of dickens, you can now breath fire."
+GotFrisbee = "Holy dickens you got the frisbee!"
+GotSprintBoots = "Holy dickens you got the sprint boots!"
+GotLightningOrb = "You can now shoot lightning orbs! Why would a giant, talking cactus drop that? Oh well, I'm sure it will come in handy."
+GotJesusSandals = "You found Jesus' Sandals. You \ncan now walk on Water. \nHoly shit!"
+GotReflectionShield = "You gained the power of Reflection Shield!"
+
+;=============================================HINTS======================================
+Hint0Pages = "1"
+Hint0-1 = "DICKS"
+
+;=============================================SIGNS======================================
+;FOUNTAIN.SMH
+Sign1 = "Smiley's house"
+Sign2 = "Welcome to Smiley Town.\nPopulation: 5"
+Sign3 = "Stuck?  Trying hitting a switch with your tongue."
+Sign4 = "Watch out for enemies!  Attack them with your tongue to destroy them!"
+Sign5 = "Use springs to hop over obstacles."
+Sign6 = "Use warps like these to travel to other areas instantly!"
+Sign7 = "Watch out for ice!  You can't change direction while slipping on it!"
+Sign9 = "This way to Olde Towne.  Bring plenty of food and, more importantly, water!"
+Sign14 = "Ahead are the Sessaria Snow Plains.  Bring your mittens!"
+Sign15 = "Approaching the Forest of Fundoria.  Be careful, and for the love of periwinkle don't eat the mushrooms!"
+Sign34 = "Watch out for slime!  It's pretty slippery!"
+Sign35 = "If you get blocked into an area, destroying all of the enemies there will open the exits."
+Sign36 = "Lick the lollipop to save the game."
+Sign37 = "Don't forget to access your map and inventory.  If you don't know how, check your controls in the options menu!"
+ 
+;OLDETOWNE.SMH
+Sign10 = "To pass through this door, you will first need to find a red key"
+Sign11 = "Olde Towne"
+Sign12 = "This way to Smolder Hollow, home to many a fire and flame!"
+Sign27 = "The switch to enter the desert is just south of Olde Towne."
+Sign28 = "This switch opens up the desert. It is timed, so hurry your horses!"
+Sign29 = "These times switches lead the way to a gem. It's tricky, so skip it if you want!"
+
+;SMHOLLOW.SMH
+Sign13 = "Dangerous and deep pits ahead!  Beware!"
+
+;SNOW.SMH
+Sign16 = "This way to Mount Frostbite."
+Sign17 = "Bridge currently out of order.  Construction will continue one day, hopefully."
+Sign18 = "Ahead lies the temple of the sacred frisbee.  Tours are cancelled until evil creatures go away.  Beware."
+Sign23 = "Some switches only work for a certain period of time..."
+Sign30 = "Ahead is a one-way path to the Realm of Despair.  Enter at your own risk."
+Sign44 = "\nTwo Snowfangs, each wielding a flail, have blocked the passage. They reside southwest of here."
+Sign45 = "Only those able to find the 3 hidden switches of Mount Frostbite may access the treasures at the peak."
+
+;FOREST.SMH
+Sign19 = "\nYou will never reach me without first striking the three dark switches I have hidden in my forest!\n\n-Garmborn, Lord of Treelets"
+Sign20 = "\nNever forget to use all of the tools at your disposal."
+Sign21 = "My maze of evil cylinders shall surely stymie your efforts!\n-Garmborn, Lord of Treelets"
+Sign22 = "Keep your wits about you, and this ice puzzle will melt to your cunning."
+Sign24 = "This is the first of the dark switches.  The rest will not come so easily!\n \n-Garmborn, Lord of Treelets"
+Sign25 = "My home is just down yonder cobblestone path."
+Sign26 = "Ninja"
+Sign39 = "The magic mushroom cave is ahead.  Its entrance is guarded by the impenetrable stone bunnies."
+Sign41 = "\nSwamp of Ill Destiny, just ahead"
+Sign42 = "A large boulder blocks the path.\n \nAnother entrance must be found if the swamp is to be entered."
+Sign43 = "Fenwar received one less boulder than he ordered from BoulderDash, Inc.\nI wonder if he made an illusion to compensate?"
+
+;DESPAIR.SMH
+Sign31 = "The sandals of Jesus to be on exhibit in the near future, just ahead.  Admission: 100$  \n\n-Lord Phyrebawz"
+Sign32 = "To the south lies the lair of Pelzon, guardian reflection shield.  This would be a useful item to have in one's inventory..."
+Sign33 = "Four, Three, Two, One, keys in each layer, isn't that fun?  -Pelzon"
+Sign38 = "To the north lies the Serpentine Path, which leads to the Castle of Evil (Fenwar's lair)."
+Sign40 = "Note to the workers: Please remove these springs when you get a chance. Doing so will hinder Smiley's progress permanently. \n-Lord Phyrebawz"
+
+;==============================================NPCS======================================
+;FOUNTAIN.SMH
+NPC0Name = "Glen"
+NPC0Pages = "2"
+NPC0-1 = "Hello there Smiley!  How are you today?  Why so glum?"
+NPC0-2 = "I'd give you something to help cheer you up, but I'm busy contemplating quantum field theory."
+
+NPC1Name = "Jethro"
+NPC1Pages = "3"
+NPC1-1 = "I saw some shady lookin' feller run down thata'way dragging some one with him!"
+NPC1-2 = "Think he was goin' south down towards ye Olde Towne, but why would anyone want to go there?"
+NPC1-3 = "That mud hole of a town's got no one left after Fenwar 
+terrorized thems peoples."
+
+NPC5Name = "Speirdyke"
+NPC5Pages = "3"
+NPC5-1 = "Name's Captain Speirdyke, pirate extraordinaire.  My ship was mortally wounded by fierce storm in the Atlarctic Ocean."
+NPC5-2 = "Anyways, to make a long story short, boy, I need some loot to buy myself a new ship and get back on the water."
+NPC5-3 = "If you help me out, I'll repay you!  You have my word."
+
+NPC8Name = "Bill Clinton"
+NPC8Pages = "2"
+NPC8-1 = "Hi, I'm former US President Bill Clinton."
+NPC8-2 = "Here take this cane, it will let us communicate telepathically, lol."
+
+;OLDETOWNE.SMH
+NPC2Name = "Abner"
+NPC2Pages = "5"
+NPC2-1 = "Howdy there.  Name's Abner Longfellow, the last citizen of Olde Towne."
+NPC2-2 = "It's not very often that I see a stranger like you 'round here."
+NPC2-3 = "But I did see some mean lookin' cowboy headin' northeast of here not long ago."
+NPC2-4 = "Probably headin' towards the Smolder Hollow.  Too bad I have the only key to it!  YAHAHA!"
+NPC2-5 = "...Oh wait.  Where did that thing go?  Gosh darn it!  I must have misplaced it!"
+
+NPC6Name = "Randeep"
+NPC6Pages = "2"
+NPC6-1 = "Stupid white people... They told me there is an oasis just northwest of here."
+NPC6-2 = "I haven't seen it in 35 years of wandering the desert! Unless it's behind that green key door, I don't think it exists."
+
+;SNOW.SMH
+NPC3Name = "Esky"
+NPC3Pages = "3"
+NPC3-1 = "Dang, I used to take this sweet shortcut back to my igloo up there."
+NPC3-2 = "But thanks to global cooling it got so cold that it froze over!"
+NPC3-3 = "If I only had a flamethrower, or something of the sort, I could blast through."
+NPC4Name = "Moesky"
+NPC4Pages = "6"
+NPC4-1 = "Greetings friend.  Welcome to the Sessaria Snow Plains.  Thanks for stopping by!"
+NPC4-2 = "There are plenty of sights to see around here, but the most popular is Mount Frosbite, to the west."
+NPC4-3 = "Unfortunately, the bridge was recently torn up by some of Fenwar's goons."
+NPC4-4 = "I think Fenwar's trying to hide something from people up there..."
+NPC4-5 = "My father told me about some mystical magical item that's deep inside one of the caves of the mountain!"
+NPC4-6 = "Of course, my father told me a lot of garbage stories to get me to go to sleep."
+
+;FOREST.SMH
+NPC7Name="Fauna Biologist"
+NPC7Pages="3"
+NPC7-1="Ahoy there! I'm glad you found me this deep in the forest."
+NPC7-2="The last time I saw another member of the species Spherifageous was when I was yet a wee lad."
+NPC7-3="Well then, I needn't keep you any longer. You'd best be on your way!"
+
+
+
+;==============================================BOSSES=====================================
+;Lord Phyrebawz
+NPC100Name = "Fenwar"
+NPC100Pages = "2"
+NPC100-1 = "...and I told him it wouldn't go with the drapes...Oh dickens we have an intruder!"
+NPC100-2 = "He might have overheard our diabolical plans. Lord Phyrebawz, destroy this pest at once!"
+NPC101Name = "Lord Phyrebawz"
+NPC101Pages = "2"
+NPC101-1 = "I say young lad, you are quite the formidable adversary! I forgot to take my vitamins this morning so I'm afraid I'm not quite up to snuff at the moment."
+NPC101-2 = "Should we ever meet again I must warn you that your victory won't be quite as assured, Oh ho ho ho! Now where did I leave those vitamins..."
+
+;Portly Penguin
+NPC110Name = "Portly Penguin"
+NPC110Pages = "2"
+NPC110-1 = "What? Are you here to make fun of my hydrophobia too? Just cause I hate H2O doesn't mean I'm not a penguin!"
+NPC110-2 = "That's it, I've put up with enough bullying! You're dead!"
+;Penguin battle chat 1
+NPC111Name = "Portly Penguin"
+NPC111Pages = "2"
+NPC111-1 = "Brrrrr.... It's cold in here!"
+NPC111-2 = "I have no time for such bullying. Now I'm hopping mad!"
+;Penguin battle chat 2
+NPC112Name = "Portly Penguin"
+NPC112Pages = "1"
+NPC112-1 = "Ninja."
+;Penguin defeat text
+NPC113Name = "Portly Penguin"
+NPC113Pages = "2"
+NPC113-1 = "This is just like at the schoolyard back in Atlartica!"
+NPC113-2 = "Here, take my frisbee, you big bully. Hmph!"
+
+;Lord Garmborn
+NPC120Name = "Lord Garmborn"
+NPC120Pages = "3"
+NPC120-1 = "I've been waiting for you Smiley."
+NPC120-2 = "After all I am a tree, I can't really do much else. Errr...wait, Lord Fenwar said I must try to be more intimidating."
+NPC120-3 = "You may have solved my evil puzzles, but it was all for naught as you will now meet your doom!!! How was that?"
+;Lord Garmborn licked text
+NPC121Name = "Lord Garmborn"
+NPC121Pages = "1"
+NPC121-1 = "Woah, woah, WOAH!!! Watch what you are doing with that thing! Why are you licking me anyway, I'm a tree, come on."
+;Lord Garmborn Defeated
+NPC122Name = "Lord Garmborn"
+NPC122Pages = "1"
+NPC122-1 = "Defeated by a mere spherifageous...Perhaps I should stick to constructing evil puzzles."
+
+;Cornwallis
+NPC130Name = "Cornwallis"
+NPC130Pages = "1"
+NPC130-1 = "Hey, you're walking on my oasis! This was a special gift from Lord Fenwar himself; I can't let anyone sully it!"
+;Cornwallis battle chat 1
+NPC131Name = "Cornwallis"
+NPC131Pages = "1"
+NPC131-1 = "Gwaarrrrgh that fire breath is making me piping mad! I'll make you pay!"
+;Cornwallis battle chat 2
+NPC132Name = "Cornwallis"
+NPC132Pages = "2"
+NPC132-1 = "Whew, sorry I got so mad but I just can't stand fire!"
+NPC132-2 = "Regardless, you are my adversary. Therefore I suppose I must destroy you. Feel the wrath of my cactlets!"
+;Cornwallis battle chat 3
+NPC133Name = "Cornwallis"
+NPC133Pages = "3"
+NPC133-1 = "Alright already! You can have the gosh darn oasis! Fenwar isn't going to be pleased about this..."
+NPC133-2 = "You see, I am unable to water myself as I am a cactus. I hang around Fenwar because only he has the resources to water a cactus as grand as myself."
+NPC133-3 = "To be honest, I don't even like him! No hard feelings young spherifageous, perhaps we shall meet again..."
+
+;Mushboom
+NPC140Name = "Brian Fungus"
+NPC140Pages = "2"
+NPC140-1 = "I, Brian Fungus."
+NPC140-2 = "You, pulverized!"
+NPC141Name = "Brian Fungus"
+NPC141Pages = "3"
+NPC141-1 = "You, Smiley."
+NPC141-2 = "You, very strong."
+NPC141-3 = "I, defeated."
+
+;Calypso Round 1
+NPC150Name = "Calypso"
+NPC150Pages = "1"
+NPC150-1 = "Dickens"
+NPC151Name = "Calypso"
+NPC151Pages = "1"
+NPC151-1 = "Oh dear, I've been defeated."
