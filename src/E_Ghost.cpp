@@ -24,13 +24,11 @@ E_Ghost::E_Ghost(int id, int gridX, int gridY, int groupID) {
 	initEnemy(id, gridX, gridY, groupID);
 
 	//Doesn't use states
-	currentState = NULL;
+	setState(new ES_Wander(this));
 
 	dealsCollisionDamage = false;
 	facing = LEFT;
 	shadowOffset = 25.0;
-	lastDirChange = 0.0;
-	dirChangeDelay = 0.0;
 
 }
 
@@ -46,40 +44,11 @@ E_Ghost::~E_Ghost() {
  */
 void E_Ghost::update(float dt) {
 
-	//Update angle
-	angleVel = angleCoefficient * cos(gameTime) * dt;
-	angle += angleVel * dt;
-
 	//Update floating shit
-	shadowOffset = 28.0 + 12.0 * cos(gameTime * 2.0);
+	shadowOffset = 32.0 + 10.0 * cos(gameTime * 2.0);
 	collisionBox->SetRadius(x,y-shadowOffset,radius);
-	
-	//Update position
-	if (!stunned) {
-		dx = speed * cos(angle);
-		dy = speed * sin(angle);
-	}
-
-	boolean changeDir = false;
-
-	//Change angle coefficient periodically
-	if (timePassedSince(lastDirChange) > dirChangeDelay) {
-
-		angleCoefficient = hge->Random_Float(50.0, 100.0);
-		if (hge->Random_Int(0,1) == 1) angleCoefficient *= -1;
-
-		dirChangeDelay = hge->Random_Float(2.0,3.0);
-		lastDirChange = gameTime;
-	}
-
-	//Change direction if the enemy is going to hit a wall next frame
-	futureCollisionBox->SetRadius(max(4.0, x + dx*dt), max(4.0, y + dy*dt), 28.0f);
-	if (theEnvironment->enemyCollision(futureCollisionBox,this,dt)) {
-		//Bounce 180 degrees off the wall
-		angle += PI;
-	}
 		
-	//Collision with player
+	//Collision with player - this is implemented
 	if (thePlayer->collisionCircle->testBox(collisionBox)) {
 		thePlayer->dealDamageAndKnockback(damage, true, 115, x, y);
 	}

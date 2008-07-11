@@ -262,7 +262,6 @@ private:
 	float angle, angleVel;
 	float lastDirChange;
 	float dirChangeDelay;
-	hgeRect *floaterCollisionBox;
 	float shadowOffset;
 
 };
@@ -359,11 +358,8 @@ public:
 	
 private:
 
-	float angleCoefficient;
-	float angle, angleVel;
-	float lastDirChange;
-	float dirChangeDelay;
-	hgeRect *floaterCollisionBox;
+	float alpha;
+	float lastFadeTime;
 	float shadowOffset;
 
 };
