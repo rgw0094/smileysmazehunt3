@@ -87,6 +87,7 @@ void Enemies::addEnemy(int id, int x, int y, float spawnHealthChance, float spaw
 			newEnemy.enemy = new E_Turret(id, x, y, groupID);
 			break;
 		case ENEMY_GHOST:
+			hge->System_Log("DICKENS");
 			newEnemy.enemy = new E_Ghost(id, x, y, groupID);
 			break;
 		default:
