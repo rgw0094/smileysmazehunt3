@@ -347,4 +347,25 @@ private:
 	hgeRect *collisionBox;	
 };
 
+class E_Ghost : public BaseEnemy {
+public:
+	E_Ghost(int id, int x, int y, int groupID);
+	~E_Ghost();
+
+	void update(float dt);
+	void draw(float dt);
+	void drawFrozen(float dt);
+	void drawStunned(float dt);
+	
+private:
+
+	float angleCoefficient;
+	float angle, angleVel;
+	float lastDirChange;
+	float dirChangeDelay;
+	hgeRect *floaterCollisionBox;
+	float shadowOffset;
+
+};
+
 #endif

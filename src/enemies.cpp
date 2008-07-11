@@ -86,6 +86,9 @@ void Enemies::addEnemy(int id, int x, int y, float spawnHealthChance, float spaw
 		case ENEMY_TURRET:
 			newEnemy.enemy = new E_Turret(id, x, y, groupID);
 			break;
+		case ENEMY_GHOST:
+			newEnemy.enemy = new E_Ghost(id, x, y, groupID);
+			break;
 		default:
 			newEnemy.enemy = new MeleeEnemy(id, x, y, groupID);
 			break;

@@ -1,6 +1,6 @@
 [HGESTRINGTABLE]
 
-numEnemies="44"
+numEnemies="45"
 
 ;Croc
 0GCol=      "0"
@@ -740,3 +740,16 @@ numEnemies="44"
 43PDamage=   "50"
 43PSpeed=    "50"
 43PType=     "7"
+
+;Ghost
+44GCol=      "0"
+44GRow=      "12"
+44EnemyType= "13"
+44WanderType="2"
+44HP=        "100"
+44Damage=    "50"
+44Speed=     "125"
+44Radius=    "28"
+44Land=      "T"
+44SWater=    "T"
+44Slime=     "T"

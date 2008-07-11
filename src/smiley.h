@@ -71,6 +71,7 @@
 #define ENEMY_FLAILER 10
 #define ENEMY_TENTACLE 11
 #define ENEMY_TURRET 12
+#define ENEMY_GHOST 13
 
 //Level ids
 #define NUM_AREAS 9
