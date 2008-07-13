@@ -15,9 +15,6 @@ extern Environment *theEnvironment;
 extern bool debugMode;
 extern float gameTime;
 
-#define MAX_ALPHA 155.0
-#define MIN_ALPHA 20.0
-
 /** 
  * Constructor
  */
@@ -48,7 +45,7 @@ E_Ghost::~E_Ghost() {
 void E_Ghost::update(float dt) {
 
 	//Update floating shit
-	shadowOffset = 32.0 + 10.0 * cos(gameTime * 2.0);
+	shadowOffset = 35.0 + 8.0 * cos(gameTime * 2.0);
 	collisionBox->SetRadius(x,y-shadowOffset,radius);
 		
 	//Collision with player - this is implemented
@@ -65,10 +62,17 @@ void E_Ghost::update(float dt) {
  */
 void E_Ghost::draw(float dt) {
 	
+	alpha = 150.0 + 150.0 * cos(gameTime * 2.0);
+	if (alpha < 15.0) alpha = 15.0;
+	if (alpha > 150.0) alpha = 150.0;
+
 	graphic[facing]->Update(dt);
 	graphic[facing]->SetColor(ARGB(alpha,255,255,255));
 	graphic[facing]->Render(screenX, screenY - shadowOffset);
+
+	resources->GetSprite("playerShadow")->SetColor(ARGB((alpha/255.0) * 75.0, 255,255,255));
 	resources->GetSprite("playerShadow")->Render(screenX, screenY);
+	resources->GetSprite("playerShadow")->SetColor(ARGB(75.0, 255, 255, 255));
 
 	if (debugMode) {
 		drawCollisionBox(collisionBox, RED);

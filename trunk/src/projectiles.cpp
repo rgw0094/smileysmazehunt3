@@ -2,7 +2,7 @@
 #include "projectiles.h"
 #include "player.h"
 #include "hge include/hgeresource.h"
-#include "enemies.h"
+#include "EnemyManager.h"
 
 extern HGE *hge;
 extern Environment *theEnvironment;

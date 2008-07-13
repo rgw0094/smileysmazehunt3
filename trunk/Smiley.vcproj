@@ -157,10 +157,10 @@
 					RelativePath=".\src\E_Turret.cpp">
 				</File>
 				<File
-					RelativePath=".\src\enemies.cpp">
+					RelativePath=".\src\EnemyGroupManager.cpp">
 				</File>
 				<File
-					RelativePath=".\src\EnemyGroupManager.cpp">
+					RelativePath=".\src\EnemyManager.cpp">
 				</File>
 				<File
 					RelativePath=".\src\ES_Chase.cpp">
@@ -365,10 +365,10 @@
 					RelativePath=".\src\enemies.h">
 				</File>
 				<File
-					RelativePath=".\src\enemy.h">
+					RelativePath=".\src\EnemyGroupManager.h">
 				</File>
 				<File
-					RelativePath=".\src\EnemyGroupManager.h">
+					RelativePath=".\src\EnemyManager.h">
 				</File>
 				<File
 					RelativePath=".\src\EnemyState.h">

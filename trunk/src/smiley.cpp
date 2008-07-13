@@ -7,7 +7,7 @@
 #include "inventory.h"
 #include "player.h"
 #include "SaveManager.h"
-#include "enemies.h"
+#include "EnemyManager.h"
 #include "EnemyGroupManager.h"
 #include "LootManager.h"
 #include "Projectiles.h"

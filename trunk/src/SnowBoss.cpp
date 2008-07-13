@@ -6,7 +6,7 @@
 #include "Projectiles.h"
 #include "hge include/hge.h"
 #include "environment.h"
-#include "enemies.h"
+#include "EnemyManager.h"
 #include "lootmanager.h"
 #include "SaveManager.h"
 #include "SoundManager.h"

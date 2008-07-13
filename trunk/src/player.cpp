@@ -1,5 +1,5 @@
 #include "smiley.h"
-#include "enemies.h"
+#include "EnemyManager.h"
 #include "projectiles.h"
 #include "inventory.h"
 #include "player.h"
