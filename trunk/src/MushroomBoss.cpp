@@ -21,7 +21,7 @@ extern ProjectileManager *projectileManager;
 extern Environment *theEnvironment;
 extern TextBox *theTextBox;
 extern bool debugMode;
-extern Enemies *theEnemies;
+extern EnemyManager *enemyManager;
 extern LootManager *lootManager;
 extern SaveManager *saveManager;
 extern SoundManager *soundManager;
@@ -173,7 +173,7 @@ void MushroomBoss::doMiniMushrooms(float dt) {
 }
 
 void MushroomBoss::spawnMiniMushroom() {
-	theEnemies->addEnemy(MINI_MUSHROOM_ENEMYID, x,y,0.1,0.6, -1);
+	enemyManager->addEnemy(MINI_MUSHROOM_ENEMYID, x,y,0.1,0.6, -1);
 
 }
 

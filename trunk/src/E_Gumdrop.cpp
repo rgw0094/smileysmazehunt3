@@ -65,7 +65,7 @@ void E_Gumdrop::update(float dt) {
 		if (distanceFromPlayer() < ATTACK_RANGE) {
 
 			//Turn to face smiley
-			setFacingEnemy(1000, DOWN);
+			setFacingPlayer(1000, DOWN);
 
 			//Shoot at smiley
 			if (!thePlayer->cloaked && timePassedSince(lastAttackTime) > ATTACK_DELAY) {

@@ -20,7 +20,7 @@ extern HGE *hge;
 
 //Objects
 extern Environment *theEnvironment;
-extern Enemies *theEnemies;
+extern EnemyManager *enemyManager;
 extern hgeParticleSystem *iceBreathParticle;
 extern ProjectileManager *projectileManager;
 extern TextBox *theTextBox;
@@ -213,7 +213,7 @@ void Player::update(float dt) {
 	//Hit stuff with Smiley's tongue.
 	if (tongue->isAttacking()) {
 		tongue->update(dt);
-		theEnemies->tongueCollision(tongue, getDamage());
+		enemyManager->tongueCollision(tongue, getDamage());
 		theEnvironment->hitSillyPads(tongue);
 		theEnvironment->toggleSwitches(tongue);
 		npcManager->talkToNPCs(tongue);
@@ -287,7 +287,7 @@ void Player::move(float xDist, float yDist, float dt) {
 
 	//Check for collision with frozen enemies
 	collisionCircle->set(x + checkXDist, y + checkYDist, (PLAYER_WIDTH/2-3)*shrinkScale);
-	bool dickens = theEnemies->collidesWithFrozenEnemy(collisionCircle);
+	bool dickens = enemyManager->collidesWithFrozenEnemy(collisionCircle);
 	collisionCircle->set(x,y,(PLAYER_WIDTH/2-3)*shrinkScale);
 	if (dickens) return;
 

@@ -1,5 +1,5 @@
-#ifndef _ENEMIES_H_
-#define _ENEMIES_H_
+#ifndef _ENEMYMANAGER_H_
+#define _ENEMYMANAGER_H_
 
 #include "smiley.h"
 #include "enemy.h"
@@ -12,11 +12,11 @@ struct EnemyStruct {
 	float spawnManaChance;
 };
 
-class Enemies {
+class EnemyManager {
 
 public: 
-	Enemies();
-	~Enemies();
+	EnemyManager();
+	~EnemyManager();
 
 	//methods
 	void draw(float dt);
@@ -32,7 +32,7 @@ public:
 	bool hitEnemiesWithProjectile(hgeRect *collisionBox, float damage, int type);
 
 	//Variables
-	std::list<EnemyStruct> theEnemies;
+	std::list<EnemyStruct> enemyList;
 	hgeParticleManager *deathParticles;
 	int randomLoot;
 

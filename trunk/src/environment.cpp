@@ -32,7 +32,7 @@ extern float gameTime;
 extern HGE *hge;
 extern Player *thePlayer;
 extern SaveManager *saveManager;
-extern Enemies *theEnemies;
+extern EnemyManager *enemyManager;
 extern LootManager *lootManager;
 extern ProjectileManager *projectileManager;
 extern TextBox *theTextBox;
@@ -142,7 +142,7 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 	fountainOnScreen = false;
 
 	//Reset objects
-	theEnemies->reset();
+	enemyManager->reset();
 	projectileManager->reset();
 	lootManager->reset();
 	npcManager->reset();
@@ -353,7 +353,7 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 					}
 					if (ids[col][row] != ENEMYGROUP_ENEMY_POPUP) {
 						//Don't spawn popup enemies yet
-						theEnemies->addEnemy(enemy-1,col,row, .2, .2, variable[col][row]);
+						enemyManager->addEnemy(enemy-1,col,row, .2, .2, variable[col][row]);
 					}
 
 				} else if (enemy >= 128 && enemy < 240) {
@@ -421,7 +421,7 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 	
 	//Update this and the enemies once to get shit set up
 	update(0.0);
-	theEnemies->update(0.0);
+	enemyManager->update(0.0);
 	thePlayer->update(0.0);
 
 	timeLevelLoaded = hge->Timer_GetTime();

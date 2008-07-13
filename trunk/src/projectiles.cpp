@@ -9,7 +9,7 @@ extern Environment *theEnvironment;
 extern Player *thePlayer;
 extern bool debugMode;
 extern hgeResourceManager *resources;
-extern Enemies *theEnemies;
+extern EnemyManager *enemyManager;
 extern float gameTime;
 
 ProjectileManager::ProjectileManager() {
@@ -109,7 +109,7 @@ void ProjectileManager::update(float dt) {
 
 		//Do collision with enemies
 		if (!i->hostile || i->id==PROJECTILE_TURRET_CANNONBALL) {
-			if (theEnemies->hitEnemiesWithProjectile(i->collisionBox, i->damage, i->id)) {
+			if (enemyManager->hitEnemiesWithProjectile(i->collisionBox, i->damage, i->id)) {
 				deleteProjectile = true;
 			}
 		}

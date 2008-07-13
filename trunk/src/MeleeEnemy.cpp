@@ -1,7 +1,3 @@
-/**
- * This is the basic enemy but its called MeleeEnemy because Visual 
- * Studio sucks ass
- */
 #include "environment.h"
 #include "EnemyState.h"
 #include "hge include/hge.h"
