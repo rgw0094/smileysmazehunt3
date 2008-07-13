@@ -15,6 +15,9 @@ extern Environment *theEnvironment;
 extern bool debugMode;
 extern float gameTime;
 
+#define MAX_ALPHA 155.0
+#define MIN_ALPHA 20.0
+
 /** 
  * Constructor
  */
@@ -63,6 +66,7 @@ void E_Ghost::update(float dt) {
 void E_Ghost::draw(float dt) {
 	
 	graphic[facing]->Update(dt);
+	graphic[facing]->SetColor(ARGB(alpha,255,255,255));
 	graphic[facing]->Render(screenX, screenY - shadowOffset);
 	resources->GetSprite("playerShadow")->Render(screenX, screenY);
 
