@@ -1,8 +1,4 @@
-/**
- * Enemy manager class. This should really be called EnemyManager.
- */
-#include "smiley.h"
-#include "enemies.h"
+#include "EnemyManager.h"
 #include "enemy.h"
 #include "lootmanager.h"
 #include "projectiles.h"
@@ -20,20 +16,17 @@ extern EnemyGroupManager *enemyGroupManager;
 extern EnemyInfo enemyInfo[99];
 extern float gameTime;
 
-#define ENEMY_FLASH_DURATION 0.5
-#define ENEMY_FROZEN_DURATION 3.0
-
 /**
  * Constructor
  */
-Enemies::Enemies() { 
+EnemyManager::EnemyManager() { 
 	deathParticles = new hgeParticleManager();
 }
 
 /**
  * Destructor
  */
-Enemies::~Enemies() {
+EnemyManager::~EnemyManager() {
 	reset();
 	if (deathParticles) delete deathParticles;
 }
@@ -41,7 +34,7 @@ Enemies::~Enemies() {
 /**
  * Add an enemy to the list
  */
-void Enemies::addEnemy(int id, int x, int y, float spawnHealthChance, float spawnManaChance, int groupID) {
+void EnemyManager::addEnemy(int id, int x, int y, float spawnHealthChance, float spawnManaChance, int groupID) {
 
 	EnemyStruct newEnemy;
 	newEnemy.spawnHealthChance = spawnHealthChance;
@@ -87,45 +80,25 @@ void Enemies::addEnemy(int id, int x, int y, float spawnHealthChance, float spaw
 			newEnemy.enemy = new E_Turret(id, x, y, groupID);
 			break;
 		case ENEMY_GHOST:
-			hge->System_Log("DICKENS");
 			newEnemy.enemy = new E_Ghost(id, x, y, groupID);
 			break;
 		default:
-			newEnemy.enemy = new MeleeEnemy(id, x, y, groupID);
+			newEnemy.enemy = new DefaultEnemy(id, x, y, groupID);
 			break;
 	}
 	
-	theEnemies.push_back(newEnemy);
+	enemyList.push_back(newEnemy);
 
 }
 
 /**
  * Draw all the enemies in the list
  */
-void Enemies::draw(float dt) {
+void EnemyManager::draw(float dt) {
+
 	std::list<EnemyStruct>::iterator i;
-	for (i = theEnemies.begin(); i != theEnemies.end(); i++) {
-
-		//Call the enemy's draw function. If the enemy is currently flashing,
-		//skip calling it some frames to create the flashing effect.
-		if (!i->enemy->flashing || int(gameTime * 100) % 10 > 5) {
-			i->enemy->draw(dt);
-		}
-
-		//Draw the ice block over the enemy if its frozen
-		if (i->enemy->frozen) {
-			i->enemy->drawFrozen(dt);
-		}
-
-		//Stunned enemy
-		if (i->enemy->stunned) {
-			i->enemy->drawStunned(dt);
-		}
-
-		//Debug mode stuff
-		if (debugMode && i->enemy->dealsCollisionDamage) {
-			drawCollisionBox(i->enemy->collisionBox, RED);
-		}
+	for (i = enemyList.begin(); i != enemyList.end(); i++) {
+		i->enemy->baseDraw(dt);
 	}
 
 	//Draw death effect
@@ -138,60 +111,13 @@ void Enemies::draw(float dt) {
 /**
  * Update all the enemies in the list
  */
-void Enemies::update(float dt) {
+void EnemyManager::update(float dt) {
 
 	std::list<EnemyStruct>::iterator i;
-	for (i = theEnemies.begin(); i != theEnemies.end(); i++) {
+	for (i = enemyList.begin(); i != enemyList.end(); i++) {
 
-		//Update basic shit that every enemy needs
-		i->enemy->collisionBox->SetRadius(i->enemy->x, i->enemy->y, i->enemy->radius);
-		i->enemy->gridX = i->enemy->x / 64;
-		i->enemy->gridY = i->enemy->y / 64;
-		i->enemy->screenX = i->enemy->x - theEnvironment->xGridOffset*64 - theEnvironment->xOffset; 
-		i->enemy->screenY = i->enemy->y - theEnvironment->yGridOffset*64 - theEnvironment->yOffset;
-
-		//Update statuses
-		if (i->enemy->stunned && timePassedSince(i->enemy->startedStun) > i->enemy->stunLength) {
-			i->enemy->stunned = false;
-		}
-		if (i->enemy->flashing && timePassedSince(i->enemy->timeStartedFlashing) > ENEMY_FLASH_DURATION) {
-			i->enemy->flashing = false;
-		}
-		if (i->enemy->knockback && timePassedSince(i->enemy->startedKnockback) > i->enemy->knockbackTime) {
-			i->enemy->knockback = false;
-		}
-		if (i->enemy->frozen && timePassedSince(i->enemy->timeFrozen) > ENEMY_FROZEN_DURATION) {
-			i->enemy->frozen = false;
-		}
-
-		//Update default animations
-		if (!i->enemy->frozen && !i->enemy->stunned) {
-			for (int n = 0; n < 4; n++) {
-				i->enemy->graphic[n]->Update(dt);
-			}
-		}
-
-		//Update the enemy's current state
-		if (i->enemy->currentState) {
-			i->enemy->currentState->update(dt);
-		}
-
-		//Call the enemy's update method
-		i->enemy->update(dt);
-		
-		//Do player collision
-		if (i->enemy->dealsCollisionDamage && thePlayer->collisionCircle->testBox(i->enemy->collisionBox)) {
-			thePlayer->dealDamageAndKnockback(i->enemy->damage, true, 115, i->enemy->x, i->enemy->y);
-		}
-
-		//Fire breath collision
-		if (!i->enemy->immuneToFire) {
-			if (thePlayer->fireBreathParticle->testCollision(i->enemy->collisionBox)) {
-				i->enemy->frozen = false;
-				i->enemy->dealDamageAndKnockback(thePlayer->getFireBreathDamage()*dt, 
-					500.0*dt,thePlayer->x, thePlayer->y);
-			}
-		}
+		//Call the base update method for the enemy.
+		i->enemy->baseUpdate(dt);
 
 		//If the enemy is dead
 		if (i->enemy->health <= 0.0f) {
@@ -217,7 +143,7 @@ void Enemies::update(float dt) {
 			}
 
 			delete i->enemy;
-			i = theEnemies.erase(i);
+			i = enemyList.erase(i);
 
 		}
 	}
@@ -228,9 +154,9 @@ void Enemies::update(float dt) {
  * Returns whether or not the provided collision box collides with
  * any enemies
  */
-bool Enemies::collidesWithEnemy(hgeRect *collisionBox) {
+bool EnemyManager::collidesWithEnemy(hgeRect *collisionBox) {
 	std::list<EnemyStruct>::iterator i;
-	for (i = theEnemies.begin(); i != theEnemies.end(); i++) {
+	for (i = enemyList.begin(); i != enemyList.end(); i++) {
 		if (collisionBox->Intersect(i->enemy->collisionBox)) {
 			return true;
 		}
@@ -240,10 +166,10 @@ bool Enemies::collidesWithEnemy(hgeRect *collisionBox) {
 /**
  * Returns true if the collision circle collides with a frozen enemy
  */
-bool Enemies::collidesWithFrozenEnemy(CollisionCircle *circle) {
+bool EnemyManager::collidesWithFrozenEnemy(CollisionCircle *circle) {
 	//Loop through the enemies
 	std::list<EnemyStruct>::iterator i;
-	for (i = theEnemies.begin(); i != theEnemies.end(); i++) {
+	for (i = enemyList.begin(); i != enemyList.end(); i++) {
 		//Check collision
 		if (i->enemy->frozen && circle->testBox(i->enemy->collisionBox)) {
 			return true;
@@ -251,19 +177,17 @@ bool Enemies::collidesWithFrozenEnemy(CollisionCircle *circle) {
 	}
 }
 
-
-
 /**
  * Damages and knocks back any enemy hit by Smiley's tongue.
  *
  *	weaponBox			the collision box of the weapon
  *	damage				how much damage the weapon does if it hits
  */
-void Enemies::tongueCollision(Tongue *tongue, float damage) {
+void EnemyManager::tongueCollision(Tongue *tongue, float damage) {
 	
 	//Loop through the enemies
 	std::list<EnemyStruct>::iterator i;
-	for (i = theEnemies.begin(); i != theEnemies.end(); i++) {
+	for (i = enemyList.begin(); i != enemyList.end(); i++) {
 		if (!i->enemy->immuneToTongue) {
 			i->enemy->doTongueCollision(tongue, damage);
 		}
@@ -275,11 +199,11 @@ void Enemies::tongueCollision(Tongue *tongue, float damage) {
 /**
  * Freezes any enemies within the box argument
  */
-void Enemies::freezeEnemies(int x, int y) {
+void EnemyManager::freezeEnemies(int x, int y) {
 	bool dickens = false;
 	//Loop through the enemies
 	std::list<EnemyStruct>::iterator i;
-	for (i = theEnemies.begin(); i != theEnemies.end(); i++) {
+	for (i = enemyList.begin(); i != enemyList.end(); i++) {
 		//Check collision
 		if (!enemyInfo[i->enemy->id].immuneToFreeze && i->enemy->collisionBox->TestPoint(x,y)) {
 			//Freeze sound effect is fucked up
@@ -295,10 +219,10 @@ void Enemies::freezeEnemies(int x, int y) {
 /**
  * Unfreezes any frozen enemies within the box argument
  */
-void Enemies::unFreezeEnemies(int x, int y) {
+void EnemyManager::unFreezeEnemies(int x, int y) {
 	//Loop through the enemies
 	std::list<EnemyStruct>::iterator i;
-	for (i = theEnemies.begin(); i != theEnemies.end(); i++) {
+	for (i = enemyList.begin(); i != enemyList.end(); i++) {
 		//Check collision
 		if (i->enemy->collisionBox->TestPoint(x,y)) i->enemy->frozen = false;
 	}
@@ -310,32 +234,31 @@ void Enemies::unFreezeEnemies(int x, int y) {
  *
  * Returns whether or not any enemies were hit
  */
-bool Enemies::hitEnemiesWithProjectile(hgeRect *collisionBox, float damage, int type) {
+bool EnemyManager::hitEnemiesWithProjectile(hgeRect *collisionBox, float damage, int type) {
+		
 	//Loop through the enemies
 	std::list<EnemyStruct>::iterator i;
-	for (i = theEnemies.begin(); i != theEnemies.end(); i++) {
+	for (i = enemyList.begin(); i != enemyList.end(); i++) {
 		//Check collision
 		if (i->enemy->collisionBox->Intersect(collisionBox)) {
 
+			//Notify the enemy of what type of projectile it was hit with
 			i->enemy->hitWithProjectile(type);
 
 			if (enemyInfo[i->enemy->id].invincible) return true;
 
-			if (type == PROJECTILE_LIGHTNING_ORB) {
-				if (!i->enemy->immuneToLightning) {
-					i->enemy->dealDamageAndKnockback(damage, 0.0, 0.0, 0.0);
-					i->enemy->startFlashing();
-				}
-			} else if (type == PROJECTILE_FRISBEE) {
+			if (type == PROJECTILE_FRISBEE) {
 				if (!i->enemy->immuneToStun) {
 					i->enemy->stunned = true;
 					i->enemy->stunLength = 2.0f;
 					i->enemy->startedStun = hge->Timer_GetTime();
 				}			
-			} else {
+			} 
+
+			if (!(type == PROJECTILE_LIGHTNING_ORB && i->enemy->immuneToLightning)) {
 				i->enemy->dealDamageAndKnockback(damage, 0.0, 0.0, 0.0);
 				i->enemy->startFlashing();
-			}			
+			}
 
 			return true;
 		}
@@ -347,11 +270,11 @@ bool Enemies::hitEnemiesWithProjectile(hgeRect *collisionBox, float damage, int 
 /**
  * Deletes all the managed enemies
  */
-void Enemies::reset() {
+void EnemyManager::reset() {
 	std::list<EnemyStruct>::iterator i;
-	for (i = theEnemies.begin(); i != theEnemies.end(); i++) {
+	for (i = enemyList.begin(); i != enemyList.end(); i++) {
 		delete i->enemy;
-		i = theEnemies.erase(i);
+		i = enemyList.erase(i);
 	}
 }
 

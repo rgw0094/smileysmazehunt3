@@ -8,7 +8,7 @@
 extern Player *thePlayer;
 extern Environment *theEnvironment;
 extern hgeResourceManager *resources;
-extern Enemies *theEnemies;
+extern EnemyManager *enemyManager;
 extern HGE *hge;
 
 EnemyGroupManager::EnemyGroupManager() {
@@ -123,7 +123,7 @@ void EnemyGroupManager::triggerGroup(int whichGroup) {
 				if (theEnvironment->enemyLayer[i][j] != -1 &&
 					theEnvironment->ids[i][j] == ENEMYGROUP_ENEMY_POPUP &&
 					theEnvironment->variable[i][j] == whichGroup) {
-						theEnemies->addEnemy(theEnvironment->enemyLayer[i][j], i, j, 0.25, 0.25, whichGroup);
+						enemyManager->addEnemy(theEnvironment->enemyLayer[i][j], i, j, 0.25, 0.25, whichGroup);
 						addEnemy(theEnvironment->variable[i][j]);
 						theEnvironment->environmentParticles->SpawnPS(&resources->GetParticleSystem("treeletSpawn")->info, i*64+32, j*64+32);
 					}

@@ -37,7 +37,7 @@ extern EnemyGroupManager *enemyGroupManager;
 extern ProjectileManager *projectileManager;
 extern LootManager *lootManager;
 extern NPCManager *npcManager;
-extern Enemies *theEnemies;
+extern EnemyManager *enemyManager;
 
 /**
  * Switches the game state
@@ -215,8 +215,8 @@ void loadGameObjects() {
 	thePlayer = new Player(saveManager->playerGridX, saveManager->playerGridY);
 
 	hge->System_Log("Creating Enemy Manager");
-	if (theEnemies) delete theEnemies;
-	theEnemies = new Enemies();
+	if (enemyManager) delete enemyManager;
+	enemyManager = new EnemyManager();
 	
 	hge->System_Log("Creating Loot Manager");
 	if (lootManager) delete lootManager;

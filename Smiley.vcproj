@@ -118,6 +118,9 @@
 					RelativePath=".\src\BaseEnemy.cpp">
 				</File>
 				<File
+					RelativePath=".\src\DefaultEnemy.cpp">
+				</File>
+				<File
 					RelativePath=".\src\E_BatletDist.cpp">
 				</File>
 				<File
@@ -170,9 +173,6 @@
 				</File>
 				<File
 					RelativePath=".\src\ES_Wander.cpp">
-				</File>
-				<File
-					RelativePath=".\src\MeleeEnemy.cpp">
 				</File>
 			</Filter>
 			<Filter
@@ -362,7 +362,7 @@
 					RelativePath=".\src\BaseEnemyState.h">
 				</File>
 				<File
-					RelativePath=".\src\enemies.h">
+					RelativePath=".\src\enemy.h">
 				</File>
 				<File
 					RelativePath=".\src\EnemyGroupManager.h">

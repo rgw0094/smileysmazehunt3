@@ -13,8 +13,11 @@ extern EnemyInfo enemyInfo[99];
 extern hgeResourceManager *resources;
 extern HGE *hge;
 extern float gameTime;
+extern bool debugMode;
 
-extern HTEXTURE enemyTexture;
+
+#define ENEMY_FLASH_DURATION 0.5
+#define ENEMY_FROZEN_DURATION 3.0
 
 /**
  * Load enemy info from the enemy.dat file
@@ -287,12 +290,16 @@ void BaseEnemy::doAStar() {
 	} while (found);
 }
 
+/**
+ * Sets the enemy to face the player no matter how far away he is.
+ */
 void BaseEnemy::setFacingPlayer() {
-	setFacingEnemy(999999.0, DOWN);
+	setFacingPlayer(999999.0, DOWN);
 }
 
 /**
- * Sets the enemy to face the player.
+ * Sets the enemy to face the player if the player is within a certain 
+ * distance.
  *
  * @param maximumDistance	If the player is more than this distance away
  *							from the enemy then it will not change direction
@@ -300,7 +307,7 @@ void BaseEnemy::setFacingPlayer() {
  *							maximumDistance away, or -1 to stay the current
  *							direction.
  */
-void BaseEnemy::setFacingEnemy(int maximumDistance, int defaultDirection) {
+void BaseEnemy::setFacingPlayer(int maximumDistance, int defaultDirection) {
 
 	if (distanceFromPlayer() < maximumDistance) {
 		int xDist = thePlayer->x - x;
@@ -363,6 +370,97 @@ void BaseEnemy::setFacing() {
 }
 
 /**
+ * Update method called by the EnemyManager every frame. This method contains
+ * things that need to be done by every enemy in the framework and should never
+ * need to be overrode!!!!
+ */
+void BaseEnemy::baseUpdate(float dt) {
+
+	//Update basic shit that every enemy needs
+	collisionBox->SetRadius(x, y, radius);
+	gridX = x / 64;
+	gridY = y / 64;
+	screenX = x - theEnvironment->xGridOffset*64 - theEnvironment->xOffset; 
+	screenY = y - theEnvironment->yGridOffset*64 - theEnvironment->yOffset;
+
+	//Update statuses
+	if (stunned && timePassedSince(startedStun) > stunLength) {
+		stunned = false;
+	}
+	if (flashing && timePassedSince(timeStartedFlashing) > ENEMY_FLASH_DURATION) {
+		flashing = false;
+	}
+	if (knockback && timePassedSince(startedKnockback) > knockbackTime) {
+		knockback = false;
+	}
+	if (frozen && timePassedSince(timeFrozen) > ENEMY_FROZEN_DURATION) {
+		frozen = false;
+	}
+
+	//Update default animations
+	if (!frozen && !stunned) {
+		for (int n = 0; n < 4; n++) {
+			graphic[n]->Update(dt);
+		}
+	}
+
+	//Update the enemy's current state
+	if (currentState) {
+		currentState->update(dt);
+	}
+
+	//Call the enemy's update method
+	update(dt);
+		
+	//Do player collision
+	doPlayerCollision();
+
+	//Fire breath collision
+	if (!immuneToFire) {
+		if (thePlayer->fireBreathParticle->testCollision(collisionBox)) {
+			frozen = false;
+			dealDamageAndKnockback(thePlayer->getFireBreathDamage()*dt, 
+				500.0*dt,thePlayer->x, thePlayer->y);
+		}
+	}
+
+}
+
+/**
+ * Draw method called by the EnemyManager every frame. This method contains
+ * draw logic that must be done by every enemy in the framework and should never
+ * need to be overrode!!!!
+ */
+void BaseEnemy::baseDraw(float dt) {
+
+	//Call the enemy's draw function. If the enemy is currently flashing,
+	//skip calling it some frames to create the flashing effect.
+	if (!flashing || int(gameTime * 100) % 10 > 5) {
+		draw(dt);
+	}
+
+	//Draw the ice block over the enemy if its frozen
+	if (frozen) {
+		drawFrozen(dt);
+	}
+
+	//Stunned enemy
+	if (stunned) {
+		drawStunned(dt);
+	}
+
+	//Debug mode stuff
+	drawDebug();
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+////////////////////////////// Virtual Methods ///////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+
+
+/**
  * Draws the frozen graphic effect for the enemy. This is called automatically every
  * frame by the framework. If an enemy needs something more specific than the default
  * functionality then it should overwrite this method.
@@ -410,5 +508,25 @@ void BaseEnemy::doTongueCollision(Tongue *tongue, float damage) {
 			startFlashing();
 		}
 
+	}
+}
+
+/**
+ * Does default player collision using the collisionBox object. Enemies can
+ * override this for something more specific.
+ */ 
+void BaseEnemy::doPlayerCollision() {
+	if (dealsCollisionDamage && thePlayer->collisionCircle->testBox(collisionBox)) {
+		thePlayer->dealDamageAndKnockback(damage, true, 115, x, y);
+	}
+}
+
+/**
+ * Default debug draw. Draws the collisionBox object in red. Enemies can
+ * override this for something more specific.
+ */
+void BaseEnemy::drawDebug() {
+	if (debugMode && dealsCollisionDamage) {
+		drawCollisionBox(collisionBox, RED);
 	}
 }

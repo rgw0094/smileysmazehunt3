@@ -13,13 +13,21 @@ class BaseEnemy {
 
 public:
 
-	//methods
+	//Methods that need to be overrode
 	virtual void draw(float dt) = 0;
 	virtual void update(float dt) = 0;
+
+	//Methods that can be overrode
 	virtual void drawFrozen(float dt);
 	virtual void drawStunned(float dt);
+	virtual void drawDebug();
 	virtual void hitWithProjectile(int projectileType);
 	virtual void doTongueCollision(Tongue* tongue, float damage);
+	virtual void doPlayerCollision();
+
+	//Methods that can't be overrode
+	void baseUpdate(float dt);
+	void baseDraw(float dt);
 	void move(float dt);
 	bool inChaseRange(int range);
 	void doAStar();
@@ -27,11 +35,10 @@ public:
 	int distanceFromPlayer();
 	void initEnemy(int _id, int _gridX, int _gridY, int _groupID);
 	void dealDamageAndKnockback(float damage, float knockbackDist, float knockbackerX, float knockbackerY);
-	void setFacingEnemy(int maximumDistance, int defaultDirection);
+	void setFacingPlayer(int maximumDistance, int defaultDirection);
 	void setFacingPlayer();
 	void setFacing();
 	void startFlashing();
-	
 
 	/**
 	 * Switches states and calls exitState() on the old state and enterState() 

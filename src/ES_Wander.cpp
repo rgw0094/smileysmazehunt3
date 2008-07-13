@@ -5,7 +5,7 @@
 
 extern HGE *hge;
 extern Environment *theEnvironment;
-extern Enemies *theEnemies;
+extern EnemyManager *enemyManager;
 extern float gameTime;
 
 /**
@@ -54,7 +54,7 @@ void ES_Wander::update(float dt) {
 	//This is fucked
 	//Enemies that go back and forth should bounce off each other
 	//if (owner->wanderType == WANDER_LEFT_RIGHT || owner->wanderType == WANDER_UP_DOWN) {
-	//	if (theEnemies->collidesWithEnemy(owner->futureCollisionBox)) {
+	//	if (enemyManager->collidesWithEnemy(owner->futureCollisionBox)) {
 	//		changeDir = true;
 	//	}
 	//}

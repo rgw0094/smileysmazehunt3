@@ -17,14 +17,14 @@
 
 
 /**
- * Melee enemy
+ * Default Enemy
  */
-class MeleeEnemy : public BaseEnemy {
+class DefaultEnemy : public BaseEnemy {
 
 public:
 
-	MeleeEnemy(int id, int x, int y, int groupID);
-	~MeleeEnemy();
+	DefaultEnemy(int id, int x, int y, int groupID);
+	~DefaultEnemy();
 
 	//methods
 	void draw(float dt);

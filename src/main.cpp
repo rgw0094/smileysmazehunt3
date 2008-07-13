@@ -24,7 +24,7 @@ hgeStringTable *stringTable, *enemyTable;
 Ability abilities[16];
 Environment *theEnvironment;
 Player *thePlayer;
-Enemies *theEnemies;
+EnemyManager *enemyManager;
 Menu *theMenu = NULL;
 LootManager *lootManager;
 TextBox *theTextBox;
@@ -211,7 +211,7 @@ bool FrameFunc() {
 			}
 			if (thePlayer) thePlayer->update(dt);
 			theTextBox->update(dt);
-			theEnemies->update(dt);
+			enemyManager->update(dt);
 			lootManager->update(dt);
 			projectileManager->update(dt);
 			npcManager->update(dt);
@@ -259,7 +259,7 @@ bool RenderFunc() {
 		//Draw objects
 		theEnvironment->draw(dt);
 		lootManager->draw(dt);
-		theEnemies->draw(dt);
+		enemyManager->draw(dt);
 		npcManager->draw(dt);
 		if (theBoss) theBoss->draw(dt);
 		if (thePlayer) thePlayer->draw(dt);

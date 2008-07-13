@@ -21,7 +21,7 @@ extern ProjectileManager *projectileManager;
 extern Environment *theEnvironment;
 extern TextBox *theTextBox;
 extern bool debugMode;
-extern Enemies *theEnemies;
+extern EnemyManager *enemyManager;
 extern LootManager *lootManager;
 extern SaveManager *saveManager;
 extern SoundManager *soundManager;
@@ -466,7 +466,7 @@ void DesertBoss::spawnCactlet() {
 
 	} while (abs(distance(cactletGridX, cactletGridY, thePlayer->gridX, thePlayer->gridY)) < 3);
 
-	theEnemies->addEnemy(CACTLET_ENEMYID, cactletGridX,cactletGridY,0.0,0.5, -1);
+	enemyManager->addEnemy(CACTLET_ENEMYID, cactletGridX,cactletGridY,0.0,0.5, -1);
 
 	//Spawn a sand cloud
 	sandClouds->SpawnPS(&resources->GetParticleSystem("sandCloud")->info,

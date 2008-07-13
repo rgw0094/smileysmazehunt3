@@ -9,7 +9,7 @@ HGE	*WeaponParticleSystem::hge=0;
 
 //Objects
 extern Environment *theEnvironment;
-extern Enemies *theEnemies;
+extern EnemyManager *enemyManager;
 extern Player *thePlayer;
 
 /**
@@ -88,7 +88,7 @@ void WeaponParticleSystem::Update(float fDeltaTime) {
 
 		//Do collision
 		if (type == PARTICLE_ICE_BREATH) {
-			theEnemies->freezeEnemies(par->vecLocation.x + theEnvironment->xGridOffset*theEnvironment->squareSize + theEnvironment->xOffset, par->vecLocation.y + theEnvironment->yGridOffset*theEnvironment->squareSize + theEnvironment->yOffset);
+			enemyManager->freezeEnemies(par->vecLocation.x + theEnvironment->xGridOffset*theEnvironment->squareSize + theEnvironment->xOffset, par->vecLocation.y + theEnvironment->yGridOffset*theEnvironment->squareSize + theEnvironment->yOffset);
 		} else if (type == PARTICLE_FIRE_NOVA) {
 			collisionBox->SetRadius(par->vecLocation.x + theEnvironment->xGridOffset*64 + theEnvironment->xOffset, par->vecLocation.y + theEnvironment->yGridOffset*64 + theEnvironment->yOffset, par->fSize);
 			if (thePlayer->collisionCircle->testBox(collisionBox)) {
