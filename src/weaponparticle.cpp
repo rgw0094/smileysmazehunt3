@@ -1,6 +1,6 @@
 #include "weaponparticle.h"
 #include "environment.h"
-#include "enemies.h"
+#include "EnemyManager.h"
 #include "player.h"
 #include "collisioncircle.h"
 #include "FireBoss.h"

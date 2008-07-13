@@ -1,7 +1,7 @@
 #include "EnemyState.h"
 #include "hge include/hge.h"
 #include "environment.h"
-#include "enemies.h"
+#include "EnemyManager.h"
 
 extern HGE *hge;
 extern Environment *theEnvironment;
