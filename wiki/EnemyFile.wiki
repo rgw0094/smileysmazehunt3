@@ -1,0 +1,77 @@
+= Enemy Variables =
+
+||Variable||Description||Possible Values||Mandatory||
+||GCol||Column the enemy graphics appear in enemies.png||int||Y||
+||GRow||Row the enemy graphics appear in enemies.png||int||Y||
+||EnemyType||See Enemy Type table below||any int||Y||
+||WanderType||See Wander Codes table||any int||Y||
+||HP||Health||any int||Y||
+||Damage||Damage the enemy deals. 100 = 1 smiley face||any int||Y||
+||Radius||Radius of collision box||any int||Y||
+||Speed||Movement speed||any int||Y||
+||Slime||Can the enemy walk on slime?||T/F||Y||
+||Land||Can the enemy walk on land?||T/F||Y||
+||Lava||Can the enemy walk on lava?||T/F||Y||
+||SWater||Can the enemy walk on shallow water?||T/F||Y||
+||DWater||Can the enemy walk on deep water?||T/F||Y||
+||ImmuneTongue||If the enemy is immune to Smiley's tongue||T/F||N||
+||ImmuneFire||If the enemy is immune to fire breath||T/F||N||
+||ImmuneLightning||If the enemy is immune to lightning||T/F||N||
+||ImmuneStun||If the enemy is immune to stun||T/F||N||
+||ImmuneFreeze||If the enemy is immune to freeze||T/F||N||
+||Invincible||If the enemy is invincible||T/F||N||
+||Variable 1||Usage is enemy-dependent, see below||any int||N||
+||Variable 2||Usage is enemy-dependent, see below||any int||N||
+
+Variables for EnemyType==0
+||Chases||If the enemy chases Smiley when he gets near||T/F||If EnemyType==0||
+||HasRanged||If the enemy has a ranged attack||T/F||If EnemyType==0||
+||Range||Projectile attack range||any int||If EnemyType==0 && HasRanged==T||
+||Delay||Projectile attack deley in seconds|| any int ||If EnemyType==0 && HasRanged==T||
+||PDamage||Projectile damage. 100 = 1 smiley face||any int||If EnemyType==0 && HasRanged==T||
+||PSpeed||Projectile speed in pixels/second||any float||If EnemyType==0 && HasRanged==T||
+||PType||What type of projectile the enemy shoots||int, see chart below||If EnemyType==0 && HasRanged==T||
+
+----
+= Enemy Types =
+||Code||Enemy Type||Variable 1||Variable 2||
+||0||Basic Enemy|| || ||
+||1||Evil eye|| || ||
+||2||Gumdrop|| || ||
+||3||Bomb generator|| || ||
+||4||Charger|| || ||
+||5||Clown balloon|| || ||
+||6||Batlet distributor|| || ||
+||7||Buzzard|| || ||
+||8||Sad Shooter|| || ||
+||9||Floater|| || ||
+||10||Flailer|| || ||
+||11||Tentacle||Distance between nodes|| ||
+||12||Turret||0 for CW rotation, 1 for CCW, 2 for no movement||Direction (see below)||
+||13||Ghost|| || ||
+
+----
+= Directions =
+||Direction||Code||
+||UP||3||
+||DOWN||0||
+||LEFT||1||
+||RIGHT||2||
+
+----
+= Wander Codes =
+||Code||Description||
+||0||Wander around randomly||
+||1||Pace left and right||
+||2||Pace up and down|| 
+
+----
+= Projectile Codes =
+||Code||Description||
+||0||Blue ball||
+||1||Frisbee||
+||2||Lightning Orb||
+||3||Cactus spike||
+||4||Penguin fish||
+||5||Fireball||
+||6||Turret cannonball||
