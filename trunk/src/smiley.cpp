@@ -23,10 +23,8 @@ extern int gameState;
 extern Player *thePlayer;
 extern hgeResourceManager *resources;
 extern int musicVolume;
-extern hgeStringTable *stringTable, *enemyTable;
-extern int numEnemies;
+extern hgeStringTable *stringTable;
 extern float changedMusicVolume;
-extern EnemyInfo enemyInfo[99];
 extern float gameTime;
 extern int frameCounter;
 extern std::string currentMusic, previousMusic;
@@ -126,30 +124,6 @@ int distance(int x1, int y1, int x2, int y2) {
 	if (y1 == y2) return abs(x1 - x2);
 	return sqrt(float((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1)));
 }
-
-
-/**
- * Sets the velocities to travel between 2 points in the specified time.
- */
-void getVelocities(int x1, int y1, int x2, int y2, float time, float *dx, float *dy) {
-	
-	//First determine the dx and dy required
-	float adj = x2 - x1;
-	float opp = y2 - y1;
-	float theta = atan(opp/adj);
-
-	*dx = cos(theta) * (float(abs(x1-x2)) / time);
-	*dy = sin(theta) * (float(abs(y1-y2)) / time);
-
-	//what the dickens
-	if (x1 > x2) {
-		*dx = -1 * *dx;
-		*dy = -1 * *dy;
-	}
-
-}
-
-
 
 /**
  * Sets time to a string in the format HH:MM:SS for the specified number of seconds
@@ -323,186 +297,6 @@ int distanceFromPlayer(float x, float y) {
 
 	return sqrt(float(xDist*xDist) + float(yDist*yDist));
 }
-
-
-/**
- * Loads enemy data from file "Enemy.dat"
- */
-void loadEnemyData() {
-	char num[2];
-	char param[68];
-	std::string varName;
-	
-	enemyTable = new hgeStringTable("Data/Enemies.dat");
-	numEnemies = atoi(enemyTable->GetString("numEnemies"));
-
-	for (int i = 0; i < numEnemies; i++) {
-		itoa(i, num, 10);
-
-		//Graphics column
-		varName = intToString(i);
-		varName += "GCol";
-		enemyInfo[i].gCol = atoi(enemyTable->GetString(varName.c_str()));
-
-		//Graphics row
-		varName = intToString(i);
-		varName += "GRow";
-		enemyInfo[i].gRow = atoi(enemyTable->GetString(varName.c_str()));
-
-		//Enemy Type
-		varName = intToString(i);
-		varName += "EnemyType";
-		enemyInfo[i].enemyType = atoi(enemyTable->GetString(varName.c_str()));
-		
-		//WanderType
-		varName = intToString(i);
-		varName += "WanderType";
-		enemyInfo[i].wanderType = atoi(enemyTable->GetString(varName.c_str()));
-		
-		//HP
-		varName = intToString(i);
-		varName += "HP";
-		enemyInfo[i].hp = atoi(enemyTable->GetString(varName.c_str()));
-		
-		//Damage
-		varName = intToString(i);
-		varName += "Damage";
-		enemyInfo[i].damage = atoi(enemyTable->GetString(varName.c_str()));
-		
-		//Speed
-		varName = intToString(i);
-		varName += "Speed";
-		enemyInfo[i].speed = atoi(enemyTable->GetString(varName.c_str()));
-		
-		//Radius
-		varName = intToString(i);
-		varName += "Radius";
-		enemyInfo[i].radius = atoi(enemyTable->GetString(varName.c_str()));
-		
-		//Can walk on Land
-		varName = intToString(i);
-		varName += "Land";
-		if (enemyTable->GetString(varName.c_str()) == 0) enemyInfo[i].land = false;
-		else enemyInfo[i].land = (strcmp(enemyTable->GetString(varName.c_str()), "T") == 0);
-		
-		//Can walk on Lava
-		varName = intToString(i);
-		varName += "Lava";
-		if (enemyTable->GetString(varName.c_str()) == 0) enemyInfo[i].lava = false;
-		else enemyInfo[i].lava = (strcmp(enemyTable->GetString(varName.c_str()), "T") == 0);
-		
-		//Can walk on Shallow Water
-		varName = intToString(i);
-		varName += "SWater";
-		if (enemyTable->GetString(varName.c_str()) == 0) enemyInfo[i].shallowWater = false;
-		else enemyInfo[i].shallowWater = (strcmp(enemyTable->GetString(varName.c_str()), "T") == 0);
-		
-		//Can walk on Deep Water
-		varName = intToString(i);
-		varName += "DWater";
-		if (enemyTable->GetString(varName.c_str()) == 0) enemyInfo[i].deepWater = false;
-		else enemyInfo[i].deepWater = (strcmp(enemyTable->GetString(varName.c_str()), "T") == 0);
-		
-		//Can walk on Slime
-		varName = intToString(i);
-		varName += "Slime";
-		if (enemyTable->GetString(varName.c_str()) == 0) enemyInfo[i].slime = false;
-		else enemyInfo[i].slime = (strcmp(enemyTable->GetString(varName.c_str()), "T") == 0);
-	
-		//Immune to smiley's tongue
-		varName = intToString(i);
-		varName += "ImmuneTongue";
-		if (enemyTable->GetString(varName.c_str()) == 0) enemyInfo[i].immuneToTongue = false;
-		else enemyInfo[i].immuneToTongue = (strcmp(enemyTable->GetString(varName.c_str()), "T") == 0);
-
-		//Immune to fire
-		varName = intToString(i);
-		varName += "ImmuneFire";
-		if (enemyTable->GetString(varName.c_str()) == 0) enemyInfo[i].immuneToFire = false;
-		else enemyInfo[i].immuneToFire = (strcmp(enemyTable->GetString(varName.c_str()), "T") == 0);
-
-		//Immune to lightning
-		varName = intToString(i);
-		varName += "ImmuneLightning";
-		if (enemyTable->GetString(varName.c_str()) == 0) enemyInfo[i].immuneToLightning = false;
-		else enemyInfo[i].immuneToLightning = (strcmp(enemyTable->GetString(varName.c_str()), "T") == 0);
-		
-		//Immune to stun
-		varName = intToString(i);
-		varName += "ImmuneStun";
-		if (enemyTable->GetString(varName.c_str()) == 0) enemyInfo[i].immuneToStun = false;
-		else enemyInfo[i].immuneToStun = (strcmp(enemyTable->GetString(varName.c_str()), "T") == 0);
-			
-		//Immune to freeze
-		varName = intToString(i);
-		varName += "ImmuneFreeze";
-		if (enemyTable->GetString(varName.c_str()) == 0) enemyInfo[i].immuneToFreeze = false;
-		else enemyInfo[i].immuneToFreeze = (strcmp(enemyTable->GetString(varName.c_str()), "T") == 0);
-
-		//Invincible
-		varName = intToString(i);
-		varName += "Invincible";
-		if (enemyTable->GetString(varName.c_str()) == 0) enemyInfo[i].invincible = false;
-		else {
-			enemyInfo[i].invincible = (strcmp(enemyTable->GetString(varName.c_str()), "T") == 0);
-			if (enemyInfo[i].invincible) {
-				enemyInfo[i].immuneToFire = enemyInfo[i].immuneToFreeze = enemyInfo[i].immuneToLightning = enemyInfo[i].immuneToStun = enemyInfo[i].immuneToTongue = true;
-			}
-		}
-
-		//Variable 1
-		varName = intToString(i);
-		varName += "Variable1";
-		if (enemyTable->GetString(varName.c_str()) == 0) enemyInfo[i].variable1 = 0;
-		else enemyInfo[i].variable1 = atoi(enemyTable->GetString(varName.c_str()));
-
-		//Variable 2
-		varName = intToString(i);
-		varName += "Variable2";
-		if (enemyTable->GetString(varName.c_str()) == 0) enemyInfo[i].variable2 = 0;
-		else enemyInfo[i].variable2 = atoi(enemyTable->GetString(varName.c_str()));
-					
-		//Has a ranged attack
-		varName = intToString(i);
-		varName += "HasRanged";
-		if (enemyTable->GetString(varName.c_str()) == 0) enemyInfo[i].hasRangedAttack = false;
-		else enemyInfo[i].hasRangedAttack = (strcmp(enemyTable->GetString(varName.c_str()), "T") == 0);
-			
-		//Will chase smiley
-		varName = intToString(i);
-		varName += "Chases";
-		if (enemyTable->GetString(varName.c_str()) == 0) enemyInfo[i].chases = false;
-		else enemyInfo[i].chases = (strcmp(enemyTable->GetString(varName.c_str()), "T") == 0);
-		
-		//Load ranged info for ranged enemies
-		if (enemyInfo[i].hasRangedAttack) {
-			//Ranged Attack Type
-			varName = intToString(i);
-			varName += "PType";
-			if (enemyTable->GetString(varName.c_str()) == 0) enemyInfo[i].rangedType = PROJECTILE_1;
-			else enemyInfo[i].rangedType = atoi(enemyTable->GetString(varName.c_str()));
-			//Ranged Attack Range
-			strcpy(param, num);
-			strcat(param, "Range");
-			enemyInfo[i].range = atoi(enemyTable->GetString(param));
-			//Ranged Attack Delay
-			strcpy(param, num);
-			strcat(param, "Delay");
-			enemyInfo[i].delay = atoi(enemyTable->GetString(param));
-			//Projectile Speed
-			strcpy(param, num);
-			strcat(param, "PSpeed");
-			enemyInfo[i].projectileSpeed = atoi(enemyTable->GetString(param));
-			//Projectile Damage
-			strcpy(param, num);
-			strcat(param, "PDamage");
-			enemyInfo[i].projectileDamage = (float)atoi(enemyTable->GetString(param)) / 100.0;
-		}
-			
-	}
-
-} // end loadEnemyData()
-
 
 /**
  * Returns the angle between (x1,y1) and (x2,y2)

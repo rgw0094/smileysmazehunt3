@@ -4,6 +4,7 @@
 #include "projectiles.h"
 #include "player.h"
 #include "EnemyGroupManager.h"
+#include "GameData.h"
 
 extern HGE *hge;
 extern Environment *theEnvironment;
@@ -13,7 +14,7 @@ extern ProjectileManager *projectileManager;
 extern bool debugMode;
 extern hgeResourceManager *resources;
 extern EnemyGroupManager *enemyGroupManager;
-extern EnemyInfo enemyInfo[99];
+extern GameData *gameData;
 extern float gameTime;
 
 /**
@@ -40,7 +41,7 @@ void EnemyManager::addEnemy(int id, int x, int y, float spawnHealthChance, float
 	newEnemy.spawnHealthChance = spawnHealthChance;
 	newEnemy.spawnManaChance = spawnManaChance;
 
-	switch (enemyInfo[id].enemyType) {
+	switch (gameData->getEnemyInfo(id).enemyType) {
 		case ENEMY_EVIL_EYE:
 			newEnemy.enemy = new E_EvilEye(id, x, y, groupID);
 			newEnemy.spawnHealthChance = 0.0;
@@ -208,7 +209,7 @@ void EnemyManager::freezeEnemies(int x, int y) {
 	std::list<EnemyStruct>::iterator i;
 	for (i = enemyList.begin(); i != enemyList.end(); i++) {
 		//Check collision
-		if (!enemyInfo[i->enemy->id].immuneToFreeze && i->enemy->collisionBox->TestPoint(x,y)) {
+		if (!gameData->getEnemyInfo(i->enemy->id).immuneToFreeze && i->enemy->collisionBox->TestPoint(x,y)) {
 			//Freeze sound effect is fucked up
 			//if (!dickens) hge->Effect_Play(resources->GetEffect("snd_freeze"));
 			dickens = true;
@@ -248,7 +249,7 @@ bool EnemyManager::hitEnemiesWithProjectile(hgeRect *collisionBox, float damage,
 			//Notify the enemy of what type of projectile it was hit with
 			i->enemy->hitWithProjectile(type);
 
-			if (enemyInfo[i->enemy->id].invincible) return true;
+			if (gameData->getEnemyInfo(i->enemy->id).invincible) return true;
 
 			if (type == PROJECTILE_FRISBEE) {
 				if (!i->enemy->immuneToStun) {

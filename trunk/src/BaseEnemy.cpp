@@ -6,10 +6,11 @@
 #include "Player.h"
 #include "hge include/hgeresource.h"
 #include "hge include/hge.h"
+#include "GameData.h"
 
 extern Player *thePlayer;
 extern Environment *theEnvironment;
-extern EnemyInfo enemyInfo[99];
+extern GameData *gameData;
 extern hgeResourceManager *resources;
 extern HGE *hge;
 extern float gameTime;
@@ -46,36 +47,36 @@ void BaseEnemy::initEnemy(int _id, int _gridX, int _gridY, int _groupID) {
 	flashing = false;
 
 	//Load enemy info
-	enemyType = enemyInfo[id].enemyType;
-	wanderType = enemyInfo[id].wanderType;
-	health = maxHealth = (float)enemyInfo[id].hp / 100.0;
-	damage = (float)enemyInfo[id].damage / 100.0;
-	radius = enemyInfo[id].radius;
-	speed = enemyInfo[id].speed;
-	immuneToTongue = enemyInfo[id].immuneToTongue;
-	immuneToFire = enemyInfo[id].immuneToFire;
-	immuneToStun = enemyInfo[id].immuneToStun;
-	immuneToLightning = enemyInfo[id].immuneToLightning;
-	chases = enemyInfo[id].chases;
-	variable1 = enemyInfo[id].variable1;
-	variable2 = enemyInfo[id].variable2;
-	hasRangedAttack = enemyInfo[id].hasRangedAttack;
+	enemyType = gameData->getEnemyInfo(id).enemyType;
+	wanderType = gameData->getEnemyInfo(id).wanderType;
+	health = maxHealth = (float)gameData->getEnemyInfo(id).hp / 100.0;
+	damage = (float)gameData->getEnemyInfo(id).damage / 100.0;
+	radius = gameData->getEnemyInfo(id).radius;
+	speed = gameData->getEnemyInfo(id).speed;
+	immuneToTongue = gameData->getEnemyInfo(id).immuneToTongue;
+	immuneToFire = gameData->getEnemyInfo(id).immuneToFire;
+	immuneToStun = gameData->getEnemyInfo(id).immuneToStun;
+	immuneToLightning = gameData->getEnemyInfo(id).immuneToLightning;
+	chases = gameData->getEnemyInfo(id).chases;
+	variable1 = gameData->getEnemyInfo(id).variable1;
+	variable2 = gameData->getEnemyInfo(id).variable2;
+	hasRangedAttack = gameData->getEnemyInfo(id).hasRangedAttack;
 	if (hasRangedAttack) {
-		rangedType = enemyInfo[id].rangedType;	
-		weaponRange = enemyInfo[id].range;
-		rangedAttackDelay = enemyInfo[id].delay;
-		projectileSpeed = enemyInfo[id].projectileSpeed; //Here is a float-to-int conversion
-		projectileDamage = enemyInfo[id].projectileDamage;
+		rangedType = gameData->getEnemyInfo(id).rangedType;	
+		weaponRange = gameData->getEnemyInfo(id).range;
+		rangedAttackDelay = gameData->getEnemyInfo(id).delay;
+		projectileSpeed = gameData->getEnemyInfo(id).projectileSpeed; //Here is a float-to-int conversion
+		projectileDamage = gameData->getEnemyInfo(id).projectileDamage;
 	}
 
 	//Set pathing shit
 	for (int i = 0; i < 256; i++) canPass[i] = false;
-	canPass[WALKABLE] = enemyInfo[id].land;
-	canPass[SLIME] = enemyInfo[id].slime;
-	canPass[WALK_LAVA] = enemyInfo[id].lava;
-	canPass[SHALLOW_WATER] = enemyInfo[id].shallowWater;
-	canPass[DEEP_WATER] = enemyInfo[id].deepWater;
-	canPass[GREEN_WATER] = enemyInfo[id].deepWater;
+	canPass[WALKABLE] = gameData->getEnemyInfo(id).land;
+	canPass[SLIME] = gameData->getEnemyInfo(id).slime;
+	canPass[WALK_LAVA] = gameData->getEnemyInfo(id).lava;
+	canPass[SHALLOW_WATER] = gameData->getEnemyInfo(id).shallowWater;
+	canPass[DEEP_WATER] = gameData->getEnemyInfo(id).deepWater;
+	canPass[GREEN_WATER] = gameData->getEnemyInfo(id).deepWater;
 	canPass[LEFT_ARROW] = true;
 	canPass[RIGHT_ARROW] = true;
 	canPass[UP_ARROW] = true;
@@ -95,13 +96,13 @@ void BaseEnemy::initEnemy(int _id, int _gridX, int _gridY, int _groupID) {
 	}
 
 	//Load graphics
-	graphic[LEFT] = new hgeAnimation(resources->GetTexture("enemies"), 2, 3, enemyInfo[id].gCol*64*8, enemyInfo[id].gRow*64, 64, 64);
+	graphic[LEFT] = new hgeAnimation(resources->GetTexture("enemies"), 2, 3, gameData->getEnemyInfo(id).gCol*64*8, gameData->getEnemyInfo(id).gRow*64, 64, 64);
 	graphic[LEFT]->Play();
-	graphic[RIGHT] = new hgeAnimation(resources->GetTexture("enemies"), 2, 3, enemyInfo[id].gCol*64*8 + 128, enemyInfo[id].gRow*64, 64, 64);
+	graphic[RIGHT] = new hgeAnimation(resources->GetTexture("enemies"), 2, 3, gameData->getEnemyInfo(id).gCol*64*8 + 128, gameData->getEnemyInfo(id).gRow*64, 64, 64);
 	graphic[RIGHT]->Play();
-	graphic[UP] = new hgeAnimation(resources->GetTexture("enemies"), 2, 3, enemyInfo[id].gCol*64*8 + 256, enemyInfo[id].gRow*64, 64, 64);
+	graphic[UP] = new hgeAnimation(resources->GetTexture("enemies"), 2, 3, gameData->getEnemyInfo(id).gCol*64*8 + 256, gameData->getEnemyInfo(id).gRow*64, 64, 64);
 	graphic[UP]->Play();
-	graphic[DOWN] = new hgeAnimation(resources->GetTexture("enemies"), 2, 3, enemyInfo[id].gCol*64*8 + 384, enemyInfo[id].gRow*64, 64, 64);
+	graphic[DOWN] = new hgeAnimation(resources->GetTexture("enemies"), 2, 3, gameData->getEnemyInfo(id).gCol*64*8 + 384, gameData->getEnemyInfo(id).gRow*64, 64, 64);
 	graphic[DOWN]->Play();
 
 	//Set graphic hot spots

@@ -235,6 +235,9 @@
 				Name="system"
 				Filter="">
 				<File
+					RelativePath=".\src\GameData.cpp">
+				</File>
+				<File
 					RelativePath=".\src\Input.cpp">
 				</File>
 				<File
@@ -436,6 +439,9 @@
 			<Filter
 				Name="system"
 				Filter="">
+				<File
+					RelativePath=".\src\GameData.h">
+				</File>
 				<File
 					RelativePath=".\src\Input.h">
 				</File>
