@@ -556,6 +556,9 @@ void Player::doAbility(float dt) {
 			!springing && 
 			!frozen &&
 			mana >= abilities[HOVER].manaCost*dt);
+	
+	//For debug purposes H will always hover
+	if (hge->Input_GetKeyState(HGEK_H)) isHovering = true;
 
 	//Start hovering
 	if (!wasHovering && isHovering) {
@@ -583,11 +586,6 @@ void Player::doAbility(float dt) {
 							 selectedAbility == REFLECTION_SHIELD && 
 							 mana >= abilities[REFLECTION_SHIELD].manaCost*dt);
 	if (reflectionShieldActive) mana -= abilities[REFLECTION_SHIELD].manaCost*dt;
-	
-	//Heli pads
-	/**
-	 * TODO
-	 */
 
 	////////////// Tut's Mask //////////////
 
@@ -729,6 +727,15 @@ void Player::doAbility(float dt) {
 			}
 			if (!canPass(theEnvironment->collision[gridX][gridY+1]) && int(y) % 64 > 64 - radius) {
 				y -= radius - (64 - int(y) % 64) + 1;
+			}
+			
+			//Adjacent corners
+			//Up-Left
+			if (!canPass(theEnvironment->collision[gridX-1][gridY-1])) {
+				if (int(x) % 64 < radius && int(y) % 64 < radius) {
+					x += radius - (int(x) % 64) + 1;
+					y += radius - (int(y) % 64) + 1;
+				}
 			}
 
 		}
