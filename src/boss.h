@@ -1,7 +1,3 @@
-/**
- * This is the abstract class defining bosses. All bosses are subclasses of this dickens.
- */
-
 #ifndef _BOSS_H_
 #define _BOSS_H_
 
@@ -11,6 +7,9 @@
 extern HGE *hge;
 extern hgeResourceManager *resources;
 
+/**
+ * This is the abstract class defining bosses. All bosses are subclasses of this dickens.
+ */
 class Boss {
 
 public:
@@ -32,6 +31,26 @@ public:
 
 	int groupID;
 	float health, maxHealth;
+
+};
+
+/**
+ * Wrapper class for the bosses.
+ */
+class BossManager {
+
+public:
+
+	BossManager();
+	~BossManager();
+
+	//methods
+	void drawBeforeSmiley(float dt);
+	void drawAfterSmiley(float dt);
+	void update(float dt);
+	void spawnBoss(int boss, int groupID, int gridX, int gridY);
+
+	Boss *currentBoss;
 
 };
 
