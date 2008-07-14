@@ -30,7 +30,7 @@ LootManager *lootManager;
 TextBox *theTextBox;
 ProjectileManager *projectileManager;
 NPCManager *npcManager;
-Boss *theBoss = NULL;
+BossManager *bossManager;
 Input *input;
 EnemyGroupManager *enemyGroupManager;
 WindowManager *windowManager;
@@ -203,12 +203,7 @@ bool FrameFunc() {
 			gameTime += dt;
 			
 			theEnvironment->update(dt);
-			if (theBoss) {
-				if (theBoss->update(dt)) { // returns true when dead
-					delete theBoss;
-					theBoss = NULL;
-				}
-			}
+			bossManager->update(dt);
 			if (thePlayer) thePlayer->update(dt);
 			theTextBox->update(dt);
 			enemyManager->update(dt);
@@ -261,9 +256,9 @@ bool RenderFunc() {
 		lootManager->draw(dt);
 		enemyManager->draw(dt);
 		npcManager->draw(dt);
-		if (theBoss) theBoss->draw(dt);
+		bossManager->drawBeforeSmiley(dt);
 		if (thePlayer) thePlayer->draw(dt);
-		if (theBoss) theBoss->drawAfterSmiley(dt);
+		bossManager->drawAfterSmiley(dt);
 		theEnvironment->drawAfterSmiley(dt);
 		theEnvironment->drawFountain();
 		projectileManager->draw(dt);
@@ -342,7 +337,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		stringTable = new hgeStringTable("Data/GameText.dat");
 		input = new Input();
 		windowManager = new WindowManager();
-		
+		bossManager = new BossManager();
 		soundManager = new SoundManager();
 
 		//Seed random number generator

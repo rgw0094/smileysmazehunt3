@@ -10,12 +10,6 @@
 #include "textbox.h"
 #include "npcmanager.h"
 #include "minimenu.h"
-#include "fireboss.h"
-#include "DesertBoss.h"
-#include "SnowBoss.h"
-#include "ForestBoss.h"
-#include "MushroomBoss.h"
-#include "DespairBoss.h"
 #include "boss.h"
 #include "EnemyGroupManager.h"
 #include "WindowManager.h"
@@ -39,7 +33,7 @@ extern TextBox *theTextBox;
 extern hgeStringTable *stringTable;
 extern NPCManager *npcManager;
 extern WindowManager *windowManager;
-extern Boss *theBoss;
+extern BossManager *bossManager;
 extern hgeResourceManager *resources;
 extern EnemyGroupManager *enemyGroupManager;
 extern Input *input;
@@ -147,11 +141,6 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 	lootManager->reset();
 	npcManager->reset();
 	enemyGroupManager->resetGroups();
-
-	if (theBoss) {
-		delete theBoss;
-		theBoss = NULL;
-	}
 	
 	//Clear old level data
 	for (int i = 0; i < 256; i++) {
@@ -300,67 +289,38 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 	areaFile.read(threeBuffer,1);	//newline
 
 
-	//Load enemy/NPC data
+	//Load enemy/NPC/Boss data
 	int enemy;
 	for (int row = 0; row < areaHeight; row++) {
 		for (int col = 0; col < areaWidth; col++) {
 			areaFile.read(threeBuffer,3);
-			enemy = atoi(threeBuffer); //DICKENS
+			enemy = atoi(threeBuffer);
 			enemyLayer[col][row] = enemy-1;
-			if (enemy != 0) {
 
-				//Fire Boss
-				if (enemy == FIRE_BOSS && !saveManager->killedBoss[FIRE_BOSS-240]) {
-					if (theBoss) delete theBoss;
-					theBoss = new FireBoss(col,row, variable[col][row]);
-					enemyGroupManager->addEnemy(variable[col][row]);
-			
-				//Forest Boss
-				} else if (enemy == FOREST_BOSS && !saveManager->killedBoss[FOREST_BOSS-240]) {
-					if (theBoss) delete theBoss;
-					theBoss = new ForestBoss(col,row, variable[col][row]);
-					enemyGroupManager->addEnemy(variable[col][row]);
-				
-				//Snow Boss
-				} else if (enemy == SNOW_BOSS && !saveManager->killedBoss[SNOW_BOSS-240]) {
-					if (theBoss) delete theBoss;
-					theBoss = new SnowBoss(col, row, variable[col][row]);
-					enemyGroupManager->addEnemy(variable[col][row]);
+			//IDs 240-256 are bosses
+			if (enemy >= 240) {
 
-				//Desert Boss
-				} else if (enemy == DESERT_BOSS && !saveManager->killedBoss[DESERT_BOSS-240]) {
-					if (theBoss) delete theBoss;
-					theBoss = new DesertBoss(col, row, variable[col][row]);
+				//Spawn the boss if it has never been killed
+				if (!saveManager->killedBoss[enemy-240]) {
+					bossManager->spawnBoss(enemy, variable[col][row], col, row);
+				}
+
+			//IDs 1-127 are enemies
+			} else if (enemy > 0 && enemy < 128) {
+
+				if (ids[col][row] == ENEMYGROUP_ENEMY) {
+					//If this enemy is part of a group, notify the manager
 					enemyGroupManager->addEnemy(variable[col][row]);
+				}
+				if (ids[col][row] != ENEMYGROUP_ENEMY_POPUP) {
+					//Don't spawn popup enemies yet
+					enemyManager->addEnemy(enemy-1,col,row, .2, .2, variable[col][row]);
+				}
 
-				//Mushroom Boss
-				} else if (enemy == MUSHROOM_BOSS && !saveManager->killedBoss[MUSHROOM_BOSS-240]) {
-					if (theBoss) delete theBoss;
-					theBoss = new MushroomBoss(col, row, variable[col][row]);
-					enemyGroupManager->addEnemy(variable[col][row]);
-
-				//Despair Boss
-				} else if (enemy == DESPAIR_BOSS && !saveManager->killedBoss[DESPAIR_BOSS-240]) {
-					if (theBoss) delete theBoss;
-					theBoss = new DespairBoss(col, row, variable[col][row]);
-					enemyGroupManager->addEnemy(variable[col][row]);
-
-				} else if (enemy < 128) {
-					//Enemy ids under 128 are enemies
-					if (ids[col][row] == ENEMYGROUP_ENEMY) {
-						//If this enemy is part of a group, notify the manager
-						enemyGroupManager->addEnemy(variable[col][row]);
-					}
-					if (ids[col][row] != ENEMYGROUP_ENEMY_POPUP) {
-						//Don't spawn popup enemies yet
-						enemyManager->addEnemy(enemy-1,col,row, .2, .2, variable[col][row]);
-					}
-
-				} else if (enemy >= 128 && enemy < 240) {
-					//Enemy ids over 128 are NPCs
-					npcManager->addNPC(enemy-128,ids[col][row],col,row);
-				} 
-			}
+			//IDs 128 - 239 are NPCs
+			} else if (enemy >= 128 && enemy < 240) {
+				npcManager->addNPC(enemy-128,ids[col][row],col,row);
+			} 
 		}
 		//Read the newline
 		areaFile.read(threeBuffer,1);

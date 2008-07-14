@@ -254,6 +254,9 @@
 				Name="boss"
 				Filter="">
 				<File
+					RelativePath=".\src\BossManager.cpp">
+				</File>
+				<File
 					RelativePath=".\src\DesertBoss.cpp">
 				</File>
 				<File
