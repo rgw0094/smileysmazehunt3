@@ -49,6 +49,7 @@ Variables for EnemyType==0
 ||11||Tentacle||Distance between nodes|| ||
 ||12||Turret||0 for CW rotation, 1 for CCW, 2 for no movement||Direction (see below)||
 ||13||Ghost|| || ||
+||14||Fake Enemy|| ||
 
 ----
 = Directions =
