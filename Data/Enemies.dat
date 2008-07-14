@@ -1,6 +1,6 @@
 [HGESTRINGTABLE]
 
-numEnemies="45"
+numEnemies="46"
 
 ;Croc
 0GCol=      "0"
@@ -747,3 +747,16 @@ numEnemies="45"
 44Land=      "T"
 44SWater=    "T"
 44Slime=     "T"
+
+;Fake Turret
+45GCol=      "1"
+45GRow=      "10"
+45EnemyType= "14"
+45WanderType="0"
+45HP=        "100"
+45Damage=    "50"
+45Speed=     "125"
+45Radius=    "28"
+45Land=      "T"
+45SWater=    "T"
+45Slime=     "T"

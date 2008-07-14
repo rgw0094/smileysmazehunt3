@@ -72,6 +72,7 @@
 #define ENEMY_TENTACLE 11
 #define ENEMY_TURRET 12
 #define ENEMY_GHOST 13
+#define ENEMY_FAKE 14
 
 //Level ids
 #define NUM_AREAS 9

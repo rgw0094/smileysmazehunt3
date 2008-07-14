@@ -364,4 +364,21 @@ private:
 
 };
 
+
+class E_Fake : public BaseEnemy {
+
+public:
+	E_Fake(int id, int x, int y, int groupID);
+	~E_Fake();
+
+	void update(float dt);
+	void draw(float dt);
+	
+private:
+
+	bool fakeMode;
+	int chaseRadius;
+
+};
+
 #endif
