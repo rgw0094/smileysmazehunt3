@@ -82,6 +82,9 @@ void EnemyManager::addEnemy(int id, int x, int y, float spawnHealthChance, float
 		case ENEMY_GHOST:
 			newEnemy.enemy = new E_Ghost(id, x, y, groupID);
 			break;
+		case ENEMY_FAKE:
+			newEnemy.enemy = new E_Fake(id, x, y, groupID);
+			break;
 		default:
 			newEnemy.enemy = new DefaultEnemy(id, x, y, groupID);
 			break;

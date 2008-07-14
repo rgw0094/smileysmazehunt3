@@ -139,6 +139,9 @@
 					RelativePath=".\src\E_EvilEye.cpp">
 				</File>
 				<File
+					RelativePath=".\src\E_Fake.cpp">
+				</File>
+				<File
 					RelativePath=".\src\E_Flailer.cpp">
 				</File>
 				<File
