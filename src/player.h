@@ -55,7 +55,7 @@ public:
 	Tongue *getTongue();
 
 	//variables
-	float scale,flyingScale,shrinkScale;	//Scales to draw smiley
+	float scale,hoverScale,shrinkScale;	//Scales to draw smiley
 	float rotation;							//Smiley's sprite rotation angle in radians
 	float radius;
 	int facing;								//Direction Smiley is facing
@@ -81,7 +81,7 @@ public:
 	int startedFallingY;					//Y position where the player started falling
 	int enteredWaterX, int enteredWaterY;	//Grid position the player was on before entering water
 	int enteredSpringX, enteredSpringY;
-	float flyingYOffset;					//Y Offset for player sprite while flying
+	float hoveringYOffset;					//Y Offset for player sprite while hovering
 	int startSpringX, startSpringY;
 	float fallingDx, fallingDy;
 
@@ -112,7 +112,7 @@ public:
 	bool drowning;
 	bool shrinkActive;
 	bool sprinting;					//If sprint boots are being used
-	bool flying;
+	bool isHovering;
 	bool cloaked;
 	bool usingCane;
 	bool inShrinkTunnel;
@@ -139,6 +139,7 @@ public:
 	float lastHit;					//Last time smiley was hit by something
 	float timeEnteredShrinkTunnel;  //Time smiley entered the shrink tunnel
 	float timeInShrinkTunnel;		//Time to take to go through the shrink tunnel
+	float timeStartedHovering;
 
 	//Graphics
 	WeaponParticleSystem *fireBreathParticle;

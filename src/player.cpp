@@ -46,6 +46,8 @@ extern int gameState;
 #define PLAYER_ACCEL 5000		//Normal player acceleration
 #define DEFAULT_RADIUS 28
 
+#define HOVER_DURATION 10.0
+
 /**
  * Constructor
  */
@@ -56,7 +58,7 @@ Player::Player(int _gridX, int _gridY) {
 		
 	//Initialize variables
 	tongue = new Tongue();
-	scale = flyingScale = shrinkScale = 1.0f;
+	scale = hoverScale = shrinkScale = 1.0f;
 	speed = 300.0f;
 	rotation = 0;
 	shadowXOffset = shadowYOffset = 0.0f;
@@ -72,7 +74,7 @@ Player::Player(int _gridX, int _gridY) {
 	weaponBox = new hgeRect(x,y,x+1,y+1);
 	selectedAbility = CANE;
 	alpha = 255.0f;
-	flyingYOffset = 0;
+	hoveringYOffset = 0;
 	timeFrozen = 0.0;
 	freezeDuration = 0.0;
 
@@ -88,7 +90,7 @@ Player::Player(int _gridX, int _gridY) {
 	//State variables
 	reflectionShieldActive = flashing = knockback = sliding =  
 		onWarp = falling = breathingFire = inLava = inShallowWater = 
-		waterWalk = onWater = drowning = shrinkActive = sprinting = flying = 
+		waterWalk = onWater = drowning = shrinkActive = sprinting = isHovering = 
 		cloaked = springing = usingCane = iceSliding = frozen = 
 		inShrinkTunnel = false;
 	
@@ -206,7 +208,7 @@ void Player::update(float dt) {
 	}
 	
 	//Attack
-	if (input->keyPressed(INPUT_ATTACK) && !frozen && frameCounter != 0) {
+	if (input->keyPressed(INPUT_ATTACK) && !frozen && !isHovering && frameCounter != 0) {
 		tongue->startAttack();
 	}
 
@@ -379,7 +381,7 @@ void Player::draw(float dt) {
 	}
 
 	//Draw Smiley's shadow
-	if ((flyingYOffset > 0.0f || drowning || springing || (onWater && waterWalk) || (inShallowWater && (selectedAbility == WATER_BOOTS)) || (!falling && theEnvironment->collisionAt(x,y+15) != WALK_LAVA && theEnvironment->collisionAt(x,y+15) != SHALLOW_WATER))) {
+	if ((hoveringYOffset > 0.0f || drowning || springing || (onWater && waterWalk) || (inShallowWater && (selectedAbility == WATER_BOOTS)) || (!falling && theEnvironment->collisionAt(x,y+15) != WALK_LAVA && theEnvironment->collisionAt(x,y+15) != SHALLOW_WATER))) {
 		if (drowning) resources->GetSprite("playerShadow")->SetColor(ARGB(255,255,255,255));
 		resources->GetSprite("playerShadow")->RenderEx(getScreenX(shadowX),getScreenY(shadowY)+(22.0*shrinkScale),0.0f,scale*shrinkScale,scale*shrinkScale);
 		if (drowning) resources->GetSprite("playerShadow")->SetColor(ARGB(50,255,255,255));
@@ -393,8 +395,8 @@ void Player::draw(float dt) {
 		}
 		//Draw Smiley sprite
 		resources->GetAnimation("player")->SetFrame(facing);
-		resources->GetAnimation("player")->RenderEx(screenX,screenY-flyingYOffset,rotation,
-			scale*flyingScale*shrinkScale,scale*flyingScale*shrinkScale);
+		resources->GetAnimation("player")->RenderEx(screenX,screenY-hoveringYOffset,rotation,
+			scale*hoverScale*shrinkScale,scale*hoverScale*shrinkScale);
 		//Draw every other tongue after smiley
 		if (facing != UP && facing != UP_LEFT && facing != UP_RIGHT) {
 			tongue->draw(dt);
@@ -462,10 +464,19 @@ void Player::drawGUI(float dt) {
 	//Jesus bar
 	if (waterWalk) {
 		resources->GetSprite("bossHealthBar")->RenderStretch(
-			getScreenX(x-30.0f), 
-			getScreenY(y-55.0f), 
-			getScreenX(x-30.0f + 60.0f*((JESUS_SANDLE_TIME-(gameTime-startedWaterWalk))/JESUS_SANDLE_TIME)), 
-			getScreenY(y-50.0f));
+			512 - 30.0, 
+			384 - 55.0 - hoveringYOffset, 
+			512 - 30.0 + 60.0f*((JESUS_SANDLE_TIME-(gameTime-startedWaterWalk))/JESUS_SANDLE_TIME), 
+			384 - 50.0 - hoveringYOffset);
+	}
+
+	//Hover bar
+	if (isHovering) {
+		resources->GetSprite("bossHealthBar")->RenderStretch(
+			512 - 30.0, 
+			384 - 55.0 - hoveringYOffset, 
+			512 - 30.0 + 60.0f*((HOVER_DURATION-(gameTime-timeStartedHovering))/HOVER_DURATION), 
+			384 - 50.0 - hoveringYOffset);
 	}
 
 	//Draw selected ability
@@ -535,25 +546,34 @@ void Player::doAbility(float dt) {
 		changeAbility(RIGHT);
 	}
 
-	/////////////// Debug Flying ////////////////
+	/////////////// Hover ////////////////
+	bool wasHovering = isHovering;
+	isHovering = ((isHovering || theEnvironment->collision[gridX][gridY] == HOVER_PAD) &&
+			timePassedSince(timeStartedHovering) < HOVER_DURATION && 
+			selectedAbility == HOVER &&
+			input->keyDown(INPUT_ABILITY) &&
+			!theTextBox->visible && 
+			!falling && 
+			!springing && 
+			!frozen &&
+			mana >= abilities[HOVER].manaCost*dt);
 
-	flying = (hge->Input_GetKeyState(HGEK_H) && 
-			  !theTextBox->visible && 
-			  !falling && 
-			  !springing && 
-			  !frozen &&
-			  mana >= abilities[HOVER].manaCost*dt);
+	//Start hovering
+	if (!wasHovering && isHovering) {
+		timeStartedHovering = gameTime;
+	}
 
-	if (flying) {
-		if (flyingScale < 1.2f) flyingScale += 0.4*dt;
-		if (flyingScale > 1.2f) flyingScale = 1.2f;
-		if (flyingYOffset < 20.0f) flyingYOffset += 40.0*dt;
-		if (flyingYOffset > 20.0f) flyingYOffset = 20.0f;
+	//Continue hovering
+	if (isHovering) {
+		if (hoverScale < 1.2f) hoverScale += 0.4*dt;
+		if (hoverScale > 1.2f) hoverScale = 1.2f;
+		if (hoveringYOffset < 20.0f) hoveringYOffset += 40.0*dt;
+		if (hoveringYOffset > 20.0f) hoveringYOffset = 20.0f;
 	} else {
-		if (flyingScale > 1.0f) flyingScale -= 0.4*dt;
-		if (flyingScale < 1.0f) flyingScale = 1.0f;
-		if (flyingYOffset > 0.0f) flyingYOffset -= 40.0f*dt;
-		if (flyingYOffset < 0.0f) flyingYOffset = 0.0f;
+		if (hoverScale > 1.0f) hoverScale -= 0.4*dt;
+		if (hoverScale < 1.0f) hoverScale = 1.0f;
+		if (hoveringYOffset > 0.0f) hoveringYOffset -= 40.0f*dt;
+		if (hoveringYOffset < 0.0f) hoveringYOffset = 0.0f;
 	}
 
 	//////////// Reflection Shield //////////////
@@ -750,7 +770,7 @@ void Player::doWarps() {
 	int id = theEnvironment->ids[gridX][gridY];
 
 	//If the player is on a warp, move the player to the other warp of the same color
-	if (!springing && flyingYOffset == 0.0f && !onWarp && (c == RED_WARP || c == GREEN_WARP || c == YELLOW_WARP || c == BLUE_WARP)) {
+	if (!springing && hoveringYOffset == 0.0f && !onWarp && (c == RED_WARP || c == GREEN_WARP || c == YELLOW_WARP || c == BLUE_WARP)) {
 		onWarp = true;
 
 		//Play the warp sound effect for non-invisible warps
@@ -782,7 +802,7 @@ void Player::doWarps() {
 void Player::doSprings(float dt) {
 
 	//Start springing
-	if (flyingYOffset == 0.0f && !springing && theEnvironment->collision[gridX][gridY] == SPRING_PAD) {
+	if (hoveringYOffset == 0.0f && !springing && theEnvironment->collision[gridX][gridY] == SPRING_PAD) {
 		hge->Effect_Play(resources->GetEffect("snd_spring"));
 		springing = true;
 		startedSpringing = gameTime;
@@ -807,7 +827,7 @@ void Player::doSprings(float dt) {
 	}
 
 	//Continue springing
-	if (!falling && !sliding && springing && flyingYOffset == 0.0f) {
+	if (!falling && !sliding && springing && hoveringYOffset == 0.0f) {
 		scale = 1.0f + sin(PI*((gameTime - startedSpringing)/springTime)) * .2f;
 		//Sprint left
 		if (facing == LEFT) {
@@ -888,7 +908,7 @@ void Player::doSprings(float dt) {
 void Player::doFalling(float dt) {
 
 	//Start falling
-	if (!springing && flyingYOffset == 0.0f && !falling && theEnvironment->collisionAt(baseX,baseY) == PIT) {
+	if (!springing && hoveringYOffset == 0.0f && !falling && theEnvironment->collisionAt(baseX,baseY) == PIT) {
 		dx = dy = 0;
 		falling = true;
 		startedFalling = gameTime;
@@ -936,7 +956,7 @@ void Player::doArrowPads(float dt) {
 
 	//Start sliding
 	int arrowPad = theEnvironment->collision[gridX][gridY];
-	if (!springing && flyingYOffset == 0.0f && !sliding && (arrowPad == LEFT_ARROW || arrowPad == RIGHT_ARROW || arrowPad == UP_ARROW || arrowPad == DOWN_ARROW)) {
+	if (!springing && hoveringYOffset == 0.0f && !sliding && (arrowPad == LEFT_ARROW || arrowPad == RIGHT_ARROW || arrowPad == UP_ARROW || arrowPad == DOWN_ARROW)) {
 		startedSliding = gameTime;
 		sliding = true;
 		dx = dy = 0;
@@ -1010,10 +1030,11 @@ bool Player::canPass(int collision) {
 		case BROWN_CYLINDER_DOWN: return true;
 		case SILVER_CYLINDER_DOWN: return true;
 		case UNWALKABLE: return false || springing;
+		case HOVER_PAD: return true;
 		case SHALLOW_WATER: return true;
 		case SHALLOW_GREEN_WATER: return true;
-		case DEEP_WATER: return ((selectedAbility == WATER_BOOTS) && !drowning) || springing || flying;
-		case GREEN_WATER: return ((selectedAbility == WATER_BOOTS) && !drowning) || springing || flying;
+		case DEEP_WATER: return ((selectedAbility == WATER_BOOTS) && !drowning) || springing || isHovering;
+		case GREEN_WATER: return ((selectedAbility == WATER_BOOTS) && !drowning) || springing || isHovering;
 		case WHITE_SWITCH_LEFT: return false || springing;
 		case YELLOW_SWITCH_LEFT: return false || springing;
 		case GREEN_SWITCH_LEFT: return false || springing;
@@ -1078,19 +1099,19 @@ void Player::doItems() {
 void Player::doWater() {
 
 	//Start water walk
-	if (!springing && selectedAbility == WATER_BOOTS && flyingYOffset == 0.0f && !waterWalk && !onWater && theEnvironment->isDeepWaterAt(baseGridX, baseGridY)) {
+	if (!springing && selectedAbility == WATER_BOOTS && hoveringYOffset == 0.0f && !waterWalk && !onWater && theEnvironment->isDeepWaterAt(baseGridX, baseGridY)) {
 		waterWalk = true;
 		startedWaterWalk = gameTime;
 	}
 	//Stop water walk
-	if (selectedAbility != WATER_BOOTS || !theEnvironment->isDeepWaterAt(baseGridX, baseGridY) || flyingYOffset > 0.0f || gameTime - JESUS_SANDLE_TIME > startedWaterWalk) {
+	if (selectedAbility != WATER_BOOTS || !theEnvironment->isDeepWaterAt(baseGridX, baseGridY) || hoveringYOffset > 0.0f || gameTime - JESUS_SANDLE_TIME > startedWaterWalk) {
 		waterWalk = false;
 	}
 
 	//Do lava
 	if (!springing) {
 		//Enter Lava
-		if (!inLava && flyingYOffset == 0.0f && theEnvironment->collisionAt(baseX,baseY) == WALK_LAVA) {
+		if (!inLava && hoveringYOffset == 0.0f && theEnvironment->collisionAt(baseX,baseY) == WALK_LAVA) {
 			inLava = true;
 			environmentChannel = hge->Effect_PlayEx(resources->GetEffect("snd_lava"),100,0,1.0f,true);
 		}
@@ -1104,7 +1125,7 @@ void Player::doWater() {
 			speedModifier = 0.6f;
 		}
 		//Exit Lava
-		if (flyingYOffset > 0.0f || inLava && theEnvironment->collisionAt(baseX,baseY) != WALK_LAVA) {
+		if (hoveringYOffset > 0.0f || inLava && theEnvironment->collisionAt(baseX,baseY) != WALK_LAVA) {
 			inLava = false;
 			hge->Channel_Stop(environmentChannel);
 		}
@@ -1113,19 +1134,19 @@ void Player::doWater() {
 	//Do shallow water
 	if (!springing) {
 		//Enter Shallow Water
-		if (flyingYOffset == 0.0f && !inShallowWater && theEnvironment->isShallowWaterAt(baseGridX,baseGridY)) {
+		if (hoveringYOffset == 0.0f && !inShallowWater && theEnvironment->isShallowWaterAt(baseGridX,baseGridY)) {
 			inShallowWater = true;
 			if (!waterWalk) environmentChannel = hge->Effect_PlayEx(resources->GetEffect("snd_shallowWater"), 100,0,1.0f,true);
 		}
 		//Exit Shallow Water
-		if (flyingYOffset > 0.0f || inShallowWater && !theEnvironment->isShallowWaterAt(baseGridX,baseGridY)) {
+		if (hoveringYOffset > 0.0f || inShallowWater && !theEnvironment->isShallowWaterAt(baseGridX,baseGridY)) {
 			inShallowWater = false;
 			hge->Channel_Stop(environmentChannel);
 		}
 	}
 
 	//Do drowning
-	if (!springing && flyingYOffset == 0.0f) {
+	if (!springing && hoveringYOffset == 0.0f) {
 		//Start drowning
 		if (!drowning && theEnvironment->isDeepWaterAt(baseGridX,baseGridY) && !waterWalk) {
 			drowning = true;
@@ -1144,7 +1165,7 @@ void Player::doWater() {
 	}
 
 	//Determine if the player is on water
-	onWater = (flyingYOffset == 0.0f) && theEnvironment->isDeepWaterAt(baseGridX,baseGridY);
+	onWater = (hoveringYOffset == 0.0f) && theEnvironment->isDeepWaterAt(baseGridX,baseGridY);
 
 }
 
@@ -1153,7 +1174,7 @@ void Player::doMovement(float dt) {
 	if (frozen) return;
 
 	//Determine acceleration - normal ground or slime
-	float accel = (theEnvironment->collision[gridX][gridY] == SLIME && flyingYOffset==0.0f) ? SLIME_ACCEL : PLAYER_ACCEL; 
+	float accel = (theEnvironment->collision[gridX][gridY] == SLIME && hoveringYOffset==0.0f) ? SLIME_ACCEL : PLAYER_ACCEL; 
 
 	//Stop drifting when abs(dx) < accel
 	if (!falling && !iceSliding && !sliding && !springing) {
@@ -1218,7 +1239,7 @@ void Player::doMovement(float dt) {
 void Player::doIce(float dt) {
 	
 	//Start Puzzle Ice
-	if (!springing && flyingYOffset == 0.0f && !iceSliding && theEnvironment->collisionAt(x,y) == ICE) {
+	if (!springing && hoveringYOffset == 0.0f && !iceSliding && theEnvironment->collisionAt(x,y) == ICE) {
 		if (lastGridX < gridX) {
 			facing = RIGHT;
 			dx = speed;
@@ -1251,7 +1272,7 @@ void Player::doIce(float dt) {
 	}
 
 	//Stop puzzle ice
-	if (iceSliding && (theEnvironment->collisionAt(x,y) != ICE || flyingYOffset > 0.0f || springing)) {
+	if (iceSliding && (theEnvironment->collisionAt(x,y) != ICE || hoveringYOffset > 0.0f || springing)) {
 		//Only stop once the player is in the middle of the square
 		if (facing == RIGHT && (int)x % 64 > 31 ||
 				facing == LEFT && (int)x % 64 < 33 ||

@@ -710,7 +710,7 @@ Sprite playerShadow {
 }
 Animation player {
  texture=general
- rect=0,506,61,72
+ rect=1,507,61,72
  frames=8
  fps=0.0
  mode=LOOP
