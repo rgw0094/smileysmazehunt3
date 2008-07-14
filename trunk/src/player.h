@@ -40,8 +40,6 @@ public:
 	void dealDamage(float damage, bool makesFlash);
 	void dealDamageAndKnockback(float damage, bool makesFlash, float knockbackDist, float knockbackerX, float knockbackerY);
 	void freeze(float duration);
-	void addKnockbackVelocity(double xVel, double yVel, float timeBegan, float duration);
-	void doKnockbackVelocities();
 	void doShrinkTunnels(float dt);
 
 	//Accessors/mutators
@@ -52,6 +50,7 @@ public:
 	float getDamage();
 	float getFireBreathDamage();
 	float getLightningOrbDamage();
+	void modifyVelocity(double xVel,double yVel);
 	Tongue *getTongue();
 
 	//variables
@@ -84,9 +83,6 @@ public:
 	float hoveringYOffset;					//Y Offset for player sprite while hovering
 	int startSpringX, startSpringY;
 	float fallingDx, fallingDy;
-
-	//Knockback linked list, used in Brian Fungus
-	std::list<velocity> theVelocities;
 
 	//Constants
 	float angles[NUM_DIRECTIONS];

@@ -14,6 +14,11 @@ struct Bomb {
 	int direction;    
 };
 
+struct Explosion {
+	double x,y,radius;
+	float timeBegan;
+};
+
 class MushroomBoss : public Boss {
 public:
 	MushroomBoss(int _gridX, int _gridY, int _groupID);
@@ -26,10 +31,13 @@ public:
 	void doSpiral(float dt);
 	void doArms(float dt);
 	void addBomb(float _x,float _y,int direction); //direction is either LEFT or RIGHT
+	void addExplosion (float _x,float _y);
+	void doExplosions(float dt);
 	void doBombs(float dt);
 	void doMiniMushrooms(float dt);
 	void spawnMiniMushroom();
 	void drawBombs();
+	
 	
 
 	//variables common to all bosses
@@ -51,6 +59,10 @@ public:
 
 	//bombs that are thrown
 	std::list<Bomb> theBombs;
+	hgeParticleManager *explosions; //This contains the particle graphics for the exposions
+	std::list<Explosion> theExplosions; //This contains the expanding collision circles
+	
+	
 
 	
 };
