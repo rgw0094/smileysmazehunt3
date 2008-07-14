@@ -58,7 +58,7 @@ extern float gameTime;
 
 //Mushroomlets
 #define MINI_MUSHROOM_INTERVAL 10.4
-#define MINI_MUSHROOM_ENEMYID 7
+#define MINI_MUSHROOM_ENEMYID 43
 
 //States
 #define MUSHBOOM_INACTIVE		0
@@ -173,7 +173,8 @@ void MushroomBoss::doMiniMushrooms(float dt) {
 }
 
 void MushroomBoss::spawnMiniMushroom() {
-	enemyManager->addEnemy(MINI_MUSHROOM_ENEMYID, x,y,0.1,0.6, -1);
+	
+	enemyManager->addEnemy(MINI_MUSHROOM_ENEMYID, getGridX(x),getGridY(y),0.1,0.6, -1);
 
 }
 
