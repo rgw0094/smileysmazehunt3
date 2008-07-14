@@ -80,27 +80,24 @@ MushroomBoss::MushroomBoss(int _gridX,int _gridY,int _groupID) {
 	
 	groupID = _groupID;
 
+	//Initialize state stuff
 	state = MUSHBOOM_INACTIVE;
-
 	startedIntroDialogue = false;
-
 	health = maxHealth = MUSHBOOM_HEALTH;
 	droppedLoot=false;	
-
-	//Mushboom specifics
 	leftArmRotate=LEFT_ARM_DEFAULT;
 	rightArmRotate=RIGHT_ARM_DEFAULT;
-
 	nextArmToRotate=LEFT;
-
 	leftArmRotating=rightArmRotating=false;
 	lastThrowTime=lastMiniMushroomTime=gameTime;
-
 	theta=phi=0.0; //Angles for the spiral
+
+	//Initialize explosion particle effects
+	explosions = new hgeParticleManager();
 }
 
 MushroomBoss::~MushroomBoss() {
-	
+	if (explosions) delete explosions;
 }
 
 
@@ -127,6 +124,8 @@ bool MushroomBoss::update(float dt) {
 		doSpiral(dt);
 		doArms(dt);
 		doBombs(dt);
+		explosions->Update(dt);
+		explosions->Transpose(-1*(theEnvironment->xGridOffset*64 + theEnvironment->xOffset), -1*(theEnvironment->yGridOffset*64 + theEnvironment->yOffset));
 		doMiniMushrooms(dt);
 	}
 
@@ -147,7 +146,7 @@ void MushroomBoss::draw(float dt) {
 	drawBombs();
 
 	//Draw explosions
-	resources->GetParticleSystem("explosion")->Render();
+	explosions->Render();
 	
 	//Draw health
 	if (state != MUSHBOOM_INACTIVE) {
@@ -265,18 +264,8 @@ void MushroomBoss::doBombs(float dt) {
 		}
 
 		if (timePassedSince(i->beginThrowTime) >= BOMB_LIFE_TIME) {
-			//explode
-			resources->GetParticleSystem("explosion")->FireAt(i->xBomb,i->yBomb);
-			float _distanceFromSmiley = distance(thePlayer->x,thePlayer->y,i->xBomb,i->yBomb);
-			
-			if (_distanceFromSmiley <= BOMB_KNOCKBACK_RANGE) {
-				float angle = getAngleBetween(i->xBomb,i->yBomb,thePlayer->x,thePlayer->y);
-				float power=1000.0;
-
-				//thePlayer->modifyVelocity(power*cos(angle),power*sin(angle));
-			}
-			
-
+			explosions->SpawnPS(&resources->GetParticleSystem("explosionLarge")->info,i->xBomb,i->yBomb);
+			addExplosion(i->xBomb,i->yBomb);
 			i=theBombs.erase(i);
 			
 		}
@@ -298,10 +287,28 @@ void MushroomBoss::addBomb(float _x,float _y,int direction) {
 	newBomb.direction=direction;
 	newBomb.x0=newBomb.xBomb=_x;
 	newBomb.y0=newBomb.yBomb=_y;
+
 	if (direction == LEFT)	newBomb.h=_x-PARABOLA_WIDTH/2;
 	else					newBomb.h=_x+PARABOLA_WIDTH/2;
+
 	newBomb.k=_y-PARABOLA_HEIGHT; //By "height" we mean how far above the bomb's initial y should it fly to
 	newBomb.a=(_y-newBomb.k)/((_x-newBomb.h)*(_x-newBomb.h)); //Solved parabola equation for 'a' to get this
 
 	theBombs.push_back(newBomb);
+}
+
+void MushroomBoss::addExplosion (float _x,float _y) {
+	Explosion newExplosion;
+	newExplosion.x=_x;
+	newExplosion.y=_y;
+	newExplosion.radius=0.0;
+	newExplosion.timeBegan=gameTime;
+
+	theExplosions.push_back(newExplosion);
+
+
+}
+
+void MushroomBoss::doExplosions(float dt) {
+
 }

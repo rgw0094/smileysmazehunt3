@@ -234,8 +234,7 @@ void Player::update(float dt) {
 	doWater();
 	doIce(dt);
 	doShrinkTunnels(dt);
-	doKnockbackVelocities();
-
+	
 	//Update health and mana
 	mana += (getMaxMana() / 2.0) * dt;
 	if (mana < 0.0f) mana = 0.0f;
@@ -1420,41 +1419,6 @@ void Player::doShrinkTunnels(float dt) {
 
 
 
-void Player::addKnockbackVelocity(double xVel, double yVel, float timeBegan, float duration) {
-	velocity newVelocity;
-	
-	newVelocity.x=xVel;
-	newVelocity.y=yVel;
-	newVelocity.timeBegan=timeBegan;
-	newVelocity.duration=duration;
-
-	theVelocities.push_back(newVelocity);
-
-}
-
-void Player::doKnockbackVelocities() {
-	velocity sumVelocity;
-	
-	sumVelocity.x=sumVelocity.y=0;
-	
-	std::list<velocity>::iterator i;
-
-	for (i=theVelocities.begin(); i != theVelocities.end(); i++) {
-		if (timePassedSince(i->timeBegan) >= i->duration) {
-			i=theVelocities.erase(i);
-		} else {
-			sumVelocity.x += i->x;
-			sumVelocity.y += i->y;
-		}
-	}
-
-	dx += sumVelocity.x;
-	dy += sumVelocity.y;
-
-    
-}
-
-
 ///////////////////////////////////////////////////////////////
 /////////////////// MUTATORS AND ACCESSORS ////////////////////								
 ///////////////////////////////////////////////////////////////
@@ -1490,4 +1454,9 @@ float Player::getMaxHealth() {
 
 float Player::getMaxMana() {
 	return 100.0 + saveManager->numUpgrades[1] * 10.0;
+}
+
+void Player::modifyVelocity(double xVel,double yVel) {
+	dx += xVel;
+	dy += yVel;
 }

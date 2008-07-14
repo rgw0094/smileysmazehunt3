@@ -155,6 +155,11 @@ Particle explosion {
  sprite=particleGraphic11
  resgroup=1
 }
+Particle explosionLarge {
+ filename=explosionLarge.psi
+ sprite=particleGraphic11
+ resgroup=1
+}
 Particle deathCloud {
  filename=deathCloud.psi
  sprite=particleGraphic1
