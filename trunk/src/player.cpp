@@ -737,6 +737,27 @@ void Player::doAbility(float dt) {
 					y += radius - (int(y) % 64) + 1;
 				}
 			}
+			//Up-Right
+			if (!canPass(theEnvironment->collision[gridX+1][gridY-1])) {
+				if (int(x) % 64 > 64 - radius && int(y) % 64 < radius) {
+					x -= radius - (64 - int(x) % 64) + 1;
+					y += radius - (int(y) % 64) + 1;
+				}
+			}
+			//Down-Left
+			if (!canPass(theEnvironment->collision[gridX-1][gridY+1])) {
+				if (int(x) % 64 < radius && int(y) % 64 > 64 - radius) {
+					x += radius - (int(x) % 64) + 1;
+					y -= radius - (64 - int(y) % 64) + 1;
+				}
+			}
+			//Down-Right
+			if (!canPass(theEnvironment->collision[gridX+1][gridY+1])) {
+				if (int(x) % 64 > 64 - radius && int(y) % 64 > 64 - radius) {
+					x -= radius - (64 - int(x) % 64) + 1;
+					y -= radius - (64 - int(y) % 64) + 1;
+				}
+			}
 
 		}
 		radius = DEFAULT_RADIUS * shrinkScale;
