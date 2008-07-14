@@ -16,11 +16,12 @@
 #include "SaveManager.h"
 #include "Shop.h"
 #include "SoundManager.h"
+#include "GameData.h"
 
 //Objects
 HGE *hge=0;
 hgeResourceManager *resources;
-hgeStringTable *stringTable, *enemyTable;
+hgeStringTable *stringTable;
 Ability abilities[16];
 Environment *theEnvironment;
 Player *thePlayer;
@@ -36,6 +37,7 @@ EnemyGroupManager *enemyGroupManager;
 WindowManager *windowManager;
 SaveManager *saveManager;
 SoundManager *soundManager;
+GameData *gameData;
 
 //Textures
 HTEXTURE animationTexture, npcTexture, mainLayerTexture, walkLayerTexture;
@@ -53,7 +55,6 @@ bool debugMode;
 float rotation = 0.0f;
 bool hasFountain;
 int fountainX, fountainY;
-int numEnemies;
 float loadingEffectScale = 3.0;
 float darkness = 0.0;
 
@@ -61,8 +62,6 @@ float darkness = 0.0;
 int currentSave;
 float timePlayed;
 
-//Enemy Information
-EnemyInfo enemyInfo[99];
 
 /**
  * Loads all game resources
@@ -125,9 +124,6 @@ void loadResources() {
 	for (int i = 0; i < NUM_ABILITIES; i++) {
 		abilitySprites[i] = new hgeSprite(resources->GetTexture("general"),192+i*64,0,64,64);
 	}
-
-	//Load enemy information into memory
-	loadEnemyData();
 
 	//Init ability data
 	initAbilities();
@@ -339,6 +335,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		windowManager = new WindowManager();
 		bossManager = new BossManager();
 		soundManager = new SoundManager();
+		gameData = new GameData();
 
 		//Seed random number generator
 		srand(time(NULL));
@@ -374,6 +371,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		delete input;
 		delete enemyGroupManager;
 		delete soundManager;
+		delete bossManager;
+		delete gameData;
 
 	}
 	else MessageBox(NULL, hge->System_GetErrorMessage(), "Error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);

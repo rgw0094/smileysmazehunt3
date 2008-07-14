@@ -216,24 +216,7 @@
 #define GREEN 2
 #define BLUE 3
 
-/**
- * Stores info for each enemy id
- */ 
-struct EnemyInfo {
 
-	//For all enemies
-	int gRow, gCol;
-	int enemyType, wanderType, hp, speed, radius, damage, rangedType;
-	bool land, shallowWater, deepWater, slime, lava;
-	bool immuneToFire, immuneToTongue, immuneToLightning, immuneToStun, immuneToFreeze, invincible;
-	int variable1, variable2;
-
-	//For basic enemies
-	bool chases, hasRangedAttack;
-	int range, delay, projectileSpeed;
-	float projectileDamage;
-	
-};
 
 struct Ability {
 	char description[68];
@@ -255,7 +238,6 @@ int getScreenY(int y);
 int getGridX(int x);
 int getGridY(int y);
 int distance(int x1, int y1, int x2, int y2);
-void getVelocities(int x1, int y1, int x2, int y2, float time, float *dx, float *dy);
 char *getTime(int seconds);
 char *intToString(int dickens);
 bool isCylinderSwitchLeft(int id);
@@ -265,8 +247,6 @@ bool isCylinderDown(int id);
 bool isWarp(int id);
 float maxFloat(float num1, float num2);
 void shadeScreen(int alpha);
-void loadEnemyData();
-void setMusicVolume(int newVolume);
 float getAngleBetween(int x1, int y1, int x2, int y2);
 float timePassedSince(float time);
 int getKeyIndex(int area);
