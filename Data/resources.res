@@ -1136,10 +1136,13 @@ Sprite cannonballProjectile {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=36
 }
-;Sprite mushroomProjectile {
-; texture=projectileTx
-; rect=
-;}
+Sprite mushroomletProjectile {
+ texture="Graphics/brian.png"
+ rect=55,105,60,65
+ hotspot=30,33
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=36
+}
 
 ;**************************
 ;******** Textures ********

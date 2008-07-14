@@ -4,6 +4,7 @@
 #include "boss.h"
 #include "hge include/hgeparticle.h"
 #include "weaponparticle.h"
+#include "collisioncircle.h"
 
 struct Bomb {
 	bool inParabolaMode;
@@ -15,8 +16,9 @@ struct Bomb {
 };
 
 struct Explosion {
-	double x,y,radius;
+	CollisionCircle* collisionCircle;
 	float timeBegan;
+	bool stillExpanding;
 };
 
 class MushroomBoss : public Boss {
@@ -28,18 +30,22 @@ public:
 	void draw(float dt);
 	bool update(float dt);
 	void enterState(int _state);
+	
 	void doSpiral(float dt);
 	void doArms(float dt);
+	
 	void addBomb(float _x,float _y,int direction); //direction is either LEFT or RIGHT
-	void addExplosion (float _x,float _y);
-	void doExplosions(float dt);
 	void doBombs(float dt);
-	void doMiniMushrooms(float dt);
-	void spawnMiniMushroom();
 	void drawBombs();
 	
+	void addExplosion (float _x,float _y);
+	void doExplosions(float dt);
+	void drawExplosions(float dt);
 	
-
+	void doMiniMushrooms(float dt);
+	void spawnMiniMushroom();
+	void spawnMiniMushroomProjectile();
+	
 	//variables common to all bosses
 	bool startedIntroDialogue;
 	bool droppedLoot;

@@ -53,11 +53,19 @@ extern float gameTime;
 #define PARABOLA_HEIGHT 100.0
 #define BOMB_AIR_TIME 0.8
 #define BOMB_LIFE_TIME 1.8
-#define BOMB_KNOCKBACK_RANGE 200.0
-#define BOMB_KNOCKBACK_DURATION 10.0
+#define EXPLOSION_LIFE_TIME 1.0
+#define EXPLOSION_COLLISION_ENLARGE_COEFFICIENT 340.0
+#define EXPLOSION_MAX_RADIUS 90.0
+#define EXPLOSION_KNOCKBACK_POWER 340.0
+#define EXPLOSION_DAMAGE 1.0
 
-//Mushroomlets
-#define MINI_MUSHROOM_INTERVAL 10.4
+//Mushroomlet projectile stuff
+#define MINI_MUSHROOM_PROJECTILE_ID 7
+#define MINI_MUSHROOM_PROJECTILE_SPEED 800
+#define MINI_MUSHROOM_PROJECTILE_DAMAGE 0.75
+
+//Mushroomlet enemy stuff
+#define MINI_MUSHROOM_INTERVAL 3.2
 #define MINI_MUSHROOM_ENEMYID 43
 
 //States
@@ -124,6 +132,7 @@ bool MushroomBoss::update(float dt) {
 		doSpiral(dt);
 		doArms(dt);
 		doBombs(dt);
+		doExplosions(dt);
 		explosions->Update(dt);
 		explosions->Transpose(-1*(theEnvironment->xGridOffset*64 + theEnvironment->xOffset), -1*(theEnvironment->yGridOffset*64 + theEnvironment->yOffset));
 		doMiniMushrooms(dt);
@@ -146,7 +155,7 @@ void MushroomBoss::draw(float dt) {
 	drawBombs();
 
 	//Draw explosions
-	explosions->Render();
+	drawExplosions(dt);
 	
 	//Draw health
 	if (state != MUSHBOOM_INACTIVE) {
@@ -167,14 +176,18 @@ void MushroomBoss::enterState(int _state) {
 void MushroomBoss::doMiniMushrooms(float dt) {
 	if (timePassedSince(lastMiniMushroomTime) >= MINI_MUSHROOM_INTERVAL) {
 		lastMiniMushroomTime=gameTime;
-		spawnMiniMushroom();
+		spawnMiniMushroomProjectile();
 	}
 }
 
 void MushroomBoss::spawnMiniMushroom() {
-	
 	enemyManager->addEnemy(MINI_MUSHROOM_ENEMYID, getGridX(x),getGridY(y),0.1,0.6, -1);
+}
 
+void MushroomBoss::spawnMiniMushroomProjectile() {
+	projectileManager->addProjectile(x,y,MINI_MUSHROOM_PROJECTILE_SPEED,
+			getAngleBetween(x,y,thePlayer->x,thePlayer->y)+hge->Random_Float(-PI/32,PI/32),
+			MINI_MUSHROOM_PROJECTILE_DAMAGE,true,MINI_MUSHROOM_PROJECTILE_ID,true);
 }
 
 void MushroomBoss::doSpiral(float dt) {
@@ -299,10 +312,12 @@ void MushroomBoss::addBomb(float _x,float _y,int direction) {
 
 void MushroomBoss::addExplosion (float _x,float _y) {
 	Explosion newExplosion;
-	newExplosion.x=_x;
-	newExplosion.y=_y;
-	newExplosion.radius=0.0;
+	newExplosion.collisionCircle = new CollisionCircle;
+	newExplosion.collisionCircle->x=_x;
+	newExplosion.collisionCircle->y=_y;
+	newExplosion.collisionCircle->radius=0.0;
 	newExplosion.timeBegan=gameTime;
+	newExplosion.stillExpanding=true;
 
 	theExplosions.push_back(newExplosion);
 
@@ -310,5 +325,38 @@ void MushroomBoss::addExplosion (float _x,float _y) {
 }
 
 void MushroomBoss::doExplosions(float dt) {
+	
+	std::list<Explosion>::iterator i;
+	for(i = theExplosions.begin(); i != theExplosions.end(); i++) {
+		i->collisionCircle->radius = EXPLOSION_COLLISION_ENLARGE_COEFFICIENT * timePassedSince(i->timeBegan);
+		if (i->collisionCircle->radius >= EXPLOSION_MAX_RADIUS) {
+			i->collisionCircle->radius=EXPLOSION_MAX_RADIUS;
+			i->stillExpanding=false;
+		}
 
+		if (i->collisionCircle->testCircle(thePlayer->collisionCircle)) {
+			if (i->stillExpanding) {
+				float angleToSmiley = getAngleBetween(i->collisionCircle->x,i->collisionCircle->y,thePlayer->x,thePlayer->y);
+				thePlayer->modifyVelocity(EXPLOSION_KNOCKBACK_POWER * cos(angleToSmiley),EXPLOSION_KNOCKBACK_POWER * sin(angleToSmiley));
+			}
+			thePlayer->dealDamage(EXPLOSION_DAMAGE,true);
+		}
+		
+		if (timePassedSince(i->timeBegan) >= EXPLOSION_LIFE_TIME) {
+			delete i->collisionCircle;
+			i=theExplosions.erase(i);
+		}		
+	}
+
+}
+
+void MushroomBoss::drawExplosions(float dt) {
+	explosions->Render();
+
+	if (debugMode) {
+		std::list<Explosion>::iterator i;
+		for(i = theExplosions.begin(); i != theExplosions.end(); i++) {
+			i->collisionCircle->draw();
+		}
+	}
 }
