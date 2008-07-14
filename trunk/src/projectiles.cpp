@@ -339,8 +339,8 @@ void ProjectileManager::initProjectiles() {
 	projectileTypes[PROJECTILE_TURRET_CANNONBALL].sprite = resources->GetSprite("cannonballProjectile");
 
 	//Mini mushroom
-	projectileTypes[PROJECTILE_MINI_MUSHROOM].radius=8;
-	projectileTypes[PROJECTILE_MINI_MUSHROOM].sprite = resources->GetSprite("mushroomProjectile");
+	projectileTypes[PROJECTILE_MINI_MUSHROOM].radius=32;
+	projectileTypes[PROJECTILE_MINI_MUSHROOM].sprite = resources->GetSprite("mushroomletProjectile");
 
 }
 
@@ -351,6 +351,8 @@ void ProjectileManager::initProjectiles() {
 void ProjectileManager::reflectProjectile(std::list<Projectile>::iterator projectile) {
 	
 	if (timePassedSince(projectile->timeReflected) < 2.0) return;
+
+	projectile->angle += PI;
 
 	projectile->timeReflected = gameTime;
 	projectile->dx = -1 * projectile->dx;
