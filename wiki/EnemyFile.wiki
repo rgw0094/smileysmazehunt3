@@ -23,7 +23,7 @@
 ||Variable 1||Usage is enemy-dependent, see below||any int||N||
 ||Variable 2||Usage is enemy-dependent, see below||any int||N||
 
-Variables for EnemyType==0
+===Variables Default Enemy (EnemyType == 0)===
 ||Chases||If the enemy chases Smiley when he gets near||T/F||If EnemyType==0||
 ||HasRanged||If the enemy has a ranged attack||T/F||If EnemyType==0||
 ||Range||Projectile attack range||any int||If EnemyType==0 && HasRanged==T||
@@ -49,7 +49,7 @@ Variables for EnemyType==0
 ||11||Tentacle||Distance between nodes|| ||
 ||12||Turret||0 for CW rotation, 1 for CCW, 2 for no movement||Direction (see below)||
 ||13||Ghost|| || ||
-||14||Fake Enemy|| ||
+||14||Fake Enemy|| || ||
 
 ----
 = Directions =
