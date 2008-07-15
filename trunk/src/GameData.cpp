@@ -11,6 +11,7 @@
 GameData::GameData() {
 	loadEnemyData();
 	loadAbilityData();
+	gameText = new hgeStringTable("Data/GameText.dat");
 }
 
 GameData::~GameData() {
