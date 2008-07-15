@@ -11,6 +11,8 @@ extern Environment *theEnvironment;
 extern Player *thePlayer;
 extern SaveManager *saveManager;
 
+extern float darkness;
+
 /**
  * Constructor
  */
@@ -31,6 +33,7 @@ DeathScreen::~DeathScreen() {
  */
 void DeathScreen::enterScreen() {
 	alpha = 0;
+	darkness = 0.0;
 }
 
 /**

@@ -42,9 +42,9 @@ Tongue::~Tongue() {
 void Tongue::startAttack() {
 
 	//Make sure it is ok to attack
-	if (attacking || theTextBox->visible || timePassedSince(theTextBox->textBoxClosed) < 0.2 ||
-			thePlayer->falling || thePlayer->springing || thePlayer->cloaked || 
-			thePlayer->shrinkActive || thePlayer->drowning || thePlayer->reflectionShieldActive) {
+	if (attacking || theTextBox->visible || thePlayer->falling || thePlayer->springing || 
+			thePlayer->cloaked || thePlayer->shrinkActive || thePlayer->drowning || 
+			thePlayer->reflectionShieldActive) {
 		return;
 	}
 
