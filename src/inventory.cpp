@@ -1,6 +1,4 @@
 #include "inventory.h"
-#include "environment.h"
-#include "textbox.h"
 #include "player.h"
 #include "Input.h"
 #include "SaveManager.h"
@@ -9,7 +7,6 @@
 //Objects
 extern HGE *hge;
 extern Player *thePlayer;
-extern TextBox *theTextBox;
 extern hgeResourceManager *resources;
 extern Input *input;
 extern SaveManager *saveManager;
