@@ -15,6 +15,7 @@
 #include "WindowManager.h"
 #include "Input.h"
 #include "SoundManager.h"
+#include "GameData.h"
 
 //Variables
 extern bool debugMode, hasFountain;
@@ -38,6 +39,7 @@ extern hgeResourceManager *resources;
 extern EnemyGroupManager *enemyGroupManager;
 extern Input *input;
 extern SoundManager *soundManager;
+extern GameData *gameData;
 
 //Textures
 extern HTEXTURE animationTexture, sillyPadTexture;
@@ -1256,7 +1258,7 @@ void Environment::hitSigns(Tongue *tongue) {
 					activated[i][j] = gameTime;
 					paramString = "Sign";
 					paramString += intToString(ids[i][j]);
-					theTextBox->set(stringTable->GetString(paramString.c_str()), false, NULL, 64);
+					theTextBox->set(gameData->getGameText(paramString.c_str()), false, NULL, 64);
 					return;
 				}
 			}

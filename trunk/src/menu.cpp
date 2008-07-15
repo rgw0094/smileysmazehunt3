@@ -1,7 +1,5 @@
-#include "smiley.h"
 #include "menu.h"
-#include "minimenu.h"
-#include "player.h"
+#include "smiley.h"
 #include "Input.h"
 
 #include "TitleScreen.h"
@@ -13,18 +11,13 @@
 //Objects
 extern HGE *hge;
 extern hgeStringTable *stringTable;
-extern Environment *theEnvironment;
-extern Player *thePlayer;
 extern hgeResourceManager *resources;
 extern SoundManager *soundManager;
 extern Input *input;
 
 //Variables
-extern int gameState, currentSave, musicVolume;
+extern int gameState;
 extern float gameStart;
-
-//Save files
-extern hgeStringTable *saveFiles[4];
 
 /**
  * Constructor
@@ -114,8 +107,8 @@ void Menu::draw(float dt) {
  * Opens the menu
  */
 void Menu::open(int _state) {
-	if (thePlayer) hge->Channel_Stop(thePlayer->environmentChannel);
-	if (thePlayer) hge->Channel_Stop(thePlayer->abilityChannel);
+	soundManager->stopAbilityChannel();
+	soundManager->stopEnvironmentChannel();
 	soundManager->playMusic("menuMusic");
 	enterGameState(MENU);
 	setScreen(_state);

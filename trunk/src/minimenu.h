@@ -3,6 +3,7 @@
 
 #include "BaseWindow.h"
 #include "Button.h"
+#include <string>
 
 //Menu items
 #define MINIMENU_SAVE 0

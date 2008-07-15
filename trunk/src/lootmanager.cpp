@@ -3,6 +3,7 @@
 #include "player.h"
 #include "textbox.h"
 #include "SaveManager.h"
+#include "GameData.h"
 
 extern Environment *theEnvironment;
 extern SaveManager *saveManager;
@@ -10,8 +11,8 @@ extern Player *thePlayer;
 extern HGE *hge;
 extern TextBox *theTextBox;
 extern hgeSprite* abilitySprites[NUM_ABILITIES];
-extern hgeStringTable *stringTable;
 extern hgeResourceManager *resources;
+extern GameData *gameData;
 extern float gameTime;
 
 /**
@@ -104,27 +105,27 @@ void LootManager::update(float dt) {
 				switch (i->ability) {
 					case WATER_BOOTS:
 						saveManager->hasAbility[WATER_BOOTS] = true;
-						theTextBox->set(stringTable->GetString("GotJesusSandals"), true, abilitySprites[WATER_BOOTS], 64);
+						theTextBox->set(gameData->getGameText("GotJesusSandals"), true, abilitySprites[WATER_BOOTS], 64);
 						break;
 					case FRISBEE:
 						saveManager->hasAbility[FRISBEE] = true;
-						theTextBox->set(stringTable->GetString("GotFrisbee"), true, abilitySprites[FIRE_BREATH], 64);
+						theTextBox->set(gameData->getGameText("GotFrisbee"), true, abilitySprites[FIRE_BREATH], 64);
 						break;
 					case FIRE_BREATH:
 						saveManager->hasAbility[FIRE_BREATH] = true;
-						theTextBox->set(stringTable->GetString("GotFireBreath"), true, abilitySprites[FIRE_BREATH], 64);
+						theTextBox->set(gameData->getGameText("GotFireBreath"), true, abilitySprites[FIRE_BREATH], 64);
 						break;
 					case SPRINT_BOOTS:
 						saveManager->hasAbility[SPRINT_BOOTS] = true;
-						theTextBox->set(stringTable->GetString("GotSprintBoots"), true, abilitySprites[SPRINT_BOOTS], 64);
+						theTextBox->set(gameData->getGameText("GotSprintBoots"), true, abilitySprites[SPRINT_BOOTS], 64);
 						break;
 					case LIGHTNING_ORB:
 						saveManager->hasAbility[LIGHTNING_ORB] = true;
-						theTextBox->set(stringTable->GetString("GotLightningOrb"), true, abilitySprites[LIGHTNING_ORB], 64);
+						theTextBox->set(gameData->getGameText("GotLightningOrb"), true, abilitySprites[LIGHTNING_ORB], 64);
 						break;
 					case REFLECTION_SHIELD:
 						saveManager->hasAbility[REFLECTION_SHIELD] = true;
-						theTextBox->set(stringTable->GetString("GotReflectionShield"), true, abilitySprites[REFLECTION_SHIELD], 64);
+						theTextBox->set(gameData->getGameText("GotReflectionShield"), true, abilitySprites[REFLECTION_SHIELD], 64);
 						break;
 				}
 			}

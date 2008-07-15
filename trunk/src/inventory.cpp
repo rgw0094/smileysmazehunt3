@@ -5,16 +5,16 @@
 #include "player.h"
 #include "Input.h"
 #include "SaveManager.h"
+#include "GameData.h"
 
 //Objects
 extern HGE *hge;
 extern Player *thePlayer;
-extern hgeStringTable *stringTable;
 extern TextBox *theTextBox;
 extern hgeResourceManager *resources;
 extern Input *input;
 extern SaveManager *saveManager;
-extern Ability abilities[16];
+extern GameData *gameData;
 
 //Sprites
 extern hgeSprite *itemLayer[256], *abilitySprites[NUM_ABILITIES];
@@ -52,7 +52,7 @@ void Inventory::draw(float dt) {
 				abilitySprites[j*4 + i]->Render(INVENTORY_X_OFFSET + 22 + i*SQUARE_SIZE, INVENTORY_Y_OFFSET + 22 + j*SQUARE_SIZE);
 				//Draw the ability name if it is highlighted
 				if (cursorX == i && cursorY == j) {
-					resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET+160,INVENTORY_Y_OFFSET+265,HGETEXT_CENTER,"%s", abilities[j*4 + i].description);
+					resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET+160,INVENTORY_Y_OFFSET+265,HGETEXT_CENTER,"%s", gameData->getAbilityInfo(j*4 + i).description);
 				}
 			}
 		}
@@ -94,7 +94,7 @@ void Inventory::draw(float dt) {
 bool Inventory::update(float dt) {
 	
 	//Highlight currently active item
-	if (abilities[cursorY*4 + cursorX].type != PASSIVE && saveManager->hasAbility[cursorY*4 + cursorX]) {
+	if (gameData->getAbilityInfo(cursorY*4 + cursorX).type != PASSIVE && saveManager->hasAbility[cursorY*4 + cursorX]) {
 		cursorY = (thePlayer->selectedAbility - (thePlayer->selectedAbility % 4)) / 4;
 		cursorX = thePlayer->selectedAbility % 4;
 	}
@@ -114,7 +114,7 @@ bool Inventory::update(float dt) {
 	}
 
 	//Update selected ability
-	if (abilities[cursorY*4 + cursorX].type != PASSIVE && saveManager->hasAbility[cursorY*4 + cursorX]) {
+	if (gameData->getAbilityInfo(cursorY*4 + cursorX).type != PASSIVE && saveManager->hasAbility[cursorY*4 + cursorX]) {
 		thePlayer->selectedAbility = cursorY*4 + cursorX;
 	}
 

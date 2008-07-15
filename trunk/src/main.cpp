@@ -18,11 +18,9 @@
 #include "SoundManager.h"
 #include "GameData.h"
 
-//Objects
+//Global Objects
 HGE *hge=0;
 hgeResourceManager *resources;
-hgeStringTable *stringTable;
-Ability abilities[16];
 Environment *theEnvironment;
 Player *thePlayer;
 EnemyManager *enemyManager;
@@ -52,14 +50,12 @@ float gameTime = 0.0;
 int frameCounter = 0;
 int gameState = MENU;
 bool debugMode;
-float rotation = 0.0f;
 bool hasFountain;
 int fountainX, fountainY;
 float loadingEffectScale = 3.0;
 float darkness = 0.0;
 
 //Save file stuff
-int currentSave;
 float timePlayed;
 
 
@@ -124,9 +120,6 @@ void loadResources() {
 	for (int i = 0; i < NUM_ABILITIES; i++) {
 		abilitySprites[i] = new hgeSprite(resources->GetTexture("general"),192+i*64,0,64,64);
 	}
-
-	//Init ability data
-	initAbilities();
 
 }
 
@@ -327,10 +320,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//Load resources
 		loadResources();
+
+		//Load non-game objects. These only need to be created once and
+		//persist until the program is closed!
 		saveManager = new SaveManager();
 		theMenu = new Menu();
 		theTextBox = new TextBox();
-		stringTable = new hgeStringTable("Data/GameText.dat");
 		input = new Input();
 		windowManager = new WindowManager();
 		bossManager = new BossManager();

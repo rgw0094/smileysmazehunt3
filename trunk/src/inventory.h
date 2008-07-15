@@ -7,12 +7,6 @@
 #define HEIGHT 3				//Height of the grid
 #define WIDTH 4					//Width of the grid
 
-//Item types
-#define PASSIVE 0
-#define ACTIVATED 1
-#define HOLD 2
-
-
 
 class Inventory : public BaseWindow {
 

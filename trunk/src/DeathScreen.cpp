@@ -56,7 +56,7 @@ bool DeathScreen::update(float dt, float mouseX, float mouseY) {
 	//Click Continue
 	if (buttons[CONTINUE_BUTTON]->isClicked()) {
 		loadGameObjects();
-		saveManager->load(saveManager->currentSave);\
+		saveManager->load(saveManager->currentSave);
 		enterGameState(GAME);
 		theEnvironment->loadArea(FOUNTAIN_AREA,FOUNTAIN_AREA,0,0);
 	}

@@ -10,6 +10,7 @@
 #include "Shop.h"
 #include "SaveManager.h"
 #include "SoundManager.h"
+#include "GameData.h"
 
 extern SaveManager *saveManager;
 extern NPCManager *npcManager;
@@ -17,11 +18,12 @@ extern HGE *hge;
 extern Player *thePlayer;
 extern hgeSprite *npcSprites[NUM_NPCS][4];
 extern hgeSprite* abilitySprites[NUM_ABILITIES];
-extern hgeStringTable *stringTable;
 extern hgeResourceManager *resources;
 extern Input *input;
 extern WindowManager *windowManager;
 extern SoundManager *soundManager;
+extern GameData *gameData;
+
 extern float gameTime;
 extern int frameCounter;
 
@@ -82,7 +84,7 @@ void TextBox::setDialogue(int _npcID, int _textID) {
 	textID = _textID;
 	paramString = "NPC";
 	paramString = paramString + intToString(textID) + "Pages";
-	numPages = atoi(stringTable->GetString(paramString.c_str()));
+	numPages = atoi(gameData->getGameText(paramString.c_str()));
 	currentPage = 1;
 	strcpy(text, "-");
 
@@ -105,7 +107,7 @@ void TextBox::setHint() {
 	textID = saveManager->currentHint;
 	paramString = "Hint";
 	paramString = paramString + intToString(textID) + "Pages";
-	numPages = atoi(stringTable->GetString(paramString.c_str()));
+	numPages = atoi(gameData->getGameText(paramString.c_str()));
 	currentPage = 1;
 	strcpy(text, "-");
 	fadeAlpha = 0.0;
@@ -163,7 +165,7 @@ void TextBox::draw(float dt) {
 		//Print the current page of the hint
 		paramString = "Hint";
 		paramString = paramString + intToString(textID) + "-" + intToString(currentPage);
-		resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, stringTable->GetString(paramString.c_str()));
+		resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, gameData->getGameText(paramString.c_str()));
 
 		//Draw next page/OK icon
 		if (currentPage == numPages) {
@@ -185,12 +187,12 @@ void TextBox::draw(float dt) {
 		}
 		paramString = "NPC";
 		paramString = paramString + intToString(textID) + "Name";
-		resources->GetFont("textBoxNameFnt")->printf(x + 220, y+20, HGETEXT_CENTER, "%s", stringTable->GetString(paramString.c_str()));
+		resources->GetFont("textBoxNameFnt")->printf(x + 220, y+20, HGETEXT_CENTER, "%s", gameData->getGameText(paramString.c_str()));
 
 		//Print the current page of the conversation
 		paramString = "NPC";
 		paramString = paramString + intToString(textID) + "-" + intToString(currentPage);
-		resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, stringTable->GetString(paramString.c_str()));
+		resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, gameData->getGameText(paramString.c_str()));
 
 		//Draw next page/OK icon
 		if (currentPage == numPages) {
@@ -278,7 +280,7 @@ void TextBox::update(float dt) {
 			//give him the cane.
 			} else if (textBoxType == TYPE_DIALOG && npcID == HINT_MAN && !saveManager->hasAbility[CANE]) {
 				saveManager->hasAbility[CANE] = true;
-				set(stringTable->GetString("GotCane"), true, abilitySprites[CANE], 64);
+				set(gameData->getGameText("GotCane"), true, abilitySprites[CANE], 64);
 			
 			//Close hint box by fading out psychedelic background
 			} else if (textBoxType == TYPE_HINT) {
