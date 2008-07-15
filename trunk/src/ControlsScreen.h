@@ -2,8 +2,9 @@
 #define _CONTROLSSCREEN_H_
 
 #include "MenuScreen.h"
-#include "hge include/hgerect.h"
-#include "Button.h"
+
+class hgeRect;
+class Button;
 
 class ControlsScreen : public MenuScreen {
 

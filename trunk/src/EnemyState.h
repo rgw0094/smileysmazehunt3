@@ -2,12 +2,12 @@
  * Defines all concrete enemy states that implement the abstract 
  * BaseEnemyState class.
  */
-
 #ifndef _ENEMYSTATE_H_
 #define _ENEMYSTATE_H_
 
-#include "BaseEnemyState.h"
-#include "BaseEnemy.h"
+#include <string>
+
+class BaseEnemy;
 
 //Wander directions
 #define WANDER_LEFT 0
@@ -19,6 +19,21 @@
 #define WANDER_NORMAL 0
 #define WANDER_LEFT_RIGHT 1
 #define WANDER_UP_DOWN 2
+
+/**
+ * Abstract base class for all enemy states.
+ */
+class EnemyState {
+
+public:
+
+	//methods
+	virtual void enterState() = 0;
+	virtual void update(float dt) = 0;
+	virtual void exitState() = 0;
+	virtual bool instanceOf(char*) = 0;
+
+};
 
 /**
  * Wander State

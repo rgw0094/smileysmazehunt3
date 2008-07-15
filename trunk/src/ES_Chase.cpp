@@ -2,9 +2,10 @@
  * Enemy state where the enemy chases after the player using the A* algorithm.
  */
 #include "EnemyState.h"
-#include "BaseEnemy.h"
 #include "Player.h"
 #include "Environment.h"
+#include "smiley.h"
+#include "enemy.h"
 
 extern Player *thePlayer;
 extern Environment *theEnvironment;

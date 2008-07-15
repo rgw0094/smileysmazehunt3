@@ -4,6 +4,7 @@
 #include "environment.h"
 #include "npcmanager.h"
 #include "textbox.h"
+#include "CollisionCircle.h"
 
 extern HGE *hge;
 extern TextBox *theTextBox;

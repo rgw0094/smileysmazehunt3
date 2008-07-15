@@ -1,8 +1,13 @@
 #ifndef _PROJECTILES_H_
 #define _PROJECTILES_H_
 
-#include "smiley.h"
-#include "CollisionCircle.h"
+#include <list>
+#include "hge include/hge.h"
+
+class CollisionCircle;
+class hgeParticleSystem;
+class hgeRect;
+class hgeSprite;
 
 //Projectile Types
 #define NUM_PROJECTILES 8

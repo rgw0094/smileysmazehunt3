@@ -4,6 +4,8 @@
 #include "player.h"
 #include "environment.h"
 #include "textbox.h"
+#include "NPC.h"
+#include "Tongue.h"
 
 extern HGE *hge;
 extern Player *thePlayer;

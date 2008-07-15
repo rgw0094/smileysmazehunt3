@@ -1,11 +1,12 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
-#include "weaponparticle.h"
-#include "collisioncircle.h"
-#include "Tongue.h"
-
 #define KNOCKBACK_DURATION 0.2
+
+class CollisionCircle;
+class Tongue;
+class WeaponParticleSystem;
+class hgeRect;
 
 struct velocity {
 	double x,y;
@@ -84,9 +85,9 @@ public:
 	float fallingDx, fallingDy;
 
 	//Constants
-	float angles[NUM_DIRECTIONS];
-	float mouthXOffset[NUM_DIRECTIONS];
-	float mouthYOffset[NUM_DIRECTIONS];
+	float angles[8];
+	float mouthXOffset[8];
+	float mouthYOffset[8];
 
 	//State info
 	bool active;					//Whether or not to update the player object

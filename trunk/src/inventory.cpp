@@ -3,6 +3,7 @@
 #include "Input.h"
 #include "SaveManager.h"
 #include "GameData.h"
+#include "smiley.h"
 
 //Objects
 extern HGE *hge;

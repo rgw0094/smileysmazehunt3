@@ -1,7 +1,7 @@
 #ifndef _NPC_H_
 #define _NPC_H_
 
-#include "smiley.h"
+class hgeRect;
 
 //Stages
 #define WALK_STAGE 0

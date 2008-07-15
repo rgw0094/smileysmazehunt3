@@ -8,6 +8,7 @@
 #include "projectiles.h"
 #include "player.h"
 #include "environment.h"
+#include "CollisionCircle.h"
 
 extern HGE *hge;
 extern hgeResourceManager *resources;

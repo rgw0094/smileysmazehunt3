@@ -8,6 +8,8 @@
 #include "SaveManager.h"
 #include "LootManager.h"
 #include "SoundManager.h"
+#include "weaponparticle.h"
+#include "Tongue.h"
 
 extern hgeResourceManager *resources;
 extern EnemyGroupManager *enemyGroupManager;

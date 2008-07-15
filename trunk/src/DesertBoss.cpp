@@ -10,7 +10,7 @@
 #include "lootmanager.h"
 #include "SaveManager.h"
 #include "SoundManager.h"
-
+#include "weaponparticle.h"
 extern HGE *hge;
 extern hgeResourceManager *resources;
 extern bool debugMode;

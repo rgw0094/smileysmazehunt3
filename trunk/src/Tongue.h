@@ -1,7 +1,7 @@
 #ifndef _TONGUE_H_
 #define _TONGUE_H_
 
-#include "hge include/hgerect.h"
+class hgeRect;
 
 class Tongue {
 

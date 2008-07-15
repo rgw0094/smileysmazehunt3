@@ -1,7 +1,7 @@
 #ifndef _MENU_H_
 #define _MENU_H_
 
-#include "MenuScreen.h"
+class MenuScreen;
 
 //Menu States
 #define NUM_MENU_SCREENS 4

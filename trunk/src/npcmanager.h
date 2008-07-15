@@ -1,10 +1,9 @@
 #ifndef _NPCMANAGER_H_
 #define _NPCMANAGER_H_
 
-#include "smiley.h"
-#include "npc.h"
-#include "collisioncircle.h"
-#include "Tongue.h"
+class Tongue;
+class CollisionCircle;
+class NPC;
 
 struct NPCStruct {
 	NPC *npc;
