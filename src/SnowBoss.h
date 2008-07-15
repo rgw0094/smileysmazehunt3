@@ -2,7 +2,6 @@
 #define _SNOWBOSS_H_
 
 #include "boss.h"
-#include "smiley.h"
 #include "hge include/hgeparticle.h"
 #include "weaponparticle.h"
 

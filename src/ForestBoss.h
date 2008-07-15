@@ -2,7 +2,6 @@
 #define _FORESTBOSS_H_
 
 #include "boss.h"
-#include "smiley.h"
 #include "hge include/hgeparticle.h"
 #include "collisionCircle.h"
 

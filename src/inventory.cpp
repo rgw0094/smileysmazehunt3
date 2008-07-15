@@ -1,4 +1,3 @@
-#include "smiley.h"
 #include "inventory.h"
 #include "environment.h"
 #include "textbox.h"
