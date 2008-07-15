@@ -1,7 +1,6 @@
 #ifndef _FIREBOSS_H_
 #define _FIREBOSS_H_
 
-#include "smiley.h"
 #include "boss.h"
 #include "weaponparticle.h"
 

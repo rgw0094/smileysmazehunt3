@@ -13,7 +13,7 @@ LPDIRECTINPUT8       g_pDI;
 LPDIRECTINPUTDEVICE8 g_pJoystick;
 DIDEVCAPS            g_diDevCaps;
 
-// Callback functions. They have to be globals in the cpp file for some reason /////////
+// Callback functions.
 BOOL CALLBACK    EnumAxesCallback( const DIDEVICEOBJECTINSTANCE* pdidoi, VOID* pContext );
 BOOL CALLBACK    EnumJoysticksCallback( const DIDEVICEINSTANCE* pdidInstance, VOID* pContext );
 
@@ -412,7 +412,7 @@ void Input::setEditMode(int whichInput) {
 }
 
 /**
- * Returns the name of the specified input;
+ * Returns the name of the specified input. Used for the menu.
  */
 char* Input::getInputName(int whichInput) {
 	switch (whichInput) {
@@ -436,7 +436,7 @@ char* Input::getInputName(int whichInput) {
 }
 
 /**
- *
+ * Returns a description of the specified input. Used for the menu.
  */
 char* Input::getInputDescription(int whichInput) {
 		
