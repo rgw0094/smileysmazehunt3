@@ -1,5 +1,6 @@
 #include "hge include/hge.h"
 #include "WindowManager.h"
+#include "BaseWindow.h"
 
 extern HGE *hge;
 

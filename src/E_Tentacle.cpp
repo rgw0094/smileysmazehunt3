@@ -7,7 +7,7 @@
 #include "hge include/hgevector.h"
 #include "projectiles.h"
 #include "tongue.h"
-
+#include "CollisionCircle.h"
 
 extern hgeResourceManager *resources;
 extern Environment *theEnvironment;

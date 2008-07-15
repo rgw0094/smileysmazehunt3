@@ -7,6 +7,7 @@
 #include "EnemyState.h"
 #include "environment.h"
 #include "player.h"
+#include "CollisionCircle.h"
 
 extern HGE *hge;
 extern hgeResourceManager *resources;

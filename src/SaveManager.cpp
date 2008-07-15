@@ -9,6 +9,7 @@
 
 #include "Environment.h"
 #include "hge include/hge.h"
+#include "smiley.h"
 
 extern Environment *theEnvironment;
 extern HGE *hge;

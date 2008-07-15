@@ -365,12 +365,6 @@
 				Name="enemy"
 				Filter="">
 				<File
-					RelativePath=".\src\BaseEnemy.h">
-				</File>
-				<File
-					RelativePath=".\src\BaseEnemyState.h">
-				</File>
-				<File
 					RelativePath=".\src\enemy.h">
 				</File>
 				<File

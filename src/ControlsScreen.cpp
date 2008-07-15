@@ -3,6 +3,7 @@
 #include "hge include/hgeresource.h"
 #include "menu.h"
 #include "Input.h"
+#include "Button.h"
 
 extern HGE *hge;
 extern hgeResourceManager *resources;

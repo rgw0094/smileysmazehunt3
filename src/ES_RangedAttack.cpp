@@ -1,7 +1,8 @@
 #include "EnemyState.h"
-#include "BaseEnemy.h"
 #include "Player.h"
 #include "Projectiles.h"
+#include "enemy.h"
+#include "smiley.h"
 
 extern Player *thePlayer;
 extern ProjectileManager *projectileManager;

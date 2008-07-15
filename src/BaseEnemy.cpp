@@ -1,12 +1,16 @@
 /**
  * Implements concrete methods of the abstract BaseEnemy class.
  */
-#include "BaseEnemy.h"
+#include "enemy.h"
 #include "Environment.h"
 #include "Player.h"
 #include "hge include/hgeresource.h"
 #include "hge include/hge.h"
 #include "GameData.h"
+#include "WeaponParticle.h"
+#include "CollisionCircle.h"
+#include "Tongue.h"
+#include "EnemyState.h"
 
 extern Player *thePlayer;
 extern Environment *theEnvironment;
@@ -110,6 +114,27 @@ void BaseEnemy::initEnemy(int _id, int _gridX, int _gridY, int _groupID) {
 
 	//Set collision box
 	collisionBox->SetRadius(x, y, radius);
+
+}
+
+
+/**
+ * Switches states and calls exitState() on the old state and enterState() 
+ * on the new.
+ */
+void BaseEnemy::setState(EnemyState *newState) {
+
+	//Exit old state
+	if (currentState) {
+		currentState->exitState();
+		delete currentState;
+	}
+
+	//Enter new state
+	currentState = newState;
+	if (currentState) {
+		currentState->enterState();
+	}
 
 }
 

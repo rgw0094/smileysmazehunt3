@@ -2,8 +2,9 @@
 #define _SNOWBOSS_H_
 
 #include "boss.h"
-#include "hge include/hgeparticle.h"
-#include "weaponparticle.h"
+
+class hgeParticleSystem;
+class WeaponParticleSystem;
 
 //States
 #define SNOWBOSS_INACTIVE 0

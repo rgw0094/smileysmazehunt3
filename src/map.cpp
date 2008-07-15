@@ -3,6 +3,7 @@
 #include "player.h"
 #include "Input.h"
 #include "SaveManager.h"
+#include "smiley.h"
 
 extern HGE *hge;
 extern SaveManager *saveManager;

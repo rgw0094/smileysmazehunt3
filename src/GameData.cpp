@@ -4,6 +4,7 @@
  * Encapsulates all game data.
  */
 
+#include "smiley.h"
 #include "GameData.h"
 #include "Projectiles.h"
 #include <string>

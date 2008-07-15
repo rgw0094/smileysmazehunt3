@@ -1,7 +1,7 @@
 #ifndef _WINDOWMANAGER_H_
 #define _WINDOWMANAGER_H_
 
-#include "BaseWindow.h"
+class BaseWindow;
 
 class WindowManager {
 

@@ -1,12 +1,19 @@
 /**
  * Defines all concrete enemy types that extend the abstract BaseEnemy class.
  */
-
 #ifndef _ENEMY_H_
 #define _ENEMY_H_
 
-#include "BaseEnemy.h"
+#include <list>
+#include "hge include/hgevector.h"
 
+class hgeParticleManager;
+class Tongue;
+class hgeRect;
+class BaseEnemyState;
+class hgeAnimation;
+class EnemyState;
+class hgeVector;
 
 //AI types
 #define AI_CHASE 0
@@ -15,6 +22,97 @@
 #define AI_UP_DOWN 3
 #define AI_CIRCLE 4
 
+#define NUM_STUN_STARS 5
+
+/** 
+ * Abstract base enemy class that all other classes below extend.
+ */
+class BaseEnemy {
+
+public:
+
+	//Methods that need to be overrode
+	virtual void draw(float dt) = 0;
+	virtual void update(float dt) = 0;
+
+	//Methods that can be overrode
+	virtual void drawFrozen(float dt);
+	virtual void drawStunned(float dt);
+	virtual void drawDebug();
+	virtual void hitWithProjectile(int projectileType);
+	virtual void doTongueCollision(Tongue* tongue, float damage);
+	virtual void doPlayerCollision();
+
+	//Methods that can't be overrode
+	void baseUpdate(float dt);
+	void baseDraw(float dt);
+	void move(float dt);
+	bool inChaseRange(int range);
+	void doAStar();
+	bool canShootPlayer();
+	int distanceFromPlayer();
+	void initEnemy(int _id, int _gridX, int _gridY, int _groupID);
+	void dealDamageAndKnockback(float damage, float knockbackDist, float knockbackerX, float knockbackerY);
+	void setFacingPlayer(int maximumDistance, int defaultDirection);
+	void setFacingPlayer();
+	void setFacing();
+	void startFlashing();
+	void setState(EnemyState *newState);
+
+	//Current state
+	EnemyState *currentState;
+
+	//Variables
+	int enemyType, radius, wanderType, pathRadius;
+	bool immuneToTongue, immuneToFire, immuneToStun, immuneToLightning;
+	float damage;
+	int id, gridX, gridY, facing;
+	bool chases;
+	int mapPath[256][256];
+	int variable1, variable2;
+
+
+	int groupID;
+	bool markMap[256][256];
+	bool canPass[256];
+	int weaponRange;	
+	float screenX,screenY,speed;
+	int startX, startY;					//Starting location of the enemy
+	float startedCircle, circleTime;
+	float health,maxHealth;
+	bool pathLand, pathSWater, pathDWater, pathIce;
+	int targetX, targetY;
+	float knockbackXDist, knockbackYDist, knockbackTime, startedKnockback, timeFrozen;
+	float lastHitByWeapon;
+	float circleTimer;
+	bool hasStartedCircle;
+	bool dealsCollisionDamage;
+	float timeStartedFlashing;
+	bool knockback;
+	float stunStarAngles[NUM_STUN_STARS];
+
+	//Ranged attack shit
+	bool hasRangedAttack;
+	int rangedType;
+	float rangedAttackDelay;
+	float lastRangedAttack;
+	float projectileSpeed;
+	float projectileDamage;	
+	float x, y, dx, dy;
+	hgeRect *collisionBox, *futureCollisionBox;
+
+	//State variables
+	bool stunned;
+	bool frozen;
+	float startedStun;
+	float stunLength;
+	bool dying;
+	bool flashing;
+
+	//Graphics
+	hgeAnimation *graphic[4];
+
+};
 
 /**
  * Default Enemy

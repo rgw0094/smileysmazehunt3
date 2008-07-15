@@ -1,8 +1,6 @@
 #ifndef _SAVEMANAGER_H_
 #define _SAVEMANAGER_H_
 
-#include "smiley.h"
-
 struct SaveFile {
 	bool empty;
 	int timePlayed;
@@ -39,21 +37,21 @@ public:
 	bool collectedItem[999];			//Stores save info about which items have been collected
 	bool openedDoor[999];				//Stores save info about which doors have been opened
 	bool cylinderChanged[999];			//Stores save info about which cylinders' state are changed
-	bool killedBoss[NUM_BOSSES];
+	bool killedBoss[12];
 	int playerGridX, playerGridY;
 	int currentHint;
 
 	//Stuff in inventory
 	bool hasAbility[12];
 	int numKeys[5][4];
-	int numGems[NUM_AREAS][4];
+	int numGems[9][4];
 	int numUpgrades[3];
 	int money;
 
 private:
 
 	SaveFile files[4];
-	bool explored[NUM_AREAS][32][32];
+	bool explored[9][32][32];
 
 };
 

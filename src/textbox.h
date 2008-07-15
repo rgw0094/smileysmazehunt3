@@ -1,8 +1,10 @@
 #ifndef TEXTBOX_H_
-#define TEXTBOT_H_
+#define TEXTBOX_H_
 
-#include "hge include/hgedistort.h"
-#include "smiley.h"
+#include <string>
+
+class hgeDistortionMesh;
+class hgeSprite;
 
 class TextBox {
 

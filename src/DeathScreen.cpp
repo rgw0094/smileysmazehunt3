@@ -4,6 +4,8 @@
 #include "environment.h"
 #include "player.h"
 #include "SaveManager.h"
+#include "Button.h"
+#include "Smiley.h"
 
 extern Menu *theMenu;
 extern hgeResourceManager *resources;

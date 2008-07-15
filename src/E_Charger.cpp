@@ -9,6 +9,7 @@
 #include "projectiles.h"
 #include "player.h"
 #include "environment.h"
+#include "smiley.h"
 
 extern HGE *hge;
 extern hgeResourceManager *resources;

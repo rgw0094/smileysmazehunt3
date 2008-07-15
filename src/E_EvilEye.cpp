@@ -5,6 +5,7 @@
 #include "projectiles.h"
 #include "player.h"
 #include "environment.h"
+#include "smiley.h"
 
 #define EYE_CLOSED 0
 #define EYE_OPENING 1

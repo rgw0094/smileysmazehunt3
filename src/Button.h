@@ -1,7 +1,7 @@
 #ifndef _BUTTON_H_
 #define _BUTTON_H_
 
-#include "hge include/hgerect.h"
+class hgeRect;
 
 #define BUTTON_WIDTH 248.0f
 #define BUTTON_HEIGHT 71.0f

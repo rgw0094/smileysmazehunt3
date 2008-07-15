@@ -13,6 +13,9 @@
 #include "WindowManager.h"
 #include "GameData.h"
 #include "SoundManager.h"
+#include "collisioncircle.h"
+#include "weaponparticle.h"
+#include "Tongue.h"
 
 //Textures
 extern HTEXTURE particleTexture;

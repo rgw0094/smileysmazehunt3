@@ -4,6 +4,7 @@
 #include "textbox.h"
 #include "SaveManager.h"
 #include "GameData.h"
+#include "collisioncircle.h"
 
 extern Environment *theEnvironment;
 extern SaveManager *saveManager;

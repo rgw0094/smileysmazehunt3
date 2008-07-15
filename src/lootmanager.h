@@ -1,7 +1,8 @@
 #ifndef _LOOTMANAGER_H_
 #define _LOOTMANAGER_H_
 
-#include "smiley.h"
+class hgeSprite;
+class hgeRect;
 
 #define NUM_LOOT 3
 #define LOOT_HEALTH 0
