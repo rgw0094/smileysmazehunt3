@@ -10,6 +10,7 @@
 
 GameData::GameData() {
 	loadEnemyData();
+	loadAbilityData();
 }
 
 GameData::~GameData() {
@@ -20,8 +21,81 @@ EnemyInfo GameData::getEnemyInfo(int enemyID) {
 	return enemyInfo[enemyID];
 }
 
+Ability GameData::getAbilityInfo(int abilityID) {
+	return abilities[abilityID];
+}
+
+char *GameData::getGameText(const char *text) {
+	return gameText->GetString(text);
+}
+
 ////////// Private functions //////////////////
 
+
+void GameData::loadAbilityData() {
+
+	//Smiley's Cane
+	strcpy(abilities[CANE].description, "Mysterious Cane");
+	abilities[CANE].type = ACTIVATED;
+	abilities[CANE].manaCost = 10;
+
+	//Jesus' Sandals
+    strcpy(abilities[WATER_BOOTS].description, "Jesus' Sandals");
+	abilities[WATER_BOOTS].type = HOLD;
+	abilities[WATER_BOOTS].manaCost = 0;
+
+	//Boots of 14
+	strcpy(abilities[SPRINT_BOOTS].description, "Speed Boots");
+	abilities[SPRINT_BOOTS].type = ACTIVATED;
+	abilities[SPRINT_BOOTS].manaCost = 0;
+
+	//Fire Breath
+	strcpy(abilities[FIRE_BREATH].description, "Fire Breath");
+	abilities[FIRE_BREATH].type = HOLD;
+	abilities[FIRE_BREATH].manaCost = 10;
+
+	//Ice Breath
+	strcpy(abilities[ICE_BREATH].description, "Ice Breath");
+	abilities[ICE_BREATH].type = ACTIVATED;
+	abilities[ICE_BREATH].manaCost = 10;
+
+	//Reflection Shield
+	strcpy(abilities[REFLECTION_SHIELD].description, "Reflection Shield");
+	abilities[REFLECTION_SHIELD].type = HOLD;
+	abilities[REFLECTION_SHIELD].manaCost = 20;
+
+	//Wings
+	strcpy(abilities[HOVER].description, "Hover");
+	abilities[HOVER].type = HOLD;
+	abilities[HOVER].manaCost = 15;
+
+	//Lightning Orbs
+	strcpy(abilities[LIGHTNING_ORB].description, "Lightning Orbs");
+	abilities[LIGHTNING_ORB].type = ACTIVATED;
+	abilities[LIGHTNING_ORB].manaCost = 1;
+
+	//Shrink
+	strcpy(abilities[SHRINK].description, "Shrink");
+	abilities[SHRINK].type = ACTIVATED;
+	abilities[SHRINK].manaCost = 0;
+
+	//Silly Pad
+	strcpy(abilities[SILLY_PAD].description, "Silly Pad");
+	abilities[SILLY_PAD].type = ACTIVATED;
+	abilities[SILLY_PAD].manaCost = 3;
+
+	//King Tut's Mask
+	strcpy(abilities[TUTS_MASK].description, "Tut's Mask");
+	abilities[TUTS_MASK].type = HOLD;
+	abilities[TUTS_MASK].manaCost = 25;
+
+	//Frisbee
+	strcpy(abilities[FRISBEE].description, "Frisbee!?!?! K");
+	abilities[FRISBEE].type = ACTIVATED;
+	abilities[FRISBEE].manaCost = 0;
+
+
+}
 
 /**
  * Loads enemy data from file "Enemy.dat"

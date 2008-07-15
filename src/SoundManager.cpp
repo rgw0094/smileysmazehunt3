@@ -81,6 +81,23 @@ void SoundManager::playPreviousMusic() {
 	currentMusic = previousMusic;
 }
 
+void SoundManager::playEnvironmentEffect(char *effect, bool loop) {
+	environmentChannel = hge->Effect_PlayEx(resources->GetEffect(effect),100,0,1.0f,loop);
+}
+
+void SoundManager::stopEnvironmentChannel() {
+	hge->Channel_Stop(environmentChannel);
+}
+	
+
+void SoundManager::playAbilityEffect(char *effect, bool loop) {
+	abilityChannel = hge->Effect_PlayEx(resources->GetEffect(effect),100,0,1.0f,loop);
+}
+
+void SoundManager::stopAbilityChannel() {
+	hge->Channel_Stop(abilityChannel);
+}
+
 /**
  * Listens for input to raise/lower music volume
  */

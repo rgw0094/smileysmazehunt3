@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string>
-#include < string >
+//#include < string >
 #include < sstream >
 #include < iostream >
 
@@ -56,6 +56,26 @@
 
 //Hardcoded IDs
 #define DRAW_AFTER_SMILEY 990
+
+//Abilities
+#define NUM_ABILITIES 12
+#define CANE 0
+#define FIRE_BREATH 1
+#define FRISBEE 2
+#define SPRINT_BOOTS 3
+#define LIGHTNING_ORB 4
+#define REFLECTION_SHIELD 5
+#define SILLY_PAD 6
+#define WATER_BOOTS 7
+#define ICE_BREATH 8
+#define SHRINK 9
+#define TUTS_MASK 10
+#define HOVER 11
+
+//Ability types
+#define PASSIVE 0
+#define ACTIVATED 1
+#define HOLD 2
 
 //Enemy Types
 #define ENEMY_BASIC 0
@@ -116,20 +136,6 @@
 #define HEALTH_ITEM 9
 #define MANA_ITEM 8
 
-//Abilities
-#define NUM_ABILITIES 12
-#define CANE 0
-#define FIRE_BREATH 1
-#define FRISBEE 2
-#define SPRINT_BOOTS 3
-#define LIGHTNING_ORB 4
-#define REFLECTION_SHIELD 5
-#define SILLY_PAD 6
-#define WATER_BOOTS 7
-#define ICE_BREATH 8
-#define SHRINK 9
-#define TUTS_MASK 10
-#define HOVER 11
 
 //-------- Collision Layer ---------//
 #define NUM_COLLISION 36
@@ -218,11 +224,7 @@
 
 
 
-struct Ability {
-	char description[68];
-	int manaCost;
-	int type;
-};
+
 
 struct Point {
 	int x, int y;

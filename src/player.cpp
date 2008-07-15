@@ -3,8 +3,6 @@
 #include "projectiles.h"
 #include "inventory.h"
 #include "player.h"
-#include "weaponparticle.h"
-#include "collisioncircle.h"
 #include "environment.h"
 #include "textbox.h"
 #include "npcmanager.h"
@@ -13,6 +11,8 @@
 #include "Input.h"
 #include "SaveManager.h"
 #include "WindowManager.h"
+#include "GameData.h"
+#include "SoundManager.h"
 
 //Textures
 extern HTEXTURE particleTexture;
@@ -24,14 +24,15 @@ extern EnemyManager *enemyManager;
 extern hgeParticleSystem *iceBreathParticle;
 extern ProjectileManager *projectileManager;
 extern TextBox *theTextBox;
-extern hgeStringTable *stringTable;
 extern NPCManager *npcManager;
 extern WindowManager *windowManager;
 extern Menu *theMenu;
 extern hgeResourceManager *resources;
 extern Input *input;
 extern SaveManager *saveManager;
-extern Ability abilities[16];
+extern GameData *gameData;
+extern SoundManager *soundManager;
+
 extern float gameTime;
 extern int frameCounter;
 
@@ -514,7 +515,7 @@ void Player::changeAbility(int direction) {
 	if (direction == LEFT) {
 		selectedAbility--;
 		if (selectedAbility < 0) selectedAbility = NUM_ABILITIES - 1;
-		while (abilities[selectedAbility].type == PASSIVE || !saveManager->hasAbility[selectedAbility]) {
+		while (gameData->getAbilityInfo(selectedAbility).type == PASSIVE || !saveManager->hasAbility[selectedAbility]) {
 			selectedAbility--;
 			if (selectedAbility < 0) selectedAbility = NUM_ABILITIES - 1;
 		}
@@ -524,7 +525,7 @@ void Player::changeAbility(int direction) {
 	if (direction == RIGHT) {
 		selectedAbility++;
 		if (selectedAbility > NUM_ABILITIES - 1) selectedAbility = 0;
-		while (abilities[selectedAbility].type == PASSIVE || !saveManager->hasAbility[selectedAbility]) {
+		while (gameData->getAbilityInfo(selectedAbility).type == PASSIVE || !saveManager->hasAbility[selectedAbility]) {
 			selectedAbility++;
 			if (selectedAbility > NUM_ABILITIES - 1) selectedAbility = 0;
 		}
@@ -555,7 +556,7 @@ void Player::doAbility(float dt) {
 			!falling && 
 			!springing && 
 			!frozen &&
-			mana >= abilities[HOVER].manaCost*dt);
+			mana >= gameData->getAbilityInfo(HOVER).manaCost*dt);
 	
 	//For debug purposes H will always hover
 	if (hge->Input_GetKeyState(HGEK_H)) isHovering = true;
@@ -584,8 +585,8 @@ void Player::doAbility(float dt) {
 							 !theTextBox->visible && 
 							 !falling && 
 							 selectedAbility == REFLECTION_SHIELD && 
-							 mana >= abilities[REFLECTION_SHIELD].manaCost*dt);
-	if (reflectionShieldActive) mana -= abilities[REFLECTION_SHIELD].manaCost*dt;
+							 mana >= gameData->getAbilityInfo(REFLECTION_SHIELD).manaCost*dt);
+	if (reflectionShieldActive) mana -= gameData->getAbilityInfo(REFLECTION_SHIELD).manaCost*dt;
 
 	////////////// Tut's Mask //////////////
 
@@ -594,8 +595,8 @@ void Player::doAbility(float dt) {
 			   !falling &&
 			   !frozen &&
 			   selectedAbility == TUTS_MASK && 
-			   mana >= abilities[TUTS_MASK].manaCost*dt);
-	if (cloaked) mana -= abilities[TUTS_MASK].manaCost*dt;
+			   mana >= gameData->getAbilityInfo(TUTS_MASK).manaCost*dt);
+	if (cloaked) mana -= gameData->getAbilityInfo(TUTS_MASK).manaCost*dt;
 	
 	////////////// Sprint Boots //////////////
 	
@@ -613,30 +614,30 @@ void Player::doAbility(float dt) {
 	if (input->keyPressed(INPUT_ABILITY) && !theTextBox->visible && !falling && !drowning && !frozen && !falling) {
 
 		//Shoot lightning orbs
-		if (selectedAbility == LIGHTNING_ORB && mana >= abilities[LIGHTNING_ORB].manaCost) {
-			mana -= abilities[LIGHTNING_ORB].manaCost;
+		if (selectedAbility == LIGHTNING_ORB && mana >= gameData->getAbilityInfo(LIGHTNING_ORB).manaCost) {
+			mana -= gameData->getAbilityInfo(LIGHTNING_ORB).manaCost;
 			lastOrb = gameTime;
 			projectileManager->addProjectile(x, y, 700.0, angles[facing]-.5*PI, getLightningOrbDamage(), false, PROJECTILE_LIGHTNING_ORB, true);
 		}
 
 		//Start using cane
-		if (selectedAbility == CANE && !usingCane && mana >= abilities[CANE].manaCost) {
+		if (selectedAbility == CANE && !usingCane && mana >= gameData->getAbilityInfo(CANE).manaCost) {
 			usingCane = true;
 			resources->GetParticleSystem("smileysCane")->FireAt(getScreenX(x), getScreenY(y));
 			timeStartedCane = gameTime;
 		}
 
 		//Place Silly Pad
-		if (selectedAbility == SILLY_PAD && mana >= abilities[SILLY_PAD].manaCost) {
+		if (selectedAbility == SILLY_PAD && mana >= gameData->getAbilityInfo(SILLY_PAD).manaCost) {
 			theEnvironment->hasSillyPad[gridX][gridY] = true;
 			theEnvironment->timeSillyPadPlaced[gridX][gridY] = gameTime;
-			mana -= abilities[SILLY_PAD].manaCost;
+			mana -= gameData->getAbilityInfo(SILLY_PAD).manaCost;
 			hge->Effect_Play(resources->GetEffect("snd_sillyPad"));
 		}
 
 		//Start Ice Breath
-		if (selectedAbility == ICE_BREATH && timePassedSince(startedIceBreath) > 1.5 && mana >= abilities[ICE_BREATH].manaCost) {
-			mana -= abilities[ICE_BREATH].manaCost;
+		if (selectedAbility == ICE_BREATH && timePassedSince(startedIceBreath) > 1.5 && mana >= gameData->getAbilityInfo(ICE_BREATH).manaCost) {
+			mana -= gameData->getAbilityInfo(ICE_BREATH).manaCost;
 			hge->Effect_Play(resources->GetEffect("snd_iceBreath"));
 			startedIceBreath = gameTime;
 			iceBreathParticle->Fire();
@@ -644,8 +645,8 @@ void Player::doAbility(float dt) {
 		}
 		
 		//Throw frisbee
-		if (selectedAbility == FRISBEE && !projectileManager->frisbeeActive() && mana >= abilities[FRISBEE].manaCost) {
-			mana -= abilities[FRISBEE].manaCost;
+		if (selectedAbility == FRISBEE && !projectileManager->frisbeeActive() && mana >= gameData->getAbilityInfo(FRISBEE).manaCost) {
+			mana -= gameData->getAbilityInfo(FRISBEE).manaCost;
 			projectileManager->addProjectile(x,y,400.0,angles[facing]-.5*PI,0,false,PROJECTILE_FRISBEE, true);
 		}
 
@@ -663,15 +664,15 @@ void Player::doAbility(float dt) {
 
 	////////////// Fire Breath //////////////
 
-	if (selectedAbility == FIRE_BREATH && input->keyDown(INPUT_ABILITY) && !frozen && !theTextBox->visible && mana >= abilities[FIRE_BREATH].manaCost*(breathingFire ? dt : .25f)) {
+	if (selectedAbility == FIRE_BREATH && input->keyDown(INPUT_ABILITY) && !frozen && !theTextBox->visible && mana >= gameData->getAbilityInfo(FIRE_BREATH).manaCost*(breathingFire ? dt : .25f)) {
 
-		mana -= abilities[FIRE_BREATH].manaCost*dt;
+		mana -= gameData->getAbilityInfo(FIRE_BREATH).manaCost*dt;
 
 		//Start breathing fire
 		if (!breathingFire) {
 			breathingFire = true;
 			fireBreathParticle->FireAt(screenX + mouthXOffset[facing], screenY + mouthYOffset[facing]);
-			abilityChannel = hge->Effect_PlayEx(resources->GetEffect("snd_fireBreath"), 100, 0, 1.0, true);
+			soundManager->playAbilityEffect("snd_fireBreath", true);
 		}
 
 		//Update breath direction and location
@@ -680,7 +681,7 @@ void Player::doAbility(float dt) {
 
 	//Stop breathing fire
 	} else if (breathingFire) {
-		hge->Channel_Stop(abilityChannel);
+		soundManager->stopAbilityChannel();
 		breathingFire = false;
 		fireBreathParticle->Stop(false);
 	}
@@ -767,7 +768,7 @@ void Player::doAbility(float dt) {
 
 	resources->GetParticleSystem("smileysCane")->Update(dt);
 	if (usingCane) {
-		mana -= abilities[CANE].manaCost*dt;
+		mana -= gameData->getAbilityInfo(CANE).manaCost*dt;
 	}
 
 	//Stop using cane
@@ -1140,7 +1141,7 @@ void Player::doWater() {
 		//Enter Lava
 		if (!inLava && hoveringYOffset == 0.0f && theEnvironment->collisionAt(baseX,baseY) == WALK_LAVA) {
 			inLava = true;
-			environmentChannel = hge->Effect_PlayEx(resources->GetEffect("snd_lava"),100,0,1.0f,true);
+			soundManager->playEnvironmentEffect("snd_lava",true);
 		}
 		//In Lava
 		if (inLava) {
@@ -1154,7 +1155,7 @@ void Player::doWater() {
 		//Exit Lava
 		if (hoveringYOffset > 0.0f || inLava && theEnvironment->collisionAt(baseX,baseY) != WALK_LAVA) {
 			inLava = false;
-			hge->Channel_Stop(environmentChannel);
+			soundManager->stopEnvironmentChannel();
 		}
 	}
 
@@ -1163,12 +1164,12 @@ void Player::doWater() {
 		//Enter Shallow Water
 		if (hoveringYOffset == 0.0f && !inShallowWater && theEnvironment->isShallowWaterAt(baseGridX,baseGridY)) {
 			inShallowWater = true;
-			if (!waterWalk) environmentChannel = hge->Effect_PlayEx(resources->GetEffect("snd_shallowWater"), 100,0,1.0f,true);
+			if (!waterWalk) soundManager->playEnvironmentEffect("snd_shallowWater", true);
 		}
 		//Exit Shallow Water
 		if (hoveringYOffset > 0.0f || inShallowWater && !theEnvironment->isShallowWaterAt(baseGridX,baseGridY)) {
 			inShallowWater = false;
-			hge->Channel_Stop(environmentChannel);
+			soundManager->stopEnvironmentChannel();
 		}
 	}
 

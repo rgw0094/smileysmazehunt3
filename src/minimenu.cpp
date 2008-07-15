@@ -1,13 +1,10 @@
-#include "smiley.h"
 #include "minimenu.h"
-#include "player.h"
 #include "menu.h"
 #include "Input.h"
 #include "SaveManager.h"
 
 extern HGE *hge;
 extern HTEXTURE menuItemTexture;
-extern Player *thePlayer;
 extern Menu *theMenu;
 extern hgeResourceManager *resources;
 extern Input *input;

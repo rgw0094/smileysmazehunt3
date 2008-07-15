@@ -22,6 +22,12 @@ struct EnemyInfo {
 	
 };
 
+struct Ability {
+	char description[68];
+	int manaCost;
+	int type;
+};
+
 class GameData {
 
 public:
@@ -30,14 +36,19 @@ public:
 	~GameData();
 
 	EnemyInfo getEnemyInfo(int enemyID);
+	Ability getAbilityInfo(int abilityID);
+	char *getGameText(const char *text);
 
 
 private:
 
 	void loadEnemyData();
+	void loadAbilityData();
 
 	hgeStringTable *enemyStringTable;
 	EnemyInfo enemyInfo[99];
+	Ability abilities[16];
+	hgeStringTable *gameText;
 
 };
 

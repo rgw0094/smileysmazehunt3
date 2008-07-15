@@ -1,7 +1,6 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
-#include "smiley.h"
 #include "weaponparticle.h"
 #include "collisioncircle.h"
 #include "Tongue.h"
@@ -140,10 +139,6 @@ public:
 	//Graphics
 	WeaponParticleSystem *fireBreathParticle;
 	WeaponParticleSystem *iceBreathParticle;
-
-	//Sounds
-	HCHANNEL abilityChannel;		//Audio channel for player ability sound effects
-	HCHANNEL environmentChannel;	//Audio channel for environment sound effects
 
 private:
 

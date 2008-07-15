@@ -1,7 +1,6 @@
 #ifndef _MENU_H_
 #define _MENU_H_
 
-#include "smiley.h"
 #include "MenuScreen.h"
 
 //Menu States
