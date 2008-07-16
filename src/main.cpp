@@ -17,6 +17,8 @@
 #include "Shop.h"
 #include "SoundManager.h"
 #include "GameData.h"
+#include "smiley.h"
+#include "environment.h"
 
 //Global Objects
 HGE *hge=0;

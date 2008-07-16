@@ -52,7 +52,7 @@ WeaponParticleSystem::WeaponParticleSystem(const char *filename, hgeSprite *spri
 void WeaponParticleSystem::Update(float fDeltaTime) {
 	int i;
 	float ang;
-	hgeParticle *par;
+	weaponParticle *par;
 	hgeVector vecAccel, vecAccel2;
 
 	if(fAge >= 0) {
@@ -262,7 +262,7 @@ void WeaponParticleSystem::Render() {
 
 	int i;
 	DWORD col;
-	hgeParticle *par=particles;
+	weaponParticle *par=particles;
 
 	col=info.sprite->GetColor();
 
@@ -280,7 +280,7 @@ void WeaponParticleSystem::Render() {
  * Returns whether or not collisionBox collides with this weapon particle system.
  */
 bool WeaponParticleSystem::testCollision(hgeRect *collisionBox) {
-	hgeParticle *par=particles;
+	weaponParticle *par=particles;
 	
 	for (int i=0; i<nParticlesAlive; i++) {
 		bool collides = collisionBox->TestPoint(par->vecLocation.x + theEnvironment->xGridOffset*64.0 + theEnvironment->xOffset, par->vecLocation.y + theEnvironment->yGridOffset*64.0 + theEnvironment->yOffset);

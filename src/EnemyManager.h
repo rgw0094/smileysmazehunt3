@@ -1,10 +1,13 @@
 #ifndef _ENEMYMANAGER_H_
 #define _ENEMYMANAGER_H_
 
-#include "smiley.h"
-#include "enemy.h"
-#include "CollisionCircle.h"
-#include "Tongue.h"
+#include <list>
+
+class Tongue;
+class CollisionCircle;
+class hgeParticleManager;
+class BaseEnemy;
+class hgeRect;
 
 struct EnemyStruct {
 	BaseEnemy *enemy;

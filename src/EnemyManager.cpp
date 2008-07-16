@@ -5,6 +5,7 @@
 #include "player.h"
 #include "EnemyGroupManager.h"
 #include "GameData.h"
+#include "CollisionCircle.h"
 
 extern HGE *hge;
 extern Environment *theEnvironment;

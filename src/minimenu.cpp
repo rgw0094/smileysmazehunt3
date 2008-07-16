@@ -5,6 +5,7 @@
 #include "hge include/hge.h"
 #include "hge include/hgeresource.h"
 #include "smiley.h"
+#include "Button.h"
 
 extern HGE *hge;
 extern HTEXTURE menuItemTexture;

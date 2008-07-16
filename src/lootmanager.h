@@ -1,6 +1,8 @@
 #ifndef _LOOTMANAGER_H_
 #define _LOOTMANAGER_H_
 
+#include <list>
+
 class hgeSprite;
 class hgeRect;
 

@@ -3,6 +3,7 @@
 #include "player.h"
 #include "hge include/hgeresource.h"
 #include "EnemyManager.h"
+#include "CollisionCircle.h"
 
 extern HGE *hge;
 extern Environment *theEnvironment;

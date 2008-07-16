@@ -11,6 +11,8 @@
 #include "SaveManager.h"
 #include "SoundManager.h"
 #include "weaponparticle.h"
+#include "CollisionCircle.h"
+
 extern HGE *hge;
 extern hgeResourceManager *resources;
 extern bool debugMode;

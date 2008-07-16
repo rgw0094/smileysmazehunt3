@@ -1,6 +1,3 @@
-#include <list>
-#include <stdio.h>
-#include <iostream>
 #ifndef _SMILEY_H_
 #define _SMILEY_H_
 
