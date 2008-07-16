@@ -1,5 +1,5 @@
-#include "hge include/hge.h"
-#include "hge include/hgeresource.h"
+#include "hge.h"
+#include "hgeresource.h"
 #include "SoundManager.h"
 #include "Input.h"
 

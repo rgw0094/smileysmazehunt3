@@ -1,5 +1,5 @@
 #include "DeathScreen.h"
-#include "hge include/hgeresource.h"
+#include "hgeresource.h"
 #include "menu.h"
 #include "environment.h"
 #include "player.h"

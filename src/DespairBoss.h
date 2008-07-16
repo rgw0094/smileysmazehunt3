@@ -2,8 +2,8 @@
 #define _DESPAIRBOSS_H_
 
 #include "boss.h"
-#include "hge include/hgeparticle.h"
-#include "hge include/hgecolor.h"
+#include "hgeparticle.h"
+#include "hgecolor.h"
 #include "collisionCircle.h"
 
 #define NUM_STUN_STARS 5

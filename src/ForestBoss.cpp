@@ -1,7 +1,7 @@
 
 #include "ForestBoss.h"
-#include "hge include/hge.h"
-#include "hge include/hgeresource.h"
+#include "hge.h"
+#include "hgeresource.h"
 #include "Player.h"
 #include "EnemyGroupManager.h"
 #include "TextBox.h"

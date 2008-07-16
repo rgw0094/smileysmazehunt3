@@ -1,7 +1,7 @@
 #ifndef GAMEDATA_H
 #define GAMEDATA_H
 
-#include "hge include/hgestrings.h"
+#include "hgestrings.h"
 
 /**
  * Stores info for each enemy id

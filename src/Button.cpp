@@ -1,7 +1,7 @@
 #include "button.h"
-#include "hge include/hge.h"
-#include "hge include/hgefont.h"
-#include "hge include/hgeresource.h"
+#include "hge.h"
+#include "hgefont.h"
+#include "hgeresource.h"
 #include "Input.h"
 
 extern HGE *hge;

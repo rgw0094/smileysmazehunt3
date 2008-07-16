@@ -1,9 +1,9 @@
 #include "environment.h"
 #include "EnemyState.h"
-#include "hge include/hge.h"
+#include "hge.h"
 #include "Player.h"
 #include "enemy.h"
-#include "hge include/hgeanim.h"
+#include "hgeanim.h"
 
 extern HGE *hge;
 extern Environment *theEnvironment;

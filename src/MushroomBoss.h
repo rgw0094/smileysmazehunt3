@@ -2,7 +2,7 @@
 #define _MUSHROOMBOSS_H_
 
 #include "boss.h"
-#include "hge include/hgeparticle.h"
+#include "hgeparticle.h"
 #include "weaponparticle.h"
 #include "collisioncircle.h"
 

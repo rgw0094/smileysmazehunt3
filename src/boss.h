@@ -1,10 +1,9 @@
 #ifndef _BOSS_H_
 #define _BOSS_H_
 
-#include "hge include/hge.h"
-#include "hge include/hgeresource.h"
+#include "hge.h"
+#include "hgeresource.h"
 
-extern HGE *hge;
 extern hgeResourceManager *resources;
 
 /**

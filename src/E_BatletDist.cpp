@@ -2,8 +2,8 @@
  * Batlet Distributor
  */
 #include "enemy.h"
-#include "hge include/hge.h"
-#include "hge include/hgeresource.h"
+#include "hge.h"
+#include "hgeresource.h"
 #include "EnemyState.h"
 #include "projectiles.h"
 #include "player.h"

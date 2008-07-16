@@ -2,7 +2,7 @@
 #include "player.h"
 #include "environment.h"
 #include "inventory.h"
-#include "hge include/hgeresource.h"
+#include "hgeresource.h"
 #include "smiley.h"
 
 extern hgeResourceManager *resources;

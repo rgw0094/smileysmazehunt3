@@ -1,7 +1,7 @@
 #include "TitleScreen.h"
-#include "hge include/hgeresource.h"
+#include "hgeresource.h"
 #include "menu.h"
-#include "hge include/hge.h"
+#include "hge.h"
 
 extern HGE *hge;
 extern Menu *theMenu;
