@@ -2,7 +2,7 @@
 #define _PROJECTILES_H_
 
 #include <list>
-#include "hge include/hge.h"
+#include "hge.h"
 
 class CollisionCircle;
 class hgeParticleSystem;

@@ -3,7 +3,7 @@
 #include "player.h"
 #include "environment.h"
 #include "inventory.h"
-#include "hge include/hgeresource.h"
+#include "hgeresource.h"
 #include "CollisionCircle.h"
 
 extern hgeResourceManager *resources;

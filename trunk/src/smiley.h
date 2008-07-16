@@ -9,9 +9,9 @@
 #include < sstream >
 #include < iostream >
 
-#include "hge include/hgeresource.h"
-#include "hge include/hgesprite.h"
-#include "hge include/hgeanim.h"
+#include "hgeresource.h"
+#include "hgesprite.h"
+#include "hgeanim.h"
 
 //Constants
 #define PI 3.14159265357989232684

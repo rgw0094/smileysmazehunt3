@@ -16,7 +16,7 @@
 #include "Input.h"
 #include "SoundManager.h"
 #include "GameData.h"
-#include "hge include/hgeparticle.h"
+#include "hgeparticle.h"
 #include "Tongue.h"
 
 //Variables

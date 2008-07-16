@@ -6,8 +6,10 @@
 #include "MushroomBoss.h"
 #include "DespairBoss.h"
 #include "EnemyGroupManager.h"
+#include "hge.h"
 
 extern EnemyGroupManager *enemyGroupManager;
+extern HGE *hge;
 
 BossManager::BossManager() {
 	currentBoss = NULL;
@@ -76,5 +78,7 @@ void BossManager::drawBeforeSmiley(float dt) {
  * Draw method called after Smiley is drawn.
  */
 void BossManager::drawAfterSmiley(float dt) {
-
+	if (currentBoss) {
+		currentBoss->drawAfterSmiley(dt);
+	}
 }

@@ -1,9 +1,9 @@
 #include "EnemyGroupManager.h"
 #include "Environment.h"
 #include "Player.h"
-#include "hge include/hgeresource.h"
+#include "hgeresource.h"
 #include "EnemyManager.h"
-#include "hge include/hge.h"
+#include "hge.h"
 
 extern Player *thePlayer;
 extern Environment *theEnvironment;

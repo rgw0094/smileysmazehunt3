@@ -1,7 +1,7 @@
 #include "enemy.h"
 #include "player.h"
 #include "projectiles.h"
-#include "hge include/hgeresource.h"
+#include "hgeresource.h"
 #include "smiley.h"
 
 extern hgeResourceManager *resources;

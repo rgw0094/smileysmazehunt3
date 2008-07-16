@@ -2,8 +2,8 @@
 #include "menu.h"
 #include "Input.h"
 #include "SaveManager.h"
-#include "hge include/hge.h"
-#include "hge include/hgeresource.h"
+#include "hge.h"
+#include "hgeresource.h"
 #include "smiley.h"
 #include "Button.h"
 

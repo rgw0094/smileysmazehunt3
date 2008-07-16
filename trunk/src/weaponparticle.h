@@ -1,11 +1,11 @@
 #ifndef WEAPONPARTICLE_H
 #define WEAPONPARTICLE_H
 
-#include "hge include/hge.h"
-#include "hge include/hgecolor.h"
-#include "hge include/hgerect.h"
-#include "hge include/hgevector.h"
-#include "hge include/hgesprite.h"
+#include "hge.h"
+#include "hgecolor.h"
+#include "hgerect.h"
+#include "hgevector.h"
+#include "hgesprite.h"
 
 #define MAX_PARTICLES	750
 #define PARTICLE_FIRE_BREATH 0

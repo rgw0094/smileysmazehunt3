@@ -1,7 +1,7 @@
 #include "smiley.h"
 #include "projectiles.h"
 #include "player.h"
-#include "hge include/hgeresource.h"
+#include "hgeresource.h"
 #include "EnemyManager.h"
 #include "CollisionCircle.h"
 

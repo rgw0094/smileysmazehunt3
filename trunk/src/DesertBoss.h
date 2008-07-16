@@ -2,7 +2,7 @@
 #define _DESERTBOSS_H_
 
 #include "boss.h"
-#include "hge include/hgeparticle.h"
+class hgeParticleSystem;
 
 //States
 #define DESERTBOSS_INACTIVE 0

@@ -1,6 +1,6 @@
 #include "ControlsScreen.h"
-#include "hge include/hge.h"
-#include "hge include/hgeresource.h"
+#include "hge.h"
+#include "hgeresource.h"
 #include "menu.h"
 #include "Input.h"
 #include "Button.h"

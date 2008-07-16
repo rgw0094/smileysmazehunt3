@@ -1,5 +1,5 @@
 #include "DespairBoss.h"
-#include "hge include/hgeresource.h"
+#include "hgeresource.h"
 #include "EnemyGroupManager.h"
 #include "TextBox.h"
 #include "Player.h"
@@ -10,6 +10,7 @@
 #include "SoundManager.h"
 #include "weaponparticle.h"
 #include "Tongue.h"
+#include "hge.h"
 
 extern hgeResourceManager *resources;
 extern EnemyGroupManager *enemyGroupManager;
@@ -22,6 +23,8 @@ extern Environment *theEnvironment;
 extern SaveManager *saveManager;
 extern LootManager *lootManager;
 extern SoundManager *soundManager;
+extern HGE *hge;
+
 extern float darkness;
 
 //Attributes
@@ -97,6 +100,7 @@ DespairBoss::~DespairBoss() {
 	resources->Purge(RES_CALYPSO);
 	delete collisionBox;
 	delete damageCollisionBox;
+	darkness = 0;
 	resetProjectiles();
 }
 

@@ -5,7 +5,7 @@
 #define _ENEMY_H_
 
 #include <list>
-#include "hge include/hgevector.h"
+#include "hgevector.h"
 
 class hgeParticleManager;
 class Tongue;

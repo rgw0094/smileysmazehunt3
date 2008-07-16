@@ -2,7 +2,7 @@
 #define _FORESTBOSS_H_
 
 #include "boss.h"
-#include "hge include/hgeparticle.h"
+#include "hgeparticle.h"
 #include "collisionCircle.h"
 
 //States
