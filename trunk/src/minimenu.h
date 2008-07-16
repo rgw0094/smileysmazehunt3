@@ -2,8 +2,9 @@
 #define _MINIMENU_H_
 
 #include "BaseWindow.h"
-#include "Button.h"
 #include <string>
+
+class Button;
 
 //Menu items
 #define MINIMENU_SAVE 0

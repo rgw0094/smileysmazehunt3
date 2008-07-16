@@ -17,6 +17,7 @@
 #include "SoundManager.h"
 #include "GameData.h"
 #include "hge include/hgeparticle.h"
+#include "Tongue.h"
 
 //Variables
 extern bool debugMode, hasFountain;

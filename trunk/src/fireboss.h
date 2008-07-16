@@ -1,8 +1,11 @@
 #ifndef _FIREBOSS_H_
 #define _FIREBOSS_H_
 
+#include <list>
 #include "boss.h"
-#include "weaponparticle.h"
+
+class hgeRect;
+class WeaponParticleSystem;
 
 //States
 #define FIREBOSS_INACTIVE 0

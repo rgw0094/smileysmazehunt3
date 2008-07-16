@@ -1,7 +1,11 @@
 #ifndef WEAPONPARTICLE_H
 #define WEAPONPARTICLE_H
 
-#include "smiley.h"
+#include "hge include/hge.h"
+#include "hge include/hgecolor.h"
+#include "hge include/hgerect.h"
+#include "hge include/hgevector.h"
+#include "hge include/hgesprite.h"
 
 #define MAX_PARTICLES	750
 #define PARTICLE_FIRE_BREATH 0
@@ -82,7 +86,7 @@ public:
 	hgeRect				rectBoundingBox;
 	bool				bUpdateBoundingBox;
 	int					type;					//fire or ice
-	hgeParticle			particles[MAX_PARTICLES];
+	weaponParticle		particles[MAX_PARTICLES];
 	hgeRect				*collisionBox;
 
 };

@@ -1,6 +1,8 @@
 #ifndef _NPCMANAGER_H_
 #define _NPCMANAGER_H_
 
+#include <list>
+
 class Tongue;
 class CollisionCircle;
 class NPC;

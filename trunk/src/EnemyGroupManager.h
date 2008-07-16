@@ -1,8 +1,6 @@
 #ifndef _ENEMYGROUPMANAGER_H_
 #define _ENEMYGROUPMANAGER_H_
 
-#include "smiley.h"
-
 //Stuff on ID layer
 #define ENEMYGROUP_TRIGGER 996
 #define ENEMYGROUP_BLOCK 997

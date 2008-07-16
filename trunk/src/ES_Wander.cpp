@@ -2,6 +2,9 @@
 #include "hge include/hge.h"
 #include "environment.h"
 #include "EnemyManager.h"
+#include "enemy.h"
+#include "hge include/hgerect.h"
+#include "smiley.h"
 
 extern HGE *hge;
 extern Environment *theEnvironment;
