@@ -1143,6 +1143,13 @@ Sprite mushroomletProjectile {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=36
 }
+Sprite laserProjectile {
+ texture="Graphics/projectiles.png"
+ rect=64,0,5,130
+ hotspot=2,65
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=36
+}
 
 ;**************************
 ;******** Textures ********

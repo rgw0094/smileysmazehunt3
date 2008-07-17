@@ -36,28 +36,40 @@ public:
 
 	//Variables
 	bool shouldDrawAfterSmiley;
+	float startX, startY;
 	float hoveringTime;
 	float oldFloatingOffset;
 	int gridX, gridY;
 	int groupID;
-	float x, y, dx, dy, startY;
+	float x, y, dx, dy;
 	int state;
 	bool startedIntroDialogue;
 	float timeEnteredState;
 	float fadeAlpha;
 	float floatingOffset;
-	float hoverTime;
 	float lastProjectileTime;
 	float shieldAlpha;
 	float stunStarAngles[NUM_STUN_STARS];
 	float lastHitByTongue;
+	
+
+	//Evil mode stuff
 	float lastEvilTime;
 	float evilAlpha;
+	float chargeAngle;
+	float timeToCharge;
+	float chargeDecel;
+	float lastLaserTime;
+	int chargeCounter;
 
 	std::list<CalypsoProjectile> projectiles;
 	hgeRect *collisionBox;
 	hgeRect *damageCollisionBox;
 	hgeParticleManager *particles;
+
+private:
+
+	bool isInEvilMode();
 
 };
 
