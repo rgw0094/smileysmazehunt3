@@ -32,12 +32,19 @@ extern float darkness;
 #define PROJECTILE_DELAY 1.6
 #define FREEZE_DURATION 1.0
 #define STUN_DURATION 5.0
+
 #define ICE_DAMAGE 0.0
 #define FIRE_DAMAGE 0.15
 #define LIGHTNING_DAMAGE 0.25
 #define COLLISION_DAMAGE 0.5
-#define EVIL_DELAY 14.0
+#define LASER_DAMAGE 0.5
+
+#define EVIL_DELAY 2.0
 #define EVIL_DURATION 9.0
+#define EVIL_NUM_CHARGES 7
+#define EVIL_CHARGE_ACCEL 2000.0
+#define EVIL_MAX_CHARGE_SPEED 1300.0
+#define LASER_SPEED 1000.0
 
 //States
 #define DESPAIRBOSS_INACTIVE 0
@@ -45,8 +52,10 @@ extern float darkness;
 #define DESPAIRBOSS_STUNNED 2
 #define DESPAIRBOSS_STUNRECOVERY 3
 #define DESPAIRBOSS_ENTEREVIL 4
-#define DESPAIRBOSS_EVIL 5
-#define DESPAIRBOSS_EXITEVIL 6
+#define DESPAIRBOSS_EVIL_CHARGING 5
+#define DESPAIRBOSS_EVIL_STOPPING_CHARGE 6
+#define DESPAIRBOSS_EVIL_CHARGE_COOLDOWN 7
+#define DESPAIRBOSS_EXITEVIL 8
 #define DESPAIRBOSS_FRIENDLY 10
 #define DESPAIRBOSS_FADING 11
 
@@ -68,6 +77,7 @@ DespairBoss::DespairBoss(int _gridX, int _gridY, int _groupID) {
 	gridY = _gridY;
 	x = gridX*64 + 32;
 	y = gridY*64 + 32;
+	startX = x;
 	startY = y;
 	collisionBox = new hgeRect(x,y,x+1,y+1);
 	damageCollisionBox = new hgeRect(x,y,x+1,y+1);
@@ -77,7 +87,6 @@ DespairBoss::DespairBoss(int _gridX, int _gridY, int _groupID) {
 	setState(DESPAIRBOSS_INACTIVE);
 	floatingOffset = 10.0;
 	lastHitByTongue = -10.0;
-	hoverTime = 0.0;
 	lastProjectileTime = 0.0;
 	shieldAlpha = 0.0;
 	shouldDrawAfterSmiley = false;
@@ -85,6 +94,7 @@ DespairBoss::DespairBoss(int _gridX, int _gridY, int _groupID) {
 	fadeAlpha = 255.0;
 	lastEvilTime = gameTime;
 	evilAlpha = 0.0;
+	chargeCounter = 0;
 
 	//Initialize stun star angles
 	for (int i = 0; i < NUM_STUN_STARS; i++) {
@@ -110,9 +120,7 @@ DespairBoss::~DespairBoss() {
 bool DespairBoss::update(float dt) {
 
 	shouldDrawAfterSmiley = thePlayer->y < y + 60.0 && 
-		(thePlayer->x > x-60 && thePlayer->x < x+60) &&
-		state != DESPAIRBOSS_ENTEREVIL && state != DESPAIRBOSS_EVIL &&
-		state != DESPAIRBOSS_EXITEVIL;
+		(thePlayer->x > x-60 && thePlayer->x < x+60) && !isInEvilMode();
 
 	damageCollisionBox->Set(x-60, y+floatingOffset-75, x+60, y+floatingOffset+75);
 	collisionBox->Set(x-60,y+45+floatingOffset-30, x+60, y+45+floatingOffset+35);
@@ -121,12 +129,12 @@ bool DespairBoss::update(float dt) {
 	if (state != DESPAIRBOSS_STUNNED && state != DESPAIRBOSS_STUNRECOVERY && 
 			state != DESPAIRBOSS_FRIENDLY && state != DESPAIRBOSS_FADING) {
 		hoveringTime += dt;
-		floatingOffset = -25.0 + 15.0 * sin(hoverTime*2.0);
+		floatingOffset = -25.0 + 15.0 * sin(hoveringTime * 2.0);
 	}
 
 	//Smiley collision
-	if (thePlayer->collisionCircle->testBox((state == DESPAIRBOSS_ENTEREVIL || state == DESPAIRBOSS_EVIL || state == DESPAIRBOSS_EXITEVIL) ? damageCollisionBox : collisionBox)) {
-		thePlayer->dealDamageAndKnockback(COLLISION_DAMAGE, true, 165, x, y);
+	if (thePlayer->collisionCircle->testBox(isInEvilMode() ? damageCollisionBox : collisionBox)) {
+		thePlayer->dealDamageAndKnockback(COLLISION_DAMAGE, true, isInEvilMode() ? 0 : 165, x, y);
 	}	
 
 	//When smiley triggers the boss' enemy block start his dialogue.
@@ -150,8 +158,7 @@ bool DespairBoss::update(float dt) {
 	if (state == DESPAIRBOSS_BATTLE) {
 
 		//Move back and forth horizontally
-		dx = 200.0 * cos(hoverTime);
-		hoverTime += dt;
+		dx = 200.0 * cos(hoveringTime);
 		
 		//Move vertically to stay close to smiley
 		if (y > thePlayer->y - 200.0) {
@@ -260,8 +267,7 @@ bool DespairBoss::update(float dt) {
 		//Die
 		if (health <= 0.0f && state != DESPAIRBOSS_FRIENDLY) {
 			health = 0.0f;
-			setState(DESPAIRBOSS_FRIENDLY);
-			//hge->Effect_Play(resources->GetEffect("snd_fireBossDie"));		
+			setState(DESPAIRBOSS_FRIENDLY);		
 			theTextBox->setDialogue(FIRE_BOSS, DESPAIRBOSS_DEFEATTEXT);	
 			saveManager->killedBoss[DESPAIR_BOSS-240] = true;
 			enemyGroupManager->notifyOfDeath(groupID);
@@ -281,45 +287,108 @@ bool DespairBoss::update(float dt) {
 
 	///////// Evil State stuff ///////////////
 
+	//Entering evil mode - the screen darkens and Calypso gets in
+	//position to start circling smiley.
 	if (state == DESPAIRBOSS_ENTEREVIL) {
 		evilAlpha += 136.0*dt;
 		darkness += 80.0*dt;
-		shieldAlpha -= 255.0*dt;
+		shieldAlpha -= 136.0*dt;
 		if (shieldAlpha < 0.0) shieldAlpha = 0.0;
 		if (darkness > 150.0) darkness = 150.0;
-		if (evilAlpha > 255.0) {
-			evilAlpha = 255.0;
-			setState(DESPAIRBOSS_EVIL);
+		if (evilAlpha > 255.0) evilAlpha = 255.0;
+
+		//Once the screen has darkened move in position to circle smiley
+		if (evilAlpha == 255.0) {
+			setState(DESPAIRBOSS_EVIL_CHARGING);
 		}
 	}
 
-	if (state == DESPAIRBOSS_EVIL) {
+	//Charging towards Smiley
+	if (state == DESPAIRBOSS_EVIL_CHARGING) {
+
+		dx += EVIL_CHARGE_ACCEL * cos(chargeAngle) * dt;
+		dy += EVIL_CHARGE_ACCEL * sin(chargeAngle) * dt;
+
+		//Don't exceed the max speed because it looks gay
+		if (sqrt(dx*dx + dy*dy) > EVIL_MAX_CHARGE_SPEED) {
+			dx = EVIL_MAX_CHARGE_SPEED * cos(chargeAngle);
+			dy = EVIL_MAX_CHARGE_SPEED * sin(chargeAngle);
+		}
+
+		//Periodically fire lasers
+		if (timePassedSince(lastLaserTime) > 2.0) {
+			lastLaserTime = gameTime;
+			//Left eye
+			projectileManager->addProjectile(x - 10, y - 50, 
+				LASER_SPEED, getAngleBetween(x, y, thePlayer->x, thePlayer->y),
+				LASER_DAMAGE, true, PROJECTILE_LASER, true);
+			//Right eye
+			projectileManager->addProjectile(x + 10, y - 50, 
+				LASER_SPEED, getAngleBetween(x, y, thePlayer->x, thePlayer->y),
+				LASER_DAMAGE, true, PROJECTILE_LASER, true);
+		}
+
+		if (timePassedSince(timeEnteredState) > timeToCharge) {
+			//Calculate time to stop
+			float vi = sqrt(dx*dx + dy*dy);
+			chargeDecel = (vi*vi) / (2.0 * 200.0);
+			timeToCharge = 200.0 / (vi/2.0);
+			setState(DESPAIRBOSS_EVIL_STOPPING_CHARGE);
+		}
+			
+	}
+
+	//Decelerating from charge
+	if (state == DESPAIRBOSS_EVIL_STOPPING_CHARGE) {
+
+		dx -= chargeDecel * cos(chargeAngle) * dt;
+		dy -= chargeDecel * sin(chargeAngle) * dt;
+
+		if (timePassedSince(timeEnteredState) > timeToCharge) {
+			setState(DESPAIRBOSS_EVIL_CHARGE_COOLDOWN);
+		}
+
+	}
+
+	//After charging smiley slowly back away from him
+	if (state == DESPAIRBOSS_EVIL_CHARGE_COOLDOWN) {
+
+		dx = -100.0 * cos(getAngleBetween(x, y, thePlayer->x, thePlayer->y));
+		dy = -100.0 * sin(getAngleBetween(x, y, thePlayer->x, thePlayer->y));
 		
-		//Chase Smiley
-		float angle = getAngleBetween(x, y, thePlayer->x, thePlayer->y);
-		dx += 700.0 * cos(angle) * dt;
-		dy += 700.0 * sin(angle) * dt;
-		if (!thePlayer->flashing) {
-			x += 300.0 * cos(angle) * dt;
-			y += 300.0 * sin(angle) * dt;
-		}
-
-		//After several seconds, exit evil mode
-		if (timePassedSince(timeEnteredState) > EVIL_DURATION) {
-			lastEvilTime = gameTime;
-			setState(DESPAIRBOSS_EXITEVIL);
-			dx = dy = 0;
+		if (timePassedSince(timeEnteredState) > 1.0) {
+			if (chargeCounter > EVIL_NUM_CHARGES) {
+				//This was the last charge
+				setState(DESPAIRBOSS_EXITEVIL);
+				dx = dy = 0.0;
+			} else {
+				//Charge again
+				setState(DESPAIRBOSS_EVIL_CHARGING);
+			}
+			chargeCounter++;
 		}
 
 	}
 
+	//Exit evil mode - the screen brightens
 	if (state == DESPAIRBOSS_EXITEVIL) {
 		evilAlpha -= 136.0*dt;
 		darkness -= 80.0*dt;
 		if (darkness < 0.0) darkness = 0.0;
-		if (evilAlpha < 0.0) {
-			evilAlpha = 0.0;
-			setState(DESPAIRBOSS_BATTLE);
+		if (evilAlpha < 0.0) evilAlpha = 0.0;
+
+		//After evil mode is over, return to Calypso's starting point
+		if (evilAlpha = 0.0) {
+
+			dx = 300.0 * cos(getAngleBetween(x, y, thePlayer->x, thePlayer->y));
+			dx = 300.0 * sin(getAngleBetween(x, y, thePlayer->x, thePlayer->y));
+
+			//Once Calypso is back to his starting location, return to battle mode.
+			if ((x > startX - 50.0 || x < startX + 50.0) && (y > startY - 50.0 || y < startY + 50.0)) {
+				evilAlpha = 0.0;
+				setState(DESPAIRBOSS_BATTLE);
+				lastEvilTime = gameTime;
+			}
 		}
 	}
 
@@ -376,7 +445,7 @@ void DespairBoss::drawCalypso(float dt) {
 	resources->GetSprite("calypso")->Render(getScreenX(x), getScreenY(y) + floatingOffset);
 
 	//Evil Calypso
-	if (state == DESPAIRBOSS_ENTEREVIL || state == DESPAIRBOSS_EVIL || state == DESPAIRBOSS_EXITEVIL) {
+	if (isInEvilMode()) {
 		resources->GetSprite("evilCalypso")->SetColor(ARGB(evilAlpha,255,255,255));
 		resources->GetSprite("evilCalypso")->Render(getScreenX(x), getScreenY(y) + floatingOffset);
 	} else {
@@ -393,8 +462,8 @@ void DespairBoss::drawCalypso(float dt) {
 		for (int n = 0; n < NUM_STUN_STARS; n++) {
 			stunStarAngles[n] += 2.0* PI * dt;
 			resources->GetSprite("stunStar")->Render(
-			getScreenX(x + cos(stunStarAngles[n])*25), 
-			getScreenY(y + sin(stunStarAngles[n])*7) - 75.0 + floatingOffset);
+				getScreenX(x + cos(stunStarAngles[n])*25), 
+				getScreenY(y + sin(stunStarAngles[n])*7) - 75.0 + floatingOffset);
 		}
 	}
 
@@ -531,10 +600,27 @@ void DespairBoss::resetProjectiles() {
  */ 
 void DespairBoss::setState(int newState) {
 
+	if (newState == DESPAIRBOSS_BATTLE) {
+		lastEvilTime = gameTime;
+		chargeCounter = 0;
+	}
+
 	if (newState == DESPAIRBOSS_STUNNED) {
 		oldFloatingOffset = floatingOffset;
 	}
 
+	if (newState == DESPAIRBOSS_EVIL_CHARGING) {
+		chargeAngle = getAngleBetween(x, y, thePlayer->x, thePlayer->y);
+		timeToCharge = sqrt(2 * distance(x, y, thePlayer->x, thePlayer->y) / EVIL_CHARGE_ACCEL);
+	}
+
 	state = newState;
 	timeEnteredState = gameTime;
+}
+
+/** 
+ * Returns whether or not the Despair boss is in any of the evil modes.
+ */
+bool DespairBoss::isInEvilMode() {
+	return (state >= DESPAIRBOSS_ENTEREVIL && state <= DESPAIRBOSS_EXITEVIL);
 }

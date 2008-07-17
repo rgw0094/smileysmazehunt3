@@ -2,7 +2,7 @@
 #define _PROJECTILES_H_
 
 #include <list>
-#include "hge.h"
+#include "hge.h" //For HTEXTURE
 
 class CollisionCircle;
 class hgeParticleSystem;
@@ -10,7 +10,7 @@ class hgeRect;
 class hgeSprite;
 
 //Projectile Types
-#define NUM_PROJECTILES 8
+#define NUM_PROJECTILES 9
 #define PROJECTILE_1 0
 #define PROJECTILE_FRISBEE 1
 #define PROJECTILE_LIGHTNING_ORB 2
@@ -19,6 +19,7 @@ class hgeSprite;
 #define PROJECTILE_FIREBALL 5
 #define PROJECTILE_TURRET_CANNONBALL 6
 #define PROJECTILE_MINI_MUSHROOM 7
+#define PROJECTILE_LASER 8
 
 #define LIGHTNING_ORB_SPEED 650.0
 
