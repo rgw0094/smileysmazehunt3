@@ -10,9 +10,10 @@ struct Bomb {
 	bool inParabolaMode;
 	double h,k,a; //(h,k) is vertex. Equation of parabola: y=a(x-h)^2+k
 	double xBomb, yBomb;
+	double yShadow;
 	double x0,y0;
 	float beginThrowTime;
-	int direction;    
+	double dx,dy;
 };
 
 struct Explosion {
@@ -34,7 +35,7 @@ public:
 	void doSpiral(float dt);
 	void doArms(float dt);
 	
-	void addBomb(float _x,float _y,int direction); //direction is either LEFT or RIGHT
+	void addBomb(float _x,float _y);
 	void doBombs(float dt);
 	void drawBombs();
 	
@@ -55,6 +56,7 @@ public:
 	float timeEnteredState;
 
 	//variables for mushboom
+	int throwState;
 	float leftArmRotate,leftArmRotateDir,rightArmRotate,rightArmRotateDir;
 	bool leftArmRotating, rightArmRotating, thrownFromLeft, thrownFromRight;
 	int nextArmToRotate;

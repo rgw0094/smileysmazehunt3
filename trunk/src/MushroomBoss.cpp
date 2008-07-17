@@ -42,17 +42,24 @@ extern float gameTime;
 
 //Arm motion stuff
 #define BOMB_THROW_DELAY 1.0
-#define THROW_DURATION 0.4 //Multiply these together to see how many radians it will rotate
+
+#define THROW_DURATION 0.5 //Multiply these together to see how many radians it will rotate
 #define ARM_ROTATE_SPEED 6.0
+
+#define BOMB_CRAZY_THROW_DELAY 0.4
+
+#define CRAZY_THROW_DURATION 0.2
+#define CRAZY_ARM_ROTATE_SPEED 15.0
+
 #define LEFT_ARM_DEFAULT 90*PI/180;
 #define RIGHT_ARM_DEFAULT 90*PI/180;
 #define ARM_LENGTH 38.0
 
 //Bomb stuff
-#define PARABOLA_WIDTH 128.0
-#define PARABOLA_HEIGHT 100.0
+
 #define BOMB_AIR_TIME 0.8
 #define BOMB_LIFE_TIME 1.8
+#define PARABOLA_HEIGHT 50.0
 #define EXPLOSION_LIFE_TIME 1.0
 #define EXPLOSION_COLLISION_ENLARGE_COEFFICIENT 340.0
 #define EXPLOSION_MAX_RADIUS 90.0
@@ -61,8 +68,8 @@ extern float gameTime;
 
 //Mushroomlet projectile stuff
 #define MINI_MUSHROOM_PROJECTILE_ID 7
-#define MINI_MUSHROOM_PROJECTILE_SPEED 800
-#define MINI_MUSHROOM_PROJECTILE_DAMAGE 0.75
+#define MINI_MUSHROOM_PROJECTILE_SPEED 500
+#define MINI_MUSHROOM_PROJECTILE_DAMAGE -1.75
 
 //Mushroomlet enemy stuff
 #define MINI_MUSHROOM_INTERVAL 3.2
@@ -71,6 +78,10 @@ extern float gameTime;
 //States
 #define MUSHBOOM_INACTIVE		0
 #define MUSHBOOM_SPIRALING		1
+
+//Throw states
+#define MUSHBOOM_THROW_STATE_AIM	0
+#define MUSHBOOM_THROW_STATE_CRAZY	1
 
 //Text for GameText.dat
 #define MUSHBOOM_INTROTEXT 140
@@ -90,6 +101,7 @@ MushroomBoss::MushroomBoss(int _gridX,int _gridY,int _groupID) {
 
 	//Initialize state stuff
 	state = MUSHBOOM_INACTIVE;
+	throwState = MUSHBOOM_THROW_STATE_AIM;
 	startedIntroDialogue = false;
 	health = maxHealth = MUSHBOOM_HEALTH;
 	droppedLoot=false;	
@@ -98,6 +110,7 @@ MushroomBoss::MushroomBoss(int _gridX,int _gridY,int _groupID) {
 	nextArmToRotate=LEFT;
 	leftArmRotating=rightArmRotating=false;
 	lastThrowTime=lastMiniMushroomTime=gameTime;
+
 	theta=phi=0.0; //Angles for the spiral
 
 	//Initialize explosion particle effects
@@ -126,6 +139,7 @@ bool MushroomBoss::update(float dt) {
 	if (state == MUSHBOOM_INACTIVE && startedIntroDialogue && !theTextBox->visible) {
 		enterState(MUSHBOOM_SPIRALING);
 		soundManager->playMusic("bossMusic");
+		lastThrowTime=lastMiniMushroomTime=gameTime;
 	}
 
 	if (state == MUSHBOOM_SPIRALING) {
@@ -213,21 +227,41 @@ void MushroomBoss::doSpiral(float dt) {
 }
 
 void MushroomBoss::doArms(float dt) {
-	if (timePassedSince(lastThrowTime) >= BOMB_THROW_DELAY) {
-		if (nextArmToRotate==LEFT) {
-			leftArmRotating=true;
-			thrownFromLeft=false;
-			leftArmRotateDir=1;
-			nextArmToRotate=RIGHT;
-			lastThrowTime = leftArmThrowTime = gameTime;
-		} else {
-			rightArmRotating=true;
-			thrownFromRight=false;
-			rightArmRotateDir=-1;
-			nextArmToRotate=LEFT;
-			lastThrowTime = rightArmThrowTime = gameTime;
+	if (throwState == MUSHBOOM_THROW_STATE_AIM) {
+		
+		if (timePassedSince(lastThrowTime) > BOMB_THROW_DELAY && !leftArmRotating && !rightArmRotating) {
+			if (thePlayer->x < x) { //throw with left arm (arm on right of screen) toward left of screen
+				leftArmRotating=true;
+				thrownFromLeft=false;
+				leftArmRotateDir=1;
+				lastThrowTime = leftArmThrowTime = gameTime;
+			} else {
+				rightArmRotating=true;
+				thrownFromRight=false;
+				rightArmRotateDir=-1;
+				lastThrowTime = rightArmThrowTime = gameTime;
+			}
 		}
-	}
+
+
+	} else { //throwstate == crazy
+		
+		if (timePassedSince(lastThrowTime) >= BOMB_CRAZY_THROW_DELAY) {
+			if (nextArmToRotate==LEFT) {
+				leftArmRotating=true;
+				thrownFromLeft=false;
+				leftArmRotateDir=1;
+				nextArmToRotate=RIGHT;
+				lastThrowTime = leftArmThrowTime = gameTime;
+			} else {
+				rightArmRotating=true;
+				thrownFromRight=false;
+				rightArmRotateDir=-1;
+				nextArmToRotate=LEFT;
+				lastThrowTime = rightArmThrowTime = gameTime;
+			}
+		}
+	} //end if throwstate == crazy
 
 	if (leftArmRotating) {
 		leftArmRotate += leftArmRotateDir*ARM_ROTATE_SPEED*dt;
@@ -239,7 +273,13 @@ void MushroomBoss::doArms(float dt) {
 			if (!thrownFromLeft) {
 				thrownFromLeft=true;
 				//throw bomb
-				addBomb(x+LEFT_ARM_OFFSET_X+ARM_LENGTH*cos(leftArmRotate-30*PI/180),y+LEFT_ARM_OFFSET_Y+ARM_LENGTH*sin(leftArmRotate-30*PI/180),LEFT);
+				//The direction will be UP_LEFT, LEFT, or DOWN_LEFT, based on increments of PI/3 (divides the circle into 6 pieces)
+				int dir = LEFT;
+				float angleToSmiley = getAngleBetween(x,y,thePlayer->x,thePlayer->y);
+				if (angleToSmiley < 5*PI/6) dir = DOWN_LEFT;
+				if (angleToSmiley > 7*PI/6 ) dir = UP_LEFT;
+				
+				addBomb(x+LEFT_ARM_OFFSET_X+ARM_LENGTH*cos(leftArmRotate-30*PI/180),y+LEFT_ARM_OFFSET_Y+ARM_LENGTH*sin(leftArmRotate-30*PI/180));
 			}
 		}		
 	}
@@ -253,7 +293,14 @@ void MushroomBoss::doArms(float dt) {
 			rightArmRotateDir = 1;
 			if (!thrownFromRight) {
 				thrownFromRight=true;
-				addBomb(x+RIGHT_ARM_OFFSET_X+ARM_LENGTH*cos(rightArmRotate+30*PI/180),y+RIGHT_ARM_OFFSET_Y+ARM_LENGTH*sin(rightArmRotate+30*PI/180),RIGHT);
+				//Throw bomb
+				//The direction will be UP_RIGHT, RIGHT, or DOWN_RIGHT, based on increments of PI/3 (divides the circle into 6 pieces)
+				int dir = RIGHT;
+				float angleToSmiley = getAngleBetween(x,y,thePlayer->x,thePlayer->y);
+				if (angleToSmiley > PI && angleToSmiley < 11*PI/6) dir = UP_RIGHT;
+				if (angleToSmiley <= PI && angleToSmiley > PI/6) dir = DOWN_RIGHT;
+				
+				addBomb(x+RIGHT_ARM_OFFSET_X+ARM_LENGTH*cos(rightArmRotate+30*PI/180),y+RIGHT_ARM_OFFSET_Y+ARM_LENGTH*sin(rightArmRotate+30*PI/180));
 			}
 		}		
 	}
@@ -265,15 +312,18 @@ void MushroomBoss::doBombs(float dt) {
 	std::list<Bomb>::iterator i;
 	for(i = theBombs.begin(); i != theBombs.end(); i++) {
 		if (i->inParabolaMode) {
+			
+			i->xBomb = i->x0 + timePassedSince(i->beginThrowTime) * i->dx / BOMB_AIR_TIME;
+			i->yBomb = i->a*(i->xBomb-i->h)*(i->xBomb-i->h) + i->k;
+			i->yShadow = i->y0 + timePassedSince(i->beginThrowTime) * i->dy / BOMB_AIR_TIME;
+
 			if (timePassedSince(i->beginThrowTime) > BOMB_AIR_TIME) {
-				i->xBomb = i->x0 + PARABOLA_WIDTH;
-				i->yBomb = i->y0;
+				i->xBomb = i->x0 + i->dx;
+				i->yBomb = i->y0 + i->dy;
+				i->yShadow = i->y0 + i->dy;
+
 				i->inParabolaMode=false;
 			}
-			if (i->direction==LEFT) i->xBomb = i->x0 - timePassedSince(i->beginThrowTime)/BOMB_AIR_TIME * PARABOLA_WIDTH;
-			else					i->xBomb = i->x0 + timePassedSince(i->beginThrowTime)/BOMB_AIR_TIME * PARABOLA_WIDTH;
-			
-			i->yBomb = i->a*(i->xBomb-i->h)*(i->xBomb-i->h) + i->k;			
 		}
 
 		if (timePassedSince(i->beginThrowTime) >= BOMB_LIFE_TIME) {
@@ -289,23 +339,70 @@ void MushroomBoss::doBombs(float dt) {
 void MushroomBoss::drawBombs() {
 	std::list<Bomb>::iterator i;
 	for(i = theBombs.begin(); i != theBombs.end(); i++) {
+		resources->GetSprite("mushboomBombShadow")->Render(getScreenX(i->xBomb),getScreenY(i->yShadow));
 		resources->GetSprite("mushboomBomb")->Render(getScreenX(i->xBomb),getScreenY(i->yBomb));
 	}
 }
 
-void MushroomBoss::addBomb(float _x,float _y,int direction) {
+void MushroomBoss::addBomb(float _x,float _y) {
 	Bomb newBomb;
 	newBomb.beginThrowTime = gameTime;
 	newBomb.inParabolaMode=true;
-	newBomb.direction=direction;
 	newBomb.x0=newBomb.xBomb=_x;
 	newBomb.y0=newBomb.yBomb=_y;
 
-	if (direction == LEFT)	newBomb.h=_x-PARABOLA_WIDTH/2;
-	else					newBomb.h=_x+PARABOLA_WIDTH/2;
+	float angleToSmiley = getAngleBetween(_x,_y,thePlayer->x,thePlayer->y);
+	float distanceToSmiley = distance(_x,_y,thePlayer->x,thePlayer->y);
 
-	newBomb.k=_y-PARABOLA_HEIGHT; //By "height" we mean how far above the bomb's initial y should it fly to
-	newBomb.a=(_y-newBomb.k)/((_x-newBomb.h)*(_x-newBomb.h)); //Solved parabola equation for 'a' to get this
+	angleToSmiley += hge->Random_Float(-0.314159,0.314159);
+	distanceToSmiley += hge->Random_Float(-48,48);
+
+    newBomb.dx = distanceToSmiley * cos(angleToSmiley);
+	newBomb.dy = distanceToSmiley * sin(angleToSmiley);
+
+	double x1, y1;
+	double x2, y2;
+
+	x1 = _x;
+	y1 = _y;
+	x2 = _x + newBomb.dx;
+	y2 = _y + newBomb.dy;
+
+	//There are problems if it's exactly horizontal or vertical. So, fudge it a bit.
+	if (x1 == x2) x2 += 0.1;
+	if (y1 == y2) y2 += 0.1;
+
+	double k1,k2;
+	k1 = y1 - PARABOLA_HEIGHT;
+	k2 = y2 - PARABOLA_HEIGHT;
+	newBomb.k = min(k1,k2); //whichever one is higher becomes our k
+
+	hge->System_Log("(x1,y1),(x2,y2): (%f,%f),(%f,%f)",x1,y1,x2,y2);
+
+	//Now for some really gay algebra. We have two points and the y coordinate of our vertex.
+	//Solving for h requires the quadratic equation. So, that's what the a,b, and c are below.
+	//I use g to represent a certain expression because that is used a lot in the equation. G stands for gay.
+
+	double g = (y1-newBomb.k)/(y2-newBomb.k);
+	double a = 1 - g;
+	double b = 2 * g * x2 - 2 * x1;
+	double c = (x1*x1)-g*(x2*x2);
+
+	double determinant = b*b - 4*a*c;
+	if (determinant < 0) return;
+
+	double root1 = (-b + sqrt(determinant))/(2*a);
+	double root2 = (-b - sqrt(determinant))/(2*a);
+
+	//Whichever root is between the x's is the one we use
+	if ((root1 > x1 && root1 < x2) || (root1 > x2 && root1 < x1)) { newBomb.h = root1;}
+	else {newBomb.h = root2;}
+	
+
+	//Solve for a
+	newBomb.a = (y1 - newBomb.k) / ((x1 - newBomb.h) * (x1 - newBomb.h));
+
+	newBomb.yShadow = y0;
 
 	theBombs.push_back(newBomb);
 }
