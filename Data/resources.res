@@ -1047,6 +1047,12 @@ Sprite mushboomBomb {
  hotspot=18,29
  resgroup=101
 }
+Sprite mushboomBombShadow {
+ texture="Graphics/brian.png"
+ rect=36,190,35,12
+ hotspot=18,-9
+ resgroup=101
+}
 
 ;**************************
 ;******** GARMBORN ********
