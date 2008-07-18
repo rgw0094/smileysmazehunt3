@@ -286,6 +286,7 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 			//Evil wall stuff
 			if (collision[col][row] >= EVIL_WALL_POSITION && collision[col][row] <= EVIL_WALL_RESTART) {
 				evilWallManager->addEvilWall(ids[col][row]);
+				evilWallManager->setState(ids[col][row],0);
 			}
 			if (collision[col][row] == EVIL_WALL_POSITION) {
 				evilWallManager->setBeginWallPosition(ids[col][row],col,row);
