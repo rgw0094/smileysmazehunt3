@@ -30,12 +30,12 @@ extern float darkness;
 
 //Attributes
 #define HEALTH 10.0
-#define PROJECTILE_DELAY 1.6
+#define PROJECTILE_DELAY 1.2
 #define FREEZE_DURATION 1.0
 #define STUN_DURATION 5.0
 
-#define ICE_DAMAGE 0.0
-#define FIRE_DAMAGE 0.15
+#define ICE_DAMAGE 0.25
+#define FIRE_DAMAGE 0.5
 #define LIGHTNING_DAMAGE 0.25
 #define COLLISION_DAMAGE 0.5
 #define LASER_DAMAGE 0.5
@@ -179,15 +179,15 @@ bool DespairBoss::update(float dt) {
 			int random = hge->Random_Int(0, 1000000);
 			int projectileType, numProjectiles, speed;
 			float angle;
-			//if (random < 600000) {
-			//	projectileType = PROJECTILE_FIRE;
-			//	numProjectiles = 1;
-			//	speed = 600.0;
-			//} else {
+			if (random < 600000) {
+				projectileType = PROJECTILE_FIRE;
+				numProjectiles = 1;
+				speed = 600.0;
+			} else {
 				projectileType = PROJECTILE_ICE;
 				numProjectiles = 1;
 				speed = ICE_SPEED;
-			//}
+			}
 
 			//Left hand - fire only
 			if (projectileType == PROJECTILE_FIRE) {
