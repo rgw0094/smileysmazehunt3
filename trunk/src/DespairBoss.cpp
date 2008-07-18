@@ -42,7 +42,7 @@ extern float darkness;
 
 #define ICE_SPEED 800.0
 
-#define EVIL_DELAY 11114.0
+#define EVIL_DELAY 14.0
 #define EVIL_NUM_CHARGES 7
 #define EVIL_CHARGE_ACCEL 2000.0
 #define EVIL_MAX_CHARGE_SPEED 1300.0
