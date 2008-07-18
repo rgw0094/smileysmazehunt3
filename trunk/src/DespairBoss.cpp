@@ -42,8 +42,7 @@ extern float darkness;
 
 #define ICE_SPEED 800.0
 
-#define EVIL_DELAY 12.0
-#define EVIL_DURATION 9.0
+#define EVIL_DELAY 14.0
 #define EVIL_NUM_CHARGES 7
 #define EVIL_CHARGE_ACCEL 2000.0
 #define EVIL_MAX_CHARGE_SPEED 1300.0
@@ -111,9 +110,9 @@ DespairBoss::DespairBoss(int _gridX, int _gridY, int _groupID) {
  * Destructor
  */
 DespairBoss::~DespairBoss() {
-	resources->Purge(RES_CALYPSO);
-	delete collisionBox;
-	delete damageCollisionBox;
+	//resources->Purge(RES_CALYPSO);
+	if (collisionBox) delete collisionBox;
+	if (damageCollisionBox) delete damageCollisionBox;
 	darkness = 0;
 	//resetProjectiles();
 }
@@ -165,25 +164,28 @@ bool DespairBoss::update(float dt) {
 		dx = 200.0 * cos(hoveringTime);
 		
 		//Move vertically to stay close to smiley
-		if (y > thePlayer->y - 200.0) {
+		if (y > thePlayer->y - 250.0) {
 			y -= 100.0*dt;
-		} else if (y < thePlayer->y - 200.0) {
+		} else if (y < thePlayer->y - 250.0) {
 			y += 100.0*dt;
 		}
-		if (y < startY) y = startY;
+		if (y < startY) {
+			y = startY;
+			dy = 0;
+		}
 
 		//Spawn projectiles periodically
 		if (timePassedSince(lastProjectileTime) > PROJECTILE_DELAY) {
-			int random = hge->Random_Int(0, 10000);
+			int random = hge->Random_Int(0, 1000000);
 			int projectileType, numProjectiles, speed;
 			float angle;
-			//if (random < 7500) {
-			//	projectileType = PROJECTILE_FIRE;
-			//	numProjectiles = 1;
-			//} else {
+			if (random < 600000) {
+				projectileType = PROJECTILE_FIRE;
+				numProjectiles = 1;
+			} else {
 				projectileType = PROJECTILE_ICE;
 				numProjectiles = 1;
-			//}
+			}
 
 			//Left hand - fire only
 			if (projectileType == PROJECTILE_FIRE) {
@@ -383,11 +385,11 @@ bool DespairBoss::update(float dt) {
 		//After evil mode is over, return to Calypso's starting point
 		if (evilAlpha == 0.0) {
 
-			dx = 300.0 * cos(getAngleBetween(x, y, startX, startY));
-			dx = 300.0 * sin(getAngleBetween(x, y, startX, startY));
+			dx = 400.0 * cos(getAngleBetween(x, y, startX, startY));
+			dy = 400.0 * sin(getAngleBetween(x, y, startX, startY));
 
 			//Once Calypso is back to his starting location, return to battle mode.
-			if ((x > startX - 50.0 || x < startX + 50.0) && (y > startY - 50.0 || y < startY + 50.0)) {
+			if (x > startX - 50.0 && x < startX + 50.0 && y > startY - 50.0 && y < startY + 50.0) {
 				evilAlpha = 0.0;
 				setState(DESPAIRBOSS_BATTLE);
 				lastEvilTime = gameTime;
@@ -618,6 +620,19 @@ void DespairBoss::updateProjectiles(float dt) {
 				case PROJECTILE_ICE:
 					thePlayer->dealDamage(ICE_DAMAGE, false);
 					thePlayer->freeze(FREEZE_DURATION);
+					if (i->hasNovaed) {
+						//Don't delete the ice nova if it hits Smiley.
+						deleteProjectile = false;
+					} else {
+						//If the ice orb hasn't novaed yet it should when it hits Smiley
+						i->hasNovaed = true;
+						delete i->particle;
+						i->particle = new hgeParticleSystem(&resources->GetParticleSystem("calypsoIceNova")->info);
+						i->particle->FireAt(i->x, i->y);
+						i->dx = 0;
+						i->dy = 0;
+						i->deathTime = gameTime + 1.0;
+					}
 					break;
 				case PROJECTILE_FIRE:
 					thePlayer->dealDamage(FIRE_DAMAGE, false);
