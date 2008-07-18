@@ -18,6 +18,7 @@
 #include "GameData.h"
 #include "hgeparticle.h"
 #include "Tongue.h"
+#include "MushroomManager.h"
 
 //Variables
 extern bool debugMode, hasFountain;
@@ -90,6 +91,9 @@ Environment::Environment() {
 	whiteCylinderRev = new hgeAnimation(animationTexture,5,20,0,8*64,64,64);
 	whiteCylinderRev->SetMode(HGEANIM_FWD);
 
+	//Explode-able Mushrooms
+	mushroomManager = new MushroomManager();
+
 	resources->GetAnimation("savePoint")->Play();
 	
 	zoneFont = new hgeFont("zone.fnt");
@@ -120,6 +124,8 @@ Environment::~Environment() {
 	delete yellowCylinderRev;
 	delete whiteCylinderRev;
 	delete zoneFont;
+
+	delete mushroomManager;
 }
 
 
@@ -267,6 +273,10 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 				hasFountain = true;
 				fountainX = -7;
 				fountainY = -7;
+			}
+			//Mushrooms
+			if (collision[col][row] == DIZZY_MUSHROOM_1 || collision[col][row] == DIZZY_MUSHROOM_2) {
+				mushroomManager->addMushroom(col,row,collision[col][row]);
 			}
 		}
 		//Read the newline
@@ -422,6 +432,7 @@ void Environment::draw(float dt) {
 				int theCollision = collision[i+xGridOffset][j+yGridOffset];
 				if (theCollision != WALKABLE && theCollision != UNWALKABLE && 
 					theCollision != ENEMY_NO_WALK && theCollision != PLAYER_START && 
+					theCollision != DIZZY_MUSHROOM_1 && theCollision != DIZZY_MUSHROOM_2 &&
 					theCollision != PLAYER_END && theCollision != PIT && 
 					theCollision != UNWALKABLE_PROJECTILE && 
 					theCollision != SHRINK_TUNNEL_HORIZONTAL &&
@@ -570,6 +581,9 @@ void Environment::draw(float dt) {
 		}
 	}
 
+	//Draw the mushrooms
+	mushroomManager->draw(dt);
+
 }
 
 
@@ -688,6 +702,9 @@ void Environment::update(float dt) {
 			}
 		}
 	}
+
+	//update the mushrooms
+	mushroomManager->update(dt);
 
 }
 
