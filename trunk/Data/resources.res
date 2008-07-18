@@ -1294,15 +1294,15 @@ Sprite stunStar {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=102
 }
-Sprite movingWall {
- texture=sprites
+Sprite evilWall {
+ texture=general
  rect=256,64,64,64
  hotspot=32,32
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=102
 }
-Sprite movingWallSpike {
- texture=sprites
+Sprite evilWallSpike {
+ texture=general
  rect=320,64,64,64
  hotspot=32,32
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE

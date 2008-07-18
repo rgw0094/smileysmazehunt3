@@ -19,6 +19,7 @@
 #include "hgeparticle.h"
 #include "Tongue.h"
 #include "MushroomManager.h"
+#include "EvilWallManager.h"
 
 //Variables
 extern bool debugMode, hasFountain;
@@ -94,6 +95,9 @@ Environment::Environment() {
 	//Explode-able Mushrooms
 	mushroomManager = new MushroomManager();
 
+	//Evil walls
+	evilWallManager = new EvilWallManager();
+
 	resources->GetAnimation("savePoint")->Play();
 	
 	zoneFont = new hgeFont("zone.fnt");
@@ -126,6 +130,7 @@ Environment::~Environment() {
 	delete zoneFont;
 
 	delete mushroomManager;
+	delete evilWallManager;
 }
 
 
@@ -277,6 +282,20 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 			//Mushrooms
 			if (collision[col][row] == DIZZY_MUSHROOM_1 || collision[col][row] == DIZZY_MUSHROOM_2) {
 				mushroomManager->addMushroom(col,row,collision[col][row]);
+			}
+			//Evil wall stuff
+			if (collision[col][row] >= EVIL_WALL_POSITION && collision[col][row] <= EVIL_WALL_RESTART) {
+				evilWallManager->addEvilWall(ids[col][row]);
+			}
+			if (collision[col][row] == EVIL_WALL_POSITION) {
+				evilWallManager->setBeginWallPosition(ids[col][row],col,row);
+				evilWallManager->setSpeed(ids[col][row],variable[col][row]);
+			}
+			if (collision[col][row] == EVIL_WALL_TRIGGER) {
+				evilWallManager->setDir(ids[col][row],variable[col][row]);
+			}
+			if (collision[col][row] == EVIL_WALL_RESTART) {
+				evilWallManager->setSmileyRestartPosition(ids[col][row],col,row);
 			}
 		}
 		//Read the newline
@@ -584,6 +603,9 @@ void Environment::draw(float dt) {
 	//Draw the mushrooms
 	mushroomManager->draw(dt);
 
+	//Draw the evil walls
+	evilWallManager->draw(dt);
+
 }
 
 
@@ -705,6 +727,9 @@ void Environment::update(float dt) {
 
 	//update the mushrooms
 	mushroomManager->update(dt);
+
+	//update the evil walls
+	evilWallManager->update(dt);
 
 }
 
@@ -1072,7 +1097,16 @@ bool Environment::playerCollision(int x, int y, float dt) {
 	//Determine the location of the collision box
 	int gridX = x / 64;
 	int gridY = y / 64;
-	bool onIce = collision[thePlayer->gridX][thePlayer->gridY] == ICE;
+
+    bool onIce = collision[thePlayer->gridX][thePlayer->gridY] == ICE;
+	
+	//Activate or deactivate evil walls
+	if (collision[thePlayer->gridX][thePlayer->gridY] == EVIL_WALL_TRIGGER) {
+		evilWallManager->activateEvilWall(ids[thePlayer->gridX][thePlayer->gridY]);
+	}
+	if (collision[thePlayer->gridX][thePlayer->gridY] == EVIL_WALL_DEACTIVATOR) {
+		evilWallManager->deactivateEvilWall(ids[thePlayer->gridX][thePlayer->gridY]);
+	}
 
 	//Check all neighbor squares
 	for (int i = gridX - 2; i <= gridX + 2; i++) {
