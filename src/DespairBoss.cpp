@@ -42,7 +42,7 @@ extern float darkness;
 
 #define ICE_SPEED 800.0
 
-#define EVIL_DELAY 14.0
+#define EVIL_DELAY 11114.0
 #define EVIL_NUM_CHARGES 7
 #define EVIL_CHARGE_ACCEL 2000.0
 #define EVIL_MAX_CHARGE_SPEED 1300.0
@@ -179,20 +179,22 @@ bool DespairBoss::update(float dt) {
 			int random = hge->Random_Int(0, 1000000);
 			int projectileType, numProjectiles, speed;
 			float angle;
-			if (random < 600000) {
-				projectileType = PROJECTILE_FIRE;
-				numProjectiles = 1;
-			} else {
+			//if (random < 600000) {
+			//	projectileType = PROJECTILE_FIRE;
+			//	numProjectiles = 1;
+			//	speed = 600.0;
+			//} else {
 				projectileType = PROJECTILE_ICE;
 				numProjectiles = 1;
-			}
+				speed = ICE_SPEED;
+			//}
 
 			//Left hand - fire only
 			if (projectileType == PROJECTILE_FIRE) {
 				angle = getAngleBetween(x-65,y-60,thePlayer->x, thePlayer->y);
 				for (int i = 0; i < numProjectiles; i++) {
 					addProjectile(projectileType, x-65, y-60+floatingOffset, 
-						angle + hge->Random_Float(-PI/12.0, PI/12.0), 600.0);
+						angle + hge->Random_Float(-PI/12.0, PI/12.0), speed);
 				}
 			}
 			
@@ -201,7 +203,7 @@ bool DespairBoss::update(float dt) {
 				angle = getAngleBetween(x+65,y-60,thePlayer->x, thePlayer->y);
 				for (int i = 0; i < numProjectiles; i++) {
 					addProjectile(projectileType, x+65, y-60+floatingOffset, 
-						angle + hge->Random_Float(-PI/12.0, PI/12.0), 600.0);
+						angle + hge->Random_Float(-PI/12.0, PI/12.0), speed);
 				}
 			}
 
@@ -620,10 +622,9 @@ void DespairBoss::updateProjectiles(float dt) {
 				case PROJECTILE_ICE:
 					thePlayer->dealDamage(ICE_DAMAGE, false);
 					thePlayer->freeze(FREEZE_DURATION);
-					if (i->hasNovaed) {
-						//Don't delete the ice nova if it hits Smiley.
-						deleteProjectile = false;
-					} else {
+					//Don't delete the ice nova if it hits Smiley.
+					deleteProjectile = false;
+					if (!i->hasNovaed) {
 						//If the ice orb hasn't novaed yet it should when it hits Smiley
 						i->hasNovaed = true;
 						delete i->particle;
