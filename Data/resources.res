@@ -130,6 +130,11 @@ Particle iceNova {
  sprite=particleGraphic13
  resgroup=1
 }
+Particle calypsoIceNova {
+ filename=calypsoicenova.psi
+ sprite=particleGraphic13
+ resgroup=1
+}
 Particle treeletSpawn {
  filename=treelet.psi
  sprite=particleGraphic13
