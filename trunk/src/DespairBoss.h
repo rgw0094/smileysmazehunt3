@@ -2,9 +2,13 @@
 #define _DESPAIRBOSS_H_
 
 #include "boss.h"
-#include "hgeparticle.h"
-#include "hgecolor.h"
-#include "collisionCircle.h"
+#include <list>
+
+class collisionCircle;
+class hgeColor;
+class hgeParticleSystem;
+class hgeParticleManager;
+
 
 #define NUM_STUN_STARS 5
 
@@ -15,6 +19,11 @@ struct CalypsoProjectile {
 	float x, y, dx, dy;
 	hgeRect *collisionBox;
 	hgeParticleSystem *particle;
+	float timeCreated;
+	float timeUntilNova;
+	bool hasNovaed;
+	float novaRadius;
+	float deathTime;
 };
 
 class DespairBoss : public Boss {

@@ -10,6 +10,7 @@
 #include "LootManager.h"
 #include "Projectiles.h"
 #include "NPCManager.h"
+#include "boss.h"
 
 extern bool debugMode;
 extern float timePlayed, gameStart;
@@ -27,6 +28,7 @@ extern ProjectileManager *projectileManager;
 extern LootManager *lootManager;
 extern NPCManager *npcManager;
 extern EnemyManager *enemyManager;
+extern BossManager *bossManager;
 
 /**
  * Switches the game state
@@ -198,6 +200,10 @@ void loadGameObjects() {
 	hge->System_Log("Creating Enemy Group Manager");
 	if (enemyGroupManager) delete enemyGroupManager;
 	enemyGroupManager = new EnemyGroupManager();
+
+	hge->System_Log("Creating Boss Manager");
+	if (bossManager) delete bossManager;
+	bossManager = new BossManager();
 
 	//Environment must be created last!
 	hge->System_Log("Creating Environment");

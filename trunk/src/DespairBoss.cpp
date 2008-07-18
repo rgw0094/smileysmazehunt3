@@ -11,6 +11,7 @@
 #include "weaponparticle.h"
 #include "Tongue.h"
 #include "hge.h"
+#include "CollisionCircle.h"
 
 extern hgeResourceManager *resources;
 extern EnemyGroupManager *enemyGroupManager;
@@ -39,12 +40,15 @@ extern float darkness;
 #define COLLISION_DAMAGE 0.5
 #define LASER_DAMAGE 0.5
 
-#define EVIL_DELAY 2.0
+#define ICE_SPEED 800.0
+
+#define EVIL_DELAY 12.0
 #define EVIL_DURATION 9.0
 #define EVIL_NUM_CHARGES 7
 #define EVIL_CHARGE_ACCEL 2000.0
 #define EVIL_MAX_CHARGE_SPEED 1300.0
-#define LASER_SPEED 1000.0
+#define LASER_DELAY 1.0
+#define LASER_SPEED 2500.0
 
 //States
 #define DESPAIRBOSS_INACTIVE 0
@@ -111,7 +115,7 @@ DespairBoss::~DespairBoss() {
 	delete collisionBox;
 	delete damageCollisionBox;
 	darkness = 0;
-	resetProjectiles();
+	//resetProjectiles();
 }
 
 /**
@@ -170,21 +174,33 @@ bool DespairBoss::update(float dt) {
 
 		//Spawn projectiles periodically
 		if (timePassedSince(lastProjectileTime) > PROJECTILE_DELAY) {
-			int projectileType = hge->Random_Int(0, NUM_PROJECTILES-1);
+			int random = hge->Random_Int(0, 10000);
+			int projectileType, numProjectiles, speed;
+			float angle;
+			//if (random < 7500) {
+			//	projectileType = PROJECTILE_FIRE;
+			//	numProjectiles = 1;
+			//} else {
+				projectileType = PROJECTILE_ICE;
+				numProjectiles = 1;
+			//}
 
-			//Left hand
-			float angle = getAngleBetween(x-65,y-60,thePlayer->x, thePlayer->y);
-			for (int i = 0; i < 5; i++) {
-				addProjectile(projectileType, x-65, y-60+floatingOffset, 
-					angle + hge->Random_Float(-PI/12.0, PI/12.0), 400.0);
+			//Left hand - fire only
+			if (projectileType == PROJECTILE_FIRE) {
+				angle = getAngleBetween(x-65,y-60,thePlayer->x, thePlayer->y);
+				for (int i = 0; i < numProjectiles; i++) {
+					addProjectile(projectileType, x-65, y-60+floatingOffset, 
+						angle + hge->Random_Float(-PI/12.0, PI/12.0), 600.0);
+				}
 			}
 			
-			//Right hand
-			angle = getAngleBetween(x+65,y-60,thePlayer->x, thePlayer->y);
-			for (int i = 0; i < 5; i++) {
-				addProjectile(projectileType, x+65, y-60+floatingOffset, 
-					angle + hge->Random_Float(-PI/12.0, PI/12.0), 400.0);
-				
+			//Right hand - fire and ice
+			if (projectileType == PROJECTILE_FIRE || projectileType == PROJECTILE_ICE) {
+				angle = getAngleBetween(x+65,y-60,thePlayer->x, thePlayer->y);
+				for (int i = 0; i < numProjectiles; i++) {
+					addProjectile(projectileType, x+65, y-60+floatingOffset, 
+						angle + hge->Random_Float(-PI/12.0, PI/12.0), 600.0);
+				}
 			}
 
 			lastProjectileTime = gameTime;
@@ -315,19 +331,6 @@ bool DespairBoss::update(float dt) {
 			dy = EVIL_MAX_CHARGE_SPEED * sin(chargeAngle);
 		}
 
-		//Periodically fire lasers
-		if (timePassedSince(lastLaserTime) > 2.0) {
-			lastLaserTime = gameTime;
-			//Left eye
-			projectileManager->addProjectile(x - 10, y - 50, 
-				LASER_SPEED, getAngleBetween(x, y, thePlayer->x, thePlayer->y),
-				LASER_DAMAGE, true, PROJECTILE_LASER, true);
-			//Right eye
-			projectileManager->addProjectile(x + 10, y - 50, 
-				LASER_SPEED, getAngleBetween(x, y, thePlayer->x, thePlayer->y),
-				LASER_DAMAGE, true, PROJECTILE_LASER, true);
-		}
-
 		if (timePassedSince(timeEnteredState) > timeToCharge) {
 			//Calculate time to stop
 			float vi = sqrt(dx*dx + dy*dy);
@@ -356,7 +359,7 @@ bool DespairBoss::update(float dt) {
 		dx = -100.0 * cos(getAngleBetween(x, y, thePlayer->x, thePlayer->y));
 		dy = -100.0 * sin(getAngleBetween(x, y, thePlayer->x, thePlayer->y));
 		
-		if (timePassedSince(timeEnteredState) > 1.0) {
+		if (timePassedSince(timeEnteredState) > 0.5) {
 			if (chargeCounter > EVIL_NUM_CHARGES) {
 				//This was the last charge
 				setState(DESPAIRBOSS_EXITEVIL);
@@ -378,10 +381,10 @@ bool DespairBoss::update(float dt) {
 		if (evilAlpha < 0.0) evilAlpha = 0.0;
 
 		//After evil mode is over, return to Calypso's starting point
-		if (evilAlpha = 0.0) {
+		if (evilAlpha == 0.0) {
 
-			dx = 300.0 * cos(getAngleBetween(x, y, thePlayer->x, thePlayer->y));
-			dx = 300.0 * sin(getAngleBetween(x, y, thePlayer->x, thePlayer->y));
+			dx = 300.0 * cos(getAngleBetween(x, y, startX, startY));
+			dx = 300.0 * sin(getAngleBetween(x, y, startX, startY));
 
 			//Once Calypso is back to his starting location, return to battle mode.
 			if ((x > startX - 50.0 || x < startX + 50.0) && (y > startY - 50.0 || y < startY + 50.0)) {
@@ -389,6 +392,24 @@ bool DespairBoss::update(float dt) {
 				setState(DESPAIRBOSS_BATTLE);
 				lastEvilTime = gameTime;
 			}
+		}
+	}
+
+	
+	//Periodically fire lasers while in evil mode
+	if (state == DESPAIRBOSS_EVIL_CHARGING || state == DESPAIRBOSS_EVIL_STOPPING_CHARGE || state == DESPAIRBOSS_EVIL_CHARGE_COOLDOWN) {
+		if (timePassedSince(lastLaserTime) > LASER_DELAY) {
+			lastLaserTime = gameTime;
+			float angle = getAngleBetween(x, y, thePlayer->x, thePlayer->y) +
+				hge->Random_Float(-(PI/16.0), PI/16.0);
+			//Left eye
+			projectileManager->addProjectile(x - 10 + 50*cos(angle), 
+				y - 60 + floatingOffset + 50*sin(angle), 
+				LASER_SPEED, angle, LASER_DAMAGE, true, PROJECTILE_LASER, true);
+			//Right eye
+			projectileManager->addProjectile(x + 10 + 50*cos(angle), 
+				y - 60 + floatingOffset + 50*sin(angle),  
+				LASER_SPEED, angle, LASER_DAMAGE, true, PROJECTILE_LASER, true);
 		}
 	}
 
@@ -495,10 +516,13 @@ void DespairBoss::addProjectile(int type, float x, float y, float angle, float s
 	newProjectile.dy = speed * sin(angle);
 	newProjectile.collisionBox = new hgeRect();
 	newProjectile.collisionBox->SetRadius(newProjectile.x, newProjectile.y,10);
-	
+	newProjectile.timeCreated = gameTime;
+
 	switch (type) {
 		case PROJECTILE_ICE:
 			newProjectile.particle = new hgeParticleSystem(&resources->GetParticleSystem("iceOrb")->info);
+			newProjectile.timeUntilNova = distance(x, y, thePlayer->x, thePlayer->y) / ICE_SPEED;
+			newProjectile.hasNovaed = false;
 			break;
 		case PROJECTILE_FIRE:
 			newProjectile.particle = new hgeParticleSystem(&resources->GetParticleSystem("fireOrb")->info);
@@ -539,23 +563,51 @@ void DespairBoss::updateProjectiles(float dt) {
 	std::list<CalypsoProjectile>::iterator i;
 	for (i = projectiles.begin(); i != projectiles.end(); i++) {
 	
-		/**
-		if (i->y < thePlayer->y) {
-			if (i->x < thePlayer->x) {
-				i->dx += 600.0*dt;
-			} else if (i->x > thePlayer->x) {
-				i->dx -= 600.0*dt;
+		if (i->type == PROJECTILE_FIRE) {
+			//Fire projectiles home
+			if (i->y < thePlayer->y) {
+				if (i->x < thePlayer->x) {
+					i->dx += 1000.0*dt;
+				} else if (i->x > thePlayer->x) {
+					i->dx -= 1000.0*dt;
+				}
 			}
-		}*/
+		}
+
+		if (i->type == PROJECTILE_ICE) {
+			//When the ice orb gets to the position where Smiley was when it was
+			//launched it explodes into a nova.
+			if (!i->hasNovaed && timePassedSince(i->timeCreated) > i->timeUntilNova) {
+				i->hasNovaed = true;
+				delete i->particle;
+				i->particle = new hgeParticleSystem(&resources->GetParticleSystem("calypsoIceNova")->info);
+				i->particle->FireAt(i->x, i->y);
+				i->dx = 0;
+				i->dy = 0;
+				i->deathTime = gameTime + 1.0;
+			}
+		}
 
 		i->x += i->dx * dt;
 		i->y += i->dy * dt;
-		i->collisionBox->SetRadius(i->x, i->y, 20);
+
+		//Set the collision box
+		if (i->type == PROJECTILE_ICE && i->hasNovaed) {
+			i->novaRadius += 110.0 * dt;
+			i->collisionBox->SetRadius(i->x, i->y, i->novaRadius);
+		} else {
+			i->collisionBox->SetRadius(i->x, i->y, 20);
+		}
 
 		bool deleteProjectile = false;
 
 		//Check for collision with walls
 		if (theEnvironment->collisionAt(i->x, i->y) == UNWALKABLE) {
+			deleteProjectile = true;
+		}
+
+		//Check for end of ice nova
+		if (i->type == PROJECTILE_ICE && i->hasNovaed && gameTime > i->deathTime) {
 			deleteProjectile = true;
 		}
 
