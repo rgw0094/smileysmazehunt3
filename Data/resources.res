@@ -1294,7 +1294,20 @@ Sprite stunStar {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=102
 }
-
+Sprite movingWall {
+ texture=sprites
+ rect=256,64,64,64
+ hotspot=32,32
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=102
+}
+Sprite movingWallSpike {
+ texture=sprites
+ rect=320,64,64,64
+ hotspot=32,32
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=102
+}
 ;************************
 ;******** CALYPSO *******
 ;************************
