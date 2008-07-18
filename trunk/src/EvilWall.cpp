@@ -202,18 +202,18 @@ void EvilWall::doCollision() {
 		case RIGHT:
             collisionRect->x1 = xPosition - EVIL_WALL_HALF_SCREEN_WIDTH*64+64;
 			collisionRect->y1 = smileyGridY*64 - EVIL_WALL_HALF_SCREEN_HEIGHT*64;
-			collisionRect->x2 = collisionRect->x1 + EVIL_WALL_HALF_SCREEN_WIDTH*64;
+			collisionRect->x2 = collisionRect->x1 + EVIL_WALL_HALF_SCREEN_WIDTH*64-32;
 			collisionRect->y2 = collisionRect->y1 + EVIL_WALL_HALF_SCREEN_HEIGHT * 2*64;
 			break;
 		case LEFT:
-			collisionRect->x1 = xPosition;
+			collisionRect->x1 = xPosition-32;
 			collisionRect->y1 = smileyGridY*64 - EVIL_WALL_HALF_SCREEN_HEIGHT*64;
 			collisionRect->x2 = collisionRect->x1 + EVIL_WALL_HALF_SCREEN_WIDTH*64;
 			collisionRect->y2 = collisionRect->y1 + EVIL_WALL_HALF_SCREEN_HEIGHT * 2*64;
 			break;
 		case UP:
 			collisionRect->x1 = smileyGridX*64 - EVIL_WALL_HALF_SCREEN_WIDTH*64;
-			collisionRect->y1 = yPosition;
+			collisionRect->y1 = yPosition-32;
 			collisionRect->x2 = collisionRect->x1 + EVIL_WALL_HALF_SCREEN_WIDTH*2*64;
 			collisionRect->y2 = collisionRect->y1 + EVIL_WALL_HALF_SCREEN_HEIGHT*64;
 			break;
@@ -221,7 +221,7 @@ void EvilWall::doCollision() {
 			collisionRect->x1 = smileyGridX*64 - EVIL_WALL_HALF_SCREEN_WIDTH*64;
 			collisionRect->y1 = yPosition - EVIL_WALL_HALF_SCREEN_HEIGHT*64+64;
 			collisionRect->x2 = collisionRect->x1 + EVIL_WALL_HALF_SCREEN_WIDTH*2*64;
-			collisionRect->y2 = collisionRect->y1 + EVIL_WALL_HALF_SCREEN_HEIGHT*64;
+			collisionRect->y2 = collisionRect->y1 + EVIL_WALL_HALF_SCREEN_HEIGHT*64-32;
 			break;
 	};
 
