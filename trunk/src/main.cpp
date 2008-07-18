@@ -195,7 +195,7 @@ bool FrameFunc() {
 			
 			theEnvironment->update(dt);
 			bossManager->update(dt);
-			if (thePlayer) thePlayer->update(dt);
+			thePlayer->update(dt);
 			theTextBox->update(dt);
 			enemyManager->update(dt);
 			lootManager->update(dt);

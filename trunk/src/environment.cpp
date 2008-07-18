@@ -135,7 +135,7 @@ Environment::~Environment() {
 
 
 /**
- * Load an environment
+ * Loads an area.
  *
  *	id			id of the zone to load
  *	from		id of the zone Smiley is coming from
@@ -203,7 +203,7 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 	} else if (id == CASTLE_OF_EVIL) {
 		//soundManager->playMusic("castleOfEvilMusic");
 		zoneName = "Castle Of Evil (What a gay name)";
-		areaFile.open("Data/Maps/castle.smg");
+		areaFile.open("Data/Maps/castle.smh");
 	}
 
 	//id range - ignore it
