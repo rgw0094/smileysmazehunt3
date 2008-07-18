@@ -14,6 +14,7 @@ class hgeRect;
 class hgeFont;
 class hgeAnimation;
 class BaseEnemy;
+class MushroomManager;
 
 //-------- Collision Layer ---------//
 #define NUM_COLLISION 36
@@ -131,7 +132,7 @@ public:
 	//Objects
 	hgeRect *collisionBox;
 	hgeFont *zoneFont;
-
+    
 	//variables
 	int areaWidth,areaHeight;		//Width and height of the area in squares
 	int ids[256][256];				//ID Layer	
@@ -157,6 +158,7 @@ public:
 	float drawX,drawY;				//Location to draw a tile
 	int offScreenRange;				//Number of tiles offscreen to draw
 	std::string zoneName;
+	MushroomManager *mushroomManager; //The explode-able mushrooms
 
 	//Animations
 	hgeAnimation *silverCylinder, *brownCylinder, *blueCylinder, *greenCylinder, *yellowCylinder, *whiteCylinder;

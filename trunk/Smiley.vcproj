@@ -191,6 +191,9 @@
 					RelativePath=".\src\lootmanager.cpp">
 				</File>
 				<File
+					RelativePath=".\src\MushroomManager.cpp">
+				</File>
+				<File
 					RelativePath=".\src\npc.cpp">
 				</File>
 				<File
@@ -388,6 +391,9 @@
 				</File>
 				<File
 					RelativePath=".\src\lootmanager.h">
+				</File>
+				<File
+					RelativePath=".\src\MushroomManager.h">
 				</File>
 				<File
 					RelativePath=".\src\npc.h">
