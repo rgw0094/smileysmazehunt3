@@ -15,6 +15,7 @@ class hgeFont;
 class hgeAnimation;
 class BaseEnemy;
 class MushroomManager;
+class EvilWallManager;
 
 //-------- Collision Layer ---------//
 #define NUM_COLLISION 36
@@ -73,6 +74,7 @@ class MushroomManager;
 #define EVIL_WALL_POSITION 52
 #define EVIL_WALL_TRIGGER 53
 #define EVIL_WALL_DEACTIVATOR 54
+#define EVIL_WALL_RESTART 55
 //...
 #define WHITE_CYLINDER_UP 58
 #define YELLOW_CYLINDER_UP 59
@@ -131,7 +133,7 @@ public:
 	bool isDeepWaterAt(int x, int y);
 	bool isShallowWaterAt(int x, int y);
 	void bombWall(int x,int y);
-
+	
 	//Objects
 	hgeRect *collisionBox;
 	hgeFont *zoneFont;
@@ -162,6 +164,7 @@ public:
 	int offScreenRange;				//Number of tiles offscreen to draw
 	std::string zoneName;
 	MushroomManager *mushroomManager; //The explode-able mushrooms
+	EvilWallManager *evilWallManager; //Evil walls which move and try to kill smiley
 
 	//Animations
 	hgeAnimation *silverCylinder, *brownCylinder, *blueCylinder, *greenCylinder, *yellowCylinder, *whiteCylinder;
