@@ -93,9 +93,13 @@ Environment::Environment() {
 	whiteCylinderRev->SetMode(HGEANIM_FWD);
 
 	//Explode-able Mushrooms
+	hge->System_Log("Creating Environment.MushroomManager");
+	if (mushroomManager) delete mushroomManager;
 	mushroomManager = new MushroomManager();
 
 	//Evil walls
+	hge->System_Log("Creating Environment.EvilWallManager");
+	if (evilWallManager) delete evilWallManager;
 	evilWallManager = new EvilWallManager();
 
 	resources->GetAnimation("savePoint")->Play();
@@ -128,9 +132,9 @@ Environment::~Environment() {
 	delete yellowCylinderRev;
 	delete whiteCylinderRev;
 	delete zoneFont;
-
 	delete mushroomManager;
 	delete evilWallManager;
+
 }
 
 
@@ -280,15 +284,17 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 				fountainY = -7;
 			}
 			//Mushrooms
+		
 			if (collision[col][row] == DIZZY_MUSHROOM_1 || collision[col][row] == DIZZY_MUSHROOM_2) {
 				mushroomManager->addMushroom(col,row,collision[col][row]);
 			}
+			
 			//Evil wall stuff
 			if (collision[col][row] >= EVIL_WALL_POSITION && collision[col][row] <= EVIL_WALL_RESTART) {
 				evilWallManager->addEvilWall(ids[col][row]);
 				evilWallManager->setState(ids[col][row],0);
 			}
-			if (collision[col][row] == EVIL_WALL_POSITION) {
+			if (collision[col][row] == EVIL_WALL_POSITION) {					
 				evilWallManager->setBeginWallPosition(ids[col][row],col,row);
 				evilWallManager->setSpeed(ids[col][row],variable[col][row]);
 			}

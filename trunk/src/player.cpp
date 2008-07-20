@@ -89,6 +89,7 @@ Player::Player(int _gridX, int _gridY) {
 	//Time variables
 	startedIceBreath = lastOrb = lastHit = lastLavaDamage = -5.0f;
 	stoppedAttacking = gameTime;
+	startedFlashing = -10.0;
 	timeEnteredShrinkTunnel = -10.0;
 
 	//State variables

@@ -5,6 +5,10 @@
 
 #include "EvilWall.h"
 
+struct EvilWallStruct {
+	EvilWall *evilWall;
+};
+
 
 class EvilWallManager {
 public:
@@ -28,7 +32,7 @@ public:
 	void draw(float dt);
 
 	//Variables
-	std::list<EvilWall> theEvilWalls;
+	std::list<EvilWallStruct> theEvilWalls;
 
 };
 
