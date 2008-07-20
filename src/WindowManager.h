@@ -16,6 +16,9 @@ public:
 	void closeWindow();
 	bool isOpenWindow();
 	BaseWindow *getActiveWindow();
+
+	//Variable
+	int frameLastWindowClosed;
 	
 private:
 	BaseWindow *activeWindow;

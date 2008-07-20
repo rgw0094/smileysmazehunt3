@@ -11,6 +11,7 @@
 #include "Input.h"
 #include "SaveManager.h"
 #include "Player.h"
+#include "WindowManager.h"
 
 extern HGE *hge;
 extern hgeResourceManager *resources;
@@ -19,6 +20,8 @@ extern Input *input;
 extern SaveManager *saveManager;
 extern float gameTime;
 extern Player *thePlayer;
+extern WindowManager *windowManager;
+extern int frameCounter;
 
 #define X_OFFSET 312.0
 #define Y_OFFSET 500.0
@@ -123,6 +126,7 @@ bool Shop::update(float dt) {
 				break;
 			case EXIT:
 				theTextBox->textBoxClosed = gameTime;
+				windowManager->frameLastWindowClosed = frameCounter;
 				return false;
 		}
 	}

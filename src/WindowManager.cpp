@@ -6,6 +6,7 @@ extern HGE *hge;
 
 WindowManager::WindowManager() {
 	activeWindow = NULL;
+	frameLastWindowClosed = 0;
 }
 
 WindowManager::~WindowManager() {
