@@ -212,7 +212,7 @@ void Player::update(float dt) {
 	}
 	
 	//Attack
-	if (input->keyPressed(INPUT_ATTACK) && !frozen && !isHovering && frameCounter != 0) {
+	if (input->keyPressed(INPUT_ATTACK) && !frozen && !isHovering && frameCounter > windowManager->frameLastWindowClosed ) {
 		tongue->startAttack();
 	}
 
@@ -221,10 +221,10 @@ void Player::update(float dt) {
 		tongue->update(dt);
 		enemyManager->tongueCollision(tongue, getDamage());
 		theEnvironment->hitSillyPads(tongue);
-		theEnvironment->toggleSwitches(tongue);
+		theEnvironment->toggleSwitches(tongue);		
 		npcManager->talkToNPCs(tongue);
 		if (!windowManager->isOpenWindow()) theEnvironment->hitSaveShrine(tongue);
-		if (!theTextBox->visible) theEnvironment->hitSigns(tongue);
+		if (!theTextBox->visible) theEnvironment->hitSigns(tongue);		
 	}
 
 	//Do shit

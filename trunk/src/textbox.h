@@ -16,7 +16,7 @@ public:
 	void draw(float dt);
 	void update(float dt);
 	void set(char* text, bool hasGraphic, hgeSprite *graphic, int graphicHeight);
-	void setDialogue(int npcID, int textID);
+	void setDialogue(int _npcID, int _textID);
 	void setHint();
 	void init();
 	void doFadeOut(float dt);
