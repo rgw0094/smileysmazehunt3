@@ -18,9 +18,10 @@ void EvilWallManager::addEvilWall(int id) {
 	int num = theEvilWalls.size();
 	if (num >= id+1) return; //We have enough, no need to make more
 
-	EvilWall newEvilWall;
+	EvilWallStruct newEvilWall;
 
-	newEvilWall.state=0;
+	newEvilWall.evilWall = new EvilWall;
+	newEvilWall.evilWall->state=0;
 
 	while (theEvilWalls.size() < id+1) {
 		theEvilWalls.push_back(newEvilWall);	
@@ -31,10 +32,10 @@ void EvilWallManager::activateEvilWall(int id) {
 	//Loop through until we get to element id, then activate it	
 	int n = 0;
 
-	std::list<EvilWall>::iterator i;
+	std::list<EvilWallStruct>::iterator i;
 	for(i = theEvilWalls.begin(); i != theEvilWalls.end(); i++) {
 		if (n==id) {
-			i->activate();
+			i->evilWall->activate();
 		}
 		n++;		
 	}
@@ -44,26 +45,26 @@ void EvilWallManager::deactivateEvilWall(int id) {
 	//Loop through until we get to element id, then deactivate it	
 	int n = 0;
 
-	std::list<EvilWall>::iterator i;
+	std::list<EvilWallStruct>::iterator i;
 	for(i = theEvilWalls.begin(); i != theEvilWalls.end(); i++) {
 		if (n==id) {
-			i->deactivate();
+			i->evilWall->deactivate();
 		}
 		n++;		
 	}
 }
 
 void EvilWallManager::update(float dt) {
-	std::list<EvilWall>::iterator i;
+	std::list<EvilWallStruct>::iterator i;
 	for(i = theEvilWalls.begin(); i != theEvilWalls.end(); i++) {
-		i->update(dt);
+		i->evilWall->update(dt);
 	}
 }
 
 void EvilWallManager::draw(float dt) {
-	std::list<EvilWall>::iterator i;
+	std::list<EvilWallStruct>::iterator i;
 	for(i = theEvilWalls.begin(); i != theEvilWalls.end(); i++) {
-		i->draw(dt);
+		i->evilWall->draw(dt);
 	}
 }
 
@@ -72,10 +73,10 @@ void EvilWallManager::setBeginWallPosition(int id, int gridX, int gridY) {
 	//Loop through until we get to element id, then mutate it	
 	int n = 0;
 
-	std::list<EvilWall>::iterator i;
+	std::list<EvilWallStruct>::iterator i;
 	for(i = theEvilWalls.begin(); i != theEvilWalls.end(); i++) {
 		if (n==id) {
-			i->setBeginWallPosition(gridX,gridY);
+			i->evilWall->setBeginWallPosition(gridX,gridY);
 		}
 		n++;		
 	}
@@ -85,10 +86,10 @@ void EvilWallManager::setDir(int id, int _dir) {
 	//Loop through until we get to element id, then mutate it	
 	int n = 0;
 
-	std::list<EvilWall>::iterator i;
+	std::list<EvilWallStruct>::iterator i;
 	for(i = theEvilWalls.begin(); i != theEvilWalls.end(); i++) {
 		if (n==id) {
-			i->setDir(_dir);
+			i->evilWall->setDir(_dir);
 		}
 		n++;		
 	}
@@ -98,10 +99,10 @@ void EvilWallManager::setSmileyRestartPosition(int id, int gridX, int gridY) {
 	//Loop through until we get to element id, then mutate it	
 	int n = 0;
 
-	std::list<EvilWall>::iterator i;
+	std::list<EvilWallStruct>::iterator i;
 	for(i = theEvilWalls.begin(); i != theEvilWalls.end(); i++) {
 		if (n==id) {
-			i->setSmileyRestartPosition(gridX,gridY);
+			i->evilWall->setSmileyRestartPosition(gridX,gridY);
 		}
 		n++;		
 	}
@@ -111,10 +112,10 @@ void EvilWallManager::setSpeed(int id, int _speed) {
 	//Loop through until we get to element id, then mutate it	
 	int n = 0;
 
-	std::list<EvilWall>::iterator i;
+	std::list<EvilWallStruct>::iterator i;
 	for(i = theEvilWalls.begin(); i != theEvilWalls.end(); i++) {
 		if (n==id) {
-			i->setSpeed(_speed);
+			i->evilWall->setSpeed(_speed);
 		}
 		n++;		
 	}
@@ -124,10 +125,10 @@ void EvilWallManager::setState(int id, int _state) {
 	//Loop through until we get to element id, then mutate it	
 	int n = 0;
 
-	std::list<EvilWall>::iterator i;
+	std::list<EvilWallStruct>::iterator i;
 	for(i = theEvilWalls.begin(); i != theEvilWalls.end(); i++) {
 		if (n==id) {
-			i->setState(_state);
+			i->evilWall->setState(_state);
 		}
 		n++;		
 	}
