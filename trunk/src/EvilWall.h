@@ -25,6 +25,7 @@ public:
 	void setState(int _state);
 	
 	//Variables
+	int evilWallID;
 	int state;
 	int dir;
 	int xBeginWall, yBeginWall; //what grid spot the beginning is located at
