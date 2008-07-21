@@ -28,7 +28,7 @@
 #include <fstream>
 
 //Variables
-extern bool debugMode, hasFountain;
+extern bool debugMode;
 extern int fountainX, fountainY;
 extern int musicVolume;
 extern float gameTime;
@@ -430,7 +430,7 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 
 
 /**
- * Draw the environment
+ * Draws the environment
  */
 void Environment::draw(float dt) {
 
@@ -628,10 +628,16 @@ void Environment::drawAfterSmiley(float dt) {
 				drawX = getScreenX(gridX * 64);
 				drawY = getScreenY(gridY * 64);
 
-				//Marked as draw after smiley
-				if (ids[gridX][gridY] == DRAW_AFTER_SMILEY) {
+				//Marked as draw after smiley or the thing above Smiley is marked as draw
+				//above Smiley and Smiley is behind it. That way you can't walk behind a tree
+				//and lick through it.
+				if (ids[gridX][gridY] == DRAW_AFTER_SMILEY || 
+						(ids[gridX][gridY-1] == DRAW_AFTER_SMILEY && 
+						thePlayer->gridX == gridX && 
+						thePlayer->gridY < gridY)) {
 					itemLayer[item[gridX][gridY]]->Render(drawX,drawY);
 				}
+
 				//Shrink tunnels
 				if (collision[gridX][gridY] == SHRINK_TUNNEL_HORIZONTAL || collision[gridX][gridY] == SHRINK_TUNNEL_VERTICAL) {
 					walkLayer[collision[gridX][gridY]]->Render(drawX, drawY);

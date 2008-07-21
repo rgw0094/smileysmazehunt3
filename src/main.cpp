@@ -54,7 +54,6 @@ float gameTime = 0.0;
 int frameCounter = 0;
 int gameState = MENU;
 bool debugMode;
-bool hasFountain;
 int fountainX, fountainY;
 float darkness = 0.0;
 
