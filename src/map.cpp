@@ -5,6 +5,9 @@
 #include "SaveManager.h"
 #include "smiley.h"
 
+#include "hgeresource.h"
+#include "hgesprite.h"
+
 extern HGE *hge;
 extern SaveManager *saveManager;
 extern Input *input;

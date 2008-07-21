@@ -58,6 +58,8 @@ extern HTEXTURE animationTexture, sillyPadTexture;
 //Sprites
 extern hgeSprite *itemLayer[256], *mainLayer[256], *walkLayer[256], *abilitySprites[NUM_ABILITIES];
 
+#define SILLY_PAD_TIME 30		//Number of seconds silly pads stay active
+
 /**
  * Constructor
  */
@@ -1394,4 +1396,17 @@ bool Environment::isDeepWaterAt(int x, int y) {
  */ 
 bool Environment::isShallowWaterAt(int x, int y) {
 	return (collision[x][y] == SHALLOW_WATER || collision[x][y] == SHALLOW_GREEN_WATER);
+}
+
+/**
+ * Set a collision box for the speicifed collision type decalared in smiley.
+ * This allows different things to have different shaped collision boxes.
+ */
+void Environment::setTerrainCollisionBox(hgeRect *box, int whatFor, int gridX, int gridY) {
+	if (whatFor == FOUNTAIN) {
+		//Fountain
+		box->Set((gridX-1)*64,gridY*64 + 35,(gridX+2)*64,(gridY+1)*64 + 10);
+	} else {
+		box->SetRadius(gridX*64+32,gridY*64+31,31);
+	}
 }

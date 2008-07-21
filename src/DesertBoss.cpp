@@ -29,6 +29,10 @@ extern SaveManager *saveManager;
 extern SoundManager *soundManager;
 extern float gameTime;
 
+#define TEXT_DESERTBOSS_INTRO 130
+#define TEXT_DESERTBOSS_VICTORY 131
+
+
 /**
  * Constructor
  */

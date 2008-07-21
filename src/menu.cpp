@@ -1,12 +1,15 @@
 #include "menu.h"
 #include "smiley.h"
 #include "Input.h"
-
 #include "TitleScreen.h"
 #include "LoadScreen.h"
 #include "ControlsScreen.h"
 #include "DeathScreen.h"
 #include "SoundManager.h"
+
+#include "hge.h"
+#include "hgestrings.h"
+#include "hgeresource.h"
 
 //Objects
 extern HGE *hge;

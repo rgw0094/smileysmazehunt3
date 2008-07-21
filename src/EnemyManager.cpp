@@ -7,6 +7,10 @@
 #include "GameData.h"
 #include "CollisionCircle.h"
 
+#include "hgerect.h"
+#include "hgeparticle.h"
+#include "hgeresource.h"
+
 extern HGE *hge;
 extern Environment *theEnvironment;
 extern Player *thePlayer;
@@ -17,6 +21,23 @@ extern hgeResourceManager *resources;
 extern EnemyGroupManager *enemyGroupManager;
 extern GameData *gameData;
 extern float gameTime;
+
+//Enemy Types
+#define ENEMY_BASIC 0
+#define ENEMY_EVIL_EYE 1
+#define ENEMY_GUMDROP 2
+#define ENEMY_BOMB_GENERATOR 3
+#define ENEMY_CHARGER 4
+#define ENEMY_CLOWNCRAB 5
+#define ENEMY_BATLET_DIST 6
+#define ENEMY_BUZZARD 7
+#define ENEMY_SAD_SHOOTER 8
+#define ENEMY_FLOATER 9
+#define ENEMY_FLAILER 10
+#define ENEMY_TENTACLE 11
+#define ENEMY_TURRET 12
+#define ENEMY_GHOST 13
+#define ENEMY_FAKE 14
 
 /**
  * Constructor
@@ -140,7 +161,7 @@ void EnemyManager::update(float dt) {
 			hge->Effect_Play(resources->GetEffect("snd_enemyDeath"));
 
 			//Spawn loot
-			randomLoot = rand() % 10000;
+			randomLoot = hge->Random_Int(0,10000);
 			if (randomLoot < 10000.0 * i->spawnHealthChance) {
 				lootManager->addLoot(LOOT_HEALTH, i->enemy->x, i->enemy->y, -1);
 			} else if (randomLoot < 10000.0 * i->spawnHealthChance + 10000.0*i->spawnManaChance) {

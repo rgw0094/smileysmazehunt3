@@ -7,6 +7,9 @@
 #include "NPC.h"
 #include "Tongue.h"
 
+#include "hgestrings.h"
+#include "hgesprite.h"
+
 extern HGE *hge;
 extern Player *thePlayer;
 extern Environment *theEnvironment;

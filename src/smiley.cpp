@@ -12,6 +12,7 @@
 #include "NPCManager.h"
 #include "boss.h"
 #include "WindowManager.h"
+#include "hgerect.h"
 
 extern bool debugMode;
 extern float timePlayed, gameStart;
@@ -73,18 +74,7 @@ void drawCollisionBox(hgeRect *box, int color) {
 }
 
 
-/**
- * Set a collision box for the speicifed collision type decalared in smiley.
- * This allows different things to have different shaped collision boxes.
- */
-void setTerrainCollisionBox(hgeRect *box, int whatFor, int gridX, int gridY) {
-	if (whatFor == FOUNTAIN) {
-		//Fountain
-		box->Set((gridX-1)*64,gridY*64 + 35,(gridX+2)*64,(gridY+1)*64 + 10);
-	} else {
-		box->SetRadius(gridX*64+32,gridY*64+31,31);
-	}
-}
+
 
 
 /**

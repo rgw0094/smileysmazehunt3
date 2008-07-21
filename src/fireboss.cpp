@@ -23,6 +23,9 @@ extern SaveManager *saveManager;
 extern SoundManager *soundManager;
 extern float gameTime;
 
+#define TEXT_FIREBOSS_INTRO 100
+#define TEXT_FIREBOSS_VICTORY 101
+
 /**
  * Constructor
  */
@@ -367,7 +370,7 @@ void FireBoss::changeState(int changeTo) {
 	} else if (state == FIREBOSS_MOVE) {
 		//Pick a new location to move to
 		int newLoc;
-		while ((newLoc = rand() % 5) == currentLocation) { }
+		while ((newLoc = hge->Random_Int(0,4)) == currentLocation) { }
 		currentLocation = newLoc;
 		//Calculate path time
 		startedPath = gameTime;

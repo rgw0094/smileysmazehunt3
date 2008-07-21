@@ -127,6 +127,7 @@ public:
 	bool isDeepWaterAt(int x, int y);
 	bool isShallowWaterAt(int x, int y);
 	void bombWall(int x,int y);
+	void setTerrainCollisionBox(hgeRect *box, int whatFor, int gridX, int gridY);
 	
 	//Objects
 	hgeRect *collisionBox;

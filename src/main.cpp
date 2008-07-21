@@ -302,9 +302,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		soundManager = new SoundManager();
 		gameData = new GameData();
 		loadEffectManager = new LoadEffectManager();
-
-		//Seed random number generator
-		srand(time(NULL));
 		
 		//Open the menu
 		theMenu->open(TITLE_SCREEN);

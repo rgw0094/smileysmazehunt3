@@ -5,6 +5,12 @@
 #include "GameData.h"
 #include "smiley.h"
 
+#include "hgerect.h"
+#include "hgeanim.h"
+#include "hgefont.h"
+#include "hgesprite.h"
+#include "hgeresource.h"
+
 //Objects
 extern HGE *hge;
 extern Player *thePlayer;
@@ -14,7 +20,7 @@ extern SaveManager *saveManager;
 extern GameData *gameData;
 
 //Sprites
-extern hgeSprite *itemLayer[256], *abilitySprites[NUM_ABILITIES];
+extern hgeSprite *itemLayer[256], *abilitySprites[12];
 
 #define INVENTORY_X_OFFSET 188.5
 #define INVENTORY_Y_OFFSET 215.5

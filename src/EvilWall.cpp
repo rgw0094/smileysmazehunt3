@@ -1,8 +1,10 @@
 #include "EvilWall.h"
 #include "Player.h"
-#include "hge.h"
 #include "Smiley.h"
 #include "CollisionCircle.h"
+
+#include "hgeresource.h"
+#include "hgesprite.h"
 
 #define EVIL_WALL_STATE_IDLE 0
 #define EVIL_WALL_STATE_APPEARING 1
