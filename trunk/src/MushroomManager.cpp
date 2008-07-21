@@ -1,7 +1,9 @@
 #include "MushroomManager.h"
 #include "player.h"
 #include "CollisionCircle.h"
-#include "hge.h"
+
+#include "hgeparticle.h"
+#include "hgeresource.h"
 
 
 #define MUSHROOM_EXPLODE_TIME 5.0

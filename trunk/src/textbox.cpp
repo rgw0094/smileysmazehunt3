@@ -12,6 +12,11 @@
 #include "SoundManager.h"
 #include "GameData.h"
 
+#include "hgedistort.h"
+#include "hgesprite.h"
+#include "hgefont.h"
+#include "hgeresource.h"
+
 extern SaveManager *saveManager;
 extern NPCManager *npcManager;
 extern HGE *hge;

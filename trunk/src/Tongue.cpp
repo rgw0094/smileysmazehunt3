@@ -1,9 +1,10 @@
 #include "Tongue.h"
 #include "Player.h"
 #include "textbox.h"
-#include "hge.h"
-#include "hgeanim.h"
 #include "smiley.h"
+
+#include "hgeresource.h"
+#include "hgeanim.h"
 
 extern hgeResourceManager *resources;
 extern Player *thePlayer;

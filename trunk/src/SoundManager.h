@@ -2,6 +2,7 @@
 #define SOUNDMANAGER_H_
 
 #include <string>
+#include "hge.h"
 
 class SoundManager {
 

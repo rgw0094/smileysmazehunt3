@@ -1,5 +1,5 @@
 #include "Input.h"
-
+#include "hge.h"
 #include <windows.h>
 #include <basetsd.h>
 #include <dinput.h>

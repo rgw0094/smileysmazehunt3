@@ -6,6 +6,9 @@
 #include "textbox.h"
 #include "CollisionCircle.h"
 
+#include "hge.h"
+#include "hgesprite.h"
+
 extern HGE *hge;
 extern TextBox *theTextBox;
 extern hgeSprite *npcSprites[NUM_NPCS][4];
@@ -43,7 +46,7 @@ NPC::NPC(int _id, int _textID, int _x,int _y) {
 	stage = REST_STAGE;
 	enteredStage = gameTime;
 	speed = 70.0f;
-	stageLength = (float(rand() % 1000) / 1000.0f) + 1.0f;
+	stageLength = hge->Random_Float(1.0, 2.0);
 	inConversation = false;
 }
 
@@ -133,7 +136,7 @@ void NPC::changeStage() {
 		stage = REST_STAGE;
 	}
 	enteredStage = gameTime;
-	stageLength = (float(rand() % 2000) / 1000.0f) + 1.0f;
+	stageLength = hge->Random_Float(1.0, 3.0);
 }
 
 
@@ -141,6 +144,6 @@ void NPC::changeStage() {
  * Randomly change the NPC's direction
  */ 
 void NPC::changeDirection() {
-	walkDirection = rand() % 4;
+	walkDirection = hge->Random_Int(0,3);
 	facing = walkDirection;
 }

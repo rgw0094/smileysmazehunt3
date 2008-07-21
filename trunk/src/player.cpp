@@ -18,6 +18,9 @@
 #include "Tongue.h"
 #include "LoadEffectManager.h"
 
+#include "hgefont.h"
+#include "hgeresource.h"
+
 //Textures
 extern HTEXTURE particleTexture;
 extern HGE *hge;
@@ -54,6 +57,7 @@ extern int gameState;
 
 #define HOVER_DURATION 10.0
 #define SPRING_VELOCITY 210.0
+#define JESUS_SANDLE_TIME 3.3
 
 /**
  * Constructor

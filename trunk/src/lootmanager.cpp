@@ -6,6 +6,9 @@
 #include "GameData.h"
 #include "collisioncircle.h"
 
+#include "hgesprite.h"
+#include "hgeresource.h"
+
 extern Environment *theEnvironment;
 extern SaveManager *saveManager;
 extern Player *thePlayer;

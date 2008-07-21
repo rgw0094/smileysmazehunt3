@@ -1,17 +1,8 @@
 #ifndef _SMILEY_H_
 #define _SMILEY_H_
 
-#include <fstream>
 #include <stdlib.h>
-#include <time.h>
-#include <string>
-//#include < string >
-#include < sstream >
-#include < iostream >
-
-#include "hgeresource.h"
-#include "hgesprite.h"
-#include "hgeanim.h"
+#include "hgerect.h"
 
 //Constants
 #define PI 3.14159265357989232684
@@ -22,10 +13,6 @@
 #define NUM_NPCS 99
 #define PLAYER_WIDTH 61
 #define PLAYER_HEIGHT 72
-#define ITEM_SIZE 64
-#define SILLY_PAD_TIME 30		//Number of seconds silly pads stay active
-#define JESUS_SANDLE_TIME 3.3	//Number of second Jesus' sandles stay active 
-								//before Smiley loses FAITH
 
 //Resource Groups
 #define RES_MENU 10
@@ -34,13 +21,6 @@
 #define RES_GARMBORN 102
 #define RES_CORNWALLIS 103
 #define RES_CALYPSO 105
-
-//Boss Text
-#define TEXT_FIREBOSS_INTRO 100
-#define TEXT_FIREBOSS_VICTORY 101
-
-#define TEXT_DESERTBOSS_INTRO 130
-#define TEXT_DESERTBOSS_VICTORY 131
 
 //Bosses(for enemy layer)
 #define NUM_BOSSES 12
@@ -73,23 +53,6 @@
 #define PASSIVE 0
 #define ACTIVATED 1
 #define HOLD 2
-
-//Enemy Types
-#define ENEMY_BASIC 0
-#define ENEMY_EVIL_EYE 1
-#define ENEMY_GUMDROP 2
-#define ENEMY_BOMB_GENERATOR 3
-#define ENEMY_CHARGER 4
-#define ENEMY_CLOWNCRAB 5
-#define ENEMY_BATLET_DIST 6
-#define ENEMY_BUZZARD 7
-#define ENEMY_SAD_SHOOTER 8
-#define ENEMY_FLOATER 9
-#define ENEMY_FLAILER 10
-#define ENEMY_TENTACLE 11
-#define ENEMY_TURRET 12
-#define ENEMY_GHOST 13
-#define ENEMY_FAKE 14
 
 //Level ids
 #define NUM_AREAS 9
@@ -137,10 +100,6 @@
 #define GREEN 2
 #define BLUE 3
 
-
-
-
-
 struct Point {
 	int x, int y;
 };
@@ -149,7 +108,6 @@ struct Point {
 void enterGameState(int newState);
 bool inBounds(int gridX, int gridY);
 void drawCollisionBox(hgeRect *box, int color);
-void setTerrainCollisionBox(hgeRect *box, int whatFor, int gridX, int gridY);
 int getScreenX(int x);
 int getScreenY(int y);
 int getGridX(int x);
