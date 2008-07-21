@@ -37,6 +37,7 @@ EvilWall::EvilWall() {
 	yBeginWall=0;	
 	state = EVIL_WALL_STATE_IDLE;
 	collisionRect = new hgeRect(0,0,0,0);
+	hge->System_Log("evil wall constructor");
 }
 
 EvilWall::~EvilWall() {
@@ -74,7 +75,6 @@ void EvilWall::deactivate() {
 }
 
 void EvilWall::update(float dt) {
-	
 	switch(state) {
 		case EVIL_WALL_STATE_APPEARING:
 			if (timePassedSince(beginAppearTime) >= EVIL_WALL_APPEAR_TIME) {
