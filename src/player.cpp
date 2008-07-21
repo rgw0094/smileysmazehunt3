@@ -51,6 +51,7 @@ extern int gameState;
 #define DEFAULT_RADIUS 28
 
 #define HOVER_DURATION 10.0
+#define SPRING_VELOCITY 210.0
 
 /**
  * Constructor
@@ -860,7 +861,7 @@ void Player::doSprings(float dt) {
 		else if (facing == RIGHT) dist = ((gridX+2)*64+32) - x;
 		else if (facing == DOWN) dist = (gridY+2)*64+32 - y;
 		else if (facing == UP) dist = y - ((gridY-2)*64+32);
-		springTime = (float(dist)/158.0f) * .75f;
+		springTime = float(dist)/SPRING_VELOCITY;
 
 	}
 
@@ -869,7 +870,7 @@ void Player::doSprings(float dt) {
 		scale = 1.0f + sin(PI*((gameTime - startedSpringing)/springTime)) * .2f;
 		//Sprint left
 		if (facing == LEFT) {
-			dx = -210.0f;
+			dx = -SPRING_VELOCITY;
 			dy = sin(2*PI*((gameTime - startedSpringing)/springTime)+PI) * 200.0f;
 			shadowX += dx*dt;
 			//Adjust the player to land in the middle of the square vertically
@@ -882,7 +883,7 @@ void Player::doSprings(float dt) {
 			}
 		//Spring right
 		} else if (facing == RIGHT) {
-			dx = 210.0f; 
+			dx = SPRING_VELOCITY; 
 			dy = sin(2*PI*((gameTime - startedSpringing)/springTime)+PI) * 200.0f;
 			shadowX += dx*dt;
 			//Adjust the player to land in the middle of the square vertically
@@ -926,7 +927,7 @@ void Player::doSprings(float dt) {
 	}
 
 	//Stop springing
-	if (springing && gameTime - springTime > startedSpringing) {
+	if (springing && timePassedSince(startedSpringing) > springTime) {
 		springing = false;
 		scale = 1.0;
 	}
