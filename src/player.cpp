@@ -895,8 +895,9 @@ void Player::doSprings(float dt) {
 		//Spring down
 		} else if (facing == DOWN) {
 			dx = 0; 
-			dy = 50 + cos(PI/2*((gameTime - startedSpringing)/springTime))*250;
+			dy = 0;
 			shadowY += SPRING_VELOCITY*dt;
+			y = shadowY + sin(PI*(timePassedSince(startedSpringing)/springTime))*50.0;
 			//Adjust the player to land in the center of the square horizontally
 			if (x < gridX*64+31) {
 				x += 40.0f*dt;
@@ -910,8 +911,7 @@ void Player::doSprings(float dt) {
 			dx = 0;
 			dy = 0;
 			shadowY -= SPRING_VELOCITY*dt;
-			y = shadowY + sin(PI*(timePassedSince(startedSpringing)/springTime))*100.0;
-			hge->System_Log("%f", sin(PI*(timePassedSince(startedSpringing)/springTime)));
+			y = shadowY - sin(PI*(timePassedSince(startedSpringing)/springTime))*50.0;
 			//Adjust the player to land in the center of the square horizontally
 			if (x < gridX*64+31) {
 				x += 40.0f*dt;
