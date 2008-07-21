@@ -63,8 +63,8 @@ numEnemies="46"
 3PDamage=   "25"
 
 ;Ice Floater
-4GCol=      "0"
-4GRow=      "11"
+4GCol=      "10"
+4GRow=      "0"
 4EnemyType= "9"
 4WanderType="0"
 4HP=        "80"
@@ -77,8 +77,8 @@ numEnemies="46"
 4Chases=    "T"
 
 ;Evil circle (horizontal)
-5GCol=      "0"
-5GRow=      "3"
+5GCol=      "12"
+5GRow=      "0"
 5EnemyType= "0"
 5WanderType="1"
 5HP=        "999999"
@@ -91,8 +91,8 @@ numEnemies="46"
 5Invincible="T"
 
 ;Evil circle (vertical)
-6GCol=      "0"
-6GRow=      "3"
+6GCol=      "12"
+6GRow=      "0"
 6EnemyType= "0"
 6WanderType="2"
 6HP=        "999999"
@@ -119,8 +119,8 @@ numEnemies="46"
 7Chases=    "T"
 
 ;Sentinel
-8GCol=      "0"
-8GRow=      "5"
+8GCol=      "2"
+8GRow=      "2"
 8EnemyType= "0"
 8WanderType="1"
 8HP=        "100"
@@ -209,7 +209,7 @@ numEnemies="46"
 13Slime=     "T"
 
 ;Earth Floater
-14GCol=      "1"
+14GCol=      "8"
 14GRow=      "0"
 14EnemyType= "9"
 14WanderType="0"
@@ -222,7 +222,7 @@ numEnemies="46"
 14Slime=     "T"
 
 ;Flailer 1
-15GCol=      "1"
+15GCol=      "8"
 15GRow=      "1"
 15EnemyType= "10"
 15WanderType="0"
@@ -236,7 +236,7 @@ numEnemies="46"
 15ImmuneStun="T"
 
 ;Tentacle, small and green
-16GCol=      "1"
+16GCol=      "8"
 16GRow=      "2"
 16EnemyType= "11"
 16WanderType="0"
@@ -250,7 +250,7 @@ numEnemies="46"
 16Variable1= "3"
 
 ;Tentacle, large and yellow/orange/red
-17GCol=      "1"
+17GCol=      "8"
 17GRow=      "3"
 17EnemyType= "11"
 17WanderType="0"
@@ -265,7 +265,7 @@ numEnemies="46"
 17Variable1= "18"
 
 ;Brown turtle
-18GCol=      "1"
+18GCol=      "8"
 18GRow=      "4"
 18EnemyType= "0"
 18WanderType="0"
@@ -278,7 +278,7 @@ numEnemies="46"
 18Chases=    "T"
 
 ;Fangy wanderer
-19GCol=      "1"
+19GCol=      "8"
 19GRow=      "5"
 19EnemyType= "0"
 19WanderType="0"
@@ -291,8 +291,8 @@ numEnemies="46"
 19Chases=    "F"
 
 ;Fire floater
-20GCol=      "1"
-20GRow=      "6"
+20GCol=      "14"
+20GRow=      "0"
 20EnemyType= "9"
 20WanderType="0"
 20HP=        "50"
@@ -305,7 +305,7 @@ numEnemies="46"
 20Chases=    "T"
 
 ;Fangy Flailer
-21GCol=      "1"
+21GCol=      "8"
 21GRow=      "5"
 21EnemyType= "10"
 21WanderType="0"
@@ -320,7 +320,7 @@ numEnemies="46"
 21ImmuneStun="T"
 
 ;Fangy Charger
-22GCol=      "1"
+22GCol=      "8"
 22GRow=      "5"
 22EnemyType= "4"
 22WanderType="0"
@@ -334,7 +334,7 @@ numEnemies="46"
 22Chases=    "T"
 
 ;Ranged fangy
-23GCol=      "1"
+23GCol=      "8"
 23GRow=      "5"
 23EnemyType= "0"
 23WanderType="0"
@@ -354,7 +354,7 @@ numEnemies="46"
 23PDamage=   "25"
 
 ;Snowman
-24GCol=      "1"
+24GCol=      "8"
 24GRow=      "7"
 24EnemyType= "0"
 24WanderType="0"
@@ -374,7 +374,7 @@ numEnemies="46"
 24PDamage=   "25"
 
 ;Blue head wanderer
-25GCol=      "1"
+25GCol=      "8"
 25GRow=      "8"
 25EnemyType= "0"
 25WanderType="0"
@@ -387,7 +387,7 @@ numEnemies="46"
 25Chases=    "F"
 
 ;Blue head charger
-26GCol=      "1"
+26GCol=      "8"
 26GRow=      "8"
 26EnemyType= "4"
 26WanderType="0"
@@ -400,7 +400,7 @@ numEnemies="46"
 26Chases=    "T"
 
 ;Blue head flail
-27GCol=      "1"
+27GCol=      "8"
 27GRow=      "8"
 27EnemyType= "10"
 27WanderType="0"
@@ -413,7 +413,7 @@ numEnemies="46"
 27Chases=    "F"
 
 ;Skull charger
-28GCol=      "1"
+28GCol=      "8"
 28GRow=      "9"
 28EnemyType= "4"
 28WanderType="0"
@@ -426,7 +426,7 @@ numEnemies="46"
 28Chases=    "T"
 
 ;Skull ranged
-29GCol=      "1"
+29GCol=      "8"
 29GRow=      "9"
 29EnemyType= "0"
 29WanderType="0"
@@ -446,7 +446,7 @@ numEnemies="46"
 29PDamage=   "25"
 
 ;Skull flail
-30GCol=      "1"
+30GCol=      "8"
 30GRow=      "9"
 30EnemyType= "10"
 30WanderType="0"
@@ -459,7 +459,7 @@ numEnemies="46"
 30Chases=    "F"
 
 ;Clockwise Turret, start UP
-31GCol=      "1"
+31GCol=      "8"
 31GRow=      "10"
 31EnemyType= "12"
 31WanderType="1"
@@ -481,7 +481,7 @@ numEnemies="46"
 31PType=     "6"
 
 ;Clockwise Turret, start DOWN
-32GCol=      "1"
+32GCol=      "8"
 32GRow=      "10"
 32EnemyType= "12"
 32WanderType="1"
@@ -503,7 +503,7 @@ numEnemies="46"
 32PType=     "6"
 
 ;Clockwise Turret, start LEFT
-33GCol=      "1"
+33GCol=      "8"
 33GRow=      "10"
 33EnemyType= "12"
 33WanderType="1"
@@ -525,7 +525,7 @@ numEnemies="46"
 33PType=     "6"
 
 ;Clockwise Turret, start RIGHT
-34GCol=      "1"
+34GCol=      "8"
 34GRow=      "10"
 34EnemyType= "12"
 34WanderType="1"
@@ -547,7 +547,7 @@ numEnemies="46"
 34PType=     "6"
 
 ;Counter-Clockwise Turret, start UP
-35GCol=      "1"
+35GCol=      "8"
 35GRow=      "11"
 35EnemyType= "12"
 35WanderType="1"
@@ -569,7 +569,7 @@ numEnemies="46"
 35PType=     "6"
 
 ;Counter-Clockwise Turret, start DOWN
-36GCol=      "1"
+36GCol=      "8"
 36GRow=      "11"
 36EnemyType= "12"
 36WanderType="1"
@@ -591,7 +591,7 @@ numEnemies="46"
 36PType=     "6"
 
 ;Counter-Clockwise Turret, start LEFT
-37GCol=      "1"
+37GCol=      "8"
 37GRow=      "11"
 37EnemyType= "12"
 37WanderType="1"
@@ -613,7 +613,7 @@ numEnemies="46"
 37PType=     "6"
 
 ;Counter-Clockwise Turret, start RIGHT
-38GCol=      "1"
+38GCol=      "8"
 38GRow=      "11"
 38EnemyType= "12"
 38WanderType="1"
@@ -635,7 +635,7 @@ numEnemies="46"
 38PType=     "6"
 
 ;Stationary Turret, start UP
-39GCol=      "1"
+39GCol=      "8"
 39GRow=      "12"
 39EnemyType= "12"
 39WanderType="1"
@@ -657,7 +657,7 @@ numEnemies="46"
 39PType=     "6"
 
 ;Stationary Turret, start DOWN
-40GCol=      "1"
+40GCol=      "8"
 40GRow=      "12"
 40EnemyType= "12"
 40WanderType="1"
@@ -679,7 +679,7 @@ numEnemies="46"
 40PType=     "6"
 
 ;Stationary Turret, start LEFT
-41GCol=      "1"
+41GCol=      "8"
 41GRow=      "12"
 41EnemyType= "12"
 41WanderType="1"
@@ -701,7 +701,7 @@ numEnemies="46"
 41PType=     "6"
 
 ;Stationary Turret, start RIGHT
-42GCol=      "1"
+42GCol=      "8"
 42GRow=      "12"
 42EnemyType= "12"
 42WanderType="1"
@@ -724,7 +724,7 @@ numEnemies="46"
 
 ;Mushroomlet
 43GCol=      "0"
-43GRow=      "12"
+43GRow=      "3"
 43EnemyType= "4"
 43WanderType="0"
 43HP=        "100"
@@ -749,7 +749,7 @@ numEnemies="46"
 44Slime=     "T"
 
 ;Fake Turret
-45GCol=      "1"
+45GCol=      "8"
 45GRow=      "10"
 45EnemyType= "14"
 45WanderType="0"

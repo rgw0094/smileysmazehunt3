@@ -100,13 +100,13 @@ void BaseEnemy::initEnemy(int _id, int _gridX, int _gridY, int _groupID) {
 	}
 
 	//Load graphics
-	graphic[LEFT] = new hgeAnimation(resources->GetTexture("enemies"), 2, 3, gameData->getEnemyInfo(id).gCol*64*8, gameData->getEnemyInfo(id).gRow*64, 64, 64);
+	graphic[LEFT] = new hgeAnimation(resources->GetTexture("enemies"), 2, 3, gameData->getEnemyInfo(id).gCol*64, gameData->getEnemyInfo(id).gRow*64, 64, 64);
 	graphic[LEFT]->Play();
-	graphic[RIGHT] = new hgeAnimation(resources->GetTexture("enemies"), 2, 3, gameData->getEnemyInfo(id).gCol*64*8 + 128, gameData->getEnemyInfo(id).gRow*64, 64, 64);
+	graphic[RIGHT] = new hgeAnimation(resources->GetTexture("enemies"), 2, 3, gameData->getEnemyInfo(id).gCol*64 + 128, gameData->getEnemyInfo(id).gRow*64, 64, 64);
 	graphic[RIGHT]->Play();
-	graphic[UP] = new hgeAnimation(resources->GetTexture("enemies"), 2, 3, gameData->getEnemyInfo(id).gCol*64*8 + 256, gameData->getEnemyInfo(id).gRow*64, 64, 64);
+	graphic[UP] = new hgeAnimation(resources->GetTexture("enemies"), 2, 3, gameData->getEnemyInfo(id).gCol*64 + 256, gameData->getEnemyInfo(id).gRow*64, 64, 64);
 	graphic[UP]->Play();
-	graphic[DOWN] = new hgeAnimation(resources->GetTexture("enemies"), 2, 3, gameData->getEnemyInfo(id).gCol*64*8 + 384, gameData->getEnemyInfo(id).gRow*64, 64, 64);
+	graphic[DOWN] = new hgeAnimation(resources->GetTexture("enemies"), 2, 3, gameData->getEnemyInfo(id).gCol*64 + 384, gameData->getEnemyInfo(id).gRow*64, 64, 64);
 	graphic[DOWN]->Play();
 
 	//Set graphic hot spots

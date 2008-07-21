@@ -447,7 +447,7 @@ void Player::draw(float dt) {
 
 
 /**
- * Draw the GUI
+ * Draws the GUI
  */
 void Player::drawGUI(float dt) {
 
@@ -523,7 +523,7 @@ void Player::drawGUI(float dt) {
 		resources->GetAnimation("keyIcons")->Render(keyXOffset + 60.0*i, keyYOffset);
 		
 		//Draw num keys
-		resources->GetFont("numberFnt")->printf(keyXOffset + 60.0*i + 45.0, keyYOffset, 
+		resources->GetFont("numberFnt")->printf(keyXOffset + 60.0*i + 45.0, keyYOffset + 5.0, 
 			HGETEXT_LEFT, "%d", saveManager->numKeys[saveManager->currentArea][i]);
 
 	}

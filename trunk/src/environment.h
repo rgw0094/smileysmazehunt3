@@ -152,6 +152,7 @@ public:
 	bool fountainOnScreen;
 	float drawX,drawY;				//Location to draw a tile
 	int offScreenRange;				//Number of tiles offscreen to draw
+	bool hasFountain;				//Whether or not this area has a fountain
 
 	MushroomManager *mushroomManager; //The explode-able mushrooms
 	EvilWallManager *evilWallManager; //Evil walls which move and try to kill smiley
