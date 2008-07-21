@@ -177,6 +177,12 @@ void Player::update(float dt) {
 	saveManager->playerGridX = gridX;
 	saveManager->playerGridY = gridY;
 
+	//GAY moves smiley with the num pad
+	if (hge->Input_KeyDown(HGEK_NUMPAD8)) y -= 64.0;
+	if (hge->Input_KeyDown(HGEK_NUMPAD2)) y += 64.0;
+	if (hge->Input_KeyDown(HGEK_NUMPAD4)) x -= 64.0;
+	if (hge->Input_KeyDown(HGEK_NUMPAD6)) x += 64.0;
+
 	//Update cloaking alpha
 	alpha = (cloaked) ? 75.0f : 255.0f;
 	resources->GetAnimation("player")->SetColor(ARGB(alpha,255,255,255));
