@@ -3,7 +3,7 @@
 ||Variable||Description||Possible Values||Mandatory||
 ||GCol||Column the enemy graphics appear in enemies.png||int||Y||
 ||GRow||Row the enemy graphics appear in enemies.png||int||Y||
-||NumFrames||Number of 2-frame animations. If you omit this the default is 4||N||
+||NumFrames||Number of 2-frame animations. If you omit this the default is 4||1-4||N||
 ||EnemyType||See Enemy Type table below||any int||Y||
 ||WanderType||See Wander Codes table||any int||Y||
 ||HP||Health||any int||Y||
