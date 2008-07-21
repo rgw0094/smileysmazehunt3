@@ -1,11 +1,6 @@
 #ifndef _ENVIRONMENT_H_
 #define _ENVIRONMENT_H_
 
-#include <string>
-#include <sstream>
-#include <iostream>
-#include <fstream>
-
 class Tongue;
 class hgeParticleSystem;
 class CollisionCircle;
@@ -135,7 +130,6 @@ public:
 	
 	//Objects
 	hgeRect *collisionBox;
-	hgeFont *zoneFont;
     
 	//variables
 	int areaWidth,areaHeight;		//Width and height of the area in squares
@@ -155,24 +149,14 @@ public:
 	float xOffset,yOffset;			//Number of pixels the player is off alignment with the grid
 	int startX, int startY;			//Level entrance
 	bool fountainOnScreen;
-	float timeLevelLoaded;
-	int zoneTextAlpha;
 	float drawX,drawY;				//Location to draw a tile
 	int offScreenRange;				//Number of tiles offscreen to draw
-	std::string zoneName;
+
 	MushroomManager *mushroomManager; //The explode-able mushrooms
 	EvilWallManager *evilWallManager; //Evil walls which move and try to kill smiley
-
-	//Animations
 	hgeAnimation *silverCylinder, *brownCylinder, *blueCylinder, *greenCylinder, *yellowCylinder, *whiteCylinder;
 	hgeAnimation *silverCylinderRev, *brownCylinderRev, *blueCylinderRev, *greenCylinderRev, *yellowCylinderRev, *whiteCylinderRev;
-	
-	//Particles
 	hgeParticleManager *environmentParticles;
-
-	//IO Shit
-	std::ifstream areaFile;				//Input stream to read area data
-	char threeBuffer[3];
 
 };
 

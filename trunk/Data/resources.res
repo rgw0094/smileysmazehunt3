@@ -51,6 +51,12 @@ Font textBoxDialogFnt {
  color=#000000
  resgroup=3
 }
+Font newAreaFnt {
+ filename="zone.fnt"
+ tracking=1.0
+ color=#000000
+ resgroup=3
+}
 
 ;***************************
 ;******** PARTICLES ********

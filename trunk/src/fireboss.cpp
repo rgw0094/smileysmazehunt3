@@ -18,8 +18,6 @@ extern TextBox *theTextBox;
 extern Environment *theEnvironment;
 extern LootManager *lootManager;
 extern hgeResourceManager *resources;
-extern HTEXTURE fenwarTexture;
-extern bool lockMusicVolume;
 extern EnemyGroupManager *enemyGroupManager;
 extern SaveManager *saveManager;
 extern SoundManager *soundManager;
@@ -238,7 +236,6 @@ bool FireBoss::update(float dt) {
 		dy = speed * sin(angle);
 		x += dx*dt;
 		y += dy*dt;
-		//if (gameTime > startedPath + pathTime) {
 		if (x > locations[currentLocation].x - 5.0f && x < locations[currentLocation].x + 5.0f &&
 				y > locations[currentLocation].y - 5.0f && y < locations[currentLocation].y + 5.0f) { 
 			changeState(FIREBOSS_ATTACK);
@@ -328,7 +325,7 @@ bool FireBoss::update(float dt) {
 	if (state == FIREBOSS_FRIENDLY && !theTextBox->visible) {
 		//Drop fire breath
 		if (!droppedLoot) {
-			lootManager->addLoot(LOOT_NEW_ABILITY, x, y, FIRE_BREATH);
+			lootManager->addLoot(LOOT_NEW_ABILITY, startX*64.0+32.0, startY*64.0+32.0, FIRE_BREATH);
 			droppedLoot = true;
 		}
 		x += 200.0f*dt;
@@ -345,7 +342,7 @@ bool FireBoss::update(float dt) {
 		}
 	}
 
-	//Fix gay floating point errors
+	//Fix gay floating point errors - this probably isn't needed anymore
 	if (!inBounds(x/64,y/64)) {
 		x = previousX;
 		y = previousY;

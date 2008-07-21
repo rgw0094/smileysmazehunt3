@@ -194,6 +194,9 @@
 					RelativePath=".\src\EvilWallManager.cpp">
 				</File>
 				<File
+					RelativePath=".\src\LoadEffectManager.cpp">
+				</File>
+				<File
 					RelativePath=".\src\lootmanager.cpp">
 				</File>
 				<File
@@ -400,6 +403,9 @@
 				</File>
 				<File
 					RelativePath=".\src\EvilWallManager.h">
+				</File>
+				<File
+					RelativePath=".\src\LoadEffectManager.h">
 				</File>
 				<File
 					RelativePath=".\src\lootmanager.h">

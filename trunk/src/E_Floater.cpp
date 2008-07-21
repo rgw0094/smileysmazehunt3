@@ -52,7 +52,7 @@ void E_Floater::update(float dt) {
 	angle += angleVel * dt;
 
 	//Update floating shit
-	shadowOffset = 28.0 + 12.0 * cos(gameTime * 2.0);
+	shadowOffset = 35.0 + 12.0 * cos(gameTime * 2.0);
 	collisionBox->SetRadius(x,y-shadowOffset,radius);
 	
 	//Update position

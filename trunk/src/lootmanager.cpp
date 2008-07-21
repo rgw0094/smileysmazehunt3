@@ -110,7 +110,7 @@ void LootManager::update(float dt) {
 						break;
 					case FRISBEE:
 						saveManager->hasAbility[FRISBEE] = true;
-						theTextBox->set(gameData->getGameText("GotFrisbee"), true, abilitySprites[FIRE_BREATH], 64);
+						theTextBox->set(gameData->getGameText("GotFrisbee"), true, abilitySprites[FRISBEE], 64);
 						break;
 					case FIRE_BREATH:
 						saveManager->hasAbility[FIRE_BREATH] = true;

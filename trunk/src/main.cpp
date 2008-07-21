@@ -19,6 +19,7 @@
 #include "GameData.h"
 #include "smiley.h"
 #include "environment.h"
+#include "LoadEffectManager.h"
 
 //Global Objects
 HGE *hge=0;
@@ -38,6 +39,7 @@ WindowManager *windowManager;
 SaveManager *saveManager;
 SoundManager *soundManager;
 GameData *gameData;
+LoadEffectManager *loadEffectManager;
 
 //Textures
 HTEXTURE animationTexture, npcTexture, mainLayerTexture, walkLayerTexture;
@@ -54,7 +56,6 @@ int gameState = MENU;
 bool debugMode;
 bool hasFountain;
 int fountainX, fountainY;
-float loadingEffectScale = 3.0;
 float darkness = 0.0;
 
 //Save file stuff
@@ -62,7 +63,8 @@ float timePlayed;
 
 
 /**
- * Loads all game resources
+ * Performs an initial load of game resources. More resources are loaded dynamically
+ * as they are needed.
  */
 void loadResources() {
 
@@ -193,33 +195,22 @@ bool FrameFunc() {
 			//Keep track of the time that no windows are open.
 			gameTime += dt;
 			
-			theEnvironment->update(dt);
-			bossManager->update(dt);
-			thePlayer->update(dt);
-			theTextBox->update(dt);
-			enemyManager->update(dt);
-			lootManager->update(dt);
-			projectileManager->update(dt);
-			npcManager->update(dt);
-			enemyGroupManager->update(dt);
+			//If the loading effect isn't active, update the game objects
+			loadEffectManager->update(dt);
+			if (!loadEffectManager->isEffectActive()) {
+				theEnvironment->update(dt);
+				bossManager->update(dt);
+				thePlayer->update(dt);
+				theTextBox->update(dt);
+				enemyManager->update(dt);
+				lootManager->update(dt);
+				projectileManager->update(dt);
+				npcManager->update(dt);
+				enemyGroupManager->update(dt);
+			}
+
 		}
 	
-	//Level loading effect
-	} else if (gameState == LOADING_LEVEL_PHASE1) {
-		loadingEffectScale -= 6.0 * dt;
-		if (loadingEffectScale < 0.00001) {
-			loadingEffectScale = 0.00001;
-			theEnvironment->loadArea(theEnvironment->ids[thePlayer->gridX][thePlayer->gridY],saveManager->currentArea,0,0);
-			gameState = LOADING_LEVEL_PHASE2;
-		}
-	} else if (gameState == LOADING_LEVEL_PHASE2) {
-		if (hge->Timer_GetTime() > theEnvironment->timeLevelLoaded + 0.5) {
-			loadingEffectScale += 6.0 * dt;
-			if (loadingEffectScale > 3.0) {
-				loadingEffectScale = 3.0;
-				gameState = GAME;
-			}
-		}
 	}
 
 	// Continue execution
@@ -242,43 +233,22 @@ bool RenderFunc() {
 
 	} else {
 		
-		//Draw objects
+		//Draw objects - order is very important!!!
 		theEnvironment->draw(dt);
 		lootManager->draw(dt);
 		enemyManager->draw(dt);
 		npcManager->draw(dt);
 		bossManager->drawBeforeSmiley(dt);
-		if (thePlayer) thePlayer->draw(dt);
+		thePlayer->draw(dt);
 		bossManager->drawAfterSmiley(dt);
 		theEnvironment->drawAfterSmiley(dt);
 		theEnvironment->drawFountain();
 		projectileManager->draw(dt);
 		theTextBox->draw(dt);
 		if (darkness > 0.0) shadeScreen(darkness);
-		if (thePlayer) thePlayer->drawGUI(dt);
+		loadEffectManager->draw(dt);
+		thePlayer->drawGUI(dt);
 		windowManager->draw(dt);
-
-		//Loading effect
-		if (gameState == LOADING_LEVEL_PHASE1 || gameState == LOADING_LEVEL_PHASE2) {
-			//workaround for HGE full screen clipping bug
-			resources->GetSprite("blackScreen")->SetColor(ARGB(255,255,255,255));
-			resources->GetSprite("blackScreen")->RenderStretch(0,0,1024,384.0-200.0*loadingEffectScale);
-			resources->GetSprite("blackScreen")->RenderStretch(0,0,512.0-200.0*loadingEffectScale,768.0);
-			resources->GetSprite("blackScreen")->RenderStretch(512.0+200.0*loadingEffectScale,0,1024,768);
-			resources->GetSprite("blackScreen")->RenderStretch(0,384.0+200.0*loadingEffectScale,1024,768);			
-			resources->GetSprite("loading")->RenderEx(512.0, 384.0, 0.0, loadingEffectScale, loadingEffectScale);
-			thePlayer->drawGUI(dt);
-		}
-
-		//After entering the zone, display the ZONE NAME
-		if (hge->Timer_GetTime() < theEnvironment->timeLevelLoaded + 2.5f && !windowManager->isOpenWindow()) {
-			if (hge->Timer_GetTime() > theEnvironment->timeLevelLoaded + 1.5f) {
-				theEnvironment->zoneTextAlpha -= 255.0f*dt;
-				if (theEnvironment->zoneTextAlpha < 0.0f) theEnvironment->zoneTextAlpha = 0.0f;
-				theEnvironment->zoneFont->SetColor(ARGB(theEnvironment->zoneTextAlpha,255,255,255));
-			}
-			theEnvironment->zoneFont->printf(512,200,HGETEXT_CENTER,"%s",theEnvironment->zoneName.c_str());
-		}
 
 	}
 
@@ -331,6 +301,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		input = new Input();
 		soundManager = new SoundManager();
 		gameData = new GameData();
+		loadEffectManager = new LoadEffectManager();
 
 		//Seed random number generator
 		srand(time(NULL));
@@ -368,7 +339,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		delete soundManager;
 		delete bossManager;
 		delete gameData;
-
+		delete loadEffectManager;
 	}
 	else MessageBox(NULL, hge->System_GetErrorMessage(), "Error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 

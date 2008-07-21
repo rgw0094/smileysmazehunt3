@@ -31,6 +31,32 @@ char *GameData::getGameText(const char *text) {
 	return gameText->GetString(text);
 }
 
+char *GameData::getAreaName(int area) {
+
+	char * areaName = (char*)malloc(32);
+	
+	//Set zone specific info
+	if (area == FOUNTAIN_AREA) {
+		areaName = "Smiley Town";
+	} else if (area == OLDE_TOWNE) {
+		areaName = "Dunes of Salabia";
+	} else if (area == SMOLDER_HOLLOW) {
+		areaName = "Smolder Hollow";
+	} else if (area == FOREST_OF_FUNGORIA) {
+		areaName = "Forest of Fundoria";
+	} else if (area == SESSARIA_SNOWPLAINS) {
+		areaName = "Sessaria Snowplains";
+	} else if (area == TUTS_TOMB) {
+		areaName = "Tut's Tomb";
+	} else if (area == WORLD_OF_DESPAIR) {
+		areaName = "Realm of Despair";
+	} else if (area == CASTLE_OF_EVIL) {
+		areaName = "Castle Of Evil (What a gay name)";
+	}
+	
+	return areaName;
+}
+
 ////////// Private functions //////////////////
 
 

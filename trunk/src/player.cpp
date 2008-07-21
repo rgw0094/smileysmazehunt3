@@ -16,6 +16,7 @@
 #include "collisioncircle.h"
 #include "weaponparticle.h"
 #include "Tongue.h"
+#include "LoadEffectManager.h"
 
 //Textures
 extern HTEXTURE particleTexture;
@@ -35,6 +36,7 @@ extern Input *input;
 extern SaveManager *saveManager;
 extern GameData *gameData;
 extern SoundManager *soundManager;
+extern LoadEffectManager *loadEffectManager;
 
 extern float gameTime;
 extern int frameCounter;
@@ -155,7 +157,7 @@ void Player::update(float dt) {
 
 	//Do level exits
 	if (theEnvironment->collision[gridX][gridY] == PLAYER_END) {
-		enterGameState(LOADING_LEVEL_PHASE1);
+		loadEffectManager->startEffect(0, 0, theEnvironment->ids[gridX][gridY]);
 		return;
 	}	
 
@@ -507,6 +509,21 @@ void Player::drawGUI(float dt) {
 	resources->GetFont("curlz")->SetColor(ARGB(255,255,255,255));
 	resources->GetFont("curlz")->printf(85,125,HGETEXT_LEFT, moneyString.c_str());
 
+	//Draw keys
+	int keyXOffset = 763.0;
+	int keyYOffset = 724.0;
+	for (int i = 0; i < 4; i++) {
+
+		//Draw key icon
+		resources->GetAnimation("keyIcons")->SetFrame(i);
+		resources->GetAnimation("keyIcons")->Render(keyXOffset + 60.0*i, keyYOffset);
+		
+		//Draw num keys
+		resources->GetFont("numberFnt")->printf(keyXOffset + 60.0*i + 45.0, keyYOffset, 
+			HGETEXT_LEFT, "%d", saveManager->numKeys[saveManager->currentArea][i]);
+
+	}
+						
 }
 
 
