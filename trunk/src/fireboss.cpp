@@ -9,12 +9,11 @@
 #include "SaveManager.h"
 #include "SoundManager.h"
 #include "WeaponParticle.h"
+#include "Tongue.h"
 
 extern HGE *hge;
 extern bool debugMode;
 extern Player *thePlayer;
-extern int musicVolume;
-extern hgeStringTable *stringTable;
 extern TextBox *theTextBox;
 extern Environment *theEnvironment;
 extern LootManager *lootManager;
@@ -273,7 +272,7 @@ bool FireBoss::update(float dt) {
 	//Check collision with Smiley's tongue
 	if (state != FIREBOSS_FRIENDLY && !flashing) {
 		for (int i = 0; i < 3; i++) {
-			if (thePlayer->weaponBox->Intersect(collisionBoxes[i]) && gameTime > lastHitByTongue + .34f) {
+			if (thePlayer->getTongue()->testCollision(collisionBoxes[i]) && timePassedSince(lastHitByTongue) >= 0.5) {
 				resources->GetAnimation("phyrebozzDownMouth")->Play();
 				resources->GetAnimation("phyrebozzLeftMouth")->Play();
 				resources->GetAnimation("phyrebozzRightMouth")->Play();

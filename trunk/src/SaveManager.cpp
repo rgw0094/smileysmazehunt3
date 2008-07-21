@@ -58,11 +58,22 @@ void SaveManager::explore(int gridX, int gridY) {
  */
 void SaveManager::resetCurrentData() {
 	for (int i = 0; i < NUM_BOSSES; i++) killedBoss[i] = false;
-	for (int i = 0; i < NUM_ABILITIES; i++) hasAbility[i] = true;
-	hasAbility[CANE] = false;
-	for (int i = 0; i < 5; i++) {
-		for (int j = 0; j < 4; j++) {
-			numKeys[i][j] = 5;
+	
+	if (currentSave == 3) { //make it a REAL GAME
+		for (int i = 0; i < NUM_ABILITIES; i++) hasAbility[i] = false;
+
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 4; j++) {
+				numKeys[i][j] = 0;
+			}
+		}
+	} else { //Start with keys and abilities
+		for (int i = 0; i < NUM_ABILITIES; i++) hasAbility[i] = true;
+	
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 4; j++) {
+				numKeys[i][j] = 5;
+			}
 		}
 	}
 	for (int i = 0; i < NUM_AREAS; i++) {
@@ -110,7 +121,6 @@ void SaveManager::load(int fileNumber) {
 	for (int i = 0; i < NUM_ABILITIES; i++) {
 		inFile.read(buffer,1);
 		hasAbility[i] = (atoi(buffer) == 1);
-		hasAbility[i] = true;
 	}
 
 	//Load keys

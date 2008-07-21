@@ -11,6 +11,7 @@
 #include "Projectiles.h"
 #include "NPCManager.h"
 #include "boss.h"
+#include "WindowManager.h"
 
 extern bool debugMode;
 extern float timePlayed, gameStart;
@@ -29,6 +30,7 @@ extern LootManager *lootManager;
 extern NPCManager *npcManager;
 extern EnemyManager *enemyManager;
 extern BossManager *bossManager;
+extern WindowManager *windowManager;
 
 /**
  * Switches the game state
@@ -204,6 +206,10 @@ void loadGameObjects() {
 	hge->System_Log("Creating Boss Manager");
 	if (bossManager) delete bossManager;
 	bossManager = new BossManager();
+
+	hge->System_Log("Creating Window Manager");
+	if (windowManager) delete windowManager;
+	windowManager = new WindowManager();
 
 	//Environment must be created last!
 	hge->System_Log("Creating Environment");

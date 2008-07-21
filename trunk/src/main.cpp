@@ -329,8 +329,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		theMenu = new Menu();
 		theTextBox = new TextBox();
 		input = new Input();
-		windowManager = new WindowManager();
-		bossManager = new BossManager();
 		soundManager = new SoundManager();
 		gameData = new GameData();
 
