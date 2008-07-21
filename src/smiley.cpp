@@ -60,10 +60,10 @@ void drawCollisionBox(hgeRect *box, int color) {
 	int g = (color == GREEN) ? 255 : 0;
 	int b = (color == BLUE) ? 255 : 0;
 
-	int x1 = box->x1 - theEnvironment->xGridOffset*theEnvironment->squareSize - theEnvironment->xOffset;
-	int x2 = box->x2 - theEnvironment->xGridOffset*theEnvironment->squareSize - theEnvironment->xOffset;
-	int y1 = box->y1 - theEnvironment->yGridOffset*theEnvironment->squareSize - theEnvironment->yOffset;
-	int y2 = box->y2 - theEnvironment->yGridOffset*theEnvironment->squareSize - theEnvironment->yOffset;
+	int x1 = getScreenX(box->x1);
+	int x2 = getScreenX(box->x2);
+	int y1 = getScreenY(box->y1);
+	int y2 = getScreenY(box->y2);
 
 	hge->Gfx_RenderLine(x1, y1, x2, y1, ARGB(255,r,g,b));
 	hge->Gfx_RenderLine(x2, y1, x2, y2, ARGB(255,r,g,b));
@@ -99,7 +99,7 @@ bool inBounds(int gridX, int gridY) {
  * Returns the screen x position given the global x position
  */
 int getScreenX(int x) {
-	return x - theEnvironment->xGridOffset*theEnvironment->squareSize - theEnvironment->xOffset;
+	return x - theEnvironment->xGridOffset*64.0 - theEnvironment->xOffset;
 }
 
 
@@ -107,7 +107,7 @@ int getScreenX(int x) {
  * Returns the screen y position given the global y position
  */
 int getScreenY(int y) {
-	return y - theEnvironment->yGridOffset*theEnvironment->squareSize - theEnvironment->yOffset;										  
+	return y - theEnvironment->yGridOffset*64.0 - theEnvironment->yOffset;										  
 }
 
 

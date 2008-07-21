@@ -66,7 +66,6 @@ Player::Player(int _gridX, int _gridY) {
 	scale = hoverScale = shrinkScale = 1.0f;
 	speed = 300.0f;
 	rotation = 0;
-	shadowXOffset = shadowYOffset = 0.0f;
 	facing = DOWN;
 	radius = DEFAULT_RADIUS;
 	gridX = _gridX;
@@ -161,20 +160,20 @@ void Player::update(float dt) {
 	}	
 
 	//Update location stuff
-	int newGridX = x / theEnvironment->squareSize;
-	int newGridY = y / theEnvironment->squareSize;
+	int newGridX = x / 64.0;
+	int newGridY = y / 64.0;
 	if (newGridX != gridX || newGridY != gridY) {
 		lastGridX = gridX;
 		gridX = newGridX;
 		lastGridY = gridY;
 		gridY = newGridY;
 	}
-	screenX = x - theEnvironment->xGridOffset*theEnvironment->squareSize - theEnvironment->xOffset; 
-	screenY = y - theEnvironment->yGridOffset*theEnvironment->squareSize - theEnvironment->yOffset;
+	screenX = getScreenX(x);
+	screenY = getScreenY(y);
 	baseX = x + 0;
 	baseY = y + 15;
-	baseGridX = baseX / theEnvironment->squareSize;
-	baseGridY = baseY / theEnvironment->squareSize;
+	baseGridX = baseX / 64.0;
+	baseGridY = baseY / 64.0;
 	saveManager->playerGridX = gridX;
 	saveManager->playerGridY = gridY;
 
@@ -822,8 +821,8 @@ void Player::doWarps() {
 			for (int j = 0; j < theEnvironment->areaHeight; j++) {
 				//Once its found, move the player there
 				if (theEnvironment->ids[i][j] == id && (i != gridX || j != gridY) && (theEnvironment->collision[i][j] == RED_WARP || theEnvironment->collision[i][j] == GREEN_WARP || theEnvironment->collision[i][j] == YELLOW_WARP || theEnvironment->collision[i][j] == BLUE_WARP)) {
-					x = theEnvironment->squareSize * i + theEnvironment->squareSize/2;
-					y = theEnvironment->squareSize * j + theEnvironment->squareSize/2;
+					x = 64.0 * i + 64.0/2;
+					y = 64.0 * j + 64.0/2;
 					return;
 				}
 			}
@@ -846,7 +845,6 @@ void Player::doSprings(float dt) {
 		springing = true;
 		startedSpringing = gameTime;
 		dx = dy = 0;
-		shadowXOffset = shadowYOffset = 0;
 		startSpringX = x;
 		startSpringY = y;
 		//Start the spring animation
@@ -898,7 +896,7 @@ void Player::doSprings(float dt) {
 		} else if (facing == DOWN) {
 			dx = 0; 
 			dy = 50 + cos(PI/2*((gameTime - startedSpringing)/springTime))*250;
-			shadowY += 210*dt;
+			shadowY += SPRING_VELOCITY*dt;
 			//Adjust the player to land in the center of the square horizontally
 			if (x < gridX*64+31) {
 				x += 40.0f*dt;
@@ -910,8 +908,10 @@ void Player::doSprings(float dt) {
 		//Spring up
 		} else if (facing == UP) {
 			dx = 0;
-			dy = -50 - cos(PI/2*((gameTime - startedSpringing)/springTime))*250;
-			shadowY -= 210*dt;
+			dy = 0;
+			shadowY -= SPRING_VELOCITY*dt;
+			y = shadowY + sin(PI*(timePassedSince(startedSpringing)/springTime))*100.0;
+			hge->System_Log("%f", sin(PI*(timePassedSince(startedSpringing)/springTime)));
 			//Adjust the player to land in the center of the square horizontally
 			if (x < gridX*64+31) {
 				x += 40.0f*dt;
@@ -930,6 +930,8 @@ void Player::doSprings(float dt) {
 	if (springing && timePassedSince(startedSpringing) > springTime) {
 		springing = false;
 		scale = 1.0;
+		x = gridX*64.0 + 32.0;
+		y = gridY*64.0 + 32.0;
 	}
 
 	//Remember where the player is before touching a spring
