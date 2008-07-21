@@ -105,7 +105,6 @@ Environment::Environment() {
 	resources->GetAnimation("savePoint")->Play();
 	
 	zoneFont = new hgeFont("zone.fnt");
-	showGrid = false;
 	collisionBox = new hgeRect();
 
 }
@@ -223,9 +222,8 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 	areaFile.read(threeBuffer,1);	//read newline
 
 	//Set up screen size (64 is normal size)
-	squareSize = 64;
-	screenWidth = SCREEN_WIDTH / squareSize;
-	screenHeight = SCREEN_HEIGHT / squareSize;
+	screenWidth = SCREEN_WIDTH / 64.0;
+	screenHeight = SCREEN_HEIGHT / 64.0;
 
 
 	//Load ID Layer
@@ -571,7 +569,7 @@ void Environment::draw(float dt) {
 
 	//If the area has a big ass fountain draw the top part after the player
 	if (hasFountain && fountainOnScreen) {
-		resources->GetSprite("bigFountainBottom")->Render(fountainX*squareSize - xOffset + 32, fountainY*squareSize - yOffset + 32);
+		resources->GetSprite("bigFountainBottom")->Render(fountainX*64.0 - xOffset + 32, fountainY*64.0 - yOffset + 32);
 	}
 
 	//Draw environment particles
@@ -585,11 +583,11 @@ void Environment::draw(float dt) {
 		resources->GetFont("curlz")->printf(1000,5,HGETEXT_RIGHT,"(%d,%d)  FPS: %d",thePlayer->gridX,thePlayer->gridY, hge->Timer_GetFPS());
 		//Column lines
 		for (int i = 0; i <= screenWidth; i++) {
-			hge->Gfx_RenderLine(i*squareSize - xOffset,0,i*squareSize - xOffset,SCREEN_HEIGHT);
+			hge->Gfx_RenderLine(i*64.0 - xOffset,0,i*64.0 - xOffset,SCREEN_HEIGHT);
 		}
 		//Row lines
 		for (int i = 0; i <= screenHeight; i++) {
-			hge->Gfx_RenderLine(0,i*squareSize - yOffset,SCREEN_WIDTH,i*squareSize - yOffset);
+			hge->Gfx_RenderLine(0,i*64.0 - yOffset,SCREEN_WIDTH,i*64.0 - yOffset);
 		}
 		//Draw Terrain collision boxes
 		for (int i = thePlayer->gridX - 2; i <= thePlayer->gridX + 2; i++) {
@@ -660,11 +658,11 @@ void Environment::drawAfterSmiley(float dt) {
 void Environment::drawFountain() {
 	if (!hasFountain || !fountainOnScreen) return;
 	if (-400 < getScreenX(fountainX) < 1700 && -400 < getScreenY(fountainY) < 1600) {
-		resources->GetSprite("bigFountainTop")->Render(fountainX*squareSize - xOffset + 32, fountainY*squareSize - yOffset + 32);
-		resources->GetAnimation("fountainRipple")->Render(fountainX*squareSize - xOffset + 32, fountainY*squareSize - yOffset - 40);
-		resources->GetSprite("smallFountain")->Render(fountainX*squareSize - xOffset + 32, fountainY*squareSize - yOffset - 83);
-		resources->GetAnimation("fountainRipple")->RenderEx(fountainX*squareSize - xOffset + 32, fountainY*squareSize - yOffset - 183,0.0f,.35f,.4f);
-		resources->GetParticleSystem("fountain")->MoveTo(fountainX*squareSize - xOffset + 32, fountainY*squareSize - yOffset - 180, true);
+		resources->GetSprite("bigFountainTop")->Render(fountainX*64.0 - xOffset + 32, fountainY*64.0 - yOffset + 32);
+		resources->GetAnimation("fountainRipple")->Render(fountainX*64.0 - xOffset + 32, fountainY*64.0 - yOffset - 40);
+		resources->GetSprite("smallFountain")->Render(fountainX*64.0 - xOffset + 32, fountainY*64.0 - yOffset - 83);
+		resources->GetAnimation("fountainRipple")->RenderEx(fountainX*64.0 - xOffset + 32, fountainY*64.0 - yOffset - 183,0.0f,.35f,.4f);
+		resources->GetParticleSystem("fountain")->MoveTo(fountainX*64.0 - xOffset + 32, fountainY*64.0 - yOffset - 180, true);
 		resources->GetParticleSystem("fountain")->Render();
 	}
 }
@@ -706,8 +704,8 @@ void Environment::update(float dt) {
 	yGridOffset = thePlayer->gridY - screenHeight/2;
 
 	//Determine the tile offset for smooth movement
-	xOffset = thePlayer->x - float(thePlayer->gridX) * float(squareSize);
-	yOffset = thePlayer->y - float(thePlayer->gridY) * float(squareSize);
+	xOffset = thePlayer->x - float(thePlayer->gridX) * float(64.0);
+	yOffset = thePlayer->y - float(thePlayer->gridY) * float(64.0);
 
 	//Update each grid square
 	for (int i = 0; i < areaWidth; i++) {
@@ -746,8 +744,8 @@ void Environment::update(float dt) {
 int Environment::collisionAt(float x, float y) {
 	
 	//Determine grid coords of the object
-	int gridX = x / (float)squareSize;
-	int gridY = y / (float)squareSize;
+	int gridX = x / (float)64.0;
+	int gridY = y / (float)64.0;
 
 	//Handle out of bounds input
 	if (!inBounds(gridX,gridY)) {
@@ -1033,14 +1031,6 @@ int Environment::gatherItem(int x, int y) {
 		return NONE;
 	}
 }
-
-/**
- * Toggle the grid and debug info
- */
-void Environment::toggleGrid() {
-	showGrid = !showGrid;	
-}
-
 
 /**
  * This method is fucking stupid and should be rewritten.

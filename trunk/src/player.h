@@ -69,7 +69,6 @@ public:
 	int startX, startY;
 	float speed;
 	float dx, dy;
-	float shadowXOffset, shadowYOffset;
 	float alpha;
 	float mana;
 	hgeRect *weaponBox;

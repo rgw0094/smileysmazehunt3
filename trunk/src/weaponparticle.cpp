@@ -76,7 +76,7 @@ void WeaponParticleSystem::Update(float fDeltaTime) {
 		}
 
 		//Kill particles that hit a wall
-		if (theEnvironment->collisionAt(par->vecLocation.x + theEnvironment->xGridOffset*theEnvironment->squareSize + theEnvironment->xOffset, par->vecLocation.y + theEnvironment->yGridOffset*theEnvironment->squareSize + theEnvironment->yOffset) == UNWALKABLE) {
+		if (theEnvironment->collisionAt(par->vecLocation.x + theEnvironment->xGridOffset*64.0 + theEnvironment->xOffset, par->vecLocation.y + theEnvironment->yGridOffset*64.0 + theEnvironment->yOffset) == UNWALKABLE) {
 			if (!thePlayer->springing) {
 				nParticlesAlive--;
 				memcpy(par, &particles[nParticlesAlive], sizeof(hgeParticle));
@@ -88,7 +88,7 @@ void WeaponParticleSystem::Update(float fDeltaTime) {
 
 		//Do collision
 		if (type == PARTICLE_ICE_BREATH) {
-			enemyManager->freezeEnemies(par->vecLocation.x + theEnvironment->xGridOffset*theEnvironment->squareSize + theEnvironment->xOffset, par->vecLocation.y + theEnvironment->yGridOffset*theEnvironment->squareSize + theEnvironment->yOffset);
+			enemyManager->freezeEnemies(par->vecLocation.x + theEnvironment->xGridOffset*64.0 + theEnvironment->xOffset, par->vecLocation.y + theEnvironment->yGridOffset*64.0 + theEnvironment->yOffset);
 		} else if (type == PARTICLE_FIRE_NOVA) {
 			collisionBox->SetRadius(par->vecLocation.x + theEnvironment->xGridOffset*64 + theEnvironment->xOffset, par->vecLocation.y + theEnvironment->yGridOffset*64 + theEnvironment->yOffset, par->fSize);
 			if (thePlayer->collisionCircle->testBox(collisionBox)) {

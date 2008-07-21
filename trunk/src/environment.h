@@ -111,7 +111,6 @@ public:
 	void drawAfterSmiley(float dt);
 	void drawGrid(float dt);
 	void update(float dt);
-	void toggleGrid();
 	void loadArea(int id, int from, int playerX, int playerY);
 	int gatherItem(int x, int y);
 	int collisionAt(float x, float y);
@@ -151,9 +150,7 @@ public:
 	bool hasSillyPad[256][256];
 	float timeSillyPadPlaced[256][256];
 	bool changed[256][256];			//If the state of this square has changed since the area loaded
-	int squareSize;					//Size to make the squares
 	int screenWidth, screenHeight;	//Number of squares that fit on the screen
-	bool showGrid;					//Whether or not to show grid lines
 	int xGridOffset,yGridOffset;	//Number of squares the top left corner is from (0,0)
 	float xOffset,yOffset;			//Number of pixels the player is off alignment with the grid
 	int startX, int startY;			//Level entrance
