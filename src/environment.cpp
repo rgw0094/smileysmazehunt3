@@ -20,6 +20,12 @@
 #include "Tongue.h"
 #include "MushroomManager.h"
 #include "EvilWallManager.h"
+#include "LoadEffectManager.h"
+
+#include <string>
+#include <sstream>
+#include <iostream>
+#include <fstream>
 
 //Variables
 extern bool debugMode, hasFountain;
@@ -44,6 +50,7 @@ extern EnemyGroupManager *enemyGroupManager;
 extern Input *input;
 extern SoundManager *soundManager;
 extern GameData *gameData;
+extern LoadEffectManager *loadEffectManager;
 
 //Textures
 extern HTEXTURE animationTexture, sillyPadTexture;
@@ -104,7 +111,6 @@ Environment::Environment() {
 
 	resources->GetAnimation("savePoint")->Play();
 	
-	zoneFont = new hgeFont("zone.fnt");
 	collisionBox = new hgeRect();
 
 }
@@ -130,7 +136,6 @@ Environment::~Environment() {
 	delete greenCylinderRev;
 	delete yellowCylinderRev;
 	delete whiteCylinderRev;
-	delete zoneFont;
 	delete mushroomManager;
 	delete evilWallManager;
 
@@ -148,6 +153,9 @@ Environment::~Environment() {
 void Environment::loadArea(int id, int from, int playerX, int playerY) {
 
 	hge->System_Log("Loading area: %d, placing Player at (%d,%d)", id, playerX, playerY);
+
+	std::ifstream areaFile;
+	char threeBuffer[3];
 
 	saveManager->currentArea = id;
 	hasFountain = false;
@@ -178,34 +186,26 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 	if (areaFile.is_open()) areaFile.close();
 	if (id == FOUNTAIN_AREA) {
 		soundManager->playMusic("townMusic");
-		zoneName = "Smiley Town";
 		areaFile.open("Data/Maps/fountain.smh");
 	} else if (id == OLDE_TOWNE) {
 		soundManager->playMusic("oldeTowneMusic");
-		zoneName = "Dunes of Salabia";
 		areaFile.open("Data/Maps/oldetowne.smh");
 	} else if (id == SMOLDER_HOLLOW) {
 		soundManager->playMusic("smolderHollowMusic");
-		zoneName = "Smolder Hollow";
 		areaFile.open("Data/Maps/smhollow.smh");
 	} else if (id == FOREST_OF_FUNGORIA) {
 		soundManager->playMusic("forestMusic");
-		zoneName = "Forest of Fundoria";
 		areaFile.open("Data/Maps/forest.smh");
 	} else if (id == SESSARIA_SNOWPLAINS) {
 		soundManager->playMusic("iceMusic");
-		zoneName = "Sessaria Snowplains";
 		areaFile.open("Data/Maps/snow.smh");
 	} else if (id == TUTS_TOMB) {
-		zoneName = "Tut's Tomb";
 		areaFile.open("Data/Maps/tutstomb.smh");
 	} else if (id == WORLD_OF_DESPAIR) {
 		soundManager->playMusic("realmOfDespairMusic");
-		zoneName = "Realm of Despair";
 		areaFile.open("Data/Maps/despair.smh");
 	} else if (id == CASTLE_OF_EVIL) {
 		//soundManager->playMusic("castleOfEvilMusic");
-		zoneName = "Castle Of Evil (What a gay name)";
 		areaFile.open("Data/Maps/castle.smh");
 	}
 
@@ -310,7 +310,6 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 	areaFile.read(threeBuffer,1);	//space
 	areaFile.read(threeBuffer,3);	//height
 	areaFile.read(threeBuffer,1);	//newline
-
 
 	//Load item data
 	for (int row = 0; row < areaHeight; row++) {
@@ -422,9 +421,8 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 	enemyManager->update(0.0);
 	thePlayer->update(0.0);
 
-	timeLevelLoaded = hge->Timer_GetTime();
-	zoneTextAlpha = 255;
-	zoneFont->SetColor(ARGB(255,255,255,255));
+	//Tell the LoadEffectManager to display the new area name
+	loadEffectManager->displayNewAreaName();
 
 }
 

@@ -15,7 +15,6 @@ struct EnemyInfo {
 	bool immuneToFire, immuneToTongue, immuneToLightning, immuneToStun, immuneToFreeze, invincible;
 	int variable1, variable2;
 
-	//For basic enemies
 	bool chases, hasRangedAttack;
 	int range, delay, projectileSpeed;
 	float projectileDamage;
@@ -38,6 +37,7 @@ public:
 	EnemyInfo getEnemyInfo(int enemyID);
 	Ability getAbilityInfo(int abilityID);
 	char *getGameText(const char *text);
+	char *getAreaName(int area);
 
 
 private:

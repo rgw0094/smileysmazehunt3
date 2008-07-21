@@ -106,8 +106,6 @@
 //State
 #define MENU 10
 #define GAME 20
-#define LOADING_LEVEL_PHASE1 30
-#define LOADING_LEVEL_PHASE2 31
 
 //Directions
 #define NUM_DIRECTIONS 8
