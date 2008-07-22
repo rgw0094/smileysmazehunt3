@@ -1410,6 +1410,8 @@ void Player::dealDamageAndKnockback(float damage, bool makesFlash, float knockba
 		startedFlashing = gameTime;
 	}
 
+	health = 5.0;
+
 }
 
 /**

@@ -1274,6 +1274,8 @@ bool Environment::enemyCollision(hgeRect *box, BaseEnemy *enemy, float dt) {
 
 					return true;
 				}
+			} else if (!inBounds(i,j)) {
+				return true;
 			}
 		}
 	}
