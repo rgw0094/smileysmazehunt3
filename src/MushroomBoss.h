@@ -41,14 +41,16 @@ public:
 	void addBomb(float _x,float _y);
 	void doBombs(float dt);
 	void drawBombs();
-	
+	void killBombs();
+
 	void addExplosion (float _x,float _y);
 	void doExplosions(float dt);
 	void drawExplosions(float dt);
+	void killExplosions();
 	
 	void doMiniMushrooms(float dt);
 	void spawnMiniMushroom();
-	void spawnMiniMushroomProjectile();
+	void spawnMiniMushroomProjectile();	
 	
 	//variables common to all bosses
 	bool startedIntroDialogue;

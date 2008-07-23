@@ -172,20 +172,19 @@ bool MushroomBoss::update(float dt) {
 	if (state == MUSHBOOM_SPIRALING) {
 		doSpiral(dt);
 		updateCollisionRects();
-		doArms(dt);		
+		doArms(dt);
+		doMiniMushrooms(dt);
+		doBombs(dt);	
+		doExplosions(dt);
 
 		//collision
 		if (thePlayer->collisionCircle->testBox(collisionRects[0]) || thePlayer->collisionCircle->testBox(collisionRects[1])) {
 			thePlayer->dealDamageAndKnockback(MUSHBOOM_DAMAGE,true,MUSHBOOM_KNOCKBACK_DISTANCE,x,y);
 		}
 	}
-
-	doBombs(dt);
-	doExplosions(dt);
 	explosions->Update(dt);
 	explosions->Transpose(-1*(theEnvironment->xGridOffset*64 + theEnvironment->xOffset), -1*(theEnvironment->yGridOffset*64 + theEnvironment->yOffset));
-	doMiniMushrooms(dt);
-
+	
 	if (y < thePlayer->y) shouldDrawAfterSmiley = false;
 	else shouldDrawAfterSmiley = true;
 
@@ -250,11 +249,10 @@ void MushroomBoss::draw(float dt) {
 		drawCollisionBox(collisionRects[1], RED);
 	}
 	
-	//Draw bombs
-	drawBombs();
-
-	//Draw explosions
-	drawExplosions(dt);
+	if (state <= MUSHBOOM_SPIRALING) {
+		drawBombs();
+		drawExplosions(dt);
+	}
 	
 	//Draw health
 	if (state != MUSHBOOM_INACTIVE) {
@@ -434,11 +432,17 @@ void MushroomBoss::doBombs(float dt) {
 		if (timePassedSince(i->beginThrowTime) >= BOMB_LIFE_TIME) {
 			explosions->SpawnPS(&resources->GetParticleSystem("explosionLarge")->info,i->xBomb,i->yBomb);
 			addExplosion(i->xBomb,i->yBomb);
-			i=theBombs.erase(i);
-			
+			i=theBombs.erase(i);			
 		}
 	}
 
+}
+
+void MushroomBoss::killBombs() {
+	std::list<Bomb>::iterator i;
+	for(i = theBombs.begin(); i != theBombs.end(); i++) {
+		i=theBombs.erase(i);
+	}
 }
 
 void MushroomBoss::drawBombs() {
@@ -549,7 +553,14 @@ void MushroomBoss::doExplosions(float dt) {
 			i=theExplosions.erase(i);
 		}		
 	}
+}
 
+void MushroomBoss::killExplosions() {
+	std::list<Explosion>::iterator i;
+	for(i = theExplosions.begin(); i != theExplosions.end(); i++) {
+		delete i->collisionCircle;
+		i=theExplosions.erase(i);
+	}
 }
 
 void MushroomBoss::drawExplosions(float dt) {
@@ -564,7 +575,9 @@ void MushroomBoss::drawExplosions(float dt) {
 }
 
 void MushroomBoss::initiateDeathSequence() {
-	//Call func to get rid of bombs/explosions
+	
+	killBombs();
+	killExplosions();
 	//Call func to get rid of mushroomlets
 	
 	if (state <= MUSHBOOM_SPIRALING) {
