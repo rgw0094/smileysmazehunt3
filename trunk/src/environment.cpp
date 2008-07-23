@@ -203,6 +203,7 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 		soundManager->playMusic("iceMusic");
 		areaFile.open("Data/Maps/snow.smh");
 	} else if (id == TUTS_TOMB) {
+		//soundManager->playMusic("tutsTombMusic");
 		areaFile.open("Data/Maps/tutstomb.smh");
 	} else if (id == WORLD_OF_DESPAIR) {
 		soundManager->playMusic("realmOfDespairMusic");
@@ -258,6 +259,7 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 	areaFile.read(threeBuffer,3);	//height
 	areaFile.read(threeBuffer,1);	//newline
 
+
 	//Load terrain data for the area
 	for (int row = 0; row < areaHeight; row++) {
 		for (int col = 0; col < areaWidth; col++) {
@@ -278,14 +280,15 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 		for (int col = 0; col < areaWidth; col++) {
 			areaFile.read(threeBuffer,3);
 			collision[col][row] = atoi(threeBuffer);
+
 			//Big ass fountain location
 			if (collision[col][row] == FOUNTAIN) {
 				hasFountain = true;
 				fountainX = -7;
 				fountainY = -7;
 			}
+
 			//Mushrooms
-		
 			if (collision[col][row] == DIZZY_MUSHROOM_1 || collision[col][row] == DIZZY_MUSHROOM_2) {
 				mushroomManager->addMushroom(col,row,collision[col][row]);
 			}
@@ -294,15 +297,12 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 			if (collision[col][row] >= EVIL_WALL_POSITION && collision[col][row] <= EVIL_WALL_RESTART) {
 				evilWallManager->addEvilWall(ids[col][row]);
 				evilWallManager->setState(ids[col][row],0);
-			}
-			if (collision[col][row] == EVIL_WALL_POSITION) {					
+			} else if (collision[col][row] == EVIL_WALL_POSITION) {					
 				evilWallManager->setBeginWallPosition(ids[col][row],col,row);
 				evilWallManager->setSpeed(ids[col][row],variable[col][row]);
-			}
-			if (collision[col][row] == EVIL_WALL_TRIGGER) {
+			} else if (collision[col][row] == EVIL_WALL_TRIGGER) {
 				evilWallManager->setDir(ids[col][row],variable[col][row]);
-			}
-			if (collision[col][row] == EVIL_WALL_RESTART) {
+			} else if (collision[col][row] == EVIL_WALL_RESTART) {
 				evilWallManager->setSmileyRestartPosition(ids[col][row],col,row);
 			}
 		}
