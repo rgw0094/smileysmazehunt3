@@ -361,7 +361,7 @@ numEnemies="46"
 
 ;Snowman
 24GCol=      "8"
-24GRow=      "0"
+24GRow=      "1"
 24NumFrames= "2"
 24EnemyType= "0"
 24WanderType="0"
