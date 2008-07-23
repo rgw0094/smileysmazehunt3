@@ -33,6 +33,20 @@ extern float gameTime;
 #define LEFT_ARM_OFFSET_X 16
 #define LEFT_ARM_OFFSET_Y 0
 
+//Collision
+#define MUSHBOOM_TOP_COLLISION_RECT_WIDTH 100
+#define MUSHBOOM_TOP_COLLISION_RECT_HEIGHT 20
+#define MUSHBOOM_TOP_COLLISION_RECT_YOFFSET -15
+
+#define MUSHBOOM_BOTTOM_COLLISION_RECT_WIDTH 48
+#define MUSHBOOM_BOTTOM_COLLISION_RECT_HEIGHT 56
+#define MUSHBOOM_BOTTOM_COLLISION_RECT_YOFFSET 24
+
+
+
+
+
+
 
 //Spiral data
 #define SPIRAL_SPEED 1.5
@@ -96,6 +110,11 @@ MushroomBoss::MushroomBoss(int _gridX,int _gridY,int _groupID) {
 	y=gridY*64+32;
 
 	x0=x; y0=y;
+
+	collisionRects[0] = new hgeRect;	
+	collisionRects[1] = new hgeRect;
+	updateCollisionRects();
+	
 	
 	groupID = _groupID;
 
@@ -115,10 +134,14 @@ MushroomBoss::MushroomBoss(int _gridX,int _gridY,int _groupID) {
 
 	//Initialize explosion particle effects
 	explosions = new hgeParticleManager();
+
+	shouldDrawAfterSmiley=false;
 }
 
 MushroomBoss::~MushroomBoss() {
 	if (explosions) delete explosions;
+	if (collisionRects[1]) delete collisionRects[1];
+	if (collisionRects[0]) delete collisionRects[0];
 }
 
 
@@ -144,6 +167,7 @@ bool MushroomBoss::update(float dt) {
 
 	if (state == MUSHBOOM_SPIRALING) {
 		doSpiral(dt);
+		updateCollisionRects();
 		doArms(dt);
 		doBombs(dt);
 		doExplosions(dt);
@@ -152,18 +176,41 @@ bool MushroomBoss::update(float dt) {
 		doMiniMushrooms(dt);
 	}
 
+	if (y < thePlayer->y) shouldDrawAfterSmiley = false;
+	else shouldDrawAfterSmiley = true;
+
 	return false;
 
 }
 
+void MushroomBoss::updateCollisionRects() {
+	collisionRects[0]->x1 = x - MUSHBOOM_TOP_COLLISION_RECT_WIDTH/2;
+	collisionRects[0]->x2 = x + MUSHBOOM_TOP_COLLISION_RECT_WIDTH/2;
+	collisionRects[0]->y1 = y + MUSHBOOM_TOP_COLLISION_RECT_YOFFSET - MUSHBOOM_TOP_COLLISION_RECT_HEIGHT/2;
+	collisionRects[0]->y2 = y + MUSHBOOM_TOP_COLLISION_RECT_YOFFSET + MUSHBOOM_TOP_COLLISION_RECT_HEIGHT/2;
+
+	collisionRects[1]->x1 = x - MUSHBOOM_BOTTOM_COLLISION_RECT_WIDTH/2;
+	collisionRects[1]->x2 = x + MUSHBOOM_BOTTOM_COLLISION_RECT_WIDTH/2;
+	collisionRects[1]->y1 = y + MUSHBOOM_BOTTOM_COLLISION_RECT_YOFFSET - MUSHBOOM_BOTTOM_COLLISION_RECT_HEIGHT/2;
+	collisionRects[1]->y2 = y + MUSHBOOM_BOTTOM_COLLISION_RECT_YOFFSET + MUSHBOOM_BOTTOM_COLLISION_RECT_HEIGHT/2;
+}
+
 void MushroomBoss::draw(float dt) {
 	
-	resources->GetSprite("mushboom")->Render(getScreenX(x),getScreenY(y));
-	if (!rightArmRotating) resources->GetSprite("mushboomRightArm")->RenderEx(getScreenX(x+RIGHT_ARM_OFFSET_X),getScreenY(y+RIGHT_ARM_OFFSET_Y),rightArmRotate);
-	resources->GetSprite("mushboomLeftArm")->RenderEx(getScreenX(x+LEFT_ARM_OFFSET_X),getScreenY(y+LEFT_ARM_OFFSET_Y),leftArmRotate);
-	
-	//draw it after left if it's rotating, so it is drawn on top
-	if (rightArmRotating) resources->GetSprite("mushboomRightArm")->RenderEx(getScreenX(x+RIGHT_ARM_OFFSET_X),getScreenY(y+RIGHT_ARM_OFFSET_Y),rightArmRotate);
+	if (!shouldDrawAfterSmiley) {
+		resources->GetSprite("mushboom")->Render(getScreenX(x),getScreenY(y));
+		if (!rightArmRotating) resources->GetSprite("mushboomRightArm")->RenderEx(getScreenX(x+RIGHT_ARM_OFFSET_X),getScreenY(y+RIGHT_ARM_OFFSET_Y),rightArmRotate);
+		resources->GetSprite("mushboomLeftArm")->RenderEx(getScreenX(x+LEFT_ARM_OFFSET_X),getScreenY(y+LEFT_ARM_OFFSET_Y),leftArmRotate);
+
+	    //draw it after left if it's rotating, so it is drawn on top
+		if (rightArmRotating) resources->GetSprite("mushboomRightArm")->RenderEx(getScreenX(x+RIGHT_ARM_OFFSET_X),getScreenY(y+RIGHT_ARM_OFFSET_Y),rightArmRotate);
+	}
+
+	//Collision rects
+	if (debugMode) {
+		drawCollisionBox(collisionRects[0], RED);
+		drawCollisionBox(collisionRects[1], RED);
+	}
 	
 	//Draw bombs
 	drawBombs();
@@ -179,6 +226,17 @@ void MushroomBoss::draw(float dt) {
 	//Debug mode stuff
 	if (debugMode) {
 		
+	}
+}
+
+void MushroomBoss::drawAfterSmiley(float dt) {
+	if (shouldDrawAfterSmiley) {
+		resources->GetSprite("mushboom")->Render(getScreenX(x),getScreenY(y));
+		if (!rightArmRotating) resources->GetSprite("mushboomRightArm")->RenderEx(getScreenX(x+RIGHT_ARM_OFFSET_X),getScreenY(y+RIGHT_ARM_OFFSET_Y),rightArmRotate);
+		resources->GetSprite("mushboomLeftArm")->RenderEx(getScreenX(x+LEFT_ARM_OFFSET_X),getScreenY(y+LEFT_ARM_OFFSET_Y),leftArmRotate);
+
+	    //draw it after left if it's rotating, so it is drawn on top
+		if (rightArmRotating) resources->GetSprite("mushboomRightArm")->RenderEx(getScreenX(x+RIGHT_ARM_OFFSET_X),getScreenY(y+RIGHT_ARM_OFFSET_Y),rightArmRotate);
 	}
 }
 
