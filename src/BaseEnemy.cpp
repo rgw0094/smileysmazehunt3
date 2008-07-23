@@ -11,6 +11,7 @@
 #include "CollisionCircle.h"
 #include "Tongue.h"
 #include "EnemyState.h"
+#include "EnemyManager.h"
 
 extern Player *thePlayer;
 extern Environment *theEnvironment;
@@ -100,26 +101,29 @@ void BaseEnemy::initEnemy(int _id, int _gridX, int _gridY, int _groupID) {
 		stunStarAngles[i] = (float)i * ((2.0*PI) / (float)NUM_STUN_STARS);
 	}
 
-	//Load graphics - each one has a 1 border transparent pixel layer around it
+	//Load graphics - each one has a 1 border transparent pixel layer around it except
+	// for batlet caves because the graphics need to be put next to each other
+	int borderSize = (gameData->getEnemyInfo(id).enemyType == ENEMY_BATLET_DIST ? 0 : 1);
+	int size = (gameData->getEnemyInfo(id).enemyType == ENEMY_BATLET_DIST ? 64 : 62);
 	graphic[LEFT] = new hgeAnimation(resources->GetTexture("enemies"), 
 		gameData->getEnemyInfo(id).numFrames, 3, 
-		gameData->getEnemyInfo(id).gCol*64+1, 
-		gameData->getEnemyInfo(id).gRow*64+1, 62, 62);
+		gameData->getEnemyInfo(id).gCol*64+borderSize, 
+		gameData->getEnemyInfo(id).gRow*64+borderSize, size, size);
 	graphic[LEFT]->Play();
 	graphic[RIGHT] = new hgeAnimation(resources->GetTexture("enemies"), 
 		gameData->getEnemyInfo(id).numFrames, 3, 
-		gameData->getEnemyInfo(id).gCol*64 + 64 * gameData->getEnemyInfo(id).numFrames+1, 
-		gameData->getEnemyInfo(id).gRow*64+1, 62, 62);
+		gameData->getEnemyInfo(id).gCol*64 + 64 * gameData->getEnemyInfo(id).numFrames+borderSize, 
+		gameData->getEnemyInfo(id).gRow*64+borderSize, size, size);
 	graphic[RIGHT]->Play();
 	graphic[UP] = new hgeAnimation(resources->GetTexture("enemies"), 
 		gameData->getEnemyInfo(id).numFrames, 3, 
-		gameData->getEnemyInfo(id).gCol*64 + 2 * 64 * gameData->getEnemyInfo(id).numFrames+1, 
-		gameData->getEnemyInfo(id).gRow*64+1, 62, 62);
+		gameData->getEnemyInfo(id).gCol*64 + 2 * 64 * gameData->getEnemyInfo(id).numFrames+borderSize, 
+		gameData->getEnemyInfo(id).gRow*64+borderSize, size, size);
 	graphic[UP]->Play();
 	graphic[DOWN] = new hgeAnimation(resources->GetTexture("enemies"), 
 		gameData->getEnemyInfo(id).numFrames, 3, 
-		gameData->getEnemyInfo(id).gCol*64 + 3 * 64 * gameData->getEnemyInfo(id).numFrames+1, 
-		gameData->getEnemyInfo(id).gRow*64+1, 62, 62);
+		gameData->getEnemyInfo(id).gCol*64 + 3 * 64 * gameData->getEnemyInfo(id).numFrames+borderSize, 
+		gameData->getEnemyInfo(id).gRow*64+borderSize, size, size);
 	graphic[DOWN]->Play();
 
 	//Set graphic hot spots

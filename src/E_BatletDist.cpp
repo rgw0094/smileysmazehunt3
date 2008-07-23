@@ -9,6 +9,8 @@
 #include "player.h"
 #include "environment.h"
 #include "CollisionCircle.h"
+#include "Tongue.h"
+#include "WeaponParticle.h"
 
 extern HGE *hge;
 extern hgeResourceManager *resources;
@@ -115,17 +117,18 @@ void E_BatletDist::addBatlet() {
 	Batlet newBatlet;
 	newBatlet.animation = new hgeAnimation(*resources->GetAnimation("batlet"));
 	newBatlet.animation->Play();
-	newBatlet.x = x+64.0;
-	newBatlet.y = y-64.0;
+	newBatlet.x = x+32.0;
+	newBatlet.y = y-32.0;
 	newBatlet.startedDiveBomb = false;
 	newBatlet.timeSpawned = gameTime;
 	newBatlet.collisionBox = new hgeRect();
 	newBatlet.collisionBox->SetRadius(newBatlet.x, newBatlet.y, 15);
+	newBatlet.scale = 0.0001;
 
 	//When a batlet first spawns it floats slowly away from the BD
 	newBatlet.angle = hge->Random_Float(0.0, 2.0*PI);
-	newBatlet.dx = 100.0*cos(newBatlet.angle);
-	newBatlet.dy = 100.0*sin(newBatlet.angle);
+	newBatlet.dx = 60.0*cos(newBatlet.angle);
+	newBatlet.dy = 60.0*sin(newBatlet.angle);
 
 	//Add it to the list
 	theBatlets.push_back(newBatlet);
@@ -138,7 +141,7 @@ void E_BatletDist::addBatlet() {
 void E_BatletDist::drawBatlets(float dt) {
 	std::list<Batlet>::iterator i;
 	for (i = theBatlets.begin(); i != theBatlets.end(); i++) {
-		i->animation->Render(getScreenX(i->x), getScreenY(i->y));
+		i->animation->RenderEx(getScreenX(i->x), getScreenY(i->y), 0.0, i->scale, i->scale);
 	}
 }
 
@@ -153,6 +156,10 @@ void E_BatletDist::updateBatlets(float dt) {
 		i->x += i->dx*dt;
 		i->y += i->dy*dt;
 
+		//Batlet gets larger to make it look like its coming out of the cave
+		i->scale += 2.0 * dt;
+		if (i->scale > 1.0) i->scale = 1.0;
+
 		//Update collision box
 		i->collisionBox->SetRadius(i->x, i->y, 15);
 
@@ -164,8 +171,10 @@ void E_BatletDist::updateBatlets(float dt) {
 			collision = true;
 		}
 
-		//Check for collision with walls
-		if (!isOverlappingDist(i->x, i->y) && theEnvironment->collisionAt(i->x, i->y) == UNWALKABLE) {
+		//Check for collision with walls and Smiley's weapons
+		if ((!isOverlappingDist(i->x, i->y) && theEnvironment->collisionAt(i->x, i->y) == UNWALKABLE) ||
+				thePlayer->getTongue()->testCollision(i->collisionBox) ||
+				thePlayer->fireBreathParticle->testCollision(i->collisionBox)) {
 			collision = true;
 		}
 		

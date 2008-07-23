@@ -9,6 +9,24 @@ class hgeParticleManager;
 class BaseEnemy;
 class hgeRect;
 
+
+//Enemy Types
+#define ENEMY_BASIC 0
+#define ENEMY_EVIL_EYE 1
+#define ENEMY_GUMDROP 2
+#define ENEMY_BOMB_GENERATOR 3
+#define ENEMY_CHARGER 4
+#define ENEMY_CLOWNCRAB 5
+#define ENEMY_BATLET_DIST 6
+#define ENEMY_BUZZARD 7
+#define ENEMY_SAD_SHOOTER 8
+#define ENEMY_FLOATER 9
+#define ENEMY_FLAILER 10
+#define ENEMY_TENTACLE 11
+#define ENEMY_TURRET 12
+#define ENEMY_GHOST 13
+#define ENEMY_FAKE 14
+
 struct EnemyStruct {
 	BaseEnemy *enemy;
 	float spawnHealthChance;
