@@ -27,7 +27,7 @@ extern SaveManager *saveManager;
 extern SoundManager *soundManager;
 extern float gameTime;
 
-#define MUSHBOOM_HEALTH 100.0
+#define MUSHBOOM_HEALTH 2.0
 #define RIGHT_ARM_OFFSET_X -15
 #define RIGHT_ARM_OFFSET_Y 0
 #define LEFT_ARM_OFFSET_X 16
@@ -44,6 +44,8 @@ extern float gameTime;
 
 #define MUSHBOOM_DAMAGE 1.0
 #define MUSHBOOM_KNOCKBACK_DISTANCE 168.0
+
+#define MUSHBOOM_FLASH_TIME 1.0
 
 //Spiral data
 #define SPIRAL_SPEED 1.5
@@ -67,7 +69,6 @@ extern float gameTime;
 #define ARM_LENGTH 38.0
 
 //Bomb stuff
-
 #define BOMB_AIR_TIME 0.8
 #define BOMB_LIFE_TIME 1.8
 #define PARABOLA_HEIGHT 50.0
@@ -80,7 +81,8 @@ extern float gameTime;
 //Mushroomlet projectile stuff
 #define MINI_MUSHROOM_PROJECTILE_ID 7
 #define MINI_MUSHROOM_PROJECTILE_SPEED 500
-#define MINI_MUSHROOM_PROJECTILE_DAMAGE -1.75
+#define MINI_MUSHROOM_PROJECTILE_DAMAGE 1.75
+#define MINI_MUSHROOM_PROJECTILE_DAMAGE_TO_BRIAN 1.0
 
 //Mushroomlet enemy stuff
 #define MINI_MUSHROOM_INTERVAL 3.2
@@ -89,6 +91,10 @@ extern float gameTime;
 //States
 #define MUSHBOOM_INACTIVE		0
 #define MUSHBOOM_SPIRALING		1
+#define MUSHBOOM_DYING_TEXT		2
+#define MUSHBOOM_FADING			3
+
+#define MUSHBOOM_FADE_SPEED 100.0
 
 //Throw states
 #define MUSHBOOM_THROW_STATE_AIM	0
@@ -112,7 +118,8 @@ MushroomBoss::MushroomBoss(int _gridX,int _gridY,int _groupID) {
 	collisionRects[1] = new hgeRect;
 	updateCollisionRects();
 	
-	
+	alpha=255.0;
+
 	groupID = _groupID;
 
 	//Initialize state stuff
@@ -165,12 +172,7 @@ bool MushroomBoss::update(float dt) {
 	if (state == MUSHBOOM_SPIRALING) {
 		doSpiral(dt);
 		updateCollisionRects();
-		doArms(dt);
-		doBombs(dt);
-		doExplosions(dt);
-		explosions->Update(dt);
-		explosions->Transpose(-1*(theEnvironment->xGridOffset*64 + theEnvironment->xOffset), -1*(theEnvironment->yGridOffset*64 + theEnvironment->yOffset));
-		doMiniMushrooms(dt);
+		doArms(dt);		
 
 		//collision
 		if (thePlayer->collisionCircle->testBox(collisionRects[0]) || thePlayer->collisionCircle->testBox(collisionRects[1])) {
@@ -178,9 +180,39 @@ bool MushroomBoss::update(float dt) {
 		}
 	}
 
+	doBombs(dt);
+	doExplosions(dt);
+	explosions->Update(dt);
+	explosions->Transpose(-1*(theEnvironment->xGridOffset*64 + theEnvironment->xOffset), -1*(theEnvironment->yGridOffset*64 + theEnvironment->yOffset));
+	doMiniMushrooms(dt);
+
 	if (y < thePlayer->y) shouldDrawAfterSmiley = false;
 	else shouldDrawAfterSmiley = true;
 
+	if (state == MUSHBOOM_DYING_TEXT) {
+		if (!theTextBox->visible) {
+			enterState(MUSHBOOM_FADING);
+			alpha=255.0;
+		}
+	}
+
+	if (state == MUSHBOOM_FADING) {
+		alpha -= MUSHBOOM_FADE_SPEED*dt;
+		//Drop frisbee
+		if (!droppedLoot) {
+			lootManager->addLoot(LOOT_NEW_ABILITY, x, y, SILLY_PAD);
+			droppedLoot = true;
+			saveManager->killedBoss[MUSHROOM_BOSS-240] = true;
+			enemyGroupManager->notifyOfDeath(groupID);
+			soundManager->playMusic("forestMusic");
+		}
+		if (alpha < 0) {
+			alpha = 0;  
+			
+			return true;
+		}
+	}
+	
 	return false;
 
 }
@@ -200,6 +232,10 @@ void MushroomBoss::updateCollisionRects() {
 void MushroomBoss::draw(float dt) {
 	
 	if (!shouldDrawAfterSmiley) {
+		resources->GetSprite("mushboom")->SetColor(ARGB(int(alpha),255,255,255));
+		resources->GetSprite("mushboomLeftArm")->SetColor(ARGB(int(alpha),255,255,255));
+		resources->GetSprite("mushboomRightArm")->SetColor(ARGB(int(alpha),255,255,255));
+		
 		resources->GetSprite("mushboom")->Render(getScreenX(x),getScreenY(y));
 		if (!rightArmRotating) resources->GetSprite("mushboomRightArm")->RenderEx(getScreenX(x+RIGHT_ARM_OFFSET_X),getScreenY(y+RIGHT_ARM_OFFSET_Y),rightArmRotate);
 		resources->GetSprite("mushboomLeftArm")->RenderEx(getScreenX(x+LEFT_ARM_OFFSET_X),getScreenY(y+LEFT_ARM_OFFSET_Y),leftArmRotate);
@@ -233,6 +269,7 @@ void MushroomBoss::draw(float dt) {
 
 void MushroomBoss::drawAfterSmiley(float dt) {
 	if (shouldDrawAfterSmiley) {
+		resources->GetSprite("mushboom")->SetColor(ARGB((int)alpha,255,255,255));
 		resources->GetSprite("mushboom")->Render(getScreenX(x),getScreenY(y));
 		if (!rightArmRotating) resources->GetSprite("mushboomRightArm")->RenderEx(getScreenX(x+RIGHT_ARM_OFFSET_X),getScreenY(y+RIGHT_ARM_OFFSET_Y),rightArmRotate);
 		resources->GetSprite("mushboomLeftArm")->RenderEx(getScreenX(x+LEFT_ARM_OFFSET_X),getScreenY(y+LEFT_ARM_OFFSET_Y),leftArmRotate);
@@ -251,6 +288,14 @@ void MushroomBoss::doMiniMushrooms(float dt) {
 	if (timePassedSince(lastMiniMushroomTime) >= MINI_MUSHROOM_INTERVAL) {
 		lastMiniMushroomTime=gameTime;
 		spawnMiniMushroomProjectile();
+	}
+	//Test their collision with mushboom
+	if (projectileManager->killProjectilesInBox(collisionRects[0],PROJECTILE_MINI_MUSHROOM,false,true) > 0
+	||  projectileManager->killProjectilesInBox(collisionRects[1],PROJECTILE_MINI_MUSHROOM,false,true) > 0){
+		health -= MINI_MUSHROOM_PROJECTILE_DAMAGE_TO_BRIAN;
+		if (health <= 0) {
+			initiateDeathSequence();
+		}
 	}
 }
 
@@ -515,5 +560,15 @@ void MushroomBoss::drawExplosions(float dt) {
 		for(i = theExplosions.begin(); i != theExplosions.end(); i++) {
 			i->collisionCircle->draw();
 		}
+	}
+}
+
+void MushroomBoss::initiateDeathSequence() {
+	//Call func to get rid of bombs/explosions
+	//Call func to get rid of mushroomlets
+	
+	if (state <= MUSHBOOM_SPIRALING) {
+		enterState(MUSHBOOM_DYING_TEXT);
+		theTextBox->setDialogue(FIRE_BOSS, MUSHBOOM_DEADTEXT);	
 	}
 }

@@ -97,7 +97,7 @@ public:
 	float xLoot,yLoot;
 	float xLeftWater,xRightWater;
 	int state;
-	int alpha;
+	float alpha;
 	bool startedIntroDialogue;
 	bool startedDrowningDialogue;
 	float lastHitByTongue;
