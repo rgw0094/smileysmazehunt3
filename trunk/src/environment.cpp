@@ -460,7 +460,7 @@ void Environment::draw(float dt) {
 					theCollision != PLAYER_END && theCollision != PIT && 
 					theCollision != UNWALKABLE_PROJECTILE && 
 					theCollision != SHRINK_TUNNEL_HORIZONTAL &&
-					theCollision != SHRINK_TUNNEL_VERTICAL &&
+					theCollision != SHRINK_TUNNEL_VERTICAL &&					
 					!(isWarp(theCollision) && 
 					variable[i + xGridOffset][j + yGridOffset] == 990)) {
 					
@@ -532,6 +532,14 @@ void Environment::draw(float dt) {
 						fountainOnScreen = true;
 						fountainX = i;
 						fountainY = j;
+					} else if (theCollision >= UP_ARROW && theCollision <= LEFT_ARROW) {
+						if (ids[i+xGridOffset][j+yGridOffset] == -1) { //render red arrow
+							walkLayer[theCollision]->SetColor(ARGB(255,255,0,255));							
+							walkLayer[theCollision]->Render(drawX,drawY);
+						} else { //it's a rotating arrow, make it green
+							walkLayer[theCollision]->SetColor(ARGB(255,0,255,255));
+							walkLayer[theCollision]->Render(drawX,drawY);							
+						}
 					} else {
 						walkLayer[theCollision]->Render(drawX,drawY);
 					}
