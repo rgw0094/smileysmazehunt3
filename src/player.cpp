@@ -184,10 +184,26 @@ void Player::update(float dt) {
 	saveManager->playerGridY = gridY;
 
 	//GAY moves smiley with the num pad
-	if (hge->Input_KeyDown(HGEK_NUMPAD8)) y -= 64.0;
-	if (hge->Input_KeyDown(HGEK_NUMPAD2)) y += 64.0;
-	if (hge->Input_KeyDown(HGEK_NUMPAD4)) x -= 64.0;
-	if (hge->Input_KeyDown(HGEK_NUMPAD6)) x += 64.0;
+	if (hge->Input_KeyDown(HGEK_NUMPAD8)) {
+		gridY--;
+		x = gridX * 64.0 + 32.0;
+		y = gridY * 64.0 + 32.0;
+	}
+	if (hge->Input_KeyDown(HGEK_NUMPAD2) || hge->Input_KeyDown(HGEK_NUMPAD5)) {
+		gridY++;	
+		x = gridX * 64.0 + 32.0;
+		y = gridY * 64.0 + 32.0;
+	}
+	if (hge->Input_KeyDown(HGEK_NUMPAD4)) {
+		gridX--;
+		x = gridX * 64.0 + 32.0;
+		y = gridY * 64.0 + 32.0;
+	}
+	if (hge->Input_KeyDown(HGEK_NUMPAD6)) {
+		gridX++;
+		x = gridX * 64.0 + 32.0;
+		y = gridY * 64.0 + 32.0;
+	}
 
 	//Update cloaking alpha
 	alpha = (cloaked) ? 75.0f : 255.0f;
@@ -524,7 +540,7 @@ void Player::drawGUI(float dt) {
 		//Draw num keys
 		resources->GetFont("numberFnt")->printf(keyXOffset + 60.0*i + 45.0, keyYOffset + 5.0, 
 			HGETEXT_LEFT, "%d", saveManager->numKeys[saveManager->currentArea][i]);
-
+		resources->GetFont("curlz")->printf(5,5,HGETEXT_LEFT, "%d", saveManager->currentArea);
 	}
 						
 }
