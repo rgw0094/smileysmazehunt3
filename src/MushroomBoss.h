@@ -29,7 +29,9 @@ public:
 
 	//methods
 	void draw(float dt);
+	void drawAfterSmiley(float dt);
 	bool update(float dt);
+	void updateCollisionRects();
 	void enterState(int _state);
 	
 	void doSpiral(float dt);
@@ -54,6 +56,8 @@ public:
 	float x,y,x0,y0;
 	int state;
 	float timeEnteredState;
+	hgeRect *collisionRects[2];
+
 
 	//variables for mushboom
 	int throwState;
@@ -62,6 +66,7 @@ public:
 	int nextArmToRotate;
 	float lastThrowTime,leftArmThrowTime,rightArmThrowTime;
 	float theta, phi; //used for spiral movement
+	bool shouldDrawAfterSmiley;
 
 	float lastMiniMushroomTime;
 
