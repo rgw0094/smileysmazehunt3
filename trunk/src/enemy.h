@@ -311,6 +311,7 @@ struct Batlet {
 	bool startedDiveBomb;
 	float timeSpawned;
 	float angle;
+	float scale;
 };
 
 class E_BatletDist : public BaseEnemy {

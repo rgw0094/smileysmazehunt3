@@ -539,8 +539,7 @@ void Player::drawGUI(float dt) {
 		
 		//Draw num keys
 		resources->GetFont("numberFnt")->printf(keyXOffset + 60.0*i + 45.0, keyYOffset + 5.0, 
-			HGETEXT_LEFT, "%d", saveManager->numKeys[saveManager->currentArea][i]);
-		resources->GetFont("curlz")->printf(5,5,HGETEXT_LEFT, "%d", saveManager->currentArea);
+			HGETEXT_LEFT, "%d", saveManager->numKeys[getKeyIndex(saveManager->currentArea)][i]);
 	}
 						
 }
