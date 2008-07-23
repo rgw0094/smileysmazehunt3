@@ -12,6 +12,10 @@ GotReflectionShield = "You gained the power of Reflection Shield!"
 Hint0Pages = "1"
 Hint0-1 = "DICKS"
 
+
+
+
+
 ;=============================================SIGNS======================================
 ;FOUNTAIN.SMH
 Sign1 = "Smiley's house"
@@ -73,6 +77,14 @@ Sign33 = "Four, Three, Two, One, keys in each layer, isn't that fun?  -Pelzon"
 Sign38 = "To the north lies the Serpentine Path, which leads to the Castle of Evil (Fenwar's lair)."
 Sign40 = "Note to the workers: Please remove these springs when you get a chance. Doing so will hinder Smiley's progress permanently. \n-Lord Phyrebawz"
 
+
+
+
+
+
+
+
+
 ;==============================================NPCS======================================
 ;FOUNTAIN.SMH
 NPC0Name = "Glen"
@@ -98,6 +110,8 @@ NPC8Pages = "2"
 NPC8-1 = "Hi, I'm former US President Bill Clinton."
 NPC8-2 = "Here take this cane, it will let us communicate telepathically, lol."
 
+
+
 ;OLDETOWNE.SMH
 NPC2Name = "Abner"
 NPC2Pages = "5"
@@ -112,12 +126,16 @@ NPC6Pages = "2"
 NPC6-1 = "Stupid white people... They told me there is an oasis just northwest of here."
 NPC6-2 = "I haven't seen it in 35 years of wandering the desert! Unless it's behind that green key door, I don't think it exists."
 
+
+
+
 ;SNOW.SMH
 NPC3Name = "Esky"
 NPC3Pages = "3"
 NPC3-1 = "Dang, I used to take this sweet shortcut back to my igloo up there."
 NPC3-2 = "But thanks to global cooling it got so cold that it froze over!"
 NPC3-3 = "If I only had a flamethrower, or something of the sort, I could blast through."
+
 NPC4Name = "Moesky"
 NPC4Pages = "6"
 NPC4-1 = "Greetings friend.  Welcome to the Sessaria Snow Plains.  Thanks for stopping by!"
@@ -127,12 +145,28 @@ NPC4-4 = "I think Fenwar's trying to hide something from people up there..."
 NPC4-5 = "My father told me about some mystical magical item that's deep inside one of the caves of the mountain!"
 NPC4-6 = "Of course, my father told me a lot of garbage stories to get me to go to sleep."
 
+
+
+
 ;FOREST.SMH
 NPC7Name="Fauna Biologist"
 NPC7Pages="3"
 NPC7-1="Ahoy there! I'm glad you found me this deep in the forest."
 NPC7-2="The last time I saw another member of the species Spherifageous was when I was yet a wee lad."
 NPC7-3="Well then, I needn't keep you any longer. You'd best be on your way!"
+
+NPC9Name = "Yauyau"
+NPC9Pages = "5"
+NPC9-1 = "Greetings.  I am Yauyau the lizard man.  It's nice to see a fellow non-evil being in these parts."
+NPC9-2 = "Because of climate change caused by global cooling, the town has flooded and is left in ruins."
+NPC9-3 = "My house is fine though, so I don't really care.  Anyways, have you seen the temple in the center of the lake?"
+NPC9-4 = "I tried to break in the other night but it turns out I needed 5 blue keys..."
+NPC9-5 = "I'd rather pace in this enclosed area for the rest of my life than look for them, though."
+
+
+
+
+
 
 
 
