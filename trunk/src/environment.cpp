@@ -815,12 +815,22 @@ void Environment::unlockDoor(int gridX, int gridY) {
 
 }
 
-
 /**
  * Toggles any switches hit by a collision box. Returns whether or not a
  * switch was toggled.
  */
 bool Environment::toggleSwitches(hgeRect *box) {
+	return toggleSwitches(box, true);
+}
+
+/**
+ * Toggles switches hit by a collision box. Returns whether or not a switch
+ * was toggled.
+ *
+ * @param playSoundFarAway  If this is true the switch sound will always play even if Smiley is
+ *							really far away
+ */
+bool Environment::toggleSwitches(hgeRect *box, bool playSoundFarAway) {
 
 	//Determine what grid square the collision box is in
 	int boxGridX = (box->x1 + ((box->x2-box->x1)/2)) / 64;
@@ -838,7 +848,7 @@ bool Environment::toggleSwitches(hgeRect *box) {
 				
 				//Check collision with any switches
 				if (timePassedSince(activated[gridX][gridY]) > .5 && collisionBox->Intersect(box)) {
-					if (toggleSwitchAt(gridX, gridY)) return true;
+					if (toggleSwitchAt(gridX, gridY, playSoundFarAway)) return true;
 				}
 			}
 		}
@@ -846,7 +856,6 @@ bool Environment::toggleSwitches(hgeRect *box) {
 
 	//No switches were toggled so return false;
 	return false;
-
 }
 
 
@@ -870,7 +879,7 @@ bool Environment::toggleSwitches(Tongue *tongue) {
 				
 				//Check collision with any switches
 				if (timePassedSince(activated[gridX][gridY]) > .5 && tongue->testCollision(collisionBox)) {			
-					if (toggleSwitchAt(gridX, gridY)) {
+					if (toggleSwitchAt(gridX, gridY, true)) {
 						hitSwitch = true;
 					}
 				}
@@ -886,8 +895,11 @@ bool Environment::toggleSwitches(Tongue *tongue) {
 /** 
  * Attempts to toggle a switch at (gridX, gridY). Returns whether or not there is
  * a switch there to toggle.
+ * 
+ * @param playSoundFarAway  If this is true the switch sound will always play even if Smiley is
+ *							really far away
  */
-bool Environment::toggleSwitchAt(int gridX, int gridY) {
+bool Environment::toggleSwitchAt(int gridX, int gridY, bool playSoundFarAway) {
 	
 	int switchID = ids[gridX][gridY];
 	bool hasSwitch = false;
@@ -959,7 +971,7 @@ bool Environment::toggleSwitchAt(int gridX, int gridY) {
 	}
 
 	//Play switch sound if the switch is somewhat close to Smiley
-	if (hasSwitch && distance(gridX, gridY, thePlayer->gridX, thePlayer->gridY) < 15) {
+	if (hasSwitch && (playSoundFarAway || distance(gridX, gridY, thePlayer->gridX, thePlayer->gridY) < 15)) {
 		hge->Effect_Play(resources->GetEffect("snd_switch"));
 	}
 
