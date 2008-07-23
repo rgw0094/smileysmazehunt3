@@ -99,26 +99,26 @@ void BaseEnemy::initEnemy(int _id, int _gridX, int _gridY, int _groupID) {
 		stunStarAngles[i] = (float)i * ((2.0*PI) / (float)NUM_STUN_STARS);
 	}
 
-	//Load graphics
+	//Load graphics - each one has a 1 border transparent pixel layer around it
 	graphic[LEFT] = new hgeAnimation(resources->GetTexture("enemies"), 
 		gameData->getEnemyInfo(id).numFrames, 3, 
-		gameData->getEnemyInfo(id).gCol*64, 
-		gameData->getEnemyInfo(id).gRow*64, 64, 64);
+		gameData->getEnemyInfo(id).gCol*64+1, 
+		gameData->getEnemyInfo(id).gRow*64+1, 62, 62);
 	graphic[LEFT]->Play();
 	graphic[RIGHT] = new hgeAnimation(resources->GetTexture("enemies"), 
 		gameData->getEnemyInfo(id).numFrames, 3, 
-		gameData->getEnemyInfo(id).gCol*64 + 64 * gameData->getEnemyInfo(id).numFrames, 
-		gameData->getEnemyInfo(id).gRow*64, 64, 64);
+		gameData->getEnemyInfo(id).gCol*64 + 64 * gameData->getEnemyInfo(id).numFrames+1, 
+		gameData->getEnemyInfo(id).gRow*64+1, 62, 62);
 	graphic[RIGHT]->Play();
 	graphic[UP] = new hgeAnimation(resources->GetTexture("enemies"), 
 		gameData->getEnemyInfo(id).numFrames, 3, 
-		gameData->getEnemyInfo(id).gCol*64 + 2 * 64 * gameData->getEnemyInfo(id).numFrames, 
-		gameData->getEnemyInfo(id).gRow*64, 64, 64);
+		gameData->getEnemyInfo(id).gCol*64 + 2 * 64 * gameData->getEnemyInfo(id).numFrames+1, 
+		gameData->getEnemyInfo(id).gRow*64+1, 62, 62);
 	graphic[UP]->Play();
 	graphic[DOWN] = new hgeAnimation(resources->GetTexture("enemies"), 
 		gameData->getEnemyInfo(id).numFrames, 3, 
-		gameData->getEnemyInfo(id).gCol*64 + 3 * 64 * gameData->getEnemyInfo(id).numFrames, 
-		gameData->getEnemyInfo(id).gRow*64, 64, 64);
+		gameData->getEnemyInfo(id).gCol*64 + 3 * 64 * gameData->getEnemyInfo(id).numFrames+1, 
+		gameData->getEnemyInfo(id).gRow*64+1, 62, 62);
 	graphic[DOWN]->Play();
 
 	//Set graphic hot spots
