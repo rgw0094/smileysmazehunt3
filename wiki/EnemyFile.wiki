@@ -13,6 +13,7 @@
 ||Slime||Can the enemy walk on slime?||T/F||Y||
 ||Land||Can the enemy walk on land?||T/F||Y||
 ||Lava||Can the enemy walk on lava?||T/F||Y||
+||Mushrooms||Can the enemy walk on mushrooms?||T/F||N||
 ||SWater||Can the enemy walk on shallow water?||T/F||Y||
 ||DWater||Can the enemy walk on deep water?||T/F||Y||
 ||ImmuneTongue||If the enemy is immune to Smiley's tongue||T/F||N||
