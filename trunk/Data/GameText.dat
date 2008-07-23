@@ -48,6 +48,7 @@ Sign23 = "Some switches only work for a certain period of time..."
 Sign30 = "Ahead is a one-way path to the Realm of Despair.  Enter at your own risk."
 Sign44 = "\nTwo Snowfangs, each wielding a flail, have blocked the passage. They reside southwest of here."
 Sign45 = "Only those able to find the 3 hidden switches of Mount Frostbite may access the treasures at the peak."
+Sign46 = "To the right: CERTAIN DEATH\n\nTo the left: save point"
 
 ;FOREST.SMH
 Sign19 = "\nYou will never reach me without first striking the three dark switches I have hidden in my forest!\n\n-Garmborn, Lord of Treelets"
@@ -160,7 +161,7 @@ NPC112-1 = "Ninja."
 ;Penguin defeat text
 NPC113Name = "Portly Penguin"
 NPC113Pages = "2"
-NPC113-1 = "This is just like at the schoolyard back in Atlartica!"
+NPC113-1 = "This is just like at the schoolyard back in Atlarctica!"
 NPC113-2 = "Here, take my frisbee, you big bully. Hmph!"
 
 ;Lord Garmborn
