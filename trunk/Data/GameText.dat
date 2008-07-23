@@ -49,6 +49,8 @@ Sign30 = "Ahead is a one-way path to the Realm of Despair.  Enter at your own ri
 Sign44 = "\nTwo Snowfangs, each wielding a flail, have blocked the passage. They reside southwest of here."
 Sign45 = "Only those able to find the 3 hidden switches of Mount Frostbite may access the treasures at the peak."
 Sign46 = "To the right: CERTAIN DEATH\n\nTo the left: save point"
+Sign47 = "Those who desire this green key must remain here forever.  Mwahahahah!\n\n -Fenwar"
+Sign48 = "\nThe purpose of this sign is to distract you from reaching the other side of that cylinder in time."
 
 ;FOREST.SMH
 Sign19 = "\nYou will never reach me without first striking the three dark switches I have hidden in my forest!\n\n-Garmborn, Lord of Treelets"
