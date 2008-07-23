@@ -21,6 +21,7 @@
 #include "MushroomManager.h"
 #include "EvilWallManager.h"
 #include "LoadEffectManager.h"
+#include "WeaponParticle.h"
 
 #include <string>
 #include <sstream>
@@ -726,8 +727,21 @@ void Environment::update(float dt) {
 		for (int j = 0; j < areaHeight; j++) {
 
 			//Update silly pads
-			if (timeSillyPadPlaced[i][j] + SILLY_PAD_TIME < gameTime) {
-				hasSillyPad[i][j] = false;
+			if (hasSillyPad[i][j]) {
+
+				collisionBox->SetRadius(i*64.0+32.0, j*64.0+32.0, 32.0);
+
+				//Test collision
+				if (timeSillyPadPlaced[i][j] + SILLY_PAD_TIME < gameTime ||
+						projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_FRISBEE) > 0 ||
+						projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_LIGHTNING_ORB) > 0 ||
+						thePlayer->iceBreathParticle->testCollision(collisionBox) ||
+						thePlayer->fireBreathParticle->testCollision(collisionBox) ||
+						thePlayer->getTongue()->testCollision(collisionBox)) {
+					hge->System_Log("DICKENS");
+					hasSillyPad[i][j] = false;
+				}
+
 			}
 
 			//Update timed switches
@@ -1293,23 +1307,6 @@ bool Environment::enemyCollision(hgeRect *box, BaseEnemy *enemy, float dt) {
 }
 
 /**
- * Destroys any silly pads within *box.
- */
-void Environment::hitSillyPads(Tongue *tongue) {
-	for (int i = thePlayer->gridX - 2; i <= thePlayer->gridX + 2; i++) {
-		for (int j = thePlayer->gridY - 2; j <= thePlayer->gridY + 2; j++) {
-			if (hasSillyPad[i][j]) {
-				collisionBox->SetRadius(i*64+32,j*64+32,24);
-				if (tongue->testCollision(collisionBox)) {
-					hasSillyPad[i][j] = false;
-				}
-			}
-		}
-	}
-}
-
-
-/**
  * Reads any sign within *box.
  */
 void Environment::hitSigns(Tongue *tongue) {
@@ -1350,12 +1347,21 @@ void Environment::hitSaveShrine(Tongue *tongue) {
 	}
 }
 
+/**
+ * Returns whether or not box collides with any silly pads or terrain 
+ * as specified by canPass.
+ */
+bool Environment::testCollision(hgeRect *box, bool canPass[256]) {
+	return testCollision(box, canPass, false);
+}
 
 /**
  * Returns whether or not box collides with terrain as specified by canPass.
+ * 
+ * @param ignoreSillyPads	If true, hitting silly pads won't be counted as collision
  */
-bool Environment::testCollision(hgeRect *box, bool canPass[256]) {
-	
+bool Environment::testCollision(hgeRect *box, bool canPass[256], bool ignoreSillyPads) {
+
 	//Determine the location of the collision box
 	int gridX = (box->x1 + (box->x2 - box->x1)/2) / 64;
 	int gridY = (box->y1 + (box->y2 - box->y1)/2) / 64;
@@ -1364,10 +1370,13 @@ bool Environment::testCollision(hgeRect *box, bool canPass[256]) {
 	for (int i = gridX - 2; i <= gridX + 2; i++) {
 		for (int j = gridY - 2; j <= gridY + 2; j++) {
 			//Ignore squares off the map
-			if (inBounds(i,j) && (!canPass[collision[i][j]] || hasSillyPad[i][j])) {
+			if (inBounds(i,j) && (!canPass[collision[i][j]] || 
+					(!ignoreSillyPads && hasSillyPad[i][j]))) {
 				
 				//Test collision
-				setTerrainCollisionBox(collisionBox, hasSillyPad[i][j] ? UNWALKABLE : collision[i][j], i, j);
+				setTerrainCollisionBox(collisionBox, (!ignoreSillyPads && hasSillyPad[i][j]) 
+						? UNWALKABLE : collision[i][j], i, j);
+
 				if (box->Intersect(collisionBox)) {
 					return true;
 				}
@@ -1377,7 +1386,9 @@ bool Environment::testCollision(hgeRect *box, bool canPass[256]) {
 
 	//No collision occured, so return false
 	return false;
+
 }
+
 
 /**
  * Returns whether or not the player is on top of any cylinders that will pop up

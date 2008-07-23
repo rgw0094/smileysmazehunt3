@@ -74,6 +74,8 @@ void ProjectileManager::addProjectile(float x, float y, float speed, float angle
 		newProjectile.particle->Fire();
 	}
 
+	hge->System_Log("Adding Projectile %d", newProjectile.id);
+
 	//Add it to the list
 	theProjectiles.push_back(newProjectile);
 
@@ -249,10 +251,24 @@ void ProjectileManager::update(float dt) {
 			}
 		} // end update lightning orb	
 
+		hge->System_Log("Delete projectile %d", deleteProjectile);
+
 		//Delete projectiles that hit walls and shit
 		i->terrainCollisionBox->SetRadius(i->x, i->y, projectileTypes[i->id].radius/2.0);
-		if (!deleteProjectile && theEnvironment->testCollision(i->terrainCollisionBox, canPass)) {
-			deleteProjectile = true;
+		if ((i->id == PROJECTILE_FRISBEE || i->id == PROJECTILE_LIGHTNING_ORB) && !i->hostile) {
+			//For friendly frisbees and lightning orbs, ignore silly pads when testing
+			//collision. They will be taken care of in the environment class when it
+			//tests collision with silly pads.
+			hge->System_Log("testing collision");
+			if (!deleteProjectile && theEnvironment->testCollision(i->terrainCollisionBox, canPass, true)) {
+				deleteProjectile = true;
+			}
+			hge->System_Log("Delete projectile %d", deleteProjectile);
+		} else {
+			//For all other projectiles test collision normally
+			if (!deleteProjectile && theEnvironment->testCollision(i->terrainCollisionBox, canPass)) {
+				deleteProjectile = true;
+			}
 		}
 
 		//If the projectile was marked for deletion, delete it now

@@ -135,6 +135,8 @@ bool Tongue::isAttacking() {
  */
 bool Tongue::testCollision(hgeRect *collisionBox) {
 	
+	if (!isAttacking()) return false;
+
 	//Determine how many collision points to test based on the current length of the tongue
 	numPoints = int((float)resources->GetAnimation("smileyTongue")->GetFrame() / (float)resources->GetAnimation("smileyTongue")->GetFrames() * (float)NUM_COLLISION_POINTS) + 1;
 	
