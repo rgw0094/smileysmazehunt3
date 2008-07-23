@@ -744,6 +744,7 @@ numEnemies="46"
 43Land=      "T"
 43SWater=    "T"
 43Chases=    "T"
+43Mushrooms= "T"
 
 ;Ghost
 44GCol=      "12"
