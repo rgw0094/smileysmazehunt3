@@ -34,7 +34,7 @@ ProjectileManager::ProjectileManager() {
 	canPass[BLUE_KEYHOLE] = false;
 	canPass[EVIL_DOOR] = false;
 	canPass[BOMBABLE_WALL] = false;
-	canPass[ICE] = false;
+	canPass[FIRE_DESTROY] = false;
 	canPass[BOMBABLE_WALL] = false;
 	canPass[FIRE_BLOCK] = false;
 
