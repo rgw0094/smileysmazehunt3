@@ -150,6 +150,12 @@ void GameData::loadEnemyData() {
 		varName += "GRow";
 		enemyInfo[i].gRow = atoi(enemyStringTable->GetString(varName.c_str()));
 
+		//Number animation frames (default 1)
+		varName = intToString(i);
+		varName += "NumFrames";
+		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].numFrames = 1;
+		else enemyInfo[i].numFrames = atoi(enemyStringTable->GetString(varName.c_str()));
+
 		//Enemy Type
 		varName = intToString(i);
 		varName += "EnemyType";

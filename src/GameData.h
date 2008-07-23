@@ -14,6 +14,7 @@ struct EnemyInfo {
 	bool land, shallowWater, deepWater, slime, lava;
 	bool immuneToFire, immuneToTongue, immuneToLightning, immuneToStun, immuneToFreeze, invincible;
 	int variable1, variable2;
+	int numFrames;
 
 	bool chases, hasRangedAttack;
 	int range, delay, projectileSpeed;
