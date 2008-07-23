@@ -70,6 +70,7 @@ class EvilWallManager;
 #define EVIL_WALL_TRIGGER 53
 #define EVIL_WALL_DEACTIVATOR 54
 #define EVIL_WALL_RESTART 55
+#define FIRE_BLOCK 56
 //...
 #define WHITE_CYLINDER_UP 58
 #define YELLOW_CYLINDER_UP 59
