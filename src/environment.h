@@ -115,11 +115,11 @@ public:
 	bool toggleSwitches(hgeRect* box);
 	bool toggleSwitches(Tongue *tongue);
 	bool toggleSwitchAt(int gridX, int gridY);
-	void hitSillyPads(Tongue *tongue);
 	void hitSigns(Tongue *tongue);
 	void hitSaveShrine(Tongue *tongue);
 	bool validPath(int x1, int y1, int x2, int y2, int radius, bool canPass[256]);
 	void drawFountain();
+	bool testCollision(hgeRect *box, bool canPass[256], bool ignoreSillyPads);
 	bool testCollision(hgeRect *box, bool canPass[256]);
 	bool playerOnCylinder(int x, int y);
 	void switchCylinders(int id);
