@@ -15,6 +15,8 @@ extern float gameTime;
 
 #define LASER_LENGTH 20.0
 
+#define MINI_MUSHROOM_ENEMYID 43
+
 ProjectileManager::ProjectileManager() {
 
 	projectileTexture = hge->Texture_Load("Graphics/projectiles.PNG");
@@ -269,6 +271,10 @@ void ProjectileManager::update(float dt) {
 
 		//If the projectile was marked for deletion, delete it now
 		if (deleteProjectile) {
+			//if it was a mushroom, and it is hostile, spawn an enemy mushroomlet
+			if (i->id == PROJECTILE_MINI_MUSHROOM && i->hostile) {
+				enemyManager->addEnemy(MINI_MUSHROOM_ENEMYID,i->x/64,i->y/64,0.25,0.75,-1);
+			}
 			delete i->collisionBox;
 			delete i->terrainCollisionBox;
 			i = theProjectiles.erase(i);
@@ -368,13 +374,20 @@ bool ProjectileManager::frisbeeActive() {
  * Returns the number of projectiles that were killed.
  */
 int ProjectileManager::killProjectilesInBox(hgeRect *collisionBox, int type) {
+	return killProjectilesInBox(collisionBox,type,true,true);
+}
+
+
+int ProjectileManager::killProjectilesInBox(hgeRect *collisionBox, int type, bool killHostile, bool killNonHostile) {
 	int numCollisions = 0;
 	std::list<Projectile>::iterator i;
 	for (i = theProjectiles.begin(); i != theProjectiles.end(); i++) {
-		if (i->id == type && collisionBox->Intersect(i->collisionBox)) {
-			delete i->collisionBox;
-			i = theProjectiles.erase(i);
-			numCollisions++;
+		if ((i->hostile && killHostile) || (!i->hostile && killNonHostile)) {
+			if (i->id == type && collisionBox->Intersect(i->collisionBox)) {
+				delete i->collisionBox;
+				i = theProjectiles.erase(i);
+				numCollisions++;
+			}
 		}
 	}
 	return numCollisions;
