@@ -11,7 +11,7 @@ struct EnemyInfo {
 	//For all enemies
 	int gRow, gCol;
 	int enemyType, wanderType, hp, speed, radius, damage, rangedType;
-	bool land, shallowWater, deepWater, slime, lava;
+	bool land, shallowWater, deepWater, slime, lava, mushrooms;
 	bool immuneToFire, immuneToTongue, immuneToLightning, immuneToStun, immuneToFreeze, invincible;
 	int variable1, variable2;
 	int numFrames;

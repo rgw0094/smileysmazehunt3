@@ -71,6 +71,7 @@ public:
 	bool reflectProjectilesInCircle(float x, float y, float radius, int type);
 	bool frisbeeActive();
 	int killProjectilesInBox(hgeRect *collisionBox, int type);
+	int killProjectilesInBox(hgeRect *collisionBox, int type, bool killHostile, bool killNonhostile);
 	int killProjectilesInCircle(float x, float y, float radius, int type);
 
 	ProjectileType projectileTypes[NUM_PROJECTILES];

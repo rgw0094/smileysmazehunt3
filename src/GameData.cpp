@@ -197,6 +197,12 @@ void GameData::loadEnemyData() {
 		varName += "Lava";
 		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].lava = false;
 		else enemyInfo[i].lava = (strcmp(enemyStringTable->GetString(varName.c_str()), "T") == 0);
+
+		//Can walk on Mushrooms
+		varName = intToString(i);
+		varName += "Mushrooms";
+		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].mushrooms = false;
+		else enemyInfo[i].mushrooms = (strcmp(enemyStringTable->GetString(varName.c_str()), "T") == 0);
 		
 		//Can walk on Shallow Water
 		varName = intToString(i);

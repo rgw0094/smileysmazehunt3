@@ -78,6 +78,7 @@ void BaseEnemy::initEnemy(int _id, int _gridX, int _gridY, int _groupID) {
 	canPass[WALKABLE] = gameData->getEnemyInfo(id).land;
 	canPass[SLIME] = gameData->getEnemyInfo(id).slime;
 	canPass[WALK_LAVA] = gameData->getEnemyInfo(id).lava;
+	canPass[DIZZY_MUSHROOM_1] = canPass[DIZZY_MUSHROOM_2] = gameData->getEnemyInfo(id).mushrooms;
 	canPass[SHALLOW_WATER] = gameData->getEnemyInfo(id).shallowWater;
 	canPass[DEEP_WATER] = gameData->getEnemyInfo(id).deepWater;
 	canPass[GREEN_WATER] = gameData->getEnemyInfo(id).deepWater;

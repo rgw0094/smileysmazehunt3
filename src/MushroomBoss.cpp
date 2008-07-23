@@ -42,11 +42,8 @@ extern float gameTime;
 #define MUSHBOOM_BOTTOM_COLLISION_RECT_HEIGHT 56
 #define MUSHBOOM_BOTTOM_COLLISION_RECT_YOFFSET 24
 
-
-
-
-
-
+#define MUSHBOOM_DAMAGE 1.0
+#define MUSHBOOM_KNOCKBACK_DISTANCE 168.0
 
 //Spiral data
 #define SPIRAL_SPEED 1.5
@@ -174,6 +171,11 @@ bool MushroomBoss::update(float dt) {
 		explosions->Update(dt);
 		explosions->Transpose(-1*(theEnvironment->xGridOffset*64 + theEnvironment->xOffset), -1*(theEnvironment->yGridOffset*64 + theEnvironment->yOffset));
 		doMiniMushrooms(dt);
+
+		//collision
+		if (thePlayer->collisionCircle->testBox(collisionRects[0]) || thePlayer->collisionCircle->testBox(collisionRects[1])) {
+			thePlayer->dealDamageAndKnockback(MUSHBOOM_DAMAGE,true,MUSHBOOM_KNOCKBACK_DISTANCE,x,y);
+		}
 	}
 
 	if (y < thePlayer->y) shouldDrawAfterSmiley = false;
