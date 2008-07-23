@@ -27,7 +27,7 @@ extern SaveManager *saveManager;
 extern SoundManager *soundManager;
 extern float gameTime;
 
-#define MUSHBOOM_HEALTH 2.0
+#define MUSHBOOM_HEALTH 14.0
 #define RIGHT_ARM_OFFSET_X -15
 #define RIGHT_ARM_OFFSET_Y 0
 #define LEFT_ARM_OFFSET_X 16
