@@ -1,5 +1,5 @@
-#ifndef _FIREBOSS_H_
-#define _FIREBOSS_H_
+#ifndef _FIREBOSS2_H_
+#define _FIREBOSS2_H_
 
 #include <list>
 #include "boss.h"
@@ -20,41 +20,41 @@ class WeaponParticleSystem;
 #define COLLISION_DAMAGE 0.25
 #define FLASH_DURATION 2.0
 
-struct FireOrb {
+struct FireBall {
 	hgeParticleSystem *particle;
 	hgeRect *collisionBox;
 	float x,y,timeCreated,dx,dy;
 };
 
 //Struct for the 5 locations the boss moves between
-struct Location {
+struct Position {
 	int x, y;
 };
 
-class FireBoss : public Boss {
+class FireBossTwo : public Boss {
 
 public:
-	FireBoss(int gridX, int gridY, int groupID);
-	~FireBoss();
+	FireBossTwo(int gridX, int gridY, int groupID);
+	~FireBossTwo();
 
 	//methods
 	void draw(float dt);
 	bool update(float dt);
 	void changeState(int changeTo);
-	void addOrb(float x, float y);
-	void drawOrbs(float dt);
-	void updateOrbs(float dt);
+	void addFireBall(float x, float y);
+	void drawFireBalls(float dt);
+	void updateFireBalls(float dt);
 	void killOrbs();
 
 	//Variables
-	int state,speed,facing, currentLocation;
+	int state,speed,facing, currentPosition;
 	int startX, startY;
 	float x,y, previousX, previousY;
 	float dx,dy;
 	float lastHitByTongue;
-	Location locations[5];
-	float startedAttackMode, lastFireOrb;
-	std::list<FireOrb> theOrbs;
+	Position positions[5];
+	float startedAttackMode, lastFireBall;
+	std::list<FireBall> fireBallList;
 	bool startedIntroDialogue;
 	float startedFlashing;
 	bool flashing, increaseAlpha;

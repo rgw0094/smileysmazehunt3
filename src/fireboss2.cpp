@@ -1,5 +1,5 @@
 #include "smiley.h"
-#include "fireboss.h"
+#include "fireboss2.h"
 #include "textbox.h"
 #include "environment.h"
 #include "lootmanager.h"
@@ -29,7 +29,7 @@ extern float gameTime;
 /**
  * Constructor
  */
-FireBoss::FireBoss(int gridX, int gridY, int _groupID) {
+FireBossTwo::FireBossTwo(int gridX, int gridY, int _groupID) {
 	startX = gridX;
 	startY = gridY;
 	groupID = _groupID;
@@ -40,9 +40,9 @@ FireBoss::FireBoss(int gridX, int gridY, int _groupID) {
 	lastHitByTongue = -100.0f;
 	health = maxHealth = HEALTH;
 	state = FIREBOSS_INACTIVE;
-	currentLocation = 0;	//Start at the middle location
+	currentPosition = 0;	//Start at the middle location
 	startedAttackMode = gameTime;
-	lastFireOrb = gameTime - 5.0f;
+	lastFireBall = gameTime - 5.0f;
 	speed = 200;
 	startedIntroDialogue = false;
 	flashing = increaseAlpha = false;
@@ -56,27 +56,27 @@ FireBoss::FireBoss(int gridX, int gridY, int _groupID) {
 
 	//Set up valid locations
 	//Center
-	locations[0].x = x;
-	locations[0].y = y;
+	positions[0].x = x;
+	positions[0].y = y;
 	//Top Left
-	locations[1].x = x - 4*64;
-	locations[1].y = y - 3*64-32;
+	positions[1].x = x - 4*64;
+	positions[1].y = y - 3*64-32;
 	//Top Right
-	locations[2].x = x + 4*64;
-	locations[2].y = y - 3*64+32;
+	positions[2].x = x + 4*64;
+	positions[2].y = y - 3*64+32;
 	//Bottom Left
-	locations[3].x = x - 4*64;
-	locations[3].y = y + 3*64+32;
+	positions[3].x = x - 4*64;
+	positions[3].y = y + 3*64+32;
 	//Bottom Right
-	locations[4].x = x + 4*64;
-	locations[4].y = y + 3*64+32;
+	positions[4].x = x + 4*64;
+	positions[4].y = y + 3*64+32;
 
 }
 
 /**
  * Destructor
  */ 
-FireBoss::~FireBoss() {
+FireBossTwo::~FireBossTwo() {
 	killOrbs();
 	delete fenwarWarp;
 	resources->Purge(RES_PHYREBOZZ);
@@ -86,7 +86,7 @@ FireBoss::~FireBoss() {
 /**
  * Draw the fire boss
  */
-void FireBoss::draw(float dt) {
+void FireBossTwo::draw(float dt) {
 
 	//Draw FENWAR talking to the boss
 	if (showFenwar) {
@@ -99,7 +99,7 @@ void FireBoss::draw(float dt) {
 	}
 
 	//Draw Orbs
-	drawOrbs(dt);
+	drawFireBalls(dt);
 
 	//Draw the boss' main sprite
 	resources->GetAnimation("phyrebozz")->SetFrame(facing);
@@ -139,7 +139,7 @@ void FireBoss::draw(float dt) {
 /**
  * Update the fire boss
  */
-bool FireBoss::update(float dt) {
+bool FireBossTwo::update(float dt) {
 
 	//Update floating offset
 	floatY = 15.0f*sin(hge->Timer_GetTime()*3.0f);
@@ -204,7 +204,7 @@ bool FireBoss::update(float dt) {
 	}
 
 	//Update orbs
-	updateOrbs(dt);
+	updateFireBalls(dt);
 
 	//Remember where the dickens he was last frame
 	if (x > 0.1f || y > 0.1 || x < 5000.0f || y < 5000.0f) {
@@ -234,13 +234,13 @@ bool FireBoss::update(float dt) {
 	//Update for MOVE state
 	if (state == FIREBOSS_MOVE) {
 		//Move towards the current location. If the boss is already there, move to attack state!
-		float angle = getAngleBetween(x,y,locations[currentLocation].x,locations[currentLocation].y);
+		float angle = getAngleBetween(x,y,positions[currentPosition].x,positions[currentPosition].y);
 		dx = speed * cos(angle);
 		dy = speed * sin(angle);
 		x += dx*dt;
 		y += dy*dt;
-		if (x > locations[currentLocation].x - 5.0f && x < locations[currentLocation].x + 5.0f &&
-				y > locations[currentLocation].y - 5.0f && y < locations[currentLocation].y + 5.0f) { 
+		if (x > positions[currentPosition].x - 5.0f && x < positions[currentPosition].x + 5.0f &&
+				y > positions[currentPosition].y - 5.0f && y < positions[currentPosition].y + 5.0f) { 
 			changeState(FIREBOSS_ATTACK);
 		}
 
@@ -264,9 +264,9 @@ bool FireBoss::update(float dt) {
 	}
 
 	//Shoot fire orbs every 10 seconds
-	if (state != FIREBOSS_FRIENDLY && state != FIREBOSS_INACTIVE && gameTime > lastFireOrb + 10) {
-		addOrb(x,y-80+floatY);
-		lastFireOrb = gameTime;
+	if (state != FIREBOSS_FRIENDLY && state != FIREBOSS_INACTIVE && gameTime > lastFireBall + 10) {
+		addFireBall(x,y-80+floatY);
+		lastFireBall = gameTime;
 	}
 
 	//Check collision with Smiley's tongue
@@ -356,7 +356,7 @@ bool FireBoss::update(float dt) {
 }
 
 
-void FireBoss::changeState(int changeTo) {
+void FireBossTwo::changeState(int changeTo) {
 	
 	state = changeTo;
 
@@ -370,22 +370,22 @@ void FireBoss::changeState(int changeTo) {
 	} else if (state == FIREBOSS_MOVE) {
 		//Pick a new location to move to
 		int newLoc;
-		while ((newLoc = hge->Random_Int(0,4)) == currentLocation) { }
-		currentLocation = newLoc;
+		while ((newLoc = hge->Random_Int(0,4)) == currentPosition) { }
+		currentPosition = newLoc;
 		//Calculate path time
 		startedPath = gameTime;
-		pathTime = sqrt((x-(float)locations[currentLocation].x)*(x-(float)locations[currentLocation].x) + (y-(float)locations[currentLocation].y)*(y-(float)locations[currentLocation].y)) / float(speed);
+		pathTime = sqrt((x-(float)positions[currentPosition].x)*(x-(float)positions[currentPosition].x) + (y-(float)positions[currentPosition].y)*(y-(float)positions[currentPosition].y)) / float(speed);
 	}
 }
 
 /**
  * Update the fire orbs
  */
-void FireBoss::updateOrbs(float dt) {
+void FireBossTwo::updateFireBalls(float dt) {
 	bool deleteOrb = false;
 	//Loop through the orbs
-	std::list<FireOrb>::iterator i;
-	for (i = theOrbs.begin(); i != theOrbs.end(); i++) {
+	std::list<FireBall>::iterator i;
+	for (i = fireBallList.begin(); i != fireBallList.end(); i++) {
 
 		//Update particle
 		i->particle->MoveTo(getScreenX(i->x), getScreenY(i->y), true);
@@ -414,7 +414,7 @@ void FireBoss::updateOrbs(float dt) {
 		if (deleteOrb) {
 			delete i->particle;
 			delete i->collisionBox;
-			i = theOrbs.erase(i);
+			i = fireBallList.erase(i);
 		}
 
 	}
@@ -424,10 +424,10 @@ void FireBoss::updateOrbs(float dt) {
 /**
  * Draw the fire orbs
  */
-void FireBoss::drawOrbs(float dt) {
+void FireBossTwo::drawFireBalls(float dt) {
 	//Loop through the orbs
-	std::list<FireOrb>::iterator i;
-	for (i = theOrbs.begin(); i != theOrbs.end(); i++) {
+	std::list<FireBall>::iterator i;
+	for (i = fireBallList.begin(); i != fireBallList.end(); i++) {
 		i->particle->Render();
 		if (debugMode) {
 			drawCollisionBox(i->collisionBox, RED);
@@ -439,28 +439,28 @@ void FireBoss::drawOrbs(float dt) {
 /** 
  * Add a fire orb
  */
-void FireBoss::addOrb(float _x, float _y) {
+void FireBossTwo::addFireBall(float _x, float _y) {
 	//Create new fire orb
-	FireOrb newOrb;
-	newOrb.x = _x;
-	newOrb.y = _y;
-	newOrb.collisionBox = new hgeRect();
-	newOrb.particle = new hgeParticleSystem("fireorb.psi", resources->GetSprite("particleGraphic2"));
-	newOrb.particle->Fire();
-	newOrb.timeCreated = gameTime;
+	FireBall newFireBall;
+	newFireBall.x = _x;
+	newFireBall.y = _y;
+	newFireBall.collisionBox = new hgeRect();
+	newFireBall.particle = new hgeParticleSystem("fireorb.psi", resources->GetSprite("particleGraphic2"));
+	newFireBall.particle->Fire();
+	newFireBall.timeCreated = gameTime;
 
 	//Add it to the list
-	theOrbs.push_back(newOrb);
+	fireBallList.push_back(newFireBall);
 }
 
 /**
  * Kills all the fire orbs
  */
-void FireBoss::killOrbs() {
-	std::list<FireOrb>::iterator i;
-	for (i = theOrbs.begin(); i != theOrbs.end(); i++) {
+void FireBossTwo::killOrbs() {
+	std::list<FireBall>::iterator i;
+	for (i = fireBallList.begin(); i != fireBallList.end(); i++) {
 		delete i->particle;
 		delete i->collisionBox;
-		i = theOrbs.erase(i);
+		i = fireBallList.erase(i);
 	}
 }

@@ -4,6 +4,14 @@
 #include "hge.h"
 #include "hgeresource.h"
 
+#define FIRE_BOSS 240
+#define DESERT_BOSS 241
+#define SNOW_BOSS 242
+#define FOREST_BOSS 243
+#define MUSHROOM_BOSS 244
+#define DESPAIR_BOSS 245
+#define FIRE_BOSS2 246
+
 extern hgeResourceManager *resources;
 
 /**
