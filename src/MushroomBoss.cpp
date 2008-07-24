@@ -579,6 +579,7 @@ void MushroomBoss::initiateDeathSequence() {
 	killBombs();
 	killExplosions();
 	//Call func to get rid of mushroomlets
+	enemyManager->killEnemies(MINI_MUSHROOM_ENEMYID);
 	
 	if (state <= MUSHBOOM_SPIRALING) {
 		enterState(MUSHBOOM_DYING_TEXT);

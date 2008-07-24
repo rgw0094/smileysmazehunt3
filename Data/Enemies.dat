@@ -1,6 +1,6 @@
 [HGESTRINGTABLE]
 
-numEnemies="46"
+numEnemies="47"
 
 ;Croc
 0GCol=      "0"
@@ -145,8 +145,8 @@ numEnemies="46"
 8ImmuneStun="T"
 
 ;Bomb generator bomb
-9GCol=      "4"
-9GRow=      "5"
+9GCol=      "8"
+9GRow=      "4"
 9EnemyType= "3"
 9WanderType="1"
 9HP=        "999999"
@@ -161,6 +161,7 @@ numEnemies="46"
 ;Clowncrab
 10GCol=      "0"
 10GRow=      "5"
+10NumFrames= "2"
 10EnemyType= "5"
 10WanderType="0"
 10HP=        "100"
@@ -271,8 +272,8 @@ numEnemies="46"
 17Variable1= "18"
 
 ;Brown turtle
-18GCol=      "8"
-18GRow=      "4"
+18GCol=      "0"
+18GRow=      "7"
 18EnemyType= "0"
 18WanderType="0"
 18HP=        "100"
@@ -771,3 +772,17 @@ numEnemies="46"
 45Land=      "T"
 45SWater=    "T"
 45Slime=     "T"
+
+;Squirrel
+46GCol=      "0"
+46GRow=      "8"
+46NumFrames= "2"
+46EnemyType= "4"
+46WanderType="0"
+46HP=        "25"
+46Damage=    "25"
+46Radius=    "28"
+46Speed=     "100"
+46Land=      "T"
+46SWater=    "T"
+46Chases=    "T"
