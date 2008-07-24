@@ -206,7 +206,7 @@ void Player::update(float dt) {
 	collisionCircle->set(x,y,(PLAYER_WIDTH/2-3)*shrinkScale);
 
 	//Keep track of where the player was before entering deep water
-	if (!theEnvironment->isDeepWaterAt(gridX, gridY)) {
+	if (!theEnvironment->isDeepWaterAt(gridX, gridY) && !theEnvironment->isArrowAt(gridX,gridY)) {
 		enteredWaterX = gridX;
 		enteredWaterY = gridY;
 	}
