@@ -893,6 +893,30 @@ bool Environment::toggleSwitches(Tongue *tongue) {
 
 }
 
+/**
+ * Toggles a switch.
+ *
+ * @param id	id of the switch to toggle.
+ */
+void Environment::toggleSwitch(int id) {
+
+	if (id < 0) {
+		hge->System_Log("ERROR: Environment.toggleSwitch() Attemping to toggle switch %d", id);
+		return;
+	}
+
+	//Scan the area to find the switch then toggle it
+	for (int i = 0; i < areaWidth; i++) {
+		for (int j = 0; j < areaHeight; j++) {
+			if (ids[i][j] == id && (isCylinderSwitchLeft(collision[i][j]) || isCylinderSwitchLeft(collision[i][j]))) {
+				toggleSwitchAt(i,j,true);
+				return;
+			}
+		}
+	}
+
+}
+
 /** 
  * Attempts to toggle a switch at (gridX, gridY). Returns whether or not there is
  * a switch there to toggle.
