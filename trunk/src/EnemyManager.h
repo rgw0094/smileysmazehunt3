@@ -43,6 +43,7 @@ public:
 	void draw(float dt);
 	void update(float dt);
 	void addEnemy(int id, int x, int y, float spawnHealthChance, float spawnManaChance, int groupID);
+	void killEnemies(int type);
 	void tongueCollision(Tongue *tongue, float damage);
 	void freezeEnemies(int x, int y);
 	void unFreezeEnemies(int x, int y);

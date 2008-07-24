@@ -100,6 +100,36 @@ void EnemyManager::addEnemy(int id, int x, int y, float spawnHealthChance, float
 
 }
 
+void EnemyManager::killEnemies(int type) {
+	std::list<EnemyStruct>::iterator i;
+	for (i = enemyList.begin(); i != enemyList.end(); i++) {
+		if (i->enemy->id == type) {
+			//Notify enemy group
+			enemyGroupManager->notifyOfDeath(i->enemy->groupID);
+
+			//Play death sound effect
+			if (i->enemy->frozen) {
+				hge->Effect_Play(resources->GetEffect("snd_iceDie"));
+			}
+
+			//Death effects
+			deathParticles->SpawnPS(&resources->GetParticleSystem("deathCloud")->info, i->enemy->x, i->enemy->y);
+			hge->Effect_Play(resources->GetEffect("snd_enemyDeath"));
+
+			//Spawn loot
+			randomLoot = hge->Random_Int(0,10000);
+			if (randomLoot < 10000.0 * i->spawnHealthChance) {
+				lootManager->addLoot(LOOT_HEALTH, i->enemy->x, i->enemy->y, -1);
+			} else if (randomLoot < 10000.0 * i->spawnHealthChance + 10000.0*i->spawnManaChance) {
+				lootManager->addLoot(LOOT_MANA, i->enemy->x, i->enemy->y, -1);
+			}
+
+			delete i->enemy;
+			i = enemyList.erase(i);
+		}
+	}
+}
+
 /**
  * Draw all the enemies in the list
  */

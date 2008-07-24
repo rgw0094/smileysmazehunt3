@@ -239,6 +239,7 @@ bool DesertBoss::update(float dt) {
 		enterState(DESERTBOSS_FRIENDLY);
 		theTextBox->setDialogue(-1, DESERTBOSS_DEFEATTEXT);
 		soundManager->fadeOutMusic();
+		enemyManager->killEnemies(CACTLET_ENEMYID);
 	}
 
 	//Cornwallis fades away after the player closes the defeat text box
