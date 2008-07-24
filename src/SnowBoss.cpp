@@ -12,6 +12,7 @@
 #include "SoundManager.h"
 #include "WeaponParticle.h"
 #include "CollisionCircle.h"
+#include "Tongue.h"
 
 extern HGE *hge;
 extern hgeResourceManager *resources;
@@ -129,9 +130,9 @@ bool SnowBoss::update(float dt) {
 	updateIceBlocks(dt);
 
 	//Check collision with Smiley's tongue
-	if (thePlayer->weaponBox->Intersect(collisionBoxes[0]) ||
-		thePlayer->weaponBox->Intersect(collisionBoxes[1]) ||
-		thePlayer->weaponBox->Intersect(collisionBoxes[2])) {
+	if (thePlayer->getTongue()->testCollision(collisionBoxes[0]) ||
+		thePlayer->getTongue()->testCollision(collisionBoxes[1]) ||
+		thePlayer->getTongue()->testCollision(collisionBoxes[2])) {
 			thePlayer->freeze(LICK_FREEZE_DURATION);
 	}
 

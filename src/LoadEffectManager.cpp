@@ -2,7 +2,6 @@
  * Handles the circle zooming in/out effect when Smiley is relocated to a new position and
  * displays the zone name text when Smiley enters a new zone.
  */
-
 #include "LoadEffectManager.h"
 #include "smiley.h"
 #include "hgeresource.h"
@@ -10,6 +9,7 @@
 #include "Environment.h"
 #include "WindowManager.h"
 #include "GameData.h"
+#include "Player.h"
 
 extern HGE *hge;
 extern hgeResourceManager *resources;
@@ -17,6 +17,7 @@ extern SaveManager *saveManager;
 extern Environment *theEnvironment;
 extern WindowManager *windowManager;
 extern GameData *gameData;
+extern Player *thePlayer;
 
 #define STATE_IN 0
 #define STATE_OUT 1
@@ -117,6 +118,8 @@ void LoadEffectManager::update(float dt) {
 			//Relocate Smiley
 			if (destinationArea == saveManager->currentArea) {
 				//Move smiley to a new location in the same area
+				thePlayer->moveTo(destinationX, destinationY);
+				theEnvironment->update(0.0);
 			} else {
 				theEnvironment->loadArea(destinationArea,saveManager->currentArea,0,0);
 				zoneTextAlpha = 255.0;

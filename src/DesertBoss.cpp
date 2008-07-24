@@ -12,6 +12,7 @@
 #include "SoundManager.h"
 #include "weaponparticle.h"
 #include "CollisionCircle.h"
+#include "Tongue.h"
 
 extern HGE *hge;
 extern hgeResourceManager *resources;
@@ -145,7 +146,7 @@ bool DesertBoss::update(float dt) {
 		}
 
 		//Check collision with Smiley's tongue
-		if (thePlayer->weaponBox->Intersect(collisionBox) && gameTime > lastHitByTongue + .34f) {
+		if (thePlayer->getTongue()->testCollision(collisionBox) && gameTime > lastHitByTongue + .34f) {
 			thePlayer->dealDamageAndKnockback(TONGUE_DAMAGE,true,150,x,y);
 		}
 

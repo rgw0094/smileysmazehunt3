@@ -64,24 +64,20 @@ extern int gameState;
  */
 Player::Player(int _gridX, int _gridY) {
 
-	active = false;
 	gameTime = hge->Timer_GetTime();
 		
 	//Initialize variables
+	moveTo(_gridX, _gridY);
 	tongue = new Tongue();
+	health = getMaxHealth();
+	mana = getMaxMana();
 	scale = hoverScale = shrinkScale = 1.0f;
 	speed = 300.0f;
 	rotation = 0;
 	facing = DOWN;
 	radius = DEFAULT_RADIUS;
-	gridX = _gridX;
-	gridY = _gridY;
-	x = gridX*64 + PLAYER_WIDTH/2;
-	y = gridY*64 + PLAYER_HEIGHT/2; 
-	dx = dy = 0.0f;
 	collisionCircle = new CollisionCircle();
 	collisionCircle->set(x,y,PLAYER_WIDTH/2-3);
-	weaponBox = new hgeRect(x,y,x+1,y+1);
 	selectedAbility = CANE;
 	alpha = 255.0f;
 	hoveringYOffset = 0;
@@ -105,6 +101,7 @@ Player::Player(int _gridX, int _gridY) {
 		cloaked = springing = usingCane = iceSliding = frozen = 
 		inShrinkTunnel = false;
 	
+	//Set up constants
 	angles[UP] = PI * 0.0;
 	angles[UP_RIGHT] = PI * .25;
 	angles[RIGHT] = PI * 0.5;
@@ -131,13 +128,7 @@ Player::Player(int _gridX, int _gridY) {
 	mouthXOffset[DOWN_RIGHT] = 10;
 	mouthYOffset[DOWN_RIGHT] = 10;
 
-	//Load saved upgrades
-	health = getMaxHealth();
-	mana = getMaxMana();
-
 }
-
-
 
 /**
  * Destructor
@@ -145,8 +136,8 @@ Player::Player(int _gridX, int _gridY) {
 Player::~Player() {
 	delete fireBreathParticle;
 	delete iceBreathParticle;
-	delete weaponBox;
 	delete collisionCircle;
+	delete tongue;
 }
 
 /**
@@ -154,7 +145,6 @@ Player::~Player() {
  */
 void Player::update(float dt) {
 
-	if (!active) return;
 	speedModifier = 1.0f;
 	lastX = x;
 	lastY = y;
@@ -403,8 +393,6 @@ void Player::move(float xDist, float yDist, float dt) {
  */
 void Player::draw(float dt) {
 
-	if (!active) return;
-
 	//Breath attacks - draw below player if facing up
 	if (facing == UP || facing == UP_LEFT || facing == UP_RIGHT) {
 		fireBreathParticle->Render();
@@ -591,16 +579,17 @@ void Player::doAbility(float dt) {
 		changeAbility(RIGHT);
 	}
 
+	//Base requirements for being allowed to use an ability
+	bool canUseAbility = !waterWalk && !falling && !springing && !frozen 
+		&& !theTextBox->visible && !drowning;
+
 	/////////////// Hover ////////////////
 	bool wasHovering = isHovering;
 	isHovering = ((isHovering || theEnvironment->collision[gridX][gridY] == HOVER_PAD) &&
 			timePassedSince(timeStartedHovering) < HOVER_DURATION && 
 			selectedAbility == HOVER &&
 			input->keyDown(INPUT_ABILITY) &&
-			!theTextBox->visible && 
-			!falling && 
-			!springing && 
-			!frozen &&
+			canUseAbility &&
 			mana >= gameData->getAbilityInfo(HOVER).manaCost*dt);
 	
 	//For debug purposes H will always hover
@@ -626,28 +615,22 @@ void Player::doAbility(float dt) {
 
 	//////////// Reflection Shield //////////////
 
-	reflectionShieldActive = (input->keyDown(INPUT_ABILITY) &&
-							 !theTextBox->visible && 
-							 !falling && 
+	reflectionShieldActive = (canUseAbility &&
+							 input->keyDown(INPUT_ABILITY) &&
 							 selectedAbility == REFLECTION_SHIELD && 
 							 mana >= gameData->getAbilityInfo(REFLECTION_SHIELD).manaCost*dt);
 	if (reflectionShieldActive) mana -= gameData->getAbilityInfo(REFLECTION_SHIELD).manaCost*dt;
 
 	////////////// Tut's Mask //////////////
 
-	cloaked = (input->keyDown(INPUT_ABILITY) &&
-			   !theTextBox->visible && 
-			   !falling &&
-			   !frozen &&
+	cloaked = (canUseAbility && input->keyDown(INPUT_ABILITY) &&
 			   selectedAbility == TUTS_MASK && 
 			   mana >= gameData->getAbilityInfo(TUTS_MASK).manaCost*dt);
 	if (cloaked) mana -= gameData->getAbilityInfo(TUTS_MASK).manaCost*dt;
 	
 	////////////// Sprint Boots //////////////
 	
-	sprinting = (input->keyDown(INPUT_ABILITY) &&
-				 !theTextBox->visible && 
-				 !falling && 
+	sprinting = (canUseAbility && input->keyDown(INPUT_ABILITY) &&
 				 selectedAbility == SPRINT_BOOTS && 
 				 theEnvironment->collision[gridX][gridY] != LEFT_ARROW &&
 				 theEnvironment->collision[gridX][gridY] != RIGHT_ARROW &&
@@ -656,7 +639,7 @@ void Player::doAbility(float dt) {
 				 theEnvironment->collision[gridX][gridY] != ICE);
 
 	//Use triggered ability
-	if (input->keyPressed(INPUT_ABILITY) && !theTextBox->visible && !falling && !drowning && !frozen && !falling) {
+	if (input->keyPressed(INPUT_ABILITY) && canUseAbility) {
 
 		//Shoot lightning orbs
 		if (selectedAbility == LIGHTNING_ORB && mana >= gameData->getAbilityInfo(LIGHTNING_ORB).manaCost) {
@@ -709,7 +692,8 @@ void Player::doAbility(float dt) {
 
 	////////////// Fire Breath //////////////
 
-	if (selectedAbility == FIRE_BREATH && input->keyDown(INPUT_ABILITY) && !frozen && !theTextBox->visible && mana >= gameData->getAbilityInfo(FIRE_BREATH).manaCost*(breathingFire ? dt : .25f)) {
+	if (canUseAbility && selectedAbility == FIRE_BREATH && input->keyDown(INPUT_ABILITY) 
+			&& mana >= gameData->getAbilityInfo(FIRE_BREATH).manaCost*(breathingFire ? dt : .25f)) {
 
 		mana -= gameData->getAbilityInfo(FIRE_BREATH).manaCost*dt;
 
@@ -751,7 +735,7 @@ void Player::doAbility(float dt) {
 	
 	////////////// Shrink //////////////
 
-	if (!falling) {
+	if (canUseAbility) {
 		//Shrinking
 		if (shrinkActive && shrinkScale > .5f) {
 			shrinkScale -= 1.0f*dt;
@@ -856,8 +840,14 @@ void Player::doWarps() {
 			for (int j = 0; j < theEnvironment->areaHeight; j++) {
 				//Once its found, move the player there
 				if (theEnvironment->ids[i][j] == id && (i != gridX || j != gridY) && (theEnvironment->collision[i][j] == RED_WARP || theEnvironment->collision[i][j] == GREEN_WARP || theEnvironment->collision[i][j] == YELLOW_WARP || theEnvironment->collision[i][j] == BLUE_WARP)) {
-					x = 64.0 * i + 64.0/2;
-					y = 64.0 * j + 64.0/2;
+					//If this is an invisible warp, use the load effect to move 
+					//Smiley to its destination
+					if (theEnvironment->variable[gridX][gridY] == 990) {
+						loadEffectManager->startEffect(i, j, saveManager->currentArea);
+					} else {
+						x = 64.0 * i + 64.0/2;
+						y = 64.0 * j + 64.0/2;
+					}
 					return;
 				}
 			}
@@ -1251,19 +1241,19 @@ void Player::doWater() {
 
 void Player::doMovement(float dt) {
 
-	if (frozen) return;
+	if (frozen || drowning || falling) return;
 
 	//Determine acceleration - normal ground or slime
 	float accel = (theEnvironment->collision[gridX][gridY] == SLIME && hoveringYOffset==0.0f) ? SLIME_ACCEL : PLAYER_ACCEL; 
 
 	//Stop drifting when abs(dx) < accel
-	if (!falling && !iceSliding && !sliding && !springing) {
+	if (!iceSliding && !sliding && !springing) {
 		if (dx > -1*accel*dt && dx < accel*dt) dx = 0;
 		if (dy > -1*accel*dt && dy < accel*dt) dy = 0;
 	}
 
 	//Decelerate
-	if (!falling && !iceSliding && !sliding && !springing) {
+	if (!iceSliding && !sliding && !springing) {
 		if ((input->keyDown(INPUT_AIM) && !iceSliding && !knockback) || (!input->keyDown(INPUT_LEFT) && !input->keyDown(INPUT_RIGHT) && !knockback))
 			if (dx > 0) dx -= accel*dt; else if (dx < 0) dx += accel*dt;
 		if ((input->keyDown(INPUT_AIM) && !iceSliding && !knockback) || (!input->keyDown(INPUT_UP) && !input->keyDown(INPUT_DOWN) && !knockback))
@@ -1274,7 +1264,7 @@ void Player::doMovement(float dt) {
 	if (theTextBox->visible) return;
 	
 	//Set facing direction
-	if (!iceSliding && !falling && !knockback && !springing && theEnvironment->collision[gridX][gridY] != SPRING_PAD) {
+	if (!iceSliding && !knockback && !springing && theEnvironment->collision[gridX][gridY] != SPRING_PAD) {
 			
 		if (input->keyDown(INPUT_LEFT)) facing = LEFT;
 		else if (input->keyDown(INPUT_RIGHT)) facing = RIGHT;
@@ -1294,7 +1284,7 @@ void Player::doMovement(float dt) {
 			
 	}
 
-	if (!input->keyDown(INPUT_AIM) && !iceSliding && !sliding && !falling && !knockback && !springing) {
+	if (!input->keyDown(INPUT_AIM) && !iceSliding && !sliding && !knockback && !springing) {
 		//Move Left
 		if (input->keyDown(INPUT_LEFT)) {
 			if (dx > -1*speed && !sliding) dx -= accel*dt;
@@ -1315,7 +1305,9 @@ void Player::doMovement(float dt) {
 
 }
 
-
+/**
+ * Updates ice related shit.
+ */ 
 void Player::doIce(float dt) {
 	
 	//Start Puzzle Ice
@@ -1365,18 +1357,15 @@ void Player::doIce(float dt) {
 
 }
 
-
-
-void Player::reset(int _gridX, int _gridY) {
-	active = true;
+/**
+ * Moves the player to the specified position.
+ */
+void Player::moveTo(int _gridX, int _gridY) {
 	gridX = _gridX;
 	gridY = _gridY;
 	x = gridX*64+32;
 	y = gridY*64+32;
-	startX = _gridX;
-	startY = _gridY;
 	dx = dy = 0;
-	enteredLevel = gameTime;
 }
 
 /**

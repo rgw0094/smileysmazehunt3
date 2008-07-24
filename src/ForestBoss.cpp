@@ -10,6 +10,7 @@
 #include "environment.h"
 #include "SaveManager.h"
 #include "SoundManager.h"
+#include "Tongue.h"
 
 extern HGE *hge;
 extern hgeResourceManager *resources;
@@ -82,7 +83,7 @@ bool ForestBoss::update(float dt) {
 	}
 
 	//Show Garmborn's tongue text the first time Smiley licks him.
-	if (thePlayer->weaponBox->Intersect(collisionBox) && !lickedYet) {
+	if (thePlayer->getTongue()->testCollision(collisionBox) && !lickedYet) {
 		lickedYet = true;
 		theTextBox->setDialogue(FIRE_BOSS, FORESTBOSS_TONGUETEXT);
 	}
