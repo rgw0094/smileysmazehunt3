@@ -332,6 +332,7 @@ void ProjectileManager::reset() {
 	for (i = theProjectiles.begin(); i != theProjectiles.end(); i++) {
 		i = theProjectiles.erase(i);
 	}
+	theProjectiles.clear();
 }
 
 

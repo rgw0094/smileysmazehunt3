@@ -149,5 +149,6 @@ void LootManager::reset() {
 	for (i = theLoot.begin(); i != theLoot.end(); i++) {
 		i = theLoot.erase(i);
 	}
+	theLoot.clear();
 }
 
