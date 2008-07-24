@@ -60,14 +60,10 @@ public:
 	bool flashing, increaseAlpha;
 	int alpha;
 	float floatY;
-	bool showFenwar, fenwarLeave;
-	int fenwarAlpha;
-	float startedFenwarLeave;
 	bool droppedLoot;
 	float startedPath, pathTime;
 
 	//Graphics
-	hgeParticleSystem *fenwarWarp;
 	WeaponParticleSystem *fireNova;
 	hgeRect *collisionBoxes[3];
 
