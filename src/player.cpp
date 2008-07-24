@@ -1233,11 +1233,16 @@ void Player::doWater() {
 		//Stop drowning
 		if (drowning && gameTime - 4.0f > startedDrowning) {
 			drowning = false;
-			x = enteredWaterX * 64 + 32;
-			y = enteredWaterY * 64 + 32;
+			moveTo(enteredWaterX, enteredWaterY);
 			flashing = true;
 			startedFlashing = gameTime;
 			health -= .5f;
+
+			//If smiley was placed onto an up cylinder, toggle its switch
+			if (isCylinderUp(theEnvironment->collision[gridX][gridY])) {
+				theEnvironment->toggleSwitch(theEnvironment->ids[gridX][gridY]);
+			}
+
 		}
 	}
 

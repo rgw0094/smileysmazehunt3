@@ -117,6 +117,7 @@ public:
 	bool toggleSwitches(hgeRect* box, bool playSoundFarAway);
 	bool toggleSwitches(Tongue *tongue);
 	bool toggleSwitchAt(int gridX, int gridY, bool playSoundFarAway);
+	void toggleSwitch(int id);
 	void hitSigns(Tongue *tongue);
 	void hitSaveShrine(Tongue *tongue);
 	bool validPath(int x1, int y1, int x2, int y2, int radius, bool canPass[256]);
