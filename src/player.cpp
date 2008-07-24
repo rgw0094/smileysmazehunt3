@@ -843,7 +843,14 @@ void Player::doWarps() {
 					//If this is an invisible warp, use the load effect to move 
 					//Smiley to its destination
 					if (theEnvironment->variable[gridX][gridY] == 990) {
-						loadEffectManager->startEffect(i, j, saveManager->currentArea);
+						int destX = i;
+						int destY = j;
+						if (facing == DOWN || facing == DOWN_LEFT || facing == DOWN_RIGHT) {
+							destY++;
+						} else if (facing == UP || facing == UP_LEFT || facing == UP_RIGHT) {
+							destY--;
+						}
+						loadEffectManager->startEffect(destX, destY, saveManager->currentArea);
 					} else {
 						x = 64.0 * i + 64.0/2;
 						y = 64.0 * j + 64.0/2;
@@ -1365,6 +1372,8 @@ void Player::moveTo(int _gridX, int _gridY) {
 	gridY = _gridY;
 	x = gridX*64+32;
 	y = gridY*64+32;
+	shadowX = x;
+	shadowY = y;
 	dx = dy = 0;
 }
 
