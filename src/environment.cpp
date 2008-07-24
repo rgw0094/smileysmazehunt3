@@ -1462,6 +1462,10 @@ bool Environment::isShallowWaterAt(int x, int y) {
 	return (collision[x][y] == SHALLOW_WATER || collision[x][y] == SHALLOW_GREEN_WATER);
 }
 
+bool Environment::isArrowAt(int x, int y) {
+	return (collision[x][y] >= UP_ARROW && collision[x][y] <= LEFT_ARROW);
+}
+
 /**
  * Set a collision box for the speicifed collision type decalared in smiley.
  * This allows different things to have different shaped collision boxes.
