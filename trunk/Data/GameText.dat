@@ -127,6 +127,14 @@ NPC6Pages = "2"
 NPC6-1 = "Stupid white people... They told me there is an oasis just northwest of here."
 NPC6-2 = "I haven't seen it in 35 years of wandering the desert! Unless it's behind that green key door, I don't think it exists."
 
+NPC10Name = "Akil"
+NPC10Pages = "5"
+NPC10-1 = "Hello, I am Akil.  I'm not really Egyptian I'm just dressed up to amuse tourists like you."
+NPC10-2 = "So, this is the Mile River.  It extends about a mile from King Tut's tomb at one end to the Smiley Town landfill at the other."
+NPC10-3 = "I was planning on raiding Tut's tomb after work today, are you interested?"
+NPC10-4 = "What if I told you that the treasure could give you incredible powers?  Please come!"
+NPC10-5 = "Actually I just don't want to go alone.  Just thinking about going down there makes me wet myself."
+
 
 
 
