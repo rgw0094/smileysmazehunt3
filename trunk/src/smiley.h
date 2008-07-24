@@ -22,14 +22,7 @@
 #define RES_CORNWALLIS 103
 #define RES_CALYPSO 105
 
-//Bosses(for enemy layer)
 #define NUM_BOSSES 12
-#define FIRE_BOSS 240
-#define DESERT_BOSS 241
-#define SNOW_BOSS 242
-#define FOREST_BOSS 243
-#define MUSHROOM_BOSS 244
-#define DESPAIR_BOSS 245
 
 //Hardcoded IDs
 #define DRAW_AFTER_SMILEY 990

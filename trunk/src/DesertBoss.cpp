@@ -123,7 +123,7 @@ bool DesertBoss::update(float dt) {
 	//When smiley triggers the boss' enemy blocks start his dialogue.
 	if (state == DESERTBOSS_INACTIVE && !startedIntroDialogue) {
 		if (enemyGroupManager->groups[groupID].triggeredYet) {
-			theTextBox->setDialogue(FIRE_BOSS, TEXT_DESERTBOSS_INTRO);
+			theTextBox->setDialogue(-1, TEXT_DESERTBOSS_INTRO);
 			startedIntroDialogue = true;
 		} else {
 			return false;
@@ -166,7 +166,7 @@ bool DesertBoss::update(float dt) {
 						//Show battle text 1 before the first spike attack
 						groundSpikeState = GSS_TEXT;
 						firstTimeLaunchingGroundSpikes = false;
-						theTextBox->setDialogue(FIRE_BOSS, DESERTBOSS_BATTLETEXT_1);
+						theTextBox->setDialogue(-1, DESERTBOSS_BATTLETEXT_1);
 					} else {
 						groundSpikeState = GSS_SHADOWS;
 					}
@@ -237,7 +237,7 @@ bool DesertBoss::update(float dt) {
 	if (health < 0.0) {
 		health = 0.0;
 		enterState(DESERTBOSS_FRIENDLY);
-		theTextBox->setDialogue(FIRE_BOSS, DESERTBOSS_DEFEATTEXT);
+		theTextBox->setDialogue(-1, DESERTBOSS_DEFEATTEXT);
 		soundManager->fadeOutMusic();
 	}
 
@@ -360,7 +360,7 @@ void DesertBoss::updateGroundSpikeState(float dt) {
 			redness = 0.0;
 			if (firstTimeFinishingGroundSpikes) {
 				firstTimeFinishingGroundSpikes = false;
-				theTextBox->setDialogue(FIRE_BOSS, DESERTBOSS_BATTLETEXT_2);
+				theTextBox->setDialogue(-1, DESERTBOSS_BATTLETEXT_2);
 				groundSpikeState = GSS_COOLING_OFF_TEXT;
 			} else {
 				enterState(DESERTBOSS_SPAWNING_CACTLETS);

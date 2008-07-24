@@ -184,8 +184,8 @@ void TextBox::draw(float dt) {
 		
 		resources->GetSprite("textBox")->Render(x,y);
 
-		//Display the NPC's face and name
-		if (npcID == FIRE_BOSS) {
+		//Display the NPC's face and name. npcID -1 means don't draw anything!
+		if (npcID == -1) {
 			
 		} else {
 			npcSprites[npcID][DOWN]->Render(x+60, y+50);

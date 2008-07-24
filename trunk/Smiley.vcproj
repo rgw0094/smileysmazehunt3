@@ -281,6 +281,9 @@
 					RelativePath=".\src\fireboss.cpp">
 				</File>
 				<File
+					RelativePath=".\src\fireboss2.cpp">
+				</File>
+				<File
 					RelativePath=".\src\ForestBoss.cpp">
 				</File>
 				<File
@@ -337,6 +340,9 @@
 				</File>
 				<File
 					RelativePath=".\src\fireboss.h">
+				</File>
+				<File
+					RelativePath=".\src\fireboss2.h">
 				</File>
 				<File
 					RelativePath=".\src\ForestBoss.h">
