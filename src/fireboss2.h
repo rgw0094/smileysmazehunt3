@@ -7,27 +7,14 @@
 class hgeRect;
 class WeaponParticleSystem;
 
-//States
-#define FIREBOSS_INACTIVE 0
-#define FIREBOSS_MOVE 1
-#define FIREBOSS_ATTACK 2
-#define FIREBOSS_FRIENDLY 3
-
-//Attributes
-#define HEALTH 4.25
-#define NOVA_DAMAGE 0.5
-#define ORB_DAMAGE 0.5
-#define COLLISION_DAMAGE 0.25
-#define FLASH_DURATION 2.0
-
 struct FireBall {
 	hgeParticleSystem *particle;
 	hgeRect *collisionBox;
-	float x,y,timeCreated,dx,dy;
+	float x,y,speed,timeCreated,dx,dy;
 };
 
 //Struct for the 5 locations the boss moves between
-struct Position {
+struct ChasePoint {
 	int x, y;
 };
 
@@ -41,18 +28,18 @@ public:
 	void draw(float dt);
 	bool update(float dt);
 	void changeState(int changeTo);
-	void addFireBall(float x, float y);
+	void addFireBall(float x, float y, float angle, float speed);
 	void drawFireBalls(float dt);
 	void updateFireBalls(float dt);
+	void startChasing(int targetChasePoint);
 	void killOrbs();
 
 	//Variables
-	int state,speed,facing, currentPosition;
+	int state,speed,facing, targetChasePoint;
 	int startX, startY;
-	float x,y, previousX, previousY;
+	float x, y;
 	float dx,dy;
 	float lastHitByTongue;
-	Position positions[5];
 	float startedAttackMode, lastFireBall;
 	std::list<FireBall> fireBallList;
 	bool startedIntroDialogue;
@@ -62,10 +49,14 @@ public:
 	float floatY;
 	bool droppedLoot;
 	float startedPath, pathTime;
+	float timeToGetToChasePoint;
+	float timeStartedChaseSegment;
 
 	//Graphics
 	WeaponParticleSystem *fireNova;
 	hgeRect *collisionBoxes[3];
+
+	ChasePoint chasePoints[4];
 
 };
 
