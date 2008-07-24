@@ -331,7 +331,7 @@ bool isWarp(int id) {
 /**
  * Returns the parent area of the given area. Only the 5 parent areas have keys, so this method
  * is used to determine which of these 5 areas to save the key to!! The number returned is the
- * [area] index of Inventory.keys[area][key color] for the parent area.
+ * [area] index of SaveManager.numKeys[area][key color] for the parent area.
  */
 int getKeyIndex(int area) {
 	switch (saveManager->currentArea) {

@@ -61,7 +61,14 @@ void Map::draw(float dt) {
 
 				//Walk Layer
 				int c = theEnvironment->collision[i][j];
-				if (c != WALKABLE && c != UNWALKABLE && c != PLAYER_START && c != PLAYER_END && c != ENEMY_NO_WALK) {
+				if (c != WALKABLE && c != UNWALKABLE && 
+						c != ENEMY_NO_WALK && c != PLAYER_START && 
+						c != DIZZY_MUSHROOM_1 && c != DIZZY_MUSHROOM_2 &&
+						c != PLAYER_END && c != PIT && 
+						c != UNWALKABLE_PROJECTILE && 
+						c != SHRINK_TUNNEL_HORIZONTAL &&
+						c != SHRINK_TUNNEL_VERTICAL &&					
+						!(isWarp(c) && theEnvironment->variable[i][j] == 990)) {
 					walkLayer[theEnvironment->collision[i][j]]->RenderStretch(drawX,drawY,drawX+squareSize,drawY+squareSize);
 				}
 				

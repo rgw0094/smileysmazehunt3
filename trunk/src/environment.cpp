@@ -390,12 +390,12 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 
 			//Put the player in the correct starting location
 			if (playerX > 0 && playerY > 0) {
-				thePlayer->reset(playerX,playerY);
+				thePlayer->moveTo(playerX,playerY);
 				startX = playerX;
 				startY = playerY;
 				playerPlaced = true;
 			} else if (!playerPlaced && collision[i][j] == PLAYER_START && ids[i][j] == from) {
-				thePlayer->reset(i,j);
+				thePlayer->moveTo(i,j);
 				startX = i;
 				startY = j;
 				playerPlaced = true;

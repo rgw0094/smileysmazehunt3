@@ -23,7 +23,7 @@ public:
 	void draw(float dt);
 	void drawGUI(float dt);
 	void update(float dt);
-	void reset(int x, int y);
+	void moveTo(int gridX, int gridY);
 	void move(float x, float y, float dt);
 	bool canPass(int collision);
 	void changeAbility(int direction);
@@ -66,12 +66,10 @@ public:
 	int lastGridX, lastGridY;
 	float shadowX, shadowY;					//Global coordinates of Smiley's shadow
 	float screenX, screenY;					//Screen coordinates
-	int startX, startY;
 	float speed;
 	float dx, dy;
 	float alpha;
 	float mana;
-	hgeRect *weaponBox;
 	CollisionCircle *collisionCircle;
 	int selectedAbility;
 	float speedModifier;
@@ -89,7 +87,6 @@ public:
 	float mouthYOffset[8];
 
 	//State info
-	bool active;					//Whether or not to update the player object
 	bool breathingFire;				//If using Fire Breath ability
 	bool breathingIce;				//If using Ice Breath ability
 	bool onWarp;					//If on a warp square
@@ -113,7 +110,6 @@ public:
 	bool inShrinkTunnel;
 
 	//Time variables
-	float enteredLevel;
 	float startedFlashing;
 	float startedKnockBack;
 	float timeStartedCane;
