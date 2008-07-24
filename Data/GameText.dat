@@ -254,3 +254,11 @@ NPC150-1 = "Dickens"
 NPC151Name = "Calypso"
 NPC151Pages = "1"
 NPC151-1 = "Oh dear, I've been defeated."
+
+;Phyrebozz Round 2
+NPC160Name = "Load Phyrebozz"
+NPC160Pages = "1"
+NPC160-1 = "MARK DICKENSON"
+NPC161Name = "Load Phyrebozz"
+NPC161Pages = "1"
+NPC161-1 = "Gwwaaarrghhh (Dickens)"
