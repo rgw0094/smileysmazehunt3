@@ -285,6 +285,7 @@ void EnemyManager::reset() {
 		delete i->enemy;
 		i = enemyList.erase(i);
 	}
+	enemyList.clear();
 }
 
 
