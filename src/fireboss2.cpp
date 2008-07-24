@@ -23,8 +23,8 @@ extern SaveManager *saveManager;
 extern SoundManager *soundManager;
 extern float gameTime;
 
-#define TEXT_FIREBOSS_INTRO 100
-#define TEXT_FIREBOSS_VICTORY 101
+#define TEXT_FIREBOSS2_INTRO 160
+#define TEXT_FIREBOSS2_VICTORY 161
 
 /**
  * Constructor
@@ -46,13 +46,10 @@ FireBossTwo::FireBossTwo(int gridX, int gridY, int _groupID) {
 	speed = 200;
 	startedIntroDialogue = false;
 	flashing = increaseAlpha = false;
-	alpha = fenwarAlpha = 255;
 	floatY = 0.0f;
-	showFenwar = true;
 	droppedLoot = false;
 
 	fireNova = new WeaponParticleSystem("firenova.psi", resources->GetSprite("particleGraphic13"), PARTICLE_FIRE_NOVA);
-	fenwarWarp = new hgeParticleSystem("fenwarwarp.psi", resources->GetSprite("particleGraphic13"));
 
 	//Set up valid locations
 	//Center
@@ -78,8 +75,8 @@ FireBossTwo::FireBossTwo(int gridX, int gridY, int _groupID) {
  */ 
 FireBossTwo::~FireBossTwo() {
 	killOrbs();
-	delete fenwarWarp;
-	resources->Purge(RES_PHYREBOZZ);
+	delete fireNova;
+	//resources->Purge(RES_PHYREBOZZ);
 }
 
 
@@ -87,16 +84,6 @@ FireBossTwo::~FireBossTwo() {
  * Draw the fire boss
  */
 void FireBossTwo::draw(float dt) {
-
-	//Draw FENWAR talking to the boss
-	if (showFenwar) {
-		resources->GetSprite("fenwarDown")->Render(getScreenX(startX*64-120), getScreenY(startY*64));
-	}
-	if (fenwarLeave) {
-		fenwarWarp->MoveTo(getScreenX(startX*64-120), getScreenY(startY*64),true);
-		fenwarWarp->Update(dt);
-		fenwarWarp->Render();
-	}
 
 	//Draw Orbs
 	drawFireBalls(dt);
@@ -145,15 +132,16 @@ bool FireBossTwo::update(float dt) {
 	floatY = 15.0f*sin(hge->Timer_GetTime()*3.0f);
 
 	//When the player enters his chamber shut the doors and start the intro dialogue
-	if (state == FIREBOSS_INACTIVE && !startedIntroDialogue && thePlayer->gridY == startY+5  && thePlayer->gridX == startX && thePlayer->y < (startY+5)*64+33) {
-		theTextBox->setDialogue(-1, TEXT_FIREBOSS_INTRO);
-		startedIntroDialogue = true;
-		soundManager->fadeOutMusic();
-
-		//Enable enemy blocks for the boss - normally this would be done with a trigger
-		//pad placed in the editor but we want the blocks to appear at the same time
-		//that this other shit above happens
-		enemyGroupManager->enableBlocks(groupID);
+	if (state == FIREBOSS_INACTIVE && !startedIntroDialogue) {
+		//When Phyrebozz's group is triggered start the intro dialogue
+		if (enemyGroupManager->groups[groupID].triggeredYet) {
+			theTextBox->setDialogue(-1, TEXT_FIREBOSS2_INTRO);
+			startedIntroDialogue = true;
+			soundManager->fadeOutMusic();
+		} else {
+			//Before Phyrebozz is triggered there is no need to update anything!
+			return false;
+		}
 
 	}
 
@@ -162,21 +150,8 @@ bool FireBossTwo::update(float dt) {
 		state = FIREBOSS_ATTACK;
 		startedAttackMode = gameTime;
 		hge->Effect_Play(resources->GetEffect("snd_fireBossDie"));
-		//Start fenwar warping out effect
-		fenwarLeave = true;
-		startedFenwarLeave = gameTime;
-		fenwarWarp->Fire();
-		fenwarAlpha = 255.0f;
 		//Start boxx music
 		soundManager->playMusic("bossMusic");
-	}
-
-	//Update fenwar warping out effect
-	if (fenwarLeave) {
-		fenwarAlpha -= 255.0f*dt;
-		resources->GetSprite("fenwarDown")->SetColor(ARGB(alpha,255,255,255));
-		if (fenwarAlpha < 0.0f) showFenwar = false;
-		if (gameTime > startedFenwarLeave + 2.0f) fenwarLeave = false;
 	}
 
 	//Don't update if inactive!!!
@@ -316,10 +291,10 @@ bool FireBossTwo::update(float dt) {
 		health = 0.0f;
 		state = FIREBOSS_FRIENDLY;
 		killOrbs();
-		theTextBox->setDialogue(-1, TEXT_FIREBOSS_VICTORY);	
+		theTextBox->setDialogue(-1, TEXT_FIREBOSS2_VICTORY);	
 		facing = DOWN;
 		alpha = 255;
-		saveManager->killedBoss[FIRE_BOSS-240] = true;
+		saveManager->killedBoss[FIRE_BOSS2-240] = true;
 		enemyGroupManager->notifyOfDeath(groupID);
 		soundManager->fadeOutMusic();
 	}
