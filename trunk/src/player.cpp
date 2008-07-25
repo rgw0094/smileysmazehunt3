@@ -903,6 +903,7 @@ void Player::doSprings(float dt) {
 	if (!falling && !sliding && springing && hoveringYOffset == 0.0f) {
 		scale = 1.0f + sin(PI*((gameTime - startedSpringing)/springTime)) * .2f;
 		dx = dy = 0;
+
 		//Sprint left
 		if (facing == LEFT) {
 			x = shadowX = x - SPRING_VELOCITY * dt;
@@ -915,6 +916,7 @@ void Player::doSprings(float dt) {
 				shadowY -= 40.0f*dt;
 				y -= 40.0f*dt;
 			}
+
 		//Spring right
 		} else if (facing == RIGHT) {
 			x = shadowX = x + SPRING_VELOCITY * dt;
@@ -927,6 +929,7 @@ void Player::doSprings(float dt) {
 				shadowY -= 40.0f*dt;
 				y -= 40.0f*dt;
 			}
+
 		//Spring down
 		} else if (facing == DOWN) {
 			shadowY += SPRING_VELOCITY*dt;
@@ -939,6 +942,7 @@ void Player::doSprings(float dt) {
 				x -= 40.0f*dt;
 				shadowX -= 40.0f*dt;
 			}
+
 		//Spring up
 		} else if (facing == UP) {
 			shadowY -= SPRING_VELOCITY*dt;
@@ -952,6 +956,7 @@ void Player::doSprings(float dt) {
 				shadowX -= 40.0f*dt;
 			}
 		}
+
 	} else if (!springing) {
 		shadowX = x;
 		shadowY = y;
