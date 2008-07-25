@@ -1177,9 +1177,9 @@ bool Environment::playerCollision(int x, int y, float dt) {
 			//Special logic for shrink tunnels
 			bool canPass;
 			if (collision[i][j] == SHRINK_TUNNEL_HORIZONTAL) {
-				canPass = thePlayer->shrinkActive && j == thePlayer->gridY;
+				canPass = thePlayer->isShrunk() && j == thePlayer->gridY;
 			} else if (collision[i][j] == SHRINK_TUNNEL_VERTICAL) {
-				canPass = thePlayer->shrinkActive && i == thePlayer->gridX;
+				canPass = thePlayer->isShrunk() && i == thePlayer->gridX;
 			} else {
 				canPass = thePlayer->canPass(collision[i][j]);
 			}
@@ -1210,7 +1210,7 @@ bool Environment::playerCollision(int x, int y, float dt) {
 
 				//Top left corner
 				if (distance(collisionBox->x1, collisionBox->y1, x, y) < thePlayer->radius) {
-					if (thePlayer->iceSliding) return true;
+					if (thePlayer->isOnIce()) return true;
 					angle = getAngleBetween(collisionBox->x1, collisionBox->y1, thePlayer->x, thePlayer->y);
 					if (onlyDownPressed && thePlayer->facing == DOWN && x < collisionBox->x1 && thePlayer->canPass(collision[i-1][j]) && !hasSillyPad[i-1][j] && !onIce) {
 						angle -= 4.0 * PI * dt;
@@ -1224,7 +1224,7 @@ bool Environment::playerCollision(int x, int y, float dt) {
 
 				//Top right corner
 				if (distance(collisionBox->x2, collisionBox->y1, x, y) < thePlayer->radius) {
-					if (thePlayer->iceSliding) return true;
+					if (thePlayer->isOnIce()) return true;
 					angle = getAngleBetween(collisionBox->x2, collisionBox->y1, thePlayer->x, thePlayer->y);
 					if (onlyDownPressed && thePlayer->facing == DOWN && x > collisionBox->x2 && thePlayer->canPass(collision[i+1][j]) && !hasSillyPad[i+1][j] && !onIce) {
 						angle += 4.0 * PI * dt;
@@ -1238,7 +1238,7 @@ bool Environment::playerCollision(int x, int y, float dt) {
 
 				//Bottom right corner
 				if (distance(collisionBox->x2, collisionBox->y2, x, y) < thePlayer->radius) {
-					if (thePlayer->iceSliding) return true;
+					if (thePlayer->isOnIce()) return true;
 					angle = getAngleBetween(collisionBox->x2, collisionBox->y2, thePlayer->x, thePlayer->y);
 					if (onlyUpPressed && thePlayer->facing == UP && x > collisionBox->x2 && thePlayer->canPass(collision[i+1][j]) && !hasSillyPad[i+1][j] && !onIce) {
 						angle -= 4.0 * PI * dt;
@@ -1252,7 +1252,7 @@ bool Environment::playerCollision(int x, int y, float dt) {
 				
 				//Bottom left corner
 				if (distance(collisionBox->x1, collisionBox->y2, x, y) < thePlayer->radius) {
-					if (thePlayer->iceSliding) return true;
+					if (thePlayer->isOnIce()) return true;
 					angle = getAngleBetween(collisionBox->x1, collisionBox->y2, thePlayer->x, thePlayer->y);
 					if (onlyUpPressed && thePlayer->facing == UP && x < collisionBox->x1 && thePlayer->canPass(collision[i-1][j]) && !hasSillyPad[i-1][j] && !onIce) {
 						angle += 4.0 * PI * dt;

@@ -89,7 +89,7 @@ void E_SadShooter::update(float dt) {
 		sadBlockers[i].x = x + sadBlockers[i].distance*cos(sadBlockers[i].angle);
 		sadBlockers[i].y = y + sadBlockers[i].distance*sin(sadBlockers[i].angle);
 
-		if (distance(sadBlockers[i].x,sadBlockers[i].y,thePlayer->x,thePlayer->y) <= BLOCKER_RADIUS + thePlayer->collisionCircle->radius && !thePlayer->flashing) {
+		if (distance(sadBlockers[i].x,sadBlockers[i].y,thePlayer->x,thePlayer->y) <= BLOCKER_RADIUS + thePlayer->collisionCircle->radius) {
 			thePlayer->dealDamageAndKnockback(damage,true,100,sadBlockers[i].x,sadBlockers[i].y);			
 		}
 

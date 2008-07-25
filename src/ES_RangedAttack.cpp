@@ -22,7 +22,7 @@ ES_RangedAttack::~ES_RangedAttack() {
 void ES_RangedAttack::update(float dt) {
 
 	//Fire ranged weapon
-	if (!owner->frozen && !owner->stunned && !thePlayer->cloaked &&
+	if (!owner->frozen && !owner->stunned && !thePlayer->isInvisible() &&
 		gameTime - owner->rangedAttackDelay > owner->lastRangedAttack) {
 			owner->lastRangedAttack = gameTime;
 			projectileManager->addProjectile(owner->x, owner->y, owner->projectileSpeed, 

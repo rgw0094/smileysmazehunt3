@@ -113,7 +113,7 @@ void E_Tentacle::update(float dt) {
 		tentacleNodes[i].position.y = y+i*variable1*sin(tentacleNodes[i].angle);
 
 		//Collision with smiley
-		if (distance(tentacleNodes[i].position.x,tentacleNodes[i].position.y,thePlayer->x,thePlayer->y) <= radius + thePlayer->collisionCircle->radius && !thePlayer->flashing) {
+		if (distance(tentacleNodes[i].position.x,tentacleNodes[i].position.y,thePlayer->x,thePlayer->y) <= radius + thePlayer->collisionCircle->radius) {
 			thePlayer->dealDamageAndKnockback(damage,true,100,tentacleNodes[i].position.x,tentacleNodes[i].position.y);			
 		}		
 

@@ -141,7 +141,7 @@ bool DesertBoss::update(float dt) {
 	if (state != DESERTBOSS_INACTIVE && state != DESERTBOSS_FRIENDLY) {
 
 		//Check collision with Smiley
-		if (!thePlayer->flashing && thePlayer->collisionCircle->testBox(collisionBox)) {
+		if (thePlayer->collisionCircle->testBox(collisionBox)) {
 			thePlayer->dealDamageAndKnockback(COLLISION_DAMAGE, true, 150, x, y);
 		}
 

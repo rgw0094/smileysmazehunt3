@@ -137,21 +137,19 @@ bool SnowBoss::update(float dt) {
 	}
 
 	//Check collision with Smiley
-	if (!thePlayer->flashing) {
-		if (state == SNOWBOSS_SLIDING) { //test only collisionbox 0
-			if (thePlayer->collisionCircle->testBox(collisionBoxes[0])) {
-				thePlayer->dealDamageAndKnockback(PENGUIN_SLIDING_DAMAGE, true, 150, x, y);
-			}
-		} else {
-			if (thePlayer->collisionCircle->testBox(collisionBoxes[0]) ||
-				thePlayer->collisionCircle->testBox(collisionBoxes[1]) ||
-				thePlayer->collisionCircle->testBox(collisionBoxes[2])) {
+	if (state == SNOWBOSS_SLIDING) { //test only collisionbox 0
+		if (thePlayer->collisionCircle->testBox(collisionBoxes[0])) {
+			thePlayer->dealDamageAndKnockback(PENGUIN_SLIDING_DAMAGE, true, 150, x, y);
+		}
+	} else {
+		if (thePlayer->collisionCircle->testBox(collisionBoxes[0]) ||
+			thePlayer->collisionCircle->testBox(collisionBoxes[1]) ||
+			thePlayer->collisionCircle->testBox(collisionBoxes[2])) {
 				
-					thePlayer->dealDamageAndKnockback(PENGUIN_COLLISION_DAMAGE, true, 150, x, y);
+				thePlayer->dealDamageAndKnockback(PENGUIN_COLLISION_DAMAGE, true, 150, x, y);
 	
-			}
-		} //end if SLIDING
-	}
+		}
+	} //end if SLIDING
 
 
 	// ----------------- State-specific stuff ---------------------

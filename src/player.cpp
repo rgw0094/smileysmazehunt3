@@ -231,7 +231,11 @@ void Player::update(float dt) {
 	}
 	
 	//Attack
-	if (input->keyPressed(INPUT_ATTACK) && !breathingFire && !frozen && !isHovering && frameCounter > windowManager->frameLastWindowClosed ) {
+	if (input->keyPressed(INPUT_ATTACK) && 
+			frameCounter > windowManager->frameLastWindowClosed &&
+			!breathingFire && !frozen && !isHovering &&
+			!falling && !springing && !cloaked && !shrinkActive && !drowning &
+			!reflectionShieldActive) {
 		tongue->startAttack();
 	}
 
@@ -895,14 +899,14 @@ void Player::doSprings(float dt) {
 
 	}
 
-	//Continue springing
+	//Continue springing - don't use dx/dy just adjust positions directly!
 	if (!falling && !sliding && springing && hoveringYOffset == 0.0f) {
 		scale = 1.0f + sin(PI*((gameTime - startedSpringing)/springTime)) * .2f;
+		dx = dy = 0;
 		//Sprint left
 		if (facing == LEFT) {
-			dx = -SPRING_VELOCITY;
-			dy = sin(2*PI*((gameTime - startedSpringing)/springTime)+PI) * 200.0f;
-			shadowX += dx*dt;
+			x = shadowX = x - SPRING_VELOCITY * dt;
+			y = shadowY - sin(PI*(timePassedSince(startedSpringing)/springTime))*50.0;
 			//Adjust the player to land in the middle of the square vertically
 			if (shadowY < enteredSpringY*64+31) {
 				shadowY += 40.0f*dt;
@@ -913,9 +917,8 @@ void Player::doSprings(float dt) {
 			}
 		//Spring right
 		} else if (facing == RIGHT) {
-			dx = SPRING_VELOCITY; 
-			dy = sin(2*PI*((gameTime - startedSpringing)/springTime)+PI) * 200.0f;
-			shadowX += dx*dt;
+			x = shadowX = x + SPRING_VELOCITY * dt;
+			y = shadowY - sin(PI*(timePassedSince(startedSpringing)/springTime))*50.0;
 			//Adjust the player to land in the middle of the square vertically
 			if (shadowY < enteredSpringY*64+31) {
 				shadowY += 40.0f*dt;
@@ -926,8 +929,6 @@ void Player::doSprings(float dt) {
 			}
 		//Spring down
 		} else if (facing == DOWN) {
-			dx = 0; 
-			dy = 0;
 			shadowY += SPRING_VELOCITY*dt;
 			y = shadowY + sin(PI*(timePassedSince(startedSpringing)/springTime))*50.0;
 			//Adjust the player to land in the center of the square horizontally
@@ -940,8 +941,6 @@ void Player::doSprings(float dt) {
 			}
 		//Spring up
 		} else if (facing == UP) {
-			dx = 0;
-			dy = 0;
 			shadowY -= SPRING_VELOCITY*dt;
 			y = shadowY - sin(PI*(timePassedSince(startedSpringing)/springTime))*50.0;
 			//Adjust the player to land in the center of the square horizontally
@@ -1508,6 +1507,26 @@ void Player::doShrinkTunnels(float dt) {
 ///////////////////////////////////////////////////////////////
 /////////////////// MUTATORS AND ACCESSORS ////////////////////								
 ///////////////////////////////////////////////////////////////
+
+bool Player::isInvisible() {
+	return cloaked;
+}
+
+bool Player::isSpringing() {
+	return springing;
+}
+
+bool Player::isReflectingProjectiles() {
+	return reflectionShieldActive;
+}
+
+bool Player::isOnIce() {
+	return iceSliding;
+}
+
+bool Player::isShrunk() {
+	return shrinkActive;
+}
 
 Tongue *Player::getTongue() {
 	return tongue;

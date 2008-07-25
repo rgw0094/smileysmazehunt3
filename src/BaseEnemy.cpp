@@ -183,7 +183,7 @@ void BaseEnemy::dealDamageAndKnockback(float damage, float knockbackDist,
  * Returns whether or not the enemy is within <range> squares of the player.
  */
 bool BaseEnemy::inChaseRange(int range) {
-	return (chases && mapPath[gridX][gridY] <= range && mapPath[gridX][gridY] > 0 && !thePlayer->cloaked &&
+	return (chases && mapPath[gridX][gridY] <= range && mapPath[gridX][gridY] > 0 && !thePlayer->isInvisible() &&
 		theEnvironment->collision[thePlayer->gridX][thePlayer->gridY] != ENEMY_NO_WALK);
 }
 
