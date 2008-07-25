@@ -153,6 +153,7 @@ void SaveManager::load(int fileNumber) {
 	for (int i = 0; i < NUM_BOSSES; i++) {
 		inFile.read(buffer,1);
 		killedBoss[i] = (atoi(buffer) == 0);
+		hge->System_Log("NINJA: %d", killedBoss[i]);
 	}
 
 	//Load player zone and location

@@ -164,7 +164,8 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 	hasFountain = false;
 	fountainOnScreen = false;
 
-	//Reset objects
+	//Reset managers
+	bossManager->reset();
 	enemyManager->reset();
 	projectileManager->reset();
 	lootManager->reset();

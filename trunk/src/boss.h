@@ -3,6 +3,7 @@
 
 #include "hge.h"
 #include "hgeresource.h"
+#include <list>
 
 #define FIRE_BOSS 240
 #define DESERT_BOSS 241
@@ -41,6 +42,10 @@ public:
 
 };
 
+struct BossStruct {
+	Boss *boss;
+};
+
 /**
  * Wrapper class for the bosses.
  */
@@ -56,8 +61,10 @@ public:
 	void drawAfterSmiley(float dt);
 	void update(float dt);
 	void spawnBoss(int boss, int groupID, int gridX, int gridY);
+	void reset();
 
-	Boss *currentBoss;
+	int numBosses;
+	std::list<BossStruct> bossList;
 
 };
 

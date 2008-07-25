@@ -13,11 +13,10 @@ extern EnemyGroupManager *enemyGroupManager;
 extern HGE *hge;
 
 BossManager::BossManager() {
-	currentBoss = NULL;
 }
 
 BossManager::~BossManager() {
-	if (currentBoss) delete currentBoss;
+	reset();
 }
 
 /** 
@@ -27,29 +26,30 @@ void BossManager::spawnBoss(int bossID, int groupID, int gridX, int gridY) {
 
 	hge->System_Log("Spawning Boss %d", bossID);
 
-	//Delete old boss just in case
-	if (currentBoss) delete currentBoss;
+	BossStruct newBoss;
 
 	//Create the boss object based on the bossID
 	if (bossID == FIRE_BOSS) {
-		currentBoss = new FireBoss(gridX,gridY, groupID);
+		newBoss.boss = new FireBoss(gridX,gridY, groupID);
 	} else if (bossID == FOREST_BOSS) {
-		currentBoss = new ForestBoss(gridX,gridY, groupID);
+		newBoss.boss = new ForestBoss(gridX,gridY, groupID);
 	} else if (bossID == SNOW_BOSS) {
-		currentBoss = new SnowBoss(gridX, gridY, groupID);
+		newBoss.boss = new SnowBoss(gridX, gridY, groupID);
 	} else if (bossID == DESERT_BOSS) {
-		currentBoss = new DesertBoss(gridX, gridY, groupID);
+		newBoss.boss = new DesertBoss(gridX, gridY, groupID);
 	} else if (bossID == MUSHROOM_BOSS) {
-		currentBoss = new MushroomBoss(gridX, gridY, groupID);
+		newBoss.boss = new MushroomBoss(gridX, gridY, groupID);
 	} else if (bossID == DESPAIR_BOSS) {
-		currentBoss = new DespairBoss(gridX, gridY, groupID);
+		newBoss.boss = new DespairBoss(gridX, gridY, groupID);
 	} else if (bossID == FIRE_BOSS2) {
-		currentBoss = new FireBossTwo(gridX, gridY, groupID);
+		newBoss.boss = new FireBossTwo(gridX, gridY, groupID);
 	} else {
 		//Unimplemented boss - exit the program
 		hge->System_Log("FATAL ERROR: BossManager.spawnBoss() received invalid boss ID!!!");
 		exit(1);
 	}
+
+	bossList.push_back(newBoss);
 	
 	//Register the boss in its bossID group
 	enemyGroupManager->addEnemy(groupID);
@@ -60,20 +60,24 @@ void BossManager::spawnBoss(int bossID, int groupID, int gridX, int gridY) {
  * Update method called every frame.
  */
 void BossManager::update(float dt) {
-	if (currentBoss) {
-		if (currentBoss->update(dt)) {
-			delete currentBoss;
-			currentBoss = NULL;
+
+	std::list<BossStruct>::iterator i;
+	for (i = bossList.begin(); i != bossList.end(); i++) {
+		if (i->boss->update(dt)) {
+			delete i->boss;
+			i = bossList.erase(i);
 		}
 	}
+
 }
 
 /**
  * Draw method called before Smiley is drawn.
  */
 void BossManager::drawBeforeSmiley(float dt) {
-	if (currentBoss) {
-		currentBoss->draw(dt);
+std::list<BossStruct>::iterator i;
+	for (i = bossList.begin(); i != bossList.end(); i++) {
+		i->boss->draw(dt);
 	}
 }
 
@@ -81,7 +85,20 @@ void BossManager::drawBeforeSmiley(float dt) {
  * Draw method called after Smiley is drawn.
  */
 void BossManager::drawAfterSmiley(float dt) {
-	if (currentBoss) {
-		currentBoss->drawAfterSmiley(dt);
+	std::list<BossStruct>::iterator i;
+	for (i = bossList.begin(); i != bossList.end(); i++) {
+		i->boss->drawAfterSmiley(dt);
 	}
+}
+
+/**
+ * Deletes all managed bosses.
+ */
+void BossManager::reset() {
+	std::list<BossStruct>::iterator i;
+	for (i = bossList.begin(); i != bossList.end(); i++) {
+		delete i->boss;
+		i = bossList.erase(i);
+	}
+	bossList.clear();
 }
