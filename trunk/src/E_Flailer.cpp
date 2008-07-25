@@ -201,10 +201,8 @@ void E_Flailer::updateFlail(float dt) {
 	if (flailing || coolingDown) {
 		if (distance(flailX, flailY, thePlayer->x, thePlayer->y) <= FLAIL_RADIUS + thePlayer->collisionCircle->radius) {	
 			thePlayer->dealDamageAndKnockback(damage,true,100,flailX,flailY);
-			if (!thePlayer->flashing) {
-				flailDx *= -1;
-				flailDy *= -1;
-			}
+			flailDx *= -1;
+			flailDy *= -1;
 		}
 	}
 

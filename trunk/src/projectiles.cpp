@@ -109,7 +109,7 @@ void ProjectileManager::update(float dt) {
 		
 		//Do collision with Smiley
 		if (i->hostile && thePlayer->collisionCircle->testBox(i->collisionBox)) {
-			if (thePlayer->reflectionShieldActive) {
+			if (thePlayer->isReflectingProjectiles()) {
 				reflectProjectile(i);
 			} else {
 				thePlayer->dealDamage(i->damage, i->makesSmileyFlash);

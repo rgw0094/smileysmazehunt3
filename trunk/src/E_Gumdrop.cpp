@@ -69,7 +69,7 @@ void E_Gumdrop::update(float dt) {
 			setFacingPlayer(1000, DOWN);
 
 			//Shoot at smiley
-			if (!thePlayer->cloaked && timePassedSince(lastAttackTime) > ATTACK_DELAY) {
+			if (!thePlayer->isInvisible() && timePassedSince(lastAttackTime) > ATTACK_DELAY) {
 				lastAttackTime = gameTime;
 				projectileManager->addProjectile(x, y, ATTACK_VELOCITY, 
 					getAngleBetween(x, y, thePlayer->x, thePlayer->y), damage, 

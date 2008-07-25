@@ -77,7 +77,7 @@ void WeaponParticleSystem::Update(float fDeltaTime) {
 
 		//Kill particles that hit a wall
 		if (theEnvironment->collisionAt(par->vecLocation.x + theEnvironment->xGridOffset*64.0 + theEnvironment->xOffset, par->vecLocation.y + theEnvironment->yGridOffset*64.0 + theEnvironment->yOffset) == UNWALKABLE) {
-			if (!thePlayer->springing) {
+			if (!thePlayer->isSpringing()) {
 				nParticlesAlive--;
 				memcpy(par, &particles[nParticlesAlive], sizeof(hgeParticle));
 				i--;

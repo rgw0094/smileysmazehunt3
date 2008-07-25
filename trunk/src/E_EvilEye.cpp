@@ -68,7 +68,7 @@ void E_EvilEye::update(float dt) {
 
 	//Shoot at the player if the eye is open
 	if (eyeState == EYE_OPEN) {
-		if (!thePlayer->cloaked && timePassedSince(lastAttackTime) > ATTACK_DELAY) {
+		if (!thePlayer->isInvisible() && timePassedSince(lastAttackTime) > ATTACK_DELAY) {
 			lastAttackTime = gameTime;
 			projectileManager->addProjectile(x, y, ATTACK_VELOCITY, 
 				getAngleBetween(x, y, thePlayer->x, thePlayer->y), ATTACK_DAMAGE, 

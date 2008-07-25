@@ -43,6 +43,11 @@ public:
 	void doShrinkTunnels(float dt);
 
 	//Accessors/mutators
+	bool isInvisible();
+	bool isSpringing();
+	bool isReflectingProjectiles();
+	bool isOnIce();
+	bool isShrunk();
 	void setHealth(float amount);
 	float getHealth();
 	float getMaxHealth();
@@ -86,29 +91,6 @@ public:
 	float mouthXOffset[8];
 	float mouthYOffset[8];
 
-	//State info
-	bool breathingFire;				//If using Fire Breath ability
-	bool breathingIce;				//If using Ice Breath ability
-	bool onWarp;					//If on a warp square
-	bool flashing;					//If flashing after being hit
-	bool knockback;					//If being knocked back by enemy
-	bool sliding;					//If sliding from arrow pads
-	bool iceSliding;				//If sliding from ice
-	bool springing;					//If airborne from spring pad
-	bool reflectionShieldActive;
-	bool falling;					//If falling into a pit
-	bool inLava;					//If the player is on a lava tile
-	bool inShallowWater;			//If the player is on a shallow water tile
-	bool waterWalk;					//If the player is in water walk mode	
-	bool onWater;					//If the player is on a water tile
-	bool drowning;
-	bool shrinkActive;
-	bool sprinting;					//If sprint boots are being used
-	bool isHovering;
-	bool cloaked;
-	bool usingCane;
-	bool inShrinkTunnel;
-
 	//Time variables
 	float startedFlashing;
 	float startedKnockBack;
@@ -139,9 +121,33 @@ public:
 private:
 
 	float health;
-	bool frozen;
+	
 	float timeFrozen, freezeDuration;
 	Tongue *tongue;
+	
+	//State info
+	bool breathingFire;				//If using Fire Breath ability
+	bool breathingIce;				//If using Ice Breath ability
+	bool onWarp;					//If on a warp square
+	bool flashing;					//If flashing after being hit
+	bool knockback;					//If being knocked back by enemy
+	bool sliding;					//If sliding from arrow pads
+	bool iceSliding;				//If sliding from ice
+	bool springing;					//If airborne from spring pad
+	bool reflectionShieldActive;
+	bool falling;					//If falling into a pit
+	bool inLava;					//If the player is on a lava tile
+	bool inShallowWater;			//If the player is on a shallow water tile
+	bool waterWalk;					//If the player is in water walk mode	
+	bool onWater;					//If the player is on a water tile
+	bool drowning;
+	bool shrinkActive;
+	bool sprinting;					//If sprint boots are being used
+	bool isHovering;
+	bool cloaked;
+	bool usingCane;
+	bool inShrinkTunnel;
+	bool frozen;
 
 };
 

@@ -96,7 +96,7 @@ void E_ClownCrab::update(float dt) {
 	xClown += xClownVel*dt;
 	yClown += yClownVel*dt;
 
-	if (distance(xClown, yClown, thePlayer->x, thePlayer->y) <= CLOWN_RADIUS + thePlayer->collisionCircle->radius && !thePlayer->flashing) {
+	if (distance(xClown, yClown, thePlayer->x, thePlayer->y) <= CLOWN_RADIUS + thePlayer->collisionCircle->radius) {
 		thePlayer->dealDamageAndKnockback(damage,true,100,xClown,yClown);
 		xClownVel=-xClownVel;
 		yClownVel=-yClownVel;
