@@ -42,18 +42,18 @@ SaveManager::~SaveManager() {
  * Returns whether or not (gridX, gridY) is explored in the current area
  */
 bool SaveManager::isExplored(int gridX, int gridY) {
-	return explored[currentArea][(gridX - (gridX%8))/8][(gridY - (gridY%8))/8];
+	return explored[currentArea][gridX][gridY];
 }
 
 /**
- * Marks the 8x8 square that Smiley is currently in as explored
+ * Marks the screen that smiley can see as explored
  */ 
 void SaveManager::explore(int gridX, int gridY) {
-	for (int curGridY=gridY-4;curGridY<=gridY+4;curGridY+=4) {
-		for (int curGridX=gridX-4;curGridX<=gridX+4;curGridX+=4) {
+	for (int curGridY = gridY - 6; curGridY <= gridY + 6; curGridY++) {
+		for (int curGridX = gridX - 8; curGridX <= gridX + 8; curGridX++) {
 			if (inBounds(curGridX,curGridY)) {
-				explored[currentArea][(curGridX-curGridX%8)/8][(curGridY-curGridY%8)/8] = true;
-			}			
+				explored[currentArea][curGridX][curGridY] = true;
+			}
 		}
 	}
 }
@@ -216,8 +216,8 @@ void SaveManager::load(int fileNumber) {
 	bitManager->setChar(nextChar);
 
 	for (int i = 0; i < NUM_AREAS; i++) {
-		for (int j = 0; j < 32; j++) {
-			for (int k = 0; k < 32; k++) {
+		for (int j = 0; j < 256; j++) {
+			for (int k = 0; k < 256; k++) {
 				nextTwoBools = bitManager->getNextBit();
 				explored[i][j][k] = nextTwoBools.nextBit;
 				if (nextTwoBools.isCharFullyRead) {
@@ -347,11 +347,8 @@ void SaveManager::save() {
 	exString += "\n\n";
 		
 	for (int i = 0; i < NUM_AREAS; i++) {
-		for (int j = 0; j < 32; j++) {
-			for (int k = 0; k < 32; k++) {
-				if (explored[i][j][k]) {
-					hge->System_Log("Setting true at %d,%d,%d",i,j,k);
-				}
+		for (int j = 0; j < 256; j++) {
+			for (int k = 0; k < 256; k++) {
 				if (bitManager->addBit(explored[i][j][k])) { //if true, it means the char is full
 					nextCharToWrite = bitManager->getCurrentChar();
 					exString += nextCharToWrite;

@@ -54,7 +54,7 @@ public:
 private:
 
 	SaveFile files[4];
-	bool explored[9][32][32];
+	bool explored[9][256][256];
 
 };
 

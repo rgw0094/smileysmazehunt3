@@ -559,7 +559,7 @@ void Environment::draw(float dt) {
 						fountainX = i;
 						fountainY = j;
 					} else if (theCollision >= UP_ARROW && theCollision <= LEFT_ARROW) {
-						if (ids[i+xGridOffset][j+yGridOffset] == -1) { //render red arrow
+						if (ids[i+xGridOffset][j+yGridOffset] == -1 || ids[i+xGridOffset][j+yGridOffset] == 990) { //render red arrow
 							walkLayer[theCollision]->SetColor(ARGB(255,255,0,255));							
 							walkLayer[theCollision]->Render(drawX,drawY);
 						} else { //it's a rotating arrow, make it green

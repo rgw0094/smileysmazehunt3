@@ -623,9 +623,58 @@ Sprite mapBorderHorizontal {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=11
 }
-Sprite mapFogOfWar {
+Sprite mapFogOfWarLeft {
  texture=general
- rect=0,592,240,240
+ rect=384,64,64,64
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=11
+}
+Sprite mapFogOfWarRight {
+ texture=general
+ rect=448,64,64,64
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=11
+}
+Sprite mapFogOfWarUp {
+ texture=general
+ rect=512,64,64,64
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=11
+}
+Sprite mapFogOfWarDown {
+ texture=general
+ rect=576,64,64,64
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=11
+}
+Sprite mapFogOfWarUpLeft {
+ texture=general
+ rect=640,64,32,32
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=11
+}
+Sprite mapFogOfWarUpRight {
+ texture=general
+ rect=672,64,32,32
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=11
+}
+Sprite mapFogOfWarDownRight {
+ texture=general
+ rect=672,96,32,32
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=11
+}
+Sprite mapFogOfWarDownLeft {
+ texture=general
+ rect=640,96,32,32
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=11
