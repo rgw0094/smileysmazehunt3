@@ -250,6 +250,9 @@
 				Name="system"
 				Filter="">
 				<File
+					RelativePath=".\src\BitManager.cpp">
+				</File>
+				<File
 					RelativePath=".\src\ChangeManager.cpp">
 				</File>
 				<File
@@ -472,6 +475,9 @@
 			<Filter
 				Name="system"
 				Filter="">
+				<File
+					RelativePath=".\src\BitManager.h">
+				</File>
 				<File
 					RelativePath=".\src\ChangeManager.h">
 				</File>

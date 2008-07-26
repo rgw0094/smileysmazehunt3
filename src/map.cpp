@@ -77,27 +77,80 @@ void Map::draw(float dt) {
 					itemLayer[theEnvironment->item[i][j]]->RenderStretch(drawX,drawY,drawX+squareSize,drawY+squareSize);
 				}
 
+				//Fog of war
+				if (inBounds(i,j) && saveManager->isExplored(i,j)) {
+					//up
+					if (inBounds(i,j-1) && !saveManager->isExplored(i,j-1)) {
+						resources->GetSprite("mapFogOfWarUp")->RenderStretch(drawX,drawY,drawX+squareSize,drawY+squareSize);
+					}
+					//down
+					if (inBounds(i,j+1) && !saveManager->isExplored(i,j+1)) {
+						resources->GetSprite("mapFogOfWarDown")->RenderStretch(drawX,drawY,drawX+squareSize,drawY+squareSize);
+					}
+					//left
+					if (inBounds(i-1,j) && !saveManager->isExplored(i-1,j)) {
+						resources->GetSprite("mapFogOfWarLeft")->RenderStretch(drawX,drawY,drawX+squareSize,drawY+squareSize);
+					}
+					//right
+					if (inBounds(i+1,j) && !saveManager->isExplored(i+1,j)) {
+						resources->GetSprite("mapFogOfWarRight")->RenderStretch(drawX,drawY,drawX+squareSize,drawY+squareSize);
+					}
+					//up-right
+					if (inBounds(i,j-1) && inBounds(i+1,j) && saveManager->isExplored(i,j-1) && saveManager->isExplored(i+1,j) && !saveManager->isExplored(i+1,j-1)) {
+						resources->GetSprite("mapFogOfWarUpRight")->RenderStretch(drawX+squareSize/2,drawY,drawX+squareSize,drawY+squareSize/2);
+					}
+					//up-left
+					if (inBounds(i,j-1) && inBounds(i-1,j) && saveManager->isExplored(i,j-1) && saveManager->isExplored(i-1,j) && !saveManager->isExplored(i-1,j-1)) {
+						resources->GetSprite("mapFogOfWarUpLeft")->RenderStretch(drawX,drawY,drawX+squareSize/2,drawY+squareSize/2);
+					}
+					//down-left
+					if (inBounds(i,j+1) && inBounds(i-1,j) && saveManager->isExplored(i,j+1) && saveManager->isExplored(i-1,j) && !saveManager->isExplored(i-1,j+1)) {
+						resources->GetSprite("mapFogOfWarDownLeft")->RenderStretch(drawX,drawY+squareSize/2,drawX+squareSize/2,drawY+squareSize);
+					}
+					//down-right
+					if (inBounds(i,j+1) && inBounds(i+1,j) && saveManager->isExplored(i,j+1) && saveManager->isExplored(i+1,j) && !saveManager->isExplored(i+1,j+1)) {
+						resources->GetSprite("mapFogOfWarDownRight")->RenderStretch(drawX+squareSize/2,drawY+squareSize/2,drawX+squareSize,drawY+squareSize);
+					}
+
+				}
+
 				//Smiley
 				if (thePlayer->gridX == i && thePlayer->gridY == j) {
 					resources->GetAnimation("player")->SetFrame(DOWN);
 					resources->GetAnimation("player")->RenderStretch(drawX,drawY-5,drawX+squareSize,drawY+squareSize);	
 				}
+			} else if (inBounds(i,j) && !saveManager->isExplored(i,j)) {
+				//Calculate the top left corner of the square and its width
+				drawX = windowX+(i-gridXOffset)*squareSize - ((int)xOffset%24);
+				drawY = windowY+(j-gridYOffset)*squareSize - ((int)yOffset%24);
+
+				mainLayer[0]->RenderStretch(drawX,drawY,drawX+squareSize,drawY+squareSize);
 			}
 		}
 	}
 
 	//Draw fog of war
+	/*
 	hge->Gfx_SetClipping(windowX,windowY,600,432);
 	for (int i = gridXOffset-8; i < gridXOffset + gridWidth+8; i++) {
 		for (int j = gridYOffset-8; j < gridYOffset + gridHeight+8; j++) {
-			if (inBounds(i,j) && i%8 == 0 && j%8 == 0 && !saveManager->isExplored(i,j)) {
-				drawX = windowX+(i-gridXOffset)*squareSize - ((int)xOffset%24) - 24.0f;
-				drawY = windowY+(j-gridYOffset)*squareSize - ((int)yOffset%24) - 24.0f;
-				resources->GetSprite("mapFogOfWar")->Render(drawX,drawY);
+			//if (inBounds(i,j) && i%8 == 0 && j%8 == 0 && !saveManager->isExplored(i,j)) {
+			//	drawX = windowX+(i-gridXOffset)*squareSize - ((int)xOffset%24) - 24.0f;
+			//	drawY = windowY+(j-gridYOffset)*squareSize - ((int)yOffset%24) - 24.0f;
+			//	resources->GetSprite("mapFogOfWar")->Render(drawX,drawY);
+			//}
+			if (inBounds(i,j) && saveManager->isExplored(i,j)) {
+				drawX = 
+				//up
+				if (inBounds(i,j-1) && !saveManager->isExplored(i,j-1)) {
+					resources->GetSprite("mapFogOfWar"
+				}
 			}
 		}
 	}
+	
 	hge->Gfx_SetClipping(0,0,1024,768);
+	*/
 
 	//Top left
 	resources->GetSprite("mapBorderTopLeft")->Render(windowX-30, windowY-30);
