@@ -108,6 +108,7 @@ int getGridY(int y);
 int distance(int x1, int y1, int x2, int y2);
 char *getTime(int seconds);
 char *intToString(int dickens);
+char *intToString(int dickens, int numDigits);
 bool isCylinderSwitchLeft(int id);
 bool isCylinderSwitchRight(int id);
 bool isCylinderUp(int id);

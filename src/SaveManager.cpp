@@ -10,6 +10,7 @@
 #include "Environment.h"
 #include "hge.h"
 #include "smiley.h"
+#include "ChangeManager.h"
 
 extern Environment *theEnvironment;
 extern HGE *hge;
@@ -22,6 +23,7 @@ extern float gameStart;
  */ 
 SaveManager::SaveManager() {
 	currentSave = -1;
+	changeManager = new ChangeManager();
 	resetCurrentData();
 	loadFileInfo();
 }
@@ -30,7 +32,7 @@ SaveManager::SaveManager() {
  * Destructor
  */
 SaveManager::~SaveManager() {
-
+	delete changeManager;
 }
 
 /**
@@ -57,6 +59,9 @@ void SaveManager::explore(int gridX, int gridY) {
  * Resets the save data that is currently in memory.
  */
 void SaveManager::resetCurrentData() {
+
+	changeManager->reset();
+
 	for (int i = 0; i < NUM_BOSSES; i++) killedBoss[i] = false;
 	
 	if (currentSave == 3) { //make it a REAL GAME
@@ -83,11 +88,6 @@ void SaveManager::resetCurrentData() {
 	}
 	money = 0;
 	for (int i = 0; i < 3; i++) numUpgrades[i] = 0;
-	for (int i = 0; i < 999; i++) {
-		collectedItem[i] = false;
-		openedDoor[i] = false;
-		cylinderChanged[i] = false;
-	}
 	currentArea = FOUNTAIN_AREA;
 	timePlayed = 0;
 	playerGridX = 0;
@@ -101,6 +101,8 @@ void SaveManager::resetCurrentData() {
 void SaveManager::load(int fileNumber) {
 
 	hge->System_Log("Loading save file %d", fileNumber);
+
+	changeManager->reset();
 
 	currentSave = fileNumber;
 
@@ -163,19 +165,31 @@ void SaveManager::load(int fileNumber) {
 	inFile.read(threeBuffer,3);
 	playerGridY = atoi(threeBuffer);
 
-	//Load which items were collected and which doors are opened
-	for (int i = 0; i < 999; i++) {
-		inFile.read(buffer,1);
-		collectedItem[i] = (atoi(buffer) == 1);
-		inFile.read(buffer,1);
-		openedDoor[i] = (atoi(buffer) == 1);
-		inFile.read(buffer,1);
-		cylinderChanged[i] = (atoi(buffer) == 1);
-	}
-
-	//Load current save
+	//Load current hint
 	inFile.read(twoBuffer, 2);
 	currentHint = atoi(twoBuffer);
+
+	//Load changed shit
+	inFile.read(threeBuffer, 3);
+	int numChanges = atoi(threeBuffer);
+	int area, x, y;
+	for (int i = 0; i < numChanges; i++) {
+		
+		//Read area
+		inFile.read(twoBuffer, 2);
+		area = atoi(twoBuffer);
+
+		//Read x coordinate
+		inFile.read(threeBuffer, 3);
+		x = atoi(threeBuffer);
+
+		//Read y coordinate
+		inFile.read(threeBuffer, 3);
+		y = atoi(threeBuffer);
+
+		changeManager->change(area, x, y);
+
+	}
 
 	//Load exploration data
 	inFile.read(buffer,1); //newline
@@ -285,13 +299,6 @@ void SaveManager::save() {
 	}
 	exString += numberString.c_str();
 
-	//Collected items and opened doors
-	for (int i = 0; i < 999; i++) {
-		exString += (collectedItem[i] ? "1" : "0");
-		exString += (openedDoor[i] ? "1" : "0");
-		exString += (cylinderChanged[i] ? "1" : "0");
-	}
-
 	//Current hint
 	if (currentHint < 10) { 
 		numberString = "0";
@@ -300,6 +307,9 @@ void SaveManager::save() {
 		numberString = intToString(currentHint);
 	}
 	exString += numberString.c_str();
+
+	//Changed shit
+	exString += changeManager->toString();
 
 	//Exploration data
 	exString += "\n\n";

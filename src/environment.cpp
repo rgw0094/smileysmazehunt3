@@ -23,6 +23,7 @@
 #include "LoadEffectManager.h"
 #include "WeaponParticle.h"
 #include "TapestryManager.h"
+#include "ChangeManager.h"
 
 #include <string>
 #include <sstream>
@@ -127,6 +128,8 @@ Environment::Environment() {
 Environment::~Environment() {
 
 	delete environmentParticles;
+	delete evilWallManager;
+	delete mushroomManager;
 	delete tapestryManager;
 
 	delete collisionBox;
@@ -142,8 +145,6 @@ Environment::~Environment() {
 	delete greenCylinderRev;
 	delete yellowCylinderRev;
 	delete whiteCylinderRev;
-	delete mushroomManager;
-	delete evilWallManager;
 
 }
 
@@ -186,7 +187,6 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 			hasSillyPad[i][j] = false;
 			variable[i][j] = 0;
 			enemyLayer[i][j] = -1;
-			changed[i][j] = false;
 		}
 	}
 
@@ -390,7 +390,6 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 	for (int row = 0; row < areaHeight; row++) {
 		for (int col = 0; col < areaWidth; col++) {
 			areaFile.read(threeBuffer,3);
-			save[col][row] = atoi(threeBuffer);
 		}
 		//Read the newline
 		areaFile.read(threeBuffer,1);
@@ -415,20 +414,41 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 				playerPlaced = true;
 			}
 
-			//Remove items that have already been collected
-			if (save[i][j] != -1 && saveManager->collectedItem[save[i][j]]) item[i][j] = 0;
-
-			//Open doors that have already been opened
-			if (save[i][j] != -1 && saveManager->openedDoor[save[i][j]] && collision[i][j] >= RED_KEYHOLE && collision[i][j] <= BLUE_KEYHOLE) {
-				collision[i][j] = WALKABLE;
+			//If there is an item at this tile check to see if it has already
+			//been collected
+			if (item[i][j] > 0 && item[i][j] < 16) {
+				if (saveManager->changeManager->isChanged(saveManager->currentArea,i,j)) {
+					item[i][j] = NONE;
+				}
 			}
 
-			//Flip cylinders that have been marked as changed
-			if (save[i][j] != -1 && saveManager->cylinderChanged[save[i][j]]) {
-				if (isCylinderUp(collision[i][j])) {
-					collision[i][j] -= 16;
-				} else if (isCylinderDown(collision[i][j])) {
-					collision[i][j] += 16;
+			//If there is a door on this tile check to see if it has already
+			//been opened
+			if (collision[i][j] >= RED_KEYHOLE && collision[i][j] <= BLUE_KEYHOLE) {
+				if (saveManager->changeManager->isChanged(saveManager->currentArea, i, j)) {
+					collision[i][j] = WALKABLE;
+				}
+			}
+
+			//Flip switches that have been marked as changed
+			if (isCylinderSwitchLeft(collision[i][j]) || isCylinderSwitchRight(collision[i][j])) {
+				if (saveManager->changeManager->isChanged(saveManager->currentArea, i, j)) {
+					int id = ids[i][j];
+					//Scan the area for cylinders linked to this switch
+					for (int k = 0; k < areaWidth; k++) {
+						for (int l = 0; l < areaHeight; l++) {
+							//If this id matches the switch we flipped
+							if (ids[k][l] == id) {
+								//Switch up cylinders down
+								if (isCylinderUp(collision[k][l])) {
+									collision[k][l] -= 16;
+								//Switch down cylinders up
+								} else if (isCylinderDown(collision[k][l])) {
+									collision[k][l] += 16;
+								}
+							}
+						}
+					}
 				}
 			}
 		}
@@ -764,7 +784,8 @@ void Environment::update(float dt) {
 
 			//Update timed switches
 			if (isCylinderSwitchLeft(collision[i][j]) || isCylinderSwitchRight(collision[i][j])) {
-				if (variable[i][j] != -1 && activated[i][j] + (float)variable[i][j] < gameTime && changed[i][j]) {
+				if (variable[i][j] != -1 && activated[i][j] + (float)variable[i][j] < gameTime && 
+						saveManager->changeManager->isChanged(saveManager->currentArea, i, j)) {
 					
 					//Make sure the player isn't on top of any of the cylinders that will pop up
 					if (!playerOnCylinder(i,j)) {
@@ -830,8 +851,8 @@ void Environment::unlockDoor(int gridX, int gridY) {
 	}
 
 	//Remember that this door was opened!
-	if (doorOpened && save[gridX][gridY] != -1) {
-		saveManager->openedDoor[save[gridX][gridY]] = true;
+	if (doorOpened) {
+		saveManager->changeManager->change(saveManager->currentArea, gridX, gridY);
 	}
 
 }
@@ -1037,7 +1058,7 @@ void Environment::flipCylinderSwitch(int gridX, int gridY) {
 		resources->GetAnimation("greenSwitch")->SetMode(HGEANIM_FWD);
 		resources->GetAnimation("yellowSwitch")->SetMode(HGEANIM_FWD);
 		resources->GetAnimation("whiteSwitch")->SetMode(HGEANIM_FWD);
-		changed[gridX][gridY] = !changed[gridX][gridY];
+		saveManager->changeManager->change(saveManager->currentArea, gridX, gridY);
 	} else if (isCylinderSwitchRight(collision[gridX][gridY])) {
 		collision[gridX][gridY] -= 16;
 		resources->GetAnimation("silverSwitch")->SetMode(HGEANIM_REV);
@@ -1046,7 +1067,7 @@ void Environment::flipCylinderSwitch(int gridX, int gridY) {
 		resources->GetAnimation("greenSwitch")->SetMode(HGEANIM_REV);
 		resources->GetAnimation("yellowSwitch")->SetMode(HGEANIM_REV);
 		resources->GetAnimation("whiteSwitch")->SetMode(HGEANIM_REV);
-		changed[gridX][gridY] = !changed[gridX][gridY];
+		saveManager->changeManager->change(saveManager->currentArea, gridX, gridY);
 	}
 
 	//Play animation
@@ -1077,11 +1098,9 @@ void Environment::switchCylinders(int switchID) {
 				if (isCylinderUp(collision[i][j])) {
 					collision[i][j] -= 16;
 					activated[i][j] = gameTime;
-					saveManager->cylinderChanged[save[i][j]] = !saveManager->cylinderChanged[save[i][j]];
 				} else if (isCylinderDown(collision[i][j])) {
 					collision[i][j] += 16;
 					activated[i][j] = gameTime;
-					saveManager->cylinderChanged[save[i][j]] = !saveManager->cylinderChanged[save[i][j]];
 				}
 				silverCylinder->Play();
 				brownCylinder->Play();
@@ -1108,7 +1127,7 @@ int Environment::gatherItem(int x, int y) {
 	int retVal = item[x][y];
 	if (retVal > 0 && retVal < 16) {
 		item[x][y] = NONE;
-		if (save[x][y] != -1) saveManager->collectedItem[save[x][y]] = true;
+		saveManager->changeManager->change(saveManager->currentArea, x, y);
 		return retVal;
 	} else {
 		return NONE;

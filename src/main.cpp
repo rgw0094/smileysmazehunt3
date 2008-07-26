@@ -301,7 +301,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		soundManager = new SoundManager();
 		gameData = new GameData();
 		loadEffectManager = new LoadEffectManager();
-		
+
 		//Open the menu
 		theMenu->open(TITLE_SCREEN);
 

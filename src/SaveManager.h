@@ -1,6 +1,8 @@
 #ifndef _SAVEMANAGER_H_
 #define _SAVEMANAGER_H_
 
+class ChangeManager;
+
 struct SaveFile {
 	bool empty;
 	int timePlayed;
@@ -34,9 +36,6 @@ public:
 	//Save data
 	int currentSave;
 	int currentArea;					//The main area Smiley is currently in
-	bool collectedItem[999];			//Stores save info about which items have been collected
-	bool openedDoor[999];				//Stores save info about which doors have been opened
-	bool cylinderChanged[999];			//Stores save info about which cylinders' state are changed
 	bool killedBoss[12];
 	int playerGridX, playerGridY;
 	int currentHint;
@@ -47,6 +46,8 @@ public:
 	int numGems[9][4];
 	int numUpgrades[3];
 	int money;
+
+	ChangeManager *changeManager;
 
 private:
 
