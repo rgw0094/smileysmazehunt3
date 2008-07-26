@@ -48,7 +48,7 @@ void E_Buzzard::draw(float dt) {
 		resources->GetSprite("buzzardWing")->RenderEx(screenX,screenY,angle);
 		resources->GetSprite("buzzardWing")->RenderEx(screenX,screenY,-angle,-1,1);
 	}
-	graphic[0]->Render(screenX,screenY);
+	graphic[LEFT]->Render(screenX,screenY);
 }
 
 void E_Buzzard::update(float dt) {

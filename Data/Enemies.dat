@@ -44,9 +44,9 @@ numEnemies="47"
 2ImmuneTongue="T"
 2ImmuneStun="T"
 
-;Ranged Enemy (using evil eye graphic for now
-3GCol=      "1"
-3GRow=      "2"
+;Ranged Squirrel
+3GCol=      "0"
+3GRow=      "8"
 3EnemyType= "0"
 3WanderType="0"
 3HP=        "75"
@@ -78,6 +78,7 @@ numEnemies="47"
 4Chases=    "T"
 
 ;Evil circle (horizontal)
+5OneGraphic="T"
 5GCol=      "10"
 5GRow=      "0"
 5NumFrames= "2"
@@ -93,6 +94,7 @@ numEnemies="47"
 5Invincible="T"
 
 ;Evil circle (vertical)
+6OneGraphic="T"
 6GCol=      "10"
 6GRow=      "0"
 6NumFrames= "2"

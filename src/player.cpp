@@ -195,6 +195,11 @@ void Player::update(float dt) {
 		y = gridY * 64.0 + 32.0;
 	}
 
+	//GAY swings tongue, to try to fix it
+	if (hge->Input_KeyDown(HGEK_T)) {
+		tongue->startAttack();
+	}
+
 	//Update cloaking alpha
 	alpha = (cloaked) ? 75.0f : 255.0f;
 	resources->GetAnimation("player")->SetColor(ARGB(alpha,255,255,255));
@@ -231,12 +236,12 @@ void Player::update(float dt) {
 	}
 	
 	//Do Tongue
-	if (input->keyPressed(INPUT_ATTACK) && 
-			frameCounter > windowManager->frameLastWindowClosed &&
-			!breathingFire && !frozen && !isHovering &&
+	if (input->keyPressed(INPUT_ATTACK) && !breathingFire && !frozen && !isHovering &&
 			!falling && !springing && !cloaked && !shrinkActive && !drowning &
-			!reflectionShieldActive) {
-		tongue->startAttack();
+			!reflectionShieldActive &&
+			frameCounter > windowManager->frameLastWindowClosed) {			
+				
+		tongue->startAttack();	
 	}
 	tongue->update(dt);
 
@@ -525,8 +530,7 @@ void Player::drawGUI(float dt) {
 		//Draw num keys
 		resources->GetFont("numberFnt")->printf(keyXOffset + 60.0*i + 45.0, keyYOffset + 5.0, 
 			HGETEXT_LEFT, "%d", saveManager->numKeys[getKeyIndex(saveManager->currentArea)][i]);
-	}
-						
+	}							
 }
 
 
@@ -1409,7 +1413,7 @@ void Player::dealDamageAndKnockback(float damage, bool makesFlash, float knockba
 		startedFlashing = gameTime;
 	}
 
-	health = 5.0;
+	//health = 5.0;
 
 }
 

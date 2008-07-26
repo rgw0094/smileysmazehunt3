@@ -140,6 +140,13 @@ void GameData::loadEnemyData() {
 	for (int i = 0; i < numEnemies; i++) {
 		itoa(i, num, 10);
 
+		//Has one graphic?
+		varName = intToString(i);
+		varName += "OneGraphic";
+		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].hasOneGraphic = false;
+		else enemyInfo[i].hasOneGraphic = (strcmp(enemyStringTable->GetString(varName.c_str()), "T") == 0);
+
+		
 		//Graphics column
 		varName = intToString(i);
 		varName += "GCol";

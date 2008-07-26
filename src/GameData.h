@@ -15,6 +15,7 @@ struct EnemyInfo {
 	bool immuneToFire, immuneToTongue, immuneToLightning, immuneToStun, immuneToFreeze, invincible;
 	int variable1, variable2;
 	int numFrames;
+	bool hasOneGraphic;
 
 	bool chases, hasRangedAttack;
 	int range, delay, projectileSpeed;
