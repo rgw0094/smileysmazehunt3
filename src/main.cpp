@@ -21,6 +21,8 @@
 #include "environment.h"
 #include "LoadEffectManager.h"
 
+#include "BitManager.h"
+
 //Global Objects
 HGE *hge=0;
 hgeResourceManager *resources;
@@ -301,6 +303,28 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		soundManager = new SoundManager();
 		gameData = new GameData();
 		loadEffectManager = new LoadEffectManager();
+
+		BitManager* nigger;
+		unsigned char dickens,fullByte;
+		char* ninja, ninja2;
+		fullByte = ~0;
+
+		nigger = new BitManager();
+
+		bool bits[8] = {true,true,false,false,false,false,true,true};
+
+		int count = 0;
+
+		for (;;) {
+			if (nigger->addBit(bits[count])) break;		
+			count++;
+		}
+		dickens = nigger->getCurrentChar();
+
+		hge->System_Log("Dickens %d Full byte %d",dickens,fullByte);
+		
+		
+
 
 		//Open the menu
 		theMenu->open(TITLE_SCREEN);

@@ -11,6 +11,7 @@
 #include "hge.h"
 #include "smiley.h"
 #include "ChangeManager.h"
+#include "BitManager.h"
 
 extern Environment *theEnvironment;
 extern HGE *hge;
@@ -24,6 +25,7 @@ extern float gameStart;
 SaveManager::SaveManager() {
 	currentSave = -1;
 	changeManager = new ChangeManager();
+	bitManager = new BitManager();
 	resetCurrentData();
 	loadFileInfo();
 }
@@ -33,6 +35,7 @@ SaveManager::SaveManager() {
  */
 SaveManager::~SaveManager() {
 	delete changeManager;
+	delete bitManager;
 }
 
 /**
@@ -86,6 +89,16 @@ void SaveManager::resetCurrentData() {
 			numGems[i][j] = 0;
 		}
 	}
+
+	//reset explored data
+	for (int i = 0; i < NUM_AREAS; i++) {
+		for (int j = 0; j < 32; j++) {
+			for (int k = 0; k < 32; k++) {
+				explored[i][j][k] = false;
+			}
+		}
+	}
+
 	money = 0;
 	for (int i = 0; i < 3; i++) numUpgrades[i] = 0;
 	currentArea = FOUNTAIN_AREA;
@@ -192,17 +205,30 @@ void SaveManager::load(int fileNumber) {
 	}
 
 	//Load exploration data
+	twoBools nextTwoBools;
+	unsigned char nextChar;
+
 	inFile.read(buffer,1); //newline
 	inFile.read(buffer,1); //newline
+
+	inFile.read(buffer,1);
+	nextChar = (unsigned char)buffer[0];
+	bitManager->setChar(nextChar);
+
 	for (int i = 0; i < NUM_AREAS; i++) {
 		for (int j = 0; j < 32; j++) {
 			for (int k = 0; k < 32; k++) {
-				inFile.read(buffer,1); //newline
-				explored[i][j][k] = atoi(buffer) == 1;
+				nextTwoBools = bitManager->getNextBit();
+				explored[i][j][k] = nextTwoBools.nextBit;
+				if (nextTwoBools.isCharFullyRead) {
+					inFile.read(buffer,1);
+					nextChar = (unsigned char)buffer[0];
+					bitManager->setChar(nextChar);
+				}			
 			}
-			inFile.read(buffer,1); //newline
+			//inFile.read(buffer,1); //newline
 		}
-		inFile.read(buffer,1); //newline
+		//inFile.read(buffer,1); //newline
 	}
 
 }
@@ -211,6 +237,8 @@ void SaveManager::load(int fileNumber) {
  * Saves the current save data in memory to a file.
  */
 void SaveManager::save() {
+
+	
 
 	hge->System_Log("Saving file %d", currentSave);
 
@@ -228,6 +256,8 @@ void SaveManager::save() {
 	} else if (currentSave == 3) {
 		exFile.open("Data/Save/file4.sav");
 	}
+
+	
 
 	//Abilities
 	for (int i = 0; i < NUM_ABILITIES; i++) exString += (hasAbility[i] ? "1" : "0");
@@ -311,17 +341,39 @@ void SaveManager::save() {
 	//Changed shit
 	exString += changeManager->toString();
 
+	unsigned char nextCharToWrite;
+
 	//Exploration data
 	exString += "\n\n";
+		
 	for (int i = 0; i < NUM_AREAS; i++) {
 		for (int j = 0; j < 32; j++) {
 			for (int k = 0; k < 32; k++) {
-				exString += intToString(explored[i][j][k]);
+				if (explored[i][j][k]) {
+					hge->System_Log("Setting true at %d,%d,%d",i,j,k);
+				}
+				if (bitManager->addBit(explored[i][j][k])) { //if true, it means the char is full
+					nextCharToWrite = bitManager->getCurrentChar();
+					exString += nextCharToWrite;
+				}				
 			}
-			exString += "\n";
+			//exString += "\n";
 		}
-		exString += "\n";
+//		exString += "\n";
 	}
+
+	// Now, we write one more char. Even if we didn't fill the char yet,
+	// we still don't want to lose any exploration data.
+	nextCharToWrite = bitManager->getCurrentChar();
+	exString += nextCharToWrite;
+
+	// Write one more empty char, just to be safe. This is necessary in case we use up
+	// exactly the right amount of chars in loading, since it automatically starts
+	// looking at the next one.
+	nextCharToWrite = 0;
+	exString += nextCharToWrite;
+
+	exString += "\n";
 
 	//Write the string to the save file
 	exFile.write(exString.c_str(), exString.length());
