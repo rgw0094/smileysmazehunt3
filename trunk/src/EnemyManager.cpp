@@ -290,7 +290,7 @@ bool EnemyManager::hitEnemiesWithProjectile(hgeRect *collisionBox, float damage,
 				if (!i->enemy->immuneToStun) {
 					i->enemy->stunned = true;
 					i->enemy->stunLength = 2.0f;
-					i->enemy->startedStun = hge->Timer_GetTime();
+					i->enemy->startedStun = gameTime;
 				}			
 			} 
 

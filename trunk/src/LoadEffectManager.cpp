@@ -134,8 +134,7 @@ void LoadEffectManager::update(float dt) {
 		//Done zooming out
 		if (loadingEffectScale > 3.0) {
 			loadingEffectScale = 3.0;
-			state = STATE_INACTIVE;
-			enterGameState(GAME);
+			state = STATE_INACTIVE;			
 		}
 	}
 }
