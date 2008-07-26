@@ -386,16 +386,6 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 	areaFile.read(threeBuffer,1);	//newline
 
 
-	//Load which items are collected and which doors are opened
-	for (int row = 0; row < areaHeight; row++) {
-		for (int col = 0; col < areaWidth; col++) {
-			areaFile.read(threeBuffer,3);
-		}
-		//Read the newline
-		areaFile.read(threeBuffer,1);
-	}
-
-
 	//Set up stuff
 	bool playerPlaced = false;
 	for (int i = 0; i < areaWidth; i++) {
