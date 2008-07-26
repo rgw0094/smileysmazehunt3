@@ -1120,8 +1120,8 @@ Sprite basicProjectile {
 }
 Sprite frisbeeProjectile {
  texture=projectileTx
- rect=0,20,64,64
- hotspot=32,32
+ rect=1,21,62,62
+ hotspot=31,31
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=36
 }
