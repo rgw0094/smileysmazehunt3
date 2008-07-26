@@ -29,7 +29,6 @@ public:
 	float enteredStage;			//What time the NPC entered their current stage
 	float stageLength;			//How long the next stage should last		
 	bool inConversation;		//If the NPC is in conversation with the player
-	float lastConversation;		//Time of the start of the last conversation
 	hgeRect *collisionBox, *futureCollisionBox, *futureCollisionBox2;
 
 };

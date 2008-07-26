@@ -23,7 +23,7 @@ public:
 	void addNPC(int id, int textID, int x, int y);
 	void reset();
 	bool npcCollision(hgeRect *box, int id);
-	void talkToNPCs(Tongue *tongue);
+	bool talkToNPCs(Tongue *tongue);
 
 	//Variables
 	std::list<NPCStruct> theNPCs;

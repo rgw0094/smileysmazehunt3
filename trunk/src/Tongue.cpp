@@ -2,14 +2,23 @@
 #include "Player.h"
 #include "textbox.h"
 #include "smiley.h"
+#include "Environment.h"
+#include "EnemyManager.h"
+#include "NPCManager.h"
+#include "WindowManager.h"
 
 #include "hgeresource.h"
 #include "hgeanim.h"
 
+extern Environment *theEnvironment;
+extern NPCManager *npcManager;
+extern EnemyManager *enemyManager;
 extern hgeResourceManager *resources;
 extern Player *thePlayer;
 extern TextBox *theTextBox;
+extern WindowManager *windowManager;
 extern HGE *hge;
+
 extern float gameTime;
 extern bool debugMode;
 
@@ -49,6 +58,7 @@ void Tongue::startAttack() {
 		return;
 	}
 
+	hasActivatedSomething = false;
 	timeStartedAttack = gameTime;
 	tongueOffsetAngle = -ATTACK_RADIUS / 2.0;
 	attacking = true;
@@ -62,6 +72,19 @@ void Tongue::startAttack() {
 void Tongue::update(float dt) {
 
 	if (!attacking) return;
+
+	//Hit Enemies
+	enemyManager->tongueCollision(this, thePlayer->getDamage());
+	
+	//Activate stuff - only one thing can be activated per attack
+	if (!hasActivatedSomething) {
+		if (theEnvironment->toggleSwitches(this) ||
+				npcManager->talkToNPCs(this) ||
+				(!windowManager->isOpenWindow() && theEnvironment->hitSaveShrine(this)) ||
+				(!theTextBox->visible && theEnvironment->hitSigns(this))) {
+			hasActivatedSomething = true;
+		}
+	}
 
 	if (tongueState == STATE_EXTENDING) {
 		resources->GetAnimation("smileyTongue")->Update(dt);

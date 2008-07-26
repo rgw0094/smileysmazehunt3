@@ -230,7 +230,7 @@ void Player::update(float dt) {
 		}
 	}
 	
-	//Attack
+	//Do Tongue
 	if (input->keyPressed(INPUT_ATTACK) && 
 			frameCounter > windowManager->frameLastWindowClosed &&
 			!breathingFire && !frozen && !isHovering &&
@@ -238,16 +238,7 @@ void Player::update(float dt) {
 			!reflectionShieldActive) {
 		tongue->startAttack();
 	}
-
-	//Hit stuff with Smiley's tongue.
-	if (tongue->isAttacking()) {
-		tongue->update(dt);
-		enemyManager->tongueCollision(tongue, getDamage());
-		theEnvironment->toggleSwitches(tongue);		
-		npcManager->talkToNPCs(tongue);
-		if (!windowManager->isOpenWindow()) theEnvironment->hitSaveShrine(tongue);
-		if (!theTextBox->visible) theEnvironment->hitSigns(tongue);		
-	}
+	tongue->update(dt);
 
 	//Do shit
 	doMovement(dt);
@@ -404,9 +395,10 @@ void Player::draw(float dt) {
 	}
 
 	//Draw Smiley's shadow
-	if ((hoveringYOffset > 0.0f || drowning || springing || (onWater && waterWalk) || (inShallowWater && (selectedAbility == WATER_BOOTS)) || (!falling && theEnvironment->collisionAt(x,y+15) != WALK_LAVA && theEnvironment->collisionAt(x,y+15) != SHALLOW_WATER))) {
+	if ((hoveringYOffset > 0.0f || drowning || springing || (onWater && waterWalk) || (!falling && theEnvironment->collisionAt(x,y+15) != WALK_LAVA))) {
 		if (drowning) resources->GetSprite("playerShadow")->SetColor(ARGB(255,255,255,255));
-		resources->GetSprite("playerShadow")->RenderEx(getScreenX(shadowX),getScreenY(shadowY)+(22.0*shrinkScale),0.0f,scale*shrinkScale,scale*shrinkScale);
+		resources->GetSprite("playerShadow")->RenderEx(screenX,
+			screenY + (22.0*shrinkScale),0.0f,scale*shrinkScale,scale*shrinkScale);
 		if (drowning) resources->GetSprite("playerShadow")->SetColor(ARGB(50,255,255,255));
 	}
 
@@ -418,7 +410,8 @@ void Player::draw(float dt) {
 		}
 		//Draw Smiley sprite
 		resources->GetAnimation("player")->SetFrame(facing);
-		resources->GetAnimation("player")->RenderEx(screenX,screenY-hoveringYOffset,rotation,
+		resources->GetAnimation("player")->RenderEx(screenX,
+			screenY-hoveringYOffset-springOffset,rotation,
 			scale*hoverScale*shrinkScale,scale*hoverScale*shrinkScale);
 		//Draw every other tongue after smiley
 		if (facing != UP && facing != UP_LEFT && facing != UP_RIGHT) {
@@ -585,7 +578,7 @@ void Player::doAbility(float dt) {
 
 	//Base requirements for being allowed to use an ability
 	bool canUseAbility = !waterWalk && !falling && !springing && !frozen 
-		&& !theTextBox->visible && !drowning;
+		&& !theTextBox->visible && !drowning && !springing;
 
 	/////////////// Hover ////////////////
 	bool wasHovering = isHovering;
@@ -901,65 +894,52 @@ void Player::doSprings(float dt) {
 
 	//Continue springing - don't use dx/dy just adjust positions directly!
 	if (!falling && !sliding && springing && hoveringYOffset == 0.0f) {
+		
 		scale = 1.0f + sin(PI*((gameTime - startedSpringing)/springTime)) * .2f;
+		springOffset =  sin(PI*(timePassedSince(startedSpringing)/springTime))*50.0;
 		dx = dy = 0;
 
 		//Sprint left
 		if (facing == LEFT) {
-			x = shadowX = x - SPRING_VELOCITY * dt;
-			y = shadowY - sin(PI*(timePassedSince(startedSpringing)/springTime))*50.0;
+			x -= SPRING_VELOCITY * dt;
 			//Adjust the player to land in the middle of the square vertically
-			if (shadowY < enteredSpringY*64+31) {
-				shadowY += 40.0f*dt;
+			if (y < enteredSpringY*64+31) {
 				y += 40.0f*dt;
-			} else if (shadowY > enteredSpringY*64+33) {
-				shadowY -= 40.0f*dt;
+			} else if (y > enteredSpringY*64+33) {
 				y -= 40.0f*dt;
 			}
 
 		//Spring right
 		} else if (facing == RIGHT) {
-			x = shadowX = x + SPRING_VELOCITY * dt;
-			y = shadowY - sin(PI*(timePassedSince(startedSpringing)/springTime))*50.0;
+			x += SPRING_VELOCITY * dt;
 			//Adjust the player to land in the middle of the square vertically
-			if (shadowY < enteredSpringY*64+31) {
-				shadowY += 40.0f*dt;
+			if (y < enteredSpringY*64+31) {
 				y += 40.0f*dt;
-			} else if (shadowY > enteredSpringY*64+33) {
-				shadowY -= 40.0f*dt;
+			} else if (y > enteredSpringY*64+33) {
 				y -= 40.0f*dt;
 			}
 
 		//Spring down
 		} else if (facing == DOWN) {
-			shadowY += SPRING_VELOCITY*dt;
-			y = shadowY + sin(PI*(timePassedSince(startedSpringing)/springTime))*50.0;
+			y += SPRING_VELOCITY*dt;
 			//Adjust the player to land in the center of the square horizontally
 			if (x < gridX*64+31) {
 				x += 40.0f*dt;
-				shadowX += 40.0f*dt;
 			} else if (x > gridX*64+33) {
 				x -= 40.0f*dt;
-				shadowX -= 40.0f*dt;
 			}
 
 		//Spring up
 		} else if (facing == UP) {
-			shadowY -= SPRING_VELOCITY*dt;
-			y = shadowY - sin(PI*(timePassedSince(startedSpringing)/springTime))*50.0;
+			y -= SPRING_VELOCITY*dt;
 			//Adjust the player to land in the center of the square horizontally
 			if (x < gridX*64+31) {
 				x += 40.0f*dt;
-				shadowX += 40.0f*dt;
 			} else if (x > gridX*64+33) {
 				x -= 40.0f*dt;
-				shadowX -= 40.0f*dt;
 			}
 		}
 
-	} else if (!springing) {
-		shadowX = x;
-		shadowY = y;
 	}
 
 	//Stop springing
@@ -1381,8 +1361,6 @@ void Player::moveTo(int _gridX, int _gridY) {
 	gridY = _gridY;
 	x = gridX*64+32;
 	y = gridY*64+32;
-	shadowX = x;
-	shadowY = y;
 	dx = dy = 0;
 }
 
@@ -1515,10 +1493,6 @@ void Player::doShrinkTunnels(float dt) {
 
 bool Player::isInvisible() {
 	return cloaked;
-}
-
-bool Player::isSpringing() {
-	return springing;
 }
 
 bool Player::isReflectingProjectiles() {

@@ -22,6 +22,7 @@
 #include "EvilWallManager.h"
 #include "LoadEffectManager.h"
 #include "WeaponParticle.h"
+#include "TapestryManager.h"
 
 #include <string>
 #include <sstream>
@@ -104,16 +105,17 @@ Environment::Environment() {
 
 	//Explode-able Mushrooms
 	hge->System_Log("Creating Environment.MushroomManager");
-	if (mushroomManager) delete mushroomManager;
 	mushroomManager = new MushroomManager();
 
 	//Evil walls
 	hge->System_Log("Creating Environment.EvilWallManager");
-	if (evilWallManager) delete evilWallManager;
 	evilWallManager = new EvilWallManager();
 
+	//Tapestries
+	hge->System_Log("Creating Environment.TapestryManager");
+	tapestryManager = new TapestryManager();
+
 	resources->GetAnimation("savePoint")->Play();
-	
 	collisionBox = new hgeRect();
 
 }
@@ -125,6 +127,7 @@ Environment::Environment() {
 Environment::~Environment() {
 
 	delete environmentParticles;
+	delete tapestryManager;
 
 	delete collisionBox;
 	delete silverCylinder;
@@ -171,7 +174,8 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 	lootManager->reset();
 	npcManager->reset();
 	enemyGroupManager->resetGroups();
-	
+	tapestryManager->reset();
+
 	//Clear old level data
 	for (int i = 0; i < 256; i++) {
 		for (int j = 0; j < 256; j++) {
@@ -319,7 +323,16 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 	for (int row = 0; row < areaHeight; row++) {
 		for (int col = 0; col < areaWidth; col++) {
 			areaFile.read(threeBuffer,3);
-			item[col][row] = atoi(threeBuffer);
+			int newItem = atoi(threeBuffer);
+
+			//Tapestries
+			if (newItem >= 15 && newItem <= 31) {
+				tapestryManager->addTapestry(col, row, item[col][row]);
+			//Other item
+			} else {
+				item[col][row] = newItem;
+			}
+
 		}
 		//Read the newline
 		areaFile.read(threeBuffer,1);
@@ -622,6 +635,9 @@ void Environment::draw(float dt) {
 	//Draw the evil walls
 	evilWallManager->draw(dt);
 
+	//Draw tapestries
+	tapestryManager->draw(dt);
+
 }
 
 
@@ -766,6 +782,9 @@ void Environment::update(float dt) {
 	//update the evil walls
 	evilWallManager->update(dt);
 
+	//Update tapestries
+	tapestryManager->update(dt);
+
 }
 
 /**
@@ -867,8 +886,6 @@ bool Environment::toggleSwitches(hgeRect *box, bool playSoundFarAway) {
  */
 bool Environment::toggleSwitches(Tongue *tongue) {
 	
-	bool hitSwitch = false;
-
 	//Loop through all the squares adjacent to Smiley
 	for (int gridX = thePlayer->gridX - 2; gridX <= thePlayer->gridX + 2; gridX++) {
 		for (int gridY = thePlayer->gridY - 2; gridY <= thePlayer->gridY + 2; gridY++) {
@@ -882,7 +899,7 @@ bool Environment::toggleSwitches(Tongue *tongue) {
 				//Check collision with any switches
 				if (timePassedSince(activated[gridX][gridY]) > .5 && tongue->testCollision(collisionBox)) {			
 					if (toggleSwitchAt(gridX, gridY, true)) {
-						hitSwitch = true;
+						return true;
 					}
 				}
 			}
@@ -1089,7 +1106,7 @@ void Environment::switchCylinders(int switchID) {
  */
 int Environment::gatherItem(int x, int y) {
 	int retVal = item[x][y];
-	if (retVal > 0 && retVal < 32) {
+	if (retVal > 0 && retVal < 16) {
 		item[x][y] = NONE;
 		if (save[x][y] != -1) saveManager->collectedItem[save[x][y]] = true;
 		return retVal;
@@ -1347,7 +1364,7 @@ bool Environment::enemyCollision(hgeRect *box, BaseEnemy *enemy, float dt) {
 /**
  * Reads any sign within *box.
  */
-void Environment::hitSigns(Tongue *tongue) {
+bool Environment::hitSigns(Tongue *tongue) {
 	
 	std::string paramString;
 
@@ -1355,34 +1372,35 @@ void Environment::hitSigns(Tongue *tongue) {
 		for (int j = thePlayer->gridY - 2; j <= thePlayer->gridY + 2; j++) {
 			if (inBounds(i,j) && collision[i][j] == SIGN) {
 				collisionBox->SetRadius(i*64+32,j*64+32,24);
-				if (timePassedSince(activated[i][j]) > .5f && tongue->testCollision(collisionBox)) {
-					activated[i][j] = gameTime;
+				if (tongue->testCollision(collisionBox)) {
 					paramString = "Sign";
 					paramString += intToString(ids[i][j]);
 					theTextBox->set(gameData->getGameText(paramString.c_str()), false, NULL, 64);
-					return;
+					return true;
 				}
 			}
 		}
 	}
+	return false;
 }
 
 
 /**
  * Opens the save menu if box collides with a save shrine
  */
-void Environment::hitSaveShrine(Tongue *tongue) {
+bool Environment::hitSaveShrine(Tongue *tongue) {
 	for (int i = thePlayer->gridX - 2; i <= thePlayer->gridX + 2; i++) {
 		for (int j = thePlayer->gridY - 2; j <= thePlayer->gridY + 2; j++) {
 			if (inBounds(i,j) && collision[i][j] == SAVE_SHRINE) {
 				collisionBox->SetRadius(i*64+32,j*64+32,24);
-				if (timePassedSince(activated[i][j]) > .5f && tongue->testCollision(collisionBox)) {
-					activated[i][j] = gameTime;
+				if (tongue->testCollision(collisionBox)) {
 					windowManager->openWindow(new MiniMenu(MINIMENU_SAVEGAME));
+					return true;
 				}
 			}
 		}
 	}
+	return false;
 }
 
 /**

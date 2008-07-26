@@ -215,6 +215,9 @@
 					RelativePath=".\src\projectiles.cpp">
 				</File>
 				<File
+					RelativePath=".\src\TapestryManager.cpp">
+				</File>
+				<File
 					RelativePath=".\src\Tongue.cpp">
 				</File>
 				<File
@@ -430,6 +433,9 @@
 				</File>
 				<File
 					RelativePath=".\src\projectiles.h">
+				</File>
+				<File
+					RelativePath=".\src\TapestryManager.h">
 				</File>
 				<File
 					RelativePath=".\src\Tongue.h">
