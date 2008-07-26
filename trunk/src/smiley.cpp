@@ -153,12 +153,33 @@ char *getTime(int time) {
 
 /**
  * Returns the specified integer as a string because the designers of C were too 
- * distracted by their beards to write a lanague that doESNT SUCK ASS FUCK SHIT
+ * distracted by their beards to write a language that doESNT SUCK ASS FUCK SHIT
  */
 char *intToString(int dickens) {
 	char * intString = (char*)malloc(10);
 	itoa(dickens, intString,10);
 	return intString;
+}
+
+/**
+ * Returns the int as a string, with the given number of digits
+ */
+
+char *intToString(int dickens, int digits) {
+	char * intString = (char*)malloc(digits);
+	
+	std::string returnString;
+	std::string placeholder;
+
+	returnString = intToString(dickens);
+
+	while (returnString.size() < digits) {
+		returnString.insert(0,"0");        				
+	}
+
+	strcpy(intString,returnString.c_str());
+	return intString;
+
 }
 
 

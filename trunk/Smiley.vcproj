@@ -250,6 +250,9 @@
 				Name="system"
 				Filter="">
 				<File
+					RelativePath=".\src\ChangeManager.cpp">
+				</File>
+				<File
 					RelativePath=".\src\GameData.cpp">
 				</File>
 				<File
@@ -469,6 +472,9 @@
 			<Filter
 				Name="system"
 				Filter="">
+				<File
+					RelativePath=".\src\ChangeManager.h">
+				</File>
 				<File
 					RelativePath=".\src\GameData.h">
 				</File>
