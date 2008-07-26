@@ -1,6 +1,7 @@
 = Enemy Variables =
 
 ||Variable||Description||Possible Values||Mandatory||
+||OneGraphic||Uses same graphic for all directions||T/F||N||
 ||GCol||Column the enemy graphics appear in enemies.png||int||Y||
 ||GRow||Row the enemy graphics appear in enemies.png||int||Y||
 ||NumFrames||Number of 2-frame animations. If you omit this the default is 4||1-4||N||
