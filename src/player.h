@@ -44,7 +44,6 @@ public:
 
 	//Accessors/mutators
 	bool isInvisible();
-	bool isSpringing();
 	bool isReflectingProjectiles();
 	bool isOnIce();
 	bool isShrunk();
@@ -69,7 +68,7 @@ public:
 	int baseGridX, baseGridY;				//The grid coordinate of the center of smiley's shadow
 	int gridX,gridY;						//Global grid coordinates
 	int lastGridX, lastGridY;
-	float shadowX, shadowY;					//Global coordinates of Smiley's shadow
+	float springOffset;
 	float screenX, screenY;					//Screen coordinates
 	float speed;
 	float dx, dy;

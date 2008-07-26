@@ -11,6 +11,7 @@ class hgeAnimation;
 class BaseEnemy;
 class MushroomManager;
 class EvilWallManager;
+class TapestryManager;
 
 //-------- Collision Layer ---------//
 #define NUM_COLLISION 36
@@ -118,8 +119,8 @@ public:
 	bool toggleSwitches(Tongue *tongue);
 	bool toggleSwitchAt(int gridX, int gridY, bool playSoundFarAway);
 	void toggleSwitch(int id);
-	void hitSigns(Tongue *tongue);
-	void hitSaveShrine(Tongue *tongue);
+	bool hitSigns(Tongue *tongue);
+	bool hitSaveShrine(Tongue *tongue);
 	bool validPath(int x1, int y1, int x2, int y2, int radius, bool canPass[256]);
 	void drawFountain();
 	bool testCollision(hgeRect *box, bool canPass[256], bool ignoreSillyPads);
@@ -160,6 +161,8 @@ public:
 
 	MushroomManager *mushroomManager; //The explode-able mushrooms
 	EvilWallManager *evilWallManager; //Evil walls which move and try to kill smiley
+	TapestryManager *tapestryManager;
+	
 	hgeAnimation *silverCylinder, *brownCylinder, *blueCylinder, *greenCylinder, *yellowCylinder, *whiteCylinder;
 	hgeAnimation *silverCylinderRev, *brownCylinderRev, *blueCylinderRev, *greenCylinderRev, *yellowCylinderRev, *whiteCylinderRev;
 	hgeParticleManager *environmentParticles;

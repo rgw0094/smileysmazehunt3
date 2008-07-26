@@ -87,13 +87,14 @@ void NPCManager::reset() {
 /**
  * Engages any NPCs within box in conversation.
  */
-void NPCManager::talkToNPCs(Tongue *tongue) {
+bool NPCManager::talkToNPCs(Tongue *tongue) {
 	std::list<NPCStruct>::iterator i;
 	for (i = theNPCs.begin(); i != theNPCs.end(); i++) {
-		if (timePassedSince(i->npc->lastConversation) > .34f && tongue->testCollision(i->npc->collisionBox)) {
-			i->npc->lastConversation = gameTime;
+		if (tongue->testCollision(i->npc->collisionBox)) {
 			theTextBox->setDialogue(i->npc->id, i->npc->textID);
 			i->npc->inConversation = true;
+			return true;
 		}
 	}
+	return false;
 }

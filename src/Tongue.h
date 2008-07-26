@@ -20,6 +20,7 @@ private:
 
 	int tongueState;
 	bool attacking;
+	bool hasActivatedSomething;
 	float timeStartedAttack;
 	float tongueOffsetAngle;
 	hgeRect *collisionBox;

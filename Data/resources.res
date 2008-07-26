@@ -1187,6 +1187,9 @@ Texture enemies {
  filename="Graphics/enemies.png"
  resgroup=2
 }
+Texture tapestriesTx {
+ filename="Graphics/tapestries.png"
+}
 
 ;*************************
 ;******** Enemies ********

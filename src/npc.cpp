@@ -30,7 +30,6 @@ NPC::NPC(int _id, int _textID, int _x,int _y) {
 	y = gridY*64 + 32;
 	facing = DOWN;
 	inConversation = false;
-	lastConversation = -5.0f;
 	collisionBox = new hgeRect();
 	futureCollisionBox = new hgeRect();
 	futureCollisionBox2 = new hgeRect();
