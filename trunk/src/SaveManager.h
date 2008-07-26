@@ -2,6 +2,7 @@
 #define _SAVEMANAGER_H_
 
 class ChangeManager;
+class BitManager;
 
 struct SaveFile {
 	bool empty;
@@ -48,6 +49,7 @@ public:
 	int money;
 
 	ChangeManager *changeManager;
+	BitManager *bitManager;
 
 private:
 
