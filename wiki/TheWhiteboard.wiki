@@ -1,17 +1,17 @@
 ===To Do===
-Fire should kill owls   	 
-Implement fire blocks 	 
-Parallax pits 	 
-Plants should burn 	 
-Mirror switch graphic 	 
-Arrow switch graphic (bunny) 	 
-Shrink tunnel switch graphic 	  
-Make yellow and green switches more saturated 	 
-Better Ranged enemy AI to make it less gay
+*Fire should kill owls   	 
+*Implement fire blocks 	 
+*Parallax pits 	 
+*Plants should burn 	 
+*Mirror switch graphic 	 
+*Arrow switch graphic (bunny) 	 
+*Shrink tunnel switch graphic 	  
+*Make yellow and green switches more saturated 	 
+*Better Ranged enemy AI to make it less gay
 
 ===Done===
-Tapestry framework
-Shade NPC's 	
-Save exploration data as bits 	 
-Re-granularize exploration data 	 
-Make arrows on id 990 draw red, not green 	 
+*Tapestry framework
+*Shade NPC's 	
+*Save exploration data as bits 	 
+*Re-granularize exploration data 	 
+*Make arrows on id 990 draw red, not green 	 
