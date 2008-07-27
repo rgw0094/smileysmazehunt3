@@ -1,4 +1,5 @@
 ===To Do===
+ * Special tile manager - for mushrooms, silly pads, fires to put out
  * Fire should kill owls   	 
  * Implement fire blocks 	 
  * Parallax pits 	 
