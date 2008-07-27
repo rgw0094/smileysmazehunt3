@@ -13,6 +13,6 @@
 ||Item||Date||Done By||
 ||Tapestry framework||7/27/08||RGW||
 ||Shade NPC's|| 7/25/08||ETI||
-||Save exploration data as bits||7/25/08||ETI
-||Re-granularize exploration data||7/25/08||ETI
-||Make arrows on id 990 draw red, not green||7/25/08||ETI
+||Save exploration data as bits||7/25/08||ETI||
+||Re-granularize exploration data||7/25/08||ETI||
+||Make arrows on id 990 draw red, not green||7/25/08||ETI||
