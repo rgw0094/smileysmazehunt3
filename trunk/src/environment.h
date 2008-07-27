@@ -9,7 +9,7 @@ class hgeRect;
 class hgeFont;
 class hgeAnimation;
 class BaseEnemy;
-class MushroomManager;
+class SpecialTileManager;
 class EvilWallManager;
 class TapestryManager;
 
@@ -157,7 +157,7 @@ public:
 	int offScreenRange;				//Number of tiles offscreen to draw
 	bool hasFountain;				//Whether or not this area has a fountain
 
-	MushroomManager *mushroomManager; //The explode-able mushrooms
+	SpecialTileManager *specialTileManager;
 	EvilWallManager *evilWallManager; //Evil walls which move and try to kill smiley
 	TapestryManager *tapestryManager;
 	

@@ -57,7 +57,7 @@ extern int gameState;
 
 #define HOVER_DURATION 10.0
 #define SPRING_VELOCITY 210.0
-#define JESUS_SANDLE_TIME 3.3
+#define JESUS_SANDLE_TIME 1.65
 
 /**
  * Constructor
@@ -265,7 +265,6 @@ void Player::update(float dt) {
 
 	//Move
 	if (inShallowWater && !springing && !(selectedAbility == WATER_BOOTS)) speedModifier = 0.5f;
-	if (onWater) speedModifier = 0.5f;
 	if (sprinting && !sliding && !iceSliding && !onWater) speedModifier *= 1.75f;
 	if (springing) speedModifier = 1.0f;
 	move(speedModifier*dx*dt,speedModifier*dy*dt,dt);
@@ -639,7 +638,34 @@ void Player::doAbility(float dt) {
 				 theEnvironment->collision[gridX][gridY] != DOWN_ARROW &&
 				 theEnvironment->collision[gridX][gridY] != ICE);
 
-	//Use triggered ability
+	
+	////////////// Fire Breath //////////////
+
+	if (canUseAbility && selectedAbility == FIRE_BREATH && input->keyDown(INPUT_ABILITY) 
+			&& mana >= gameData->getAbilityInfo(FIRE_BREATH).manaCost*(breathingFire ? dt : .25f)) {
+
+		mana -= gameData->getAbilityInfo(FIRE_BREATH).manaCost*dt;
+
+		//Start breathing fire
+		if (!breathingFire) {
+			breathingFire = true;
+			fireBreathParticle->FireAt(screenX + mouthXOffset[facing], screenY + mouthYOffset[facing]);
+			soundManager->playAbilityEffect("snd_fireBreath", true);
+		}
+
+		//Update breath direction and location
+		fireBreathParticle->info.fDirection = angles[facing];
+		fireBreathParticle->MoveTo(screenX + mouthXOffset[facing], screenY + mouthYOffset[facing], false);
+
+	//Stop breathing fire
+	} else if (breathingFire) {
+		soundManager->stopAbilityChannel();
+		breathingFire = false;
+		fireBreathParticle->Stop(false);
+	}
+
+	/////////////////// Triggered Abilities ///////////////
+
 	if (input->keyPressed(INPUT_ABILITY) && canUseAbility) {
 
 		//Shoot lightning orbs
@@ -691,30 +717,6 @@ void Player::doAbility(float dt) {
 	if (!breathingIce) iceBreathParticle->Stop(true);
 	fireBreathParticle->Update(dt);
 
-	////////////// Fire Breath //////////////
-
-	if (canUseAbility && selectedAbility == FIRE_BREATH && input->keyDown(INPUT_ABILITY) 
-			&& mana >= gameData->getAbilityInfo(FIRE_BREATH).manaCost*(breathingFire ? dt : .25f)) {
-
-		mana -= gameData->getAbilityInfo(FIRE_BREATH).manaCost*dt;
-
-		//Start breathing fire
-		if (!breathingFire) {
-			breathingFire = true;
-			fireBreathParticle->FireAt(screenX + mouthXOffset[facing], screenY + mouthYOffset[facing]);
-			soundManager->playAbilityEffect("snd_fireBreath", true);
-		}
-
-		//Update breath direction and location
-		fireBreathParticle->info.fDirection = angles[facing];
-		fireBreathParticle->MoveTo(screenX + mouthXOffset[facing], screenY + mouthYOffset[facing], false);
-
-	//Stop breathing fire
-	} else if (breathingFire) {
-		soundManager->stopAbilityChannel();
-		breathingFire = false;
-		fireBreathParticle->Stop(false);
-	}
 
 	////////////// Ice Breath //////////////
 

@@ -62,8 +62,8 @@ char *GameData::getAreaName(int area) {
 
 void GameData::loadAbilityData() {
 
-	//Smiley's Cane
-	strcpy(abilities[CANE].description, "Mysterious Cane");
+	//Clinton's Cane
+	strcpy(abilities[CANE].description, "Cane Of Clinton");
 	abilities[CANE].type = ACTIVATED;
 	abilities[CANE].manaCost = 10;
 

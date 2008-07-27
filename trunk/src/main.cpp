@@ -123,7 +123,7 @@ void loadResources() {
 
 	//Ability Sprites
 	for (int i = 0; i < NUM_ABILITIES; i++) {
-		abilitySprites[i] = new hgeSprite(resources->GetTexture("general"),192+i*64,0,64,64);
+		abilitySprites[i] = new hgeSprite(resources->GetTexture("general"),193+i*64,1,62,62);
 	}
 
 }
