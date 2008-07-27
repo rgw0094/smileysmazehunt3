@@ -92,8 +92,8 @@ void SaveManager::resetCurrentData() {
 
 	//reset explored data
 	for (int i = 0; i < NUM_AREAS; i++) {
-		for (int j = 0; j < 32; j++) {
-			for (int k = 0; k < 32; k++) {
+		for (int j = 0; j < 256; j++) {
+			for (int k = 0; k < 256; k++) {
 				explored[i][j][k] = false;
 			}
 		}
@@ -226,9 +226,7 @@ void SaveManager::load(int fileNumber) {
 					bitManager->setChar(nextChar);
 				}			
 			}
-			//inFile.read(buffer,1); //newline
 		}
-		//inFile.read(buffer,1); //newline
 	}
 
 }

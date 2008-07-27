@@ -1239,6 +1239,9 @@ void Player::doWater() {
 
 }
 
+/**
+ * Listens for movement input from the player and acts accordingly.
+ */
 void Player::doMovement(float dt) {
 
 	if (frozen || drowning || falling) return;
