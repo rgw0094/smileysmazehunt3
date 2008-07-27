@@ -200,9 +200,6 @@
 					RelativePath=".\src\lootmanager.cpp">
 				</File>
 				<File
-					RelativePath=".\src\MushroomManager.cpp">
-				</File>
-				<File
 					RelativePath=".\src\npc.cpp">
 				</File>
 				<File
@@ -213,6 +210,9 @@
 				</File>
 				<File
 					RelativePath=".\src\projectiles.cpp">
+				</File>
+				<File
+					RelativePath=".\src\SpecialTileManager.cpp">
 				</File>
 				<File
 					RelativePath=".\src\TapestryManager.cpp">
@@ -426,9 +426,6 @@
 					RelativePath=".\src\lootmanager.h">
 				</File>
 				<File
-					RelativePath=".\src\MushroomManager.h">
-				</File>
-				<File
 					RelativePath=".\src\npc.h">
 				</File>
 				<File
@@ -439,6 +436,9 @@
 				</File>
 				<File
 					RelativePath=".\src\projectiles.h">
+				</File>
+				<File
+					RelativePath=".\src\SpecialTileManager.h">
 				</File>
 				<File
 					RelativePath=".\src\TapestryManager.h">

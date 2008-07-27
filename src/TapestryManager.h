@@ -9,6 +9,7 @@ class hgeDistortionMesh;
 
 struct Tapestry {
 	hgeDistortionMesh *distortion;
+	int granularity;
 	float x, y;
 };
 

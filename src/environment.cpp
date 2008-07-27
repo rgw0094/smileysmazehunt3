@@ -18,7 +18,7 @@
 #include "GameData.h"
 #include "hgeparticle.h"
 #include "Tongue.h"
-#include "MushroomManager.h"
+#include "SpecialTileManager.h"
 #include "EvilWallManager.h"
 #include "LoadEffectManager.h"
 #include "WeaponParticle.h"
@@ -104,9 +104,9 @@ Environment::Environment() {
 	whiteCylinderRev = new hgeAnimation(animationTexture,5,20,0,8*64,64,64);
 	whiteCylinderRev->SetMode(HGEANIM_FWD);
 
-	//Explode-able Mushrooms
-	hge->System_Log("Creating Environment.MushroomManager");
-	mushroomManager = new MushroomManager();
+	//Manager for special tiles
+	hge->System_Log("Creating Environment.SpecialTileManager");
+	specialTileManager = new SpecialTileManager();
 
 	//Evil walls
 	hge->System_Log("Creating Environment.EvilWallManager");
@@ -129,7 +129,7 @@ Environment::~Environment() {
 
 	delete environmentParticles;
 	delete evilWallManager;
-	delete mushroomManager;
+	delete specialTileManager;
 	delete tapestryManager;
 
 	delete collisionBox;
@@ -295,7 +295,7 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 
 			//Mushrooms
 			if (collision[col][row] == DIZZY_MUSHROOM_1 || collision[col][row] == DIZZY_MUSHROOM_2) {
-				mushroomManager->addMushroom(col,row,collision[col][row]);
+				specialTileManager->addMushroom(col,row,collision[col][row]);
 			}
 			
 			//Evil wall stuff
@@ -325,9 +325,9 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 			areaFile.read(threeBuffer,3);
 			int newItem = atoi(threeBuffer);
 
-			//Tapestries
-			if (newItem >= 15 && newItem <= 31) {
-				tapestryManager->addTapestry(col, row, item[col][row]);
+			//Tapestries - second row of the item layer
+			if (newItem >= 16 && newItem < 32) {
+				tapestryManager->addTapestry(col, row, newItem);
 			//Other item
 			} else {
 				item[col][row] = newItem;
@@ -640,7 +640,7 @@ void Environment::draw(float dt) {
 	}
 
 	//Draw the mushrooms
-	mushroomManager->draw(dt);
+	specialTileManager->draw(dt);
 
 	//Draw the evil walls
 	evilWallManager->draw(dt);
@@ -788,7 +788,7 @@ void Environment::update(float dt) {
 	}
 
 	//update the mushrooms
-	mushroomManager->update(dt);
+	specialTileManager->update(dt);
 
 	//update the evil walls
 	evilWallManager->update(dt);

@@ -8,7 +8,8 @@ extern hgeResourceManager *resources;
 
 extern float gameTime;
 
-#define GRANULARITY 8
+#define EVIL_TAPESTRY 19
+
 /**
  * Constructor
  */
@@ -32,11 +33,25 @@ void TapestryManager::addTapestry(int gridX, int gridY, int id) {
 	Tapestry newTapestry;
 	newTapestry.x = gridX * 64.0;
 	newTapestry.y = gridY * 64.0;
-	newTapestry.distortion = new hgeDistortionMesh(GRANULARITY, GRANULARITY);
-	//newTapestry.distortion->SetTexture(resources->GetTexture("itemLayer2"));
-	//newTapestry.distortion->SetTextureRect(833,1,190,254);
-	newTapestry.distortion->SetTexture(resources->GetTexture("itemLayer1"));
-	newTapestry.distortion->SetTextureRect(1,65,62,62);	
+
+	//Set texture - single square tapestries can just use the 
+	switch (id) {
+
+		case EVIL_TAPESTRY:
+			newTapestry.distortion = new hgeDistortionMesh(8, 8);
+			newTapestry.distortion->SetTexture(resources->GetTexture("general"));
+			newTapestry.distortion->SetTextureRect(449,129,190,254);
+			newTapestry.granularity = 8;
+			break;
+
+		default:
+			//By default just use the graphic in the item layer
+			newTapestry.distortion = new hgeDistortionMesh(4, 4);
+			newTapestry.distortion->SetTexture(resources->GetTexture("itemLayer1"));
+			newTapestry.distortion->SetTextureRect((id-16)*64 + 1,65,62,62);
+			newTapestry.granularity = 4;
+	}
+	
 	newTapestry.distortion->SetBlendMode(BLEND_COLORADD | BLEND_ALPHABLEND | BLEND_ZWRITE);
 	newTapestry.distortion->Clear(0xFF000000);
 
@@ -61,12 +76,12 @@ void TapestryManager::draw(float dt) {
 void TapestryManager::update(float dt) {
 	std::list<Tapestry>::iterator i;
 	for (i = tapestryList.begin(); i != tapestryList.end(); i++) {
-		for (int x = 0; x < GRANULARITY; x++) {
-			for(int y = 1; y < GRANULARITY; y++) {
+		for (int x = 0; x < i->granularity; x++) {
+			for(int y = 1; y < i->granularity; y++) {
 				i->distortion->SetDisplacement(
 					x, //column
 					y, //row
-					cosf(gameTime*2.0+y*4.0/GRANULARITY)*0.5*y, //dx
+					cosf(gameTime*2.0+y*4.0/i->granularity)*0.5*y, //dx
 					sinf(gameTime*3.0+(x+y)/2)*2, //dy					
 					HGEDISP_NODE); //reference
 

@@ -165,7 +165,7 @@ void TextBox::draw(float dt) {
 		resources->GetSprite("textBox")->Render(x,y);
 
 		npcSprites[HINT_MAN][DOWN]->Render(x+60, y+50);
-		resources->GetFont("textBoxNameFnt")->printf(x + 220, y+20, HGETEXT_CENTER, "%s", "Hint Man");
+		resources->GetFont("textBoxNameFnt")->printf(x + 220, y+20, HGETEXT_CENTER, "%s", "Bill Clinton");
 
 		//Print the current page of the hint
 		paramString = "Hint";
