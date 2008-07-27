@@ -453,7 +453,7 @@ numEnemies="47"
 29HasRanged= "T"
 29PType=     "5"
 29Range=     "300"
-29Delay=     "1.8"
+29Delay=     "4"
 29PSpeed=    "150"
 29PDamage=   "25"
 
