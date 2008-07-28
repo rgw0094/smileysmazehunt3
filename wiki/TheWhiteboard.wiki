@@ -15,6 +15,7 @@
  * Super springs (skips 3 blocks instead of 1)
  * Have Fenwar make more appearances than just in Smolder Hollow and the end
  * Fix the spikey moving walls
+ * Make the fountain heal you
 
 ===Done===
 ||Item||Date||Done By||
