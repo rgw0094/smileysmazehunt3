@@ -13,7 +13,8 @@
  * Tentacles are too easy right now.  Change their movement pattern?
  * When using fire on the shore of deep water, if you immediately (through the inventory) put on Jesus' Sandals and walk on the water the flame breath will continue to be used long enough to hit ice blocks that should be out of reach.
  * Super springs (skips 3 blocks instead of 1)
- * Have Fenwar make more appearances than just in Smolder Hollow and the end.
+ * Have Fenwar make more appearances than just in Smolder Hollow and the end
+ * Fix the spikey moving walls
 
 ===Done===
 ||Item||Date||Done By||
