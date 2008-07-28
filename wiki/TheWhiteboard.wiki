@@ -2,13 +2,17 @@
  * Special tile manager - for mushrooms, silly pads, fires to put out
  * Fire should kill owls   	 
  * Implement fire blocks 	 
- * Parallax pits 	 
+ * Parallax pits - Use ID layer to change HUE to match the level	 
  * Plants should burn 	 
  * Mirror switch graphic 	 
  * Arrow switch graphic (bunny) 	 
  * Shrink tunnel switch graphic 	  
+ * Shrink tunnels in general need tweaking - you can get Smiley to stand inside them
  * Make yellow and green switches more saturated 	 
  * Better Ranged enemy AI to make it less gay
+ * Tentacles are too easy right now.  Change their movement pattern?
+ * When using fire on the shore of deep water, if you immediately (through the inventory) put on Jesus' Sandals and walk on the water the flame breath will continue to be used long enough to hit ice blocks that should be out of reach.
+ * Super springs (skips 3 blocks instead of 1)
 
 ===Done===
 ||Item||Date||Done By||
