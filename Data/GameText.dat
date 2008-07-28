@@ -16,6 +16,21 @@ Hint0-3 = "So have you even talked to Jethro?  He told you to go down south of S
 Hint0-4 = "I've heard that there's a powerful item in some mysterious cavern down there."
 Hint0-5 = "Hope that helped.  I'll see you around."
 
+Hint1Pages = "5"
+Hint1-1 = "Hey Smiley.  Stumped again?"
+Hint1-2 = "Well it's understandable.  This is a big world we live in...  with a lot of nice-looking women in it."
+Hint1-3 = "I'm going to be honest, I have no idea what you need to do next."
+Hint1-4 = "But, one of my former vice-presidents thinks you should help combat global cooling by melting the ice caps with your new fire breath."
+Hint1-5 = "So why don't you give that a shot first?  Alright, that's all for now.  Take care!"
+
+Hint2Pages = ""
+Hint2-1 = "Smiley, buddy!  What's happening?"
+Hint2-2 = "I've heard you got a frisbee.  That's pretty cool.  I used to play a lot back in the day, when I wasn't stoned."
+Hint2-3 = "You should try hitting stuff with it.  Like Hillary!  Haha just kidding."
+Hint2-4 = "But seriously, I'm getting a vision.  You need to go fight an evil tree."
+Hint2-5 = "Now where would you be most likely to find an evil tree?  That's your job."
+
+
 
 
 
@@ -54,7 +69,7 @@ Sign16 = "This way to Mount Frostbite."
 Sign17 = "Bridge currently out of order.  Construction will continue one day, hopefully."
 Sign18 = "Ahead lies the temple of the sacred frisbee.  Tours are cancelled until evil creatures go away.  Beware."
 Sign23 = "Some switches only work for a certain period of time..."
-Sign30 = "Ahead is a mysterious warp to the Realm of Despair.  Enter at your own risk."
+Sign30 = "This way to a mysterious warp to the Realm of Despair.  Enter at your own risk."
 Sign44 = "\nTwo Snowfangs, each wielding a flail, have blocked the passage. They reside southwest of here."
 Sign45 = "Only those able to find the 3 hidden switches of Mount Frostbite may access the treasures at the peak."
 Sign46 = "To the right: CERTAIN DEATH\n\nTo the left: save point"
@@ -70,7 +85,7 @@ Sign24 = "This is the first of the dark switches.  The rest will not come so eas
 Sign25 = "My home is just down yonder cobblestone path."
 Sign26 = "Garmborn's lair, just ahead."
 Sign39 = "The Magic Mushroom Cave is ahead.  Its entrance is guarded by the impenetrable turrets of Brian Fungus."
-Sign41 = "\nSwamp of Ill Destiny, just ahead"
+Sign41 = "\nSwamp of Ill Destiny lies due north."
 Sign42 = "A large boulder blocks the path.\n \nAnother entrance must be found if the swamp is to be entered."
 Sign43 = "Fenwar received one less boulder than he ordered from BoulderDash, Inc.\nI wonder if he made an illusion to compensate?"
 Sign49 = "God said this fire will burn forever as a neverending source of energy for this world.  Please do NOT put it out and cause an energy crisis!"
@@ -83,9 +98,10 @@ Sign33 = "Four, Three, Two, One, keys in each layer, isn't that fun?\n\n-Calypso
 Sign38 = "To the north lies the Serpentine Path, which leads to the Castle of Evil (Fenwar's lair)."
 Sign40 = "Note to the workers: Please remove these springs when you get a chance. Doing so will hinder Smiley's progress permanently. \n-Lord Phyrebawz"
 Sign50 = "This puzzle is not for the faint-of-heart. It's just a gem, so skip it if you want!"
-Sign53 = "The Pools of the Dead is ahead, home of Lord Phyrebawz."
+Sign53 = "The Pools of the Dead - home of Lord Phyrebawz."
 
-
+;TUT.SMH
+Sign54 = "Shine your light into the hall of mirrors as the great Kings direct."
 
 
 
@@ -165,9 +181,9 @@ NPC4-6 = "Of course, my father told me a lot of garbage stories to get me to go 
 ;FOREST.SMH
 NPC7Name="Fauna Biologist"
 NPC7Pages="3"
-NPC7-1="Ahoy there! I'm glad you found me this deep in the forest."
-NPC7-2="The last time I saw another member of the species Spherifageous was when I was yet a wee lad."
-NPC7-3="Well then, I needn't keep you any longer. You'd best be on your way!"
+NPC7-1 = "Ahoy there! I'm glad you found me this deep in the forest."
+NPC7-2 = "The last time I saw another member of the species Spherifageous was when I was yet a wee lad."
+NPC7-3 = "Well then, I needn't keep you any longer. You'd best be on your way!"
 
 NPC9Name = "Yauyau"
 NPC9Pages = "5"
@@ -180,6 +196,38 @@ NPC9-5 = "I'd rather pace in this enclosed area for the rest of my life than loo
 
 
 
+;TUT.SMH
+NPC11Name = "King Mah I"
+NPC11Pages = "1"
+NPC11-1 = "Battles bestrew bloodied barbarian bodies."
+
+NPC12Name = "King Mah II"
+NPC12Pages = "1"
+NPC12-1 = "An ample alabaster ankh always alleviates an annoyance."
+
+NPC13Name = "King Mah III"
+NPC13Pages = "1"
+NPC13-1 = "Crazed corrupt crows can caw continuously."
+
+NPC14Name = "King Mah IV"
+NPC14Pages = "1"
+NPC14-1 = "Always ally an awfully aggressive adversary."
+
+NPC15Name = "King Mah V"
+NPC15Pages = "1"
+NPC15-1 = "Belated breathing brings brewing burial."
+
+NPC16Name = "King Mah VI"
+NPC16Pages = "1"
+NPC16-1 = "Chaos can cause copius conundrums."
+
+NPC17Name = "King Mah VII"
+NPC17Pages = "1"
+NPC17-1 = "Death decidedly dominates depressing doldrums."
+
+NPC18Name = "King Mah VIII"
+NPC18Pages = "1"
+NPC18-1 = "Do dank dungeons desire dutiful detergent dolloping?"
 
 
 
