@@ -16,8 +16,6 @@
 #define MUSHROOM_EXPLOSION_DAMAGE 0.75
 #define MUSHROOM_EXPLOSION_KNOCKBACK 156.0
 
-//#define MUSHROOM_DRAW_Y_OFFSET -32 //So the hot spot can be on the bottom, thus making the grow look right
-
 extern hgeSprite *walkLayer[256];
 extern Environment *theEnvironment;
 extern Player *thePlayer;
