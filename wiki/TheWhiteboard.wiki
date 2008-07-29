@@ -12,7 +12,6 @@
  * Better Ranged enemy AI to make it less gay
  * Tentacles are too easy right now.  Change their movement pattern?
  * When using fire on the shore of deep water, if you immediately (through the inventory) put on Jesus' Sandals and walk on the water the flame breath will continue to be used long enough to hit ice blocks that should be out of reach.
- * Super springs (skips 3 blocks instead of 1)
  * Have Fenwar make more appearances than just in Smolder Hollow and the end
  * Fix the spikey moving walls
  * Make the fountain heal you
@@ -22,6 +21,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Super springs||7/29/08||RGW||
 ||Make it so that you don't start with the cane||7/29/08||RGW||
 ||Save what walls have been bombed||7/28/08||RGW||
 ||Leet Title Screen||7/28/08||RMM||
