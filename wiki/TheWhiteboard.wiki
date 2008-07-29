@@ -14,10 +14,10 @@
  * Have Fenwar make more appearances than just in Smolder Hollow and the end
  * Fix the spikey moving walls
  * Make the fountain heal you
- * Make it save the bomb-walls being destroyed
 
 ===Done===
 ||Item||Date||Done By||
+||Save what walls have been bombed||7/28/08||RGW||
 ||Fires to put out||7/27/08||RGW||
 ||Special Tile Manager||7/27/08||RGW||
 ||Tapestry framework||7/27/08||RGW||
