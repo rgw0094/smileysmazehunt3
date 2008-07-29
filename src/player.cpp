@@ -78,7 +78,7 @@ Player::Player(int _gridX, int _gridY) {
 	radius = DEFAULT_RADIUS;
 	collisionCircle = new CollisionCircle();
 	collisionCircle->set(x,y,PLAYER_WIDTH/2-3);
-	selectedAbility = CANE;
+	selectedAbility = saveManager->hasAbility[CANE] ? CANE : NO_ABILITY;;
 	alpha = 255.0f;
 	hoveringYOffset = 0;
 	timeFrozen = 0.0;
@@ -501,7 +501,7 @@ void Player::drawGUI(float dt) {
 
 	//Draw selected ability
 	resources->GetSprite("abilityBox")->Render(28,28);
-	if (selectedAbility < NUM_ABILITIES) {
+	if (selectedAbility != NO_ABILITY) {
 		abilitySprites[selectedAbility]->Render(39,39);
 	}
 
