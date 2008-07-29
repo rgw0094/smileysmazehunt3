@@ -39,6 +39,20 @@ SaveManager::~SaveManager() {
 }
 
 /**
+ * Records a change at the specified tile.
+ */
+void SaveManager::change(int gridX, int gridY) {
+	changeManager->change(currentArea, gridX, gridY);
+}
+
+/**
+ * Returns whether or not the specified tile has a change on it.
+ */
+bool SaveManager::isTileChanged(int gridX, int gridY) {
+	return changeManager->isChanged(currentArea, gridX, gridY);
+}
+
+/**
  * Returns whether or not (gridX, gridY) is explored in the current area
  */
 bool SaveManager::isExplored(int gridX, int gridY) {

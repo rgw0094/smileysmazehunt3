@@ -23,13 +23,14 @@ public:
 	void save();
 	void deleteFile(int fileNumber);
 	void startNewGame(int fileNumber);
-
 	void saveFileInfo();
 	void loadFileInfo();
 	bool isFileEmpty(int file);
 	int getTimePlayed(int file);
 	int getCompletion(int file);
 	void incrementTimePlayed(int file, int amount);
+	void change(int gridX, int gridY);
+	bool isTileChanged(int gridX, int gridY);
 
 	void explore(int gridX, int gridY);
 	bool isExplored(int gridX, int gridY);
@@ -46,12 +47,12 @@ public:
 	int numKeys[5][4];
 	int numGems[9][4];
 	int numUpgrades[3];
-	int money;
-
-	ChangeManager *changeManager;
-	BitManager *bitManager;
+	int money;	
 
 private:
+	
+	ChangeManager *changeManager;
+	BitManager *bitManager;
 
 	SaveFile files[4];
 	bool explored[9][256][256];
