@@ -5,7 +5,8 @@
  * Mirror switch graphic 	 
  * Arrow switch graphic (bunny) 	 
  * Shrink tunnel switch graphic 	  
- * Shrink tunnels in general need tweaking - you can get Smiley to stand inside them
+ * Shrink tunnels in general need tweaking - we need some collision boxes on the sides.
+ * In the block above the horizontal shrink tunnels the mainlayer is drawn over top of Smiley for some reason
  * Make yellow and green switches more saturated 	 
  * Better Ranged enemy AI to make it less gay
  * Tentacles are too easy right now.  Change their movement pattern?
