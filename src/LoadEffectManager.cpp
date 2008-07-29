@@ -66,6 +66,7 @@ void LoadEffectManager::displayNewAreaName() {
  */
 void LoadEffectManager::startEffect(int _destinationX, int _destinationY, int _destinationArea) {
 	
+	doneZoomingIn = false;
 	destinationX = _destinationX;
 	destinationY = _destinationY;
 	destinationArea = _destinationArea;
@@ -110,9 +111,8 @@ void LoadEffectManager::update(float dt) {
 
 	//Circle zooming in
 	if (state == STATE_IN) {
-		loadingEffectScale -= 6.0 * dt;
-		//Done zooming in
-		if (loadingEffectScale < 0.00001) {
+		
+		if (doneZoomingIn) {
 			loadingEffectScale = 0.00001;
 
 			//Relocate Smiley
@@ -126,6 +126,14 @@ void LoadEffectManager::update(float dt) {
 			}
 			
 			state = STATE_OUT;
+		} else {
+			loadingEffectScale -= 6.0 * dt;
+		}
+
+		//When done zooming in don't actually move Smiley until the next frame so
+		//that it draws the circle completely zoomed in while the level is loading
+		if (loadingEffectScale < 0.00001) {
+			doneZoomingIn = true;
 		}
 
 	//Circle zooming out

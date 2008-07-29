@@ -22,6 +22,7 @@ private:
 	int destinationY;
 	int destinationArea;
 
+	bool doneZoomingIn;
 	float timeLevelLoaded;
 	float zoneTextAlpha;
 	float loadingEffectScale;

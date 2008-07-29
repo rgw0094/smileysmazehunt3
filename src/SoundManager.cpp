@@ -13,9 +13,9 @@ extern Input *input;
 SoundManager::SoundManager() {
 
 	//Music volume starts at what it was when app was closed last
-	setMusicVolume(hge->Ini_GetInt("Options", "volume", 100));
-	timeChangedMusicVolume = -10.0f;
-	lockMusicVolume = false;
+	setMusicVolume(hge->Ini_GetInt("Options", "musicVolume", 100));
+	setMusicVolume(hge->Ini_GetInt("Options", "soundVolume", 100));
+	timeChangedVolume = -10.0f;
 
 }
 
@@ -31,8 +31,6 @@ SoundManager::~SoundManager() {
  * Changes the music channel to play the specified song.
  */
 void SoundManager::playMusic(char *music) {
-
-	lockMusicVolume = false;
 
 	previousMusic = currentMusic;
 	previousMusicPosition = hge->Channel_GetPos(musicChannel);
@@ -55,7 +53,6 @@ void SoundManager::stopMusic() {
  * Stops the music by fading out.
  */
 void SoundManager::fadeOutMusic() {
-	lockMusicVolume = true;
 	hge->Channel_SlideTo(musicChannel,3.0f,0,-101,-1.0f);
 }
 
@@ -66,9 +63,21 @@ void SoundManager::setMusicVolume(int newVolume) {
 	musicVolume = newVolume;
 	if (musicVolume < 0) musicVolume = 0;
 	if (musicVolume > 100) musicVolume = 100;
-	hge->Channel_SetVolume(musicChannel, musicVolume);
-	timeChangedMusicVolume = hge->Timer_GetTime();
-	hge->Ini_SetInt("Options", "volume", musicVolume);
+	hge->System_SetState(HGE_MUSVOLUME, musicVolume);
+	timeChangedVolume = hge->Timer_GetTime();
+	hge->Ini_SetInt("Options", "musicVolume", musicVolume);
+}
+
+/**
+ * Sets a new sound volume.
+ */
+void SoundManager::setSoundVolume(int newVolume) {
+	soundVolume = newVolume;
+	if (soundVolume < 0) soundVolume = 0;
+	if (soundVolume > 100) soundVolume = 100;
+	hge->System_SetState(HGE_FXVOLUME, soundVolume);
+	timeChangedVolume = hge->Timer_GetTime();
+	hge->Ini_SetInt("Options", "soundVolume", soundVolume);
 }
 
 /**
@@ -103,13 +112,13 @@ void SoundManager::stopAbilityChannel() {
  */
 void SoundManager::update(float dt) {
 	//Input to change music volume
-	if (!lockMusicVolume) {
-		if (input->keyPressed(INPUT_VOLUME_UP)) {
-			setMusicVolume(musicVolume + 10);
-		} 
-		if (input->keyPressed(INPUT_VOLUME_DOWN)) {
-			setMusicVolume(musicVolume - 10);
-		}
+	if (input->keyPressed(INPUT_VOLUME_UP)) {
+		setMusicVolume(musicVolume + 10);
+		setSoundVolume(soundVolume + 10);
+	} 
+	if (input->keyPressed(INPUT_VOLUME_DOWN)) {
+		setMusicVolume(musicVolume - 10);
+		setSoundVolume(soundVolume - 10);
 	}
 }
 
@@ -118,7 +127,7 @@ void SoundManager::update(float dt) {
  */
 void SoundManager::draw(float dt) {
 	//Display music volume after it was changed
-	if (timeChangedMusicVolume > hge->Timer_GetTime() - 2.0f) {
+	if (timeChangedVolume > hge->Timer_GetTime() - 2.0f) {
 		resources->GetFont("curlz")->SetColor(ARGB(255,0,255,0));
 		resources->GetFont("curlz")->printf(512,10,HGETEXT_CENTER,"Music Volume: %d", musicVolume);
 		resources->GetFont("curlz")->SetColor(ARGB(255,255,255,255));
