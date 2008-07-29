@@ -1,7 +1,5 @@
 ===To Do===
- * Special tile manager - for mushrooms, silly pads, fires to put out
- * Fire should kill owls   	 
- * Implement fire blocks 	 
+ * Fire should kill owls   	  
  * Parallax pits - Use ID layer to change HUE to match the level	 
  * Plants should burn 	 
  * Mirror switch graphic 	 
@@ -20,6 +18,8 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fires to put out||7/27/08||RGW||
+||Special Tile Manager||7/27/08||RGW||
 ||Tapestry framework||7/27/08||RGW||
 ||Shade NPC's|| 7/25/08||ETI||
 ||Save exploration data as bits||7/25/08||ETI||
