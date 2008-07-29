@@ -31,6 +31,12 @@ Hint2-4 = "But seriously, I'm getting a vision.  You need to go fight an evil tr
 Hint2-5 = "Now where would you be most likely to find an evil tree?  That's your job."
 Hint2-6 = "That's all for now.  Adios Smiley."
 
+Hint3Pages = ""
+Hint3-1 = "Smiley.  What's up?  I'm a little busy so let's make this snappy."
+Hint3-2 = "I'm a little sick of you bugging me.  Why is it always about helping you?!"
+Hint3-3 = "... Sorry I'm bad with relationships."
+Hint3-4 = "
+
 
 
 
@@ -128,8 +134,8 @@ NPC5-3 = "If you help me out, I'll repay you!  You have my word."
 
 NPC8Name = "Bill Clinton"
 NPC8Pages = "2"
-NPC8-1 = "Hi, I'm former US President Bill Clinton."
-NPC8-2 = "Here take this cane, it will let us communicate telepathically, lol."
+NPC8-1 = "Hi, I'm former US President Bill Clinton.  Thanks for licking me."
+NPC8-2 = "In return, take this cane, it will let us communicate telepathically, lol."
 
 
 
@@ -206,7 +212,7 @@ NPC12-1 = "An ample alabaster ankh always alleviates an annoyance."
 
 NPC13Name = "King Mah III"
 NPC13Pages = "1"
-NPC13-1 = "Crazed corrupt crows can caw continuously."
+NPC13-1 = "Crazed, corrupt crows can caw continuously."
 
 NPC14Name = "King Mah IV"
 NPC14Pages = "1"
