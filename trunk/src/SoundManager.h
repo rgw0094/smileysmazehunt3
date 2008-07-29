@@ -17,6 +17,7 @@ public:
 	void fadeOutMusic();
 	void playPreviousMusic();
 	void setMusicVolume(int newVolume);
+	void setSoundVolume(int soundVolume);
 	void update(float dt);
 	void draw(float dt);
 	void playEnvironmentEffect(char *effect, bool loop);
@@ -34,8 +35,8 @@ private:
 	std::string previousMusic;
 	int previousMusicPosition;
 	int musicVolume;
-	float timeChangedMusicVolume;
-	bool lockMusicVolume;
+	int soundVolume;
+	float timeChangedVolume;
 
 };
 
