@@ -501,9 +501,7 @@ void Environment::draw(float dt) {
 					theCollision != ENEMY_NO_WALK && theCollision != PLAYER_START && 
 					theCollision != DIZZY_MUSHROOM_1 && theCollision != DIZZY_MUSHROOM_2 &&
 					theCollision != PLAYER_END && theCollision != PIT && 
-					theCollision != UNWALKABLE_PROJECTILE && 
-					theCollision != SHRINK_TUNNEL_HORIZONTAL &&
-					theCollision != SHRINK_TUNNEL_VERTICAL &&			
+					theCollision != UNWALKABLE_PROJECTILE && 		
 					theCollision != FLAME &&
 					theCollision != FIRE_DESTROY &&
 					!(isWarp(theCollision) && 
@@ -685,16 +683,12 @@ void Environment::drawAfterSmiley(float dt) {
 					itemLayer[item[gridX][gridY]]->Render(drawX,drawY);
 				}
 
-				//Shrink tunnels
-				if (collision[gridX][gridY] == SHRINK_TUNNEL_HORIZONTAL || collision[gridX][gridY] == SHRINK_TUNNEL_VERTICAL) {
+				//Shrink tunnels unless Smiley is directly underneath it and not 
+				//yet in the shrink tunnel
+				if ((collision[gridX][gridY] == SHRINK_TUNNEL_HORIZONTAL || 
+						collision[gridX][gridY] == SHRINK_TUNNEL_VERTICAL) &&
+						!(thePlayer->gridY == gridY+1 && !thePlayer->isInShrinkTunnel())) {
 					walkLayer[collision[gridX][gridY]]->Render(drawX, drawY);
-				}
-
-				//Draw everything above a horizontal shrink tunnel after smiley so that his
-				//hat doesn't overlap it
-				if (collision[gridX][gridY+1] == SHRINK_TUNNEL_HORIZONTAL) {
-					mainLayer[terrain[gridX][gridY]]->Render(drawX, drawY);
-					itemLayer[item[gridX][gridY]]->Render(drawX, drawY);
 				}
 
 			}

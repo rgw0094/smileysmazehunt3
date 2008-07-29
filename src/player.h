@@ -48,6 +48,7 @@ public:
 	bool isReflectingProjectiles();
 	bool isOnIce();
 	bool isShrunk();
+	bool isInShrinkTunnel();
 	void setHealth(float amount);
 	float getHealth();
 	float getMaxHealth();
