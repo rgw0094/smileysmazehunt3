@@ -17,6 +17,7 @@
  * Make the fountain heal you
  * Make it so that you don't start with the cane
  * Have Bill Clinton have another text for after he gives you the cane - maybe he just tells his hints?
+ * You can still walk diagonally between two arrow blocks.
 
 ===Done===
 ||Item||Date||Done By||
