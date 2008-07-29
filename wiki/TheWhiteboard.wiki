@@ -15,6 +15,8 @@
  * Have Fenwar make more appearances than just in Smolder Hollow and the end
  * Fix the spikey moving walls
  * Make the fountain heal you
+ * Make it so that you don't start with the cane
+ * Have Bill Clinton have another text for after he gives you the cane - maybe he just tells his hints?
 
 ===Done===
 ||Item||Date||Done By||
