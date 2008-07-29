@@ -6,6 +6,11 @@ Font curlz {
  tracking=1.0
  resgroup=3
 }
+Font titleFnt {
+ filename="titleFnt.fnt"
+ tracking=1.0
+ resgroup=3
+}
 Font controls {
  filename="controls.fnt"
  tracking=1.0
