@@ -526,6 +526,8 @@ void Environment::draw(float dt) {
 						resources->GetAnimation("greenWater")->Render(drawX,drawY);
 					} else if (theCollision == SPRING_PAD && gameTime - 0.5f < activated[i+xGridOffset][j+yGridOffset]) {
 						resources->GetAnimation("spring")->Render(drawX,drawY);
+					} else if (theCollision == SUPER_SPRING && gameTime - 0.5f < activated[i+xGridOffset][j+yGridOffset]) {
+						resources->GetAnimation("superSpring")->Render(drawX, drawY);
 					
 					//Switch animations
 					} else if ((theCollision == SILVER_SWITCH_LEFT || theCollision == SILVER_SWITCH_RIGHT) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
@@ -729,6 +731,7 @@ void Environment::update(float dt) {
 	resources->GetAnimation("greenWater")->Update(dt);
 	resources->GetAnimation("lava")->Update(dt);
 	resources->GetAnimation("spring")->Update(dt);
+	resources->GetAnimation("superSpring")->Update(dt);
 	resources->GetAnimation("silverSwitch")->Update(dt);
 	resources->GetAnimation("brownSwitch")->Update(dt);
 	resources->GetAnimation("blueSwitch")->Update(dt);

@@ -872,8 +872,13 @@ void Player::doWarps() {
  */
 void Player::doSprings(float dt) {
 
+	int collision = theEnvironment->collision[gridX][gridY];
+
 	//Start springing
-	if (hoveringYOffset == 0.0f && !springing && theEnvironment->collision[gridX][gridY] == SPRING_PAD) {
+	if (hoveringYOffset == 0.0f && !springing && (collision == SPRING_PAD || collision == SUPER_SPRING)) {
+		
+		bool superSpring = (collision == SUPER_SPRING);
+		
 		hge->Effect_Play(resources->GetEffect("snd_spring"));
 		springing = true;
 		startedSpringing = gameTime;
@@ -882,17 +887,24 @@ void Player::doSprings(float dt) {
 		startSpringY = y;
 		//Start the spring animation
 		theEnvironment->activated[gridX][gridY] = gameTime;
-		resources->GetAnimation("spring")->Play();		
+		if (superSpring) {
+			resources->GetAnimation("superSpring")->Play();
+		} else {
+			resources->GetAnimation("spring")->Play();
+		}
+		
 		//Set Smiley facing a straight direction(not diagonally)
 		setFacingStraight();
 
 		//Determine how long smiley will have to spring to skip a square
+		int jumpGridDist = superSpring ? 4 : 2;
+		springVelocity = superSpring ? SPRING_VELOCITY * 1.5 : SPRING_VELOCITY;
 		int dist;
-		if (facing == LEFT) dist = x - ((gridX-2)*64+32);
-		else if (facing == RIGHT) dist = ((gridX+2)*64+32) - x;
-		else if (facing == DOWN) dist = (gridY+2)*64+32 - y;
-		else if (facing == UP) dist = y - ((gridY-2)*64+32);
-		springTime = float(dist)/SPRING_VELOCITY;
+		if (facing == LEFT) dist = x - ((gridX-jumpGridDist)*64+32);
+		else if (facing == RIGHT) dist = ((gridX+jumpGridDist)*64+32) - x;
+		else if (facing == DOWN) dist = (gridY+jumpGridDist)*64+32 - y;
+		else if (facing == UP) dist = y - ((gridY-jumpGridDist)*64+32);
+		springTime = float(dist)/springVelocity;
 
 	}
 
@@ -900,12 +912,12 @@ void Player::doSprings(float dt) {
 	if (!falling && !sliding && springing && hoveringYOffset == 0.0f) {
 		
 		scale = 1.0f + sin(PI*((gameTime - startedSpringing)/springTime)) * .2f;
-		springOffset =  sin(PI*(timePassedSince(startedSpringing)/springTime))*50.0;
+		springOffset =  sin(PI*(timePassedSince(startedSpringing)/springTime))* (springVelocity / 4.0);
 		dx = dy = 0;
 
 		//Sprint left
 		if (facing == LEFT) {
-			x -= SPRING_VELOCITY * dt;
+			x -= springVelocity * dt;
 			//Adjust the player to land in the middle of the square vertically
 			if (y < enteredSpringY*64+31) {
 				y += 40.0f*dt;
@@ -915,7 +927,7 @@ void Player::doSprings(float dt) {
 
 		//Spring right
 		} else if (facing == RIGHT) {
-			x += SPRING_VELOCITY * dt;
+			x += springVelocity * dt;
 			//Adjust the player to land in the middle of the square vertically
 			if (y < enteredSpringY*64+31) {
 				y += 40.0f*dt;
@@ -925,7 +937,7 @@ void Player::doSprings(float dt) {
 
 		//Spring down
 		} else if (facing == DOWN) {
-			y += SPRING_VELOCITY*dt;
+			y += springVelocity*dt;
 			//Adjust the player to land in the center of the square horizontally
 			if (x < gridX*64+31) {
 				x += 40.0f*dt;
@@ -935,7 +947,7 @@ void Player::doSprings(float dt) {
 
 		//Spring up
 		} else if (facing == UP) {
-			y -= SPRING_VELOCITY*dt;
+			y -= springVelocity*dt;
 			//Adjust the player to land in the center of the square horizontally
 			if (x < gridX*64+31) {
 				x += 40.0f*dt;
@@ -951,6 +963,7 @@ void Player::doSprings(float dt) {
 		springing = false;
 		scale = 1.0;
 		x = gridX*64.0 + 32.0;
+		springOffset = 0.0;
 		y = gridY*64.0 + 32.0;
 	}
 
@@ -1071,6 +1084,7 @@ bool Player::canPass(int collision) {
 		case ICE: return !knockback;
 		case WALK_LAVA: return true;
 		case SPRING_PAD: return true;
+		case SUPER_SPRING: return true;
 		case RED_WARP: return true;
 		case BLUE_WARP: return true;
 		case YELLOW_WARP: return true;

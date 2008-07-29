@@ -72,7 +72,7 @@ class TapestryManager;
 #define EVIL_WALL_DEACTIVATOR 54
 #define EVIL_WALL_RESTART 55
 #define FLAME 56
-//...
+#define SUPER_SPRING 57
 #define WHITE_CYLINDER_UP 58
 #define YELLOW_CYLINDER_UP 59
 #define GREEN_CYLINDER_UP 60

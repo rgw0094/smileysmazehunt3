@@ -123,6 +123,7 @@ private:
 	float health;
 	
 	float timeFrozen, freezeDuration;
+	float springVelocity;
 	Tongue *tongue;
 	
 	//State info
