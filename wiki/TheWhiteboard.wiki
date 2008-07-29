@@ -6,8 +6,6 @@
  * Mirror switch graphic 	 
  * Arrow switch graphic (bunny) 	 
  * Shrink tunnel switch graphic 	  
- * Shrink tunnels in general need tweaking - we need some collision boxes on the sides.
- * In the block above the horizontal shrink tunnels the mainlayer is drawn over top of Smiley for some reason
  * Make yellow and green switches more saturated 	 
  * Better Ranged enemy AI to make it less gay
  * Tentacles are too easy right now.  Change their movement pattern?
@@ -21,6 +19,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fix Shrink Tunnels||7/29/08||RGW||
 ||Super springs||7/29/08||RGW||
 ||Make it so that you don't start with the cane||7/29/08||RGW||
 ||Save what walls have been bombed||7/28/08||RGW||
