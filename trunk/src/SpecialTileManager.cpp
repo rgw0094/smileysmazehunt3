@@ -147,6 +147,7 @@ void SpecialTileManager::addSillyPad(int gridX, int gridY) {
 	SillyPad newSillyPad;
 	newSillyPad.gridX = gridX;
 	newSillyPad.gridY = gridY;
+	newSillyPad.timePlaced = gameTime;
 
 	//Add it to the list
 	sillyPadList.push_back(newSillyPad);

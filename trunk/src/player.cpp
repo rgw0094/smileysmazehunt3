@@ -55,6 +55,7 @@ extern int gameState;
 #define PLAYER_ACCEL 5000		//Normal player acceleration
 #define DEFAULT_RADIUS 28
 
+#define SHRINK_TUNNEL_SPEED 500.0
 #define HOVER_DURATION 10.0
 #define SPRING_VELOCITY 210.0
 #define JESUS_SANDLE_TIME 1.65
@@ -737,6 +738,10 @@ void Player::doAbility(float dt) {
 	////////////// Shrink //////////////
 
 	if (canUseAbility) {
+
+		//If you change abilities while shrunk you lose shrink
+		if (shrinkActive) shrinkActive = (selectedAbility == SHRINK);
+
 		//Shrinking
 		if (shrinkActive && shrinkScale > .5f) {
 			shrinkScale -= 1.0f*dt;
@@ -1465,7 +1470,7 @@ void Player::freeze(float duration) {
  */ 
 void Player::doShrinkTunnels(float dt) {
 
-	//Enter shrink tunnel
+	//Enter shrink tunnelB
 	int shrinkTunnel = theEnvironment->collision[gridX][gridY];
 	if (!springing && !sliding && (shrinkTunnel == SHRINK_TUNNEL_HORIZONTAL || shrinkTunnel == SHRINK_TUNNEL_VERTICAL)) {
 		
@@ -1475,23 +1480,23 @@ void Player::doShrinkTunnels(float dt) {
 
 		//Entering from left (going right)
 		if (shrinkTunnel == SHRINK_TUNNEL_HORIZONTAL && facing == RIGHT || facing == UP_RIGHT || facing == DOWN_RIGHT)	{
-			dx = 250.0;
-			timeToSlide = (64.0 - float(x) + (float(gridX)*64.0+32.0)) / 250.0;
+			dx = SHRINK_TUNNEL_SPEED;
+			timeToSlide = (64.0 - float(x) + (float(gridX)*64.0+32.0)) / SHRINK_TUNNEL_SPEED;
 
 		//Entering from right (going left)
 		} else if (shrinkTunnel == SHRINK_TUNNEL_HORIZONTAL && facing == LEFT || facing == UP_LEFT || facing == DOWN_LEFT) {
-			dx = -250.0;
-			timeToSlide = (64.0f + float(x) - (float(gridX)*64.0f+32.0f)) / 250.0f;
+			dx = -SHRINK_TUNNEL_SPEED;
+			timeToSlide = (64.0f + float(x) - (float(gridX)*64.0f+32.0f)) / SHRINK_TUNNEL_SPEED;
 		
 		//Entering from top (going down)
 		} else if (shrinkTunnel == SHRINK_TUNNEL_VERTICAL && facing == DOWN || facing == DOWN_LEFT || facing == DOWN_RIGHT) {
-			dy = 250.0;
-			timeToSlide = (64.0f - float(y) + (float(gridY)*64.0f+32.0f)) / 250.0f;
+			dy = SHRINK_TUNNEL_SPEED;
+			timeToSlide = (64.0f - float(y) + (float(gridY)*64.0f+32.0f)) / SHRINK_TUNNEL_SPEED;
 		
 		//Entering from bottom (going up)
 		} else if (shrinkTunnel == SHRINK_TUNNEL_VERTICAL && facing == UP || facing == UP_LEFT || facing == UP_RIGHT) {
-			dy = -250.0;
-			timeToSlide = (64.0f + float(y) - (float(gridY)*64.0f+32.0f)) / 250.0f;
+			dy = -SHRINK_TUNNEL_SPEED;
+			timeToSlide = (64.0f + float(y) - (float(gridY)*64.0f+32.0f)) / SHRINK_TUNNEL_SPEED;
 		}
 
 	}
@@ -1514,14 +1519,12 @@ void Player::doShrinkTunnels(float dt) {
 	}
 
 	//Exit shrink tunnel
-	if (springing || (sliding && timePassedSince(timeEnteredShrinkTunnel) > timeInShrinkTunnel)) {
+	if (timePassedSince(timeEnteredShrinkTunnel) > timeInShrinkTunnel) {
 		inShrinkTunnel = false;
 	}
 	
 
 }
-
-
 
 ///////////////////////////////////////////////////////////////
 /////////////////// MUTATORS AND ACCESSORS ////////////////////								
@@ -1540,7 +1543,7 @@ bool Player::isOnIce() {
 }
 
 bool Player::isShrunk() {
-	return shrinkActive;
+	return (shrinkActive && shrinkScale == 0.5);
 }
 
 Tongue *Player::getTongue() {
@@ -1574,6 +1577,10 @@ float Player::getMaxHealth() {
 
 float Player::getMaxMana() {
 	return 100.0 + saveManager->numUpgrades[1] * 10.0;
+}
+
+bool Player::isInShrinkTunnel() {
+	return inShrinkTunnel;
 }
 
 void Player::modifyVelocity(double xVel,double yVel) {
