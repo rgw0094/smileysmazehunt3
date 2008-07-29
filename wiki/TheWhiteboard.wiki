@@ -15,13 +15,13 @@
  * Have Fenwar make more appearances than just in Smolder Hollow and the end
  * Fix the spikey moving walls
  * Make the fountain heal you
- * Make it so that you don't start with the cane
  * Have Bill Clinton have another text for after he gives you the cane - maybe he just tells his hints?
  * You can still walk diagonally between two arrow blocks.
  * While laying silly pads to block the spikey bouncing enemies, after the first silly pad disappeared, all of the silly pads Smiley laid would immediately disappear as well.
 
 ===Done===
 ||Item||Date||Done By||
+|| * Make it so that you don't start with the cane||7/29/08||RGW||
 ||Save what walls have been bombed||7/28/08||RGW||
 ||Leet Title Screen||7/28/08||RMM||
 ||Fires to put out||7/27/08||RGW||
