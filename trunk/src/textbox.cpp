@@ -285,6 +285,7 @@ void TextBox::update(float dt) {
 			//give him the cane.
 			} else if (textBoxType == TYPE_DIALOG && npcID == HINT_MAN && !saveManager->hasAbility[CANE]) {
 				saveManager->hasAbility[CANE] = true;
+				thePlayer->selectedAbility = CANE;
 				set(gameData->getGameText("GotCane"), true, abilitySprites[CANE], 64);
 			
 			//Close hint box by fading out psychedelic background

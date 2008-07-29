@@ -29,6 +29,7 @@
 
 //Abilities
 #define NUM_ABILITIES 12
+#define NO_ABILITY -1
 #define CANE 0
 #define FIRE_BREATH 1
 #define FRISBEE 2
