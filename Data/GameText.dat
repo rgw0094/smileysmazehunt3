@@ -31,12 +31,13 @@ Hint2-4 = "But seriously, I'm getting a vision.  You need to go fight an evil tr
 Hint2-5 = "Now where would you be most likely to find an evil tree?  That's your job."
 Hint2-6 = "That's all for now.  Adios Smiley."
 
-Hint3Pages = "4"
+Hint3Pages = "6"
 Hint3-1 = "Smiley.  What's up?  I'm a little busy so let's make this snappy."
 Hint3-2 = "I'm a little sick of you bugging me.  Why is it always about helping you?!"
 Hint3-3 = "... Sorry I'm bad with relationships."
-Hint3-4 = ""
-
+Hint3-4 = "Where to go, you ask?  You should put your new boots to use in the new walk-a-thon to help pay Hillary's debt."
+Hint3-5 = "A good place to train would be on a hot hiking trail.  That'll help you lose that baby fat!"
+Hint3-6 = "Thanks so much!  I hope to see you at the event!"
 
 
 
@@ -51,7 +52,7 @@ Sign6 = "Use warps like these to travel to other areas instantly!"
 Sign7 = "Watch out for ice!  You can't change direction while slipping on it!"
 Sign9 = "This way to Olde Towne.  Bring plenty of food and, more importantly, water!"
 Sign14 = "Ahead are the Sessaria Snow Plains.  Bring your mittens!"
-Sign15 = "Approaching the Forest of Fundoria.  Home of the famous Mushroom Cave and Swamp of Ill Destiny."
+Sign15 = "Approaching the Forest of Fundoria - home of the famous Mushroom Cave and Swamp of Ill Destiny."
 Sign34 = "Watch out for slime!  It's pretty slippery!"
 Sign35 = "If you get blocked into an area, destroying all of the enemies there will open the exits."
 Sign36 = "Lick the lollipop to save the game."
@@ -202,35 +203,35 @@ NPC9-5 = "I'd rather pace in this enclosed area for the rest of my life than loo
 
 
 ;TUT.SMH
-NPC11Name = "King Mah I"
+NPC11Name = "Pharaoh Moan I"
 NPC11Pages = "1"
 NPC11-1 = "Battles bestrew bloodied barbarian bodies."
 
-NPC12Name = "King Mah II"
+NPC12Name = "Pharaoh  Moan II"
 NPC12Pages = "1"
 NPC12-1 = "An ample alabaster ankh always alleviates an annoyance."
 
-NPC13Name = "King Mah III"
+NPC13Name = "Pharaoh Moan III"
 NPC13Pages = "1"
 NPC13-1 = "Crazed, corrupt crows can caw continuously."
 
-NPC14Name = "King Mah IV"
+NPC14Name = "Pharaoh Moan IV"
 NPC14Pages = "1"
 NPC14-1 = "Always ally an awfully aggressive adversary."
 
-NPC15Name = "King Mah V"
+NPC15Name = "Pharaoh Moan V"
 NPC15Pages = "1"
 NPC15-1 = "Belated breathing brings brewing burial."
 
-NPC16Name = "King Mah VI"
+NPC16Name = "Pharaoh Moan VI"
 NPC16Pages = "1"
 NPC16-1 = "Chaos can cause copius conundrums."
 
-NPC17Name = "King Mah VII"
+NPC17Name = "Pharaoh Moan VII"
 NPC17Pages = "1"
 NPC17-1 = "Death decidedly dominates depressing doldrums."
 
-NPC18Name = "King Mah VIII"
+NPC18Name = "Pharaoh Moan VIII"
 NPC18Pages = "1"
 NPC18-1 = "Do dank dungeons desire dutiful detergent dolloping?"
 
