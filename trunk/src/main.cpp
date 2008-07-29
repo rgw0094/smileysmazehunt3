@@ -286,6 +286,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	hge->System_SetState(HGE_SCREENWIDTH, SCREEN_WIDTH);
 	hge->System_SetState(HGE_SCREENHEIGHT, SCREEN_HEIGHT);
 	hge->System_SetState(HGE_SCREENBPP, 32);
+	hge->System_SetState(HGE_FPS, HGEFPS_VSYNC);
 	hge->System_SetState(HGE_SHOWSPLASH, false);
 	hge->System_SetState(HGE_ICON, MAKEINTRESOURCE (IDI_ICON1));
 
