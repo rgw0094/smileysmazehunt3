@@ -13,7 +13,7 @@
  * Have Bill Clinton have another text for after he gives you the cane - maybe he just tells his hints?
  * You can still walk diagonally between two arrow blocks.
 
-=== Graphics ToDo ===
+=== Graphics To Do ===
  * Mirror switch graphic 	 
  * Arrow switch graphic (bunny) 	 
  * Shrink tunnel switch graphic
