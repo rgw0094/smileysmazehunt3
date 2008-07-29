@@ -201,6 +201,11 @@ Particle smileysCane {
  sprite=particleGraphic5
  resgroup=1
 }
+Particle flame {
+ filename=flame.psi
+ sprite=particleGraphic13
+ resgroup=1
+}
 
 ;***********************
 ;******** FENWAR *******

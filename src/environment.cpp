@@ -61,8 +61,6 @@ extern HTEXTURE animationTexture, sillyPadTexture;
 //Sprites
 extern hgeSprite *itemLayer[256], *mainLayer[256], *walkLayer[256], *abilitySprites[NUM_ABILITIES];
 
-#define SILLY_PAD_TIME 30		//Number of seconds silly pads stay active
-
 /**
  * Constructor
  */
@@ -168,7 +166,7 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 	hasFountain = false;
 	fountainOnScreen = false;
 
-	//Reset managers
+	//Delete all objects from the previous area.
 	bossManager->reset();
 	enemyManager->reset();
 	projectileManager->reset();
@@ -176,6 +174,7 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 	npcManager->reset();
 	enemyGroupManager->resetGroups();
 	tapestryManager->reset();
+	specialTileManager->reset();
 
 	//Clear old level data
 	for (int i = 0; i < 256; i++) {
@@ -184,7 +183,6 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 			collision[i][j] = 0;
 			item[i][j] = 0;
 			activated[i][j] = -100.0f;
-			hasSillyPad[i][j] = false;
 			variable[i][j] = 0;
 			enemyLayer[i][j] = -1;
 		}
@@ -291,6 +289,17 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 				hasFountain = true;
 				fountainX = -7;
 				fountainY = -7;
+			}
+			
+			//Flames
+			if (collision[col][row] == FLAME) {
+				specialTileManager->addFlame(col, row);
+			}
+			
+			//Ice blocks
+			if (collision[col][row] == FIRE_DESTROY) {
+				specialTileManager->addIceBlock(col, row);
+				hge->System_Log("adding ice block to %d %d", col, row);
 			}
 
 			//Mushrooms
@@ -486,7 +495,9 @@ void Environment::draw(float dt) {
 					theCollision != PLAYER_END && theCollision != PIT && 
 					theCollision != UNWALKABLE_PROJECTILE && 
 					theCollision != SHRINK_TUNNEL_HORIZONTAL &&
-					theCollision != SHRINK_TUNNEL_VERTICAL &&					
+					theCollision != SHRINK_TUNNEL_VERTICAL &&			
+					theCollision != FLAME &&
+					theCollision != FIRE_DESTROY &&
 					!(isWarp(theCollision) && 
 					variable[i + xGridOffset][j + yGridOffset] == 990)) {
 					
@@ -585,17 +596,6 @@ void Environment::draw(float dt) {
 						itemLayer[theItem]->Render(drawX,drawY);
 					}
 				}
-
-				//Silly Pads
-				if (hasSillyPad[i+xGridOffset][j+yGridOffset]) {
-					//Fade out during the last 2 seconds
-					float timeLeft = (float)SILLY_PAD_TIME - (gameTime - timeSillyPadPlaced[i+xGridOffset][j+yGridOffset]);
-					if (timeLeft < 1.0f) {
-						abilitySprites[SILLY_PAD]->SetColor(ARGB((timeLeft/1.0f)*255.0f,255,255,255));
-					}
-					abilitySprites[SILLY_PAD]->Render(drawX,drawY);
-					abilitySprites[SILLY_PAD]->SetColor(ARGB(255,255,255,255));
-				}
 			
 			}
 		}
@@ -628,25 +628,25 @@ void Environment::draw(float dt) {
 			for (int j = thePlayer->gridY - 2; j <= thePlayer->gridY + 2; j++) {
 				if (inBounds(i,j)) {
 					//Set collision box depending on collision type
-					if (hasSillyPad[i][j]) {
+					if (hasSillyPad(i,j)) {
 						collisionBox->SetRadius(i*64+32,j*64+32,24);
 					} else {
 						setTerrainCollisionBox(collisionBox, collision[i][j], i, j);
 					}
-					if (!thePlayer->canPass(collision[i][j]) || hasSillyPad[i][j]) drawCollisionBox(collisionBox, GREEN);
+					if (!thePlayer->canPass(collision[i][j]) || hasSillyPad(i,j)) drawCollisionBox(collisionBox, GREEN);
 				}
 			}
 		}
 	}
-
-	//Draw the mushrooms
-	specialTileManager->draw(dt);
 
 	//Draw the evil walls
 	evilWallManager->draw(dt);
 
 	//Draw tapestries
 	tapestryManager->draw(dt);
+
+	//Draw the mushrooms
+	specialTileManager->draw(dt);
 
 }
 
@@ -753,24 +753,6 @@ void Environment::update(float dt) {
 	//Update each grid square
 	for (int i = 0; i < areaWidth; i++) {
 		for (int j = 0; j < areaHeight; j++) {
-
-			//Update silly pads
-			if (hasSillyPad[i][j]) {
-
-				collisionBox->SetRadius(i*64.0+32.0, j*64.0+32.0, 32.0);
-
-				//Test collision
-				if (timeSillyPadPlaced[i][j] + SILLY_PAD_TIME < gameTime ||
-						projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_FRISBEE) > 0 ||
-						projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_LIGHTNING_ORB) > 0 ||
-						thePlayer->iceBreathParticle->testCollision(collisionBox) ||
-						thePlayer->fireBreathParticle->testCollision(collisionBox) ||
-						thePlayer->getTongue()->testCollision(collisionBox)) {
-					hge->System_Log("DICKENS");
-					hasSillyPad[i][j] = false;
-				}
-
-			}
 
 			//Update timed switches
 			if (isCylinderSwitchLeft(collision[i][j]) || isCylinderSwitchRight(collision[i][j])) {
@@ -1152,13 +1134,13 @@ bool Environment::validPath(int x1, int y1, int x2, int y2, int radius, bool can
 	try {
 		while (abs(xTravelled) < abs(x2 - x1) && abs(yTravelled) < abs(y2 - y1)) {
 			//Top left of the object
-			if (!canPath[collisionAt(curX-radius, curY-radius)] || hasSillyPad[int(curX-radius)/64][int(curY-radius)/64]) return false;
+			if (!canPath[collisionAt(curX-radius, curY-radius)] || hasSillyPad(int(curX-radius)/64,int(curY-radius)/64)) return false;
 			//Top right of the object
-			if (!canPath[collisionAt(curX+radius, curY-radius)] || hasSillyPad[int(curX+radius)/64][int(curY-radius)/64]) return false;
+			if (!canPath[collisionAt(curX+radius, curY-radius)] || hasSillyPad(int(curX+radius)/64,int(curY-radius)/64)) return false;
 			//Bottom left of the object
-			if (!canPath[collisionAt(curX-radius, curY+radius)] || hasSillyPad[int(curX-radius)/64][int(curY+radius)/64]) return false;
+			if (!canPath[collisionAt(curX-radius, curY+radius)] || hasSillyPad(int(curX-radius)/64,int(curY+radius)/64)) return false;
 			//Bottom right of the object
-			if (!canPath[collisionAt(curX+radius, curY+radius)] || hasSillyPad[int(curX+radius)/64][int(curY+radius)/64]) return false;
+			if (!canPath[collisionAt(curX+radius, curY+radius)] || hasSillyPad(int(curX+radius)/64,int(curY+radius)/64)) return false;
 			curX += dx;
 			curY += dy;
 			xTravelled += dx;
@@ -1239,9 +1221,9 @@ bool Environment::playerCollision(int x, int y, float dt) {
 				if (distance(collisionBox->x1, collisionBox->y1, x, y) < thePlayer->radius) {
 					if (thePlayer->isOnIce()) return true;
 					angle = getAngleBetween(collisionBox->x1, collisionBox->y1, thePlayer->x, thePlayer->y);
-					if (onlyDownPressed && thePlayer->facing == DOWN && x < collisionBox->x1 && thePlayer->canPass(collision[i-1][j]) && !hasSillyPad[i-1][j] && !onIce) {
+					if (onlyDownPressed && thePlayer->facing == DOWN && x < collisionBox->x1 && thePlayer->canPass(collision[i-1][j]) && !hasSillyPad(i-1,j) && !onIce) {
 						angle -= 4.0 * PI * dt;
-					} else if (onlyRightPressed && thePlayer->facing == RIGHT && y < collisionBox->y1 && thePlayer->canPass(collision[i][j-1]) && !hasSillyPad[i][j-1] && !onIce) {
+					} else if (onlyRightPressed && thePlayer->facing == RIGHT && y < collisionBox->y1 && thePlayer->canPass(collision[i][j-1]) && !hasSillyPad(i,j-1) && !onIce) {
 						angle += 4.0 * PI * dt;
 					} else return true;
 					thePlayer->x = collisionBox->x1 + (thePlayer->radius+1) * cos(angle);
@@ -1253,9 +1235,9 @@ bool Environment::playerCollision(int x, int y, float dt) {
 				if (distance(collisionBox->x2, collisionBox->y1, x, y) < thePlayer->radius) {
 					if (thePlayer->isOnIce()) return true;
 					angle = getAngleBetween(collisionBox->x2, collisionBox->y1, thePlayer->x, thePlayer->y);
-					if (onlyDownPressed && thePlayer->facing == DOWN && x > collisionBox->x2 && thePlayer->canPass(collision[i+1][j]) && !hasSillyPad[i+1][j] && !onIce) {
+					if (onlyDownPressed && thePlayer->facing == DOWN && x > collisionBox->x2 && thePlayer->canPass(collision[i+1][j]) && !hasSillyPad(i+1,j) && !onIce) {
 						angle += 4.0 * PI * dt;
-					} else if (onlyLeftPressed && thePlayer->facing == LEFT && y < collisionBox->y1 && thePlayer->canPass(collision[i][j-1]) && !hasSillyPad[i][j-1] && !onIce) {
+					} else if (onlyLeftPressed && thePlayer->facing == LEFT && y < collisionBox->y1 && thePlayer->canPass(collision[i][j-1]) && !hasSillyPad(i,j-1) && !onIce) {
 						angle -= 4.0 * PI * dt;
 					} else return true;
 					thePlayer->x = collisionBox->x2 + (thePlayer->radius+1) * cos(angle);
@@ -1267,9 +1249,9 @@ bool Environment::playerCollision(int x, int y, float dt) {
 				if (distance(collisionBox->x2, collisionBox->y2, x, y) < thePlayer->radius) {
 					if (thePlayer->isOnIce()) return true;
 					angle = getAngleBetween(collisionBox->x2, collisionBox->y2, thePlayer->x, thePlayer->y);
-					if (onlyUpPressed && thePlayer->facing == UP && x > collisionBox->x2 && thePlayer->canPass(collision[i+1][j]) && !hasSillyPad[i+1][j] && !onIce) {
+					if (onlyUpPressed && thePlayer->facing == UP && x > collisionBox->x2 && thePlayer->canPass(collision[i+1][j]) && !hasSillyPad(i+1,j) && !onIce) {
 						angle -= 4.0 * PI * dt;
-					} else if (onlyLeftPressed && thePlayer->facing == LEFT && y > collisionBox->y2 && thePlayer->canPass(collision[i][j+1]) && !hasSillyPad[i][j+1] && !onIce) {
+					} else if (onlyLeftPressed && thePlayer->facing == LEFT && y > collisionBox->y2 && thePlayer->canPass(collision[i][j+1]) && !hasSillyPad(i,j+1) && !onIce) {
 						angle += 4.0 * PI * dt;
 					} else return true;
 					thePlayer->x = collisionBox->x2 + (thePlayer->radius+1) * cos(angle);
@@ -1281,9 +1263,9 @@ bool Environment::playerCollision(int x, int y, float dt) {
 				if (distance(collisionBox->x1, collisionBox->y2, x, y) < thePlayer->radius) {
 					if (thePlayer->isOnIce()) return true;
 					angle = getAngleBetween(collisionBox->x1, collisionBox->y2, thePlayer->x, thePlayer->y);
-					if (onlyUpPressed && thePlayer->facing == UP && x < collisionBox->x1 && thePlayer->canPass(collision[i-1][j]) && !hasSillyPad[i-1][j] && !onIce) {
+					if (onlyUpPressed && thePlayer->facing == UP && x < collisionBox->x1 && thePlayer->canPass(collision[i-1][j]) && !hasSillyPad(i-1,j) && !onIce) {
 						angle += 4.0 * PI * dt;
-					} else if (onlyRightPressed && thePlayer->facing == RIGHT && y > collisionBox->y2 && thePlayer->canPass(collision[i][j+1]) && !hasSillyPad[i][j+1] && !onIce) {
+					} else if (onlyRightPressed && thePlayer->facing == RIGHT && y > collisionBox->y2 && thePlayer->canPass(collision[i][j+1]) && !hasSillyPad(i, j+1) && !onIce) {
 						angle -= 4.0 * PI * dt;
 					} else return true;
 					thePlayer->x = collisionBox->x1 + (thePlayer->radius+1) * cos(angle);
@@ -1322,9 +1304,9 @@ bool Environment::enemyCollision(hgeRect *box, BaseEnemy *enemy, float dt) {
 	for (int i = gridX - 2; i <= gridX + 2; i++) {
 		for (int j = gridY - 2; j <= gridY + 2; j++) {
 			//Ignore squares off the map
-			if (inBounds(i,j) && (!enemy->canPass[collision[i][j]] || hasSillyPad[i][j])) {
+			if (inBounds(i,j) && (!enemy->canPass[collision[i][j]] || hasSillyPad(i,j))) {
 				//Test collision
-				setTerrainCollisionBox(collisionBox, hasSillyPad[i][j] ? UNWALKABLE : collision[i][j], i, j);
+				setTerrainCollisionBox(collisionBox, hasSillyPad(i,j) ? UNWALKABLE : collision[i][j], i, j);
 				if (box->Intersect(collisionBox)) {
 
 					//Help the enemy round corners
@@ -1436,10 +1418,10 @@ bool Environment::testCollision(hgeRect *box, bool canPass[256], bool ignoreSill
 		for (int j = gridY - 2; j <= gridY + 2; j++) {
 			//Ignore squares off the map
 			if (inBounds(i,j) && (!canPass[collision[i][j]] || 
-					(!ignoreSillyPads && hasSillyPad[i][j]))) {
+					(!ignoreSillyPads && hasSillyPad(i,j)))) {
 				
 				//Test collision
-				setTerrainCollisionBox(collisionBox, (!ignoreSillyPads && hasSillyPad[i][j]) 
+				setTerrainCollisionBox(collisionBox, (!ignoreSillyPads && hasSillyPad(i,j)) 
 						? UNWALKABLE : collision[i][j], i, j);
 
 				if (box->Intersect(collisionBox)) {
@@ -1505,4 +1487,18 @@ void Environment::setTerrainCollisionBox(hgeRect *box, int whatFor, int gridX, i
 	} else {
 		box->SetRadius(gridX*64+32,gridY*64+31,31);
 	}
+}
+
+/**
+ * Places a silly pad at the specified grid location.
+ */
+void Environment::placeSillyPad(int gridX, int gridY) {
+	specialTileManager->addSillyPad(gridX, gridY);
+
+	//Play sound effect
+	hge->Effect_Play(resources->GetEffect("snd_sillyPad"));
+}
+
+bool Environment::hasSillyPad(int gridX, int gridY) {
+	return specialTileManager->isSillyPadAt(gridX, gridY);
 }

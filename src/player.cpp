@@ -684,10 +684,8 @@ void Player::doAbility(float dt) {
 
 		//Place Silly Pad
 		if (selectedAbility == SILLY_PAD && mana >= gameData->getAbilityInfo(SILLY_PAD).manaCost) {
-			theEnvironment->hasSillyPad[gridX][gridY] = true;
-			theEnvironment->timeSillyPadPlaced[gridX][gridY] = gameTime;
+			theEnvironment->placeSillyPad(gridX, gridY);
 			mana -= gameData->getAbilityInfo(SILLY_PAD).manaCost;
-			hge->Effect_Play(resources->GetEffect("snd_sillyPad"));
 		}
 
 		//Start Ice Breath
@@ -1118,6 +1116,7 @@ bool Player::canPass(int collision) {
 		case DIZZY_MUSHROOM_2: return true;
 		case BOMB_PAD_UP: return true;
 		case BOMB_PAD_DOWN: return true;
+		case FLAME: return true;
 
 		default: return false;
 	}
@@ -1396,6 +1395,22 @@ void Player::dealDamage(float damage, bool makesFlash) {
  */ 
 void Player::dealDamageAndKnockback(float damage, bool makesFlash, float knockbackDist,
 									float knockbackerX, float knockbackerY) {
+	dealDamageAndKnockback(damage, true, false, knockbackDist, knockbackerX, knockbackerY);
+}
+
+/**
+ * Deals the specified damage to the smiley and knocks him back.
+ *
+ * @param damage		Damage to deal
+ * @param makesFlash	Whether or not the attack makes smiley flash
+ * @param alwaysKnockback True if Smiley should be knocked back even if flashing
+ * @param knockbackDist Distance to knock smiley back from the center of
+ *						The knockbacker
+ * @param knockbackerX  x location of the object that knocked smiley back
+ * @param knockbackerY  y location of the object that knocked smiley back
+ */ 
+void Player::dealDamageAndKnockback(float damage, bool makesFlash, bool alwaysKnockback, float knockbackDist, 
+		float knockbackerX, float knockbackerY) {
 	
 	if (!makesFlash || (makesFlash && !flashing)) {
 		health -= damage;
@@ -1406,7 +1421,7 @@ void Player::dealDamageAndKnockback(float damage, bool makesFlash, float knockba
 	float knockbackY = (knockbackDist - distance(knockbackerX, knockbackerY, x, y)) * sin(knockbackAngle);
 
 	//Do knockback if not sliding etc.
-	if (knockbackDist > 0 && !flashing && !iceSliding && !sliding && !springing && !falling) {
+	if (knockbackDist > 0 && (!flashing || alwaysKnockback) && !iceSliding && !sliding && !springing && !falling) {
 		dx = knockbackX / KNOCKBACK_DURATION;
 		dy = knockbackY / KNOCKBACK_DURATION;
 		knockback = true;
@@ -1417,8 +1432,6 @@ void Player::dealDamageAndKnockback(float damage, bool makesFlash, float knockba
 		flashing = true;
 		startedFlashing = gameTime;
 	}
-
-	health = 5.0;
 
 }
 
