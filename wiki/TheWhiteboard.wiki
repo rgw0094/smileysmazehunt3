@@ -21,7 +21,7 @@
 
 ===Done===
 ||Item||Date||Done By||
-|| * Make it so that you don't start with the cane||7/29/08||RGW||
+||Make it so that you don't start with the cane||7/29/08||RGW||
 ||Save what walls have been bombed||7/28/08||RGW||
 ||Leet Title Screen||7/28/08||RMM||
 ||Fires to put out||7/27/08||RGW||
