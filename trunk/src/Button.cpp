@@ -32,7 +32,7 @@ void Button::draw(float dt) {
 	}
 
 	//Draw text
-	resources->GetFont("button")->printf(x + width/2.0f, y, HGETEXT_CENTER, text);
+	resources->GetFont("button")->printf(x + width/2.0f, y+5.0, HGETEXT_CENTER, text);
 
 }
 
