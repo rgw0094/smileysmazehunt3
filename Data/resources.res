@@ -417,6 +417,16 @@ Animation spring {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=2
 }
+Animation superSpring {
+ texture=animations
+ rect=0,704,64,64
+ frames=7
+ fps=14.0
+ mode=FORWARD,LOOP
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=2
+}
 Animation silverSwitch {
  texture=animations
  rect=320,192,64,64
@@ -1294,8 +1304,8 @@ Animation bombEyesGlow {
  resgroup=102
 }
 Sprite bombRedCircle {
- texture=animations
- rect=0,704,192,192
+ texture=general
+ rect=640,128,192,192
  hotspot=96,96
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=36
