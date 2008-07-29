@@ -18,6 +18,7 @@
  * Make it so that you don't start with the cane
  * Have Bill Clinton have another text for after he gives you the cane - maybe he just tells his hints?
  * You can still walk diagonally between two arrow blocks.
+ * While laying silly pads to block the spikey bouncing enemies, after the first silly pad disappeared, all of the silly pads Smiley laid would immediately disappear as well.
 
 ===Done===
 ||Item||Date||Done By||
