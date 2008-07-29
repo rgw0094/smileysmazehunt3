@@ -71,7 +71,7 @@ class TapestryManager;
 #define EVIL_WALL_TRIGGER 53
 #define EVIL_WALL_DEACTIVATOR 54
 #define EVIL_WALL_RESTART 55
-#define FIRE_BLOCK 56
+#define FLAME 56
 //...
 #define WHITE_CYLINDER_UP 58
 #define YELLOW_CYLINDER_UP 59
@@ -133,6 +133,8 @@ public:
 	bool isArrowAt(int x,int y);
 	void bombWall(int x,int y);
 	void setTerrainCollisionBox(hgeRect *box, int whatFor, int gridX, int gridY);
+	void placeSillyPad(int gridX, int gridY);
+	bool hasSillyPad(int gridX, int gridY);
 
 	//Objects
 	hgeRect *collisionBox;
@@ -146,8 +148,6 @@ public:
 	int item[256][256];				//Item Layer
 	int enemyLayer[256][256];		//Enemy Layer
 	float activated[256][256];		//What time things were activated on each square
-	bool hasSillyPad[256][256];
-	float timeSillyPadPlaced[256][256];
 	int screenWidth, screenHeight;	//Number of squares that fit on the screen
 	int xGridOffset,yGridOffset;	//Number of squares the top left corner is from (0,0)
 	float xOffset,yOffset;			//Number of pixels the player is off alignment with the grid

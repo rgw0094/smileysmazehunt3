@@ -99,13 +99,6 @@ void WeaponParticleSystem::Update(float fDeltaTime) {
 			}
 		}
 
-		//Alter terrain
-		if (type == PARTICLE_FIRE_BREATH) {
-			if (theEnvironment->collisionAt(par->vecLocation.x + theEnvironment->xGridOffset*64 + theEnvironment->xOffset, par->vecLocation.y + theEnvironment->yGridOffset*64 + theEnvironment->yOffset) == FIRE_DESTROY) {
-				theEnvironment->collision[(int)(par->vecLocation.x + theEnvironment->xGridOffset*64 + theEnvironment->xOffset)/64][(int)(par->vecLocation.y + theEnvironment->yGridOffset*64 + theEnvironment->yOffset)/64] = WALKABLE;
-			}
-		}
-
 		//Update shit
 		vecAccel = par->vecLocation-vecLocation;
 		vecAccel.Normalize();

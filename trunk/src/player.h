@@ -39,6 +39,7 @@ public:
 	void doIce(float dt);
 	void dealDamage(float damage, bool makesFlash);
 	void dealDamageAndKnockback(float damage, bool makesFlash, float knockbackDist, float knockbackerX, float knockbackerY);
+	void dealDamageAndKnockback(float damage, bool makesFlash, bool alwaysKnockback, float knockbackDist, float knockbackerX, float knockbackerY);
 	void freeze(float duration);
 	void doShrinkTunnels(float dt);
 

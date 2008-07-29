@@ -94,7 +94,7 @@ void LoadEffectManager::draw(float dt) {
 		//After 1.5 seconds start fading out the zone name
 		if (hge->Timer_GetTime() > timeLevelLoaded + 1.5f) {
 			zoneTextAlpha -= 255.0f*dt;
-			if (zoneTextAlpha < 0.0f) 0.0f;
+			if (zoneTextAlpha < 0.0) 0.0;
 			resources->GetFont("newAreaFnt")->SetColor(ARGB(zoneTextAlpha,255,255,255));
 		}
 		resources->GetFont("newAreaFnt")->printf(512,200,HGETEXT_CENTER, 

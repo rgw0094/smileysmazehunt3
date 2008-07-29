@@ -36,7 +36,7 @@ ProjectileManager::ProjectileManager() {
 	canPass[BOMBABLE_WALL] = false;
 	canPass[FIRE_DESTROY] = false;
 	canPass[BOMBABLE_WALL] = false;
-	canPass[FIRE_BLOCK] = false;
+	canPass[FLAME] = false;
 
 }
 

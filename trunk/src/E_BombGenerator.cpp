@@ -234,7 +234,7 @@ void E_BombGenerator::checkNextTileAndTurn() {
 
 	if (!inBounds(xTileNext,yTileNext) ||
 		!canPass[theEnvironment->collision[xTileNext][yTileNext]] || 
-		theEnvironment->hasSillyPad[xTileNext][yTileNext]) {
+		theEnvironment->hasSillyPad(xTileNext, yTileNext)) {
 		//turn left!
 
 		//first check to see if the bomb has walked halfway across the tile

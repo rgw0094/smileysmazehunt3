@@ -267,7 +267,7 @@ void BaseEnemy::doAStar() {
 			if (i == thePlayer->gridX && j == thePlayer->gridY) {
 				mapPath[i][j] = 0;
 			//If (i,j) is inaccessible, set distance to 999
-			} else if (!canPass[theEnvironment->collision[i][j]] || theEnvironment->hasSillyPad[i][j]) {			
+			} else if (!canPass[theEnvironment->collision[i][j]] || theEnvironment->hasSillyPad(i, j)) {			
 				mapPath[i][j] = 999;
 			//Otherwise put a -1
 			} else {
