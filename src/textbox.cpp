@@ -49,8 +49,6 @@ extern int frameCounter;
 TextBox::TextBox() {
 	x = 312;
 	y = 500;
-	visible = false;
-	textBoxClosed = -5.0f;
 	alpha = 255;
 	increaseAlpha = false;
 }
@@ -70,7 +68,6 @@ void TextBox::init() {
 
 	fadeAlpha = 255.0;
 	thePlayer->dx = thePlayer->dy = 0;
-	visible = true;
 	lastKeyPressFrame = frameCounter;
 	timeStarted = gameTime;
 	fadingOut = false;
@@ -161,8 +158,6 @@ void TextBox::set(char* _text, bool _hasGraphic, hgeSprite *_graphic, int _graph
  * Draws the text box if it is open.
  */ 
 void TextBox::draw(float dt) {
-
-	if (!visible) return;
 	
 	//Hint box
 	if (textBoxType == TYPE_HINT) {
@@ -235,12 +230,9 @@ void TextBox::draw(float dt) {
  */
 bool TextBox::update(float dt) {
 
-	if (!visible) return false;
-
 	//Fade out effect
 	if (fadingOut) {
-		doFadeOut(dt);
-		return false;
+		return doFadeOut(dt);
 	}
 
 	//Update icon alphas
@@ -282,14 +274,13 @@ bool TextBox::update(float dt) {
 		if (numPages == currentPage) {
 			
 			//Close the text box
-			visible = false;
 			windowManager->frameLastWindowClosed = frameCounter;
-			windowManager->textBoxOpen = false;
 			if (hasGraphic && textBoxType == TYPE_NORMAL) graphic->SetHotSpot(oldHotSpotX, oldHotSpotY);
 			
 			//If this is spierdyke, open the shop
 			if (textBoxType == TYPE_DIALOG && npcID == SPIERDYKE) {
 				windowManager->openWindow(new Shop());
+				return true; //Don't tell manager to close window
 
 			//If this is the first time Smiley has talked to the hint man,
 			//give him the cane.
@@ -301,10 +292,10 @@ bool TextBox::update(float dt) {
 			//Close hint box by fading out psychedelic background
 			} else if (textBoxType == TYPE_HINT) {
 				fadingOut = true;
-				visible = true;
-			} else {
-				textBoxClosed = gameTime;
 			}
+
+			//Return false to tell the window manager to close this window
+			return false;
 
 		//More pages left - go to the next one
 		} else {
@@ -313,14 +304,15 @@ bool TextBox::update(float dt) {
 		}
 	}
 
-	return false;
+	return true;
 
 }
 
 /**
- * Updates alphas in order to fade out the hint screen
+ * Updates alphas in order to fade out the hint screen. Returns true if done
+ * fading out
  */
-void TextBox::doFadeOut(float dt) {
+bool TextBox::doFadeOut(float dt) {
 
 	//Fade stuff out
 	if (fadeAlpha > 0.0) fadeAlpha -= 130.0 * dt;
@@ -340,8 +332,6 @@ void TextBox::doFadeOut(float dt) {
 	//Done fading out, set everything back to normal
 	if (fadeAlpha < 0.0) {
 		fadeAlpha = 0.0;
-		visible = false;
-		textBoxClosed = gameTime;
 		resources->GetSprite("textBox")->SetColor(ARGB(255,255,255,255));
 		resources->GetFont("textBoxNameFnt")->SetColor(ARGB(255,0,0,0));
 		resources->GetFont("textBoxDialogFnt")->SetColor(ARGB(255,0,0,0));
@@ -349,6 +339,8 @@ void TextBox::doFadeOut(float dt) {
 		resources->GetSprite("arrowIcon")->SetColor(ARGB(255,255,255,255));
 		npcSprites[BILL_CLINTON][DOWN]->SetColor(ARGB(255,255,255,255));
 		soundManager->playPreviousMusic();
+		return true;
 	}
 
+	return false;
 }

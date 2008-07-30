@@ -6,7 +6,10 @@
 #include "minimenu.h"
 #include "input.h"
 #include "textbox.h"
+#include "player.h"
+#include "tongue.h"
 
+extern Player *thePlayer;
 extern Input *input;
 extern HGE *hge;
 
@@ -14,7 +17,6 @@ extern HGE *hge;
  * Constructor.
  */
 WindowManager::WindowManager() {
-	textBox = new TextBox();
 	textBoxOpen = false;
 	activeWindow = NULL;
 	frameLastWindowClosed = 0;
@@ -25,9 +27,7 @@ WindowManager::WindowManager() {
 /**
  * Destructor.
  */
-WindowManager::~WindowManager() { 
-	delete textBox;
-}
+WindowManager::~WindowManager() { }
 
 /**
  * Opens the game menu to the menu window that was last open.
@@ -77,6 +77,7 @@ void WindowManager::openWindow(BaseWindow *newWindow) {
  */
 void WindowManager::closeWindow() {
 	gameMenuOpen = false;
+	textBoxOpen = false;
 	if (activeWindow) delete activeWindow;
 	activeWindow = 0;
 }
@@ -88,15 +89,12 @@ void WindowManager::draw(float dt) {
 	if (activeWindow) {
 		activeWindow->draw(dt);
 	}
-	textBox->draw(dt);
 }
 
 /**
  * Called every frame to update the WindowManager
  */ 
 void WindowManager::update(float dt) {
-
-	textBox->update(dt);
 
 	//Handle input for scrolling through game menu windows
 	if (gameMenuOpen) {
@@ -111,6 +109,12 @@ void WindowManager::update(float dt) {
 		}
 	}
 
+	//When the text box is open keep updating Smiley's tongue
+	if (textBoxOpen) {
+		thePlayer->getTongue()->update(dt);
+	}
+
+	//If the active window returns false, close it
 	if (activeWindow && !activeWindow->update(dt)) closeWindow();
 }
 
@@ -129,7 +133,9 @@ bool WindowManager::isOpenWindow() {
  * Opens a standard text box.
  */
 void WindowManager::openTextBox(char* text, bool hasGraphic, hgeSprite *graphic, int graphicHeight) {
+	TextBox *textBox = new TextBox();
 	textBox->set(text, hasGraphic, graphic, graphicHeight);
+	openWindow(textBox);
 	textBoxOpen = true;
 }
 
@@ -137,7 +143,9 @@ void WindowManager::openTextBox(char* text, bool hasGraphic, hgeSprite *graphic,
  * Opens a text box for dialogue.
  */
 void WindowManager::openDialogue(int _npcID, int _textID) {
+	TextBox *textBox = new TextBox();
 	textBox->setDialogue(_npcID, _textID);
+	openWindow(textBox);
 	textBoxOpen = true;
 }
 
@@ -145,7 +153,9 @@ void WindowManager::openDialogue(int _npcID, int _textID) {
  * Opens a text box to display hints.
  */
 void WindowManager::openHint() {
+	TextBox *textBox = new TextBox();
 	textBox->setHint();
+	openWindow(textBox);
 	textBoxOpen = true;
 }
 
