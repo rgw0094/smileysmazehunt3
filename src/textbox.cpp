@@ -32,13 +32,14 @@ extern GameData *gameData;
 extern float gameTime;
 extern int frameCounter;
 
-#define SPIERDYKE 5
-#define HINT_MAN 8
-
 //Dialog box types
 #define TYPE_NORMAL 0
 #define TYPE_DIALOG 1
 #define TYPE_HINT 2
+
+#define SPIERDYKE 5
+#define BILL_CLINTON 8
+#define BILL_CLINTON_TEXT2 19
 
 #define PSYCHEDELIC_GRANULARITY 16
 
@@ -84,14 +85,21 @@ void TextBox::setDialogue(int _npcID, int _textID) {
 	textBoxType = TYPE_DIALOG;
 	init();
 
-	//Get number of pages for this NPC
 	npcID = _npcID;
 	textID = _textID;
+
+	//After Smiley gets the cane, Bill Clinton needs new dialogue
+	if (npcID == BILL_CLINTON && saveManager->hasAbility[CANE]) {
+		textID = BILL_CLINTON_TEXT2;
+	}
+
 	paramString = "NPC";
 	paramString = paramString + intToString(textID) + "Pages";
 	numPages = atoi(gameData->getGameText(paramString.c_str()));
 	currentPage = 1;
 	strcpy(text, "-");
+
+	
 
 	hasGraphic = true;
 	graphicHeight = 64;
@@ -108,7 +116,7 @@ void TextBox::setHint() {
 
 	soundManager->playMusic("hintMusic");
 
-	npcID = HINT_MAN;
+	npcID = BILL_CLINTON;
 	textID = saveManager->currentHint;
 	paramString = "Hint";
 	paramString = paramString + intToString(textID) + "Pages";
@@ -164,7 +172,7 @@ void TextBox::draw(float dt) {
 		resources->GetAnimation("player")->Render(512,384);
 		resources->GetSprite("textBox")->Render(x,y);
 
-		npcSprites[HINT_MAN][DOWN]->Render(x+60, y+50);
+		npcSprites[BILL_CLINTON][DOWN]->Render(x+60, y+50);
 		resources->GetFont("textBoxNameFnt")->printf(x + 220, y+20, HGETEXT_CENTER, "%s", "Bill Clinton");
 
 		//Print the current page of the hint
@@ -283,7 +291,7 @@ void TextBox::update(float dt) {
 
 			//If this is the first time Smiley has talked to the hint man,
 			//give him the cane.
-			} else if (textBoxType == TYPE_DIALOG && npcID == HINT_MAN && !saveManager->hasAbility[CANE]) {
+			} else if (textBoxType == TYPE_DIALOG && npcID == BILL_CLINTON && !saveManager->hasAbility[CANE]) {
 				saveManager->hasAbility[CANE] = true;
 				thePlayer->selectedAbility = CANE;
 				set(gameData->getGameText("GotCane"), true, abilitySprites[CANE], 64);
@@ -317,7 +325,7 @@ void TextBox::doFadeOut(float dt) {
 	resources->GetFont("textBoxDialogFnt")->SetColor(ARGB(fadeAlpha,0,0,0));
 	resources->GetSprite("okIcon")->SetColor(ARGB(fadeAlpha,255,255,255));
 	resources->GetSprite("arrowIcon")->SetColor(ARGB(fadeAlpha,255,255,255));
-	npcSprites[HINT_MAN][DOWN]->SetColor(ARGB(fadeAlpha,255,255,255));
+	npcSprites[BILL_CLINTON][DOWN]->SetColor(ARGB(fadeAlpha,255,255,255));
 	for (int i = 0; i < PSYCHEDELIC_GRANULARITY; i++) {
 		for(int j = 0; j < PSYCHEDELIC_GRANULARITY; j++) {
 			distortion->SetColor(i, j, ARGB(fadeAlpha, 0, 0, 0));
@@ -335,7 +343,7 @@ void TextBox::doFadeOut(float dt) {
 		resources->GetFont("textBoxDialogFnt")->SetColor(ARGB(255,0,0,0));
 		resources->GetSprite("okIcon")->SetColor(ARGB(255,255,255,255));
 		resources->GetSprite("arrowIcon")->SetColor(ARGB(255,255,255,255));
-		npcSprites[HINT_MAN][DOWN]->SetColor(ARGB(255,255,255,255));
+		npcSprites[BILL_CLINTON][DOWN]->SetColor(ARGB(255,255,255,255));
 		soundManager->playPreviousMusic();
 	}
 

@@ -138,7 +138,11 @@ NPC8Pages = "2"
 NPC8-1 = "Hi, I'm former US President Bill Clinton.  Thanks for licking me."
 NPC8-2 = "In return, take this cane, it will let us communicate telepathically, lol."
 
-
+;Bill Clinton 2 - used after he gives you the cane
+NPC19Name = "Bill Clinton"
+NPC19Pages = "2"
+NPC19-1 = "Hey, uhhh, I'd prefer it if we weren't seen talking in public. You still have that cane right?"
+NPC19-2 = "You see, I prefer to only be seen talking to important people and hot chicks."
 
 ;OLDETOWNE.SMH
 NPC2Name = "Abner"
