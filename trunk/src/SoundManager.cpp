@@ -112,11 +112,11 @@ void SoundManager::stopAbilityChannel() {
  */
 void SoundManager::update(float dt) {
 	//Input to change music volume
-	if (input->keyPressed(INPUT_VOLUME_UP)) {
+	if (hge->Input_KeyDown(HGEK_ADD)) {
 		setMusicVolume(musicVolume + 10);
 		setSoundVolume(soundVolume + 10);
 	} 
-	if (input->keyPressed(INPUT_VOLUME_DOWN)) {
+	if (hge->Input_KeyDown(HGEK_SUBTRACT)) {
 		setMusicVolume(musicVolume - 10);
 		setSoundVolume(soundVolume - 10);
 	}

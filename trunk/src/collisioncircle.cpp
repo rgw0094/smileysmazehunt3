@@ -58,6 +58,13 @@ bool CollisionCircle::testCircle(CollisionCircle *circle) {
 }
 
 /**
+ * Returns whether or not the provided point collides with this circle.
+ */ 
+bool CollisionCircle::testPoint(int pointX, int pointY) {
+	return (abs(distance(x, y, pointX, pointY)) < radius);
+}
+
+/**
  * draw the circle
  */
 void CollisionCircle::draw() {

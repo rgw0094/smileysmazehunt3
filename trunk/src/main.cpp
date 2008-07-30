@@ -160,6 +160,23 @@ bool FrameFunc() {
 		//Toggle debug mode
 		if (hge->Input_KeyDown(HGEK_D)) debugMode = !debugMode;
 
+		//Toggle game menu
+		if (input->keyPressed(INPUT_PAUSE)) {
+			if (windowManager->isGameMenuOpen()) {
+				windowManager->closeGameMenu();
+			} else if (!windowManager->isOpenWindow()) {
+				windowManager->openGameMenu();
+			}
+		}
+
+		//If the user presses escape go straight to the options screen
+		if (hge->Input_KeyDown(HGEK_ESCAPE)) {
+			if (!windowManager->isOpenWindow()) {
+				windowManager->openGameMenu(OPTIONS);
+			}
+		}
+
+		/**
 		//Toggle the inventory
 		if (input->keyPressed(INPUT_INVENTORY)) {
 			//Open
@@ -181,11 +198,11 @@ bool FrameFunc() {
 		}
 		
 		//Open the mini menu
-		if (input->keyPressed(INPUT_EXIT) || hge->Input_KeyDown(HGEK_ESCAPE)) {
+		if (input->keyPressed(INPUT_PAUSE) || hge->Input_KeyDown(HGEK_ESCAPE)) {
 			if (!windowManager->isOpenWindow()) {
 				windowManager->openWindow(new MiniMenu(MINIMENU_EXIT));
 			}
-		}
+		}*/
 
 		//Update all windows
 		windowManager->update(dt);

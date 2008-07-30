@@ -6,6 +6,7 @@
 #include "EnemyManager.h"
 #include "NPCManager.h"
 #include "WindowManager.h"
+#include "CollisionCircle.h"
 
 #include "hgeresource.h"
 #include "hgeanim.h"
@@ -166,6 +167,26 @@ bool Tongue::testCollision(hgeRect *collisionBox) {
 		pointX = thePlayer->x + thePlayer->mouthXOffset[thePlayer->facing] + (i+1)*(TONGUE_LENGTH / (NUM_COLLISION_POINTS-1)) * cos(testAngle);
 		pointY = thePlayer->y + thePlayer->mouthYOffset[thePlayer->facing] + (i+1)*(TONGUE_LENGTH / (NUM_COLLISION_POINTS-1)) * sin(testAngle);
 		if (collisionBox->TestPoint(pointX, pointY)) return true;
+	}
+	return false;
+}
+
+
+/**
+ * Returns whether or not a circle collides with the tongue.
+ */
+bool Tongue::testCollision(CollisionCircle *collisionCircle) {
+	
+	if (!isAttacking()) return false;
+
+	//Determine how many collision points to test based on the current length of the tongue
+	numPoints = int((float)resources->GetAnimation("smileyTongue")->GetFrame() / (float)resources->GetAnimation("smileyTongue")->GetFrames() * (float)NUM_COLLISION_POINTS) + 1;
+	
+	for (int i = 0; i < numPoints; i++) {
+		testAngle = -(PI / 2.0) + thePlayer->angles[thePlayer->facing] + (thePlayer->facing == LEFT ? -1 : 1) * tongueOffsetAngle;
+		pointX = thePlayer->x + thePlayer->mouthXOffset[thePlayer->facing] + (i+1)*(TONGUE_LENGTH / (NUM_COLLISION_POINTS-1)) * cos(testAngle);
+		pointY = thePlayer->y + thePlayer->mouthYOffset[thePlayer->facing] + (i+1)*(TONGUE_LENGTH / (NUM_COLLISION_POINTS-1)) * sin(testAngle);
+		if (collisionCircle->testPoint(pointX, pointY)) return true;
 	}
 	return false;
 }

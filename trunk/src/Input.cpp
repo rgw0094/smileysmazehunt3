@@ -333,12 +333,8 @@ void Input::saveInputs() {
 	hge->Ini_SetInt("Controls","aim",inputs[INPUT_AIM].code);
 	hge->Ini_SetInt("Controls","next",inputs[INPUT_NEXT_ABILITY].code);
 	hge->Ini_SetInt("Controls","previous",inputs[INPUT_PREVIOUS_ABILITY].code);
-	hge->Ini_SetInt("Controls","exit",inputs[INPUT_EXIT].code);
-	hge->Ini_SetInt("Controls","inventory",inputs[INPUT_INVENTORY].code);
-	hge->Ini_SetInt("Controls","map",inputs[INPUT_MAP].code);
+	hge->Ini_SetInt("Controls","exit",inputs[INPUT_PAUSE].code);
 	hge->Ini_SetInt("Controls","screenshot",inputs[INPUT_SCREENSHOT].code);
-	hge->Ini_SetInt("Controls","volumeup",inputs[INPUT_VOLUME_UP].code);
-	hge->Ini_SetInt("Controls","volumedown",inputs[INPUT_VOLUME_DOWN].code);
 
 	//Save device for each input
 	hge->Ini_SetInt("Controls","leftDevice",inputs[INPUT_LEFT].device);
@@ -350,12 +346,8 @@ void Input::saveInputs() {
 	hge->Ini_SetInt("Controls","aimDevice",inputs[INPUT_AIM].device);
 	hge->Ini_SetInt("Controls","nextDevice",inputs[INPUT_NEXT_ABILITY].device);
 	hge->Ini_SetInt("Controls","previousDevice",inputs[INPUT_PREVIOUS_ABILITY].device);
-	hge->Ini_SetInt("Controls","exitDevice",inputs[INPUT_EXIT].device);
-	hge->Ini_SetInt("Controls","inventoryDevice",inputs[INPUT_INVENTORY].device);
-	hge->Ini_SetInt("Controls","mapDevice",inputs[INPUT_MAP].device);
+	hge->Ini_SetInt("Controls","exitDevice",inputs[INPUT_PAUSE].device);
 	hge->Ini_SetInt("Controls","screenshotDevice",inputs[INPUT_SCREENSHOT].device);
-	hge->Ini_SetInt("Controls","volumeupDevice",inputs[INPUT_VOLUME_UP].device);
-	hge->Ini_SetInt("Controls","volumedownDevice",inputs[INPUT_VOLUME_DOWN].device);
 
 }
 
@@ -375,12 +367,8 @@ void Input::loadInputs() {
 	inputs[INPUT_AIM].code = hge->Ini_GetInt("Controls","aim",HGEK_ALT);
 	inputs[INPUT_NEXT_ABILITY].code = hge->Ini_GetInt("Controls","next",HGEK_X);
 	inputs[INPUT_PREVIOUS_ABILITY].code = hge->Ini_GetInt("Controls","previous",HGEK_Z);
-	inputs[INPUT_EXIT].code = hge->Ini_GetInt("Controls","exit",HGEK_ESCAPE);
-	inputs[INPUT_INVENTORY].code = hge->Ini_GetInt("Controls","inventory",HGEK_I);
-	inputs[INPUT_MAP].code = hge->Ini_GetInt("Controls","map",HGEK_M);
+	inputs[INPUT_PAUSE].code = hge->Ini_GetInt("Controls","exit",HGEK_ESCAPE);
 	inputs[INPUT_SCREENSHOT].code = hge->Ini_GetInt("Controls","screenshot",HGEK_S);
-	inputs[INPUT_VOLUME_UP].code = hge->Ini_GetInt("Controls","volumeup",HGEK_ADD);
-	inputs[INPUT_VOLUME_DOWN].code = hge->Ini_GetInt("Controls","volumedown",HGEK_SUBTRACT);
 
 	//Load device for each input
 	inputs[INPUT_LEFT].device = hge->Ini_GetInt("Controls","leftDevice", DEVICE_KEYBOARD);
@@ -392,12 +380,8 @@ void Input::loadInputs() {
 	inputs[INPUT_AIM].device = hge->Ini_GetInt("Controls","aimDevice",DEVICE_KEYBOARD);
 	inputs[INPUT_NEXT_ABILITY].device = hge->Ini_GetInt("Controls","nextDevice",DEVICE_KEYBOARD);
 	inputs[INPUT_PREVIOUS_ABILITY].device = hge->Ini_GetInt("Controls","previousDevice",DEVICE_KEYBOARD);
-	inputs[INPUT_EXIT].device = hge->Ini_GetInt("Controls","exitDevice",DEVICE_KEYBOARD);
-	inputs[INPUT_INVENTORY].device = hge->Ini_GetInt("Controls","inventoryDevice",DEVICE_KEYBOARD);
-	inputs[INPUT_MAP].device = hge->Ini_GetInt("Controls","mapDevice",DEVICE_KEYBOARD);
+	inputs[INPUT_PAUSE].device = hge->Ini_GetInt("Controls","exitDevice",DEVICE_KEYBOARD);
 	inputs[INPUT_SCREENSHOT].device = hge->Ini_GetInt("Controls","screenshotDevice",DEVICE_KEYBOARD);
-	inputs[INPUT_VOLUME_UP].device = hge->Ini_GetInt("Controls","volumeupDevice",DEVICE_KEYBOARD);
-	inputs[INPUT_VOLUME_DOWN].device = hge->Ini_GetInt("Controls","volumedownDevice",DEVICE_KEYBOARD);
 
 }
 
@@ -425,12 +409,8 @@ char* Input::getInputName(int whichInput) {
 		case INPUT_AIM: return "Aim";
 		case INPUT_PREVIOUS_ABILITY: return "Previous Ability";
 		case INPUT_NEXT_ABILITY: return "Next Ability";
-		case INPUT_EXIT: return "Exit";
-		case INPUT_INVENTORY: return "Inventory";
-		case INPUT_MAP: return "Map";
+		case INPUT_PAUSE: return "Pause";
 		case INPUT_SCREENSHOT: return "Screenshot";
-		case INPUT_VOLUME_UP: return "Music Volume Up";
-		case INPUT_VOLUME_DOWN: return "Music Volume Down";
 		default: return "Error";
 	}
 }
