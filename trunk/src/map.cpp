@@ -153,31 +153,7 @@ void Map::draw(float dt) {
 	*/
 
 	//Top left
-	resources->GetSprite("mapBorderTopLeft")->Render(windowX-30, windowY-30);
-	//Top
-	for (int i = 0; i < 20; i++) {
-		resources->GetSprite("mapBorderHorizontal")->Render(windowX + i*30, windowY-30);
-	}
-	//Top right
-	resources->GetSprite("mapBorderTopRight")->Render(windowX + 600, windowY-30);
-	//Left
-	for (int i = 0; i < 14; i++) {
-		resources->GetSprite("mapBorderVertical")->Render(windowX - 30, windowY + i*30);
-	}
-	resources->GetSprite("mapBorderVertical")->Render(windowX - 30, windowY + 402);
-	//Right
-	for (int i = 0; i < 14; i++) {
-		resources->GetSprite("mapBorderVertical")->Render(windowX + 600, windowY + i*30);
-	}
-	resources->GetSprite("mapBorderVertical")->Render(windowX + 600, windowY + 402);
-	//Bottom left
-	resources->GetSprite("mapBorderBottomLeft")->Render(windowX - 30, windowY + 432);
-	//Bottom right
-	resources->GetSprite("mapBorderBottomRight")->Render(windowX + 600, windowY + 432);
-	//Bottom
-	for (int i = 0; i < 20; i++) {
-		resources->GetSprite("mapBorderHorizontal")->Render(windowX + i*30, windowY + 432);
-	}
+	resources->GetSprite("mapBackground")->Render(windowX - 30, windowY - 30);
 
 }
 
