@@ -175,6 +175,9 @@ bool FrameFunc() {
 		//Update all windows
 		windowManager->update(dt);
 
+		//Update loading effect
+		loadEffectManager->update(dt);
+
 		//If no windows are open, update the game objects
 		if (!windowManager->isOpenWindow()) {
 			
@@ -182,7 +185,6 @@ bool FrameFunc() {
 			gameTime += dt;
 			
 			//If the loading effect isn't active, update the game objects
-			loadEffectManager->update(dt);
 			if (!loadEffectManager->isEffectActive()) {
 				theEnvironment->update(dt);
 				bossManager->update(dt);

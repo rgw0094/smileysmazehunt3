@@ -20,16 +20,14 @@ public:
 	void setDialogue(int _npcID, int _textID);
 	void setHint();
 	void init();
-	void doFadeOut(float dt);
+	bool doFadeOut(float dt);
 
 	//Variables
-	bool visible;			//If there is an active textbox
 	bool hasGraphic;		//If the text box should display a graphic
 	int textBoxType;		//Dialog, Hint, Normal
 	int graphicHeight;		//Height of the graphic if there is one
 	int x,y;
 	int npcID, textID, numPages, currentPage;
-	float textBoxClosed;	//Time the textbox was closed
 	float oldHotSpotX, oldHotSpotY;			
 	hgeSprite *graphic;
 	float timeStarted;

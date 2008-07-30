@@ -43,7 +43,6 @@ private:
 	bool gameMenuOpen;
 	int currentMenuWindow;
 	BaseWindow *activeWindow;
-	TextBox *textBox;
 
 };
 
