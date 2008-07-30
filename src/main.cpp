@@ -169,7 +169,7 @@ bool FrameFunc() {
 
 		//If the user presses escape go straight to the options screen
 		if (hge->Input_KeyDown(HGEK_ESCAPE)) {
-			windowManager->openGameMenu(OPTIONS);
+			windowManager->openWindow(new MiniMenu(MINIMENU_EXIT));
 		}
 
 		//Update all windows

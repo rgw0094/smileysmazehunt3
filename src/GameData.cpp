@@ -7,7 +7,10 @@
 #include "smiley.h"
 #include "GameData.h"
 #include "Projectiles.h"
+#include "Player.h"
 #include <string>
+
+extern Player *thePlayer;
 
 GameData::GameData() {
 	loadEnemyData();
@@ -64,62 +67,87 @@ void GameData::loadAbilityData() {
 
 	//Clinton's Cane
 	strcpy(abilities[CANE].name, "Cane Of Clinton");
-	strcpy(abilities[CANE].description, "Allows you to communicate telepathically with Bill Clinton.");
+	strcpy(abilities[CANE].description, 
+		"Use for 3 seconds to communicate telepathically with Bill Clinton. \n\nMana Cost: 10");
 	abilities[CANE].type = ACTIVATED;
 	abilities[CANE].manaCost = 10;
 
 	//Jesus' Sandals
     strcpy(abilities[WATER_BOOTS].name, "Jesus' Sandals");
+	strcpy(abilities[WATER_BOOTS].description, 
+		"While equipped you gain the power of Jesus Christ. (That means you can walk on water)");
 	abilities[WATER_BOOTS].type = HOLD;
 	abilities[WATER_BOOTS].manaCost = 0;
 
 	//Boots of 14
 	strcpy(abilities[SPRINT_BOOTS].name, "Speed Boots");
+	strcpy(abilities[SPRINT_BOOTS].description, "When activated you run 75% faster.");
 	abilities[SPRINT_BOOTS].type = ACTIVATED;
 	abilities[SPRINT_BOOTS].manaCost = 0;
 
 	//Fire Breath
 	strcpy(abilities[FIRE_BREATH].name, "Fire Breath");
+	strcpy(abilities[FIRE_BREATH].description, 
+		"Allows you to breath deadly fire breath.\n\nMana Cost: 10/second\n");
+	strcat(abilities[FIRE_BREATH].description, "Damage: ");
+	strcat(abilities[FIRE_BREATH].description, intToString(thePlayer->getFireBreathDamage()));
+	strcat(abilities[FIRE_BREATH].description, " per second.");
 	abilities[FIRE_BREATH].type = HOLD;
 	abilities[FIRE_BREATH].manaCost = 10;
 
 	//Ice Breath
 	strcpy(abilities[ICE_BREATH].name, "Ice Breath");
+	strcpy(abilities[ICE_BREATH].description, 
+		"Unleashes an icy blast that can freeze enemies.\n\n\nMana Cost: 10");
 	abilities[ICE_BREATH].type = ACTIVATED;
 	abilities[ICE_BREATH].manaCost = 10;
 
 	//Reflection Shield
 	strcpy(abilities[REFLECTION_SHIELD].name, "Reflection Shield");
+	strcpy(abilities[REFLECTION_SHIELD].description, 
+		"Activate to deflect certain projectiles.\n\n\nMana Cost: 10");
 	abilities[REFLECTION_SHIELD].type = HOLD;
-	abilities[REFLECTION_SHIELD].manaCost = 20;
+	abilities[REFLECTION_SHIELD].manaCost = 10;
 
-	//Wings
+	//Hover
 	strcpy(abilities[HOVER].name, "Hover");
+	strcpy(abilities[HOVER].description, 
+		"Grants you the power to use hover pads\n\n\nMana Cost: 15/second");
 	abilities[HOVER].type = HOLD;
 	abilities[HOVER].manaCost = 15;
 
 	//Lightning Orbs
 	strcpy(abilities[LIGHTNING_ORB].name, "Lightning Orbs");
+	strcpy(abilities[LIGHTNING_ORB].description, 
+		"Shoots orbs of lightning. \n\n\nMana Cost: 5\n");
+	strcat(abilities[LIGHTNING_ORB].description, "Damage: ");
+	strcat(abilities[LIGHTNING_ORB].description, intToString(thePlayer->getLightningOrbDamage()));
 	abilities[LIGHTNING_ORB].type = ACTIVATED;
-	abilities[LIGHTNING_ORB].manaCost = 1;
+	abilities[LIGHTNING_ORB].manaCost = 5;
 
 	//Shrink
 	strcpy(abilities[SHRINK].name, "Shrink");
+	strcpy(abilities[SHRINK].description, "When activated Smiley will shrink in size and be able to fit into smaller spaces.");
 	abilities[SHRINK].type = ACTIVATED;
 	abilities[SHRINK].manaCost = 0;
 
 	//Silly Pad
 	strcpy(abilities[SILLY_PAD].name, "Silly Pad");
+	strcpy(abilities[SILLY_PAD].description, 
+		"Places a Silly Pad. They are so silly that enemies can't even cross them!\n\nMana Cost: 5");
 	abilities[SILLY_PAD].type = ACTIVATED;
-	abilities[SILLY_PAD].manaCost = 3;
+	abilities[SILLY_PAD].manaCost = 5;
 
 	//King Tut's Mask
 	strcpy(abilities[TUTS_MASK].name, "Tut's Mask");
+	strcpy(abilities[TUTS_MASK].description, 
+		"Grants the wearer the power of invisibility.\n\n\nMana Cost: 25/second");
 	abilities[TUTS_MASK].type = HOLD;
 	abilities[TUTS_MASK].manaCost = 25;
 
 	//Frisbee
 	strcpy(abilities[FRISBEE].name, "Frisbee!?!?! K");
+	strcpy(abilities[FRISBEE].description, "Throws a frisbee that can stun enemies.");
 	abilities[FRISBEE].type = ACTIVATED;
 	abilities[FRISBEE].manaCost = 0;
 
