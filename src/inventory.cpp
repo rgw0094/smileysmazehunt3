@@ -53,9 +53,21 @@ void Inventory::draw(float dt) {
 		for (int j = 0; j < HEIGHT; j++) {
 			if (saveManager->hasAbility[j*4 + i]) {
 				abilitySprites[j*4 + i]->Render(INVENTORY_X_OFFSET + 40 + i*SQUARE_SIZE, INVENTORY_Y_OFFSET + 40 + j*SQUARE_SIZE);
-				//Draw the ability name if it is highlighted
+				//Draw the ability name and info if it is highlighted
 				if (cursorX == i && cursorY == j) {
-					resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET+160,INVENTORY_Y_OFFSET+265,HGETEXT_CENTER,"%s", gameData->getAbilityInfo(j*4 + i).description);
+					resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET+170,INVENTORY_Y_OFFSET+275,HGETEXT_CENTER,"%s", gameData->getAbilityInfo(j*4 + i).name);
+					resources->GetFont("description")->printf(
+						INVENTORY_X_OFFSET+40,
+						INVENTORY_Y_OFFSET+340,
+						HGETEXT_LEFT,
+						"Mana Cost: %d", gameData->getAbilityInfo(j*4+i).manaCost);
+					resources->GetFont("description")->printfb(
+						INVENTORY_X_OFFSET+40,	//box x
+						INVENTORY_Y_OFFSET+365,	//box y
+						275.0, 200.0,			//width and height of box
+						HGETEXT_LEFT | HGETEXT_TOP, //Alignment
+						"%s", gameData->getAbilityInfo(j*4 + i).description);
+
 				}
 			}
 		}
@@ -67,23 +79,23 @@ void Inventory::draw(float dt) {
 			//Level icons
 			if (j == 0) {
 				resources->GetAnimation("levelIcons")->SetFrame(i);
-				resources->GetAnimation("levelIcons")->Render(INVENTORY_X_OFFSET + 380 + i*50,INVENTORY_Y_OFFSET + 20);
+				resources->GetAnimation("levelIcons")->Render(INVENTORY_X_OFFSET + 385 + i*50,INVENTORY_Y_OFFSET + 35);
 			}
 			//Key icons
 			if (i == 0) {
 				resources->GetAnimation("keyIcons")->SetFrame(j);			
-				resources->GetAnimation("keyIcons")->Render(INVENTORY_X_OFFSET + 335, INVENTORY_Y_OFFSET + 70 + j*50);
+				resources->GetAnimation("keyIcons")->Render(INVENTORY_X_OFFSET + 345, INVENTORY_Y_OFFSET + 75 + j*50);
 			}
 			//Key numbers
-			resources->GetFont("numberFnt")->printf(INVENTORY_X_OFFSET+400+i*50,INVENTORY_Y_OFFSET+75+j*50,HGETEXT_CENTER,"%d",saveManager->numKeys[i][j]);
+			resources->GetFont("numberFnt")->printf(INVENTORY_X_OFFSET+405+i*50,INVENTORY_Y_OFFSET+80+j*50,HGETEXT_CENTER,"%d",saveManager->numKeys[i][j]);
 		}
 	}	
 
 	//Upgrades
 	for (int i = 0; i < 3; i++) {
 		resources->GetAnimation("upgradeIcons")->SetFrame(i);
-		resources->GetAnimation("upgradeIcons")->Render(INVENTORY_X_OFFSET+350+i*90,INVENTORY_Y_OFFSET + 270);
-		resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET+395+i*90,INVENTORY_Y_OFFSET+275,HGETEXT_LEFT,"x%d",saveManager->numUpgrades[i]);
+		resources->GetAnimation("upgradeIcons")->Render(INVENTORY_X_OFFSET+355+i*90,INVENTORY_Y_OFFSET + 300);
+		resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET+400+i*90,INVENTORY_Y_OFFSET+305,HGETEXT_LEFT,"x%d",saveManager->numUpgrades[i]);
 	}
 
 	//Draw the cursor

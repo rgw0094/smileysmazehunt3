@@ -63,62 +63,63 @@ char *GameData::getAreaName(int area) {
 void GameData::loadAbilityData() {
 
 	//Clinton's Cane
-	strcpy(abilities[CANE].description, "Cane Of Clinton");
+	strcpy(abilities[CANE].name, "Cane Of Clinton");
+	strcpy(abilities[CANE].description, "Allows you to communicate telepathically with Bill Clinton.");
 	abilities[CANE].type = ACTIVATED;
 	abilities[CANE].manaCost = 10;
 
 	//Jesus' Sandals
-    strcpy(abilities[WATER_BOOTS].description, "Jesus' Sandals");
+    strcpy(abilities[WATER_BOOTS].name, "Jesus' Sandals");
 	abilities[WATER_BOOTS].type = HOLD;
 	abilities[WATER_BOOTS].manaCost = 0;
 
 	//Boots of 14
-	strcpy(abilities[SPRINT_BOOTS].description, "Speed Boots");
+	strcpy(abilities[SPRINT_BOOTS].name, "Speed Boots");
 	abilities[SPRINT_BOOTS].type = ACTIVATED;
 	abilities[SPRINT_BOOTS].manaCost = 0;
 
 	//Fire Breath
-	strcpy(abilities[FIRE_BREATH].description, "Fire Breath");
+	strcpy(abilities[FIRE_BREATH].name, "Fire Breath");
 	abilities[FIRE_BREATH].type = HOLD;
 	abilities[FIRE_BREATH].manaCost = 10;
 
 	//Ice Breath
-	strcpy(abilities[ICE_BREATH].description, "Ice Breath");
+	strcpy(abilities[ICE_BREATH].name, "Ice Breath");
 	abilities[ICE_BREATH].type = ACTIVATED;
 	abilities[ICE_BREATH].manaCost = 10;
 
 	//Reflection Shield
-	strcpy(abilities[REFLECTION_SHIELD].description, "Reflection Shield");
+	strcpy(abilities[REFLECTION_SHIELD].name, "Reflection Shield");
 	abilities[REFLECTION_SHIELD].type = HOLD;
 	abilities[REFLECTION_SHIELD].manaCost = 20;
 
 	//Wings
-	strcpy(abilities[HOVER].description, "Hover");
+	strcpy(abilities[HOVER].name, "Hover");
 	abilities[HOVER].type = HOLD;
 	abilities[HOVER].manaCost = 15;
 
 	//Lightning Orbs
-	strcpy(abilities[LIGHTNING_ORB].description, "Lightning Orbs");
+	strcpy(abilities[LIGHTNING_ORB].name, "Lightning Orbs");
 	abilities[LIGHTNING_ORB].type = ACTIVATED;
 	abilities[LIGHTNING_ORB].manaCost = 1;
 
 	//Shrink
-	strcpy(abilities[SHRINK].description, "Shrink");
+	strcpy(abilities[SHRINK].name, "Shrink");
 	abilities[SHRINK].type = ACTIVATED;
 	abilities[SHRINK].manaCost = 0;
 
 	//Silly Pad
-	strcpy(abilities[SILLY_PAD].description, "Silly Pad");
+	strcpy(abilities[SILLY_PAD].name, "Silly Pad");
 	abilities[SILLY_PAD].type = ACTIVATED;
 	abilities[SILLY_PAD].manaCost = 3;
 
 	//King Tut's Mask
-	strcpy(abilities[TUTS_MASK].description, "Tut's Mask");
+	strcpy(abilities[TUTS_MASK].name, "Tut's Mask");
 	abilities[TUTS_MASK].type = HOLD;
 	abilities[TUTS_MASK].manaCost = 25;
 
 	//Frisbee
-	strcpy(abilities[FRISBEE].description, "Frisbee!?!?! K");
+	strcpy(abilities[FRISBEE].name, "Frisbee!?!?! K");
 	abilities[FRISBEE].type = ACTIVATED;
 	abilities[FRISBEE].manaCost = 0;
 

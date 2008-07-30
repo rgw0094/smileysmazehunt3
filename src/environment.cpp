@@ -206,7 +206,7 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 		soundManager->playMusic("iceMusic");
 		areaFile.open("Data/Maps/snow.smh");
 	} else if (id == TUTS_TOMB) {
-		//soundManager->playMusic("tutsTombMusic");
+		soundManager->playMusic("kingTutMusic");
 		areaFile.open("Data/Maps/tutstomb.smh");
 	} else if (id == WORLD_OF_DESPAIR) {
 		soundManager->playMusic("realmOfDespairMusic");

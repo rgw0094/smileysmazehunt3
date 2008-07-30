@@ -24,7 +24,8 @@ struct EnemyInfo {
 };
 
 struct Ability {
-	char description[68];
+	char name[32];
+	char description[128];
 	int manaCost;
 	int type;
 };

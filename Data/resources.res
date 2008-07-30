@@ -6,6 +6,11 @@ Font curlz {
  tracking=1.0
  resgroup=3
 }
+Font description {
+ filename="description.fnt"
+ tracking=1.0
+ resgroup=3
+}
 Font titleFnt {
  filename="titleFnt.fnt"
  tracking=1.0
@@ -295,6 +300,11 @@ Music realmOfDespairMusic {
 Music hintMusic {
  filename="hint.xm"
  amplify=90
+ resgroup=11
+}
+Music kingTutMusic {
+ filename="kingtut.mod"
+ amplify=50
  resgroup=11
 }
 
