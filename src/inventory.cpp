@@ -22,8 +22,8 @@ extern GameData *gameData;
 //Sprites
 extern hgeSprite *itemLayer[256], *abilitySprites[12];
 
-#define INVENTORY_X_OFFSET 188.5
-#define INVENTORY_Y_OFFSET 215.5
+#define INVENTORY_X_OFFSET ((1024.0-660.0)/2.0)
+#define INVENTORY_Y_OFFSET ((768.0-492.0)/2.0)
 
 /**
  * Constructor
@@ -46,13 +46,13 @@ void Inventory::draw(float dt) {
 	shadeScreen(100);
 
 	//Draw the inventory background
-	resources->GetSprite("inventory")->Render(INVENTORY_X_OFFSET-25, INVENTORY_Y_OFFSET-15);
+	resources->GetSprite("inventory")->Render(INVENTORY_X_OFFSET, INVENTORY_Y_OFFSET);
 
 	//Ability grid
 	for (int i = 0; i < WIDTH; i++) {
 		for (int j = 0; j < HEIGHT; j++) {
 			if (saveManager->hasAbility[j*4 + i]) {
-				abilitySprites[j*4 + i]->Render(INVENTORY_X_OFFSET + 22 + i*SQUARE_SIZE, INVENTORY_Y_OFFSET + 22 + j*SQUARE_SIZE);
+				abilitySprites[j*4 + i]->Render(INVENTORY_X_OFFSET + 40 + i*SQUARE_SIZE, INVENTORY_Y_OFFSET + 40 + j*SQUARE_SIZE);
 				//Draw the ability name if it is highlighted
 				if (cursorX == i && cursorY == j) {
 					resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET+160,INVENTORY_Y_OFFSET+265,HGETEXT_CENTER,"%s", gameData->getAbilityInfo(j*4 + i).description);
@@ -87,7 +87,7 @@ void Inventory::draw(float dt) {
 	}
 
 	//Draw the cursor
-	resources->GetSprite("inventoryCursor")->Render(INVENTORY_X_OFFSET + cursorX*SQUARE_SIZE + 13, INVENTORY_Y_OFFSET + cursorY*SQUARE_SIZE + 13);
+	resources->GetSprite("inventoryCursor")->Render(INVENTORY_X_OFFSET + cursorX*SQUARE_SIZE + 31, INVENTORY_Y_OFFSET + cursorY*SQUARE_SIZE + 31);
 
 }
 
