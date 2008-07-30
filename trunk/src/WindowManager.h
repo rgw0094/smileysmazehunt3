@@ -5,10 +5,9 @@ class BaseWindow;
 class TextBox;
 class hgeSprite;
 
-#define NUM_MENU_WINDOWS 3
+#define NUM_MENU_WINDOWS 2
 #define INVENTORY 0
 #define AREA_MAP 1
-#define OPTIONS 2
 
 class WindowManager {
 

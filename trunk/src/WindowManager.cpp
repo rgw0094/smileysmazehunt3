@@ -48,9 +48,6 @@ void WindowManager::openGameMenu(int whichWindow) {
 		case AREA_MAP:
 			openWindow(new Map());
 			break;
-		case OPTIONS:
-			openWindow(new MiniMenu(MINIMENU_EXIT));
-			break;
 	}
 }
 

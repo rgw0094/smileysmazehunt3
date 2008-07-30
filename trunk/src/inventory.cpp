@@ -56,14 +56,9 @@ void Inventory::draw(float dt) {
 				//Draw the ability name and info if it is highlighted
 				if (cursorX == i && cursorY == j) {
 					resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET+170,INVENTORY_Y_OFFSET+275,HGETEXT_CENTER,"%s", gameData->getAbilityInfo(j*4 + i).name);
-					resources->GetFont("description")->printf(
-						INVENTORY_X_OFFSET+40,
-						INVENTORY_Y_OFFSET+340,
-						HGETEXT_LEFT,
-						"Mana Cost: %d", gameData->getAbilityInfo(j*4+i).manaCost);
 					resources->GetFont("description")->printfb(
 						INVENTORY_X_OFFSET+40,	//box x
-						INVENTORY_Y_OFFSET+365,	//box y
+						INVENTORY_Y_OFFSET+340,	//box y
 						275.0, 200.0,			//width and height of box
 						HGETEXT_LEFT | HGETEXT_TOP, //Alignment
 						"%s", gameData->getAbilityInfo(j*4 + i).description);
