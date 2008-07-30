@@ -1,6 +1,5 @@
 === Programming To Do ===
  * Combine menus into one menu system
- * Fire should kill owls
  * Parallax pits - Use ID layer to change HUE to match the level
  * Plants should burn
  * Make yellow and green switches more saturated
@@ -20,6 +19,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Tongue/Fire kills Owlets||7/29/08||RGW||
 ||Bill Clinton text changes after you get the cane||7/29/08||RGW||
 ||Fix Silly Pads||7/29/08||RGW||
 ||Fix Shrink Tunnels||7/29/08||RGW||
