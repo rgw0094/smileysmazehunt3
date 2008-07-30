@@ -1,5 +1,6 @@
 === Programming To Do ===
  * Combine menus into one menu system
+ * Integrate TextBox with Window framework
  * Parallax pits - Use ID layer to change HUE to match the level
  * Plants should burn
  * Make yellow and green switches more saturated
