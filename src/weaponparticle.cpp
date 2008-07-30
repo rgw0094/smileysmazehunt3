@@ -280,3 +280,15 @@ bool WeaponParticleSystem::testCollision(hgeRect *collisionBox) {
 	}
 }
 
+/**
+ * Returns whether or not collisionCircle collides with this weapon particle system.
+ */
+bool WeaponParticleSystem::testCollision(CollisionCircle *collisionCircle) {
+	weaponParticle *par=particles;
+	
+	for (int i=0; i<nParticlesAlive; i++) {
+		bool collides = collisionCircle->testPoint(par->vecLocation.x + theEnvironment->xGridOffset*64.0 + theEnvironment->xOffset, par->vecLocation.y + theEnvironment->yGridOffset*64.0 + theEnvironment->yOffset);
+		if (collides) return true;
+		par++;
+	}
+}

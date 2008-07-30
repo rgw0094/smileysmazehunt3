@@ -7,6 +7,8 @@
 #include "hgevector.h"
 #include "hgesprite.h"
 
+class CollisionCircle;
+
 #define MAX_PARTICLES	750
 #define PARTICLE_FIRE_BREATH 0
 #define PARTICLE_ICE_BREATH 1
@@ -75,6 +77,7 @@ public:
 	void Update(float fDeltaTime);
 	void MoveTo(float x, float y, bool bMoveParticles=false);
 	bool testCollision(hgeRect *collisionBox);
+	bool testCollision(CollisionCircle *collisionCircle);
 
 	static HGE			*hge;
 	float				fAge;

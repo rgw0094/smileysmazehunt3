@@ -3,6 +3,11 @@
 
 class BaseWindow;
 
+#define NUM_MENU_WINDOWS 3
+#define INVENTORY 0
+#define AREA_MAP 1
+#define OPTIONS 2
+
 class WindowManager {
 
 public:
@@ -15,12 +20,19 @@ public:
 	void openWindow(BaseWindow *newWindow);
 	void closeWindow();
 	bool isOpenWindow();
+	void openGameMenu();
+	void openGameMenu(int menu);
+	void closeGameMenu();
+	bool isGameMenuOpen();
 	BaseWindow *getActiveWindow();
 
 	//Variable
 	int frameLastWindowClosed;
 	
 private:
+
+	bool gameMenuOpen;
+	int currentMenuWindow;
 	BaseWindow *activeWindow;
 
 };

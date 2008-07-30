@@ -2,6 +2,7 @@
 #define _TONGUE_H_
 
 class hgeRect;
+class CollisionCircle;
 
 class Tongue {
 
@@ -14,6 +15,7 @@ public:
 	void draw(float dt);
 	void startAttack();
 	bool testCollision(hgeRect *collisionBox);
+	bool testCollision(CollisionCircle *collisionCircle);
 	bool isAttacking();
 
 private:

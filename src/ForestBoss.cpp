@@ -1,4 +1,3 @@
-
 #include "ForestBoss.h"
 #include "hge.h"
 #include "hgeresource.h"
@@ -11,6 +10,7 @@
 #include "SaveManager.h"
 #include "SoundManager.h"
 #include "Tongue.h"
+#include "WeaponParticle.h"
 
 extern HGE *hge;
 extern hgeResourceManager *resources;
@@ -430,6 +430,13 @@ void ForestBoss::updateOwlets(float dt) {
 		//Check for collision with Smiley
 		if (i->collisionCircle->testCircle(thePlayer->collisionCircle)) {
 			thePlayer->dealDamage(OWLET_DAMAGE, true);
+			collision = true;
+		}
+
+		//Check for collision with walls and Smiley's weapons
+		if (theEnvironment->collisionAt(i->x, i->y) == UNWALKABLE ||
+				thePlayer->getTongue()->testCollision(i->collisionCircle) ||
+				thePlayer->fireBreathParticle->testCollision(i->collisionCircle)) {
 			collision = true;
 		}
 
