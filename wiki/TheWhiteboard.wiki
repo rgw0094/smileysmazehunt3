@@ -10,7 +10,6 @@
  * Have Fenwar make more appearances than just in Smolder Hollow and the end
  * Fix the spikey moving walls
  * Make the fountain heal you
- * Have Bill Clinton have another text for after he gives you the cane - maybe he just tells his hints?
  * You can still walk diagonally between two arrow blocks.
 
 === Graphics To Do ===
@@ -21,6 +20,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Bill Clinton text changes after you get the cane||7/29/08||RGW||
 ||Fix Silly Pads||7/29/08||RGW||
 ||Fix Shrink Tunnels||7/29/08||RGW||
 ||Super springs||7/29/08||RGW||
