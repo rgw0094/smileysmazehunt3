@@ -2,7 +2,6 @@
 #include "MushroomBoss.h"
 #include "EnemyGroupManager.h"
 #include "Player.h"
-#include "TextBox.h"
 #include "Projectiles.h"
 #include "hge.h"
 #include "environment.h"
@@ -10,16 +9,16 @@
 #include "lootmanager.h"
 #include "SaveManager.h"
 #include "SoundManager.h"
+#include "WindowManager.h"
 
 extern HGE *hge;
+extern WindowManager *windowManager;
 extern hgeResourceManager *resources;
 extern bool debugMode;
 extern EnemyGroupManager *enemyGroupManager;
 extern Player *thePlayer;
-extern TextBox *theTextBox;
 extern ProjectileManager *projectileManager;
 extern Environment *theEnvironment;
-extern TextBox *theTextBox;
 extern bool debugMode;
 extern EnemyManager *enemyManager;
 extern LootManager *lootManager;
@@ -155,7 +154,7 @@ bool MushroomBoss::update(float dt) {
 	//When smiley triggers the boss' enemy blocks start his dialogue.
 	if (state == MUSHBOOM_INACTIVE && !startedIntroDialogue) {
 		if (enemyGroupManager->groups[groupID].triggeredYet) {
-			theTextBox->setDialogue(-1, MUSHBOOM_INTROTEXT);
+			windowManager->openDialogue(-1, MUSHBOOM_INTROTEXT);
 			startedIntroDialogue = true;
 		} else {
 			return false;
@@ -163,7 +162,7 @@ bool MushroomBoss::update(float dt) {
 	}
 
     //Activate the boss when the intro dialogue is closed
-	if (state == MUSHBOOM_INACTIVE && startedIntroDialogue && !theTextBox->visible) {
+	if (state == MUSHBOOM_INACTIVE && startedIntroDialogue && !windowManager->isTextBoxOpen()) {
 		enterState(MUSHBOOM_SPIRALING);
 		soundManager->playMusic("bossMusic");
 		lastThrowTime=lastMiniMushroomTime=gameTime;
@@ -189,7 +188,7 @@ bool MushroomBoss::update(float dt) {
 	else shouldDrawAfterSmiley = true;
 
 	if (state == MUSHBOOM_DYING_TEXT) {
-		if (!theTextBox->visible) {
+		if (!windowManager->isTextBoxOpen()) {
 			enterState(MUSHBOOM_FADING);
 			alpha=255.0;
 		}
@@ -583,6 +582,6 @@ void MushroomBoss::initiateDeathSequence() {
 	
 	if (state <= MUSHBOOM_SPIRALING) {
 		enterState(MUSHBOOM_DYING_TEXT);
-		theTextBox->setDialogue(-1, MUSHBOOM_DEADTEXT);	
+		windowManager->openDialogue(-1, MUSHBOOM_DEADTEXT);	
 	}
 }

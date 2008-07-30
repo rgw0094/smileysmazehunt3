@@ -1,19 +1,19 @@
 #include "smiley.h"
 #include "lootmanager.h"
 #include "player.h"
-#include "textbox.h"
 #include "SaveManager.h"
 #include "GameData.h"
 #include "collisioncircle.h"
+#include "WindowManager.h"
 
 #include "hgesprite.h"
 #include "hgeresource.h"
 
 extern Environment *theEnvironment;
+extern WindowManager *windowManager;
 extern SaveManager *saveManager;
 extern Player *thePlayer;
 extern HGE *hge;
-extern TextBox *theTextBox;
 extern hgeSprite* abilitySprites[NUM_ABILITIES];
 extern hgeResourceManager *resources;
 extern GameData *gameData;
@@ -109,27 +109,27 @@ void LootManager::update(float dt) {
 				switch (i->ability) {
 					case WATER_BOOTS:
 						saveManager->hasAbility[WATER_BOOTS] = true;
-						theTextBox->set(gameData->getGameText("GotJesusSandals"), true, abilitySprites[WATER_BOOTS], 64);
+						windowManager->openTextBox(gameData->getGameText("GotJesusSandals"), true, abilitySprites[WATER_BOOTS], 64);
 						break;
 					case FRISBEE:
 						saveManager->hasAbility[FRISBEE] = true;
-						theTextBox->set(gameData->getGameText("GotFrisbee"), true, abilitySprites[FRISBEE], 64);
+						windowManager->openTextBox(gameData->getGameText("GotFrisbee"), true, abilitySprites[FRISBEE], 64);
 						break;
 					case FIRE_BREATH:
 						saveManager->hasAbility[FIRE_BREATH] = true;
-						theTextBox->set(gameData->getGameText("GotFireBreath"), true, abilitySprites[FIRE_BREATH], 64);
+						windowManager->openTextBox(gameData->getGameText("GotFireBreath"), true, abilitySprites[FIRE_BREATH], 64);
 						break;
 					case SPRINT_BOOTS:
 						saveManager->hasAbility[SPRINT_BOOTS] = true;
-						theTextBox->set(gameData->getGameText("GotSprintBoots"), true, abilitySprites[SPRINT_BOOTS], 64);
+						windowManager->openTextBox(gameData->getGameText("GotSprintBoots"), true, abilitySprites[SPRINT_BOOTS], 64);
 						break;
 					case LIGHTNING_ORB:
 						saveManager->hasAbility[LIGHTNING_ORB] = true;
-						theTextBox->set(gameData->getGameText("GotLightningOrb"), true, abilitySprites[LIGHTNING_ORB], 64);
+						windowManager->openTextBox(gameData->getGameText("GotLightningOrb"), true, abilitySprites[LIGHTNING_ORB], 64);
 						break;
 					case REFLECTION_SHIELD:
 						saveManager->hasAbility[REFLECTION_SHIELD] = true;
-						theTextBox->set(gameData->getGameText("GotReflectionShield"), true, abilitySprites[REFLECTION_SHIELD], 64);
+						windowManager->openTextBox(gameData->getGameText("GotReflectionShield"), true, abilitySprites[REFLECTION_SHIELD], 64);
 						break;
 				}
 			}

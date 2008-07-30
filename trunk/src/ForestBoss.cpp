@@ -3,7 +3,6 @@
 #include "hgeresource.h"
 #include "Player.h"
 #include "EnemyGroupManager.h"
-#include "TextBox.h"
 #include "projectiles.h"
 #include "lootmanager.h"
 #include "environment.h"
@@ -11,12 +10,13 @@
 #include "SoundManager.h"
 #include "Tongue.h"
 #include "WeaponParticle.h"
+#include "WindowManager.h"
 
 extern HGE *hge;
+extern WindowManager *windowManager;
 extern hgeResourceManager *resources;
 extern Player *thePlayer;
 extern EnemyGroupManager *enemyGroupManager;
-extern TextBox *theTextBox;
 extern bool debugMode;
 extern ProjectileManager *projectileManager;
 extern LootManager *lootManager;
@@ -69,7 +69,7 @@ bool ForestBoss::update(float dt) {
 	//When smiley triggers the boss' enemy blocks start his dialogue.
 	if (state == FORESTBOSS_INACTIVE && !startedIntroDialogue) {
 		if (enemyGroupManager->groups[groupID].triggeredYet) {
-			theTextBox->setDialogue(-1, FORESTBOSS_INTROTEXT);
+			windowManager->openDialogue(-1, FORESTBOSS_INTROTEXT);
 			startedIntroDialogue = true;
 		} else {
 			return false;
@@ -77,7 +77,7 @@ bool ForestBoss::update(float dt) {
 	}
 
 	//Activate the boss when the intro dialogue is closed
-	if (state == FORESTBOSS_INACTIVE && startedIntroDialogue && !theTextBox->visible) {
+	if (state == FORESTBOSS_INACTIVE && startedIntroDialogue && !windowManager->isTextBoxOpen()) {
 		enterState(FORESTBOSS_BATTLE);
 		soundManager->playMusic("bossMusic");
 	}
@@ -85,7 +85,7 @@ bool ForestBoss::update(float dt) {
 	//Show Garmborn's tongue text the first time Smiley licks him.
 	if (thePlayer->getTongue()->testCollision(collisionBox) && !lickedYet) {
 		lickedYet = true;
-		theTextBox->setDialogue(-1, FORESTBOSS_TONGUETEXT);
+		windowManager->openDialogue(-1, FORESTBOSS_TONGUETEXT);
 	}
 
 	//Smiley collision
@@ -147,7 +147,7 @@ bool ForestBoss::update(float dt) {
 	}
 
 	//Defeat Text showing
-	if (state == FORESTBOSS_DEFEATED && !theTextBox->visible) {
+	if (state == FORESTBOSS_DEFEATED && !windowManager->isTextBoxOpen()) {
 		enterState(FORESTBOSS_FADING);
 	}
 
@@ -285,7 +285,7 @@ void ForestBoss::enterState(int _state) {
 	if (state == FORESTBOSS_DEFEATED) {
 		treeletsFadingOut = true;
 		soundManager->fadeOutMusic();
-		theTextBox->setDialogue(-1, FORESTBOSS_DEFEATTEXT);
+		windowManager->openDialogue(-1, FORESTBOSS_DEFEATTEXT);
 		resetOwlets(true);
 	}
 

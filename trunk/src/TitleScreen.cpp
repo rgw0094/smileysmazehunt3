@@ -47,7 +47,7 @@ void TitleScreen::draw(float dt) {
 
 	//Title
 	resources->GetFont("titleFnt")->printf(512,50,HGETEXT_CENTER, "Smiley's Maze");
-	resources->GetFont("titleFnt")->printf(512,150,HGETEXT_CENTER, "Hunt 3");
+	resources->GetFont("titleFnt")->printf(512,150,HGETEXT_CENTER, "Hunt");
 
 	//Draw buttons
 	for (int i = 0; i < NUM_BUTTONS; i++) {

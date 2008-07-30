@@ -2,7 +2,6 @@
 #include "SnowBoss.h"
 #include "EnemyGroupManager.h"
 #include "Player.h"
-#include "TextBox.h"
 #include "Projectiles.h"
 #include "hge.h"
 #include "environment.h"
@@ -13,16 +12,16 @@
 #include "WeaponParticle.h"
 #include "CollisionCircle.h"
 #include "Tongue.h"
+#include "WindowManager.h"
 
 extern HGE *hge;
 extern hgeResourceManager *resources;
 extern bool debugMode;
 extern EnemyGroupManager *enemyGroupManager;
 extern Player *thePlayer;
-extern TextBox *theTextBox;
 extern ProjectileManager *projectileManager;
+extern WindowManager *windowManager;
 extern Environment *theEnvironment;
-extern TextBox *theTextBox;
 extern bool debugMode;
 extern EnemyManager *enemyManager;
 extern LootManager *lootManager;
@@ -112,7 +111,7 @@ bool SnowBoss::update(float dt) {
 	//When smiley triggers the boss' enemy blocks start his dialogue.
 	if (state == SNOWBOSS_INACTIVE && !startedIntroDialogue) {
 		if (enemyGroupManager->groups[groupID].triggeredYet) {
-			theTextBox->setDialogue(-1, SNOWBOSS_INTROTEXT);
+			windowManager->openDialogue(-1, SNOWBOSS_INTROTEXT);
 			startedIntroDialogue = true;
 		} else {
 			return false;
@@ -120,7 +119,7 @@ bool SnowBoss::update(float dt) {
 	}
 
     //Activate the boss when the intro dialogue is closed
-	if (state == SNOWBOSS_INACTIVE && startedIntroDialogue && !theTextBox->visible) {
+	if (state == SNOWBOSS_INACTIVE && startedIntroDialogue && !windowManager->isTextBoxOpen()) {
 		enterState(SNOWBOSS_WADDLING);
 		soundManager->playMusic("bossMusic");
 	}
@@ -274,7 +273,7 @@ bool SnowBoss::update(float dt) {
 			
 			health -= DAMAGE_FROM_DROWNING;
 			if (health <= 0) {
-				theTextBox->setDialogue(-1, SNOWBOSS_DEFEATTEXT);
+				windowManager->openDialogue(-1, SNOWBOSS_DEFEATTEXT);
 				enterState(SNOWBOSS_PRE_DEATH);
 			}
 		}
@@ -285,10 +284,10 @@ bool SnowBoss::update(float dt) {
 		if (timePassedSince(timeEnteredState) > 0.1) {
 			if (!startedDrowningDialogue) {
 				startedDrowningDialogue = true;
-				theTextBox->setDialogue(-1, SNOWBOSS_BATTLETEXT_1);
+				windowManager->openDialogue(-1, SNOWBOSS_BATTLETEXT_1);
 			}
 		}
-		if (timePassedSince(timeEnteredState) > DROWNING_TIME && !theTextBox->visible) {
+		if (timePassedSince(timeEnteredState) > DROWNING_TIME && !windowManager->isTextBoxOpen()) {
 			enterState(SNOWBOSS_JUMPING_TO_CENTER);
 			startX=x;
 			startY=y-64;
@@ -321,7 +320,7 @@ bool SnowBoss::update(float dt) {
 	}
 
 	if (state==SNOWBOSS_PRE_DEATH) {
-		if (!theTextBox->visible) {
+		if (!windowManager->isTextBoxOpen()) {
 			alpha=255;
 			enterState(SNOWBOSS_FADING);
 		}

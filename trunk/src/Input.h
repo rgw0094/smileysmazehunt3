@@ -16,7 +16,7 @@
 #define AXIS_MAXCLICK 700		//when axis is above this value, it takes action for that direction
 
 //Inputs
-#define NUM_INPUTS 11
+#define NUM_INPUTS 10
 #define INPUT_LEFT 0
 #define INPUT_RIGHT 1
 #define INPUT_UP 2
@@ -27,7 +27,6 @@
 #define INPUT_PREVIOUS_ABILITY 7
 #define INPUT_NEXT_ABILITY 8
 #define INPUT_PAUSE 9
-#define INPUT_SCREENSHOT 10
 
 //Codes for joystick
 #define JOYSTICK_LEFT -5

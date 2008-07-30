@@ -24,7 +24,6 @@ public:
 	//methods
 	void draw(float dt);
 	bool update(float dt);
-	bool instanceOf(char* type) { return strcmp(type, "MiniMenu") == 0; }
 		
 	//Variables
 	int x, y, mode;

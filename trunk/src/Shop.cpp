@@ -7,7 +7,6 @@
 #include "shop.h"
 #include "hge.h"
 #include "hgeresource.h"
-#include "TextBox.h"
 #include "Input.h"
 #include "SaveManager.h"
 #include "Player.h"
@@ -15,7 +14,6 @@
 
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern TextBox *theTextBox;
 extern Input *input;
 extern SaveManager *saveManager;
 extern float gameTime;
@@ -125,7 +123,6 @@ bool Shop::update(float dt) {
 				purchaseItem(currentSelection);
 				break;
 			case EXIT:
-				theTextBox->textBoxClosed = gameTime;
 				windowManager->frameLastWindowClosed = frameCounter;
 				return false;
 		}

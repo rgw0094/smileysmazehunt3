@@ -2,11 +2,12 @@
 #define TEXTBOX_H_
 
 #include <string>
+#include "BaseWindow.h"
 
 class hgeDistortionMesh;
 class hgeSprite;
 
-class TextBox {
+class TextBox : public BaseWindow {
 
 public:
 	TextBox();
@@ -14,7 +15,7 @@ public:
 
 	//methods
 	void draw(float dt);
-	void update(float dt);
+	bool update(float dt);
 	void set(char* text, bool hasGraphic, hgeSprite *graphic, int graphicHeight);
 	void setDialogue(int _npcID, int _textID);
 	void setHint();

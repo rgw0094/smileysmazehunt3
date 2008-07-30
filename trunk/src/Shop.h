@@ -17,7 +17,6 @@ public:
 
 	void draw(float dt);
 	bool update(float dt);
-	bool instanceOf(char* type) { return strcmp(type, "Shop") == 0; }
 
 private:
 

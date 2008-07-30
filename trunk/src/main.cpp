@@ -1,6 +1,5 @@
 #include "EnemyManager.h"
 #include "lootmanager.h"
-#include "textbox.h"
 #include "projectiles.h"
 #include "inventory.h"
 #include "menu.h"
@@ -31,7 +30,6 @@ Player *thePlayer;
 EnemyManager *enemyManager;
 Menu *theMenu = NULL;
 LootManager *lootManager;
-TextBox *theTextBox;
 ProjectileManager *projectileManager;
 NPCManager *npcManager;
 BossManager *bossManager;
@@ -143,7 +141,7 @@ bool FrameFunc() {
 	soundManager->update(dt);
 
 	//Input for taking screenshots
-	if (input->keyPressed(INPUT_SCREENSHOT)) {
+	if (hge->Input_KeyDown(HGEK_F1)) {
 		hge->System_Snapshot();
 	}
 	
@@ -171,38 +169,8 @@ bool FrameFunc() {
 
 		//If the user presses escape go straight to the options screen
 		if (hge->Input_KeyDown(HGEK_ESCAPE)) {
-			//if (!windowManager->isOpenWindow()) {
-				windowManager->openGameMenu(OPTIONS);
-			//}
+			windowManager->openGameMenu(OPTIONS);
 		}
-
-		/**
-		//Toggle the inventory
-		if (input->keyPressed(INPUT_INVENTORY)) {
-			//Open
-			if (!windowManager->isOpenWindow())
-				windowManager->openWindow(new Inventory());
-			//Close
-			else if (windowManager->getActiveWindow()->instanceOf("Inventory"))
-				windowManager->closeWindow();
-		}
-		
-		//Toggle the map
-		if (input->keyPressed(INPUT_MAP)) {
-			//Open
-			if (!windowManager->isOpenWindow()) 
-				windowManager->openWindow(new Map());
-			//Close
-			else if (windowManager->getActiveWindow()->instanceOf("Map")) 
-				windowManager->closeWindow();
-		}
-		
-		//Open the mini menu
-		if (input->keyPressed(INPUT_PAUSE) || hge->Input_KeyDown(HGEK_ESCAPE)) {
-			if (!windowManager->isOpenWindow()) {
-				windowManager->openWindow(new MiniMenu(MINIMENU_EXIT));
-			}
-		}*/
 
 		//Update all windows
 		windowManager->update(dt);
@@ -219,7 +187,6 @@ bool FrameFunc() {
 				theEnvironment->update(dt);
 				bossManager->update(dt);
 				thePlayer->update(dt);
-				theTextBox->update(dt);
 				enemyManager->update(dt);
 				lootManager->update(dt);
 				projectileManager->update(dt);
@@ -262,7 +229,6 @@ bool RenderFunc() {
 		theEnvironment->drawAfterSmiley(dt);
 		theEnvironment->drawFountain();
 		projectileManager->draw(dt);
-		theTextBox->draw(dt);
 		if (darkness > 0.0) shadeScreen(darkness);
 		loadEffectManager->draw(dt);
 		thePlayer->drawGUI(dt);
@@ -316,33 +282,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//persist until the program is closed!
 		saveManager = new SaveManager();
 		theMenu = new Menu();
-		theTextBox = new TextBox();
 		input = new Input();
 		soundManager = new SoundManager();
 		gameData = new GameData();
 		loadEffectManager = new LoadEffectManager();
-
-		BitManager* nigger;
-		unsigned char dickens,fullByte;
-		char* ninja, ninja2;
-		fullByte = ~0;
-
-		nigger = new BitManager();
-
-		bool bits[8] = {true,true,false,false,false,false,true,true};
-
-		int count = 0;
-
-		for (;;) {
-			if (nigger->addBit(bits[count])) break;		
-			count++;
-		}
-		dickens = nigger->getCurrentChar();
-
-		hge->System_Log("Dickens %d Full byte %d",dickens,fullByte);
-		
-		
-
 
 		//Open the menu
 		theMenu->open(TITLE_SCREEN);

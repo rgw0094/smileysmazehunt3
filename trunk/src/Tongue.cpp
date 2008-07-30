@@ -1,6 +1,5 @@
 #include "Tongue.h"
 #include "Player.h"
-#include "textbox.h"
 #include "smiley.h"
 #include "Environment.h"
 #include "EnemyManager.h"
@@ -16,7 +15,6 @@ extern NPCManager *npcManager;
 extern EnemyManager *enemyManager;
 extern hgeResourceManager *resources;
 extern Player *thePlayer;
-extern TextBox *theTextBox;
 extern WindowManager *windowManager;
 extern HGE *hge;
 
@@ -55,7 +53,7 @@ Tongue::~Tongue() {
 void Tongue::startAttack() {
 
 	//Make sure it is ok to attack
-	if (attacking || theTextBox->visible) {
+	if (attacking || windowManager->isTextBoxOpen()) {
 		return;
 	}
 
@@ -82,7 +80,7 @@ void Tongue::update(float dt) {
 		if (theEnvironment->toggleSwitches(this) ||
 				npcManager->talkToNPCs(this) ||
 				(!windowManager->isOpenWindow() && theEnvironment->hitSaveShrine(this)) ||
-				(!theTextBox->visible && theEnvironment->hitSigns(this))) {
+				(!windowManager->isTextBoxOpen() && theEnvironment->hitSigns(this))) {
 			hasActivatedSomething = true;
 		}
 	}

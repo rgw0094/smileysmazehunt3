@@ -3,18 +3,18 @@
 #include "collisioncircle.h"
 #include "player.h"
 #include "environment.h"
-#include "textbox.h"
 #include "NPC.h"
 #include "Tongue.h"
+#include "WindowManager.h"
 
 #include "hgestrings.h"
 #include "hgesprite.h"
 
 extern HGE *hge;
+extern WindowManager *windowManager;
 extern Player *thePlayer;
 extern Environment *theEnvironment;
 extern hgeStringTable *stringTable;
-extern TextBox *theTextBox;
 extern hgeSprite *npcSprites[NUM_NPCS][4];
 extern float gameTime;
 
@@ -91,7 +91,7 @@ bool NPCManager::talkToNPCs(Tongue *tongue) {
 	std::list<NPCStruct>::iterator i;
 	for (i = theNPCs.begin(); i != theNPCs.end(); i++) {
 		if (tongue->testCollision(i->npc->collisionBox)) {
-			theTextBox->setDialogue(i->npc->id, i->npc->textID);
+			windowManager->openDialogue(i->npc->id, i->npc->textID);
 			i->npc->inConversation = true;
 			return true;
 		}

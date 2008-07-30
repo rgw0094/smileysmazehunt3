@@ -3,14 +3,14 @@
 #include "player.h"
 #include "environment.h"
 #include "npcmanager.h"
-#include "textbox.h"
 #include "CollisionCircle.h"
+#include "WindowManager.h"
 
 #include "hge.h"
 #include "hgesprite.h"
 
 extern HGE *hge;
-extern TextBox *theTextBox;
+extern WindowManager *windowManager;
 extern hgeSprite *npcSprites[NUM_NPCS][4];
 extern bool debugMode;
 extern Player *thePlayer;
@@ -68,7 +68,7 @@ void NPC::update(float dt) {
 	collisionBox->SetRadius(x,y,32);
 
 	//Exit conversation
-	if (!theTextBox->visible) inConversation = false;
+	if (!windowManager->isTextBoxOpen()) inConversation = false;
 
 	//If in conversation, stand still and face the player
 	if (inConversation) {
