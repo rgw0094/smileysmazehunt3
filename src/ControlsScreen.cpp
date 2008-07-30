@@ -53,38 +53,35 @@ void ControlsScreen::draw(float dt) {
 
 
 	//Draw input boxes.
-	for (int col = 0; col < 3; col++) {
+	for (int col = 0; col < 2; col++) {
 		for (int row = 0; row < 5; row++) {
 		
 			currentInput = col*5 + row;
 
-			if (currentInput < NUM_INPUTS) {
+			x = 265.0 + col*300.0;
+			y = 125.0 + row*100.0;
 
-				x = 115.0 + col*300.0;
-				y = 125.0 + row*100.0;
+			//Input name
+			resources->GetFont("controls")->SetColor(ARGB(255,255,255,255));
+			resources->GetFont("controls")->Render(x + 110.0, y - 35.0, HGETEXT_CENTER, 
+				input->getInputName(currentInput));
 
-				//Input name
-				resources->GetFont("controls")->Render(x + 110.0, y - 35.0, HGETEXT_CENTER, 
-					input->getInputName(currentInput));
-
-				//Input box
-				resources->GetFont("controls")->SetScale(0.8);
-				if (input->isEditModeEnabled(currentInput)) {
-					//Edit mode is active
-					resources->GetSprite("selectedControlsBox")->Render(x,y);
-					resources->GetFont("controls")->SetColor(ARGB(255,255,255,255));
-					resources->GetFont("controls")->printf(x + 110.0, y + 5.0, HGETEXT_CENTER,
-						input->getInputDescription(currentInput));
-				} else {
-					//Edit mode is not active
-					resources->GetSprite("controlsBox")->Render(x,y);
-					resources->GetFont("controls")->printf(x + 110.0, y + 5.0, HGETEXT_CENTER,
-						input->getInputDescription(currentInput));
-				}
-				resources->GetFont("controls")->SetScale(1.0);
-				resources->GetFont("controls")->SetColor(ARGB(255,0,0,0));
-
+			//Input box
+			resources->GetFont("controls")->SetScale(0.8);
+			if (input->isEditModeEnabled(currentInput)) {
+				//Edit mode is active
+				resources->GetSprite("selectedControlsBox")->Render(x,y);
+				resources->GetFont("controls")->SetColor(ARGB(255,255,255,255));
+				resources->GetFont("controls")->printf(x + 110.0, y + 5.0, HGETEXT_CENTER,
+					input->getInputDescription(currentInput));
+			} else {
+				//Edit mode is not active
+				resources->GetSprite("controlsBox")->Render(x,y);
+				resources->GetFont("controls")->printf(x + 110.0, y + 5.0, HGETEXT_CENTER,
+					input->getInputDescription(currentInput));
 			}
+			resources->GetFont("controls")->SetScale(1.0);
+			resources->GetFont("controls")->SetColor(ARGB(255,0,0,0));
 
 		}
 	}

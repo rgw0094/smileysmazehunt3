@@ -582,7 +582,7 @@ void Player::doAbility(float dt) {
 
 	//Base requirements for being allowed to use an ability
 	bool canUseAbility = !waterWalk && !falling && !springing && !frozen 
-		&& !theTextBox->visible && !drowning && !springing;
+		&& !drowning && !springing;
 
 	/////////////// Hover ////////////////
 	bool wasHovering = isHovering;
@@ -818,7 +818,7 @@ void Player::doAbility(float dt) {
 			resources->GetParticleSystem("smileysCane")->Stop(false);
 			usingCane = false;
 			facing = DOWN;
-			theTextBox->setHint();
+			windowManager->openHint();
 		}
 	}
 
@@ -1282,9 +1282,6 @@ void Player::doMovement(float dt) {
 		if ((input->keyDown(INPUT_AIM) && !iceSliding && !knockback) || (!input->keyDown(INPUT_UP) && !input->keyDown(INPUT_DOWN) && !knockback))
 			if (dy > 0) dy -= accel*dt; else if (dy < 0) dy += accel*dt;
 	}
-
-	//Don't let the player move if a text box is on screen
-	if (theTextBox->visible) return;
 	
 	//Set facing direction
 	if (!iceSliding && !knockback && !springing && theEnvironment->collision[gridX][gridY] != SPRING_PAD) {

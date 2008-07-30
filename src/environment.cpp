@@ -1371,7 +1371,7 @@ bool Environment::hitSigns(Tongue *tongue) {
 				if (tongue->testCollision(collisionBox)) {
 					paramString = "Sign";
 					paramString += intToString(ids[i][j]);
-					theTextBox->set(gameData->getGameText(paramString.c_str()), false, NULL, 64);
+					windowManager->openTextBox(gameData->getGameText(paramString.c_str()), false, NULL, 64);
 					return true;
 				}
 			}

@@ -334,7 +334,6 @@ void Input::saveInputs() {
 	hge->Ini_SetInt("Controls","next",inputs[INPUT_NEXT_ABILITY].code);
 	hge->Ini_SetInt("Controls","previous",inputs[INPUT_PREVIOUS_ABILITY].code);
 	hge->Ini_SetInt("Controls","exit",inputs[INPUT_PAUSE].code);
-	hge->Ini_SetInt("Controls","screenshot",inputs[INPUT_SCREENSHOT].code);
 
 	//Save device for each input
 	hge->Ini_SetInt("Controls","leftDevice",inputs[INPUT_LEFT].device);
@@ -347,7 +346,6 @@ void Input::saveInputs() {
 	hge->Ini_SetInt("Controls","nextDevice",inputs[INPUT_NEXT_ABILITY].device);
 	hge->Ini_SetInt("Controls","previousDevice",inputs[INPUT_PREVIOUS_ABILITY].device);
 	hge->Ini_SetInt("Controls","exitDevice",inputs[INPUT_PAUSE].device);
-	hge->Ini_SetInt("Controls","screenshotDevice",inputs[INPUT_SCREENSHOT].device);
 
 }
 
@@ -368,7 +366,6 @@ void Input::loadInputs() {
 	inputs[INPUT_NEXT_ABILITY].code = hge->Ini_GetInt("Controls","next",HGEK_X);
 	inputs[INPUT_PREVIOUS_ABILITY].code = hge->Ini_GetInt("Controls","previous",HGEK_Z);
 	inputs[INPUT_PAUSE].code = hge->Ini_GetInt("Controls","exit",HGEK_ESCAPE);
-	inputs[INPUT_SCREENSHOT].code = hge->Ini_GetInt("Controls","screenshot",HGEK_S);
 
 	//Load device for each input
 	inputs[INPUT_LEFT].device = hge->Ini_GetInt("Controls","leftDevice", DEVICE_KEYBOARD);
@@ -381,7 +378,6 @@ void Input::loadInputs() {
 	inputs[INPUT_NEXT_ABILITY].device = hge->Ini_GetInt("Controls","nextDevice",DEVICE_KEYBOARD);
 	inputs[INPUT_PREVIOUS_ABILITY].device = hge->Ini_GetInt("Controls","previousDevice",DEVICE_KEYBOARD);
 	inputs[INPUT_PAUSE].device = hge->Ini_GetInt("Controls","exitDevice",DEVICE_KEYBOARD);
-	inputs[INPUT_SCREENSHOT].device = hge->Ini_GetInt("Controls","screenshotDevice",DEVICE_KEYBOARD);
 
 }
 
@@ -410,7 +406,6 @@ char* Input::getInputName(int whichInput) {
 		case INPUT_PREVIOUS_ABILITY: return "Previous Ability";
 		case INPUT_NEXT_ABILITY: return "Next Ability";
 		case INPUT_PAUSE: return "Pause";
-		case INPUT_SCREENSHOT: return "Screenshot";
 		default: return "Error";
 	}
 }

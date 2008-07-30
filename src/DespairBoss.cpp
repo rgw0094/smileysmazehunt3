@@ -1,7 +1,6 @@
 #include "DespairBoss.h"
 #include "hgeresource.h"
 #include "EnemyGroupManager.h"
-#include "TextBox.h"
 #include "Player.h"
 #include "Environment.h"
 #include "Projectiles.h"
@@ -12,10 +11,11 @@
 #include "Tongue.h"
 #include "hge.h"
 #include "CollisionCircle.h"
+#include "WindowManager.h"
 
 extern hgeResourceManager *resources;
+extern WindowManager *windowManager;
 extern EnemyGroupManager *enemyGroupManager;
-extern TextBox *theTextBox;
 extern Player *thePlayer;
 extern float gameTime;
 extern bool debugMode;
@@ -143,7 +143,7 @@ bool DespairBoss::update(float dt) {
 	//When smiley triggers the boss' enemy block start his dialogue.
 	if (state == DESPAIRBOSS_INACTIVE && !startedIntroDialogue) {
 		if (enemyGroupManager->groups[groupID].triggeredYet) {
-			theTextBox->setDialogue(-1, DESPAIRBOSS_INTROTEXT);
+			windowManager->openDialogue(-1, DESPAIRBOSS_INTROTEXT);
 			startedIntroDialogue = true;
 		} else {
 			return false;
@@ -151,7 +151,7 @@ bool DespairBoss::update(float dt) {
 	}
 
 	//Activate the boss when the intro dialogue is closed
-	if (state == DESPAIRBOSS_INACTIVE && startedIntroDialogue && !theTextBox->visible) {
+	if (state == DESPAIRBOSS_INACTIVE && startedIntroDialogue && !windowManager->isTextBoxOpen()) {
 		setState(DESPAIRBOSS_BATTLE);
 		soundManager->playMusic("bossMusic");
 	}
@@ -288,7 +288,7 @@ bool DespairBoss::update(float dt) {
 		if (health <= 0.0f && state != DESPAIRBOSS_FRIENDLY) {
 			health = 0.0f;
 			setState(DESPAIRBOSS_FRIENDLY);		
-			theTextBox->setDialogue(-1, DESPAIRBOSS_DEFEATTEXT);	
+			windowManager->openDialogue(-1, DESPAIRBOSS_DEFEATTEXT);	
 			saveManager->killedBoss[DESPAIR_BOSS-240] = true;
 			enemyGroupManager->notifyOfDeath(groupID);
 			soundManager->fadeOutMusic();
@@ -420,7 +420,7 @@ bool DespairBoss::update(float dt) {
 	///////// Death State stuff ///////////////
 
 	//After being defeated, wait for the text box to be closed
-	if (state == DESPAIRBOSS_FRIENDLY && !theTextBox->visible) {
+	if (state == DESPAIRBOSS_FRIENDLY && !windowManager->isTextBoxOpen()) {
 		setState(DESPAIRBOSS_FADING);
 	}
 

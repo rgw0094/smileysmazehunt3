@@ -18,7 +18,6 @@ public:
 	virtual bool update(float dt) { return true; };	//return false to close
 	virtual void open() { };
 	virtual void close() { };
-	virtual bool instanceOf(char* type) = 0;
 
 	bool isWindowOpen;
 

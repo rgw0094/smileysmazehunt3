@@ -1,6 +1,5 @@
 #include "smiley.h"
 #include "fireboss2.h"
-#include "textbox.h"
 #include "environment.h"
 #include "lootmanager.h"
 #include "enemyGroupManager.h"
@@ -11,11 +10,12 @@
 #include "WeaponParticle.h"
 #include "Tongue.h"
 #include "projectiles.h"
+#include "WindowManager.h"
 
 extern HGE *hge;
+extern WindowManager *windowManager;
 extern bool debugMode;
 extern Player *thePlayer;
-extern TextBox *theTextBox;
 extern Environment *theEnvironment;
 extern LootManager *lootManager;
 extern hgeResourceManager *resources;
@@ -158,7 +158,7 @@ bool FireBossTwo::update(float dt) {
 	if (state == FIREBOSS_INACTIVE && !startedIntroDialogue) {
 		//When Phyrebozz's group is triggered start the intro dialogue
 		if (enemyGroupManager->groups[groupID].triggeredYet) {
-			theTextBox->setDialogue(-1, TEXT_FIREBOSS2_INTRO);
+			windowManager->openDialogue(-1, TEXT_FIREBOSS2_INTRO);
 			startedIntroDialogue = true;
 			soundManager->fadeOutMusic();
 		} else {
@@ -169,7 +169,7 @@ bool FireBossTwo::update(float dt) {
 	}
 
 	//Activate the boss when the intro dialogue is closed
-	if (state == FIREBOSS_INACTIVE && startedIntroDialogue && !theTextBox->visible) {
+	if (state == FIREBOSS_INACTIVE && startedIntroDialogue && !windowManager->isTextBoxOpen()) {
 		startChasing(CHASE_POINT_TOP_LEFT);
 		startedAttackMode = gameTime;
 		hge->Effect_Play(resources->GetEffect("snd_fireBossDie"));
@@ -323,7 +323,7 @@ bool FireBossTwo::update(float dt) {
 		health = 0.0f;
 		state = FIREBOSS_FRIENDLY;
 		killOrbs();
-		theTextBox->setDialogue(-1, TEXT_FIREBOSS2_VICTORY);	
+		windowManager->openDialogue(-1, TEXT_FIREBOSS2_VICTORY);	
 		facing = DOWN;
 		alpha = 255;
 		saveManager->killedBoss[FIRE_BOSS2-240] = true;
@@ -332,7 +332,7 @@ bool FireBossTwo::update(float dt) {
 	}
 	
 	//After you beat the boss he runs away!!
-	if (state == FIREBOSS_FRIENDLY && !theTextBox->visible) {
+	if (state == FIREBOSS_FRIENDLY && !windowManager->isTextBoxOpen()) {
 		//Drop fire breath
 		if (!droppedLoot) {
 			lootManager->addLoot(LOOT_NEW_ABILITY, startX*64.0+32.0, startY*64.0+32.0, FIRE_BREATH);

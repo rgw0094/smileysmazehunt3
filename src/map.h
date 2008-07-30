@@ -14,7 +14,6 @@ public:
 	void draw(float dt);
 	bool update(float dt);
 	void open();
-	bool instanceOf(char* type) { return strcmp(type, "Map") == 0; }
 
 	//stuff
 	int windowWidth, windowHeight;	//Pixel size of the map

@@ -18,7 +18,6 @@ public:
 	//methods
 	void draw(float dt);
 	bool update(float dt);
-	bool instanceOf(char* type) { return strcmp(type, "Inventory") == 0; }
 
 	//Variables
 	int cursorX, cursorY;

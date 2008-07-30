@@ -1,6 +1,5 @@
 #include "smiley.h"
 #include "fireboss.h"
-#include "textbox.h"
 #include "environment.h"
 #include "lootmanager.h"
 #include "enemyGroupManager.h"
@@ -10,11 +9,12 @@
 #include "SoundManager.h"
 #include "WeaponParticle.h"
 #include "Tongue.h"
+#include "WindowManager.h"
 
 extern HGE *hge;
+extern WindowManager *windowManager;
 extern bool debugMode;
 extern Player *thePlayer;
-extern TextBox *theTextBox;
 extern Environment *theEnvironment;
 extern LootManager *lootManager;
 extern hgeResourceManager *resources;
@@ -146,7 +146,7 @@ bool FireBoss::update(float dt) {
 
 	//When the player enters his chamber shut the doors and start the intro dialogue
 	if (state == FIREBOSS_INACTIVE && !startedIntroDialogue && thePlayer->gridY == startY+5  && thePlayer->gridX == startX && thePlayer->y < (startY+5)*64+33) {
-		theTextBox->setDialogue(-1, TEXT_FIREBOSS_INTRO);
+		windowManager->openDialogue(-1, TEXT_FIREBOSS_INTRO);
 		startedIntroDialogue = true;
 		soundManager->fadeOutMusic();
 
@@ -158,7 +158,7 @@ bool FireBoss::update(float dt) {
 	}
 
 	//Activate the boss when the intro dialogue is closed
-	if (state == FIREBOSS_INACTIVE && startedIntroDialogue && !theTextBox->visible) {
+	if (state == FIREBOSS_INACTIVE && startedIntroDialogue && !windowManager->isTextBoxOpen()) {
 		state = FIREBOSS_ATTACK;
 		startedAttackMode = gameTime;
 		hge->Effect_Play(resources->GetEffect("snd_fireBossDie"));
@@ -316,7 +316,7 @@ bool FireBoss::update(float dt) {
 		health = 0.0f;
 		state = FIREBOSS_FRIENDLY;
 		killOrbs();
-		theTextBox->setDialogue(-1, TEXT_FIREBOSS_VICTORY);	
+		windowManager->openDialogue(-1, TEXT_FIREBOSS_VICTORY);	
 		facing = DOWN;
 		alpha = 255;
 		saveManager->killedBoss[FIRE_BOSS-240] = true;
@@ -325,7 +325,7 @@ bool FireBoss::update(float dt) {
 	}
 	
 	//After you beat the boss he runs away!!
-	if (state == FIREBOSS_FRIENDLY && !theTextBox->visible) {
+	if (state == FIREBOSS_FRIENDLY && !windowManager->isTextBoxOpen()) {
 		//Drop fire breath
 		if (!droppedLoot) {
 			lootManager->addLoot(LOOT_NEW_ABILITY, startX*64.0+32.0, startY*64.0+32.0, FIRE_BREATH);

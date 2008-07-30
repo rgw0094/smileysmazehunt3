@@ -233,14 +233,14 @@ void TextBox::draw(float dt) {
 /**
  * Updates the text box if it is active
  */
-void TextBox::update(float dt) {
+bool TextBox::update(float dt) {
 
-	if (!visible) return;
+	if (!visible) return false;
 
 	//Fade out effect
 	if (fadingOut) {
 		doFadeOut(dt);
-		return;
+		return false;
 	}
 
 	//Update icon alphas
@@ -269,7 +269,7 @@ void TextBox::update(float dt) {
 		for (int i = 0; i < PSYCHEDELIC_GRANULARITY; i++) {
 			for(int j = 0; j < PSYCHEDELIC_GRANULARITY; j++) {
 				distortion->SetColor(i, j, ARGB(fadeAlpha, 0, 0, 0));
-				distortion->SetDisplacement(j,i,cosf(gameTime*2+(i+j)/2)*15,sinf(gameTime*2+(i+j)/2)*15,HGEDISP_NODE);
+				distortion->SetDisplacement(j,i,cosf(hge->Timer_GetTime()*2+(i+j)/2)*15,sinf(hge->Timer_GetTime()*2+(i+j)/2)*15,HGEDISP_NODE);
 			}
 		}
 	}
@@ -283,6 +283,8 @@ void TextBox::update(float dt) {
 			
 			//Close the text box
 			visible = false;
+			windowManager->frameLastWindowClosed = frameCounter;
+			windowManager->textBoxOpen = false;
 			if (hasGraphic && textBoxType == TYPE_NORMAL) graphic->SetHotSpot(oldHotSpotX, oldHotSpotY);
 			
 			//If this is spierdyke, open the shop
@@ -310,6 +312,8 @@ void TextBox::update(float dt) {
 			if (currentPage > numPages) currentPage = numPages;
 		}
 	}
+
+	return false;
 
 }
 
