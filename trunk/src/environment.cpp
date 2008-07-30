@@ -382,7 +382,6 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 
 			//IDs 128 - 239 are NPCs
 			} else if (enemy >= 128 && enemy < 240) {
-				hge->System_Log("Spawning NPC %d", enemy);
 				npcManager->addNPC(enemy-128,ids[col][row],col,row);
 			} 
 		}
