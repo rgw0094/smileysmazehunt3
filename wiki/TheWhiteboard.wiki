@@ -10,6 +10,8 @@
  * Fix the spikey moving walls
  * Make the fountain heal you
  * You can still walk diagonally between two arrow blocks.
+ * Fix random graphical errors:  bottom of fountain drawn on top of life bar, Bill Clinton's hints don't fade out, sometimes the title screen buttons show the wrong graphics when highlighted, sometimes the changing area black circle isn't colored black outside of the circle.
+ * There's no "you got the cane!" message anymore after Bill gives it to you
 
 === Graphics To Do ===
  * Mirror switch graphic 	 
