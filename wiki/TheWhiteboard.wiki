@@ -1,5 +1,4 @@
 === Programming To Do ===
- * Combine menus into one menu system
  * Integrate TextBox with Window framework
  * Parallax pits - Use ID layer to change HUE to match the level
  * Plants should burn
@@ -20,6 +19,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Single game menu system||7/29/08||RGW||
 ||Tongue/Fire kills Owlets||7/29/08||RGW||
 ||Bill Clinton text changes after you get the cane||7/29/08||RGW||
 ||Fix Silly Pads||7/29/08||RGW||
