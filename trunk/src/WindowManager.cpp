@@ -49,14 +49,6 @@ void WindowManager::openGameMenu(int whichWindow) {
 	}
 }
 
-/** 
- * Closes the game menu
- */ 
-void WindowManager::closeGameMenu() {
-	gameMenuOpen = false;
-	closeWindow();
-}
-
 /**
  * Returns whether or not the game menu is open
  */
@@ -76,6 +68,7 @@ void WindowManager::openWindow(BaseWindow *newWindow) {
 }
 
 void WindowManager::closeWindow() {
+	gameMenuOpen = false;
 	if (activeWindow) delete activeWindow;
 	activeWindow = 0;
 }

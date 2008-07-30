@@ -163,7 +163,7 @@ bool FrameFunc() {
 		//Toggle game menu
 		if (input->keyPressed(INPUT_PAUSE)) {
 			if (windowManager->isGameMenuOpen()) {
-				windowManager->closeGameMenu();
+				windowManager->closeWindow();
 			} else if (!windowManager->isOpenWindow()) {
 				windowManager->openGameMenu();
 			}
@@ -171,9 +171,9 @@ bool FrameFunc() {
 
 		//If the user presses escape go straight to the options screen
 		if (hge->Input_KeyDown(HGEK_ESCAPE)) {
-			if (!windowManager->isOpenWindow()) {
+			//if (!windowManager->isOpenWindow()) {
 				windowManager->openGameMenu(OPTIONS);
-			}
+			//}
 		}
 
 		/**
