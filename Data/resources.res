@@ -601,44 +601,9 @@ Sprite selectedControlsBox {
 ;*************************
 ;******** MINI MAP *******
 ;*************************
-Sprite mapBorderTopLeft {
- texture=general
- rect=96,128,30,30
- hotspot=0,0
- blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=11
-}
-Sprite mapBorderTopRight {
- texture=general
- rect=64,224,30,30
- hotspot=0,0
- blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=11
-}
-Sprite mapBorderBottomLeft {
- texture=general
- rect=64,192,30,30
- hotspot=0,0
- blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=11
-}
-Sprite mapBorderBottomRight {
- texture=general
- rect=96,192,30,30
- hotspot=0,0
- blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=11
-}
-Sprite mapBorderVertical {
- texture=general
- rect=96,160,30,30
- hotspot=0,0
- blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=11
-}
-Sprite mapBorderHorizontal {
- texture=general
- rect=64,160,30,30
+Sprite mapBackground {
+ texture="Graphics/mapborder.png"
+ rect=0,0,660,492
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=11
