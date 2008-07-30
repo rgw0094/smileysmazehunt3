@@ -795,21 +795,21 @@ Texture InventoryTx {
 }
 Sprite inventoryCursor {
  texture=general
- rect=128,64,78,78
+ rect=129,65,76,76
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=20
 }
 Sprite inventory {
  texture=InventoryTx
- rect=0,0,697,367
+ rect=0,0,660,492
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=20
 }
 Animation levelIcons {
  texture=InventoryTx
- rect=0,367,40,40
+ rect=0,492,40,40
  frames=5
  fps=20.0
  mode=LOOP
@@ -819,7 +819,7 @@ Animation levelIcons {
 }
 Animation keyIcons {
  texture=InventoryTx
- rect=200,367,40,40
+ rect=200,492,40,40
  frames=5
  fps=20.0
  mode=LOOP
@@ -829,7 +829,7 @@ Animation keyIcons {
 }
 Animation upgradeIcons {
  texture=InventoryTx
- rect=360,367,40,40
+ rect=360,492,40,40
  frames=5
  fps=20.0
  mode=LOOP
