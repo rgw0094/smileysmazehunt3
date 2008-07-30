@@ -1,5 +1,5 @@
 === Programming To Do ===
- * Integrate TextBox with Window framework
+ * Update game menus - use new graphics
  * Parallax pits - Use ID layer to change HUE to match the level
  * Plants should burn
  * Make yellow and green switches more saturated
@@ -19,6 +19,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Integrate TextBox with Window framework||7/29/08||RGW||
 ||Single game menu system||7/29/08||RGW||
 ||Tongue/Fire kills Owlets||7/29/08||RGW||
 ||Bill Clinton text changes after you get the cane||7/29/08||RGW||
