@@ -22,7 +22,6 @@ public:
 	bool isOpenWindow();
 	void openGameMenu();
 	void openGameMenu(int menu);
-	void closeGameMenu();
 	bool isGameMenuOpen();
 	BaseWindow *getActiveWindow();
 
