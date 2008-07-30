@@ -5,13 +5,15 @@
  * Make yellow and green switches more saturated
  * Better Ranged enemy AI to make it less gay
  * Tentacles are too easy right now.  Change their movement pattern?
- * When using fire on the shore of deep water, if you immediately (through the inventory) put on Jesus' Sandals and walk on the water the flame breath will continue to be used long enough to hit ice blocks that should be out of reach.
  * Have Fenwar make more appearances than just in Smolder Hollow and the end
  * Fix the spikey moving walls
  * Make the fountain heal you
+
+=== Bugs To Consider ===
  * You can still walk diagonally between two arrow blocks.
- * Fix random graphical errors:  bottom of fountain drawn on top of life bar, Bill Clinton's hints don't fade out, sometimes the title screen buttons show the wrong graphics when highlighted, sometimes the changing area black circle isn't colored black outside of the circle.
+ * Fix random graphical errors:  bottom of fountain drawn on top of life bar, Bill Clinton's hints don't fade out, sometimes the title screen buttons show the wrong graphics when highlighted, sometimes the changing area black circle isn't colored black outside of the circle, sometimes it draws the headboss life meter on top of yours after you drown... etc.
  * There's no "you got the cane!" message anymore after Bill gives it to you
+ * When using fire on the shore of deep water, if you immediately (through the inventory) put on Jesus' Sandals and walk on the water the flame breath will continue to be used long enough to hit ice blocks that should be out of reach.
 
 === Graphics To Do ===
  * Mirror switch graphic 	 
