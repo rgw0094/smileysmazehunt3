@@ -1,4 +1,5 @@
 === Programming To Do ===
+ * When enemy graphics overlap draw them so that the lower enemy on the screen is on top
  * Slider UI class
  * Checkbox UI class
  * Controls menu
