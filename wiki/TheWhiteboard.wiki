@@ -26,7 +26,6 @@
  * Bouncing spikey enemies that I put to appear in line with each other in game sometimes are not in line when testing, making it a lot harder to get by them than planned.
  * You can still walk diagonally between two arrow blocks.
  * Fix random graphical errors:  bottom of fountain drawn on top of life bar, sometimes the changing area black circle isn't colored black outside of the circle, sometimes it draws the headboss life meter on top of yours after you drown... etc.
- * There's no "you got the cane!" message anymore after Bill gives it to you
  * When using fire on the shore of deep water, if you immediately (through the inventory) put on Jesus' Sandals and walk on the water the flame breath will continue to be used long enough to hit ice blocks that should be out of reach.
 
 === Graphics To Do ===
