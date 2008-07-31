@@ -54,7 +54,9 @@ char *GameData::getAreaName(int area) {
 	} else if (area == WORLD_OF_DESPAIR) {
 		areaName = "Realm of Despair";
 	} else if (area == CASTLE_OF_EVIL) {
-		areaName = "Castle Of Evil (What a gay name)";
+		areaName = "Castle Of Evil";
+	} else if (area == SERPENTINE_PATH) {
+		areaName = "The Serpentine Path";
 	}
 	
 	return areaName;
