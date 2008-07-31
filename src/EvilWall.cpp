@@ -37,7 +37,6 @@ EvilWall::EvilWall() {
 	yBeginWall=0;	
 	state = EVIL_WALL_STATE_IDLE;
 	collisionRect = new hgeRect(0,0,0,0);
-	hge->System_Log("evil wall constructor");
 }
 
 EvilWall::~EvilWall() {
@@ -168,6 +167,8 @@ void EvilWall::drawEvilWall() {
 
 	bool edge;
 	double angle;
+
+	hge->System_Log("(%d %d) (%d %d) %d",xBeginWall,yBeginWall,xDraw,yDraw,dir);
 	
 	for (gridY = 0; gridY < height; gridY++) {
 		for (gridX = 0; gridX < width; gridX++) {

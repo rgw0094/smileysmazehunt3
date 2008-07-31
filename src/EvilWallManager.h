@@ -20,6 +20,7 @@ public:
 	void activateEvilWall(int id);
 	void deactivateEvilWall(int id);
 	void addEvilWall(int id);
+	void reset();
 	
 	//Mutators
 	void setBeginWallPosition(int id, int gridX, int gridY);
