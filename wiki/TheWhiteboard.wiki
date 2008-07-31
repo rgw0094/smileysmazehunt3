@@ -1,4 +1,5 @@
 === Programming To Do ===
+ * Controls menu
  * Finish Phyrebozz 2
  * Lovecraftian Boss
  * King Tut
