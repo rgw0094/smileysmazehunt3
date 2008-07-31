@@ -32,15 +32,15 @@ bool OptionsWindow::update(float dt) {
 	hge->Input_GetMousePos(&mouseX, &mouseY);
 
 	//Update input boxes
-	for (int col = 0; col < 3; col++) {
+	for (int col = 0; col < 2; col++) {
 		for (int row = 0; row < 5; row++) {
 		
 			currentInput = col*5 + row;
-			x = 115.0 + col*300.0;
-			y = 125.0 + row*100.0;
+			x = 182.0 + 40 + col*140.0;
+			y = 138.0 + 80 + row*80.0;
 
 			//Listen for click to enable edit mode
-			inputBox->Set(x, y, x + 210.0, y + 30.0);
+			inputBox->Set(x, y, x + 130.0, y + 30.0);
 			if (hge->Input_KeyDown(HGEK_LBUTTON) && inputBox->TestPoint(mouseX, mouseY)) {
 				input->setEditMode(currentInput);
 			}
@@ -66,9 +66,8 @@ void OptionsWindow::draw(float dt) {
 		for (int row = 0; row < 5; row++) {
 		
 			currentInput = col*5 + row;
-
 			x = 182.0 + 40 + col*140.0;
-			y = 138.0 + 30 + row*80.0;
+			y = 138.0 + 45 + row*80.0;
 
 			//Input name
 			resources->GetFont("controls")->SetScale(0.8);

@@ -3,7 +3,7 @@
 #include "Input.h"
 #include "TitleScreen.h"
 #include "LoadScreen.h"
-#include "ControlsScreen.h"
+#include "OptionsScreen.h"
 #include "DeathScreen.h"
 #include "SoundManager.h"
 
@@ -53,8 +53,8 @@ void Menu::setScreen(int screen) {
 	currentScreen = screen;
 	if (currentScreen == TITLE_SCREEN) {
 		menuScreen = new TitleScreen();
-	} else if (currentScreen == CONTROLS_SCREEN) {
-		menuScreen = new ControlsScreen();
+	} else if (currentScreen == OPTIONS_SCREEN) {
+		menuScreen = new OptionsScreen();
 	} else if (currentScreen == LOAD_SCREEN) {
 		menuScreen = new LoadScreen();
 	} else if (currentScreen == DEATH_SCREEN) {
