@@ -211,8 +211,11 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 	} else if (id == WORLD_OF_DESPAIR) {
 		soundManager->playMusic("realmOfDespairMusic");
 		areaFile.open("Data/Maps/despair.smh");
+	} else if (id == SERPENTINE_PATH) {
+		soundManager->playMusic("serpentinePathMusic");
+		areaFile.open("Data/Maps/path.smh");
 	} else if (id == CASTLE_OF_EVIL) {
-		//soundManager->playMusic("castleOfEvilMusic");
+		soundManager->playMusic("castleOfEvilMusic");
 		areaFile.open("Data/Maps/castle.smh");
 	}
 

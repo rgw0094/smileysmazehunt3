@@ -282,6 +282,11 @@ Music iceMusic {
  amplify=50
  resgroup=11
 }
+Music serpentinePathMusic {
+ filename="serpentinePath.xm"
+ amplify=50
+ resgroup=11
+}
 Music oldeTowneMusic {
  filename="oldetowne.xm"
  amplify=70
