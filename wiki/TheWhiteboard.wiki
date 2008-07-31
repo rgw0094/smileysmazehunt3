@@ -1,4 +1,6 @@
 === Programming To Do ===
+ * Slider UI class
+ * Checkbox UI class
  * Controls menu
  * Finish Phyrebozz 2
  * Lovecraftian Boss
