@@ -1,6 +1,6 @@
 [HGESTRINGTABLE]
 
-numEnemies="50"
+numEnemies="51"
 
 ;Croc
 0GCol=      "0"
@@ -834,3 +834,17 @@ numEnemies="50"
 49Land=      "T"
 49SWater=    "T"
 49Chases=    "F"
+
+
+;Killer Croc
+50GCol=      "0"
+50GRow=      "0"
+50EnemyType= "4"
+50WanderType="0"
+50HP=        "10000"
+50Damage=    "99999"
+50Radius=    "28"
+50Speed=     "1000"
+50Land=      "T"
+50SWater=    "T"
+50Chases=    "T"
