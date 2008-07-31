@@ -69,7 +69,8 @@ Sign51 = "Only the tiniest of tiny travellers may continue south to the Mile Riv
 
 ;SMHOLLOW.SMH
 Sign13 = "Dangerous and deep pits ahead!  Beware!"
-
+Sign55 = "Maintenance - It appears global cooling is even affecting us down here. Please try to keep the walkways clear of ice!\n- Phyrebozz                      "
+ 
 ;SNOW.SMH
 Sign16 = "This way to Mount Frostbite."
 Sign17 = "Bridge currently out of order.  Construction will continue one day, hopefully."
