@@ -21,6 +21,9 @@
  * Make not just switches but moving cylinders/mirrors/arrows make a noise.  That way if a far off switch is activating them they don't move silently.  We still need to have the sounds be dependent on how far Smiley is from them though since otherwise levels would just be constant switch-activation noises due to the turrets.
 
 === Bugs To Consider ===
+ * Timed cylinder bug:  In Tut's Tomb I have cylinders that are up and go down for 1 second when you shoot the switch.  But if you shoot the switch with two orbs slightly far apart and stand on the now down cylinder just after the 1st orb hits, the cylinders stay down even after you step off of them.
+ * If you lick just before going on a spring it looks like the dickens.
+ * Bouncing spikey enemies that I put to appear in line with each other in game sometimes are not in line when testing, making it a lot harder to get by them than planned.
  * You can still walk diagonally between two arrow blocks.
  * Fix random graphical errors:  bottom of fountain drawn on top of life bar, sometimes the changing area black circle isn't colored black outside of the circle, sometimes it draws the headboss life meter on top of yours after you drown... etc.
  * There's no "you got the cane!" message anymore after Bill gives it to you
