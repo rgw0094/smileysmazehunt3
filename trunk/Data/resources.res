@@ -600,17 +600,28 @@ Sprite menuSaveBox {
 }
 Sprite controlsBox {
  texture=menuItemsTx
- rect=0,273,210,30
+ rect=0,273,130,30
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=10
 }
 Sprite selectedControlsBox {
  texture=menuItemsTx
- rect=0,303,210,30
+ rect=0,303,130,30
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=10
+}
+
+;*******************************
+;******** OPTIONS WINDOW *******
+;********************************
+Sprite optionsBackground {
+ texture="Graphics/options.png"
+ rect=0,0,660,492
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=11
 }
 
 ;*************************

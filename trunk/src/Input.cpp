@@ -403,7 +403,7 @@ char* Input::getInputName(int whichInput) {
 		case INPUT_ATTACK: return "Attack/Select";
 		case INPUT_ABILITY: return "Use Ability";
 		case INPUT_AIM: return "Aim";
-		case INPUT_PREVIOUS_ABILITY: return "Previous Ability";
+		case INPUT_PREVIOUS_ABILITY: return "Last Ability";
 		case INPUT_NEXT_ABILITY: return "Next Ability";
 		case INPUT_PAUSE: return "Pause";
 		default: return "Error";
