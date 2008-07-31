@@ -196,11 +196,6 @@ void Player::update(float dt) {
 		y = gridY * 64.0 + 32.0;
 	}
 
-	//GAY swings tongue, to try to fix it
-	if (hge->Input_KeyDown(HGEK_T)) {
-		tongue->startAttack();
-	}
-
 	//Update cloaking alpha
 	alpha = (cloaked) ? 75.0f : 255.0f;
 	resources->GetAnimation("player")->SetColor(ARGB(alpha,255,255,255));
@@ -574,10 +569,12 @@ void Player::changeAbility(int direction) {
 void Player::doAbility(float dt) {
 
 	//Input for scrolling through selected abilities
-	if (input->keyPressed(INPUT_PREVIOUS_ABILITY)) {
-		changeAbility(LEFT);
-	} else if  (input->keyPressed(INPUT_NEXT_ABILITY)) {
-		changeAbility(RIGHT);
+	if (saveManager->hasAbility[CANE]) {
+		if (input->keyPressed(INPUT_PREVIOUS_ABILITY)) {
+			changeAbility(LEFT);
+		} else if  (input->keyPressed(INPUT_NEXT_ABILITY)) {
+			changeAbility(RIGHT);
+		}
 	}
 
 	//Base requirements for being allowed to use an ability

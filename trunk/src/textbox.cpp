@@ -229,8 +229,6 @@ void TextBox::draw(float dt) {
 		}
 	}
 
-	resources->GetFont("curlz")->printf(5,5,HGETEXT_LEFT,"%f", fadeAlpha);
-
 }
 
 /**
@@ -292,14 +290,14 @@ bool TextBox::update(float dt) {
 
 			//If this is the first time Smiley has talked to the hint man,
 			//give him the cane.
-			} else if (textBoxType == TYPE_DIALOG && textID == BILL_CLINTON && !saveManager->hasAbility[CANE]) {
+			} else if (textBoxType == TYPE_DIALOG && npcID == BILL_CLINTON && !saveManager->hasAbility[CANE]) {
 				saveManager->hasAbility[CANE] = true;
 				thePlayer->selectedAbility = CANE;
 				set(gameData->getGameText("GotCane"), true, abilitySprites[CANE], 64);
+				return true;
 			
 			//Close hint box by fading out psychedelic background
 			} else if (textBoxType == TYPE_HINT) {
-				hge->System_Log("DICKENS");
 				fadingOut = true;
 			}
 
@@ -325,11 +323,9 @@ bool TextBox::update(float dt) {
  */
 bool TextBox::doFadeOut(float dt) {
 
-	hge->System_Log("dickens %f", fadeAlpha);
-
 	//Fade stuff out
 	if (fadeAlpha > 0.0) fadeAlpha -= 130.0 * dt;
-	if (fadeAlpha < 0.0) fadeAlpha == 0.0;
+	if (fadeAlpha < 0.0) fadeAlpha = 0.0;
 	resources->GetSprite("textBox")->SetColor(ARGB(fadeAlpha,255,255,255));
 	resources->GetFont("textBoxNameFnt")->SetColor(ARGB(fadeAlpha,0,0,0));
 	resources->GetFont("textBoxDialogFnt")->SetColor(ARGB(fadeAlpha,0,0,0));
@@ -352,8 +348,8 @@ bool TextBox::doFadeOut(float dt) {
 		resources->GetSprite("arrowIcon")->SetColor(ARGB(255,255,255,255));
 		npcSprites[BILL_CLINTON][DOWN]->SetColor(ARGB(255,255,255,255));
 		soundManager->playPreviousMusic();
-		return true;
+		return false;
 	}
 
-	return false;
+	return true;
 }
