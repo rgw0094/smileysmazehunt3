@@ -174,6 +174,12 @@ void Player::update(float dt) {
 	saveManager->playerGridX = gridX;
 	saveManager->playerGridY = gridY;
 
+	//GAY gives you life when you press L
+	if (hge->Input_KeyDown(HGEK_L)) {
+		health += 1.0;
+		if (health > getMaxHealth()) health = getMaxHealth();
+	}
+
 	//GAY moves smiley with the num pad
 	if (hge->Input_KeyDown(HGEK_NUMPAD8)) {
 		gridY--;
