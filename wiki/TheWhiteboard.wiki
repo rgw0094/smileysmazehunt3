@@ -1,6 +1,5 @@
 === Programming To Do ===
  * Parallax pits - Use ID layer to change HUE to match the level
- * Plants should burn
  * Make yellow and green switches more saturated
  * Better Ranged enemy AI to make it less gay
  * Tentacles are too easy right now.  Change their movement pattern?
