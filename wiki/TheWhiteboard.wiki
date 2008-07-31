@@ -1,3 +1,7 @@
+=== Shit List ===
+ * Patric
+ * Kevin
+
 === Programming To Do ===
  * When enemy graphics overlap draw them so that the lower enemy on the screen is on top
  * Slider UI class
@@ -49,7 +53,3 @@
 ||Re-granularize exploration data||7/25/08||ETI||
 ||Make arrows on id 990 draw red, not green||7/25/08||ETI||
 ||Change Manager||7/25/08||RGW/ETI||
-
-=== Shit List ===
- * Patric
- * Kevin
