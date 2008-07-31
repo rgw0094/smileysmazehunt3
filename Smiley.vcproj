@@ -222,13 +222,10 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="menu"
+				Name="mainmenu"
 				Filter="">
 				<File
 					RelativePath=".\src\Button.cpp">
-				</File>
-				<File
-					RelativePath=".\src\ControlsScreen.cpp">
 				</File>
 				<File
 					RelativePath=".\src\DeathScreen.cpp">
@@ -238,6 +235,9 @@
 				</File>
 				<File
 					RelativePath=".\src\menu.cpp">
+				</File>
+				<File
+					RelativePath=".\src\OptionsScreen.cpp">
 				</File>
 				<File
 					RelativePath=".\src\TitleScreen.cpp">
@@ -300,7 +300,7 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="window"
+				Name="gamemenu"
 				Filter="">
 				<File
 					RelativePath=".\src\inventory.cpp">
@@ -364,13 +364,10 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="menu"
+				Name="mainmenu"
 				Filter="">
 				<File
 					RelativePath=".\src\Button.h">
-				</File>
-				<File
-					RelativePath=".\src\ControlsScreen.h">
 				</File>
 				<File
 					RelativePath=".\src\DeathScreen.h">
@@ -383,6 +380,9 @@
 				</File>
 				<File
 					RelativePath=".\src\MenuScreen.h">
+				</File>
+				<File
+					RelativePath=".\src\OptionsScreen.h">
 				</File>
 				<File
 					RelativePath=".\src\TitleScreen.h">
@@ -451,7 +451,7 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="window"
+				Name="gamemenu"
 				Filter="">
 				<File
 					RelativePath=".\src\BaseWindow.h">

@@ -7,7 +7,7 @@
 
 #define NUM_BUTTONS 3
 #define PLAY_BUTTON 0
-#define CONTROLS_BUTTON 1
+#define OPTIONS_BUTTON 1
 #define EXIT_BUTTON 2
 
 class TitleScreen : public MenuScreen {

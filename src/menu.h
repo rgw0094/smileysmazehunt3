@@ -7,7 +7,7 @@ class MenuScreen;
 #define NUM_MENU_SCREENS 4
 #define TITLE_SCREEN 0
 #define LOAD_SCREEN 1
-#define CONTROLS_SCREEN 2
+#define OPTIONS_SCREEN 2
 #define DEATH_SCREEN 3
 
 class Menu {
