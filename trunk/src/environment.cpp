@@ -175,12 +175,14 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 	enemyGroupManager->resetGroups();
 	tapestryManager->reset();
 	specialTileManager->reset();
+	evilWallManager->reset();
 
 	//Clear old level data
 	for (int i = 0; i < 256; i++) {
 		for (int j = 0; j < 256; j++) {
 			terrain[i][j] = 0;
 			collision[i][j] = 0;
+			ids[i][j] = -1;
 			item[i][j] = 0;
 			activated[i][j] = -100.0f;
 			variable[i][j] = 0;

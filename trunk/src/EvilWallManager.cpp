@@ -27,7 +27,10 @@ void EvilWallManager::addEvilWall(int id) {
 	newEvilWall.evilWall->evilWallID=id;
 		
 	theEvilWalls.push_back(newEvilWall);
-	
+}
+
+void EvilWallManager::reset() {
+	if (theEvilWalls.size() > 0) theEvilWalls.empty();
 }
 
 void EvilWallManager::activateEvilWall(int id) {
