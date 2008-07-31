@@ -3,8 +3,7 @@
 
 #include "MenuScreen.h"
 
-class hgeRect;
-class Button;
+class OptionsWindow;
 
 class ControlsScreen : public MenuScreen {
 
@@ -19,10 +18,7 @@ public:
 	void enterScreen();
 	void exitScreen();
 
-	Button *doneButton;
-	hgeRect *inputBox;
-	int currentInput;
-	float x, y;
+	OptionsWindow *optionsWindow;
 	
 
 };

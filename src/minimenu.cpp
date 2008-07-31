@@ -6,6 +6,8 @@
 #include "hgeresource.h"
 #include "smiley.h"
 #include "Button.h"
+#include "WindowManager.h"
+#include "OptionsWindow.h"
 
 extern HGE *hge;
 extern HTEXTURE menuItemTexture;
@@ -13,6 +15,7 @@ extern Menu *theMenu;
 extern hgeResourceManager *resources;
 extern Input *input;
 extern SaveManager *saveManager;
+extern WindowManager *windowManager;
 extern float gameTime;
 
 /**
@@ -20,20 +23,18 @@ extern float gameTime;
  *
  * @param _mode		which mode to open in - save or exit
  */
-MiniMenu::MiniMenu(int _mode) {
+MiniMenu::MiniMenu(int mode) {
 
-	buttons[0] = new Button(512.0-125.0, 300.0, "temp");
-	buttons[1] = new Button(512.0-125.0, 400.0, "temp");
 	x = (1024 - 250) / 2;
 	y = (768 - 75 - 75 - 30) / 2;
 
-	mode = _mode;
 	if (mode == MINIMENU_EXIT) {
-		strcpy(buttons[0]->text, "Cancel");
-		strcpy(buttons[1]->text, "Quit");
+		addButton("Cancel", 512.0-125.0, 250.0, MINIMENU_CANCEL);
+		addButton("Options", 512.0-125.0, 350.0, MINIMENU_OPTIONS);
+		addButton("Quit", 512.0-125.0, 450.0, MINIMENU_QUIT);
 	} else if (mode == MINIMENU_SAVEGAME) {
-		strcpy(buttons[0]->text, "Cancel");
-		strcpy(buttons[1]->text, "Save");
+		addButton("Cancel", 512.0-125.0, 300.0, MINIMENU_CANCEL);
+		addButton("Quit", 512.0-125.0, 450.0, MINIMENU_QUIT);
 	}
 
 }
@@ -41,7 +42,14 @@ MiniMenu::MiniMenu(int _mode) {
 /**
  * Destructor
  */
-MiniMenu::~MiniMenu() { }
+MiniMenu::~MiniMenu() {
+	std::list<ButtonStruct>::iterator i;
+	for (i = buttonList.begin(); i != buttonList.end(); i++) {
+		delete i->button;
+		i = buttonList.erase(i);
+	}
+	buttonList.clear();
+}
 
 
 
@@ -54,8 +62,9 @@ void MiniMenu::draw(float dt) {
 	shadeScreen(100);
 
 	//Draw buttons
-	for (int i = 0; i < 2; i++) {
-		buttons[i]->draw(dt);
+	std::list<ButtonStruct>::iterator i;
+	for (i = buttonList.begin(); i != buttonList.end(); i++) {
+		i->button->draw(dt);
 	}
 
 	//Draw the mouse
@@ -83,37 +92,44 @@ bool MiniMenu::update(float dt) {
 		if (mouseY < 1.0) mouseY = 1.0;
 		if (mouseY > 767.0) mouseY = 767.0;
 		hge->Input_SetMousePos(mouseX,mouseY);
+	} else {
+		mouseX = mouseY = 1.0;
 	}
 
 	//Update buttons
-	for (int i = 0; i < 2; i++) {
-		buttons[i]->update(mouseX, mouseY);
-	}
+	std::list<ButtonStruct>::iterator i;
+	for (i = buttonList.begin(); i != buttonList.end(); i++) {
+		i->button->update(mouseX, mouseY);
 
-	//Button click
-	if (mode == MINIMENU_EXIT) {
-		if (buttons[0]->isClicked()) {
-			//Cancel
-			return false;
+		if (i->button->isClicked()) {
+			switch (i->id) {
+				case MINIMENU_CANCEL:
+					return false;
+				case MINIMENU_QUIT:
+					theMenu->open(TITLE_SCREEN);
+					saveManager->incrementTimePlayed(saveManager->currentSave, gameTime);
+					saveManager->saveFileInfo();
+					return false;
+				case MINIMENU_SAVE:
+					saveManager->save();
+					return false;
+				case MINIMENU_OPTIONS:
+					windowManager->openWindow(new OptionsWindow());
+					return true;
+			}
 		}
-		if (buttons[1]->isClicked()) {
-			//Quit
-			theMenu->open(TITLE_SCREEN);
-			saveManager->incrementTimePlayed(saveManager->currentSave, gameTime);
-			saveManager->saveFileInfo();
-			return false;
-		}
-	} else if (mode == MINIMENU_SAVEGAME) {
-		if (buttons[0]->isClicked()) {
-			//Cancel
-			return false;
-		}
-		if (buttons[1]->isClicked()) {
-			//Save
-			saveManager->save();
-			return false;
-		}
+
 	}
 
 	return true;
+}
+
+void MiniMenu::addButton(char *text, float x, float y, int id) {
+
+	ButtonStruct newButton;
+	newButton.button = new Button(x, y, text);
+	newButton.id = id;
+
+	buttonList.push_back(newButton);
+
 }

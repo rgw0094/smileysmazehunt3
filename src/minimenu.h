@@ -3,6 +3,7 @@
 
 #include "BaseWindow.h"
 #include <string>
+#include <list>
 
 class Button;
 
@@ -10,10 +11,16 @@ class Button;
 #define MINIMENU_SAVE 0
 #define MINIMENU_CANCEL 1
 #define MINIMENU_QUIT 2
+#define MINIMENU_OPTIONS 3
 
 //Mode
 #define MINIMENU_EXIT 0
 #define MINIMENU_SAVEGAME 1
+
+struct ButtonStruct {
+	Button *button;
+	int id;
+};
 
 class MiniMenu : public BaseWindow {
 
@@ -24,14 +31,15 @@ public:
 	//methods
 	void draw(float dt);
 	bool update(float dt);
+	void addButton(char* text, float x, float y, int id);
 		
 	//Variables
-	int x, y, mode;
+	int x, y;
 	float mouseX, mouseY;
 	float xOffset, yOffset;
 	int selected;
 
-	Button *buttons[2];
+	std::list<ButtonStruct> buttonList;
 
 };
 

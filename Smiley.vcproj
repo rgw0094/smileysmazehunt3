@@ -312,6 +312,9 @@
 					RelativePath=".\src\minimenu.cpp">
 				</File>
 				<File
+					RelativePath=".\src\OptionsWindow.cpp">
+				</File>
+				<File
 					RelativePath=".\src\Shop.cpp">
 				</File>
 				<File
@@ -461,6 +464,9 @@
 				</File>
 				<File
 					RelativePath=".\src\minimenu.h">
+				</File>
+				<File
+					RelativePath=".\src\OptionsWindow.h">
 				</File>
 				<File
 					RelativePath=".\src\Shop.h">
