@@ -131,6 +131,12 @@ void TextBox::setHint() {
 	distortion->SetBlendMode(BLEND_COLORADD | BLEND_ALPHABLEND | BLEND_ZWRITE);
 	distortion->Clear(0xFF000000);
 
+	for (int i = 0; i < PSYCHEDELIC_GRANULARITY; i++) {
+		for(int j = 0; j < PSYCHEDELIC_GRANULARITY; j++) {
+			distortion->SetColor(i, j, ARGB(fadeAlpha, 0, 0, 0));
+		}
+	}
+
 }
 
 
@@ -223,6 +229,8 @@ void TextBox::draw(float dt) {
 		}
 	}
 
+	resources->GetFont("curlz")->printf(5,5,HGETEXT_LEFT,"%f", fadeAlpha);
+
 }
 
 /**
@@ -253,7 +261,7 @@ bool TextBox::update(float dt) {
 	resources->GetSprite("arrowIcon")->SetColor(ARGB(255,alpha,alpha,alpha));
 
 	//Update psychedelic background for hints
-	if (textBoxType == TYPE_HINT) {
+	if (textBoxType == TYPE_HINT && !fadingOut) {
 		if (fadeAlpha < 255.0) {
 			fadeAlpha += 130.0 * dt;
 			if (fadeAlpha > 255.0) fadeAlpha = 255.0;
@@ -284,18 +292,21 @@ bool TextBox::update(float dt) {
 
 			//If this is the first time Smiley has talked to the hint man,
 			//give him the cane.
-			} else if (textBoxType == TYPE_DIALOG && npcID == BILL_CLINTON && !saveManager->hasAbility[CANE]) {
+			} else if (textBoxType == TYPE_DIALOG && textID == BILL_CLINTON && !saveManager->hasAbility[CANE]) {
 				saveManager->hasAbility[CANE] = true;
 				thePlayer->selectedAbility = CANE;
 				set(gameData->getGameText("GotCane"), true, abilitySprites[CANE], 64);
 			
 			//Close hint box by fading out psychedelic background
 			} else if (textBoxType == TYPE_HINT) {
+				hge->System_Log("DICKENS");
 				fadingOut = true;
 			}
 
-			//Return false to tell the window manager to close this window
-			return false;
+			if (!fadingOut) {
+				//Return false to tell the window manager to close this window
+				return false;
+			}
 
 		//More pages left - go to the next one
 		} else {
@@ -314,8 +325,11 @@ bool TextBox::update(float dt) {
  */
 bool TextBox::doFadeOut(float dt) {
 
+	hge->System_Log("dickens %f", fadeAlpha);
+
 	//Fade stuff out
 	if (fadeAlpha > 0.0) fadeAlpha -= 130.0 * dt;
+	if (fadeAlpha < 0.0) fadeAlpha == 0.0;
 	resources->GetSprite("textBox")->SetColor(ARGB(fadeAlpha,255,255,255));
 	resources->GetFont("textBoxNameFnt")->SetColor(ARGB(fadeAlpha,0,0,0));
 	resources->GetFont("textBoxDialogFnt")->SetColor(ARGB(fadeAlpha,0,0,0));
@@ -325,13 +339,12 @@ bool TextBox::doFadeOut(float dt) {
 	for (int i = 0; i < PSYCHEDELIC_GRANULARITY; i++) {
 		for(int j = 0; j < PSYCHEDELIC_GRANULARITY; j++) {
 			distortion->SetColor(i, j, ARGB(fadeAlpha, 0, 0, 0));
-			distortion->SetDisplacement(j,i,cosf(gameTime*10+(i+j)/2)*5,sinf(gameTime*10+(i+j)/2)*5,HGEDISP_NODE);
+			distortion->SetDisplacement(j,i,cosf(hge->Timer_GetTime()*10+(i+j)/2)*5,sinf(hge->Timer_GetTime()*10+(i+j)/2)*5,HGEDISP_NODE);
 		}
 	}
 
 	//Done fading out, set everything back to normal
-	if (fadeAlpha < 0.0) {
-		fadeAlpha = 0.0;
+	if (fadeAlpha == 0.0) {
 		resources->GetSprite("textBox")->SetColor(ARGB(255,255,255,255));
 		resources->GetFont("textBoxNameFnt")->SetColor(ARGB(255,0,0,0));
 		resources->GetFont("textBoxDialogFnt")->SetColor(ARGB(255,0,0,0));
