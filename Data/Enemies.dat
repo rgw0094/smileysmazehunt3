@@ -1,6 +1,6 @@
 [HGESTRINGTABLE]
 
-numEnemies="47"
+numEnemies="50"
 
 ;Croc
 0GCol=      "0"
@@ -788,3 +788,49 @@ numEnemies="47"
 46Land=      "T"
 46SWater=    "T"
 46Chases=    "T"
+
+;Mummy Charger
+47GCol=      "4"
+47GRow=      "7"
+47EnemyType= "4"
+47WanderType="0"
+47HP=        "250"
+47Damage=    "25"
+47Radius=    "28"
+47Speed=     "100"
+47Land=      "T"
+47SWater=    "T"
+47Chases=    "T"
+
+;Mummy Ranged
+48GCol=      "4"
+48GRow=      "7"
+48EnemyType= "0"
+48WanderType="0"
+48HP=        "200"
+48Damage=    "50"
+48Radius=    "28"
+48Speed=     "130"
+48Land=      "T"
+48Lava=      "F"
+48SWater=    "T"
+48Chases=    "T"
+48HasRanged= "T"
+48PType=     "5"
+48Range=     "300"
+48Delay=     "4"
+48PSpeed=    "150"
+48PDamage=   "25"
+
+;Mummy Flail
+49GCol=      "4"
+49GRow=      "7"
+49EnemyType= "10"
+49WanderType="0"
+49HP=        "300"
+49Damage=    "75"
+49Radius=    "28"
+49Speed=     "100"
+49Land=      "T"
+49SWater=    "T"
+49Chases=    "F"
