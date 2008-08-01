@@ -17,6 +17,7 @@
 #include "weaponparticle.h"
 #include "Tongue.h"
 #include "LoadEffectManager.h"
+#include "Worm.h"
 
 #include "hgefont.h"
 #include "hgeresource.h"
@@ -70,6 +71,7 @@ Player::Player(int _gridX, int _gridY) {
 	//Initialize variables
 	moveTo(_gridX, _gridY);
 	tongue = new Tongue();
+	worm = new Worm();
 	health = getMaxHealth();
 	mana = getMaxMana();
 	scale = hoverScale = shrinkScale = 1.0f;
@@ -139,6 +141,7 @@ Player::~Player() {
 	delete iceBreathParticle;
 	delete collisionCircle;
 	delete tongue;
+	delete worm;
 }
 
 /**
@@ -246,6 +249,9 @@ void Player::update(float dt) {
 		tongue->startAttack();	
 	}
 	tongue->update(dt);
+
+	//Do worm
+	worm->update();
 
 	//Do shit
 	doMovement(dt);
@@ -449,6 +455,7 @@ void Player::draw(float dt) {
 		collisionCircle->draw();
 	}
 
+	worm->draw();
 }
 
 
