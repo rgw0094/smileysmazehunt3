@@ -7,6 +7,7 @@ class CollisionCircle;
 class Tongue;
 class WeaponParticleSystem;
 class hgeRect;
+class Worm;
 
 struct velocity {
 	double x,y;
@@ -126,6 +127,7 @@ private:
 	float timeFrozen, freezeDuration;
 	float springVelocity;
 	Tongue *tongue;
+	Worm *worm;
 	
 	//State info
 	bool breathingFire;				//If using Fire Breath ability

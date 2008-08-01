@@ -108,6 +108,21 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
+			<File
+				RelativePath=".\src\Worm.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
+			</File>
 			<Filter
 				Name="enemy"
 				Filter="">
@@ -334,6 +349,9 @@
 			</File>
 			<File
 				RelativePath=".\src\resource1.h">
+			</File>
+			<File
+				RelativePath=".\src\Worm.h">
 			</File>
 			<Filter
 				Name="boss"
