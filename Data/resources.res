@@ -512,6 +512,15 @@ Animation savePoint {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=2
 }
+Animation smileletGfx {
+ texture=general
+ rect=128,93,28,26
+ frames=8
+ mode=FORWARD,LOOP
+ hotspot=14,13
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=2
+}
 
 ;***********************
 ;******** COMMON *******
