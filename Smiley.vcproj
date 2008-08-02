@@ -109,6 +109,9 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
+				RelativePath=".\src\Smilelet.cpp">
+			</File>
+			<File
 				RelativePath=".\src\Worm.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -349,6 +352,9 @@
 			</File>
 			<File
 				RelativePath=".\src\resource1.h">
+			</File>
+			<File
+				RelativePath=".\src\Smilelet.h">
 			</File>
 			<File
 				RelativePath=".\src\Worm.h">

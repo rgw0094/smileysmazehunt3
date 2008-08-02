@@ -8,6 +8,7 @@ class Tongue;
 class WeaponParticleSystem;
 class hgeRect;
 class Worm;
+struct WormNode;
 
 struct velocity {
 	double x,y;
@@ -58,6 +59,7 @@ public:
 	float getFireBreathDamage();
 	float getLightningOrbDamage();
 	void modifyVelocity(double xVel,double yVel);
+	WormNode getWormNode(int num);
 	Tongue *getTongue();
 
 	//variables

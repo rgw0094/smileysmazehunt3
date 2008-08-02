@@ -18,6 +18,7 @@
 #include "Tongue.h"
 #include "LoadEffectManager.h"
 #include "Worm.h"
+#include "Smilelet.h"
 
 #include "hgefont.h"
 #include "hgeresource.h"
@@ -71,7 +72,7 @@ Player::Player(int _gridX, int _gridY) {
 	//Initialize variables
 	moveTo(_gridX, _gridY);
 	tongue = new Tongue();
-	worm = new Worm();
+	worm = new Worm(_gridX,_gridY);
 	health = getMaxHealth();
 	mana = getMaxMana();
 	scale = hoverScale = shrinkScale = 1.0f;
@@ -455,7 +456,7 @@ void Player::draw(float dt) {
 		collisionCircle->draw();
 	}
 
-	worm->draw();
+	worm->draw();	
 }
 
 
@@ -1555,6 +1556,10 @@ bool Player::isShrunk() {
 
 Tongue *Player::getTongue() {
 	return tongue;
+}
+
+WormNode Player::getWormNode(int num) {
+	return worm->getNode(num);
 }
 
 void Player::setHealth(float amount) {

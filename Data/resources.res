@@ -514,7 +514,7 @@ Animation savePoint {
 }
 Animation smileletGfx {
  texture=general
- rect=128,93,28,26
+ rect=128,193,28,26
  frames=8
  mode=FORWARD,LOOP
  hotspot=14,13
