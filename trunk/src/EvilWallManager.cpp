@@ -30,7 +30,13 @@ void EvilWallManager::addEvilWall(int id) {
 }
 
 void EvilWallManager::reset() {
-	if (theEvilWalls.size() > 0) theEvilWalls.empty();
+	std::list<EvilWallStruct>::iterator i;
+	for (i = theEvilWalls.begin(); i != theEvilWalls.end(); i++) {
+		delete i->evilWall;
+		i = theEvilWalls.erase(i);
+	}
+	
+	theEvilWalls.empty();
 }
 
 void EvilWallManager::activateEvilWall(int id) {

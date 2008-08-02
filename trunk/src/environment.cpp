@@ -24,6 +24,7 @@
 #include "WeaponParticle.h"
 #include "TapestryManager.h"
 #include "ChangeManager.h"
+#include "Smilelet.h"
 
 #include <string>
 #include <sstream>
@@ -114,6 +115,9 @@ Environment::Environment() {
 	hge->System_Log("Creating Environment.TapestryManager");
 	tapestryManager = new TapestryManager();
 
+	//Smilelets (guys that follow Smiley)
+	smilelet = new Smilelet();
+
 	resources->GetAnimation("savePoint")->Play();
 	collisionBox = new hgeRect();
 
@@ -129,6 +133,7 @@ Environment::~Environment() {
 	delete evilWallManager;
 	delete specialTileManager;
 	delete tapestryManager;
+	delete smilelet;
 
 	delete collisionBox;
 	delete silverCylinder;
@@ -176,6 +181,7 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 	tapestryManager->reset();
 	specialTileManager->reset();
 	evilWallManager->reset();
+	smilelet->reset();
 
 	//Clear old level data
 	for (int i = 0; i < 256; i++) {
@@ -310,6 +316,12 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 			//Mushrooms
 			if (collision[col][row] == DIZZY_MUSHROOM_1 || collision[col][row] == DIZZY_MUSHROOM_2) {
 				specialTileManager->addMushroom(col,row,collision[col][row]);
+			}
+
+			//Smilelet
+			if (collision[col][row] == SMILELET) {
+				smilelet->addSmilelet(col,row,ids[col][row]);
+				collision[col][row] = WALKABLE;
 			}
 			
 			//Evil wall stuff
@@ -657,6 +669,10 @@ void Environment::draw(float dt) {
 	//Draw tapestries
 	tapestryManager->draw(dt);
 
+	//Draw smilelets
+	smilelet->drawBeforeSmiley();
+	smilelet->drawAfterSmiley();
+
 	//Draw the mushrooms
 	specialTileManager->draw(dt);
 
@@ -786,6 +802,10 @@ void Environment::update(float dt) {
 
 	//Update tapestries
 	tapestryManager->update(dt);
+
+	
+	//Update smilelets
+	smilelet->update();
 
 }
 
