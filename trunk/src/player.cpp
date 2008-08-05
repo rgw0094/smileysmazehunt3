@@ -1130,6 +1130,7 @@ bool Player::canPass(int collision) {
 		case EVIL_WALL_RESTART: return true;
 		case DEEP_WATER: return ((selectedAbility == WATER_BOOTS) && !drowning) || springing || isHovering;
 		case GREEN_WATER: return ((selectedAbility == WATER_BOOTS) && !drowning) || springing || isHovering;
+		case SMILELET_FLOWER_HAPPY: return true;
 		case WHITE_SWITCH_LEFT: return false || springing;
 		case YELLOW_SWITCH_LEFT: return false || springing;
 		case GREEN_SWITCH_LEFT: return false || springing;

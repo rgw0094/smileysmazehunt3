@@ -82,6 +82,8 @@ class Smilelet;
 #define SILVER_CYLINDER_UP 63
 //...
 #define SMILELET 64
+#define SMILELET_FLOWER_SAD 65
+#define SMILELET_FLOWER_HAPPY 66
 //...
 #define WHITE_SWITCH_LEFT 74
 #define YELLOW_SWITCH_LEFT 75
@@ -134,6 +136,7 @@ public:
 	bool isDeepWaterAt(int x, int y);
 	bool isShallowWaterAt(int x, int y);
 	bool isArrowAt(int x,int y);
+	bool isSadSmileletFlowerAt(int x,int y);
 	void bombWall(int x,int y);
 	void setTerrainCollisionBox(hgeRect *box, int whatFor, int gridX, int gridY);
 	void placeSillyPad(int gridX, int gridY);
