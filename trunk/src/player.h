@@ -97,7 +97,6 @@ public:
 
 	bool invincible;
 
-	//Graphics
 	WeaponParticleSystem *fireBreathParticle;
 	WeaponParticleSystem *iceBreathParticle;
 
@@ -108,6 +107,7 @@ private:
 	float timeFrozen, freezeDuration;
 	float springVelocity;
 	Tongue *tongue;
+	Worm *worm;
 	
 	//Time variables
 	float startedFlashing;
@@ -132,22 +132,6 @@ private:
 	float timeInShrinkTunnel;		//Time to take to go through the shrink tunnel
 	float timeStartedHovering;
 
-<<<<<<< .mine
-=======
-	//Graphics
-	WeaponParticleSystem *fireBreathParticle;
-	WeaponParticleSystem *iceBreathParticle;
-
-private:
-
-	float health;
-	
-	float timeFrozen, freezeDuration;
-	float springVelocity;
-	Tongue *tongue;
-	Worm *worm;
-	
->>>>>>> .r298
 	//State info
 	bool breathingFire;				//If using Fire Breath ability
 	bool breathingIce;				//If using Ice Breath ability

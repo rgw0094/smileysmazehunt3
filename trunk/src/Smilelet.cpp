@@ -1,3 +1,4 @@
+#include "smiley.h"
 #include "Smilelet.h"
 #include "CollisionCircle.h"
 #include "Player.h"
