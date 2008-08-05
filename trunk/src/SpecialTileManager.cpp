@@ -348,7 +348,7 @@ void SpecialTileManager::updateMushrooms(float dt) {
 	for(i = theMushrooms.begin(); i != theMushrooms.end(); i++) {
 		switch (i->state) {
 			case MUSHROOM_STATE_IDLING:
-				if (i->mushroomCollisionCircle->testCircle(thePlayer->collisionCircle)) {
+				if (i->mushroomCollisionCircle->testCircle(thePlayer->collisionCircle) && !thePlayer->isFlashing()) {
 					i->state = MUSHROOM_STATE_EXPLODING;
 					i->beginExplodeTime = gameTime;
 					explosions->SpawnPS(&resources->GetParticleSystem("explosionLarge")->info,i->x+32,i->y+32);

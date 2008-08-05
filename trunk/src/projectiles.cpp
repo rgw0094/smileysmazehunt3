@@ -79,7 +79,7 @@ void ProjectileManager::addProjectile(float x, float y, float speed, float angle
 		newProjectile.particle->Fire();
 	}
 
-	hge->System_Log("Adding Projectile %d", newProjectile.id);
+	//hge->System_Log("Adding Projectile %d", newProjectile.id);
 
 	//Add it to the list
 	theProjectiles.push_back(newProjectile);

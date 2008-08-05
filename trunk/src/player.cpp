@@ -1554,6 +1554,10 @@ bool Player::isShrunk() {
 	return (shrinkActive && shrinkScale == 0.5);
 }
 
+bool Player::isFlashing() {
+	return flashing;
+}
+
 Tongue *Player::getTongue() {
 	return tongue;
 }

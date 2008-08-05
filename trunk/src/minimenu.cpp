@@ -34,7 +34,7 @@ MiniMenu::MiniMenu(int mode) {
 		addButton("Quit", 512.0-125.0, 450.0, MINIMENU_QUIT);
 	} else if (mode == MINIMENU_SAVEGAME) {
 		addButton("Cancel", 512.0-125.0, 300.0, MINIMENU_CANCEL);
-		addButton("Quit", 512.0-125.0, 450.0, MINIMENU_QUIT);
+		addButton("Save", 512.0-125.0, 450.0, MINIMENU_SAVE);
 	}
 
 }

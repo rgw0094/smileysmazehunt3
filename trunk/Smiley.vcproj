@@ -108,24 +108,6 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
-			<File
-				RelativePath=".\src\Smilelet.cpp">
-			</File>
-			<File
-				RelativePath=".\src\Worm.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-			</File>
 			<Filter
 				Name="enemy"
 				Filter="">
@@ -227,6 +209,9 @@
 					RelativePath=".\src\projectiles.cpp">
 				</File>
 				<File
+					RelativePath=".\src\Smilelet.cpp">
+				</File>
+				<File
 					RelativePath=".\src\SpecialTileManager.cpp">
 				</File>
 				<File
@@ -237,6 +222,21 @@
 				</File>
 				<File
 					RelativePath=".\src\weaponparticle.cpp">
+				</File>
+				<File
+					RelativePath=".\src\Worm.cpp">
+					<FileConfiguration
+						Name="Debug|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+					</FileConfiguration>
 				</File>
 			</Filter>
 			<Filter
@@ -353,12 +353,6 @@
 			<File
 				RelativePath=".\src\resource1.h">
 			</File>
-			<File
-				RelativePath=".\src\Smilelet.h">
-			</File>
-			<File
-				RelativePath=".\src\Worm.h">
-			</File>
 			<Filter
 				Name="boss"
 				Filter="">
@@ -462,6 +456,9 @@
 					RelativePath=".\src\projectiles.h">
 				</File>
 				<File
+					RelativePath=".\src\Smilelet.h">
+				</File>
+				<File
 					RelativePath=".\src\SpecialTileManager.h">
 				</File>
 				<File
@@ -472,6 +469,9 @@
 				</File>
 				<File
 					RelativePath=".\src\weaponparticle.h">
+				</File>
+				<File
+					RelativePath=".\src\Worm.h">
 				</File>
 			</Filter>
 			<Filter

@@ -50,6 +50,7 @@ public:
 	bool isReflectingProjectiles();
 	bool isOnIce();
 	bool isShrunk();
+	bool isFlashing();
 	bool isInShrinkTunnel();
 	void setHealth(float amount);
 	float getHealth();
