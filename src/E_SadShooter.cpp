@@ -1,3 +1,4 @@
+#include "smiley.h"
 #include "enemy.h"
 #include "EnemyState.h"
 #include "player.h"

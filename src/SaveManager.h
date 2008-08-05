@@ -31,16 +31,22 @@ public:
 	void incrementTimePlayed(int file, int amount);
 	void change(int gridX, int gridY);
 	bool isTileChanged(int gridX, int gridY);
-
+	float getDamageModifier();
+	void killBoss(int boss);
+	bool isBossKilled(int boss);
 	void explore(int gridX, int gridY);
 	bool isExplored(int gridX, int gridY);
 
+	//Stats
+	int numTongueLicks;
+	int numEnemiesKilled;
+	float damageDealt;
+	float damageReceived;
+
 	//Save data
 	int currentSave;
-	int currentArea;					//The main area Smiley is currently in
-	bool killedBoss[12];
+	int currentArea;
 	int playerGridX, playerGridY;
-	int currentHint;
 
 	//Stuff in inventory
 	bool hasAbility[12];
@@ -56,6 +62,7 @@ private:
 
 	SaveFile files[4];
 	bool explored[9][256][256];
+	bool killedBoss[12];
 
 };
 

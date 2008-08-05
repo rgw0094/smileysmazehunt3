@@ -1,3 +1,4 @@
+#include "smiley.h"
 #include "hgeresource.h"
 #include "DesertBoss.h"
 #include "EnemyGroupManager.h"
@@ -258,7 +259,7 @@ bool DesertBoss::update(float dt) {
 			soundManager->playMusic("oldeTowneMusic");
 			enemyGroupManager->notifyOfDeath(groupID);
 			lootManager->addLoot(LOOT_NEW_ABILITY, x, y, LIGHTNING_ORB);
-			saveManager->killedBoss[DESERT_BOSS] = true;
+			saveManager->killBoss(DESERT_BOSS);
 			return true;
 		}
 	}

@@ -1,3 +1,4 @@
+#include "smiley.h"
 #include "enemy.h"
 #include "EnemyState.h"
 #include "player.h"
@@ -132,7 +133,7 @@ void E_Tentacle::update(float dt) {
  * Overrides base tongue collision logic in order to implement collision
  * for each node of the tentacle.
  */ 
-void E_Tentacle::doTongueCollision(Tongue *tongue, float damage) {
+bool E_Tentacle::doTongueCollision(Tongue *tongue, float damage) {
 	
 	for (int i=0; i<NUM_NODES; i++) {
 		//Set up collision box
@@ -167,8 +168,10 @@ void E_Tentacle::doTongueCollision(Tongue *tongue, float damage) {
 
 				beginKnockbackTime=gameTime;
 				knockback=true;
+				return true;
 
 			}
 		}
 	}
+	return false;
 }

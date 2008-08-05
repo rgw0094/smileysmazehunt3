@@ -6,12 +6,12 @@
 #include "CollisionCircle.h"
 #include "WindowManager.h"
 
-#include "hge.h"
+#include "hgeresource.h"
 #include "hgesprite.h"
 
 extern HGE *hge;
+extern hgeResourceManager *resources;
 extern WindowManager *windowManager;
-extern hgeSprite *npcSprites[NUM_NPCS][4];
 extern bool debugMode;
 extern Player *thePlayer;
 extern Environment *theEnvironment;
@@ -33,6 +33,12 @@ NPC::NPC(int _id, int _textID, int _x,int _y) {
 	collisionBox = new hgeRect();
 	futureCollisionBox = new hgeRect();
 	futureCollisionBox2 = new hgeRect();
+
+	//Load sprites
+	for (int i = 0; i < 4; i++) {
+		sprites[i] = new hgeSprite(resources->GetTexture("npcTx"),i*64,id*64,64,64);
+		sprites[i]->SetHotSpot(32,32);
+	}
 
 	//Set pathing shit
 	for (int i = 0; i < 256; i++) canPass[i] = false;
@@ -116,7 +122,7 @@ void NPC::update(float dt) {
  * Draw the NPC
  */
 void NPC::draw(float dt) {
-	npcSprites[id][facing]->Render(getScreenX(x), getScreenY(y));
+	sprites[facing]->Render(getScreenX(x), getScreenY(y));
 	//Debug mode stuff
 	if (debugMode) {
 		drawCollisionBox(collisionBox, RED);

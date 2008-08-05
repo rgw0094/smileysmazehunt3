@@ -3,8 +3,10 @@
 
 #include "boss.h"
 #include "hgeparticle.h"
-#include "weaponparticle.h"
-#include "collisioncircle.h"
+
+
+class WeaponParticleSystem;
+class CollisionCircle;
 
 struct Bomb {
 	bool inParabolaMode;
@@ -78,9 +80,6 @@ public:
 	std::list<Bomb> theBombs;
 	hgeParticleManager *explosions; //This contains the particle graphics for the exposions
 	std::list<Explosion> theExplosions; //This contains the expanding collision circles
-	
-	
-
 	
 };
 

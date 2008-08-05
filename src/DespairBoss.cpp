@@ -1,3 +1,4 @@
+#include "smiley.h"
 #include "DespairBoss.h"
 #include "hgeresource.h"
 #include "EnemyGroupManager.h"
@@ -289,7 +290,7 @@ bool DespairBoss::update(float dt) {
 			health = 0.0f;
 			setState(DESPAIRBOSS_FRIENDLY);		
 			windowManager->openDialogue(-1, DESPAIRBOSS_DEFEATTEXT);	
-			saveManager->killedBoss[DESPAIR_BOSS-240] = true;
+			saveManager->killBoss(DESPAIR_BOSS);
 			enemyGroupManager->notifyOfDeath(groupID);
 			soundManager->fadeOutMusic();
 		}

@@ -1,3 +1,4 @@
+#include "smiley.h"
 #include "ForestBoss.h"
 #include "hge.h"
 #include "hgeresource.h"
@@ -11,6 +12,7 @@
 #include "Tongue.h"
 #include "WeaponParticle.h"
 #include "WindowManager.h"
+#include "CollisionCircle.h"
 
 extern HGE *hge;
 extern WindowManager *windowManager;
@@ -158,7 +160,7 @@ bool ForestBoss::update(float dt) {
 			lootManager->addLoot(LOOT_NEW_ABILITY, x, y, SPRINT_BOOTS);
 			soundManager->playMusic("forestMusic");
 			enemyGroupManager->notifyOfDeath(groupID);
-			saveManager->killedBoss[FOREST_BOSS] = true;
+			saveManager->killBoss(FOREST_BOSS);
 			return true; //Return true to delete the boss
 		}
 	}

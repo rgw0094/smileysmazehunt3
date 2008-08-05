@@ -4,7 +4,6 @@
 #include "inventory.h"
 #include "player.h"
 #include "environment.h"
-#include "textbox.h"
 #include "npcmanager.h"
 #include "minimenu.h"
 #include "menu.h"
@@ -58,7 +57,7 @@ extern int gameState;
 #define DEFAULT_RADIUS 28
 
 #define SHRINK_TUNNEL_SPEED 500.0
-#define HOVER_DURATION 10.0
+#define HOVER_DURATION 5.0
 #define SPRING_VELOCITY 210.0
 #define JESUS_SANDLE_TIME 1.65
 
@@ -87,6 +86,7 @@ Player::Player(int _gridX, int _gridY) {
 	hoveringYOffset = 0;
 	timeFrozen = 0.0;
 	freezeDuration = 0.0;
+	invincible = false;
 
 	//Load Particles
 	fireBreathParticle = new WeaponParticleSystem("firebreath.psi", resources->GetSprite("particleGraphic1"), PARTICLE_FIRE_BREATH);
@@ -151,8 +151,6 @@ Player::~Player() {
 void Player::update(float dt) {
 
 	speedModifier = 1.0f;
-	lastX = x;
-	lastY = y;
 
 	//Do level exits
 	if (theEnvironment->collision[gridX][gridY] == PLAYER_END) {
@@ -246,7 +244,7 @@ void Player::update(float dt) {
 			!falling && !springing && !cloaked && !shrinkActive && !drowning &
 			!reflectionShieldActive &&
 			frameCounter > windowManager->frameLastWindowClosed) {			
-				
+		saveManager->numTongueLicks++;
 		tongue->startAttack();	
 	}
 	tongue->update(dt);
@@ -539,7 +537,13 @@ void Player::drawGUI(float dt) {
 		//Draw num keys
 		resources->GetFont("numberFnt")->printf(keyXOffset + 60.0*i + 45.0, keyYOffset + 5.0, 
 			HGETEXT_LEFT, "%d", saveManager->numKeys[getKeyIndex(saveManager->currentArea)][i]);
-	}							
+	}		
+
+	//Show whether or not Smiley is invincible
+	if (invincible) {
+		resources->GetFont("curlz")->printf(512.0, 3, HGETEXT_CENTER, "Invincibility On");
+	}
+
 }
 
 
@@ -598,10 +602,9 @@ void Player::doAbility(float dt) {
 	/////////////// Hover ////////////////
 	bool wasHovering = isHovering;
 	isHovering = ((isHovering || theEnvironment->collision[gridX][gridY] == HOVER_PAD) &&
-			timePassedSince(timeStartedHovering) < HOVER_DURATION && 
 			selectedAbility == HOVER &&
 			input->keyDown(INPUT_ABILITY) &&
-			canUseAbility &&
+			//canUseAbility &&
 			mana >= gameData->getAbilityInfo(HOVER).manaCost*dt);
 	
 	//For debug purposes H will always hover
@@ -614,6 +617,9 @@ void Player::doAbility(float dt) {
 
 	//Continue hovering
 	if (isHovering) {
+		if (timePassedSince(timeStartedHovering) > HOVER_DURATION) {
+			isHovering = false;
+		}
 		if (hoverScale < 1.2f) hoverScale += 0.4*dt;
 		if (hoverScale > 1.2f) hoverScale = 1.2f;
 		if (hoveringYOffset < 20.0f) hoveringYOffset += 40.0*dt;
@@ -1441,7 +1447,10 @@ void Player::dealDamageAndKnockback(float damage, bool makesFlash, bool alwaysKn
 		float knockbackerX, float knockbackerY) {
 	
 	if (!makesFlash || (makesFlash && !flashing)) {
-		health -= damage;
+		if (!invincible) {
+			health -= damage;
+			saveManager->damageReceived += damage;
+		}
 	}
 
 	float knockbackAngle = getAngleBetween(knockbackerX, knockbackerY, x, y);
@@ -1577,11 +1586,11 @@ float Player::getHealth() {
 }
 
 float Player::getDamage() {
-	return .25 + (.25 * 0.05) * saveManager->numUpgrades[2];
+	return .25 * saveManager->getDamageModifier();
 }
 
 float Player::getFireBreathDamage() {
-	return 1.0 + (1.0 * 0.05) * saveManager->numUpgrades[2];
+	return 1.0 + (1.5 * 0.05) * saveManager->numUpgrades[2];
 }
 
 float Player::getLightningOrbDamage() {

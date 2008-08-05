@@ -119,7 +119,6 @@ void SaveManager::resetCurrentData() {
 	timePlayed = 0;
 	playerGridX = 0;
 	playerGridY = 0;
-	currentHint = 0;
 }
 
 /**
@@ -138,6 +137,7 @@ void SaveManager::load(int fileNumber) {
 	char buffer[1];
 	char twoBuffer[2];
 	char threeBuffer[3];
+	char fiveBuffer[5];
 	if (currentSave == 0) inFile.open("Data/Save/file1.sav");
 	else if (currentSave == 1) inFile.open("Data/Save/file2.sav");
 	else if (currentSave == 2) inFile.open("Data/Save/file3.sav");
@@ -192,10 +192,6 @@ void SaveManager::load(int fileNumber) {
 	inFile.read(threeBuffer,3);
 	playerGridY = atoi(threeBuffer);
 
-	//Load current hint
-	inFile.read(twoBuffer, 2);
-	currentHint = atoi(twoBuffer);
-
 	//Load changed shit
 	inFile.read(threeBuffer, 3);
 	int numChanges = atoi(threeBuffer);
@@ -217,6 +213,16 @@ void SaveManager::load(int fileNumber) {
 		changeManager->change(area, x, y);
 
 	}
+
+	//Load Stats
+	inFile.read(fiveBuffer, 5);
+	numTongueLicks = atoi(fiveBuffer);
+	inFile.read(fiveBuffer, 5);
+	numEnemiesKilled = atoi(fiveBuffer);
+	inFile.read(fiveBuffer, 5);
+	damageDealt = atoi(fiveBuffer);
+	inFile.read(fiveBuffer, 5);
+	damageReceived = atoi(fiveBuffer);
 
 	//Load exploration data
 	twoBools nextTwoBools;
@@ -250,147 +256,98 @@ void SaveManager::load(int fileNumber) {
  */
 void SaveManager::save() {
 
-	
-
 	hge->System_Log("Saving file %d", currentSave);
 
-	std::ofstream exFile;
-	std::string exString;
-	std::string numberString;
+	std::ofstream outputFile;
+	std::string outputString;
 
 	//Select the specified save file
 	if (currentSave == 0) {
-		exFile.open("Data/Save/file1.sav");
+		outputFile.open("Data/Save/file1.sav");
 	} else if (currentSave == 1) {
-		exFile.open("Data/Save/file2.sav");
+		outputFile.open("Data/Save/file2.sav");
 	} else if (currentSave == 2) {
-		exFile.open("Data/Save/file3.sav");
+		outputFile.open("Data/Save/file3.sav");
 	} else if (currentSave == 3) {
-		exFile.open("Data/Save/file4.sav");
+		outputFile.open("Data/Save/file4.sav");
 	}
 
-	
-
 	//Abilities
-	for (int i = 0; i < NUM_ABILITIES; i++) exString += (hasAbility[i] ? "1" : "0");
+	for (int i = 0; i < NUM_ABILITIES; i++) outputString += (hasAbility[i] ? "1" : "0");
 
 	//Keys
 	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 4; j++) {
-			exString += intToString(numKeys[i][j]);
+			outputString += intToString(numKeys[i][j]);
 		}
 	}
 
 	//Gems
 	for (int i = 0; i < NUM_AREAS; i++) {
 		for (int j = 0; j < 3; j++) {
-			exString += intToString(numGems[i][j]);
+			outputString += intToString(numGems[i][j]);
 		}
 	}
 
 	//Money (3 digits)
-	if (money < 10) { 
-		numberString = "00";
-		numberString += intToString(money);
-	} else if (money < 100) {
-		numberString = "0";
-		numberString += intToString(money);
-	} else {
-		numberString = intToString(money);
-	}
-	exString += numberString.c_str();
+	outputString += intToString(money, 3);
 
 	//Upgrades (2 digits)
 	for (int i = 0; i < 3; i++) {
-		if (numUpgrades[i] < 10) {
-			numberString = "0";
-			numberString += intToString(numUpgrades[i]);
-			exString += numberString.c_str();
-		} else {
-			exString += intToString(numUpgrades[i]);
-		}
+		outputString += intToString(numUpgrades[i], 2);
 	}
 
 	//Bosses
-	for (int i = 0; i < NUM_BOSSES; i++) exString += (killedBoss[i] ? "0" : "1");
+	for (int i = 0; i < NUM_BOSSES; i++) outputString += (killedBoss[i] ? "0" : "1");
 
-	//Zone
-	exString += intToString(currentArea);
-
-	//X-coord
-	if (playerGridX < 10) { 
-		numberString = "00";
-		numberString += intToString(playerGridX);
-	} else if (playerGridX < 100) {
-		numberString = "0";
-		numberString += intToString(playerGridX);
-	} else {
-		numberString = intToString(playerGridX);
-	}
-	exString += numberString.c_str();
-	
-	//Y-coord
-	if (playerGridY < 10) { 
-		numberString = "00";
-		numberString += intToString(playerGridY);
-	} else if (playerGridY < 100) {
-		numberString = "0";
-		numberString += intToString(playerGridY);
-	} else {
-		numberString = intToString(playerGridY);
-	}
-	exString += numberString.c_str();
-
-	//Current hint
-	if (currentHint < 10) { 
-		numberString = "0";
-		numberString += intToString(currentHint);
-	} else {
-		numberString = intToString(currentHint);
-	}
-	exString += numberString.c_str();
+	//Area and position
+	outputString += intToString(currentArea);
+	outputString += intToString(playerGridX, 3);
+	outputString += intToString(playerGridY, 3);
 
 	//Changed shit
-	exString += changeManager->toString();
+	outputString += changeManager->toString();
 
-	unsigned char nextCharToWrite;
+	//Stats
+	outputString += intToString(numTongueLicks, 5);
+	outputString += intToString(numEnemiesKilled, 5);
+	outputString += intToString(damageDealt, 5);
+	outputString += intToString(damageReceived, 5);
 
 	//Exploration data
-	exString += "\n\n";
-		
+	unsigned char nextCharToWrite;
+	outputString += "\n\n";
 	for (int i = 0; i < NUM_AREAS; i++) {
 		for (int j = 0; j < 256; j++) {
 			for (int k = 0; k < 256; k++) {
 				if (bitManager->addBit(explored[i][j][k])) { //if true, it means the char is full
 					nextCharToWrite = bitManager->getCurrentChar();
-					exString += nextCharToWrite;
+					outputString += nextCharToWrite;
 				}				
 			}
-			//exString += "\n";
 		}
-//		exString += "\n";
 	}
 
 	// Now, we write one more char. Even if we didn't fill the char yet,
 	// we still don't want to lose any exploration data.
 	nextCharToWrite = bitManager->getCurrentChar();
-	exString += nextCharToWrite;
+	outputString += nextCharToWrite;
 
 	// Write one more empty char, just to be safe. This is necessary in case we use up
 	// exactly the right amount of chars in loading, since it automatically starts
 	// looking at the next one.
 	nextCharToWrite = 0;
-	exString += nextCharToWrite;
+	outputString += nextCharToWrite;
 
-	exString += "\n";
+	outputString += "\n";
 
 	//Write the string to the save file
-	exFile.write(exString.c_str(), exString.length());
-	exString.clear();
-	exString = "";
+	outputFile.write(outputString.c_str(), outputString.length());
+	outputString.clear();
+	outputString = "";
 
 	//Close the file!
-	exFile.close();
+	outputFile.close();
 	
 }
 
@@ -555,4 +512,16 @@ int SaveManager::getCompletion(int file) {
  */
 void SaveManager::incrementTimePlayed(int file, int amount) {
 	files[file].timePlayed += amount;
+}
+
+float SaveManager::getDamageModifier() {
+	return 1.0 + float(numUpgrades[2]) * 0.05;
+}
+
+void SaveManager::killBoss(int boss) {
+	killedBoss[boss-240] = true;
+}
+
+bool SaveManager::isBossKilled(int boss) {
+	return killedBoss[boss-240];
 }

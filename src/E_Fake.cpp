@@ -1,13 +1,8 @@
-#include "environment.h"
 #include "EnemyState.h"
-#include "hge.h"
-#include "Player.h"
 #include "enemy.h"
 #include "hgeanim.h"
 
 extern HGE *hge;
-extern Environment *theEnvironment;
-extern Player *thePlayer;
 
 //How close smiley has to get for the fake enemy to come alive.
 #define ENTER_FAKEMODE_RADIUS 200

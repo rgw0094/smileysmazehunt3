@@ -95,7 +95,7 @@
 #define BLUE 3
 
 struct Point {
-	int x, int y;
+	int x, y;
 };
 
 //Global functions
@@ -116,6 +116,8 @@ bool isCylinderUp(int id);
 bool isCylinderDown(int id);
 bool isWarp(int id);
 float maxFloat(float num1, float num2);
+float maxFloat(float f1, float f2, float f3, float f4);
+int getFacingDirection(float dx, float dy);
 void shadeScreen(int alpha);
 float getAngleBetween(int x1, int y1, int x2, int y2);
 float timePassedSince(float time);
@@ -123,5 +125,6 @@ int getKeyIndex(int area);
 void loadGameObjects();
 void initAbilities();
 int roundUp(float num);
+int getCurrentHint();
 
 #endif

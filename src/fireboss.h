@@ -7,18 +7,7 @@
 class hgeRect;
 class WeaponParticleSystem;
 
-//States
-#define FIREBOSS_INACTIVE 0
-#define FIREBOSS_MOVE 1
-#define FIREBOSS_ATTACK 2
-#define FIREBOSS_FRIENDLY 3
-
-//Attributes
-#define HEALTH 4.25
 #define NOVA_DAMAGE 0.5
-#define ORB_DAMAGE 0.5
-#define COLLISION_DAMAGE 0.25
-#define FLASH_DURATION 2.0
 
 struct FireOrb {
 	hgeParticleSystem *particle;

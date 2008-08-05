@@ -5,6 +5,7 @@
 
 class Button;
 class hgeRect;
+class Slider;
 
 class OptionsWindow : public BaseWindow {
 
@@ -12,16 +13,16 @@ public:
 	OptionsWindow();
 	~OptionsWindow();
 
-	//General methods
 	void draw(float dt);
 	bool update(float dt);
-
-	//Variables
 	
 private:
 
 	float mouseX, mouseY;
+	bool mousePressed;
 	hgeRect *inputBox;
+	Button *doneButton;
+	Slider *musicVolumeSlider, *soundVolumeSlider;
 	int currentInput;
 	float x, y;
 

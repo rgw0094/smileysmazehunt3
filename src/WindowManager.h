@@ -28,7 +28,7 @@ public:
 	bool isGameMenuOpen();
 
 	//Text box methods
-	void openTextBox(char* text, bool hasGraphic, hgeSprite *graphic, int graphicHeight);
+	void openTextBox(char* text, bool hasGraphic, hgeSprite *graphic);
 	void openDialogue(int _npcID, int _textID);
 	void openHint();
 	bool isTextBoxOpen();

@@ -27,15 +27,19 @@ public:
 	//methods
 	void draw(float dt);
 	bool update(float dt);
-	void changeState(int changeTo);
+	bool updateState(float dt);
 	void addFireBall(float x, float y, float angle, float speed);
 	void drawFireBalls(float dt);
 	void updateFireBalls(float dt);
-	void startChasing(int targetChasePoint);
+	void startChasing();
+	void startMoveToPoint(int x, int y, float speed);
+	void doDamage(float damage, bool makeFlash);
+	void die();
+	void setState(int newState);
 	void killOrbs();
 
 	//Variables
-	int state,speed,facing, targetChasePoint;
+	int state, facing, targetChasePoint;
 	int startX, startY;
 	float x, y;
 	float dx,dy;
@@ -48,9 +52,10 @@ public:
 	int alpha;
 	float floatY;
 	bool droppedLoot;
-	float startedPath, pathTime;
-	float timeToGetToChasePoint;
-	float timeStartedChaseSegment;
+
+	float timeToMove;
+	float timeStartedMove;
+	int chaseCounter;
 
 	//Graphics
 	WeaponParticleSystem *fireNova;

@@ -31,7 +31,7 @@ extern float gameTime;
 //States
 #define FIREBOSS_INACTIVE 0
 #define FIREBOSS_CHASE 1
-#define FIREBOSS_MOVE 2
+#define FIREBOSS_RETURN_TO_ATTACK 2
 #define FIREBOSS_ATTACK 3
 #define FIREBOSS_FRIENDLY 4
 
@@ -69,7 +69,6 @@ FireBossTwo::FireBossTwo(int gridX, int gridY, int _groupID) {
 	targetChasePoint = 0;	//Start at the middle location
 	startedAttackMode = gameTime;
 	lastFireBall = gameTime - 5.0f;
-	speed = 200;
 	startedIntroDialogue = false;
 	flashing = increaseAlpha = false;
 	floatY = 0.0f;
@@ -161,6 +160,7 @@ bool FireBossTwo::update(float dt) {
 			windowManager->openDialogue(-1, TEXT_FIREBOSS2_INTRO);
 			startedIntroDialogue = true;
 			soundManager->fadeOutMusic();
+			facing = UP;
 		} else {
 			//Before Phyrebozz is triggered there is no need to update anything!
 			return false;
@@ -168,12 +168,13 @@ bool FireBossTwo::update(float dt) {
 
 	}
 
+	//Update battle state stuff
+	if (updateState(dt)) return true;
+
 	//Activate the boss when the intro dialogue is closed
 	if (state == FIREBOSS_INACTIVE && startedIntroDialogue && !windowManager->isTextBoxOpen()) {
-		startChasing(CHASE_POINT_TOP_LEFT);
-		startedAttackMode = gameTime;
+		setState(FIREBOSS_ATTACK);
 		hge->Effect_Play(resources->GetEffect("snd_fireBossDie"));
-		//Start boxx music
 		soundManager->playMusic("bossMusic");
 	}
 
@@ -204,58 +205,6 @@ bool FireBossTwo::update(float dt) {
 	//Update orbs
 	updateFireBalls(dt);
 
-	/////////// Chase State ////////////
-
-	if (state == FIREBOSS_CHASE) {
-		
-		//Move towards target corner
-		float angle = getAngleBetween(x, y, chasePoints[targetChasePoint].x, chasePoints[targetChasePoint].y);
-		x += CHASE_SPEED * cos(angle) * dt;
-		y += CHASE_SPEED * sin(angle) * dt;
-
-		//Set facing
-		if (targetChasePoint == CHASE_POINT_TOP_RIGHT) facing = RIGHT;
-		if (targetChasePoint == CHASE_POINT_BOTTOM_RIGHT) facing = DOWN;
-		if (targetChasePoint == CHASE_POINT_BOTTOM_LEFT) facing = LEFT;
-		if (targetChasePoint == CHASE_POINT_TOP_LEFT) facing = UP;
-
-		//Periodically launch fireballs at Smiley
-		if (timePassedSince(lastFireBall) > CHASE_FIREBALL_DELAY) {
-			//addFireBall(x, y, getAngleBetween(x, y, thePlayer->x, thePlayer->y) + 
-			//	hge->Random_Float(-(PI/16.0), (PI/16.0)), 800.0);
-			projectileManager->addProjectile(x, y, CHASE_FIREBALL_SPEED, 
-				getAngleBetween(x, y, thePlayer->x, thePlayer->y) + hge->Random_Float(-(PI/16.0), (PI/16.0)),
-				CHASE_FIREBALL_DAMAGE, true, PROJECTILE_FIREBALL, false);
-
-
-			lastFireBall = gameTime;
-		}
-
-		//When he gets to the target corner set his new target to the next corner
-		if (timePassedSince(timeStartedChaseSegment) > timeToGetToChasePoint) {
-			targetChasePoint++;
-			if (targetChasePoint > 3) targetChasePoint = 0;
-			startChasing(targetChasePoint);
-		}
-
-	}
-
-	//Update for ATTACK state
-	if (state == FIREBOSS_ATTACK) {
-		fireNova->MoveTo(getScreenX(x),getScreenY(y+floatY),true);
-		fireNova->Update(dt);
-		if (gameTime > startedAttackMode + 2.0f) {
-			changeState(FIREBOSS_MOVE);
-		}
-	}
-
-	//Shoot fire orbs every 10 seconds
-	/*
-	if (state != FIREBOSS_FRIENDLY && state != FIREBOSS_INACTIVE && gameTime > lastFireBall + 10) {
-		addFireBall(x,y-80+floatY);
-		lastFireBall = gameTime;
-	}*/
-
 	//Update collisionBoxes
 	if (facing == DOWN) {
 		collisionBoxes[0]->Set(x-25,y-80+floatY,x+35,y-45+floatY);
@@ -279,22 +228,13 @@ bool FireBossTwo::update(float dt) {
 	if (state != FIREBOSS_FRIENDLY && !flashing) {
 		for (int i = 0; i < 3; i++) {
 			if (thePlayer->getTongue()->testCollision(collisionBoxes[i]) && timePassedSince(lastHitByTongue) >= 0.5) {
-				resources->GetAnimation("phyrebozzDownMouth")->Play();
-				resources->GetAnimation("phyrebozzLeftMouth")->Play();
-				resources->GetAnimation("phyrebozzRightMouth")->Play();
+				doDamage(thePlayer->getDamage(), true);
 				lastHitByTongue = gameTime;
-				health -= thePlayer->getDamage();
-				if (health > 0.0f) {
-					hge->Effect_Play(resources->GetEffect("snd_fireBossHit"));
-				}
-				//Start flashing
-				flashing = true;
-				startedFlashing = gameTime;
-				alpha = 255;
-				increaseAlpha = false;
 			}
 		}
 	}
+
+//	if (projectileManager->killProjectilesInBox(collisionBoxes[0]
 
 	//Stop flashing after a while
 	if (flashing && timePassedSince(startedFlashing) > FLASH_DURATION) {
@@ -311,31 +251,22 @@ bool FireBossTwo::update(float dt) {
 		for (int i = 0; i < 3; i++) {
 			if (thePlayer->collisionCircle->testBox(collisionBoxes[i])) {
 				thePlayer->dealDamageAndKnockback(0.25, true, 150, x, y);
+				//If chasing smiley, leave chase state after running into him
+				if (state == FIREBOSS_CHASE) {
+					state = FIREBOSS_RETURN_TO_ATTACK;
+					startMoveToPoint(startX*64+32,startY*64+32, 300);
+				}
 			}
 		}
 	}
 
 	///////////////// Death Stuff /////////////////
-
-	//Die
-	if (health <= 0.0f && state != FIREBOSS_FRIENDLY) {
-		hge->Effect_Play(resources->GetEffect("snd_fireBossDie"));
-		health = 0.0f;
-		state = FIREBOSS_FRIENDLY;
-		killOrbs();
-		windowManager->openDialogue(-1, TEXT_FIREBOSS2_VICTORY);	
-		facing = DOWN;
-		alpha = 255;
-		saveManager->killedBoss[FIRE_BOSS2-240] = true;
-		enemyGroupManager->notifyOfDeath(groupID);
-		soundManager->fadeOutMusic();
-	}
 	
 	//After you beat the boss he runs away!!
 	if (state == FIREBOSS_FRIENDLY && !windowManager->isTextBoxOpen()) {
 		//Drop fire breath
 		if (!droppedLoot) {
-			lootManager->addLoot(LOOT_NEW_ABILITY, startX*64.0+32.0, startY*64.0+32.0, FIRE_BREATH);
+			lootManager->addLoot(LOOT_NEW_ABILITY, startX*64.0+32.0, startY*64.0+32.0, WATER_BOOTS);
 			droppedLoot = true;
 		}
 		x += 200.0f*dt;
@@ -347,7 +278,7 @@ bool FireBossTwo::update(float dt) {
 
 		//Done running away
 		if (alpha < 0.0f) {
-			soundManager->playMusic("smolderHollowMusic");
+			soundManager->playPreviousMusic();
 			return true;
 		}
 	}
@@ -356,39 +287,168 @@ bool FireBossTwo::update(float dt) {
 }
 
 /**
- * Sets the fire boss to move towards the target chase point.
+ * Updates stuff based on phyrebozz' current state
  */
-void FireBossTwo::startChasing(int _targetChasePoint) {
-	state = FIREBOSS_CHASE;
-	targetChasePoint = _targetChasePoint;
-	timeStartedChaseSegment = gameTime;
-	speed = 0.0;
-	timeToGetToChasePoint = distance(x, y, chasePoints[targetChasePoint].x, 
-		chasePoints[targetChasePoint].y) / CHASE_SPEED;
+bool FireBossTwo::updateState(float dt) {
+
+	//---Chase State---------------------------------
+	// Phyrebozz chases smiley around the pool
+	//-----------------------------------------------
+	if (state == FIREBOSS_CHASE) {
+				
+		//Periodically launch fireballs at Smiley
+		if (timePassedSince(lastFireBall) > CHASE_FIREBALL_DELAY) {
+			projectileManager->addProjectile(x, y, CHASE_FIREBALL_SPEED, 
+				getAngleBetween(x, y, thePlayer->x, thePlayer->y) + hge->Random_Float(-(PI/16.0), (PI/16.0)),
+				CHASE_FIREBALL_DAMAGE, true, PROJECTILE_FIREBALL, false);
+			lastFireBall = gameTime;
+		}
+
+		//When he gets to the target corner set his new target to the next corner
+		if (timePassedSince(timeStartedMove) > timeToMove) {
+			//When a new chase point is reached start moving towards the next one
+			chaseCounter++;
+			if (chaseCounter > 5) {
+				//Stop chasing smiley after a while
+				state = FIREBOSS_RETURN_TO_ATTACK;
+				startMoveToPoint(startX*64 + 32, startY*64 + 32, 300.0);
+			} else {
+				targetChasePoint++;
+				if (targetChasePoint > 3) targetChasePoint = 0;
+				startMoveToPoint(chasePoints[targetChasePoint].x, chasePoints[targetChasePoint].y, CHASE_SPEED);
+			}
+		}
+
+	}
+
+	//---Return to Attack State----------------------
+	//Intermediate state where phyrebozz is moving from chase to attack
+	//-----------------------------------------------
+	if (state == FIREBOSS_RETURN_TO_ATTACK) {
+		if (timePassedSince(timeStartedMove) > timeToMove) {
+			setState(FIREBOSS_ATTACK);
+			dx = dy = 0;
+		}
+	}
+
+	//---Attack State--------------------------------
+	// Phyrebozz launches various attacks at Smiley while floating over his pool.
+	//-----------------------------------------------
+	if (state == FIREBOSS_ATTACK) {
+		dx = 250 * cos(timePassedSince(startedAttackMode));
+
+		if (timePassedSince(lastFireBall) > 2.0) {
+			addFireBall(x, y, getAngleBetween(x, y, thePlayer->x, thePlayer->y), 400.0);
+			lastFireBall = gameTime;
+		}
+
+		if (timePassedSince(startedAttackMode) > 8.0) {
+			startChasing();
+		}
+
+	}
+	
+	//Set facing
+	if (state == FIREBOSS_ATTACK) {
+		facing = thePlayer->y < y ? UP : DOWN;
+	} else {
+		facing = getFacingDirection(dx, dy);
+	}
+
+	//Move
+	x += dx * dt;
+	y += dy * dt;
+
+	return false;
 }
 
+/** 
+ * Changes Phyrebozz' state. Handles state transition stuff.
+ */
+void FireBossTwo::setState(int newState) {
+	state = newState;
 
-void FireBossTwo::changeState(int changeTo) {
-	
-	state = changeTo;
-
-	//Switch to attack
-	if (state == FIREBOSS_ATTACK) {
+	if (newState == FIREBOSS_ATTACK) {
 		startedAttackMode = gameTime;
-		fireNova->FireAt(getScreenX(x),getScreenY(y));
-		hge->Effect_Play(resources->GetEffect("snd_fireBossNova"));
-	
-	//Switch from attack to move
-	} else if (state == FIREBOSS_MOVE) {
-		//Pick a new location to move to
-		int newLoc;
-		while ((newLoc = hge->Random_Int(0,4)) == targetChasePoint) { }
-		targetChasePoint = newLoc;
-		//Calculate path time
-		startedPath = gameTime;
-		pathTime = sqrt((x-(float)chasePoints[targetChasePoint].x)*(x-(float)chasePoints[targetChasePoint].x) + (y-(float)chasePoints[targetChasePoint].y)*(y-(float)chasePoints[targetChasePoint].y)) / float(speed);
 	}
 }
+
+/**
+ * Deals damage and does hit animation.
+ */
+void FireBossTwo::doDamage(float damage, bool makeFlash) {
+	
+	if (makeFlash && flashing) return;
+
+	resources->GetAnimation("phyrebozzDownMouth")->Play();
+	resources->GetAnimation("phyrebozzLeftMouth")->Play();
+	resources->GetAnimation("phyrebozzRightMouth")->Play();
+	health -= damage;
+	
+	if (health < 0.0) {
+		die();
+	} else {
+		//Start flashing
+		if (makeFlash) {
+			flashing = true;
+			startedFlashing = gameTime;
+			alpha = 255;
+			increaseAlpha = false;
+		}
+		hge->Effect_Play(resources->GetEffect("snd_fireBossHit"));
+	}
+
+}
+
+/**
+ * Called when Phyrebozz is killed.
+ */
+void FireBossTwo::die() {
+	hge->Effect_Play(resources->GetEffect("snd_fireBossDie"));
+	health = 0.0f;
+	state = FIREBOSS_FRIENDLY;
+	killOrbs();
+	windowManager->openDialogue(-1, TEXT_FIREBOSS2_VICTORY);	
+	facing = DOWN;
+	alpha = 255;
+	saveManager->killBoss(FIRE_BOSS2);
+	enemyGroupManager->notifyOfDeath(groupID);
+	soundManager->fadeOutMusic();
+}
+
+/**
+ * Sets the fire boss to move towards the target chase point.
+ */
+void FireBossTwo::startChasing() {
+	
+	chaseCounter = 0;
+	state = FIREBOSS_CHASE;
+
+	//Determine the chase point closest to Smiley to start at
+	int dist1 = distance(thePlayer->x, thePlayer->y, chasePoints[CHASE_POINT_TOP_LEFT].x, chasePoints[CHASE_POINT_TOP_LEFT].y);
+	int dist2 = distance(thePlayer->x, thePlayer->y, chasePoints[CHASE_POINT_TOP_RIGHT].x, chasePoints[CHASE_POINT_TOP_RIGHT].y);
+	int dist3 = distance(thePlayer->x, thePlayer->y, chasePoints[CHASE_POINT_BOTTOM_LEFT].x, chasePoints[CHASE_POINT_BOTTOM_LEFT].y);
+	int dist4 = distance(thePlayer->x, thePlayer->y, chasePoints[CHASE_POINT_BOTTOM_RIGHT].x, chasePoints[CHASE_POINT_BOTTOM_RIGHT].y);
+
+	if (dist1 < dist2 && dist1 < dist3 && dist1 < dist4) targetChasePoint = CHASE_POINT_TOP_LEFT;
+	if (dist2 < dist1 && dist2 < dist3 && dist2 < dist4) targetChasePoint = CHASE_POINT_TOP_RIGHT;
+	if (dist3 < dist1 && dist3 < dist2 && dist3 < dist4) targetChasePoint = CHASE_POINT_BOTTOM_LEFT;
+	if (dist4 < dist1 && dist4 < dist2 && dist4 < dist3) targetChasePoint = CHASE_POINT_BOTTOM_RIGHT;
+	
+	startMoveToPoint(chasePoints[targetChasePoint].x, chasePoints[targetChasePoint].y, CHASE_SPEED);
+}
+
+/**
+ * Starts phyrebozz moving toward a point at the specified speed.
+ */ 
+void FireBossTwo::startMoveToPoint(int _x, int _y, float speed) {
+	timeStartedMove = gameTime;
+	timeToMove = distance(x, y, _x, _y) / speed;
+	float angle = getAngleBetween(x, y, _x, _y);
+	dx = speed * cos(angle);
+	dy = speed * sin(angle);
+}
+
 
 /**
  * Update the fire orbs
@@ -454,6 +514,7 @@ void FireBossTwo::drawFireBalls(float dt) {
  * Add a fire orb
  */
 void FireBossTwo::addFireBall(float x, float y, float angle, float speed) {
+	
 	//Create new fire orb
 	FireBall newFireBall;
 	newFireBall.x = x;

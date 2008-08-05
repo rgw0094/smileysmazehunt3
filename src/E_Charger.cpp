@@ -10,6 +10,7 @@
 #include "player.h"
 #include "environment.h"
 #include "smiley.h"
+#include "tongue.h"
 
 extern HGE *hge;
 extern hgeResourceManager *resources;
@@ -25,6 +26,7 @@ extern float gameTime;
 #define CHARGE_DELAY 2.0
 
 //Charge states
+#define CHARGE_STATE_PAUSE 1
 #define CHARGE_STATE_CHARGING 0
 #define CHARGE_STATE_NOT_CHARGING 2
 
@@ -60,6 +62,33 @@ void E_Charger::draw(float dt) {
 }
 
 /**
+ * Overrides the tongue collision method so that the charger's charge can
+ * be interrupted because otherwise these enemies are a pain in the ass.
+ */
+bool E_Charger::doTongueCollision(Tongue *tongue, float damage) {
+	
+	//Check collision
+	if (tongue->testCollision(collisionBox)) {
+			
+		//Make sure the enemy wasn't already hit by this attack
+		if (timePassedSince(lastHitByWeapon) > .5) {
+			lastHitByWeapon = gameTime;
+			dealDamageAndKnockback(damage, 65.0, thePlayer->x, thePlayer->y);
+			startFlashing();
+			//If charging, stop
+			if (chargeState == CHARGE_STATE_CHARGING) {
+				chargeState = CHARGE_STATE_NOT_CHARGING;
+				setState(new ES_Wander(this));
+			}
+			return true;
+		}
+
+	}
+
+	return false;
+}
+
+/**
  * Updates the charging enemy. Called every frame automatically by the framework.
  */ 
 void E_Charger::update(float dt) {
@@ -71,12 +100,23 @@ void E_Charger::update(float dt) {
 				timePassedSince(timeStartedCharging + CHARGE_DURATION) > CHARGE_DELAY
 				&& theEnvironment->validPath(x, y, thePlayer->x, thePlayer->y, 16, canPass)) {
 
+			chargeState = CHARGE_STATE_PAUSE;
+			timeStartedCharging = gameTime;
+			setFacingPlayer();
+			setState(NULL);
+			dx = dy = 0;
+
+		}
+
+	} else if (chargeState == CHARGE_STATE_PAUSE) {
+
+		//Start charging after a short pause.
+		if (timePassedSince(timeStartedCharging) > 0.5) {
 			timeStartedCharging = gameTime;
 			chargeAngle = getAngleBetween(x, y, thePlayer->x, thePlayer->y);
 
 			//Update state
 			chargeState = CHARGE_STATE_CHARGING;
-			setState(NULL);
 
 		}
 
@@ -105,12 +145,3 @@ void E_Charger::update(float dt) {
 	move(dt);
 
 }
-
-
-
-
-
-
-
-
-

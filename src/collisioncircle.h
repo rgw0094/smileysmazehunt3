@@ -1,9 +1,10 @@
 #ifndef _COLLISIONCIRCLE_H_
 #define _COLLISIONCIRCLE_H_
 
-#include "smiley.h"
-#include "environment.h"
-#include "enemy.h"
+#include <list>
+#include "hgevector.h"
+
+class hgeRect;
 
 class CollisionCircle {
 

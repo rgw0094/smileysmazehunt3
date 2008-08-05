@@ -64,9 +64,7 @@ bool ChangeManager::removeChange(int area, int x, int y) {
  * Adds a new change to the list.
  */
 void ChangeManager::addChange(int area, int x, int y) {
-	
-	hge->System_Log("Adding change at (%d, %d) in area %d", x, y, area);
-	
+		
 	Change newChange;
 	newChange.area = area;
 	newChange.x = x;

@@ -21,7 +21,6 @@ extern SaveManager *saveManager;
 extern NPCManager *npcManager;
 extern HGE *hge;
 extern Player *thePlayer;
-extern hgeSprite *npcSprites[NUM_NPCS][4];
 extern hgeSprite* abilitySprites[NUM_ABILITIES];
 extern hgeResourceManager *resources;
 extern Input *input;
@@ -85,6 +84,8 @@ void TextBox::setDialogue(int _npcID, int _textID) {
 	npcID = _npcID;
 	textID = _textID;
 
+	graphic = new hgeSprite(resources->GetTexture("npcTx"),0,npcID*64.0, 64,64);
+
 	//After Smiley gets the cane, Bill Clinton needs new dialogue
 	if (npcID == BILL_CLINTON && saveManager->hasAbility[CANE]) {
 		textID = BILL_CLINTON_TEXT2;
@@ -99,7 +100,6 @@ void TextBox::setDialogue(int _npcID, int _textID) {
 	
 
 	hasGraphic = true;
-	graphicHeight = 64;
 
 }
 
@@ -114,7 +114,7 @@ void TextBox::setHint() {
 	soundManager->playMusic("hintMusic");
 
 	npcID = BILL_CLINTON;
-	textID = saveManager->currentHint;
+	textID = getCurrentHint();
 	paramString = "Hint";
 	paramString = paramString + intToString(textID) + "Pages";
 	numPages = atoi(gameData->getGameText(paramString.c_str()));
@@ -122,7 +122,6 @@ void TextBox::setHint() {
 	strcpy(text, "-");
 	fadeAlpha = 0.0;
 	hasGraphic = true;
-	graphicHeight = 64;
 
 	//Set distortion mesh for psychedelic background
 	distortion =new hgeDistortionMesh(PSYCHEDELIC_GRANULARITY, PSYCHEDELIC_GRANULARITY);
@@ -143,14 +142,13 @@ void TextBox::setHint() {
 /**
  * Intializes a text box for non-dialogue purposes.
  */
-void TextBox::set(char* _text, bool _hasGraphic, hgeSprite *_graphic, int _graphicHeight) {
+void TextBox::set(char* _text, bool _hasGraphic, hgeSprite *_graphic) {
 
 	textBoxType = TYPE_NORMAL;
 	init();
 
 	strcpy(text, _text);
 	hasGraphic = _hasGraphic;
-	graphicHeight = _graphicHeight;
 	if (hasGraphic) {
 		graphic = _graphic;
 		graphic->GetHotSpot(&oldHotSpotX, &oldHotSpotY);
@@ -159,6 +157,8 @@ void TextBox::set(char* _text, bool _hasGraphic, hgeSprite *_graphic, int _graph
 	numPages = currentPage = 1;
 
 }
+
+void s
 
 /**
  * Draws the text box if it is open.
@@ -173,7 +173,7 @@ void TextBox::draw(float dt) {
 		resources->GetAnimation("player")->Render(512,384);
 		resources->GetSprite("textBox")->Render(x,y);
 
-		npcSprites[BILL_CLINTON][DOWN]->Render(x+60, y+50);
+		//npcSprites[BILL_CLINTON][DOWN]->Render(x+60, y+50);
 		resources->GetFont("textBoxNameFnt")->printf(x + 220, y+20, HGETEXT_CENTER, "%s", "Bill Clinton");
 
 		//Print the current page of the hint
@@ -197,7 +197,7 @@ void TextBox::draw(float dt) {
 		if (npcID == -1) {
 			
 		} else {
-			npcSprites[npcID][DOWN]->Render(x+60, y+50);
+			//npcSprites[npcID][DOWN]->Render(x+60, y+50);
 		}
 		paramString = "NPC";
 		paramString = paramString + intToString(textID) + "Name";
@@ -222,7 +222,7 @@ void TextBox::draw(float dt) {
 	
 		if (hasGraphic && textBoxType == TYPE_NORMAL) {
 			graphic->Render(x+180,y+20);
-			resources->GetFont("textBoxFnt")->printfb(x + 20, y + 25 + graphicHeight, 360, 200 - graphicHeight, HGETEXT_CENTER, "%s", text);
+			resources->GetFont("textBoxFnt")->printfb(x + 20, y + 25 + 64, 360, 200 - 64, HGETEXT_CENTER, "%s", text);
 		} else {
 			resources->GetFont("textBoxFnt")->printfb(x + 20, y + 20, 360, 210, HGETEXT_CENTER, "%s", text);
 		
@@ -293,7 +293,7 @@ bool TextBox::update(float dt) {
 			} else if (textBoxType == TYPE_DIALOG && npcID == BILL_CLINTON && !saveManager->hasAbility[CANE]) {
 				saveManager->hasAbility[CANE] = true;
 				thePlayer->selectedAbility = CANE;
-				set(gameData->getGameText("GotCane"), true, abilitySprites[CANE], 64);
+				set(gameData->getGameText("GotCane"), true, abilitySprites[CANE]);
 				return true;
 			
 			//Close hint box by fading out psychedelic background
@@ -331,7 +331,7 @@ bool TextBox::doFadeOut(float dt) {
 	resources->GetFont("textBoxDialogFnt")->SetColor(ARGB(fadeAlpha,0,0,0));
 	resources->GetSprite("okIcon")->SetColor(ARGB(fadeAlpha,255,255,255));
 	resources->GetSprite("arrowIcon")->SetColor(ARGB(fadeAlpha,255,255,255));
-	npcSprites[BILL_CLINTON][DOWN]->SetColor(ARGB(fadeAlpha,255,255,255));
+	//npcSprites[BILL_CLINTON][DOWN]->SetColor(ARGB(fadeAlpha,255,255,255));
 	for (int i = 0; i < PSYCHEDELIC_GRANULARITY; i++) {
 		for(int j = 0; j < PSYCHEDELIC_GRANULARITY; j++) {
 			distortion->SetColor(i, j, ARGB(fadeAlpha, 0, 0, 0));
@@ -346,7 +346,7 @@ bool TextBox::doFadeOut(float dt) {
 		resources->GetFont("textBoxDialogFnt")->SetColor(ARGB(255,0,0,0));
 		resources->GetSprite("okIcon")->SetColor(ARGB(255,255,255,255));
 		resources->GetSprite("arrowIcon")->SetColor(ARGB(255,255,255,255));
-		npcSprites[BILL_CLINTON][DOWN]->SetColor(ARGB(255,255,255,255));
+		//npcSprites[BILL_CLINTON][DOWN]->SetColor(ARGB(255,255,255,255));
 		soundManager->playPreviousMusic();
 		return false;
 	}

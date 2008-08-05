@@ -1,3 +1,4 @@
+#include "smiley.h"
 #include "hgeresource.h"
 #include "MushroomBoss.h"
 #include "EnemyGroupManager.h"
@@ -10,6 +11,8 @@
 #include "SaveManager.h"
 #include "SoundManager.h"
 #include "WindowManager.h"
+#include "weaponparticle.h"
+#include "collisioncircle.h"
 
 extern HGE *hge;
 extern WindowManager *windowManager;
@@ -200,7 +203,7 @@ bool MushroomBoss::update(float dt) {
 		if (!droppedLoot) {
 			lootManager->addLoot(LOOT_NEW_ABILITY, x, y, SILLY_PAD);
 			droppedLoot = true;
-			saveManager->killedBoss[MUSHROOM_BOSS-240] = true;
+			saveManager->killBoss(MUSHROOM_BOSS);
 			enemyGroupManager->notifyOfDeath(groupID);
 			soundManager->playMusic("forestMusic");
 		}
@@ -484,8 +487,6 @@ void MushroomBoss::addBomb(float _x,float _y) {
 	k1 = y1 - PARABOLA_HEIGHT;
 	k2 = y2 - PARABOLA_HEIGHT;
 	newBomb.k = min(k1,k2); //whichever one is higher becomes our k
-
-	hge->System_Log("(x1,y1),(x2,y2): (%f,%f),(%f,%f)",x1,y1,x2,y2);
 
 	//Now for some really gay algebra. We have two points and the y coordinate of our vertex.
 	//Solving for h requires the quadratic equation. So, that's what the a,b, and c are below.

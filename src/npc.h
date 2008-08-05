@@ -2,6 +2,7 @@
 #define _NPC_H_
 
 class hgeRect;
+class hgeSprite;
 
 //Stages
 #define WALK_STAGE 0
@@ -30,6 +31,7 @@ public:
 	float stageLength;			//How long the next stage should last		
 	bool inConversation;		//If the NPC is in conversation with the player
 	hgeRect *collisionBox, *futureCollisionBox, *futureCollisionBox2;
+	hgeSprite *sprites[4];
 
 };
 

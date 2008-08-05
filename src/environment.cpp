@@ -6,8 +6,6 @@
 #include "SaveManager.h"
 #include "player.h"
 #include "collisioncircle.h"
-#include "inventory.h"
-#include "textbox.h"
 #include "npcmanager.h"
 #include "minimenu.h"
 #include "boss.h"
@@ -24,7 +22,11 @@
 #include "WeaponParticle.h"
 #include "TapestryManager.h"
 #include "ChangeManager.h"
+<<<<<<< .mine
+#include "enemy.h"
+=======
 #include "Smilelet.h"
+>>>>>>> .r298
 
 #include <string>
 #include <sstream>
@@ -56,9 +58,6 @@ extern SoundManager *soundManager;
 extern GameData *gameData;
 extern LoadEffectManager *loadEffectManager;
 
-//Textures
-extern HTEXTURE animationTexture, sillyPadTexture;
-
 //Sprites
 extern hgeSprite *itemLayer[256], *mainLayer[256], *walkLayer[256], *abilitySprites[NUM_ABILITIES];
 
@@ -72,35 +71,35 @@ Environment::Environment() {
 	resources->GetParticleSystem("fountain")->Fire();
 
 	//Load animations
-	silverCylinder = new hgeAnimation(animationTexture,5,20,0,3*64,64,64);
+	silverCylinder = new hgeAnimation(resources->GetTexture("animations"),5,20,0,3*64,64,64);
 	silverCylinder->SetMode(HGEANIM_REV);
 	silverCylinder->Play();
-	brownCylinder = new hgeAnimation(animationTexture,5,20,0,4*64,64,64);
+	brownCylinder = new hgeAnimation(resources->GetTexture("animations"),5,20,0,4*64,64,64);
 	brownCylinder->SetMode(HGEANIM_REV);
 	brownCylinder->Play();
-	blueCylinder = new hgeAnimation(animationTexture,5,20,0,5*64,64,64);
+	blueCylinder = new hgeAnimation(resources->GetTexture("animations"),5,20,0,5*64,64,64);
 	blueCylinder->SetMode(HGEANIM_REV);
 	blueCylinder->Play();
-	greenCylinder = new hgeAnimation(animationTexture,5,20,0,6*64,64,64);
+	greenCylinder = new hgeAnimation(resources->GetTexture("animations"),5,20,0,6*64,64,64);
 	greenCylinder->SetMode(HGEANIM_REV);
 	greenCylinder->Play();
-	yellowCylinder = new hgeAnimation(animationTexture,5,20,0,7*64,64,64);
+	yellowCylinder = new hgeAnimation(resources->GetTexture("animations"),5,20,0,7*64,64,64);
 	yellowCylinder->SetMode(HGEANIM_REV);
 	yellowCylinder->Play();
-	whiteCylinder = new hgeAnimation(animationTexture,5,20,0,8*64,64,64);
+	whiteCylinder = new hgeAnimation(resources->GetTexture("animations"),5,20,0,8*64,64,64);
 	whiteCylinder->SetMode(HGEANIM_REV);
 	whiteCylinder->Play();
-	silverCylinderRev = new hgeAnimation(animationTexture,5,20,0,3*64,64,64);
+	silverCylinderRev = new hgeAnimation(resources->GetTexture("animations"),5,20,0,3*64,64,64);
 	silverCylinderRev->SetMode(HGEANIM_FWD);
-	brownCylinderRev = new hgeAnimation(animationTexture,5,20,0,4*64,64,64);
+	brownCylinderRev = new hgeAnimation(resources->GetTexture("animations"),5,20,0,4*64,64,64);
 	brownCylinderRev->SetMode(HGEANIM_FWD);
-	blueCylinderRev = new hgeAnimation(animationTexture,5,20,0,5*64,64,64);
+	blueCylinderRev = new hgeAnimation(resources->GetTexture("animations"),5,20,0,5*64,64,64);
 	blueCylinderRev->SetMode(HGEANIM_FWD);
-	greenCylinderRev = new hgeAnimation(animationTexture,5,20,0,6*64,64,64);
+	greenCylinderRev = new hgeAnimation(resources->GetTexture("animations"),5,20,0,6*64,64,64);
 	greenCylinderRev->SetMode(HGEANIM_FWD);
-	yellowCylinderRev = new hgeAnimation(animationTexture,5,20,0,7*64,64,64);
+	yellowCylinderRev = new hgeAnimation(resources->GetTexture("animations"),5,20,0,7*64,64,64);
 	yellowCylinderRev->SetMode(HGEANIM_FWD);
-	whiteCylinderRev = new hgeAnimation(animationTexture,5,20,0,8*64,64,64);
+	whiteCylinderRev = new hgeAnimation(resources->GetTexture("animations"),5,20,0,8*64,64,64);
 	whiteCylinderRev->SetMode(HGEANIM_FWD);
 
 	//Manager for special tiles
@@ -310,7 +309,6 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 			//Ice blocks
 			if (collision[col][row] == FIRE_DESTROY) {
 				specialTileManager->addIceBlock(col, row);
-				hge->System_Log("adding ice block to %d %d", col, row);
 			}
 
 			//Mushrooms
@@ -384,7 +382,7 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 			if (enemy >= 240) {
 
 				//Spawn the boss if it has never been killed
-				if (!saveManager->killedBoss[enemy-240]) {
+				if (!saveManager->isBossKilled(enemy)) {
 					bossManager->spawnBoss(enemy, variable[col][row], col, row);
 				}
 
@@ -512,6 +510,8 @@ void Environment::draw(float dt) {
 				int theTerrain = terrain[i+xGridOffset][j+yGridOffset];
 				if (theTerrain > 0 && theTerrain < 256) {
 					mainLayer[theTerrain]->Render(drawX,drawY);
+				} else {
+					resources->GetSprite("blackScreen")->RenderStretch(drawX, drawY, drawX+64, drawY+64);
 				}
 
 				//Collision
@@ -624,6 +624,8 @@ void Environment::draw(float dt) {
 					}
 				}
 			
+			} else {
+				resources->GetSprite("blackScreen")->RenderStretch(drawX, drawY, drawX+64, drawY+64);
 			}
 		}
 	}
@@ -1399,7 +1401,7 @@ bool Environment::hitSigns(Tongue *tongue) {
 				if (tongue->testCollision(collisionBox)) {
 					paramString = "Sign";
 					paramString += intToString(ids[i][j]);
-					windowManager->openTextBox(gameData->getGameText(paramString.c_str()), false, NULL, 64);
+					windowManager->openTextBox(gameData->getGameText(paramString.c_str()), false, NULL);
 					return true;
 				}
 			}
