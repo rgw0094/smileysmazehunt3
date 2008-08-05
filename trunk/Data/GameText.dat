@@ -336,8 +336,11 @@ NPC151-1 = "Oh dear, I've been defeated."
 
 ;Phyrebozz Round 2
 NPC160Name = "Load Phyrebozz"
-NPC160Pages = "1"
-NPC160-1 = "MARK DICKENSON"
+NPC160Pages = "4"
+NPC160-1 = "You again! I must warn you, I remembered my vitamins this morning. Furthermore, I have acquired a powerful artifact."
+NPC160-2 = "Indeed, I have located the long lost Sandals of Jesus. I hear they give you the power to walk on water."
+NPC160-3 = "However, I'm afraid I cannot let them fall into your hands, as that would allow you to reach me while I'm strategically placed over water."
+NPC160-4 = "Perhaps if you find a way to slay me I will 'drop' the sandals and you can gain their power. I think that's how these things usually go."
 NPC161Name = "Load Phyrebozz"
 NPC161Pages = "1"
 NPC161-1 = "Gwwaaarrghhh (Dickens)"
