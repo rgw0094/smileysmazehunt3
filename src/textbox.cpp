@@ -158,7 +158,6 @@ void TextBox::set(char* _text, bool _hasGraphic, hgeSprite *_graphic) {
 
 }
 
-void s
 
 /**
  * Draws the text box if it is open.

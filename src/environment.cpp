@@ -22,11 +22,8 @@
 #include "WeaponParticle.h"
 #include "TapestryManager.h"
 #include "ChangeManager.h"
-<<<<<<< .mine
 #include "enemy.h"
-=======
 #include "Smilelet.h"
->>>>>>> .r298
 
 #include <string>
 #include <sstream>
