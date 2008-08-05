@@ -1499,6 +1499,13 @@ bool Environment::isDeepWaterAt(int x, int y) {
 }
 
 /**
+ * Returns whether or not there is a SMILELET FLOWER at grid (x,y)
+ */
+bool Environment::isSadSmileletFlowerAt(int x,int y) {
+	return (collision[x][y] == SMILELET_FLOWER_SAD);
+}
+
+/**
  * Returns whether or not there is shallow water of any kind at grid (x,y)
  */ 
 bool Environment::isShallowWaterAt(int x, int y) {
