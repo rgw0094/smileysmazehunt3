@@ -3,6 +3,7 @@
  * Kevin
 
 === Programming To Do ===
+ * Refactor text box
  * When enemy graphics overlap draw them so that the lower enemy on the screen is on top
  * Finish Phyrebozz 2
  * Lovecraftian Boss
@@ -13,7 +14,6 @@
  * Better Ranged enemy AI to make it less gay
  * Tentacles are too easy right now.  Change their movement pattern?
  * Have Fenwar make more appearances than just in Smolder Hollow and the end
- * Fix the spikey moving walls
  * Make the fountain heal you
  * Make not just switches but moving cylinders/mirrors/arrows make a noise.  That way if a far off switch is activating them they don't move silently.  We still need to have the sounds be dependent on how far Smiley is from them though since otherwise levels would just be constant switch-activation noises due to the turrets.
  * Finish Smilelet framework.
@@ -25,7 +25,6 @@
  * You can still walk diagonally between two arrow blocks.
  * Fix random graphical errors:  bottom of fountain drawn on top of life bar, sometimes the changing area black circle isn't colored black outside of the circle, sometimes it draws the headboss life meter on top of yours after you drown... etc.
  * When using fire on the shore of deep water, if you immediately (through the inventory) put on Jesus' Sandals and walk on the water the flame breath will continue to be used long enough to hit ice blocks that should be out of reach.
- * When shrunk, you can drown if you walk down into water.
 
 === Graphics To Do ===
  * Mirror switch graphic 	 
@@ -35,6 +34,8 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Bug Fix: drowning while shrunk||8/5/08||RGW||
+||More enjoyable ranged/charger AI||8/5/08||RGW||
 ||Options menu||8/5/08||RGW||
 ||Slider UI class||8/5/08||RGW||
 ||Smilelet graphics||8/1/08||ETI||
