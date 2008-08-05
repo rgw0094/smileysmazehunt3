@@ -64,12 +64,11 @@ public:
 	Tongue *getTongue();
 
 	//variables
-	float scale,hoverScale,shrinkScale;	//Scales to draw smiley
+	float scale,hoverScale,shrinkScale;		//Scales to draw smiley
 	float rotation;							//Smiley's sprite rotation angle in radians
 	float radius;
 	int facing;								//Direction Smiley is facing
 	float x, y;								//Global coordinates
-	float lastX, lastY;						//Last frame's x and y
 	int baseX, baseY;						//The coordinate of the center of smiley's shadow
 	int baseGridX, baseGridY;				//The grid coordinate of the center of smiley's shadow
 	int gridX,gridY;						//Global grid coordinates
@@ -85,7 +84,7 @@ public:
 	float speedModifier;
 	int startedFallingX;					//X position where the player started falling
 	int startedFallingY;					//Y position where the player started falling
-	int enteredWaterX, int enteredWaterY;	//Grid position the player was on before entering water
+	int enteredWaterX, enteredWaterY;		//Grid position the player was on before entering water
 	int enteredSpringX, enteredSpringY;
 	float hoveringYOffset;					//Y Offset for player sprite while hovering
 	int startSpringX, startSpringY;
@@ -96,6 +95,20 @@ public:
 	float mouthXOffset[8];
 	float mouthYOffset[8];
 
+	bool invincible;
+
+	//Graphics
+	WeaponParticleSystem *fireBreathParticle;
+	WeaponParticleSystem *iceBreathParticle;
+
+private:
+
+	float health;
+	
+	float timeFrozen, freezeDuration;
+	float springVelocity;
+	Tongue *tongue;
+	
 	//Time variables
 	float startedFlashing;
 	float startedKnockBack;
@@ -119,6 +132,8 @@ public:
 	float timeInShrinkTunnel;		//Time to take to go through the shrink tunnel
 	float timeStartedHovering;
 
+<<<<<<< .mine
+=======
 	//Graphics
 	WeaponParticleSystem *fireBreathParticle;
 	WeaponParticleSystem *iceBreathParticle;
@@ -132,6 +147,7 @@ private:
 	Tongue *tongue;
 	Worm *worm;
 	
+>>>>>>> .r298
 	//State info
 	bool breathingFire;				//If using Fire Breath ability
 	bool breathingIce;				//If using Ice Breath ability

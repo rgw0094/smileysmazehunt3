@@ -1,4 +1,5 @@
 #include "smiley.h"
+#include "environment.h"
 #include "projectiles.h"
 #include "player.h"
 #include "hgeresource.h"
@@ -79,8 +80,11 @@ void ProjectileManager::addProjectile(float x, float y, float speed, float angle
 		newProjectile.particle->Fire();
 	}
 
+<<<<<<< .mine
+=======
 	//hge->System_Log("Adding Projectile %d", newProjectile.id);
 
+>>>>>>> .r298
 	//Add it to the list
 	theProjectiles.push_back(newProjectile);
 

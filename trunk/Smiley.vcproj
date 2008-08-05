@@ -109,55 +109,13 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<Filter
-				Name="enemy"
+				Name="EnemyFramework"
 				Filter="">
 				<File
 					RelativePath=".\src\BaseEnemy.cpp">
 				</File>
 				<File
 					RelativePath=".\src\DefaultEnemy.cpp">
-				</File>
-				<File
-					RelativePath=".\src\E_BatletDist.cpp">
-				</File>
-				<File
-					RelativePath=".\src\E_BombGenerator.cpp">
-				</File>
-				<File
-					RelativePath=".\src\E_Buzzard.cpp">
-				</File>
-				<File
-					RelativePath=".\src\E_Charger.cpp">
-				</File>
-				<File
-					RelativePath=".\src\E_ClownCrab.cpp">
-				</File>
-				<File
-					RelativePath=".\src\E_EvilEye.cpp">
-				</File>
-				<File
-					RelativePath=".\src\E_Fake.cpp">
-				</File>
-				<File
-					RelativePath=".\src\E_Flailer.cpp">
-				</File>
-				<File
-					RelativePath=".\src\E_Floater.cpp">
-				</File>
-				<File
-					RelativePath=".\src\E_Ghost.cpp">
-				</File>
-				<File
-					RelativePath=".\src\E_Gumdrop.cpp">
-				</File>
-				<File
-					RelativePath=".\src\E_SadShooter.cpp">
-				</File>
-				<File
-					RelativePath=".\src\E_Tentacle.cpp">
-				</File>
-				<File
-					RelativePath=".\src\E_Turret.cpp">
 				</File>
 				<File
 					RelativePath=".\src\EnemyGroupManager.cpp">
@@ -174,6 +132,55 @@
 				<File
 					RelativePath=".\src\ES_Wander.cpp">
 				</File>
+				<Filter
+					Name="enemies"
+					Filter="">
+					<File
+						RelativePath=".\src\E_BatletDist.cpp">
+					</File>
+					<File
+						RelativePath=".\src\E_BombGenerator.cpp">
+					</File>
+					<File
+						RelativePath=".\src\E_Buzzard.cpp">
+					</File>
+					<File
+						RelativePath=".\src\E_Charger.cpp">
+					</File>
+					<File
+						RelativePath=".\src\E_ClownCrab.cpp">
+					</File>
+					<File
+						RelativePath=".\src\E_EvilEye.cpp">
+					</File>
+					<File
+						RelativePath=".\src\E_Fake.cpp">
+					</File>
+					<File
+						RelativePath=".\src\E_Flailer.cpp">
+					</File>
+					<File
+						RelativePath=".\src\E_Floater.cpp">
+					</File>
+					<File
+						RelativePath=".\src\E_Ghost.cpp">
+					</File>
+					<File
+						RelativePath=".\src\E_Gumdrop.cpp">
+					</File>
+					<File
+						RelativePath=".\src\E_Ranged.cpp">
+					</File>
+					<File
+						RelativePath=".\src\E_SadShooter.cpp">
+					</File>
+					<File
+						RelativePath=".\src\E_Tentacle.cpp">
+					</File>
+					<File
+						RelativePath=".\src\E_Turret.cpp">
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="gameobj"
@@ -189,9 +196,6 @@
 				</File>
 				<File
 					RelativePath=".\src\EvilWallManager.cpp">
-				</File>
-				<File
-					RelativePath=".\src\LoadEffectManager.cpp">
 				</File>
 				<File
 					RelativePath=".\src\lootmanager.cpp">
@@ -240,28 +244,6 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="mainmenu"
-				Filter="">
-				<File
-					RelativePath=".\src\Button.cpp">
-				</File>
-				<File
-					RelativePath=".\src\DeathScreen.cpp">
-				</File>
-				<File
-					RelativePath=".\src\LoadScreen.cpp">
-				</File>
-				<File
-					RelativePath=".\src\menu.cpp">
-				</File>
-				<File
-					RelativePath=".\src\OptionsScreen.cpp">
-				</File>
-				<File
-					RelativePath=".\src\TitleScreen.cpp">
-				</File>
-			</Filter>
-			<Filter
 				Name="system"
 				Filter="">
 				<File
@@ -275,6 +257,9 @@
 				</File>
 				<File
 					RelativePath=".\src\Input.cpp">
+				</File>
+				<File
+					RelativePath=".\src\LoadEffectManager.cpp">
 				</File>
 				<File
 					RelativePath=".\src\main.cpp">
@@ -318,29 +303,58 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="gamemenu"
+				Name="ui"
 				Filter="">
 				<File
-					RelativePath=".\src\inventory.cpp">
+					RelativePath=".\src\Button.cpp">
 				</File>
 				<File
-					RelativePath=".\src\map.cpp">
+					RelativePath=".\src\Slider.cpp">
 				</File>
-				<File
-					RelativePath=".\src\minimenu.cpp">
-				</File>
-				<File
-					RelativePath=".\src\OptionsWindow.cpp">
-				</File>
-				<File
-					RelativePath=".\src\Shop.cpp">
-				</File>
-				<File
-					RelativePath=".\src\textbox.cpp">
-				</File>
-				<File
-					RelativePath=".\src\WindowManager.cpp">
-				</File>
+				<Filter
+					Name="mainmenu"
+					Filter="">
+					<File
+						RelativePath=".\src\DeathScreen.cpp">
+					</File>
+					<File
+						RelativePath=".\src\LoadScreen.cpp">
+					</File>
+					<File
+						RelativePath=".\src\menu.cpp">
+					</File>
+					<File
+						RelativePath=".\src\OptionsScreen.cpp">
+					</File>
+					<File
+						RelativePath=".\src\TitleScreen.cpp">
+					</File>
+				</Filter>
+				<Filter
+					Name="gamemenu"
+					Filter="">
+					<File
+						RelativePath=".\src\inventory.cpp">
+					</File>
+					<File
+						RelativePath=".\src\map.cpp">
+					</File>
+					<File
+						RelativePath=".\src\minimenu.cpp">
+					</File>
+					<File
+						RelativePath=".\src\OptionsWindow.cpp">
+					</File>
+					<File
+						RelativePath=".\src\Shop.cpp">
+					</File>
+					<File
+						RelativePath=".\src\textbox.cpp">
+					</File>
+					<File
+						RelativePath=".\src\WindowManager.cpp">
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
@@ -382,32 +396,7 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="mainmenu"
-				Filter="">
-				<File
-					RelativePath=".\src\Button.h">
-				</File>
-				<File
-					RelativePath=".\src\DeathScreen.h">
-				</File>
-				<File
-					RelativePath=".\src\LoadScreen.h">
-				</File>
-				<File
-					RelativePath=".\src\menu.h">
-				</File>
-				<File
-					RelativePath=".\src\MenuScreen.h">
-				</File>
-				<File
-					RelativePath=".\src\OptionsScreen.h">
-				</File>
-				<File
-					RelativePath=".\src\TitleScreen.h">
-				</File>
-			</Filter>
-			<Filter
-				Name="enemy"
+				Name="EnemyFramework"
 				Filter="">
 				<File
 					RelativePath=".\src\enemy.h">
@@ -436,9 +425,6 @@
 				</File>
 				<File
 					RelativePath=".\src\EvilWallManager.h">
-				</File>
-				<File
-					RelativePath=".\src\LoadEffectManager.h">
 				</File>
 				<File
 					RelativePath=".\src\lootmanager.h">
@@ -475,34 +461,6 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="gamemenu"
-				Filter="">
-				<File
-					RelativePath=".\src\BaseWindow.h">
-				</File>
-				<File
-					RelativePath=".\src\inventory.h">
-				</File>
-				<File
-					RelativePath=".\src\map.h">
-				</File>
-				<File
-					RelativePath=".\src\minimenu.h">
-				</File>
-				<File
-					RelativePath=".\src\OptionsWindow.h">
-				</File>
-				<File
-					RelativePath=".\src\Shop.h">
-				</File>
-				<File
-					RelativePath=".\src\textbox.h">
-				</File>
-				<File
-					RelativePath=".\src\WindowManager.h">
-				</File>
-			</Filter>
-			<Filter
 				Name="system"
 				Filter="">
 				<File
@@ -518,6 +476,9 @@
 					RelativePath=".\src\Input.h">
 				</File>
 				<File
+					RelativePath=".\src\LoadEffectManager.h">
+				</File>
+				<File
 					RelativePath=".\src\SaveManager.h">
 				</File>
 				<File
@@ -526,6 +487,66 @@
 				<File
 					RelativePath=".\src\SoundManager.h">
 				</File>
+			</Filter>
+			<Filter
+				Name="ui"
+				Filter="">
+				<File
+					RelativePath=".\src\Button.h">
+				</File>
+				<File
+					RelativePath=".\src\Slider.h">
+				</File>
+				<Filter
+					Name="gamemenu"
+					Filter="">
+					<File
+						RelativePath=".\src\BaseWindow.h">
+					</File>
+					<File
+						RelativePath=".\src\inventory.h">
+					</File>
+					<File
+						RelativePath=".\src\map.h">
+					</File>
+					<File
+						RelativePath=".\src\minimenu.h">
+					</File>
+					<File
+						RelativePath=".\src\OptionsWindow.h">
+					</File>
+					<File
+						RelativePath=".\src\Shop.h">
+					</File>
+					<File
+						RelativePath=".\src\textbox.h">
+					</File>
+					<File
+						RelativePath=".\src\WindowManager.h">
+					</File>
+				</Filter>
+				<Filter
+					Name="mainmenu"
+					Filter="">
+					<File
+						RelativePath=".\src\DeathScreen.h">
+					</File>
+					<File
+						RelativePath=".\src\LoadScreen.h">
+					</File>
+					<File
+						RelativePath=".\src\menu.h">
+					</File>
+					<File
+						RelativePath=".\src\MenuScreen.h">
+					</File>
+					<File
+						RelativePath=".\src\OptionsScreen.h">
+					</File>
+					<File
+						RelativePath=".\src\TitleScreen.h">
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
