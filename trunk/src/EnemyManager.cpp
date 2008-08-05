@@ -1,3 +1,4 @@
+#include "environment.h"
 #include "EnemyManager.h"
 #include "enemy.h"
 #include "lootmanager.h"
@@ -6,6 +7,7 @@
 #include "EnemyGroupManager.h"
 #include "GameData.h"
 #include "CollisionCircle.h"
+#include "SaveManager.h"
 
 #include "hgerect.h"
 #include "hgeparticle.h"
@@ -20,6 +22,7 @@ extern bool debugMode;
 extern hgeResourceManager *resources;
 extern EnemyGroupManager *enemyGroupManager;
 extern GameData *gameData;
+extern SaveManager *saveManager;
 extern float gameTime;
 
 /**
@@ -90,6 +93,9 @@ void EnemyManager::addEnemy(int id, int x, int y, float spawnHealthChance, float
 			break;
 		case ENEMY_FAKE:
 			newEnemy.enemy = new E_Fake(id, x, y, groupID);
+			break;
+		case ENEMY_RANGED:
+			newEnemy.enemy = new E_Ranged(id, x, y, groupID);
 			break;
 		default:
 			newEnemy.enemy = new DefaultEnemy(id, x, y, groupID);
@@ -184,6 +190,8 @@ void EnemyManager::update(float dt) {
 			delete i->enemy;
 			i = enemyList.erase(i);
 
+			saveManager->numEnemiesKilled++;
+
 		}
 	}
 
@@ -217,21 +225,25 @@ bool EnemyManager::collidesWithFrozenEnemy(CollisionCircle *circle) {
 }
 
 /**
- * Damages and knocks back any enemy hit by Smiley's tongue.
+ * Damages and knocks back any enemy hit by Smiley's tongue. Returns whether
+ * or not an enemy was hit.
  *
  *	weaponBox			the collision box of the weapon
  *	damage				how much damage the weapon does if it hits
  */
-void EnemyManager::tongueCollision(Tongue *tongue, float damage) {
-	
+bool EnemyManager::tongueCollision(Tongue *tongue, float damage) {
+	bool hit = false;
 	//Loop through the enemies
 	std::list<EnemyStruct>::iterator i;
 	for (i = enemyList.begin(); i != enemyList.end(); i++) {
 		if (!i->enemy->immuneToTongue) {
-			i->enemy->doTongueCollision(tongue, damage);
+			if (i->enemy->doTongueCollision(tongue, damage)) {
+				i->enemy->notifyTongueHit();
+				hit = true;
+			}
 		}
 	}
-
+	return hit;
 } //end tongueCollision()
 
 

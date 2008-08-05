@@ -1,11 +1,9 @@
 #include "EnemyManager.h"
 #include "lootmanager.h"
 #include "projectiles.h"
-#include "inventory.h"
 #include "menu.h"
 #include "player.h"
 #include "minimenu.h"
-#include "map.h"
 #include "npcmanager.h"
 #include "boss.h"
 #include "Input.h"
@@ -13,14 +11,11 @@
 #include "WindowManager.h"
 #include "resource1.h"
 #include "SaveManager.h"
-#include "Shop.h"
 #include "SoundManager.h"
 #include "GameData.h"
 #include "smiley.h"
 #include "environment.h"
 #include "LoadEffectManager.h"
-
-#include "BitManager.h"
 
 //Global Objects
 HGE *hge=0;
@@ -28,7 +23,7 @@ hgeResourceManager *resources;
 Environment *theEnvironment;
 Player *thePlayer;
 EnemyManager *enemyManager;
-Menu *theMenu = NULL;
+Menu *theMenu;
 LootManager *lootManager;
 ProjectileManager *projectileManager;
 NPCManager *npcManager;
@@ -42,12 +37,11 @@ GameData *gameData;
 LoadEffectManager *loadEffectManager;
 
 //Textures
-HTEXTURE animationTexture, npcTexture, mainLayerTexture, walkLayerTexture;
+HTEXTURE mainLayerTexture, walkLayerTexture;
 
 //Sprites
 hgeSprite *abilitySprites[NUM_ABILITIES];
 hgeSprite *mainLayer[256], *itemLayer[512], *walkLayer[256];
-hgeSprite *npcSprites[NUM_NPCS][4];
 
 //Variables
 float gameTime = 0.0;
@@ -76,8 +70,6 @@ void loadResources() {
 	//Load textures
 	mainLayerTexture = hge->Texture_Load("Graphics/mainlayer.png");
 	walkLayerTexture = hge->Texture_Load("Graphics/walklayer.PNG");
-	animationTexture = resources->GetTexture("animations");
-	npcTexture = hge->Texture_Load("Graphics/npcs.PNG");
 
 	//Load tiles
 	for (int i = 0; i < 16; i++) {
@@ -92,14 +84,6 @@ void loadResources() {
 	for (int i = 0; i < 16; i++) {
 		for (int j = 0; j < 16; j++) {
 			itemLayer[256+j*16+i] = new hgeSprite(resources->GetTexture("itemLayer2"),i*64,j*64,64,64);
-		}
-	}
-
-	//Load NPC sprites
-	for (int i = 0; i < NUM_NPCS; i++) {
-		for (int j = 0; j < 4; j++) {
-			npcSprites[i][j] = new hgeSprite(npcTexture,0+j*64,0+i*64,64,64);
-			npcSprites[i][j]->SetHotSpot(32,32);
 		}
 	}
 
@@ -138,8 +122,6 @@ bool FrameFunc() {
 	//Update the input
 	input->UpdateInput();
 	
-	soundManager->update(dt);
-
 	//Input for taking screenshots
 	if (hge->Input_KeyDown(HGEK_F1)) {
 		hge->System_Snapshot();
@@ -158,6 +140,11 @@ bool FrameFunc() {
 		//Toggle debug mode
 		if (hge->Input_KeyDown(HGEK_D)) debugMode = !debugMode;
 
+		//Toggle invincibility
+		if (hge->Input_KeyDown(HGEK_I)) {
+			thePlayer->invincible = !thePlayer->invincible;
+		}
+
 		//Toggle game menu
 		if (input->keyPressed(INPUT_PAUSE)) {
 			if (windowManager->isGameMenuOpen()) {
@@ -167,7 +154,7 @@ bool FrameFunc() {
 			}
 		}
 
-		//If the user presses escape go straight to the options screen
+		//Toggle options/exit
 		if (hge->Input_KeyDown(HGEK_ESCAPE)) {
 			windowManager->openWindow(new MiniMenu(MINIMENU_EXIT));
 		}
@@ -212,7 +199,6 @@ bool RenderFunc() {
 
 	//Start rendering
 	float dt=hge->Timer_GetDelta();
-	hge->Gfx_Clear(0);
 	hge->Gfx_BeginScene();
 
 	if (gameState == MENU) {
@@ -237,8 +223,6 @@ bool RenderFunc() {
 		windowManager->draw(dt);
 
 	}
-
-	soundManager->draw(dt);
 
 	//Finish rendering
 	hge->Gfx_EndScene();
@@ -271,7 +255,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	hge->System_SetState(HGE_SCREENWIDTH, SCREEN_WIDTH);
 	hge->System_SetState(HGE_SCREENHEIGHT, SCREEN_HEIGHT);
 	hge->System_SetState(HGE_SCREENBPP, 32);
-	hge->System_SetState(HGE_FPS, HGEFPS_VSYNC);
+	hge->System_SetState(HGE_FPS, HGEFPS_UNLIMITED);
 	hge->System_SetState(HGE_SHOWSPLASH, false);
 	hge->System_SetState(HGE_ICON, MAKEINTRESOURCE (IDI_ICON1));
 
@@ -303,16 +287,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			if (mainLayer[i]) delete mainLayer[i];
 			if (walkLayer[i]) delete walkLayer[i];
 		}
-		for (int i = 0; i < NUM_NPCS; i++) {
-			for (int j = 0; j < 4; j++) {
-				delete npcSprites[i][j];
-			}
-		}
 		for (int i = 0; i < NUM_ABILITIES; i++) delete abilitySprites[i];
-		if (thePlayer) delete thePlayer;
-		if (theEnvironment) delete theEnvironment;
-		if (windowManager) delete windowManager;
-		if (saveManager) delete saveManager;
+		delete thePlayer;
+		delete theEnvironment;
+		delete windowManager;
+		delete saveManager;
 		delete theMenu;
 		delete lootManager;
 		delete projectileManager;

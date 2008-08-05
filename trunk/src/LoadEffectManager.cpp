@@ -83,19 +83,24 @@ void LoadEffectManager::draw(float dt) {
 	if (isEffectActive()) {
 		//workaround for HGE full screen clipping bug
 		resources->GetSprite("blackScreen")->SetColor(ARGB(255,255,255,255));
-		resources->GetSprite("blackScreen")->RenderStretch(0,0,1024,384.0-200.0*loadingEffectScale);
-		resources->GetSprite("blackScreen")->RenderStretch(0,0,512.0-200.0*loadingEffectScale,768.0);
-		resources->GetSprite("blackScreen")->RenderStretch(512.0+200.0*loadingEffectScale,0,1024,768);
-		resources->GetSprite("blackScreen")->RenderStretch(0,384.0+200.0*loadingEffectScale,1024,768);			
+		//Top
+		resources->GetSprite("blackScreen")->RenderStretch(0,0,1024,384.0-198.0*loadingEffectScale);
+		//Left
+		resources->GetSprite("blackScreen")->RenderStretch(0,0,512.0-198.0*loadingEffectScale,768.0);
+		//Right
+		resources->GetSprite("blackScreen")->RenderStretch(512.0+198.0*loadingEffectScale,0,1024,768);
+		//Bottom
+		resources->GetSprite("blackScreen")->RenderStretch(0,384.0+198.0*loadingEffectScale,1024,768);			
+		//Circle
 		resources->GetSprite("loading")->RenderEx(512.0, 384.0, 0.0, loadingEffectScale, loadingEffectScale);
 	}
 
 	//After entering a new zone, display the ZONE NAME for 2.5 seconds after entering
 	if (hge->Timer_GetTime() < timeLevelLoaded + 2.5 && !windowManager->isOpenWindow()) {
 		//After 1.5 seconds start fading out the zone name
-		if (hge->Timer_GetTime() > timeLevelLoaded + 1.5f) {
+		if (hge->Timer_GetTime() > timeLevelLoaded + 1.5) {
 			zoneTextAlpha -= 255.0f*dt;
-			if (zoneTextAlpha < 0.0) 0.0;
+			if (zoneTextAlpha < 0.0) zoneTextAlpha = 0.0;
 			resources->GetFont("newAreaFnt")->SetColor(ARGB(zoneTextAlpha,255,255,255));
 		}
 		resources->GetFont("newAreaFnt")->printf(512,200,HGETEXT_CENTER, 
@@ -113,7 +118,7 @@ void LoadEffectManager::update(float dt) {
 	if (state == STATE_IN) {
 		
 		if (doneZoomingIn) {
-			loadingEffectScale = 0.00001;
+			loadingEffectScale = 0.0;
 
 			//Relocate Smiley
 			if (destinationArea == saveManager->currentArea) {

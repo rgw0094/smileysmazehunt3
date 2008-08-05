@@ -3,7 +3,8 @@
 
 #include "boss.h"
 #include "hgeparticle.h"
-#include "collisionCircle.h"
+
+class CollisionCircle;
 
 //States
 #define FORESTBOSS_INACTIVE 0

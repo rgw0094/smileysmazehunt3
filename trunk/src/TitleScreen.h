@@ -3,7 +3,8 @@
 
 #include "MenuScreen.h"
 #include <string>
-#include "Button.h"
+
+class Button;
 
 #define NUM_BUTTONS 3
 #define PLAY_BUTTON 0

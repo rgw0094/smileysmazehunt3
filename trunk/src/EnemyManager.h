@@ -26,6 +26,7 @@ class hgeRect;
 #define ENEMY_TURRET 12
 #define ENEMY_GHOST 13
 #define ENEMY_FAKE 14
+#define ENEMY_RANGED 15
 
 struct EnemyStruct {
 	BaseEnemy *enemy;
@@ -44,7 +45,7 @@ public:
 	void update(float dt);
 	void addEnemy(int id, int x, int y, float spawnHealthChance, float spawnManaChance, int groupID);
 	void killEnemies(int type);
-	void tongueCollision(Tongue *tongue, float damage);
+	bool tongueCollision(Tongue *tongue, float damage);
 	void freezeEnemies(int x, int y);
 	void unFreezeEnemies(int x, int y);
 	bool collidesWithEnemy(hgeRect *collisionBox);

@@ -16,16 +16,16 @@ public:
 	//methods
 	void draw(float dt);
 	bool update(float dt);
-	void set(char* text, bool hasGraphic, hgeSprite *graphic, int graphicHeight);
+	void set(char* text, bool hasGraphic, hgeSprite *graphic);
 	void setDialogue(int _npcID, int _textID);
 	void setHint();
+	void setGraphic(hgeSprite *graphic);
 	void init();
 	bool doFadeOut(float dt);
 
 	//Variables
 	bool hasGraphic;		//If the text box should display a graphic
 	int textBoxType;		//Dialog, Hint, Normal
-	int graphicHeight;		//Height of the graphic if there is one
 	int x,y;
 	int npcID, textID, numPages, currentPage;
 	float oldHotSpotX, oldHotSpotY;			

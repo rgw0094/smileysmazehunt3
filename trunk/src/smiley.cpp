@@ -164,7 +164,6 @@ char *intToString(int dickens) {
 /**
  * Returns the int as a string, with the given number of digits
  */
-
 char *intToString(int dickens, int digits) {
 	char * intString = (char*)malloc(digits);
 	
@@ -273,6 +272,28 @@ float maxFloat(float num1, float num2) {
 	else return num2;
 }
 
+float maxFloat(float f1, float f2, float f3, float f4) {
+	if (f1 > f2 && f1 > f3 && f1 > f4) {
+		return f1;
+	} else if (f2 > f1 && f2 > f3 && f2 > f4) {
+		return f2;
+	} else if (f3 > f1 && f3 > f2 && f3 > f4) {
+		return f3;
+	} else if (f4 > f4 && f4 > f2 && f4 > f3) {
+		return f4;
+	}
+}
+
+/**
+ * Returns the direction to face if it should face the direction it is moving the fastest.
+ */
+int getFacingDirection(float dx, float dy) {
+	if (abs(dx) > abs (dy)) {
+		return dx > 0 ? RIGHT : LEFT;
+	} else if(abs(dy) > abs(dy)) {
+		return dy > 0 ? DOWN : UP;
+	}
+}
 
 /**
  * Shades the screen
@@ -378,4 +399,28 @@ int getKeyIndex(int area) {
 int roundUp(float num) {
 	if (num > (int)num) return (int)num + 1;
 	else return (int)num;
+}
+
+/**
+ * Returns the current hint number based on what boss has been killed.
+ */
+int getCurrentHint() {
+	if (saveManager->isBossKilled(FIRE_BOSS2)) {
+		return 7;
+	} else if (saveManager->isBossKilled(MUSHROOM_BOSS)) {
+		return 6;
+	} else if (saveManager->isBossKilled(DESPAIR_BOSS)) {
+		return 5;
+	} else if (saveManager->isBossKilled(DESERT_BOSS)) {
+		return 4;
+	} else if (saveManager->isBossKilled(FOREST_BOSS)) {
+		return 3;
+	} else if (saveManager->isBossKilled(SNOW_BOSS)) {
+		return 2;
+	} else if (saveManager->isBossKilled(FIRE_BOSS)) {
+		return 1;
+	} else {
+		return 0;
+	}
+
 }

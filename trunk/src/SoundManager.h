@@ -18,12 +18,12 @@ public:
 	void playPreviousMusic();
 	void setMusicVolume(int newVolume);
 	void setSoundVolume(int soundVolume);
-	void update(float dt);
-	void draw(float dt);
 	void playEnvironmentEffect(char *effect, bool loop);
 	void stopEnvironmentChannel();
 	void playAbilityEffect(char *effect, bool loop);
 	void stopAbilityChannel();
+	int getMusicVolume();
+	int getSoundVolume();
 
 private:
 
@@ -36,7 +36,6 @@ private:
 	int previousMusicPosition;
 	int musicVolume;
 	int soundVolume;
-	float timeChangedVolume;
 
 };
 

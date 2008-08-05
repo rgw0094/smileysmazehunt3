@@ -1,9 +1,11 @@
+#include "smiley.h"
 #include "SpecialTileManager.h"
 #include "player.h"
 #include "CollisionCircle.h"
 #include "WeaponParticle.h"
 #include "projectiles.h"
 #include "Tongue.h"
+#include "environment.h"
 
 #include "hgeparticle.h"
 #include "hgeresource.h"
@@ -223,7 +225,6 @@ void SpecialTileManager::addFlame(int gridX, int gridY) {
 	Flame newFlame;
 	newFlame.x = gridX * 64.0 + 32.0;
 	newFlame.y = gridY * 64.0 + 32.0;
-	hge->System_Log("adding flame to %f %f", newFlame.x, newFlame.y);
 	newFlame.timeFlamePutOut = -10.0;
 	newFlame.particle = new hgeParticleSystem(&resources->GetParticleSystem("flame")->info);
 	newFlame.particle->FireAt(getScreenX(newFlame.x), getScreenY(newFlame.y));

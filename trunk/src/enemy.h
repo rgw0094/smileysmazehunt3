@@ -40,7 +40,8 @@ public:
 	virtual void drawStunned(float dt);
 	virtual void drawDebug();
 	virtual void hitWithProjectile(int projectileType);
-	virtual void doTongueCollision(Tongue* tongue, float damage);
+	virtual void notifyTongueHit();
+	virtual bool doTongueCollision(Tongue* tongue, float damage);
 	virtual void doPlayerCollision();
 
 	//Methods that can't be overrode
@@ -130,6 +131,7 @@ public:
 
 private:
 	int chaseRadius;
+	float lastRangedStateTime;
 
 };
 
@@ -190,6 +192,7 @@ public:
 
 	void update(float dt);
 	void draw(float dt);
+	bool doTongueCollision(Tongue *tongue, float damage);
 
 private:
 	int chargeState;
@@ -410,7 +413,7 @@ public:
 
 	void update(float dt);
 	void draw(float dt);
-    void doTongueCollision(Tongue *tongue, float damage);
+    bool doTongueCollision(Tongue *tongue, float damage);
     
 private:
 
@@ -477,6 +480,25 @@ private:
 
 	bool fakeMode;
 	int chaseRadius;
+
+};
+
+//Non-gay ranged enemy
+class E_Ranged : public BaseEnemy {
+
+public:
+
+	E_Ranged(int id, int x, int y, int groupID);
+	~E_Ranged();
+
+	//methods
+	void draw(float dt);
+	void update(float dt);
+	void startRangedAttack();
+
+	bool usingRangedAttack;
+	bool shotYet;
+	float timeStartedRangedAttack;
 
 };
 

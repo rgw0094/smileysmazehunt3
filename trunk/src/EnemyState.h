@@ -33,6 +33,8 @@ public:
 	virtual void exitState() = 0;
 	virtual bool instanceOf(char*) = 0;
 
+	float timeEnteredState;
+
 };
 
 /**

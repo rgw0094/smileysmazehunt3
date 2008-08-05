@@ -15,7 +15,6 @@ extern WindowManager *windowManager;
 extern Player *thePlayer;
 extern Environment *theEnvironment;
 extern hgeStringTable *stringTable;
-extern hgeSprite *npcSprites[NUM_NPCS][4];
 extern float gameTime;
 
 NPCManager::NPCManager() { 

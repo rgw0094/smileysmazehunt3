@@ -1,5 +1,6 @@
+#include "smiley.h"
 #include "collisioncircle.h"
-
+#include "hgerect.h"
 
 extern HGE *hge;
 
@@ -80,7 +81,7 @@ void CollisionCircle::draw() {
 	x2 = (float)radius;
 	y2 = 0.0;
  
-	for(a=0.0; a<= (2.0*M_PI + EachAngle); a+=EachAngle) {
+	for(a=0.0; a<= (2.0*PI + EachAngle); a+=EachAngle) {
 		x1 = x2;
 		y1 = y2;
 		x2 = (float)radius * cos(a);

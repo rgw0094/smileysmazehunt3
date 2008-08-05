@@ -1,6 +1,7 @@
 /**
  * Implements concrete methods of the abstract BaseEnemy class.
  */
+#include "smiley.h"
 #include "enemy.h"
 #include "Environment.h"
 #include "Player.h"
@@ -441,7 +442,7 @@ void BaseEnemy::baseUpdate(float dt) {
 	}
 
 	//Update default animations
-	if (!frozen && !stunned) {
+	if (!frozen && !stunned && (dx > 0.0 || dy > 0.0)) {
 		for (int n = 0; n < 4; n++) {
 			graphic[n]->Update(dt);
 		}
@@ -535,23 +536,34 @@ void BaseEnemy::hitWithProjectile(int projectileType) {
 }
 
 /**
- * Basic tongue collision funcitonality. Enemies can override this
- * for something more specific.
+ * Notifies the enemy that it has been hit by Smiley's tongue. Enemies should
+ * override this if they need some special functionality when hit by the tongue.
  */
-void BaseEnemy::doTongueCollision(Tongue *tongue, float damage) {
+void BaseEnemy::notifyTongueHit() {
+
+}
+
+/**
+ * Basic tongue collision funcitonality. Enemies can override this
+ * for something more specific. Returns true if the tongue hit
+ * this enemy.
+ */
+bool BaseEnemy::doTongueCollision(Tongue *tongue, float damage) {
 	
 	//Check collision
 	if (tongue->testCollision(collisionBox)) {
 			
 		//Make sure the enemy wasn't already hit by this attack
 		if (timePassedSince(lastHitByWeapon) > .5) {
-			
 			lastHitByWeapon = gameTime;
 			dealDamageAndKnockback(damage, 65.0, thePlayer->x, thePlayer->y);
 			startFlashing();
+			return true;
 		}
 
 	}
+
+	return false;
 }
 
 /**

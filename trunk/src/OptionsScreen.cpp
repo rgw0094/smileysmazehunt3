@@ -1,6 +1,9 @@
 #include "OptionsScreen.h"
 #include "OptionsWindow.h"
 #include "hgeresource.h"
+#include "menu.h"
+
+extern Menu *theMenu;
 
 extern hgeResourceManager *resources;
 
@@ -22,5 +25,8 @@ void OptionsScreen::draw(float dt) {
 }
 
 bool OptionsScreen::update(float dt, float mouseX, float mouseY) {
-	return !optionsWindow->update(dt);
+	if (!optionsWindow->update(dt)) {
+		theMenu->setScreen(TITLE_SCREEN);
+	}
+	return false;
 }

@@ -1,6 +1,7 @@
 /**
  * Batlet Distributor
  */
+#include "smiley.h"
 #include "enemy.h"
 #include "hge.h"
 #include "hgeresource.h"

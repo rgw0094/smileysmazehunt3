@@ -89,10 +89,45 @@ void Inventory::draw(float dt) {
 	//Upgrades
 	for (int i = 0; i < 3; i++) {
 		resources->GetAnimation("upgradeIcons")->SetFrame(i);
-		resources->GetAnimation("upgradeIcons")->Render(INVENTORY_X_OFFSET+355+i*90,INVENTORY_Y_OFFSET + 300);
-		resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET+400+i*90,INVENTORY_Y_OFFSET+305,HGETEXT_LEFT,"x%d",saveManager->numUpgrades[i]);
+		resources->GetAnimation("upgradeIcons")->Render(INVENTORY_X_OFFSET+355+i*90,INVENTORY_Y_OFFSET + 297);
+		resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET+400+i*90,INVENTORY_Y_OFFSET+302,HGETEXT_LEFT,"x%d",saveManager->numUpgrades[i]);
 	}
 
+	////////////Stats///////////////
+	resources->GetFont("inventoryFnt")->SetScale(0.55);
+	//Maximum mana
+	resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 335, 
+		HGETEXT_LEFT, "Maximum Mana: ");
+	resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 335, 
+		HGETEXT_RIGHT, "%d", int(thePlayer->getMaxMana()));
+	//Damage multiplier
+	resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 355, 
+		HGETEXT_LEFT, "Damage Multiplier:");
+	resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 355, 
+		HGETEXT_RIGHT, "%1.3f", saveManager->getDamageModifier());
+	//Number of licks
+	resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 375,
+		HGETEXT_LEFT, "Number Of Licks:");
+	resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 375,
+		HGETEXT_RIGHT, "%d", saveManager->numTongueLicks);
+	//Enemies killed
+	resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 395,
+		HGETEXT_LEFT, "Enemies Killed:");
+	resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 395,
+		HGETEXT_RIGHT, "%d", saveManager->numEnemiesKilled);
+	//Damage dealt
+	resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 415,
+		HGETEXT_LEFT, "Damage Dealt:");
+	resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 415,
+		HGETEXT_RIGHT, "%d", int(saveManager->damageDealt));
+	//Damage received
+	resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 435,
+		HGETEXT_LEFT, "Damage Taken:");
+	resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 435,
+		HGETEXT_RIGHT, "%d", int(saveManager->damageReceived));
+	resources->GetFont("inventoryFnt")->SetScale(1.0);
+	//////////End Stats////////////////
+	
 	//Draw the cursor
 	resources->GetSprite("inventoryCursor")->Render(INVENTORY_X_OFFSET + cursorX*SQUARE_SIZE + 31, INVENTORY_Y_OFFSET + cursorY*SQUARE_SIZE + 31);
 

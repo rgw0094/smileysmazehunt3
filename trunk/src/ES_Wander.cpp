@@ -64,7 +64,7 @@ void ES_Wander::update(float dt) {
 
 	if (changeDir) {
 
-		nextDirChangeTime = gameTime + hge->Random_Float(2.0, 4.0);
+		nextDirChangeTime = gameTime + hge->Random_Float(1.2, 2.0);
 		currentAction = getNewDirection();
 
 		//Set dx/dy based on new direction
@@ -100,14 +100,42 @@ void ES_Wander::update(float dt) {
  */
 int ES_Wander::getNewDirection() {
 
+	bool newDirFound = false;
+	int collision;
+	int count = 0;
 	int newDir = -1;
 
+	int minDir, maxDir;
 	if (owner->wanderType == WANDER_LEFT_RIGHT) {
-		while ((newDir = hge->Random_Int(0,1)) == currentAction) { }
+		minDir = 0;
+		maxDir = 1;
 	} else if (owner->wanderType == WANDER_UP_DOWN) {
-		while ((newDir = hge->Random_Int(2,3)) == currentAction) { }
+		minDir = 2;
+		maxDir = 3;
 	} else {
-		while ((newDir = hge->Random_Int(0,3)) == currentAction) { }
+		minDir = 0;
+		maxDir = 3;
+	}
+
+	//Find a new direction that won't result in the enemy facing a wall.
+	while (!newDirFound) {
+		newDir = hge->Random_Int(minDir, maxDir);
+		if (newDir == WANDER_LEFT) {
+			collision = theEnvironment->collision[owner->gridX-1][owner->gridY];
+		} else if (newDir == WANDER_RIGHT) {
+			collision = theEnvironment->collision[owner->gridX+1][owner->gridY];
+		} else if (newDir == WANDER_UP) {
+			collision = theEnvironment->collision[owner->gridX][owner->gridY-1];
+		} else if (newDir == WANDER_DOWN) {
+			collision = theEnvironment->collision[owner->gridX][owner->gridY+1];
+		}
+		newDirFound = (newDir != currentAction && owner->canPass[collision]);
+		count++;
+		if (count > 4) {
+			//If no new direction is possible, just stay at the old one
+			newDir = currentAction;
+			newDirFound = true;
+		}
 	}
 
 	return newDir;

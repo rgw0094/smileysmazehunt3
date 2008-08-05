@@ -23,6 +23,19 @@ extern SaveManager *saveManager;
 extern SoundManager *soundManager;
 extern float gameTime;
 
+//States
+#define FIREBOSS_INACTIVE 0
+#define FIREBOSS_MOVE 1
+#define FIREBOSS_ATTACK 2
+#define FIREBOSS_FRIENDLY 3
+
+//Attributes
+#define HEALTH 4.25
+
+#define ORB_DAMAGE 0.5
+#define COLLISION_DAMAGE 0.25
+#define FLASH_DURATION 2.0
+
 #define TEXT_FIREBOSS_INTRO 100
 #define TEXT_FIREBOSS_VICTORY 101
 
@@ -313,13 +326,14 @@ bool FireBoss::update(float dt) {
 	//Die
 	if (health <= 0.0f && state != FIREBOSS_FRIENDLY) {
 		hge->Effect_Play(resources->GetEffect("snd_fireBossDie"));
+		flashing = false;
 		health = 0.0f;
 		state = FIREBOSS_FRIENDLY;
 		killOrbs();
 		windowManager->openDialogue(-1, TEXT_FIREBOSS_VICTORY);	
 		facing = DOWN;
 		alpha = 255;
-		saveManager->killedBoss[FIRE_BOSS-240] = true;
+		saveManager->killBoss(FIRE_BOSS);
 		enemyGroupManager->notifyOfDeath(groupID);
 		soundManager->fadeOutMusic();
 	}

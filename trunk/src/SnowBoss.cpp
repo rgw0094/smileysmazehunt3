@@ -1,3 +1,4 @@
+#include "smiley.h"
 #include "hgeresource.h"
 #include "SnowBoss.h"
 #include "EnemyGroupManager.h"
@@ -332,7 +333,7 @@ bool SnowBoss::update(float dt) {
 		if (!droppedLoot) {
 			lootManager->addLoot(LOOT_NEW_ABILITY, xLoot, yLoot, FRISBEE);
 			droppedLoot = true;
-			saveManager->killedBoss[SNOW_BOSS-240] = true;
+			saveManager->killBoss(SNOW_BOSS);
 			enemyGroupManager->notifyOfDeath(groupID);
 			soundManager->playMusic("iceMusic");
 		}

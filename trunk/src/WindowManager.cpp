@@ -129,9 +129,9 @@ bool WindowManager::isOpenWindow() {
 /**
  * Opens a standard text box.
  */
-void WindowManager::openTextBox(char* text, bool hasGraphic, hgeSprite *graphic, int graphicHeight) {
+void WindowManager::openTextBox(char* text, bool hasGraphic, hgeSprite *graphic) {
 	TextBox *textBox = new TextBox();
-	textBox->set(text, hasGraphic, graphic, graphicHeight);
+	textBox->set(text, hasGraphic, graphic);
 	openWindow(textBox);
 	textBoxOpen = true;
 }
