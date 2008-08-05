@@ -632,6 +632,13 @@ Sprite optionsBackground {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=11
 }
+Sprite sliderBar {
+ texture="Graphics/options.png"
+ rect=0,492,93,21
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=11
+}
 
 ;*************************
 ;******** MINI MAP *******
@@ -1259,6 +1266,9 @@ Texture enemies {
 Texture tapestriesTx {
  filename="Graphics/tapestries.png"
 }
+Texture npcTx {
+ filename="Graphics/npcs.png"
+}
 
 ;*************************
 ;******** Enemies ********
@@ -1271,7 +1281,7 @@ Animation evileye {
  mode=NOLOOP
  hotspot=32,32
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=102
+ resgroup=1
 }
 Animation gumdrop {
  texture=animations
@@ -1281,7 +1291,7 @@ Animation gumdrop {
  mode=NOLOOP
  hotspot=32,32
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=102
+ resgroup=1
 }
 Animation bombSpawn {
  texture=animations
@@ -1291,7 +1301,7 @@ Animation bombSpawn {
  mode=NOLOOP
  hotspot=32,32
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=102
+ resgroup=1
 }
 Animation bombEyesGlow {
  texture=animations
@@ -1301,7 +1311,7 @@ Animation bombEyesGlow {
  mode=PINGPONG
  hotspot=32,32
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=102
+ resgroup=1
 }
 Sprite bombRedCircle {
  texture=general
@@ -1318,21 +1328,21 @@ Animation crabWalk {
  mode=LOOP
  hotspot=32,32
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=102
+ resgroup=1
 }
 Sprite clownChainDot {
  texture=animations
  rect=960,64,16,16
  hotspot=8,8
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=102
+ resgroup=1
 }
 Sprite clownHead {
  texture=animations
  rect=960,192,64,64
  hotspot=32,32
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=102
+ resgroup=1
 }
 Animation batlet {
  texture=animations
@@ -1342,49 +1352,49 @@ Animation batlet {
  mode=PINGPONG
  hotspot=32,32
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=102
+ resgroup=1
 }
 Sprite buzzardWing {
  texture=animations
  rect=768,320,98,27
  hotspot=100,14
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=102
+ resgroup=1
 }
 Sprite flailLink {
  texture=general
  rect=80,0,16,16
  hotspot=8,8
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=102
+ resgroup=1
 }
 Sprite flailHead {
  texture=general
  rect=0,0,64,64
  hotspot=32,32
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=102
+ resgroup=1
 }
 Sprite stunStar {
  texture=general
  rect=64,16,10,10
  hotspot=5,5
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=102
+ resgroup=1
 }
 Sprite evilWall {
  texture=general
  rect=256,64,64,64
  hotspot=32,32
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=102
+ resgroup=1
 }
 Sprite evilWallSpike {
  texture=general
  rect=320,64,64,64
  hotspot=32,32
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=102
+ resgroup=1
 }
 ;************************
 ;******** CALYPSO *******
