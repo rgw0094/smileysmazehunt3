@@ -144,7 +144,7 @@ bool DespairBoss::update(float dt) {
 	//When smiley triggers the boss' enemy block start his dialogue.
 	if (state == DESPAIRBOSS_INACTIVE && !startedIntroDialogue) {
 		if (enemyGroupManager->groups[groupID].triggeredYet) {
-			windowManager->openDialogue(-1, DESPAIRBOSS_INTROTEXT);
+			windowManager->openDialogueTextBox(-1, DESPAIRBOSS_INTROTEXT);
 			startedIntroDialogue = true;
 		} else {
 			return false;
@@ -289,7 +289,7 @@ bool DespairBoss::update(float dt) {
 		if (health <= 0.0f && state != DESPAIRBOSS_FRIENDLY) {
 			health = 0.0f;
 			setState(DESPAIRBOSS_FRIENDLY);		
-			windowManager->openDialogue(-1, DESPAIRBOSS_DEFEATTEXT);	
+			windowManager->openDialogueTextBox(-1, DESPAIRBOSS_DEFEATTEXT);	
 			saveManager->killBoss(DESPAIR_BOSS);
 			enemyGroupManager->notifyOfDeath(groupID);
 			soundManager->fadeOutMusic();

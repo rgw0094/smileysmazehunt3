@@ -71,7 +71,7 @@ bool ForestBoss::update(float dt) {
 	//When smiley triggers the boss' enemy blocks start his dialogue.
 	if (state == FORESTBOSS_INACTIVE && !startedIntroDialogue) {
 		if (enemyGroupManager->groups[groupID].triggeredYet) {
-			windowManager->openDialogue(-1, FORESTBOSS_INTROTEXT);
+			windowManager->openDialogueTextBox(-1, FORESTBOSS_INTROTEXT);
 			startedIntroDialogue = true;
 		} else {
 			return false;
@@ -87,7 +87,7 @@ bool ForestBoss::update(float dt) {
 	//Show Garmborn's tongue text the first time Smiley licks him.
 	if (thePlayer->getTongue()->testCollision(collisionBox) && !lickedYet) {
 		lickedYet = true;
-		windowManager->openDialogue(-1, FORESTBOSS_TONGUETEXT);
+		windowManager->openDialogueTextBox(-1, FORESTBOSS_TONGUETEXT);
 	}
 
 	//Smiley collision
@@ -287,7 +287,7 @@ void ForestBoss::enterState(int _state) {
 	if (state == FORESTBOSS_DEFEATED) {
 		treeletsFadingOut = true;
 		soundManager->fadeOutMusic();
-		windowManager->openDialogue(-1, FORESTBOSS_DEFEATTEXT);
+		windowManager->openDialogueTextBox(-1, FORESTBOSS_DEFEATTEXT);
 		resetOwlets(true);
 	}
 

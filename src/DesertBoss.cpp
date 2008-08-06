@@ -123,7 +123,7 @@ bool DesertBoss::update(float dt) {
 	//When smiley triggers the boss' enemy blocks start his dialogue.
 	if (state == DESERTBOSS_INACTIVE && !startedIntroDialogue) {
 		if (enemyGroupManager->groups[groupID].triggeredYet) {
-			windowManager->openDialogue(-1, TEXT_DESERTBOSS_INTRO);
+			windowManager->openDialogueTextBox(-1, TEXT_DESERTBOSS_INTRO);
 			startedIntroDialogue = true;
 		} else {
 			return false;
@@ -166,7 +166,7 @@ bool DesertBoss::update(float dt) {
 						//Show battle text 1 before the first spike attack
 						groundSpikeState = GSS_TEXT;
 						firstTimeLaunchingGroundSpikes = false;
-						windowManager->openDialogue(-1, DESERTBOSS_BATTLETEXT_1);
+						windowManager->openDialogueTextBox(-1, DESERTBOSS_BATTLETEXT_1);
 					} else {
 						groundSpikeState = GSS_SHADOWS;
 					}
@@ -237,7 +237,7 @@ bool DesertBoss::update(float dt) {
 	if (health < 0.0) {
 		health = 0.0;
 		enterState(DESERTBOSS_FRIENDLY);
-		windowManager->openDialogue(-1, DESERTBOSS_DEFEATTEXT);
+		windowManager->openDialogueTextBox(-1, DESERTBOSS_DEFEATTEXT);
 		soundManager->fadeOutMusic();
 		enemyManager->killEnemies(CACTLET_ENEMYID);
 	}
@@ -361,7 +361,7 @@ void DesertBoss::updateGroundSpikeState(float dt) {
 			redness = 0.0;
 			if (firstTimeFinishingGroundSpikes) {
 				firstTimeFinishingGroundSpikes = false;
-				windowManager->openDialogue(-1, DESERTBOSS_BATTLETEXT_2);
+				windowManager->openDialogueTextBox(-1, DESERTBOSS_BATTLETEXT_2);
 				groundSpikeState = GSS_COOLING_OFF_TEXT;
 			} else {
 				enterState(DESERTBOSS_SPAWNING_CACTLETS);

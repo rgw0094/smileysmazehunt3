@@ -23,7 +23,6 @@
 #define SILLY_PAD_TIME 30		//Number of seconds silly pads stay active
 
 extern hgeSprite *walkLayer[256];
-extern hgeSprite *abilitySprites[16];
 extern Environment *theEnvironment;
 extern Player *thePlayer;
 extern ProjectileManager *projectileManager;
@@ -166,10 +165,10 @@ void SpecialTileManager::drawSillyPads(float dt) {
 		//Fade out during the last 2 seconds
 		float timeLeft = (float)SILLY_PAD_TIME - timePassedSince(i->timePlaced);
 		if (timeLeft < 1.0f) {
-			abilitySprites[SILLY_PAD]->SetColor(ARGB((timeLeft/1.0f)*255.0f,255,255,255));
+			resources->GetSprite("sillyPad")->SetColor(ARGB((timeLeft/1.0f)*255.0f,255,255,255));
 		}
-		abilitySprites[SILLY_PAD]->Render(getScreenX(i->gridX*64.0), getScreenY(i->gridY*64.0));
-		abilitySprites[SILLY_PAD]->SetColor(ARGB(255,255,255,255));
+		resources->GetSprite("sillyPad")->Render(getScreenX(i->gridX*64.0), getScreenY(i->gridY*64.0));
+		resources->GetSprite("sillyPad")->SetColor(ARGB(255,255,255,255));
 	}
 }
 

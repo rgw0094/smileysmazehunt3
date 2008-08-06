@@ -157,7 +157,7 @@ bool MushroomBoss::update(float dt) {
 	//When smiley triggers the boss' enemy blocks start his dialogue.
 	if (state == MUSHBOOM_INACTIVE && !startedIntroDialogue) {
 		if (enemyGroupManager->groups[groupID].triggeredYet) {
-			windowManager->openDialogue(-1, MUSHBOOM_INTROTEXT);
+			windowManager->openDialogueTextBox(-1, MUSHBOOM_INTROTEXT);
 			startedIntroDialogue = true;
 		} else {
 			return false;
@@ -583,6 +583,6 @@ void MushroomBoss::initiateDeathSequence() {
 	
 	if (state <= MUSHBOOM_SPIRALING) {
 		enterState(MUSHBOOM_DYING_TEXT);
-		windowManager->openDialogue(-1, MUSHBOOM_DEADTEXT);	
+		windowManager->openDialogueTextBox(-1, MUSHBOOM_DEADTEXT);	
 	}
 }

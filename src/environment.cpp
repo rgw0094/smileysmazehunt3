@@ -56,7 +56,7 @@ extern GameData *gameData;
 extern LoadEffectManager *loadEffectManager;
 
 //Sprites
-extern hgeSprite *itemLayer[256], *mainLayer[256], *walkLayer[256], *abilitySprites[NUM_ABILITIES];
+extern hgeSprite *itemLayer[256], *mainLayer[256], *walkLayer[256];
 
 /**
  * Constructor
@@ -1396,9 +1396,7 @@ bool Environment::hitSigns(Tongue *tongue) {
 			if (inBounds(i,j) && collision[i][j] == SIGN) {
 				collisionBox->SetRadius(i*64+32,j*64+32,24);
 				if (tongue->testCollision(collisionBox)) {
-					paramString = "Sign";
-					paramString += intToString(ids[i][j]);
-					windowManager->openTextBox(gameData->getGameText(paramString.c_str()), false, NULL);
+					windowManager->openSignTextBox(ids[i][j]);
 					return true;
 				}
 			}

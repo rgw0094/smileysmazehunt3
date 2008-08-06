@@ -16,23 +16,22 @@ public:
 	//methods
 	void draw(float dt);
 	bool update(float dt);
-	void set(char* text, bool hasGraphic, hgeSprite *graphic);
+	void setSign(int signId);
 	void setDialogue(int _npcID, int _textID);
 	void setHint();
-	void setGraphic(hgeSprite *graphic);
+	void setNewAbility(int ability);
 	void init();
 	bool doFadeOut(float dt);
 
 	//Variables
-	bool hasGraphic;		//If the text box should display a graphic
-	int textBoxType;		//Dialog, Hint, Normal
+	int textBoxType;
 	int x,y;
-	int npcID, textID, numPages, currentPage;
-	float oldHotSpotX, oldHotSpotY;			
+	int npcID, textID, numPages, currentPage;	
 	hgeSprite *graphic;
 	float timeStarted;
 	char text[200];
 	int alpha;
+	int ability;
 	bool increaseAlpha;
 	int lastKeyPressFrame;
 	std::string paramString;

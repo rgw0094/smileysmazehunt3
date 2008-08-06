@@ -21,7 +21,6 @@ extern SaveManager *saveManager;
 extern NPCManager *npcManager;
 extern HGE *hge;
 extern Player *thePlayer;
-extern hgeSprite* abilitySprites[NUM_ABILITIES];
 extern hgeResourceManager *resources;
 extern Input *input;
 extern WindowManager *windowManager;
@@ -32,9 +31,10 @@ extern float gameTime;
 extern int frameCounter;
 
 //Dialog box types
-#define TYPE_NORMAL 0
+#define TYPE_SIGN 0
 #define TYPE_DIALOG 1
 #define TYPE_HINT 2
+#define TYPE_ABILITY 3
 
 #define SPIERDYKE 5
 #define BILL_CLINTON 8
@@ -57,6 +57,7 @@ TextBox::TextBox() {
  */ 
 TextBox::~TextBox() { 
 	if (distortion) delete distortion;
+	if (graphic) delete graphic;
 }
 
 
@@ -70,6 +71,8 @@ void TextBox::init() {
 	lastKeyPressFrame = frameCounter;
 	timeStarted = gameTime;
 	fadingOut = false;
+	distortion = NULL;
+	graphic = NULL;
 
 }
 
@@ -97,10 +100,6 @@ void TextBox::setDialogue(int _npcID, int _textID) {
 	currentPage = 1;
 	strcpy(text, "-");
 
-	
-
-	hasGraphic = true;
-
 }
 
 /**
@@ -121,7 +120,6 @@ void TextBox::setHint() {
 	currentPage = 1;
 	strcpy(text, "-");
 	fadeAlpha = 0.0;
-	hasGraphic = true;
 
 	//Set distortion mesh for psychedelic background
 	distortion =new hgeDistortionMesh(PSYCHEDELIC_GRANULARITY, PSYCHEDELIC_GRANULARITY);
@@ -138,23 +136,47 @@ void TextBox::setHint() {
 
 }
 
+/**
+ * Opens the text box to tell the user they received a new ability.
+ */
+void TextBox::setNewAbility(int _ability) {
+
+	textBoxType = TYPE_ABILITY;
+	init();
+	numPages = currentPage = 1;
+	ability = _ability;
+
+	if (ability == CANE) {
+		strcpy(text, gameData->getGameText("GotCane"));
+	} else if (ability == WATER_BOOTS) {
+		strcpy(text, gameData->getGameText("GotJesusSandals"));
+	} else if (ability == FRISBEE) {
+		strcpy(text, gameData->getGameText("GotFrisbee"));
+	} else if (ability == FIRE_BREATH) {
+		strcpy(text, gameData->getGameText("GotFireBreath"));
+	} else if (ability == SPRINT_BOOTS) {
+		strcpy(text, gameData->getGameText("GotSprintBoots"));
+	} else if (ability == LIGHTNING_ORB) {
+		strcpy(text, gameData->getGameText("GotLightningOrb"));
+	} else if (ability == REFLECTION_SHIELD) {
+		strcpy(text, gameData->getGameText("GotReflectionShield"));
+	}
+
+}
 
 /**
  * Intializes a text box for non-dialogue purposes.
  */
-void TextBox::set(char* _text, bool _hasGraphic, hgeSprite *_graphic) {
+void TextBox::setSign(int signId) {
 
-	textBoxType = TYPE_NORMAL;
+	textBoxType = TYPE_SIGN;
 	init();
-
-	strcpy(text, _text);
-	hasGraphic = _hasGraphic;
-	if (hasGraphic) {
-		graphic = _graphic;
-		graphic->GetHotSpot(&oldHotSpotX, &oldHotSpotY);
-		graphic->SetHotSpot(0,0);
-	}
 	numPages = currentPage = 1;
+
+	std::string paramString;
+	paramString = "Sign";
+	paramString += intToString(signId);
+	strcpy(text, gameData->getGameText(paramString.c_str()));
 
 }
 
@@ -172,7 +194,7 @@ void TextBox::draw(float dt) {
 		resources->GetAnimation("player")->Render(512,384);
 		resources->GetSprite("textBox")->Render(x,y);
 
-		//npcSprites[BILL_CLINTON][DOWN]->Render(x+60, y+50);
+		resources->GetSprite("billClinton")->Render(x+60, y+50);
 		resources->GetFont("textBoxNameFnt")->printf(x + 220, y+20, HGETEXT_CENTER, "%s", "Bill Clinton");
 
 		//Print the current page of the hint
@@ -193,10 +215,8 @@ void TextBox::draw(float dt) {
 		resources->GetSprite("textBox")->Render(x,y);
 
 		//Display the NPC's face and name. npcID -1 means don't draw anything!
-		if (npcID == -1) {
-			
-		} else {
-			//npcSprites[npcID][DOWN]->Render(x+60, y+50);
+		if (npcID != -1) {
+			graphic->Render(x+60-32, y+50-32);
 		}
 		paramString = "NPC";
 		paramString = paramString + intToString(textID) + "Name";
@@ -214,18 +234,17 @@ void TextBox::draw(float dt) {
 			resources->GetSprite("arrowIcon")->Render(x + 350, y + 220);
 		}
 
-	//Normal text box
-	} else {
+
+	} else if (textBoxType == TYPE_ABILITY) {
+		resources->GetSprite("textBox")->Render(x,y);
+		resources->GetAnimation("abilities")->SetFrame(ability);
+		resources->GetAnimation("abilities")->Render(x+180,y+20);
+		resources->GetFont("textBoxFnt")->printfb(x + 20, y + 25 + 64, 360, 200 - 64, HGETEXT_CENTER, "%s", text);
+
+	} else if (textBoxType == TYPE_SIGN) {
 		
 		resources->GetSprite("textBox")->Render(x,y);
-	
-		if (hasGraphic && textBoxType == TYPE_NORMAL) {
-			graphic->Render(x+180,y+20);
-			resources->GetFont("textBoxFnt")->printfb(x + 20, y + 25 + 64, 360, 200 - 64, HGETEXT_CENTER, "%s", text);
-		} else {
-			resources->GetFont("textBoxFnt")->printfb(x + 20, y + 20, 360, 210, HGETEXT_CENTER, "%s", text);
-		
-		}
+		resources->GetFont("textBoxFnt")->printfb(x + 20, y + 20, 360, 210, HGETEXT_CENTER, "%s", text);
 	}
 
 }
@@ -280,19 +299,17 @@ bool TextBox::update(float dt) {
 			
 			//Close the text box
 			windowManager->frameLastWindowClosed = frameCounter;
-			if (hasGraphic && textBoxType == TYPE_NORMAL) graphic->SetHotSpot(oldHotSpotX, oldHotSpotY);
 			
 			//If this is spierdyke, open the shop
 			if (textBoxType == TYPE_DIALOG && npcID == SPIERDYKE) {
 				windowManager->openWindow(new Shop());
 				return true; //Don't tell manager to close window
 
-			//If this is the first time Smiley has talked to the hint man,
-			//give him the cane.
+			//Give smiley the cane the first time he talks to Bill Clinton
 			} else if (textBoxType == TYPE_DIALOG && npcID == BILL_CLINTON && !saveManager->hasAbility[CANE]) {
 				saveManager->hasAbility[CANE] = true;
 				thePlayer->selectedAbility = CANE;
-				set(gameData->getGameText("GotCane"), true, abilitySprites[CANE]);
+				setNewAbility(CANE);
 				return true;
 			
 			//Close hint box by fading out psychedelic background
@@ -310,6 +327,12 @@ bool TextBox::update(float dt) {
 			currentPage++;
 			if (currentPage > numPages) currentPage = numPages;
 		}
+	}
+
+	//Keep updating smiley's cane particle while the hint box is up so that it doesn't just
+	//sit there unanimated because it looks gay.
+	if (textBoxType == TYPE_HINT) {
+		resources->GetParticleSystem("smileysCane")->Update(dt);
 	}
 
 	return true;
@@ -330,7 +353,7 @@ bool TextBox::doFadeOut(float dt) {
 	resources->GetFont("textBoxDialogFnt")->SetColor(ARGB(fadeAlpha,0,0,0));
 	resources->GetSprite("okIcon")->SetColor(ARGB(fadeAlpha,255,255,255));
 	resources->GetSprite("arrowIcon")->SetColor(ARGB(fadeAlpha,255,255,255));
-	//npcSprites[BILL_CLINTON][DOWN]->SetColor(ARGB(fadeAlpha,255,255,255));
+	resources->GetSprite("billClinton")->SetColor(ARGB(fadeAlpha,255,255,255));
 	for (int i = 0; i < PSYCHEDELIC_GRANULARITY; i++) {
 		for(int j = 0; j < PSYCHEDELIC_GRANULARITY; j++) {
 			distortion->SetColor(i, j, ARGB(fadeAlpha, 0, 0, 0));
@@ -345,7 +368,7 @@ bool TextBox::doFadeOut(float dt) {
 		resources->GetFont("textBoxDialogFnt")->SetColor(ARGB(255,0,0,0));
 		resources->GetSprite("okIcon")->SetColor(ARGB(255,255,255,255));
 		resources->GetSprite("arrowIcon")->SetColor(ARGB(255,255,255,255));
-		//npcSprites[BILL_CLINTON][DOWN]->SetColor(ARGB(255,255,255,255));
+		resources->GetSprite("billClinton")->SetColor(ARGB(255,255,255,255));
 		soundManager->playPreviousMusic();
 		return false;
 	}

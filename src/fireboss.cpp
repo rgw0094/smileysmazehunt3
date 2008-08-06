@@ -159,7 +159,7 @@ bool FireBoss::update(float dt) {
 
 	//When the player enters his chamber shut the doors and start the intro dialogue
 	if (state == FIREBOSS_INACTIVE && !startedIntroDialogue && thePlayer->gridY == startY+5  && thePlayer->gridX == startX && thePlayer->y < (startY+5)*64+33) {
-		windowManager->openDialogue(-1, TEXT_FIREBOSS_INTRO);
+		windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS_INTRO);
 		startedIntroDialogue = true;
 		soundManager->fadeOutMusic();
 
@@ -330,7 +330,7 @@ bool FireBoss::update(float dt) {
 		health = 0.0f;
 		state = FIREBOSS_FRIENDLY;
 		killOrbs();
-		windowManager->openDialogue(-1, TEXT_FIREBOSS_VICTORY);	
+		windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS_VICTORY);	
 		facing = DOWN;
 		alpha = 255;
 		saveManager->killBoss(FIRE_BOSS);

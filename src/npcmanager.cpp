@@ -90,7 +90,7 @@ bool NPCManager::talkToNPCs(Tongue *tongue) {
 	std::list<NPCStruct>::iterator i;
 	for (i = theNPCs.begin(); i != theNPCs.end(); i++) {
 		if (tongue->testCollision(i->npc->collisionBox)) {
-			windowManager->openDialogue(i->npc->id, i->npc->textID);
+			windowManager->openDialogueTextBox(i->npc->id, i->npc->textID);
 			i->npc->inConversation = true;
 			return true;
 		}
