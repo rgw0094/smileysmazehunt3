@@ -68,6 +68,7 @@
 ||0||Wander around randomly||
 ||1||Pace left and right||
 ||2||Pace up and down|| 
+||3||Stand still||
 
 ----
 = Projectile Codes =
