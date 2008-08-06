@@ -15,9 +15,15 @@ struct oneSmilelet {
 	int dir;
 	DWORD col;
 	int x,y;
+
+	int smileyHitX,smileyHitY; //use this to have the smilelet wait until the right moment to start following smiley
+	bool beginFollow;
 	
 	int beginMoveToFlowerX,beginMoveToFlowerY;
 	int endMoveToFlowerX,endMoveToFlowerY;
+
+	int beginPanicX,beginPanicY;
+	float timeBeganPanic;
 	
 	double angleOffset;
 	double angle;
@@ -42,6 +48,7 @@ private:
 	int numFollowing;
 	int flowerGridX,flowerGridY;
 	float timeEnteredState;
+	bool needsToPanic;
 
 	//Methods
 	void doSmileletWait(std::list<oneSmilelet>::iterator c);
@@ -55,6 +62,7 @@ private:
 	void switchToCircleFlower();
 	bool isFlowerAt(int gridX,int gridY);
 	int convertAngleToDir(double angle);
+	void initiatePanic();
 
 };
 
