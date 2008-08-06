@@ -201,7 +201,7 @@ void EnemyManager::update(float dt) {
  * Returns whether or not the provided collision box collides with
  * any enemies
  */
-bool EnemyManager::collidesWithEnemy(hgeRect *collisionBox) {
+bool EnemyManager::testCollision(hgeRect *collisionBox) {
 	std::list<EnemyStruct>::iterator i;
 	for (i = enemyList.begin(); i != enemyList.end(); i++) {
 		if (collisionBox->Intersect(i->enemy->collisionBox)) {

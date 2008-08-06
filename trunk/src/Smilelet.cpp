@@ -6,6 +6,7 @@
 #include "hgeresource.h"
 #include "hge.h"
 #include "environment.h"
+#include "EnemyManager.h"
 
 using namespace std;
 
@@ -14,6 +15,7 @@ extern HGE *hge;
 extern hgeResourceManager *resources;
 extern Environment *theEnvironment;
 extern float gameTime;
+extern EnemyManager *enemyManager;
 
 #define SMILELET_STATE_WAITING 0
 #define SMILELET_STATE_FOLLOWING_SMILEY 1
@@ -24,13 +26,16 @@ extern float gameTime;
 #define SMILELET_RADIUS 13
 #define DISTANCE_BETWEEN_SMILELETS 60
 
+#define SMILELET_PANIC_SPEED 200.0
+
 #define MOVE_TO_FLOWER_TIME 1.0
 #define FLOWER_RADIUS 32
 #define CIRCLE_ANGLE_PERIOD 0.5
 
 Smilelet::Smilelet() {
-	nextWormPosition=0;
-	numFollowing=0;
+	nextWormPosition = 0;
+	numFollowing = 0;
+	needsToPanic = false;
 }
 
 Smilelet::~Smilelet() {
@@ -46,6 +51,7 @@ void Smilelet::update() {
 
 	checkedForFlower=false;
 	switchedToCircleFlower=false;
+	needsToPanic=false;
 
 	for (i=theSmilelets.begin(); i!= theSmilelets.end();i++) {
 		switch(i->state) {
@@ -57,6 +63,10 @@ void Smilelet::update() {
 				if (!checkedForFlower) {
 					checkForNearbyFlower();
 					checkedForFlower=true;
+				}				
+				if (needsToPanic || thePlayer->isFlashing()) {
+					initiatePanic();
+					needsToPanic = false;
 				}
 				break;
 			case SMILELET_STATE_MOVE_TO_FLOWER:
@@ -70,6 +80,7 @@ void Smilelet::update() {
 				doSmileletCircleFlower(i);
 				break;
 			case SMILELET_STATE_RUNNING_HOME:
+				doSmileletRun(i);
 				break;
 		};
 		
@@ -139,19 +150,38 @@ void Smilelet::doSmileletWait(std::list<oneSmilelet>::iterator c) {
 void Smilelet::queueSmilelet(std::list<oneSmilelet>::iterator c) {
 	c->state = SMILELET_STATE_FOLLOWING_SMILEY;
 	c->wormPosition = nextWormPosition;
+	c->smileyHitX = thePlayer->x;
+	c->smileyHitY = thePlayer->y;
 
 	nextWormPosition++;
 	numFollowing++;
+	needsToPanic = false;
+	c->beginFollow = false;
 }
 
 void Smilelet::doSmileletFollow(std::list<oneSmilelet>::iterator c) {
+
 	WormNode node;
+	hgeRect collisionRect;
 	
 	node = thePlayer->getWormNode((c->wormPosition+1)*DISTANCE_BETWEEN_SMILELETS);
 
-	c->x = node.x;
-	c->y = node.y;
-	c->dir = node.dir;
+	if (node.x == c->smileyHitX && node.y == c->smileyHitY) c->beginFollow = true;
+
+	if (c->beginFollow) {
+		c->x = node.x;
+		c->y = node.y;
+		c->dir = node.dir;
+
+		collisionRect.x1 = c->x - SMILELET_RADIUS;
+		collisionRect.x2 = c->x + SMILELET_RADIUS;
+		collisionRect.y1 = c->y - SMILELET_RADIUS;
+		collisionRect.y2 = c->y + SMILELET_RADIUS;
+		
+		if (enemyManager->testCollision(&collisionRect)) {
+			needsToPanic = true;
+		}
+	}
 }
 
 void Smilelet::doSmileletMoveToFlower(std::list<oneSmilelet>::iterator c) {
@@ -175,6 +205,18 @@ void Smilelet::doSmileletCircleFlower(std::list<oneSmilelet>::iterator c) {
 }
 
 void Smilelet::doSmileletRun(std::list<oneSmilelet>::iterator c) {
+	c->x = (float)c->beginPanicX + timePassedSince(c->timeBeganPanic) * SMILELET_PANIC_SPEED * cos(c->angle);
+	c->y = (float)c->beginPanicY + timePassedSince(c->timeBeganPanic) * SMILELET_PANIC_SPEED * sin(c->angle);
+
+	//Calculate how long it should take to get to the destination
+	double timeToDestination = distance(c->beginPanicX,c->beginPanicY,c->initialXPosition,c->initialYPosition) / SMILELET_PANIC_SPEED;
+
+	//If we've been running longer than that, stop running
+	if (timePassedSince(c->timeBeganPanic) >= timeToDestination) {
+		c->x = c->initialXPosition;
+		c->y = c->initialYPosition;
+		c->state = SMILELET_STATE_WAITING;
+	}
 
 }
 
@@ -270,3 +312,26 @@ int Smilelet::convertAngleToDir(double angle) {
 
 	return dir;
 }
+
+void Smilelet::initiatePanic() {
+	
+	std::list<oneSmilelet>::iterator i;
+
+	for (i = theSmilelets.begin(); i != theSmilelets.end(); i++) {
+		if (i->state == SMILELET_STATE_FOLLOWING_SMILEY) {
+			i->state = SMILELET_STATE_RUNNING_HOME;
+
+			i->timeBeganPanic = gameTime;
+			i->beginPanicX = i->x;
+			i->beginPanicY = i->y;
+
+			i->angle = getAngleBetween(i->x,i->y,i->initialXPosition,i->initialYPosition);
+
+			i->dir = convertAngleToDir(i->angle);
+		}
+	}
+	
+	numFollowing = 0;
+	nextWormPosition = 0;
+}
+

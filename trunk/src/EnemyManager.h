@@ -48,7 +48,7 @@ public:
 	bool tongueCollision(Tongue *tongue, float damage);
 	void freezeEnemies(int x, int y);
 	void unFreezeEnemies(int x, int y);
-	bool collidesWithEnemy(hgeRect *collisionBox);
+	bool testCollision(hgeRect *collisionBox);
 	bool collidesWithFrozenEnemy(CollisionCircle *circle);
 	void doAStar(BaseEnemy *enemy);
 	void reset();
