@@ -129,9 +129,19 @@ bool WindowManager::isOpenWindow() {
 /**
  * Opens a standard text box.
  */
-void WindowManager::openTextBox(char* text, bool hasGraphic, hgeSprite *graphic) {
+void WindowManager::openSignTextBox(int signId) {
 	TextBox *textBox = new TextBox();
-	textBox->set(text, hasGraphic, graphic);
+	textBox->setSign(signId);
+	openWindow(textBox);
+	textBoxOpen = true;
+}
+
+/**
+ * Opens a text box to inform the user they got a new ability.
+ */
+void WindowManager::openNewAbilityTextBox(int whichAbility) {
+	TextBox *textBox = new TextBox();
+	textBox->setNewAbility(whichAbility);
 	openWindow(textBox);
 	textBoxOpen = true;
 }
@@ -139,7 +149,7 @@ void WindowManager::openTextBox(char* text, bool hasGraphic, hgeSprite *graphic)
 /**
  * Opens a text box for dialogue.
  */
-void WindowManager::openDialogue(int _npcID, int _textID) {
+void WindowManager::openDialogueTextBox(int _npcID, int _textID) {
 	TextBox *textBox = new TextBox();
 	textBox->setDialogue(_npcID, _textID);
 	openWindow(textBox);
@@ -149,7 +159,7 @@ void WindowManager::openDialogue(int _npcID, int _textID) {
 /**
  * Opens a text box to display hints.
  */
-void WindowManager::openHint() {
+void WindowManager::openHintTextBox() {
 	TextBox *textBox = new TextBox();
 	textBox->setHint();
 	openWindow(textBox);

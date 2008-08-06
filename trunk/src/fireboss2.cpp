@@ -157,7 +157,7 @@ bool FireBossTwo::update(float dt) {
 	if (state == FIREBOSS_INACTIVE && !startedIntroDialogue) {
 		//When Phyrebozz's group is triggered start the intro dialogue
 		if (enemyGroupManager->groups[groupID].triggeredYet) {
-			windowManager->openDialogue(-1, TEXT_FIREBOSS2_INTRO);
+			windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS2_INTRO);
 			startedIntroDialogue = true;
 			soundManager->fadeOutMusic();
 			facing = UP;
@@ -408,7 +408,7 @@ void FireBossTwo::die() {
 	health = 0.0f;
 	state = FIREBOSS_FRIENDLY;
 	killOrbs();
-	windowManager->openDialogue(-1, TEXT_FIREBOSS2_VICTORY);	
+	windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS2_VICTORY);	
 	facing = DOWN;
 	alpha = 255;
 	saveManager->killBoss(FIRE_BOSS2);

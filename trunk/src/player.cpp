@@ -45,9 +45,6 @@ extern LoadEffectManager *loadEffectManager;
 extern float gameTime;
 extern int frameCounter;
 
-//Sprites
-extern hgeSprite *abilitySprites[NUM_ABILITIES];
-
 //Variables
 extern bool debugMode;
 extern int gameState;
@@ -170,7 +167,7 @@ void Player::update(float dt) {
 	screenX = getScreenX(x);
 	screenY = getScreenY(y);
 	baseX = x + 0;
-	baseY = y + 15;
+	baseY = y + 15 * shrinkScale;
 	baseGridX = baseX / 64.0;
 	baseGridY = baseY / 64.0;
 	saveManager->playerGridX = gridX;
@@ -249,7 +246,7 @@ void Player::update(float dt) {
 	}
 	tongue->update(dt);
 
-	//Do worm
+	//Do worm (for smilelets)
 	worm->update();
 
 	//Do shit
@@ -510,7 +507,8 @@ void Player::drawGUI(float dt) {
 	//Draw selected ability
 	resources->GetSprite("abilityBox")->Render(28,28);
 	if (selectedAbility != NO_ABILITY) {
-		abilitySprites[selectedAbility]->Render(39,39);
+		resources->GetAnimation("abilities")->SetFrame(selectedAbility);
+		resources->GetAnimation("abilities")->Render(39,39);
 	}
 
 	//Draw money
@@ -604,7 +602,6 @@ void Player::doAbility(float dt) {
 	isHovering = ((isHovering || theEnvironment->collision[gridX][gridY] == HOVER_PAD) &&
 			selectedAbility == HOVER &&
 			input->keyDown(INPUT_ABILITY) &&
-			//canUseAbility &&
 			mana >= gameData->getAbilityInfo(HOVER).manaCost*dt);
 	
 	//For debug purposes H will always hover
@@ -835,7 +832,7 @@ void Player::doAbility(float dt) {
 			resources->GetParticleSystem("smileysCane")->Stop(false);
 			usingCane = false;
 			facing = DOWN;
-			windowManager->openHint();
+			windowManager->openHintTextBox();
 		}
 	}
 

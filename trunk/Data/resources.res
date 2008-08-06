@@ -532,6 +532,13 @@ Sprite mouseCursor {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=1
 }
+Sprite sillyPad {
+ texture=general
+ rect=576,0,64,64
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=1
+}
 Sprite blackScreen {
  texture=general
  rect=97,65,30,30
@@ -559,6 +566,23 @@ Sprite loading {
  hotspot=200,200
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=1
+}
+Sprite billClinton {
+ texture=npcTx
+ rect=0,512,64,64
+ hotspot=32,32
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=1
+}
+Animation abilities {
+ texture=general
+ rect=192,0,64,64
+ frames=16
+ fps=0.0
+ mode=LOOP
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=4
 }
 
 ;*********************

@@ -112,7 +112,7 @@ bool SnowBoss::update(float dt) {
 	//When smiley triggers the boss' enemy blocks start his dialogue.
 	if (state == SNOWBOSS_INACTIVE && !startedIntroDialogue) {
 		if (enemyGroupManager->groups[groupID].triggeredYet) {
-			windowManager->openDialogue(-1, SNOWBOSS_INTROTEXT);
+			windowManager->openDialogueTextBox(-1, SNOWBOSS_INTROTEXT);
 			startedIntroDialogue = true;
 		} else {
 			return false;
@@ -274,7 +274,7 @@ bool SnowBoss::update(float dt) {
 			
 			health -= DAMAGE_FROM_DROWNING;
 			if (health <= 0) {
-				windowManager->openDialogue(-1, SNOWBOSS_DEFEATTEXT);
+				windowManager->openDialogueTextBox(-1, SNOWBOSS_DEFEATTEXT);
 				enterState(SNOWBOSS_PRE_DEATH);
 			}
 		}
@@ -285,7 +285,7 @@ bool SnowBoss::update(float dt) {
 		if (timePassedSince(timeEnteredState) > 0.1) {
 			if (!startedDrowningDialogue) {
 				startedDrowningDialogue = true;
-				windowManager->openDialogue(-1, SNOWBOSS_BATTLETEXT_1);
+				windowManager->openDialogueTextBox(-1, SNOWBOSS_BATTLETEXT_1);
 			}
 		}
 		if (timePassedSince(timeEnteredState) > DROWNING_TIME && !windowManager->isTextBoxOpen()) {

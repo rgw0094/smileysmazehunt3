@@ -23,7 +23,7 @@ OptionsWindow::OptionsWindow() {
 	soundVolumeSlider->setValue(soundManager->getSoundVolume());
 	musicVolumeSlider = new Slider(TOP_LEFT_X + 507.0, TOP_LEFT_Y + 92.0, 0, 100);
 	musicVolumeSlider->setValue(soundManager->getMusicVolume());
-	doneButton = new Button(TOP_LEFT_X + 360.0, TOP_LEFT_Y + 350.0, "Done");
+	doneButton = new Button(TOP_LEFT_X + 360.0, TOP_LEFT_Y + 340.0, "Done");
 }
 
 /**

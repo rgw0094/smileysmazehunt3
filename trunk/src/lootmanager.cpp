@@ -15,7 +15,6 @@ extern WindowManager *windowManager;
 extern SaveManager *saveManager;
 extern Player *thePlayer;
 extern HGE *hge;
-extern hgeSprite* abilitySprites[NUM_ABILITIES];
 extern hgeResourceManager *resources;
 extern GameData *gameData;
 extern float gameTime;
@@ -105,34 +104,9 @@ void LootManager::update(float dt) {
 				thePlayer->mana += 20.0f;
 				if (thePlayer->mana > thePlayer->getMaxMana()) thePlayer->mana = thePlayer->getMaxMana();
 			} else if (i->type == LOOT_NEW_ABILITY) {
-
-				//Show a message for the new ability
-				switch (i->ability) {
-					case WATER_BOOTS:
-						saveManager->hasAbility[WATER_BOOTS] = true;
-						windowManager->openTextBox(gameData->getGameText("GotJesusSandals"), true, abilitySprites[WATER_BOOTS]);
-						break;
-					case FRISBEE:
-						saveManager->hasAbility[FRISBEE] = true;
-						windowManager->openTextBox(gameData->getGameText("GotFrisbee"), true, abilitySprites[FRISBEE]);
-						break;
-					case FIRE_BREATH:
-						saveManager->hasAbility[FIRE_BREATH] = true;
-						windowManager->openTextBox(gameData->getGameText("GotFireBreath"), true, abilitySprites[FIRE_BREATH]);
-						break;
-					case SPRINT_BOOTS:
-						saveManager->hasAbility[SPRINT_BOOTS] = true;
-						windowManager->openTextBox(gameData->getGameText("GotSprintBoots"), true, abilitySprites[SPRINT_BOOTS]);
-						break;
-					case LIGHTNING_ORB:
-						saveManager->hasAbility[LIGHTNING_ORB] = true;
-						windowManager->openTextBox(gameData->getGameText("GotLightningOrb"), true, abilitySprites[LIGHTNING_ORB]);
-						break;
-					case REFLECTION_SHIELD:
-						saveManager->hasAbility[REFLECTION_SHIELD] = true;
-						windowManager->openTextBox(gameData->getGameText("GotReflectionShield"), true, abilitySprites[REFLECTION_SHIELD]);
-						break;
-				}
+				saveManager->hasAbility[i->ability] = true;
+				thePlayer->selectedAbility = i->ability;
+				windowManager->openNewAbilityTextBox(i->ability);
 			}
 			//Delete the loot
 			i = theLoot.erase(i);

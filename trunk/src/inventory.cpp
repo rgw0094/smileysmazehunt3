@@ -20,7 +20,7 @@ extern SaveManager *saveManager;
 extern GameData *gameData;
 
 //Sprites
-extern hgeSprite *itemLayer[256], *abilitySprites[12];
+extern hgeSprite *itemLayer[256];
 
 #define INVENTORY_X_OFFSET ((1024.0-660.0)/2.0)
 #define INVENTORY_Y_OFFSET ((768.0-492.0)/2.0)
@@ -52,7 +52,8 @@ void Inventory::draw(float dt) {
 	for (int i = 0; i < WIDTH; i++) {
 		for (int j = 0; j < HEIGHT; j++) {
 			if (saveManager->hasAbility[j*4 + i]) {
-				abilitySprites[j*4 + i]->Render(INVENTORY_X_OFFSET + 40 + i*SQUARE_SIZE, INVENTORY_Y_OFFSET + 40 + j*SQUARE_SIZE);
+				resources->GetAnimation("abilities")->SetFrame(j*4+i);
+				resources->GetAnimation("abilities")->Render(INVENTORY_X_OFFSET + 40 + i*SQUARE_SIZE, INVENTORY_Y_OFFSET + 40 + j*SQUARE_SIZE);
 				//Draw the ability name and info if it is highlighted
 				if (cursorX == i && cursorY == j) {
 					resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET+170,INVENTORY_Y_OFFSET+275,HGETEXT_CENTER,"%s", gameData->getAbilityInfo(j*4 + i).name);

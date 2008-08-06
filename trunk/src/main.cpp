@@ -40,7 +40,6 @@ LoadEffectManager *loadEffectManager;
 HTEXTURE mainLayerTexture, walkLayerTexture;
 
 //Sprites
-hgeSprite *abilitySprites[NUM_ABILITIES];
 hgeSprite *mainLayer[256], *itemLayer[512], *walkLayer[256];
 
 //Variables
@@ -102,11 +101,6 @@ void loadResources() {
 	resources->GetAnimation("greenWater")->Play();
 	resources->GetAnimation("lava")->Play();
 	resources->GetAnimation("fountainRipple")->Play();
-
-	//Ability Sprites
-	for (int i = 0; i < NUM_ABILITIES; i++) {
-		abilitySprites[i] = new hgeSprite(resources->GetTexture("general"),193+i*64,1,62,62);
-	}
 
 }
 
@@ -287,7 +281,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			if (mainLayer[i]) delete mainLayer[i];
 			if (walkLayer[i]) delete walkLayer[i];
 		}
-		for (int i = 0; i < NUM_ABILITIES; i++) delete abilitySprites[i];
 		delete thePlayer;
 		delete theEnvironment;
 		delete windowManager;
