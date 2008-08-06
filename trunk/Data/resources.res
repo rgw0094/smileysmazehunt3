@@ -838,7 +838,7 @@ Animation smileyTongue {
  texture=animations
  rect=640,419,12,71
  frames=11
- fps=60.0
+ fps=100.0
  mode=LOOP
  hotspot=6,70
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
