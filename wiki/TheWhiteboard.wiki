@@ -8,6 +8,7 @@
  * Finish Phyrebozz 2
  * Lovecraftian Boss
  * King Tut
+ * Bartli
  * Calypso 2
  * Parallax pits - Use ID layer to change HUE to match the level
  * Make yellow and green switches more saturated
