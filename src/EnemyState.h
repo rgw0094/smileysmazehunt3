@@ -14,6 +14,7 @@ class BaseEnemy;
 #define WANDER_RIGHT 1
 #define WANDER_UP 2
 #define WANDER_DOWN 3
+#define WANDER_STAND_STILL 4
 
 //Wander types defined in enemy.bat
 #define WANDER_NORMAL 0
