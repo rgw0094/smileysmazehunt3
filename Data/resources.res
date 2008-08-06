@@ -312,6 +312,11 @@ Music kingTutMusic {
  amplify=50
  resgroup=11
 }
+Music castleOfEvilMusic {
+ filename="castleOfEvil.mod"
+ amplify=50
+ resgroup=11
+}
 
 ;**************************
 ;******** FOUNTAIN ********
