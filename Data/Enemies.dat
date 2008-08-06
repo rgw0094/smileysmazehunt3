@@ -788,16 +788,18 @@ numEnemies="51"
 46SWater=    "T"
 46Chases=    "T"
 
-;Mummy Charger
-47GCol=      "4"
+;Snake
+47GCol=      "8"
 47GRow=      "7"
+47NumFrames= "2"
 47EnemyType= "4"
 47WanderType="0"
-47HP=        "250"
-47Damage=    "25"
+47HP=        "350"
+47Damage=    "75"
 47Radius=    "28"
 47Speed=     "100"
 47Land=      "T"
+47Lava=      "T"
 47SWater=    "T"
 47Chases=    "T"
 
@@ -835,7 +837,7 @@ numEnemies="51"
 49Chases=    "F"
 
 
-;Killer Croc
+;Protector
 50GCol=      "4"
 50GRow=      "3"
 50EnemyType= "0"
@@ -848,3 +850,4 @@ numEnemies="51"
 50SWater=    "T"
 50Slime=     "T"
 50Chases=    "T"
+
