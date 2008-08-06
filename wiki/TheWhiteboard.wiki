@@ -11,7 +11,6 @@
  * Calypso 2
  * Parallax pits - Use ID layer to change HUE to match the level
  * Make yellow and green switches more saturated
- * Better Ranged enemy AI to make it less gay
  * Tentacles are too easy right now.  Change their movement pattern?
  * Have Fenwar make more appearances than just in Smolder Hollow and the end
  * Make the fountain heal you
