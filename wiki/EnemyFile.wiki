@@ -26,12 +26,12 @@
 ||Variable 1||Usage is enemy-dependent, see below||any int||N||
 ||Variable 2||Usage is enemy-dependent, see below||any int||N||
 ||Chases||If the enemy chases Smiley when he gets near||T/F||If EnemyType==0||
-||HasRanged||If the enemy has a ranged attack||T/F||If EnemyType==0||
+||HasRanged||If the enemy has a ranged attack||T/F||??||
 ||Range||Projectile attack range||any int||If EnemyType==0 && HasRanged==T||
-||Delay||Projectile attack deley in seconds|| any int ||If EnemyType==0 && HasRanged==T||
-||PDamage||Projectile damage. 100 = 1 smiley face||any int||If EnemyType==0 && HasRanged==T||
-||PSpeed||Projectile speed in pixels/second||any float||If EnemyType==0 && HasRanged==T||
-||PType||What type of projectile the enemy shoots||int, see chart below||If EnemyType==0 && HasRanged==T||
+||Delay||Projectile attack deley in seconds|| any int ||If HasRanged==T||
+||PDamage||Projectile damage. 100 = 1 smiley face||any int||If HasRanged==T||
+||PSpeed||Projectile speed in pixels/second||any float||If HasRanged==T||
+||PType||What type of projectile the enemy shoots||int, see chart below||If HasRanged==T||
 
 ----
 = Enemy Types =
