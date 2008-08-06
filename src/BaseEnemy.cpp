@@ -442,7 +442,7 @@ void BaseEnemy::baseUpdate(float dt) {
 	}
 
 	//Update default animations
-	if (!frozen && !stunned && (dx > 0.0 || dy > 0.0)) {
+	if (!frozen && !stunned && (abs(dx) > 0.0 || abs(dy) > 0.0)) {
 		for (int n = 0; n < 4; n++) {
 			graphic[n]->Update(dt);
 		}
