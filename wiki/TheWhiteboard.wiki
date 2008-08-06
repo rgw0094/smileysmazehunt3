@@ -4,6 +4,7 @@
  * Hillary
 
 === Programming To Do ===
+ * Hopping enemy. Support the chases variable.
  * When enemy graphics overlap draw them so that the lower enemy on the screen is on top
  * Finish Phyrebozz 2
  * Lovecraftian Boss
