@@ -27,6 +27,11 @@ ES_Wander::ES_Wander(BaseEnemy *_owner) {
 		owner->dx = 0;
 		owner->dy = owner->speed;
 	}
+	if (owner->wanderType == WANDER_STAND_STILL) {
+		owner->facing = DOWN;
+		owner->dx = 0;
+		owner->dy = 0;
+	}
 
 }
 
