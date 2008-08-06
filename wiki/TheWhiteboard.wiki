@@ -4,7 +4,6 @@
  * Hillary
 
 === Programming To Do ===
- * "Stand Still" wander type
  * When enemy graphics overlap draw them so that the lower enemy on the screen is on top
  * Finish Phyrebozz 2
  * Lovecraftian Boss
@@ -34,6 +33,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||"Stand Still" wander type||8/5/08||RGW||
 ||Refactor text box||8/5/08||RGW||
 ||Bug Fix: drowning while shrunk||8/5/08||RGW||
 ||More enjoyable ranged/charger AI||8/5/08||RGW||
