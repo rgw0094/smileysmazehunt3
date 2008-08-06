@@ -94,11 +94,11 @@ void Tongue::update(float dt) {
 		}
 
 	} else if (tongueState == STATE_SWINGING) {
-		tongueOffsetAngle += 5.0 * PI * dt;
-		if (tongueOffsetAngle > ATTACK_RADIUS / 2.0) tongueOffsetAngle = ATTACK_RADIUS / 2.0;
+		tongueOffsetAngle += 8.0 * PI * dt;
 
 		//When tongue finishes swinging, start retracting it
 		if (tongueOffsetAngle > ATTACK_RADIUS / 2.0) {
+			tongueOffsetAngle = ATTACK_RADIUS / 2.0;
 			resources->GetAnimation("smileyTongue")->SetFrame(10);
 			resources->GetAnimation("smileyTongue")->SetMode(HGEANIM_REV);
 			resources->GetAnimation("smileyTongue")->Play();

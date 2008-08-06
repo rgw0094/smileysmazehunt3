@@ -62,8 +62,6 @@ extern int gameState;
  * Constructor
  */
 Player::Player(int _gridX, int _gridY) {
-
-	gameTime = hge->Timer_GetTime();
 		
 	//Initialize variables
 	moveTo(_gridX, _gridY);
@@ -114,12 +112,12 @@ Player::Player(int _gridX, int _gridY) {
 
 	mouthXOffset[LEFT] = -20;
 	mouthYOffset[LEFT] = 10;
-	mouthXOffset[RIGHT] = 20;
+	mouthXOffset[RIGHT] = 18;
 	mouthYOffset[RIGHT] = 10;
 	mouthXOffset[UP] = 0;
 	mouthYOffset[UP] = -10;
 	mouthXOffset[DOWN] = -2;
-	mouthYOffset[DOWN] = 15;
+	mouthYOffset[DOWN] = 13;
 	mouthXOffset[UP_LEFT] = -10;
 	mouthYOffset[UP_LEFT] = -5;
 	mouthXOffset[UP_RIGHT] = 5;
@@ -242,7 +240,8 @@ void Player::update(float dt) {
 			!reflectionShieldActive &&
 			frameCounter > windowManager->frameLastWindowClosed) {			
 		saveManager->numTongueLicks++;
-		tongue->startAttack();	
+		tongue->startAttack();
+		dx = dy = 0;
 	}
 	tongue->update(dt);
 

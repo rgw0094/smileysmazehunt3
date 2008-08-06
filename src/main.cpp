@@ -277,9 +277,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// Free loaded shit
 		delete resources;
 		for (int i = 0; i < 256; i++) {
-			if (itemLayer[i]) delete itemLayer[i];
 			if (mainLayer[i]) delete mainLayer[i];
 			if (walkLayer[i]) delete walkLayer[i];
+		}
+		for (int i = 0; i < 512; i++) {
+			if (itemLayer[i]) delete itemLayer[i];
 		}
 		delete thePlayer;
 		delete theEnvironment;
