@@ -12,6 +12,7 @@
 #define MUSHROOM_BOSS 244
 #define DESPAIR_BOSS 245
 #define FIRE_BOSS2 246
+#define CANDY_BOSS 247
 
 extern hgeResourceManager *resources;
 
