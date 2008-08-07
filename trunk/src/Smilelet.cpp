@@ -7,6 +7,7 @@
 #include "hge.h"
 #include "environment.h"
 #include "EnemyManager.h"
+#include "Projectiles.h"
 
 using namespace std;
 
@@ -16,6 +17,7 @@ extern hgeResourceManager *resources;
 extern Environment *theEnvironment;
 extern float gameTime;
 extern EnemyManager *enemyManager;
+extern ProjectileManager *projectileManager;
 
 #define SMILELET_STATE_WAITING 0
 #define SMILELET_STATE_FOLLOWING_SMILEY 1
@@ -26,7 +28,7 @@ extern EnemyManager *enemyManager;
 #define SMILELET_RADIUS 13
 #define DISTANCE_BETWEEN_SMILELETS 60
 
-#define SMILELET_PANIC_SPEED 200.0
+#define SMILELET_PANIC_SPEED 350.0
 
 #define MOVE_TO_FLOWER_TIME 1.0
 #define FLOWER_RADIUS 32
@@ -64,7 +66,7 @@ void Smilelet::update() {
 					checkForNearbyFlower();
 					checkedForFlower=true;
 				}				
-				if (needsToPanic || thePlayer->isFlashing()) {
+				if (needsToPanic || thePlayer->isFlashing() || !thePlayer->isShrunk()) {
 					initiatePanic();
 					needsToPanic = false;
 				}
@@ -116,6 +118,7 @@ void Smilelet::addSmilelet(int xGrid,int yGrid,int color) {
 	newSmilelet.collisionCircle->x = newSmilelet.x;
 	newSmilelet.collisionCircle->y = newSmilelet.y;
 	newSmilelet.collisionCircle->radius = SMILELET_RADIUS;
+	newSmilelet.dir = DOWN;
 
 	onesDigit = color % 10; color /= 10;
 	tensDigit = color % 10; color /= 10;
@@ -155,8 +158,8 @@ void Smilelet::queueSmilelet(std::list<oneSmilelet>::iterator c) {
 
 	nextWormPosition++;
 	numFollowing++;
-	needsToPanic = false;
 	c->beginFollow = false;
+	c->timeBeganBobbing = gameTime;
 }
 
 void Smilelet::doSmileletFollow(std::list<oneSmilelet>::iterator c) {
@@ -166,11 +169,15 @@ void Smilelet::doSmileletFollow(std::list<oneSmilelet>::iterator c) {
 	
 	node = thePlayer->getWormNode((c->wormPosition+1)*DISTANCE_BETWEEN_SMILELETS);
 
-	if (node.x == c->smileyHitX && node.y == c->smileyHitY) c->beginFollow = true;
+	if (distance(node.x,node.y,c->x,c->y) <= SMILELET_RADIUS + thePlayer->radius + 4) {
+		c->beginFollow = true;
+	} else { //Bob up and down in excited anticipation
+		c->y = c->initialYPosition - (sin(timePassedSince(c->timeBeganBobbing)*10)*sin(timePassedSince(c->timeBeganBobbing)*10)) * 10.0; 
+	}
 
 	if (c->beginFollow) {
 		c->x = node.x;
-		c->y = node.y;
+		c->y = node.y - (sin(timePassedSince(c->timeBeganBobbing)*10)*sin(timePassedSince(c->timeBeganBobbing)*10)) * 10.0;
 		c->dir = node.dir;
 
 		collisionRect.x1 = c->x - SMILELET_RADIUS;
@@ -179,6 +186,10 @@ void Smilelet::doSmileletFollow(std::list<oneSmilelet>::iterator c) {
 		collisionRect.y2 = c->y + SMILELET_RADIUS;
 		
 		if (enemyManager->testCollision(&collisionRect)) {
+			needsToPanic = true;
+		}
+
+		if (projectileManager->killProjectilesInBox(&collisionRect,PROJECTILE_ALL,true,false)) {
 			needsToPanic = true;
 		}
 	}

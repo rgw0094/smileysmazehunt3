@@ -18,6 +18,7 @@ struct oneSmilelet {
 
 	int smileyHitX,smileyHitY; //use this to have the smilelet wait until the right moment to start following smiley
 	bool beginFollow;
+	float timeBeganBobbing;
 	
 	int beginMoveToFlowerX,beginMoveToFlowerY;
 	int endMoveToFlowerX,endMoveToFlowerY;

@@ -11,6 +11,7 @@ class hgeSprite;
 
 //Projectile Types
 #define NUM_PROJECTILES 9
+#define PROJECTILE_ALL -1
 #define PROJECTILE_1 0
 #define PROJECTILE_FRISBEE 1
 #define PROJECTILE_LIGHTNING_ORB 2
