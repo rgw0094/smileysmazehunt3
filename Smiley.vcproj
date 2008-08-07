@@ -282,6 +282,9 @@
 					RelativePath=".\src\BossManager.cpp">
 				</File>
 				<File
+					RelativePath=".\src\CandyBoss.cpp">
+				</File>
+				<File
 					RelativePath=".\src\DesertBoss.cpp">
 				</File>
 				<File
@@ -373,6 +376,9 @@
 				Filter="">
 				<File
 					RelativePath=".\src\boss.h">
+				</File>
+				<File
+					RelativePath=".\src\CandyBoss.h">
 				</File>
 				<File
 					RelativePath=".\src\DesertBoss.h">

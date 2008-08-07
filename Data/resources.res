@@ -1210,6 +1210,20 @@ Animation owlet {
 }
 
 ;*****************************
+;******** BARTLI *************
+;*****************************
+Animation bartli {
+ texture="Graphics/Bartli.png"
+ rect=0,0,110,132
+ frames=2
+ fps=20.0
+ mode=LOOP,PINGPONG
+ hotspot=55,116
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=102
+}
+
+;*****************************
 ;******** PROJECTILES ********
 ;*****************************
 Texture projectileTx {

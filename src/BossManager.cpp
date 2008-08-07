@@ -6,6 +6,7 @@
 #include "MushroomBoss.h"
 #include "DespairBoss.h"
 #include "Fireboss2.h"
+#include "CandyBoss.h"
 #include "EnemyGroupManager.h"
 #include "hge.h"
 
@@ -43,6 +44,8 @@ void BossManager::spawnBoss(int bossID, int groupID, int gridX, int gridY) {
 		newBoss.boss = new DespairBoss(gridX, gridY, groupID);
 	} else if (bossID == FIRE_BOSS2) {
 		newBoss.boss = new FireBossTwo(gridX, gridY, groupID);
+	} else if (bossID == CANDY_BOSS) {
+		newBoss.boss = new CandyBoss(gridX, gridY, groupID);
 	} else {
 		//Unimplemented boss - exit the program
 		hge->System_Log("FATAL ERROR: BossManager.spawnBoss() received invalid boss ID!!!");
