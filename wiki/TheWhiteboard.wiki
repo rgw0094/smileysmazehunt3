@@ -33,7 +33,7 @@
 
 ===Done===
 ||Item||Date||Done By||
-||Yellow/green saturation||8/6/08||ETI||
+||Increase yellow/green switch saturation||8/6/08||ETI||
 ||Smilelets||8/6/08||ETI||
 ||"Stand Still" wander type||8/5/08||RGW||
 ||Refactor text box||8/5/08||RGW||
