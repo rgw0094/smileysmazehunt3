@@ -12,12 +12,10 @@
  * Bartli
  * Calypso 2
  * Parallax pits - Use ID layer to change HUE to match the level
- * Make yellow and green switches more saturated
  * Tentacles are too easy right now.  Change their movement pattern?
  * Have Fenwar make more appearances than just in Smolder Hollow and the end
  * Make the fountain heal you
  * Make not just switches but moving cylinders/mirrors/arrows make a noise.  That way if a far off switch is activating them they don't move silently.  We still need to have the sounds be dependent on how far Smiley is from them though since otherwise levels would just be constant switch-activation noises due to the turrets.
- * Finish Smilelet framework.
 
 === Bugs To Consider ===
  * Timed cylinder bug:  In Tut's Tomb I have cylinders that are up and go down for 1 second when you shoot the switch.  But if you shoot the switch with two orbs slightly far apart and stand on the now down cylinder just after the 1st orb hits, the cylinders stay down even after you step off of them.
@@ -35,6 +33,8 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Yellow/green saturation||8/6/08||ETI||
+||Smilelets||8/6/08||ETI||
 ||"Stand Still" wander type||8/5/08||RGW||
 ||Refactor text box||8/5/08||RGW||
 ||Bug Fix: drowning while shrunk||8/5/08||RGW||
