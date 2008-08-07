@@ -386,7 +386,7 @@ int ProjectileManager::killProjectilesInBox(hgeRect *collisionBox, int type, boo
 	std::list<Projectile>::iterator i;
 	for (i = theProjectiles.begin(); i != theProjectiles.end(); i++) {
 		if ((i->hostile && killHostile) || (!i->hostile && killNonHostile)) {
-			if (i->id == type && collisionBox->Intersect(i->collisionBox)) {
+			if ((i->id == type || type == PROJECTILE_ALL) && collisionBox->Intersect(i->collisionBox)) {
 				delete i->collisionBox;
 				i = theProjectiles.erase(i);
 				numCollisions++;
