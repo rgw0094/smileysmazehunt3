@@ -7,9 +7,18 @@
 class hgeRect;
 class WeaponParticleSystem;
 
+#define FLAME_WALL_NUM_PARTICLES 6
+
 struct FlameLauncher {
 	int gridX, gridY;
 	int facing;
+};
+
+struct FlameWall {
+	int x, y, int direction;
+	float seperation;
+	hgeParticleSystem* particles[FLAME_WALL_NUM_PARTICLES];
+	hgeRect *collisionBox;
 };
 
 struct FireBall {
@@ -29,30 +38,37 @@ public:
 	FireBossTwo(int gridX, int gridY, int groupID);
 	~FireBossTwo();
 
-	//methods
 	void draw(float dt);
 	bool update(float dt);
 	bool updateState(float dt);
+	
 	void addFireBall(float x, float y, float angle, float speed);
 	void drawFireBalls(float dt);
 	void updateFireBalls(float dt);
+	void killOrbs();
+	
+	void addFlameWall(float x, float y, int direction);
+	void drawFlameWalls(float dt);
+	void updateFlameWalls(float dt);
+	void resetFlameWalls();
+
 	void drawFlameLaunchers(float dt);
+	void launchFlames();
 	void updateFlameLaunchers(float dt);
 	void startChasing();
 	void startMoveToPoint(int x, int y, float speed);
 	void doDamage(float damage, bool makeFlash);
 	void die();
 	void setState(int newState);
-	void killOrbs();
+	
+private:
 
-	//Variables
 	int state, facing, targetChasePoint;
 	int startX, startY;
 	float x, y;
 	float dx,dy;
 	float lastHitByTongue;
 	float startedAttackMode, lastFireBall;
-	std::list<FireBall> fireBallList;
 	bool startedIntroDialogue;
 	float startedFlashing;
 	bool flashing, increaseAlpha;
@@ -60,6 +76,7 @@ public:
 	float floatY;
 	bool droppedLoot;
 
+	float lastFlameLaunchTime;
 	float timeToMove;
 	float timeStartedMove;
 	int chaseCounter;
@@ -69,7 +86,10 @@ public:
 	hgeRect *collisionBoxes[3];
 
 	ChasePoint chasePoints[4];
-	FlameLauncher flameLaunchers[4];
+	FlameLauncher flameLaunchers[8];
+
+	std::list<FireBall> fireBallList;
+	std::list<FlameWall> flameWallList;
 
 };
 
