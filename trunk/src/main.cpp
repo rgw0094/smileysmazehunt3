@@ -158,6 +158,7 @@ bool FrameFunc() {
 
 		//Update loading effect
 		loadEffectManager->update(dt);
+		enemyGroupManager->update(dt);
 
 		//If no windows are open, update the game objects
 		if (!windowManager->isOpenWindow()) {
@@ -174,7 +175,6 @@ bool FrameFunc() {
 				lootManager->update(dt);
 				projectileManager->update(dt);
 				npcManager->update(dt);
-				enemyGroupManager->update(dt);
 			}
 
 		}
