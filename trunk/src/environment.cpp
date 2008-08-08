@@ -639,8 +639,7 @@ void Environment::draw(float dt) {
 
 	//Debug mode stuff
 	if (debugMode) {
-		//Grid co-ords and fps
-		resources->GetFont("curlz")->printf(1000,5,HGETEXT_RIGHT,"(%d,%d)  FPS: %d",thePlayer->gridX,thePlayer->gridY, hge->Timer_GetFPS());
+
 		//Column lines
 		for (int i = 0; i <= screenWidth; i++) {
 			hge->Gfx_RenderLine(i*64.0 - xOffset,0,i*64.0 - xOffset,SCREEN_HEIGHT);

@@ -611,14 +611,16 @@ void FireBossTwo::updateFlameWalls(float dt) {
 		if (i->seperation > (200.0 / float(FLAME_WALL_NUM_PARTICLES))) i->seperation = 200.0 / float(FLAME_WALL_NUM_PARTICLES);
 
 		if (i->direction == LEFT || i->direction == RIGHT) {
-			i->x += FLAME_WALL_SPEED * dt;
+			if (i->direction == RIGHT) i->x += FLAME_WALL_SPEED * dt;
+			if (i->direction == LEFT) i->x -= FLAME_WALL_SPEED * dt;
 			i->collisionBox->Set(i->x - 20, i->y - 100, i->x + 20, i->y + 100);
 			for (int j = 0; j < FLAME_WALL_NUM_PARTICLES; j++) {
 				i->particles[j]->Update(dt);
 				i->particles[j]->MoveTo(getScreenX(i->x), getScreenY(i->y + j * i->seperation - (float(FLAME_WALL_NUM_PARTICLES) * i->seperation)/2.0), true);
 			}
 		} else if (i->direction == UP || i->direction == DOWN) {
-			i->y += FLAME_WALL_SPEED * dt;
+			if (i->direction == UP) i->y -= FLAME_WALL_SPEED * dt;
+			if (i->direction == DOWN) i->y += FLAME_WALL_SPEED * dt;
 			i->collisionBox->Set(i->x - 100, i->y - 20, i->x + 100, i->y + 20);
 			for (int j = 0; j < FLAME_WALL_NUM_PARTICLES; j++) {
 				i->particles[j]->Update(dt);
