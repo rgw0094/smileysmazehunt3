@@ -49,8 +49,8 @@ extern int frameCounter;
 extern bool debugMode;
 extern int gameState;
 
-#define SLIME_ACCEL 500			//Player acceleration on slime
-#define PLAYER_ACCEL 5000		//Normal player acceleration
+#define SLIME_ACCEL 500.0			//Player acceleration on slime
+#define PLAYER_ACCEL 5000.0		//Normal player acceleration
 #define DEFAULT_RADIUS 28
 
 #define SHRINK_TUNNEL_SPEED 500.0
@@ -290,13 +290,13 @@ void Player::move(float xDist, float yDist, float dt) {
 	if (frozen) return;
 
 	if (iceSliding) {
-		xDist *= 1.2f;
-		yDist *= 1.2f;
+		xDist *= 1.2;
+		yDist *= 1.2;
 	}
 
 	//Distance to look ahead in the x direction
 	float checkXDist;
-	if (xDist < 0) {
+	if (xDist < 0.0) {
 		checkXDist = min(-1.0, xDist);
 	} else {
 		checkXDist = max(1.0, xDist);
@@ -304,16 +304,16 @@ void Player::move(float xDist, float yDist, float dt) {
 
 	//Distance to look ahead in the y direction
 	float checkYDist;
-	if (yDist < 0) {
+	if (yDist < 0.0) {
 		checkYDist = min(-1.0, yDist);
 	} else {
 		checkYDist = max(1.0, yDist);
 	}
 
 	//Check for collision with frozen enemies
-	collisionCircle->set(x + checkXDist, y + checkYDist, (PLAYER_WIDTH/2-3)*shrinkScale);
+	collisionCircle->set(x + checkXDist, y + checkYDist, (PLAYER_WIDTH/2.0-3.0)*shrinkScale);
 	bool dickens = enemyManager->collidesWithFrozenEnemy(collisionCircle);
-	collisionCircle->set(x,y,(PLAYER_WIDTH/2-3)*shrinkScale);
+	collisionCircle->set(x,y,(PLAYER_WIDTH/2.0-3.0)*shrinkScale);
 	if (dickens) return;
 
 	//-----This is really gay-----
@@ -1281,12 +1281,12 @@ void Player::doMovement(float dt) {
 	if (frozen || drowning || falling) return;
 
 	//Determine acceleration - normal ground or slime
-	float accel = (theEnvironment->collision[gridX][gridY] == SLIME && hoveringYOffset==0.0f) ? SLIME_ACCEL : PLAYER_ACCEL; 
+	float accel = (theEnvironment->collision[gridX][gridY] == SLIME && hoveringYOffset==0.0) ? SLIME_ACCEL : PLAYER_ACCEL; 
 
 	//Stop drifting when abs(dx) < accel
 	if (!iceSliding && !sliding && !springing) {
-		if (dx > -1*accel*dt && dx < accel*dt) dx = 0;
-		if (dy > -1*accel*dt && dy < accel*dt) dy = 0;
+		if (dx > -1.0*accel*dt && dx < accel*dt) dx = 0.0;
+		if (dy > -1.0*accel*dt && dy < accel*dt) dy = 0.0;
 	}
 
 	//Decelerate
