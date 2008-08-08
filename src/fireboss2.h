@@ -7,6 +7,11 @@
 class hgeRect;
 class WeaponParticleSystem;
 
+struct FlameLauncher {
+	int gridX, gridY;
+	int facing;
+};
+
 struct FireBall {
 	hgeParticleSystem *particle;
 	hgeRect *collisionBox;
@@ -31,6 +36,8 @@ public:
 	void addFireBall(float x, float y, float angle, float speed);
 	void drawFireBalls(float dt);
 	void updateFireBalls(float dt);
+	void drawFlameLaunchers(float dt);
+	void updateFlameLaunchers(float dt);
 	void startChasing();
 	void startMoveToPoint(int x, int y, float speed);
 	void doDamage(float damage, bool makeFlash);
@@ -62,6 +69,7 @@ public:
 	hgeRect *collisionBoxes[3];
 
 	ChasePoint chasePoints[4];
+	FlameLauncher flameLaunchers[4];
 
 };
 

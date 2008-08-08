@@ -1099,6 +1099,13 @@ Animation phyrebozzRightMouth {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=100
 }
+Sprite flameLauncher {
+ texture=general
+ rect=256,128,64,64
+ hotspot=32,32
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=1
+}
 
 ;*****************************
 ;****** PORTLY PENGUIN *******

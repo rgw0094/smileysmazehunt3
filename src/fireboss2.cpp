@@ -35,10 +35,10 @@ extern float gameTime;
 #define FIREBOSS_ATTACK 3
 #define FIREBOSS_FRIENDLY 4
 
-#define CHASE_POINT_TOP_LEFT 0
-#define CHASE_POINT_TOP_RIGHT 1
-#define CHASE_POINT_BOTTOM_RIGHT 2
-#define CHASE_POINT_BOTTOM_LEFT 3
+#define TOP_LEFT 0
+#define TOP_RIGHT 1
+#define BOTTOM_RIGHT 2
+#define BOTTOM_LEFT 3
 
 #define CHASE_FIREBALL_DELAY 1.0
 #define CHASE_FIREBALL_SPEED 1000.0
@@ -78,17 +78,27 @@ FireBossTwo::FireBossTwo(int gridX, int gridY, int _groupID) {
 
 	//Set up valid locations
 	//Top Left
-	chasePoints[CHASE_POINT_TOP_LEFT].x = x - 7*64;
-	chasePoints[CHASE_POINT_TOP_LEFT].y = y - 4*64;
+	chasePoints[TOP_LEFT].x = x - 7*64;
+	chasePoints[TOP_LEFT].y = y - 4*64;
 	//Top Right
-	chasePoints[CHASE_POINT_TOP_RIGHT].x = x + 7*64;
-	chasePoints[CHASE_POINT_TOP_RIGHT].y = y - 4*64;
+	chasePoints[TOP_RIGHT].x = x + 7*64;
+	chasePoints[TOP_RIGHT].y = y - 4*64;
 	//Bottom Left
-	chasePoints[CHASE_POINT_BOTTOM_LEFT].x = x - 7*64;
-	chasePoints[CHASE_POINT_BOTTOM_LEFT].y = y + 4*64;
+	chasePoints[BOTTOM_LEFT].x = x - 7*64;
+	chasePoints[BOTTOM_LEFT].y = y + 4*64;
 	//Bottom Right
-	chasePoints[CHASE_POINT_BOTTOM_RIGHT].x = x + 7*64;
-	chasePoints[CHASE_POINT_BOTTOM_RIGHT].y = y + 4*64;
+	chasePoints[BOTTOM_RIGHT].x = x + 7*64;
+	chasePoints[BOTTOM_RIGHT].y = y + 4*64;
+
+	//Set up flame launchers
+	//Top left
+	flameLaunchers[0].gridX = startX - 10;
+	flameLaunchers[0].gridY = startY - 4;
+	flameLaunchers[0].facing = RIGHT;
+	flameLaunchers[1].gridX = startX - 7;
+	flameLaunchers[1].gridY = startY - 7;
+	flameLaunchers[1].facing = DOWN;
+	//Top right
 
 }
 
@@ -107,7 +117,7 @@ FireBossTwo::~FireBossTwo() {
  */
 void FireBossTwo::draw(float dt) {
 
-	//Draw Orbs
+	drawFlameLaunchers(dt);
 	drawFireBalls(dt);
 
 	//Draw the boss' main sprite
@@ -425,15 +435,15 @@ void FireBossTwo::startChasing() {
 	state = FIREBOSS_CHASE;
 
 	//Determine the chase point closest to Smiley to start at
-	int dist1 = distance(thePlayer->x, thePlayer->y, chasePoints[CHASE_POINT_TOP_LEFT].x, chasePoints[CHASE_POINT_TOP_LEFT].y);
-	int dist2 = distance(thePlayer->x, thePlayer->y, chasePoints[CHASE_POINT_TOP_RIGHT].x, chasePoints[CHASE_POINT_TOP_RIGHT].y);
-	int dist3 = distance(thePlayer->x, thePlayer->y, chasePoints[CHASE_POINT_BOTTOM_LEFT].x, chasePoints[CHASE_POINT_BOTTOM_LEFT].y);
-	int dist4 = distance(thePlayer->x, thePlayer->y, chasePoints[CHASE_POINT_BOTTOM_RIGHT].x, chasePoints[CHASE_POINT_BOTTOM_RIGHT].y);
+	int dist1 = distance(thePlayer->x, thePlayer->y, chasePoints[TOP_LEFT].x, chasePoints[TOP_LEFT].y);
+	int dist2 = distance(thePlayer->x, thePlayer->y, chasePoints[TOP_RIGHT].x, chasePoints[TOP_RIGHT].y);
+	int dist3 = distance(thePlayer->x, thePlayer->y, chasePoints[BOTTOM_LEFT].x, chasePoints[BOTTOM_LEFT].y);
+	int dist4 = distance(thePlayer->x, thePlayer->y, chasePoints[BOTTOM_RIGHT].x, chasePoints[BOTTOM_RIGHT].y);
 
-	if (dist1 < dist2 && dist1 < dist3 && dist1 < dist4) targetChasePoint = CHASE_POINT_TOP_LEFT;
-	if (dist2 < dist1 && dist2 < dist3 && dist2 < dist4) targetChasePoint = CHASE_POINT_TOP_RIGHT;
-	if (dist3 < dist1 && dist3 < dist2 && dist3 < dist4) targetChasePoint = CHASE_POINT_BOTTOM_LEFT;
-	if (dist4 < dist1 && dist4 < dist2 && dist4 < dist3) targetChasePoint = CHASE_POINT_BOTTOM_RIGHT;
+	if (dist1 < dist2 && dist1 < dist3 && dist1 < dist4) targetChasePoint = TOP_LEFT;
+	if (dist2 < dist1 && dist2 < dist3 && dist2 < dist4) targetChasePoint = TOP_RIGHT;
+	if (dist3 < dist1 && dist3 < dist2 && dist3 < dist4) targetChasePoint = BOTTOM_LEFT;
+	if (dist4 < dist1 && dist4 < dist2 && dist4 < dist3) targetChasePoint = BOTTOM_RIGHT;
 	
 	startMoveToPoint(chasePoints[targetChasePoint].x, chasePoints[targetChasePoint].y, CHASE_SPEED);
 }
@@ -539,5 +549,18 @@ void FireBossTwo::killOrbs() {
 		delete i->particle;
 		delete i->collisionBox;
 		i = fireBallList.erase(i);
+	}
+}
+
+void FireBossTwo::drawFlameLaunchers(float dt) {
+	for (int i = 0; i < 2; i++) {
+		resources->GetSprite("flameLauncher")->Render(getScreenX(flameLaunchers[i].gridX*64+32), 
+			getScreenY(flameLaunchers[i].gridY*64+32));
+	}
+}
+
+void FireBossTwo::updateFlameLaunchers(float dt) {
+	for (int i = 0; i < 1; i++) {
+
 	}
 }
