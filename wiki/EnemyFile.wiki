@@ -78,3 +78,20 @@
 ||4||Penguin fish||
 ||5||Fireball||
 ||6||Turret cannonball||
+
+----
+= Enemies by Area =
+||Area||Enemies||
+||Olde Towne||Red Croc, Turtle||
+||Smolder Hollow||Fire Floater, Fangie||
+||Sessaria||Crystal, Snowman, Snowfang||
+||Forest||Floating Turnip, Squirrel, Flower||
+||Desert||Buzzard, Cactlet, ^Green Snake^||
+||Realm||^Purple Fangie^, Eye||
+||Mush Cave||Mushroom, ^Snail^||
+||Pools||Skullie, Spider||
+||Mt Frostbite||Batlet, Ice Cream Man, Candy Floater, Circular Head Thing||
+||Swamp||Buzzard, Tentacle, Crab/Clown, ^Green Croc^||
+||Tut||Tan Snake, Mummy||
+||Castle||^Red Skullie^, ^Red Spikey Ball^, Batlet(2)||
+||Superscript denotes yet to be done||||
