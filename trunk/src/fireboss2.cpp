@@ -23,7 +23,9 @@ extern EnemyGroupManager *enemyGroupManager;
 extern SaveManager *saveManager;
 extern SoundManager *soundManager;
 extern ProjectileManager *projectileManager;
+
 extern float gameTime;
+extern bool debugMode;
 
 #define TEXT_FIREBOSS2_INTRO 160
 #define TEXT_FIREBOSS2_VICTORY 161
@@ -40,6 +42,9 @@ extern float gameTime;
 #define BOTTOM_RIGHT 2
 #define BOTTOM_LEFT 3
 
+#define FLAME_LAUNCH_DELAY 3.0
+#define FLAME_WALL_DAMAGE 1.0
+#define FLAME_WALL_SPEED 300.0
 #define CHASE_FIREBALL_DELAY 1.0
 #define CHASE_FIREBALL_SPEED 1000.0
 #define CHASE_FIREBALL_DAMAGE 0.5
@@ -71,6 +76,7 @@ FireBossTwo::FireBossTwo(int gridX, int gridY, int _groupID) {
 	lastFireBall = gameTime - 5.0f;
 	startedIntroDialogue = false;
 	flashing = increaseAlpha = false;
+	lastFlameLaunchTime = gameTime;
 	floatY = 0.0f;
 	droppedLoot = false;
 
@@ -99,6 +105,26 @@ FireBossTwo::FireBossTwo(int gridX, int gridY, int _groupID) {
 	flameLaunchers[1].gridY = startY - 7;
 	flameLaunchers[1].facing = DOWN;
 	//Top right
+	flameLaunchers[2].gridX = startX + 7;
+	flameLaunchers[2].gridY = startY - 7;
+	flameLaunchers[2].facing = DOWN;
+	flameLaunchers[3].gridX = startX + 10;
+	flameLaunchers[3].gridY = startY - 4;
+	flameLaunchers[3].facing = LEFT;
+	//Bottom Right
+	flameLaunchers[4].gridX = startX + 10;
+	flameLaunchers[4].gridY = startY + 4;
+	flameLaunchers[4].facing = LEFT;
+	flameLaunchers[5].gridX = startX + 7;
+	flameLaunchers[5].gridY = startY + 7;
+	flameLaunchers[5].facing = UP;
+	//Bottom Left
+	flameLaunchers[6].gridX = startX - 7;
+	flameLaunchers[6].gridY = startY + 7;
+	flameLaunchers[6].facing = UP;
+	flameLaunchers[7].gridX = startX - 10;
+	flameLaunchers[7].gridY = startY + 4;
+	flameLaunchers[7].facing = RIGHT;
 
 }
 
@@ -118,6 +144,7 @@ FireBossTwo::~FireBossTwo() {
 void FireBossTwo::draw(float dt) {
 
 	drawFlameLaunchers(dt);
+	drawFlameWalls(dt);
 	drawFireBalls(dt);
 
 	//Draw the boss' main sprite
@@ -188,9 +215,6 @@ bool FireBossTwo::update(float dt) {
 		soundManager->playMusic("bossMusic");
 	}
 
-	//Don't update if inactive!!!
-	if (state == FIREBOSS_INACTIVE) return false;
-
 	//Update icon alphas for flashing
 	if (flashing) {
 		if (increaseAlpha) {
@@ -212,7 +236,8 @@ bool FireBossTwo::update(float dt) {
 		resources->GetAnimation("phyrebozzLeftMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
 	}
 
-	//Update orbs
+	updateFlameLaunchers(dt);
+	updateFlameWalls(dt);
 	updateFireBalls(dt);
 
 	//Update collisionBoxes
@@ -459,15 +484,38 @@ void FireBossTwo::startMoveToPoint(int _x, int _y, float speed) {
 	dy = speed * sin(angle);
 }
 
+///////////////////////////// FIRE BALLS /////////////////////////////////
+
+/** 
+ * Add a fire orb
+ */
+void FireBossTwo::addFireBall(float x, float y, float angle, float speed) {
+	
+	//Create new fire orb
+	FireBall newFireBall;
+	newFireBall.x = x;
+	newFireBall.y = y;
+	newFireBall.dx = speed * cos(angle);
+	newFireBall.dy = speed * sin(angle);
+	newFireBall.collisionBox = new hgeRect();
+	newFireBall.particle = new hgeParticleSystem(&resources->GetParticleSystem("fireOrb")->info);
+	newFireBall.particle->Fire();
+	newFireBall.timeCreated = gameTime;
+
+	//Add it to the list
+	fireBallList.push_back(newFireBall);
+}
 
 /**
  * Update the fire orbs
  */
 void FireBossTwo::updateFireBalls(float dt) {
-	bool deleteOrb = false;
+	
 	//Loop through the orbs
 	std::list<FireBall>::iterator i;
 	for (i = fireBallList.begin(); i != fireBallList.end(); i++) {
+
+		bool deleteOrb = false;
 
 		//Update particle
 		i->particle->MoveTo(getScreenX(i->x), getScreenY(i->y), true);
@@ -519,27 +567,6 @@ void FireBossTwo::drawFireBalls(float dt) {
 	}
 }
 
-
-/** 
- * Add a fire orb
- */
-void FireBossTwo::addFireBall(float x, float y, float angle, float speed) {
-	
-	//Create new fire orb
-	FireBall newFireBall;
-	newFireBall.x = x;
-	newFireBall.y = y;
-	newFireBall.dx = speed * cos(angle);
-	newFireBall.dy = speed * sin(angle);
-	newFireBall.collisionBox = new hgeRect();
-	newFireBall.particle = new hgeParticleSystem("fireorb.psi", resources->GetSprite("particleGraphic2"));
-	newFireBall.particle->Fire();
-	newFireBall.timeCreated = gameTime;
-
-	//Add it to the list
-	fireBallList.push_back(newFireBall);
-}
-
 /**
  * Kills all the fire orbs
  */
@@ -552,15 +579,118 @@ void FireBossTwo::killOrbs() {
 	}
 }
 
+/////////////////////////////// FLAME WALLS /////////////////////////////////
+
+void FireBossTwo::addFlameWall(float x, float y, int direction) {
+	
+	//Create the new flame wall
+	FlameWall newFlameWall;
+	newFlameWall.x = x;
+	newFlameWall.y = y;
+	newFlameWall.direction = direction;
+	newFlameWall.collisionBox = new hgeRect(1,1,1,1);
+	newFlameWall.seperation = 0;
+
+	for (int i = 0; i < FLAME_WALL_NUM_PARTICLES; i++) {
+		newFlameWall.particles[i] = new hgeParticleSystem(&resources->GetParticleSystem("fireOrb")->info);
+		newFlameWall.particles[i]->FireAt(getScreenX(newFlameWall.x), getScreenY(newFlameWall.y));
+	}
+
+	//Add it to the list
+	flameWallList.push_back(newFlameWall);
+
+}
+
+void FireBossTwo::updateFlameWalls(float dt) {
+	std::list<FlameWall>::iterator i;
+	for (i = flameWallList.begin(); i != flameWallList.end(); i++) {
+		
+		bool deleteWall = false;
+
+		i->seperation += (200.0 / float(FLAME_WALL_NUM_PARTICLES)) * dt;
+		if (i->seperation > (200.0 / float(FLAME_WALL_NUM_PARTICLES))) i->seperation = 200.0 / float(FLAME_WALL_NUM_PARTICLES);
+
+		if (i->direction == LEFT || i->direction == RIGHT) {
+			i->x += FLAME_WALL_SPEED * dt;
+			i->collisionBox->Set(i->x - 20, i->y - 100, i->x + 20, i->y + 100);
+			for (int j = 0; j < FLAME_WALL_NUM_PARTICLES; j++) {
+				i->particles[j]->Update(dt);
+				i->particles[j]->MoveTo(getScreenX(i->x), getScreenY(i->y + j * i->seperation - (float(FLAME_WALL_NUM_PARTICLES) * i->seperation)/2.0), true);
+			}
+		} else if (i->direction == UP || i->direction == DOWN) {
+			i->y += FLAME_WALL_SPEED * dt;
+			i->collisionBox->Set(i->x - 100, i->y - 20, i->x + 100, i->y + 20);
+			for (int j = 0; j < FLAME_WALL_NUM_PARTICLES; j++) {
+				i->particles[j]->Update(dt);
+				i->particles[j]->MoveTo(getScreenX(i->x + j * i->seperation - (float(FLAME_WALL_NUM_PARTICLES) * i->seperation)/2.0), getScreenY(i->y), true);
+			}
+		}
+
+		//Environment collision
+		if (theEnvironment->collisionAt(i->x, i->y) == UNWALKABLE) {
+			deleteWall = true;
+		}	
+
+		//Player collision
+		if (!deleteWall && thePlayer->collisionCircle->testBox(i->collisionBox)) {
+			thePlayer->dealDamage(FLAME_WALL_DAMAGE, false);
+			deleteWall = true;
+		}
+
+		//Delete orbs marked for deletion
+		if (deleteWall) {
+			for (int j = 0; j < FLAME_WALL_NUM_PARTICLES; j++) delete i->particles[j];
+			delete i->collisionBox;
+			i = flameWallList.erase(i);
+		}
+
+	}
+}
+
+void FireBossTwo::drawFlameWalls(float dt) {
+	std::list<FlameWall>::iterator i;
+	for (i = flameWallList.begin(); i != flameWallList.end(); i++) {
+		for (int j = 0; j < FLAME_WALL_NUM_PARTICLES; j++) {
+			i->particles[j]->Render();
+		}
+		if (debugMode) {
+			drawCollisionBox(i->collisionBox, RED);
+		}
+	}
+}
+
+void FireBossTwo::resetFlameWalls() {
+	std::list<FlameWall>::iterator i;
+	for (i = flameWallList.begin(); i != flameWallList.end(); i++) {
+		for (int j = 0; j < 4; j++) delete i->particles[j];
+		delete i->collisionBox;
+		i = flameWallList.erase(i);
+	}
+}
+
+/////////////////////////////// FLAME LAUNCHERS /////////////////////////////
+
+/**
+ * Randomly chooses flame launchers to launch flames.
+ */
+void FireBossTwo::launchFlames() {
+	for (int i = 0; i < 8; i++) {
+		//if (hge->Random_Int(0,10000) < 5000) {
+			addFlameWall(flameLaunchers[i].gridX*64+32, flameLaunchers[i].gridY*64+32, flameLaunchers[i].facing);
+		//}
+	}
+	lastFlameLaunchTime = gameTime;
+}
+
 void FireBossTwo::drawFlameLaunchers(float dt) {
-	for (int i = 0; i < 2; i++) {
-		resources->GetSprite("flameLauncher")->Render(getScreenX(flameLaunchers[i].gridX*64+32), 
-			getScreenY(flameLaunchers[i].gridY*64+32));
+	for (int i = 0; i < 8; i++) {
+		resources->GetSprite("flameLauncher")->RenderEx(getScreenX(flameLaunchers[i].gridX*64+32), 
+			getScreenY(flameLaunchers[i].gridY*64+32), thePlayer->angles[flameLaunchers[i].facing]);
 	}
 }
 
 void FireBossTwo::updateFlameLaunchers(float dt) {
-	for (int i = 0; i < 1; i++) {
-
+	if (timePassedSince(lastFlameLaunchTime) > FLAME_LAUNCH_DELAY) {
+		launchFlames();
 	}
 }

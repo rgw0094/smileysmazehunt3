@@ -216,6 +216,11 @@ Particle flame {
  sprite=particleGraphic13
  resgroup=1
 }
+Particle fireOrb {
+ filename=fireorb.psi
+ sprite=particleGraphic2
+ resgroup=1
+}
 
 ;***********************
 ;******** FENWAR *******
