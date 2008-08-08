@@ -218,6 +218,11 @@ bool RenderFunc() {
 
 	}
 
+	if (debugMode) {
+		//Grid co-ords and fps
+		resources->GetFont("curlz")->printf(1000,5,HGETEXT_RIGHT,"(%d,%d)  FPS: %d",thePlayer->gridX,thePlayer->gridY, hge->Timer_GetFPS());
+	}
+
 	//Finish rendering
 	hge->Gfx_EndScene();
 	return false;
