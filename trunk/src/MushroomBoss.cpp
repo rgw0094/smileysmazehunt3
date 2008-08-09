@@ -3,7 +3,7 @@
 #include "MushroomBoss.h"
 #include "EnemyGroupManager.h"
 #include "Player.h"
-#include "Projectiles.h"
+#include "ProjectileManager.h"
 #include "hge.h"
 #include "environment.h"
 #include "EnemyManager.h"

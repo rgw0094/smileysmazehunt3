@@ -8,7 +8,7 @@
 #include "EnemyManager.h"
 #include "EnemyGroupManager.h"
 #include "LootManager.h"
-#include "Projectiles.h"
+#include "ProjectileManager.h"
 #include "NPCManager.h"
 #include "boss.h"
 #include "WindowManager.h"

@@ -1,6 +1,6 @@
 #include "EnemyState.h"
 #include "Player.h"
-#include "Projectiles.h"
+#include "ProjectileManager.h"
 #include "enemy.h"
 #include "smiley.h"
 

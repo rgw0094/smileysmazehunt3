@@ -7,7 +7,7 @@
 #include "hge.h"
 #include "hgeresource.h"
 #include "EnemyState.h"
-#include "projectiles.h"
+#include "ProjectileManager.h"
 #include "player.h"
 #include "environment.h"
 #include "CollisionCircle.h"
