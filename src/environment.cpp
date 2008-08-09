@@ -2,7 +2,7 @@
 #include "environment.h"
 #include "EnemyManager.h"
 #include "lootmanager.h"
-#include "projectiles.h"
+#include "ProjectileManager.h"
 #include "SaveManager.h"
 #include "player.h"
 #include "collisioncircle.h"

@@ -7,7 +7,7 @@
 #include "hge.h"
 #include "environment.h"
 #include "EnemyManager.h"
-#include "Projectiles.h"
+#include "ProjectileManager.h"
 
 using namespace std;
 

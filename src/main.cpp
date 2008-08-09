@@ -1,6 +1,6 @@
 #include "EnemyManager.h"
 #include "lootmanager.h"
-#include "projectiles.h"
+#include "ProjectileManager.h"
 #include "menu.h"
 #include "player.h"
 #include "minimenu.h"

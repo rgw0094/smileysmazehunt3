@@ -5,7 +5,7 @@
 #include "environment.h"
 #include "inventory.h"
 #include "hgeresource.h"
-#include "projectiles.h"
+#include "ProjectileManager.h"
 #include "CollisionCircle.h"
 
 extern hgeResourceManager *resources;

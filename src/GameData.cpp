@@ -6,7 +6,7 @@
 
 #include "smiley.h"
 #include "GameData.h"
-#include "Projectiles.h"
+#include "ProjectileManager.h"
 #include "Player.h"
 #include <string>
 

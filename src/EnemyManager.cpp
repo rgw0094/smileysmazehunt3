@@ -2,7 +2,7 @@
 #include "EnemyManager.h"
 #include "enemy.h"
 #include "lootmanager.h"
-#include "projectiles.h"
+#include "ProjectileManager.h"
 #include "player.h"
 #include "EnemyGroupManager.h"
 #include "GameData.h"

@@ -1,6 +1,6 @@
 #include "smiley.h"
 #include "environment.h"
-#include "projectiles.h"
+#include "ProjectileManager.h"
 #include "player.h"
 #include "hgeresource.h"
 #include "EnemyManager.h"

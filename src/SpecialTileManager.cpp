@@ -3,7 +3,7 @@
 #include "player.h"
 #include "CollisionCircle.h"
 #include "WeaponParticle.h"
-#include "projectiles.h"
+#include "ProjectileManager.h"
 #include "Tongue.h"
 #include "environment.h"
 

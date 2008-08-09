@@ -4,7 +4,7 @@
 #include "EnemyGroupManager.h"
 #include "Player.h"
 #include "Environment.h"
-#include "Projectiles.h"
+#include "ProjectileManager.h"
 #include "SaveManager.h"
 #include "LootManager.h"
 #include "SoundManager.h"

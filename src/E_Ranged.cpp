@@ -6,7 +6,7 @@
 #include "hgeanim.h"
 #include "smiley.h"
 #include "hgeresource.h"
-#include "projectiles.h"
+#include "ProjectileManager.h"
 
 extern HGE *hge;
 extern Environment *theEnvironment;

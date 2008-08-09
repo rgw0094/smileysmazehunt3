@@ -9,7 +9,7 @@
 #include "SoundManager.h"
 #include "WeaponParticle.h"
 #include "Tongue.h"
-#include "projectiles.h"
+#include "ProjectileManager.h"
 #include "WindowManager.h"
 
 extern HGE *hge;

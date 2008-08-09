@@ -6,7 +6,7 @@
 #include "inventory.h"
 #include "hgeresource.h"
 #include "hgevector.h"
-#include "projectiles.h"
+#include "ProjectileManager.h"
 #include "tongue.h"
 #include "CollisionCircle.h"
 
