@@ -51,6 +51,8 @@
 ||12||Turret||0 for CW rotation, 1 for CCW, 2 for no movement||Direction (see below)||
 ||13||Ghost|| || ||
 ||14||Fake Enemy|| || ||
+||15||Non-Gay Ranged Enemy|| || ||
+||16||Hopper|| || ||
 
 ----
 = Directions =
