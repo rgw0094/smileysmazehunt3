@@ -65,7 +65,7 @@ void EnemyManager::addEnemy(int id, int x, int y, float spawnHealthChance, float
 			newEnemy.enemy = new E_Charger(id, x, y, groupID);
 			break;
 		case ENEMY_CLOWNCRAB:
-			newEnemy.enemy = new E_ClownCrab(id, x, y, groupID);
+			newEnemy.enemy = new E_ChainClown(id, x, y, groupID);
 			break;
 		case ENEMY_BATLET_DIST:
 			newEnemy.enemy = new E_BatletDist(id, x, y, groupID);

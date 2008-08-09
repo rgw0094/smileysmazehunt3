@@ -205,11 +205,11 @@ private:
  * Crab with clown enemy (Lopose Ono)
  */
 
-class E_ClownCrab : public BaseEnemy {
+class E_ChainClown : public BaseEnemy {
 
 public:
-	E_ClownCrab(int id, int x, int y, int groupID);
-	~E_ClownCrab();
+	E_ChainClown(int id, int x, int y, int groupID);
+	~E_ChainClown();
 
 	void update(float dt);
 	void draw(float dt);

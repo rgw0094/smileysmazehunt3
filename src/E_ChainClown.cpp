@@ -16,7 +16,7 @@ extern HGE *hge;
 #define DAMPING_CONSTANT 0.001
 #define CLOWN_RADIUS 32.0
 
-E_ClownCrab::E_ClownCrab(int id, int x, int y, int groupID) {
+E_ChainClown::E_ChainClown(int id, int x, int y, int groupID) {
 	
 	//Call parent's init function
 	initEnemy(id, x, y, groupID);
@@ -39,7 +39,7 @@ E_ClownCrab::E_ClownCrab(int id, int x, int y, int groupID) {
  * Draws the crab, chain, and clown, in that order
  */
 
-void E_ClownCrab::draw(float dt) {
+void E_ChainClown::draw(float dt) {
 	float angle=0.0;
 	if (facing==0 || facing == 3) angle=3*PI/2;
 	crabWalkAnimation->RenderEx(screenX,screenY,angle);
@@ -73,7 +73,7 @@ void E_ClownCrab::draw(float dt) {
  * Updates
  */
 
-void E_ClownCrab::update(float dt) {
+void E_ChainClown::update(float dt) {
 
 	crabWalkAnimation->Update(dt);
 
@@ -105,6 +105,6 @@ void E_ClownCrab::update(float dt) {
 
 }
 
-E_ClownCrab::~E_ClownCrab() {
+E_ChainClown::~E_ChainClown() {
 	if (crabWalkAnimation) delete crabWalkAnimation;	
 }

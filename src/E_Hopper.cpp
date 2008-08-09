@@ -51,7 +51,8 @@ void E_Hopper::update(float dt) {
 		if (chases) {
 			//Hop towards Smiley
 			hopAngle = getAngleBetween(x, y, thePlayer->x, thePlayer->y);
-			hopDistance = int(distanceFromPlayer()) % 300;
+			hopDistance = distanceFromPlayer();
+			if (hopDistance > 300.0) hopDistance = 300.0;
 		} else {
 			//Find a random angle and distance to hop that won't result in running into a wall
 			do {
