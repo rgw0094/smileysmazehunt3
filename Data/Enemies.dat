@@ -1,6 +1,6 @@
 [HGESTRINGTABLE]
 
-numEnemies="51"
+numEnemies="52"
 
 ;Croc
 0GCol=      "0"
@@ -47,7 +47,7 @@ numEnemies="51"
 ;Ranged Squirrel
 3GCol=      "0"
 3GRow=      "8"
-3EnemyType= "0"
+3EnemyType= "15"
 3WanderType="0"
 3HP=        "75"
 3Damage=    "25"
@@ -160,7 +160,7 @@ numEnemies="51"
 9Slime=     "T"
 9Invincible="T"
 
-;Clowncrab
+;Clown Chain
 10GCol=      "0"
 10GRow=      "5"
 10NumFrames= "2"
@@ -345,7 +345,7 @@ numEnemies="51"
 ;Ranged fangy
 23GCol=      "0"
 23GRow=      "3"
-23EnemyType= "0"
+23EnemyType= "15"
 23WanderType="0"
 23HP=        "50"
 23Damage=    "25"
@@ -806,7 +806,7 @@ numEnemies="51"
 ;Mummy Ranged
 48GCol=      "4"
 48GRow=      "7"
-48EnemyType= "0"
+48EnemyType= "15"
 48WanderType="0"
 48HP=        "200"
 48Damage=    "50"
@@ -836,7 +836,6 @@ numEnemies="51"
 49SWater=    "T"
 49Chases=    "F"
 
-
 ;Protector
 50GCol=      "4"
 50GRow=      "3"
@@ -851,3 +850,16 @@ numEnemies="51"
 50Slime=     "T"
 50Chases=    "T"
 
+;Hopping eye
+51GCol=      "8"
+51GRow=      "8"
+51EnemyType= "16"
+51WanderType="0"
+51HP=        "100"
+51Damage=    "25"
+51Speed=     "400"
+51Radius=    "28"
+51Land=      "T"
+51SWater=    "T"
+51Slime=     "T"
+51Chases=    "T"

@@ -9,6 +9,9 @@
 #include "Environment.h"
 #include "WindowManager.h"
 #include "GameData.h"
+#include "EnemyManager.h"
+#include "LootManager.h"
+#include "Projectiles.h"
 #include "Player.h"
 
 extern HGE *hge;
@@ -17,6 +20,9 @@ extern SaveManager *saveManager;
 extern Environment *theEnvironment;
 extern WindowManager *windowManager;
 extern GameData *gameData;
+extern LootManager *lootManager;
+extern ProjectileManager *projectileManager;
+extern EnemyManager *enemyManager;
 extern Player *thePlayer;
 
 #define STATE_IN 0
@@ -125,6 +131,9 @@ void LoadEffectManager::update(float dt) {
 				//Move smiley to a new location in the same area
 				thePlayer->moveTo(destinationX, destinationY);
 				theEnvironment->update(0.0);
+				enemyManager->update(0.0);
+				lootManager->update(0.0);
+				projectileManager->update(0.0);
 			} else {
 				theEnvironment->loadArea(destinationArea,saveManager->currentArea,0,0);
 				zoneTextAlpha = 255.0;

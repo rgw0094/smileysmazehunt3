@@ -502,4 +502,26 @@ public:
 
 };
 
+class E_Hopper : public BaseEnemy {
+
+public:
+
+	E_Hopper(int id, int x, int y, int groupID);
+	~E_Hopper();
+
+	//methods
+	void draw(float dt);
+	void update(float dt);
+
+	bool hopping;
+	float timeStartedHop;
+	float timeStoppedHop;
+	float timeToHop;
+	float hopYOffset;
+	float hopDistance, hopAngle;
+
+
+
+};
+
 #endif

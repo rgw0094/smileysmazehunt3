@@ -1137,8 +1137,6 @@ int Environment::gatherItem(int x, int y) {
 }
 
 /**
- * This method is fucking stupid and should be rewritten.
- *
  * Returns whether or not there is an unobstructed straight line from 
  * pixel position (x1, y1) to (x2, y2).
  *

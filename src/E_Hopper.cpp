@@ -1,0 +1,76 @@
+#include "enemy.h"
+#include "smiley.h"
+#include "environment.h"
+
+#include "hgeresource.h"
+#include "hgeanim.h"
+
+extern float gameTime;
+extern HGE *hge;
+extern hgeResourceManager *resources;
+extern Environment *theEnvironment;
+
+/** 
+ * Constructor
+ */
+E_Hopper::E_Hopper(int id, int x, int y, int groupID) {
+	
+	//Call parent initialization routine
+	initEnemy(id, x, y, groupID);
+
+	//Hopper doesn't use states
+	currentState = NULL;
+
+	//Set initial state
+	facing = DOWN;
+	timeStoppedHop = gameTime;
+	hopYOffset = 0.0;
+	hopping = false;
+	dx = dy = 0.0;
+
+}
+
+/**
+ * Destructor
+ */
+E_Hopper::~E_Hopper() {
+
+}
+
+void E_Hopper::update(float dt) {
+
+	if (!hopping && timePassedSince(timeStoppedHop) > 1.0) {
+		
+		//Start next hop
+		hopping = true;
+		timeStartedHop = gameTime;
+
+		//Find an angle and distance to hop that won't result in running into a wall
+		do {
+			hopDistance = hge->Random_Float(125.0, 300.0);
+			hopAngle = hge->Random_Float(0.0, 2.0*PI);
+		} while(!theEnvironment->validPath(x, y, x + hopDistance * cos(hopAngle), y + hopDistance * sin(hopAngle), 28, canPass));
+		
+		timeToHop = hopDistance / float(speed);
+		dx = speed * cos(hopAngle);
+		dy = speed * sin(hopAngle);
+
+	}
+
+	if (hopping) {
+		hopYOffset = (hopDistance / 3.0) * sin((timePassedSince(timeStartedHop)/timeToHop) * PI);
+		if (timePassedSince(timeStartedHop) > timeToHop) {
+			hopping = false;
+			timeStoppedHop = gameTime;
+			dx = dy = hopYOffset = 0.0;
+		}
+	}
+
+	move(dt);
+
+}
+
+void E_Hopper::draw(float dt) {
+	resources->GetSprite("playerShadow")->Render(screenX, screenY + 32.0);
+	graphic[facing]->Render(screenX, screenY - hopYOffset);
+}

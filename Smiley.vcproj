@@ -170,6 +170,9 @@
 						RelativePath=".\src\E_Gumdrop.cpp">
 					</File>
 					<File
+						RelativePath=".\src\E_Hopper.cpp">
+					</File>
+					<File
 						RelativePath=".\src\E_Ranged.cpp">
 					</File>
 					<File
