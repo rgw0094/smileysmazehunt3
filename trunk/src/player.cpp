@@ -637,7 +637,7 @@ void Player::doAbility(float dt) {
 
 	////////////// Tut's Mask //////////////
 
-	cloaked = (canUseAbility && input->keyDown(INPUT_ABILITY) &&
+	cloaked = (!frozen && input->keyDown(INPUT_ABILITY) &&
 			   selectedAbility == TUTS_MASK && 
 			   mana >= gameData->getAbilityInfo(TUTS_MASK).manaCost*dt);
 	if (cloaked) mana -= gameData->getAbilityInfo(TUTS_MASK).manaCost*dt;

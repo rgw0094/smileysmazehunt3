@@ -97,6 +97,9 @@ void EnemyManager::addEnemy(int id, int x, int y, float spawnHealthChance, float
 		case ENEMY_RANGED:
 			newEnemy.enemy = new E_Ranged(id, x, y, groupID);
 			break;
+		case ENEMY_HOPPER:
+			newEnemy.enemy = new E_Hopper(id, x, y, groupID);
+			break;
 		default:
 			newEnemy.enemy = new DefaultEnemy(id, x, y, groupID);
 			break;

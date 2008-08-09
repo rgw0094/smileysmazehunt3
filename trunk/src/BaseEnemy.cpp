@@ -424,8 +424,8 @@ void BaseEnemy::baseUpdate(float dt) {
 	collisionBox->SetRadius(x, y, radius);
 	gridX = x / 64;
 	gridY = y / 64;
-	screenX = x - theEnvironment->xGridOffset*64 - theEnvironment->xOffset; 
-	screenY = y - theEnvironment->yGridOffset*64 - theEnvironment->yOffset;
+	screenX = getScreenX(x);
+	screenY = getScreenY(y);
 
 	//Update statuses
 	if (stunned && timePassedSince(startedStun) > stunLength) {

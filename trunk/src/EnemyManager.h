@@ -27,6 +27,7 @@ class hgeRect;
 #define ENEMY_GHOST 13
 #define ENEMY_FAKE 14
 #define ENEMY_RANGED 15
+#define ENEMY_HOPPER 16
 
 struct EnemyStruct {
 	BaseEnemy *enemy;
