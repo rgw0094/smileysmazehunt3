@@ -146,10 +146,10 @@
 						RelativePath=".\src\E_Buzzard.cpp">
 					</File>
 					<File
-						RelativePath=".\src\E_Charger.cpp">
+						RelativePath=".\src\E_ChainClown.cpp">
 					</File>
 					<File
-						RelativePath=".\src\E_ClownCrab.cpp">
+						RelativePath=".\src\E_Charger.cpp">
 					</File>
 					<File
 						RelativePath=".\src\E_EvilEye.cpp">
@@ -214,7 +214,7 @@
 					RelativePath=".\src\player.cpp">
 				</File>
 				<File
-					RelativePath=".\src\projectiles.cpp">
+					RelativePath=".\src\ProjectileManager.cpp">
 				</File>
 				<File
 					RelativePath=".\src\Smilelet.cpp">
@@ -449,7 +449,7 @@
 					RelativePath=".\src\player.h">
 				</File>
 				<File
-					RelativePath=".\src\projectiles.h">
+					RelativePath=".\src\ProjectileManager.h">
 				</File>
 				<File
 					RelativePath=".\src\Smilelet.h">
