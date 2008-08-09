@@ -1,12 +1,15 @@
 #include "enemy.h"
 #include "smiley.h"
 #include "environment.h"
+#include "player.h"
+#include "Tongue.h"
 
 #include "hgeresource.h"
 #include "hgeanim.h"
 
 extern float gameTime;
 extern HGE *hge;
+extern Player *thePlayer;
 extern hgeResourceManager *resources;
 extern Environment *theEnvironment;
 
@@ -45,12 +48,18 @@ void E_Hopper::update(float dt) {
 		hopping = true;
 		timeStartedHop = gameTime;
 
-		//Find an angle and distance to hop that won't result in running into a wall
-		do {
-			hopDistance = hge->Random_Float(125.0, 300.0);
-			hopAngle = hge->Random_Float(0.0, 2.0*PI);
-		} while(!theEnvironment->validPath(x, y, x + hopDistance * cos(hopAngle), y + hopDistance * sin(hopAngle), 28, canPass));
-		
+		if (chases) {
+			//Hop towards Smiley
+			hopAngle = getAngleBetween(x, y, thePlayer->x, thePlayer->y);
+			hopDistance = int(distanceFromPlayer()) % 300;
+		} else {
+			//Find a random angle and distance to hop that won't result in running into a wall
+			do {
+				hopDistance = hge->Random_Float(125.0, 300.0);
+				hopAngle = hge->Random_Float(0.0, 2.0*PI);
+			} while(!theEnvironment->validPath(x, y, x + hopDistance * cos(hopAngle), y + hopDistance * sin(hopAngle), 28, canPass));
+		}
+
 		timeToHop = hopDistance / float(speed);
 		dx = speed * cos(hopAngle);
 		dy = speed * sin(hopAngle);
@@ -58,7 +67,10 @@ void E_Hopper::update(float dt) {
 	}
 
 	if (hopping) {
+		
 		hopYOffset = (hopDistance / 3.0) * sin((timePassedSince(timeStartedHop)/timeToHop) * PI);
+		collisionBox->SetRadius(x, y - hopYOffset, radius);
+		
 		if (timePassedSince(timeStartedHop) > timeToHop) {
 			hopping = false;
 			timeStoppedHop = gameTime;
@@ -73,4 +85,31 @@ void E_Hopper::update(float dt) {
 void E_Hopper::draw(float dt) {
 	resources->GetSprite("playerShadow")->Render(screenX, screenY + 32.0);
 	graphic[facing]->Render(screenX, screenY - hopYOffset);
+}
+
+
+/**
+ * Overrides the tongue collision method so that the hopper's hop can be
+ * interrupted when hit by Smiley's tongue.
+ */
+bool E_Hopper::doTongueCollision(Tongue *tongue, float damage) {
+	
+	//Check collision
+	if (tongue->testCollision(collisionBox)) {
+			
+		//Make sure the enemy wasn't already hit by this attack
+		if (timePassedSince(lastHitByWeapon) > .5) {
+			lastHitByWeapon = gameTime;
+			//If hopping, stop
+			if (hopping) {
+				dx = dy = 0.0;
+			}
+			dealDamageAndKnockback(damage, 65.0, thePlayer->x, thePlayer->y);
+			startFlashing();
+			return true;
+		}
+
+	}
+
+	return false;
 }

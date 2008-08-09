@@ -512,6 +512,7 @@ public:
 	//methods
 	void draw(float dt);
 	void update(float dt);
+	bool doTongueCollision(Tongue *tongue, float damage);
 
 	bool hopping;
 	float timeStartedHop;
@@ -519,8 +520,6 @@ public:
 	float timeToHop;
 	float hopYOffset;
 	float hopDistance, hopAngle;
-
-
 
 };
 
