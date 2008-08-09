@@ -27,7 +27,6 @@
  * Mirror switch graphic 	 
  * Arrow switch graphic (bunny) 	 
  * Shrink tunnel switch graphic
- * Shrink tunnel graphic
 
 ===Done===
 ||Item||Date||Done By||
@@ -41,6 +40,7 @@
 ||More enjoyable ranged/charger AI||8/5/08||RGW||
 ||Options menu||8/5/08||RGW||
 ||Slider UI class||8/5/08||RGW||
+||Shrink Tunnel Graphic||8/5/08||RMM||
 ||Smilelet graphics||8/1/08||ETI||
 ||Worm framework||7/31/08||ETI||
 ||Use new Game Menu layout/graphics||7/30/08||RGW||
