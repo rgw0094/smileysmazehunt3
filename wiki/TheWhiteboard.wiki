@@ -4,6 +4,7 @@
  * Hillary
 
 === Programming To Do ===
+ * Add "Timed tiles" to SpecialTileManager. You can spawn a tile (such as lava or water or something) that fades in then fades out after a certain amount of time)
  * When enemy graphics overlap draw them so that the lower enemy on the screen is on top
  * Finish Phyrebozz 2
  * Lovecraftian Boss
