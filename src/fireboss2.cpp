@@ -270,8 +270,6 @@ bool FireBossTwo::update(float dt) {
 		}
 	}
 
-//	if (projectileManager->killProjectilesInBox(collisionBoxes[0]
-
 	//Stop flashing after a while
 	if (flashing && timePassedSince(startedFlashing) > FLASH_DURATION) {
 		alpha = 255;
@@ -694,10 +692,22 @@ void FireBossTwo::resetFlameWalls() {
  * Randomly chooses flame launchers to launch flames.
  */
 void FireBossTwo::launchFlames() {
+	int facing, gridX, gridY;
 	for (int i = 0; i < 8; i++) {
-		//if (hge->Random_Int(0,10000) < 5000) {
+
+		facing = flameLaunchers[i].facing;
+		gridX = flameLaunchers[i].gridX;
+		gridY = flameLaunchers[i].gridY;
+
+		//Only fire if not blocked by a silly pad and the player is in their flame wall trajectory
+		if (hge->Random_Int(0,10000) <= 10000 && 
+				(facing == DOWN && !theEnvironment->hasSillyPad(gridX, gridY + 1) && thePlayer->gridX >= gridX - 1 && thePlayer->gridX <= gridX + 1) ||
+				(facing == UP && !theEnvironment->hasSillyPad(gridX, gridY - 1) && thePlayer->gridX >= gridX - 1 && thePlayer->gridX <= gridX + 1) ||
+				(facing == LEFT && !theEnvironment->hasSillyPad(gridX - 1, gridY) && thePlayer->gridY >= gridY - 1 && thePlayer->gridY <= gridY + 1) ||
+				(facing == RIGHT && !theEnvironment->hasSillyPad(gridX + 1, gridY) && thePlayer->gridY >= gridY - 1 && thePlayer->gridY <= gridY + 1)) {
 			addFlameWall(flameLaunchers[i].gridX*64+32, flameLaunchers[i].gridY*64+32, flameLaunchers[i].facing);
-		//}
+		}
+
 	}
 	lastFlameLaunchTime = gameTime;
 }
