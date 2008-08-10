@@ -1309,7 +1309,7 @@ bool Environment::playerCollision(float x, float y, float dt) {
 		}
 	}
 
-	return false;
+	return !thePlayer->canPass(collision[gridX][gridY]);
 }
 
 

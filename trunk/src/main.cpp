@@ -55,8 +55,8 @@ float timePlayed;
 
 
 /**
- * Performs an initial load of game resources. More resources are loaded dynamically
- * as they are needed.
+ * Performs an initial load of game resources. Most resources are loaded dynamically
+ * later as they are needed.
  */
 void loadResources() {
 
@@ -121,12 +121,11 @@ bool FrameFunc() {
 		hge->System_Snapshot();
 	}
 	
-	//Update the Menu
 	if (gameState == MENU) {
+	
 		if (theMenu->update(dt)) return true;
 		if (hge->Input_KeyDown(HGEK_ESCAPE)) return true;
 
-	//Update the Game
 	} else if (gameState == GAME) {
 
 		frameCounter++;
@@ -153,10 +152,9 @@ bool FrameFunc() {
 			windowManager->openWindow(new MiniMenu(MINIMENU_EXIT));
 		}
 
-		//Update all windows
+		//Update windows. The load effect and enemy group managers need to be updated at all
+		//times, even if a window is open!
 		windowManager->update(dt);
-
-		//Update loading effect
 		loadEffectManager->update(dt);
 		enemyGroupManager->update(dt);
 
@@ -239,7 +237,9 @@ bool ExitFunc() {
 	return true;
 }
 
-
+/**
+ * Application entry point.
+ */
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// Get HGE interface
 	hge = hgeCreate(HGE_VERSION);
@@ -260,7 +260,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	if(hge->System_Initiate()) {
 
-		//Load resources
 		loadResources();
 
 		//Load non-game objects. These only need to be created once and
@@ -275,8 +274,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//Open the menu
 		theMenu->open(TITLE_SCREEN);
 
-		//Start HGE. When this function returns it means the program is
-		//exiting.
+		//Start HGE. When this function returns it means the program is exiting.
 		hge->System_Start();
 
 		// Free loaded shit
