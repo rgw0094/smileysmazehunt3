@@ -3,7 +3,6 @@
 #include "EnemyState.h"
 #include "player.h"
 #include "environment.h"
-#include "inventory.h"
 #include "hgeresource.h"
 #include "ProjectileManager.h"
 #include "CollisionCircle.h"

@@ -1,7 +1,6 @@
 #include "enemy.h"
 #include "player.h"
 #include "environment.h"
-#include "inventory.h"
 #include "hgeresource.h"
 #include "smiley.h"
 

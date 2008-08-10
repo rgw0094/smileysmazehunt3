@@ -1,7 +1,6 @@
 #include "smiley.h"
 #include "EnemyManager.h"
 #include "ProjectileManager.h"
-#include "inventory.h"
 #include "player.h"
 #include "environment.h"
 #include "npcmanager.h"
@@ -288,6 +287,9 @@ void Player::update(float dt) {
 void Player::move(float xDist, float yDist, float dt) {
 	
 	if (frozen) return;
+
+	if (xDist > 64.0) xDist = 64.0;
+	if (yDist > 64.0) yDist = 64.0;
 
 	if (iceSliding) {
 		xDist *= 1.2;
