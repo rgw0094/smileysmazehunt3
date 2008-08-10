@@ -132,9 +132,10 @@ FireBossTwo::FireBossTwo(int gridX, int gridY, int _groupID) {
  * Destructor
  */ 
 FireBossTwo::~FireBossTwo() {
-	killOrbs();
+	resetFlameWalls();
+	resetFireBalls();
 	delete fireNova;
-	//resources->Purge(RES_PHYREBOZZ);
+	resources->Purge(RES_PHYREBOZZ);
 }
 
 
@@ -442,7 +443,6 @@ void FireBossTwo::die() {
 	hge->Effect_Play(resources->GetEffect("snd_fireBossDie"));
 	health = 0.0f;
 	state = FIREBOSS_FRIENDLY;
-	killOrbs();
 	windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS2_VICTORY);	
 	facing = DOWN;
 	alpha = 255;
@@ -570,7 +570,7 @@ void FireBossTwo::drawFireBalls(float dt) {
 /**
  * Kills all the fire orbs
  */
-void FireBossTwo::killOrbs() {
+void FireBossTwo::resetFireBalls() {
 	std::list<FireBall>::iterator i;
 	for (i = fireBallList.begin(); i != fireBallList.end(); i++) {
 		delete i->particle;
@@ -588,12 +588,14 @@ void FireBossTwo::addFlameWall(float x, float y, int direction) {
 	newFlameWall.x = x;
 	newFlameWall.y = y;
 	newFlameWall.direction = direction;
-	newFlameWall.collisionBox = new hgeRect(1,1,1,1);
 	newFlameWall.seperation = 0;
 
 	for (int i = 0; i < FLAME_WALL_NUM_PARTICLES; i++) {
-		newFlameWall.particles[i] = new hgeParticleSystem(&resources->GetParticleSystem("fireOrb")->info);
-		newFlameWall.particles[i]->FireAt(getScreenX(newFlameWall.x), getScreenY(newFlameWall.y));
+		newFlameWall.fireBalls[i].particle = new hgeParticleSystem(&resources->GetParticleSystem("fireOrb")->info);
+		newFlameWall.fireBalls[i].particle->FireAt(getScreenX(newFlameWall.x), getScreenY(newFlameWall.y));
+		newFlameWall.fireBalls[i].collisionBox = new hgeRect();
+		newFlameWall.fireBalls[i].collisionBox->SetRadius(newFlameWall.x, newFlameWall.y, 15);
+		newFlameWall.fireBalls[i].alive = true;
 	}
 
 	//Add it to the list
@@ -604,45 +606,62 @@ void FireBossTwo::addFlameWall(float x, float y, int direction) {
 void FireBossTwo::updateFlameWalls(float dt) {
 	std::list<FlameWall>::iterator i;
 	for (i = flameWallList.begin(); i != flameWallList.end(); i++) {
-		
-		bool deleteWall = false;
 
+		bool anyFireBallsLeft = false;
+
+		//The fireballs spread out after launching to form the wall
 		i->seperation += (200.0 / float(FLAME_WALL_NUM_PARTICLES)) * dt;
 		if (i->seperation > (200.0 / float(FLAME_WALL_NUM_PARTICLES))) i->seperation = 200.0 / float(FLAME_WALL_NUM_PARTICLES);
 
-		if (i->direction == LEFT || i->direction == RIGHT) {
-			if (i->direction == RIGHT) i->x += FLAME_WALL_SPEED * dt;
-			if (i->direction == LEFT) i->x -= FLAME_WALL_SPEED * dt;
-			i->collisionBox->Set(i->x - 20, i->y - 100, i->x + 20, i->y + 100);
-			for (int j = 0; j < FLAME_WALL_NUM_PARTICLES; j++) {
-				i->particles[j]->Update(dt);
-				i->particles[j]->MoveTo(getScreenX(i->x), getScreenY(i->y + j * i->seperation - (float(FLAME_WALL_NUM_PARTICLES) * i->seperation)/2.0), true);
+		if (i->direction == RIGHT) i->x += FLAME_WALL_SPEED * dt;
+		if (i->direction == LEFT) i->x -= FLAME_WALL_SPEED * dt;
+		if (i->direction == UP) i->y -= FLAME_WALL_SPEED * dt;
+		if (i->direction == DOWN) i->y += FLAME_WALL_SPEED * dt;
+
+		//For each individual fireball in the flame wall
+		for (int j = 0; j < FLAME_WALL_NUM_PARTICLES; j++) {
+
+			if (i->fireBalls[j].alive) {
+
+				if (i->direction == LEFT || i->direction == RIGHT) {	
+					i->fireBalls[j].x = i->x;
+					i->fireBalls[j].y = i->y + j * i->seperation - (float(FLAME_WALL_NUM_PARTICLES) * i->seperation)/2.0;
+				} else if (i->direction == UP || i->direction == DOWN) {
+					i->fireBalls[j].x = i->x + j * i->seperation - (float(FLAME_WALL_NUM_PARTICLES) * i->seperation)/2.0;
+					i->fireBalls[j].y = i->y;
+				}
+
+				i->fireBalls[j].particle->Update(dt);
+				i->fireBalls[j].particle->MoveTo(getScreenX(i->fireBalls[j].x), getScreenY(i->fireBalls[j].y), true);
+				i->fireBalls[j].collisionBox->SetRadius(i->fireBalls[j].x, i->fireBalls[j].y, 15.0);
+
+				bool deleteFireBall = false;
+				
+				//Environment collision
+				if (theEnvironment->collisionAt(i->fireBalls[j].x, i->fireBalls[j].y) == UNWALKABLE) {
+					deleteFireBall = true;
+				}	
+
+				//Player collision
+				if (!deleteFireBall && thePlayer->collisionCircle->testBox(i->fireBalls[j].collisionBox)) {
+					thePlayer->dealDamage(FLAME_WALL_DAMAGE, false);
+					deleteFireBall = true;
+				}
+
+				if (deleteFireBall) {
+					delete i->fireBalls[j].particle;
+					delete i->fireBalls[j].collisionBox;
+					i->fireBalls[j].alive = false;
+				}
+
+				if (i->fireBalls[j].alive) anyFireBallsLeft = true;
+
 			}
-		} else if (i->direction == UP || i->direction == DOWN) {
-			if (i->direction == UP) i->y -= FLAME_WALL_SPEED * dt;
-			if (i->direction == DOWN) i->y += FLAME_WALL_SPEED * dt;
-			i->collisionBox->Set(i->x - 100, i->y - 20, i->x + 100, i->y + 20);
-			for (int j = 0; j < FLAME_WALL_NUM_PARTICLES; j++) {
-				i->particles[j]->Update(dt);
-				i->particles[j]->MoveTo(getScreenX(i->x + j * i->seperation - (float(FLAME_WALL_NUM_PARTICLES) * i->seperation)/2.0), getScreenY(i->y), true);
-			}
+
 		}
 
-		//Environment collision
-		if (theEnvironment->collisionAt(i->x, i->y) == UNWALKABLE) {
-			deleteWall = true;
-		}	
-
-		//Player collision
-		if (!deleteWall && thePlayer->collisionCircle->testBox(i->collisionBox)) {
-			thePlayer->dealDamage(FLAME_WALL_DAMAGE, false);
-			deleteWall = true;
-		}
-
-		//Delete orbs marked for deletion
-		if (deleteWall) {
-			for (int j = 0; j < FLAME_WALL_NUM_PARTICLES; j++) delete i->particles[j];
-			delete i->collisionBox;
+		//If all of the fireballs in the wall are dead, remove the wall
+		if (!anyFireBallsLeft) {
 			i = flameWallList.erase(i);
 		}
 
@@ -653,10 +672,10 @@ void FireBossTwo::drawFlameWalls(float dt) {
 	std::list<FlameWall>::iterator i;
 	for (i = flameWallList.begin(); i != flameWallList.end(); i++) {
 		for (int j = 0; j < FLAME_WALL_NUM_PARTICLES; j++) {
-			i->particles[j]->Render();
-		}
-		if (debugMode) {
-			drawCollisionBox(i->collisionBox, RED);
+			if (i->fireBalls[j].alive) {
+				i->fireBalls[j].particle->Render();
+				if (debugMode) drawCollisionBox(i->fireBalls[j].collisionBox, RED);
+			}
 		}
 	}
 }
@@ -664,10 +683,9 @@ void FireBossTwo::drawFlameWalls(float dt) {
 void FireBossTwo::resetFlameWalls() {
 	std::list<FlameWall>::iterator i;
 	for (i = flameWallList.begin(); i != flameWallList.end(); i++) {
-		for (int j = 0; j < 4; j++) delete i->particles[j];
-		delete i->collisionBox;
 		i = flameWallList.erase(i);
 	}
+	flameWallList.clear();
 }
 
 /////////////////////////////// FLAME LAUNCHERS /////////////////////////////

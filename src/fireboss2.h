@@ -7,24 +7,24 @@
 class hgeRect;
 class WeaponParticleSystem;
 
-#define FLAME_WALL_NUM_PARTICLES 6
+#define FLAME_WALL_NUM_PARTICLES 10
 
 struct FlameLauncher {
 	int gridX, gridY;
 	int facing;
 };
 
-struct FlameWall {
-	int x, y, int direction;
-	float seperation;
-	hgeParticleSystem* particles[FLAME_WALL_NUM_PARTICLES];
-	hgeRect *collisionBox;
-};
-
 struct FireBall {
 	hgeParticleSystem *particle;
 	hgeRect *collisionBox;
+	bool alive;
 	float x,y,speed,timeCreated,dx,dy;
+};
+
+struct FlameWall {
+	int x, y, int direction;
+	float seperation;
+	FireBall fireBalls[FLAME_WALL_NUM_PARTICLES];
 };
 
 //Struct for the 5 locations the boss moves between
@@ -45,7 +45,7 @@ public:
 	void addFireBall(float x, float y, float angle, float speed);
 	void drawFireBalls(float dt);
 	void updateFireBalls(float dt);
-	void killOrbs();
+	void resetFireBalls();
 	
 	void addFlameWall(float x, float y, int direction);
 	void drawFlameWalls(float dt);

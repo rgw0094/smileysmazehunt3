@@ -116,7 +116,7 @@ public:
 	void loadArea(int id, int from, int playerX, int playerY);
 	int gatherItem(int x, int y);
 	int collisionAt(float x, float y);
-	bool playerCollision(int x, int y,float dt);
+	bool playerCollision(float x, float y,float dt);
 	bool enemyCollision(hgeRect *box, BaseEnemy *enemy, float dt);
 	void unlockDoor(int gridX, int gridY);
 	bool toggleSwitches(hgeRect* box);

@@ -1191,11 +1191,11 @@ bool Environment::validPath(int x1, int y1, int x2, int y2, int radius, bool can
  * @arg y		y-coord of the player
  * @arg dt
  */
-bool Environment::playerCollision(int x, int y, float dt) {
+bool Environment::playerCollision(float x, float y, float dt) {
 	
 	//Determine the location of the collision box
-	int gridX = x / 64;
-	int gridY = y / 64;
+	int gridX = getGridX(x);
+	int gridY = getGridY(y);
 
     bool onIce = collision[thePlayer->gridX][thePlayer->gridY] == ICE;
 	
@@ -1221,8 +1221,12 @@ bool Environment::playerCollision(int x, int y, float dt) {
 				canPass = thePlayer->canPass(collision[i][j]);
 			}
 
-			//Ignore squares off the map
-			if (inBounds(i,j) && !canPass) {
+			//Don't let the player walk off the map
+			if (!inBounds(i, j)) return true;
+
+			//If the player is unable to walk on this square's collision type, see if their collision
+			//circle overlaps the square.
+			if (!canPass) {
 		
 				//Set collision box depending on collision type
 				setTerrainCollisionBox(collisionBox, collision[i][j], i, j);
