@@ -39,6 +39,11 @@ struct IceBlock {
 	float timeMelted;
 };
 
+struct TimedTile {
+	int gridX, gridY, newTile, oldTile;
+	float duration, timeCreated, alpha;
+};
+
 class SpecialTileManager {
 
 public:
@@ -50,6 +55,13 @@ public:
 	void draw(float dt);
 	void update(float dt);
 	void reset();
+
+	void addTimedTile(int gridX, int gridY, int tile, float duration);
+	void updateTimedTiles(float dt);
+	void drawTimedTiles(float dt);
+	void resetTimedTiles();
+	bool isTimedTileAt(int gridX, int gridY);
+	bool isTimedTileAt(int gridX, int gridY, int tile);
 
 	void addMushroom(int _gridX,int _gridY, int _graphicsIndex);
 	void updateMushrooms(float dt);
@@ -77,6 +89,7 @@ public:
 	std::list<SillyPad> sillyPadList;
 	std::list<Mushroom> theMushrooms; //Linked list containing the mushrooms
 	std::list<IceBlock> iceBlockList;
+	std::list<TimedTile> timedTileList;
 
 	hgeParticleManager *explosions; //This contains the particle effects (graphics) of the explosions	
 	hgeRect *collisionBox;	//general purpose collision box

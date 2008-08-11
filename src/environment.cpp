@@ -1184,18 +1184,20 @@ bool Environment::validPath(int x1, int y1, int x2, int y2, int radius, bool can
 
 
 /**
- * Returns whether or not player, when centered at (x,y)the provided collision box collides 
- * with any terrain. Also autoadjusts the player's position to navigate corners.
+ * Returns whether or not player, when centered at (x,y), collides with any terrain. 
+ * Also autoadjusts the player's position to navigate corners.
  * 
+ * This should be moved to the Player class.
+ *
  * @arg x		x-coord of the player
  * @arg y		y-coord of the player
  * @arg dt
  */
-bool Environment::playerCollision(float x, float y, float dt) {
+bool Environment::playerCollision(int x, int y, float dt) {
 	
 	//Determine the location of the collision box
-	int gridX = getGridX(x);
-	int gridY = getGridY(y);
+	int gridX = x / 64;
+	int gridY = y / 64;
 
     bool onIce = collision[thePlayer->gridX][thePlayer->gridY] == ICE;
 	
@@ -1221,12 +1223,8 @@ bool Environment::playerCollision(float x, float y, float dt) {
 				canPass = thePlayer->canPass(collision[i][j]);
 			}
 
-			//Don't let the player walk off the map
-			if (!inBounds(i, j)) return true;
-
-			//If the player is unable to walk on this square's collision type, see if their collision
-			//circle overlaps the square.
-			if (!canPass) {
+			//Ignore squares off the map
+			if (inBounds(i,j) && !canPass) {
 		
 				//Set collision box depending on collision type
 				setTerrainCollisionBox(collisionBox, collision[i][j], i, j);
@@ -1309,7 +1307,7 @@ bool Environment::playerCollision(float x, float y, float dt) {
 		}
 	}
 
-	return !thePlayer->canPass(collision[gridX][gridY]);
+	return false;
 }
 
 
@@ -1539,4 +1537,16 @@ void Environment::placeSillyPad(int gridX, int gridY) {
 
 bool Environment::hasSillyPad(int gridX, int gridY) {
 	return specialTileManager->isSillyPadAt(gridX, gridY);
+}
+
+void Environment::addTimedTile(int gridX, int gridY, int tile, float duration) {
+	specialTileManager->addTimedTile(gridX, gridY, tile, duration);
+}
+
+bool Environment::isTimedTileAt(int gridX, int gridY) {
+	return specialTileManager->isTimedTileAt(gridX, gridY);
+}
+
+bool Environment::isTimedTileAt(int gridX, int gridY, int tile) {
+	return specialTileManager->isTimedTileAt(gridX, gridY, tile);
 }

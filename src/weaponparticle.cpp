@@ -4,6 +4,7 @@
 #include "collisioncircle.h"
 #include "FireBoss.h"
 #include "Player.h"
+#include "smiley.h"
 
 HGE	*WeaponParticleSystem::hge=0;
 
@@ -42,6 +43,11 @@ WeaponParticleSystem::WeaponParticleSystem(const char *filename, hgeSprite *spri
 	rectBoundingBox.Clear();
 	bUpdateBoundingBox=false;
 	collisionBox = new hgeRect();
+
+	if (type == PARTICLE_FIRE_NOVA2) {
+		info.fParticleLifeMax -= .4;
+		info.fParticleLifeMin -= .4;
+	}
 
 }
 
@@ -87,7 +93,7 @@ void WeaponParticleSystem::Update(float fDeltaTime) {
 		//Do collision
 		if (type == PARTICLE_ICE_BREATH) {
 			enemyManager->freezeEnemies(par->vecLocation.x + theEnvironment->xGridOffset*64.0 + theEnvironment->xOffset, par->vecLocation.y + theEnvironment->yGridOffset*64.0 + theEnvironment->yOffset);
-		} else if (type == PARTICLE_FIRE_NOVA) {
+		} else if (type == PARTICLE_FIRE_NOVA || type == PARTICLE_FIRE_NOVA2) {
 			collisionBox->SetRadius(par->vecLocation.x + theEnvironment->xGridOffset*64 + theEnvironment->xOffset, par->vecLocation.y + theEnvironment->yGridOffset*64 + theEnvironment->yOffset, par->fSize);
 			if (thePlayer->collisionCircle->testBox(collisionBox)) {
 				thePlayer->dealDamage(NOVA_DAMAGE, true);
@@ -97,6 +103,12 @@ void WeaponParticleSystem::Update(float fDeltaTime) {
 			if (thePlayer->collisionCircle->testBox(collisionBox)) {
 				thePlayer->freeze(ICE_NOVA_FREEZE_DURATION);
 			}
+		}
+
+		if (type == PARTICLE_FIRE_NOVA2) {
+			//Turn ground into lava
+			theEnvironment->addTimedTile(getGridX(par->vecLocation.x + theEnvironment->xGridOffset*64 + theEnvironment->xOffset), 
+				getGridY(par->vecLocation.y + theEnvironment->yGridOffset*64 + theEnvironment->yOffset), WALK_LAVA, 5.0);
 		}
 
 		//Update shit
