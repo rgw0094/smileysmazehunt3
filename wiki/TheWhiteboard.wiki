@@ -30,7 +30,7 @@
 
 ===Done===
 ||Item||Date||Done By||
-||Add Timed Tiles to SpecialTileManager||8/9/08||RGW||
+||Add Timed Tiles to SpecialTileManager||8/10/08||RGW||
 ||Bugfix: Tongue looks like the dickens on springs||8/9/08||RGW||
 ||Hopping enemy||8/9/08||RGW||
 ||Increase yellow/green switch saturation||8/6/08||ETI||
