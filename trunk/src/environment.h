@@ -116,7 +116,7 @@ public:
 	void loadArea(int id, int from, int playerX, int playerY);
 	int gatherItem(int x, int y);
 	int collisionAt(float x, float y);
-	bool playerCollision(float x, float y,float dt);
+	bool playerCollision(int x, int y,float dt);
 	bool enemyCollision(hgeRect *box, BaseEnemy *enemy, float dt);
 	void unlockDoor(int gridX, int gridY);
 	bool toggleSwitches(hgeRect* box);
@@ -141,9 +141,9 @@ public:
 	void setTerrainCollisionBox(hgeRect *box, int whatFor, int gridX, int gridY);
 	void placeSillyPad(int gridX, int gridY);
 	bool hasSillyPad(int gridX, int gridY);
-
-	//Objects
-	hgeRect *collisionBox;
+	void addTimedTile(int gridX, int gridY, int tile, float duration);
+	bool isTimedTileAt(int gridX, int gridY);
+	bool isTimedTileAt(int gridX, int gridY, int tile);
     
 	//variables
 	int areaWidth,areaHeight;		//Width and height of the area in squares
@@ -163,14 +163,19 @@ public:
 	int offScreenRange;				//Number of tiles offscreen to draw
 	bool hasFountain;				//Whether or not this area has a fountain
 
+	hgeParticleManager *environmentParticles;
+
+private:
+
 	SpecialTileManager *specialTileManager;
 	EvilWallManager *evilWallManager; //Evil walls which move and try to kill smiley
 	TapestryManager *tapestryManager;
 	Smilelet *smilelet;
-	
+	hgeRect *collisionBox;
+
 	hgeAnimation *silverCylinder, *brownCylinder, *blueCylinder, *greenCylinder, *yellowCylinder, *whiteCylinder;
 	hgeAnimation *silverCylinderRev, *brownCylinderRev, *blueCylinderRev, *greenCylinderRev, *yellowCylinderRev, *whiteCylinderRev;
-	hgeParticleManager *environmentParticles;
+	
 
 };
 

@@ -18,7 +18,7 @@ struct FireBall {
 	hgeParticleSystem *particle;
 	hgeRect *collisionBox;
 	bool alive;
-	float x,y,speed,timeCreated,dx,dy;
+	float x,y,angle,speed,timeCreated,dx,dy;
 };
 
 struct FlameWall {
@@ -54,6 +54,7 @@ public:
 
 	void drawFlameLaunchers(float dt);
 	void launchFlames();
+	void launchAllFlames();
 	void updateFlameLaunchers(float dt);
 	void startChasing();
 	void startMoveToPoint(int x, int y, float speed);
@@ -68,18 +69,21 @@ private:
 	float x, y;
 	float dx,dy;
 	float lastHitByTongue;
-	float startedAttackMode, lastFireBall;
+	float lastFireBall;
 	bool startedIntroDialogue;
 	float startedFlashing;
 	bool flashing, increaseAlpha;
 	int alpha;
 	float floatY;
 	bool droppedLoot;
+	bool saidVitaminDialogYet;
 
 	float lastFlameLaunchTime;
 	float timeToMove;
 	float timeStartedMove;
+	float timeEnteredState;
 	int chaseCounter;
+	bool moving;
 
 	//Graphics
 	WeaponParticleSystem *fireNova;

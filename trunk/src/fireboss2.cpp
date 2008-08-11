@@ -28,14 +28,17 @@ extern float gameTime;
 extern bool debugMode;
 
 #define TEXT_FIREBOSS2_INTRO 160
-#define TEXT_FIREBOSS2_VICTORY 161
+#define TEXT_FIREBOSS2_VITAMINS 161
+#define TEXT_FIREBOSS2_VICTORY 162
 
 //States
 #define FIREBOSS_INACTIVE 0
-#define FIREBOSS_CHASE 1
-#define FIREBOSS_RETURN_TO_ATTACK 2
-#define FIREBOSS_ATTACK 3
-#define FIREBOSS_FRIENDLY 4
+#define FIREBOSS_FIRST_BATTLE 1
+#define FIREBOSS_USING_NOVA 2
+#define FIREBOSS_CHASE 3
+#define FIREBOSS_RETURN_TO_ATTACK 4
+#define FIREBOSS_ATTACK 5
+#define FIREBOSS_FRIENDLY 6
 
 #define TOP_LEFT 0
 #define TOP_RIGHT 1
@@ -51,11 +54,11 @@ extern bool debugMode;
 #define CHASE_SPEED 700.0
 
 //Attributes
-#define HEALTH 4.25
+#define HEALTH 10.00
 #define NOVA_DAMAGE 0.5
 #define ORB_DAMAGE 0.5
 #define COLLISION_DAMAGE 0.25
-#define FLASH_DURATION 2.0
+#define FLASH_DURATION 1.5
 
 /**
  * Constructor
@@ -66,21 +69,21 @@ FireBossTwo::FireBossTwo(int gridX, int gridY, int _groupID) {
 	groupID = _groupID;
 	x = gridX*64+32;
 	y = gridY*64+32;
-	facing = DOWN;
+	facing = UP;
 	for (int i = 0; i < 3; i++) collisionBoxes[i] = new hgeRect();
 	lastHitByTongue = -100.0f;
 	health = maxHealth = HEALTH;
 	state = FIREBOSS_INACTIVE;
 	targetChasePoint = 0;	//Start at the middle location
-	startedAttackMode = gameTime;
 	lastFireBall = gameTime - 5.0f;
 	startedIntroDialogue = false;
 	flashing = increaseAlpha = false;
 	lastFlameLaunchTime = gameTime;
 	floatY = 0.0f;
 	droppedLoot = false;
+	saidVitaminDialogYet = false;
 
-	fireNova = new WeaponParticleSystem("firenova.psi", resources->GetSprite("particleGraphic13"), PARTICLE_FIRE_NOVA);
+	fireNova = new WeaponParticleSystem("firenova.psi", resources->GetSprite("particleGraphic13"), PARTICLE_FIRE_NOVA2);
 
 	//Set up valid locations
 	//Top Left
@@ -98,32 +101,32 @@ FireBossTwo::FireBossTwo(int gridX, int gridY, int _groupID) {
 
 	//Set up flame launchers
 	//Top left
-	flameLaunchers[0].gridX = startX - 10;
-	flameLaunchers[0].gridY = startY - 4;
+	flameLaunchers[0].gridX = startX - 9;
+	flameLaunchers[0].gridY = startY - 5;
 	flameLaunchers[0].facing = RIGHT;
-	flameLaunchers[1].gridX = startX - 7;
-	flameLaunchers[1].gridY = startY - 7;
+	flameLaunchers[1].gridX = startX - 6;
+	flameLaunchers[1].gridY = startY - 8;
 	flameLaunchers[1].facing = DOWN;
 	//Top right
-	flameLaunchers[2].gridX = startX + 7;
-	flameLaunchers[2].gridY = startY - 7;
+	flameLaunchers[2].gridX = startX + 6;
+	flameLaunchers[2].gridY = startY - 8;
 	flameLaunchers[2].facing = DOWN;
-	flameLaunchers[3].gridX = startX + 10;
-	flameLaunchers[3].gridY = startY - 4;
+	flameLaunchers[3].gridX = startX + 9;
+	flameLaunchers[3].gridY = startY - 5;
 	flameLaunchers[3].facing = LEFT;
 	//Bottom Right
-	flameLaunchers[4].gridX = startX + 10;
-	flameLaunchers[4].gridY = startY + 4;
+	flameLaunchers[4].gridX = startX + 9;
+	flameLaunchers[4].gridY = startY + 5;
 	flameLaunchers[4].facing = LEFT;
-	flameLaunchers[5].gridX = startX + 7;
-	flameLaunchers[5].gridY = startY + 7;
+	flameLaunchers[5].gridX = startX + 6;
+	flameLaunchers[5].gridY = startY + 8;
 	flameLaunchers[5].facing = UP;
 	//Bottom Left
-	flameLaunchers[6].gridX = startX - 7;
-	flameLaunchers[6].gridY = startY + 7;
+	flameLaunchers[6].gridX = startX - 6;
+	flameLaunchers[6].gridY = startY + 8;
 	flameLaunchers[6].facing = UP;
-	flameLaunchers[7].gridX = startX - 10;
-	flameLaunchers[7].gridY = startY + 4;
+	flameLaunchers[7].gridX = startX - 9;
+	flameLaunchers[7].gridY = startY + 5;
 	flameLaunchers[7].facing = RIGHT;
 
 }
@@ -164,10 +167,9 @@ void FireBossTwo::draw(float dt) {
 		resources->GetAnimation("phyrebozzRightMouth")->Render(getScreenX(x-(97/2)+34),getScreenY(y-(158/2)+12+floatY));
 	}
 	
-	//Draw fire nova attack
-	if (state == FIREBOSS_ATTACK) {
-		fireNova->Render();
-	}
+	fireNova->MoveTo(getScreenX(x), getScreenY(y), true);
+	fireNova->Update(dt);
+	fireNova->Render();
 
 	//Draw his health bar
 	if (state != FIREBOSS_INACTIVE) {
@@ -211,7 +213,7 @@ bool FireBossTwo::update(float dt) {
 
 	//Activate the boss when the intro dialogue is closed
 	if (state == FIREBOSS_INACTIVE && startedIntroDialogue && !windowManager->isTextBoxOpen()) {
-		setState(FIREBOSS_ATTACK);
+		setState(FIREBOSS_FIRST_BATTLE);
 		hge->Effect_Play(resources->GetEffect("snd_fireBossDie"));
 		soundManager->playMusic("bossMusic");
 	}
@@ -270,6 +272,14 @@ bool FireBossTwo::update(float dt) {
 		}
 	}
 
+	//Check for collision with lightning orbs
+	if (projectileManager->killProjectilesInBox(collisionBoxes[0], PROJECTILE_LIGHTNING_ORB) > 0 ||
+			projectileManager->killProjectilesInBox(collisionBoxes[1], PROJECTILE_LIGHTNING_ORB) > 0 ||
+			projectileManager->killProjectilesInBox(collisionBoxes[1], PROJECTILE_LIGHTNING_ORB) > 0) {
+		doDamage(thePlayer->getLightningOrbDamage() * 2.0, true);
+	}
+
+
 	//Stop flashing after a while
 	if (flashing && timePassedSince(startedFlashing) > FLASH_DURATION) {
 		alpha = 255;
@@ -287,7 +297,7 @@ bool FireBossTwo::update(float dt) {
 				thePlayer->dealDamageAndKnockback(0.25, true, 150, x, y);
 				//If chasing smiley, leave chase state after running into him
 				if (state == FIREBOSS_CHASE) {
-					state = FIREBOSS_RETURN_TO_ATTACK;
+					setState(FIREBOSS_RETURN_TO_ATTACK);
 					startMoveToPoint(startX*64+32,startY*64+32, 300);
 				}
 			}
@@ -324,6 +334,52 @@ bool FireBossTwo::update(float dt) {
  * Updates stuff based on phyrebozz' current state
  */
 bool FireBossTwo::updateState(float dt) {
+
+	//---First Battle--------------------------------
+	// When you first engage Phyrebozz he floats around and shoots homing orbs at
+	// Smiley that he needs to use the reflection shield to avoid. Once Phyrebozz
+	// takes enough damage he says his vitamins line and moves on to the next stage.
+	//-----------------------------------------------
+	if (state == FIREBOSS_FIRST_BATTLE) {
+
+		if (!moving) {
+
+			//Move back and forth
+			dx = 250 * cos(timePassedSince(timeEnteredState));
+
+			//Launch fireballs
+			if (timePassedSince(lastFireBall) > 2.0) {
+				addFireBall(x, y, getAngleBetween(x, y, thePlayer->x, thePlayer->y) - PI / 4.0, 500.0);
+				addFireBall(x, y, getAngleBetween(x, y, thePlayer->x, thePlayer->y) + PI / 4.0, 500.0);
+				lastFireBall = gameTime;
+			}
+
+		}
+
+		//At 80% health go to the next stage.
+		if (health < HEALTH * .99) {
+
+			//Move back to the starting position first.
+			if (!moving) {
+				startMoveToPoint(startX*64.0+32.0, startY*64.0+32.0, 250.0);
+			} else {
+				if (timePassedSince(timeStartedMove) > timeToMove) {
+					if (!saidVitaminDialogYet && !windowManager->isTextBoxOpen()) {
+						windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS2_VITAMINS);
+						saidVitaminDialogYet = true;
+					} else {
+						hge->Effect_Play(resources->GetEffect("snd_fireBossDie"));
+						setState(FIREBOSS_USING_NOVA);
+						launchAllFlames();
+						moving = false;
+						dx = dy = 0.0;
+					}
+				}
+			}
+
+		}
+
+	}
 
 	//---Chase State---------------------------------
 	// Phyrebozz chases smiley around the pool
@@ -369,21 +425,21 @@ bool FireBossTwo::updateState(float dt) {
 	// Phyrebozz launches various attacks at Smiley while floating over his pool.
 	//-----------------------------------------------
 	if (state == FIREBOSS_ATTACK) {
-		dx = 250 * cos(timePassedSince(startedAttackMode));
+		dx = 250 * cos(timePassedSince(timeEnteredState));
 
 		if (timePassedSince(lastFireBall) > 2.0) {
 			addFireBall(x, y, getAngleBetween(x, y, thePlayer->x, thePlayer->y), 400.0);
 			lastFireBall = gameTime;
 		}
 
-		if (timePassedSince(startedAttackMode) > 8.0) {
+		if (timePassedSince(timeEnteredState) > 8.0) {
 			startChasing();
 		}
 
 	}
 	
 	//Set facing
-	if (state == FIREBOSS_ATTACK) {
+	if (state == FIREBOSS_ATTACK || FIREBOSS_FIRST_BATTLE) {
 		facing = thePlayer->y < y ? UP : DOWN;
 	} else {
 		facing = getFacingDirection(dx, dy);
@@ -400,10 +456,12 @@ bool FireBossTwo::updateState(float dt) {
  * Changes Phyrebozz' state. Handles state transition stuff.
  */
 void FireBossTwo::setState(int newState) {
+	
 	state = newState;
+	timeEnteredState = gameTime;
 
-	if (newState == FIREBOSS_ATTACK) {
-		startedAttackMode = gameTime;
+	if (newState == FIREBOSS_USING_NOVA) {
+		fireNova->FireAt(getScreenX(x), getScreenY(y));
 	}
 }
 
@@ -476,6 +534,7 @@ void FireBossTwo::startChasing() {
  */ 
 void FireBossTwo::startMoveToPoint(int _x, int _y, float speed) {
 	timeStartedMove = gameTime;
+	moving = true;
 	timeToMove = distance(x, y, _x, _y) / speed;
 	float angle = getAngleBetween(x, y, _x, _y);
 	dx = speed * cos(angle);
@@ -493,12 +552,14 @@ void FireBossTwo::addFireBall(float x, float y, float angle, float speed) {
 	FireBall newFireBall;
 	newFireBall.x = x;
 	newFireBall.y = y;
+	newFireBall.speed = speed;
 	newFireBall.dx = speed * cos(angle);
 	newFireBall.dy = speed * sin(angle);
 	newFireBall.collisionBox = new hgeRect();
 	newFireBall.particle = new hgeParticleSystem(&resources->GetParticleSystem("fireOrb")->info);
 	newFireBall.particle->Fire();
 	newFireBall.timeCreated = gameTime;
+	newFireBall.angle = angle;
 
 	//Add it to the list
 	fireBallList.push_back(newFireBall);
@@ -521,13 +582,36 @@ void FireBossTwo::updateFireBalls(float dt) {
 
 		//Update collision box
 		i->collisionBox->SetRadius(i->x, i->y, 15);
+		
+		//Find angle to seek target
+		float xDist = i->x - thePlayer->x;
+		float targetAngle = atan((i->y - thePlayer->y) / xDist);
 
-		//Move towards player
-		//float angle = getAngleBetween(i->x,i->y,thePlayer->x,thePlayer->y);
-		//i->dx = 130 * cos(angle);
-		//i->dy = 130 * sin(angle);
-		i->x += i->dx*dt;
-		i->y += i->dy*dt;
+		//----------Do a bunch of SHIT----------
+		while (i->angle < 0.0) i->angle += 2.0*PI;
+		while (i->angle > 2.0*PI ) i->angle -= 2.0*PI;
+		while (targetAngle < 0.0) targetAngle += 2.0*PI;
+		while (targetAngle > 2.0*PI ) targetAngle -= 2.0*PI;
+		float temp = i->angle - targetAngle;
+		while (temp < 0) temp += 2.0*PI;
+		while (temp > 2.0*PI) temp -= 2.0*PI;
+		if (xDist > 0) {
+			if (temp <= PI) {
+				i->angle += (PI / 2.0) * dt;
+			} else if (temp > PI) {
+				i->angle -= (PI / 2.0) * dt;
+			}
+		} else {
+			if (temp <= PI) {
+				i->angle -= (PI / 2.0) * dt;
+			} else if (temp > PI) {
+				i->angle += (PI / 2.0) * dt;
+			}
+		}
+		//----------------------------------------
+
+		i->x += i->speed * cos(i->angle) * dt;
+		i->y += i->speed * sin(i->angle) * dt;
 
 		//Environment collision
 		if (theEnvironment->collisionAt(i->x, i->y) == UNWALKABLE) {
@@ -712,6 +796,13 @@ void FireBossTwo::launchFlames() {
 	lastFlameLaunchTime = gameTime;
 }
 
+void FireBossTwo::launchAllFlames() {
+	for (int i = 0; i < 8; i++) {
+		addFlameWall(flameLaunchers[i].gridX*64+32, flameLaunchers[i].gridY*64+32, flameLaunchers[i].facing);
+	}
+	lastFlameLaunchTime = gameTime;
+}
+
 void FireBossTwo::drawFlameLaunchers(float dt) {
 	for (int i = 0; i < 8; i++) {
 		resources->GetSprite("flameLauncher")->RenderEx(getScreenX(flameLaunchers[i].gridX*64+32), 
@@ -720,7 +811,7 @@ void FireBossTwo::drawFlameLaunchers(float dt) {
 }
 
 void FireBossTwo::updateFlameLaunchers(float dt) {
-	if (timePassedSince(lastFlameLaunchTime) > FLAME_LAUNCH_DELAY) {
-		launchFlames();
-	}
+	//if (timePassedSince(lastFlameLaunchTime) > FLAME_LAUNCH_DELAY) {
+	//	launchFlames();
+	//}
 }

@@ -52,12 +52,14 @@ void SpecialTileManager::reset() {
 	resetFlames();
 	resetSillyPads();
 	resetIceBlocks();
+	resetTimedTiles();
 }
 
 /**
  * Draws all special tiles
  */
 void SpecialTileManager::draw(float dt) {
+	drawTimedTiles(dt);
 	drawMushrooms(dt);
 	drawSillyPads(dt);
 	drawIceBlocks(dt);
@@ -68,6 +70,8 @@ void SpecialTileManager::draw(float dt) {
  * Updates all special tiles
  */
 void SpecialTileManager::update(float dt) {
+	
+	updateTimedTiles(dt);
 	updateMushrooms(dt);
 	updateSillyPads(dt);
 	updateFlames(dt);
@@ -136,6 +140,109 @@ void SpecialTileManager::resetIceBlocks() {
 	}
 	iceBlockList.clear();
 }
+
+//////////// Timed Tile Functions ///////////////////
+
+/**
+ * Add a timed tile.
+ */
+void SpecialTileManager::addTimedTile(int gridX, int gridY, int tile, float duration) {
+
+	if (isTimedTileAt(gridX, gridY, tile)) return;
+
+	TimedTile newTile;
+	newTile.gridX = gridX;
+	newTile.gridY = gridY;
+	newTile.newTile = tile;
+	newTile.oldTile = theEnvironment->collision[gridX][gridY];
+	newTile.duration = duration;
+	newTile.timeCreated = gameTime;
+	newTile.alpha = 0.0;
+
+	timedTileList.push_back(newTile);
+
+}
+
+/**
+ * Update all timed tiles.
+ */
+void SpecialTileManager::updateTimedTiles(float dt) {
+	std::list<TimedTile>::iterator i;
+	for(i = timedTileList.begin(); i != timedTileList.end(); i++) {
+		if (timePassedSince(i->timeCreated) <= i->duration) {
+			//Fading in
+			if (i->alpha < 255.0) {
+				i->alpha += 255.0 * dt;
+				if (i->alpha > 255.0) {
+					theEnvironment->collision[i->gridX][i->gridY] = i->newTile;
+					i->alpha = 255.0;
+				}
+			}
+		} else {
+			//Fading out
+			if (i->alpha == 255.0) theEnvironment->collision[i->gridX][i->gridY] = i->oldTile;
+			i->alpha -= 255.0 * dt;
+			if (i->alpha < 0.0) {
+				i->alpha = 0.0;
+				i = timedTileList.erase(i);
+			}
+		}
+	}
+}
+
+/**
+ * Draw all timed tiles.
+ */
+void SpecialTileManager::drawTimedTiles(float dt) {
+	std::list<TimedTile>::iterator i;
+	for(i = timedTileList.begin(); i != timedTileList.end(); i++) {
+		if (i->alpha < 255.0) {
+			if (i->newTile == WALK_LAVA || i->newTile == NO_WALK_LAVA) {
+				resources->GetAnimation("lava")->SetColor(ARGB(i->alpha, 255, 255, 255));
+				resources->GetAnimation("lava")->Render(getScreenX(i->gridX*64), getScreenY(i->gridY*64));
+				resources->GetAnimation("lava")->SetColor(ARGB(255, 255, 255, 255));
+			} else {
+				walkLayer[i->newTile]->SetColor(ARGB(i->alpha, 255, 255, 255));
+				walkLayer[i->newTile]->Render(getScreenX(i->gridX*64), getScreenY(i->gridY*64));
+				walkLayer[i->newTile]->SetColor(ARGB(255, 255, 255, 255));
+			}
+		}
+	}
+}
+
+/**
+ * Delete all timed tiles.
+ */ 
+void SpecialTileManager::resetTimedTiles() {
+	std::list<TimedTile>::iterator i;
+	for(i = timedTileList.begin(); i != timedTileList.end(); i++) {
+		i = timedTileList.erase(i);
+	}
+	timedTileList.clear();
+}
+
+/**
+ * Returns whether or not there is a timed tile at the specified location.
+ */
+bool SpecialTileManager::isTimedTileAt(int gridX, int gridY) {
+	std::list<TimedTile>::iterator i;
+	for(i = timedTileList.begin(); i != timedTileList.end(); i++) {
+		if (i->gridX == gridX && i->gridY == gridY) return true;
+	}
+	return false;
+}
+
+/**
+ * Returns whether or not there is a timed tile of a certain type at the specified location.
+ */
+bool SpecialTileManager::isTimedTileAt(int gridX, int gridY, int tile) {
+	std::list<TimedTile>::iterator i;
+	for(i = timedTileList.begin(); i != timedTileList.end(); i++) {
+		if (i->gridX == gridX && i->gridY == gridY && i->newTile == tile) return true;
+	}
+	return false;
+}
+
 
 //////////// Silly Pad Functions ///////////////
 
