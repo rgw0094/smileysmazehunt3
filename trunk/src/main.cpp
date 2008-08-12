@@ -104,6 +104,35 @@ void loadResources() {
 
 }
 
+/**
+ * Put all gay debug input here.
+ */
+void doDebugInput() {
+
+	//Toggle debug mode
+	if (hge->Input_KeyDown(HGEK_D)) debugMode = !debugMode;
+
+	if (gameState == GAME) {
+
+		//Toggle invincibility
+		if (hge->Input_KeyDown(HGEK_I)) {
+			thePlayer->invincible = !thePlayer->invincible;
+		}
+		
+		//Gives you life when you press L
+		if (hge->Input_KeyDown(HGEK_L)) {
+			thePlayer->setHealth(thePlayer->getMaxHealth());
+		}
+
+		//Move smiley with num pad
+		if (hge->Input_KeyDown(HGEK_NUMPAD8)) thePlayer->moveTo(thePlayer->gridX, thePlayer->gridY - 1);
+		if (hge->Input_KeyDown(HGEK_NUMPAD5)) thePlayer->moveTo(thePlayer->gridX, thePlayer->gridY + 1);
+		if (hge->Input_KeyDown(HGEK_NUMPAD4)) thePlayer->moveTo(thePlayer->gridX - 1, thePlayer->gridY);
+		if (hge->Input_KeyDown(HGEK_NUMPAD6)) thePlayer->moveTo(thePlayer->gridX + 1, thePlayer->gridY);
+
+	}
+
+}
 
 /**
  * Frame function. This is called continously by HGE. Each
@@ -112,6 +141,8 @@ void loadResources() {
 bool FrameFunc() {
 
 	float dt = hge->Timer_GetDelta();
+
+	doDebugInput();
 
 	//Update the input
 	input->UpdateInput();
@@ -129,14 +160,6 @@ bool FrameFunc() {
 	} else if (gameState == GAME) {
 
 		frameCounter++;
-
-		//Toggle debug mode
-		if (hge->Input_KeyDown(HGEK_D)) debugMode = !debugMode;
-
-		//Toggle invincibility
-		if (hge->Input_KeyDown(HGEK_I)) {
-			thePlayer->invincible = !thePlayer->invincible;
-		}
 
 		//Toggle game menu
 		if (input->keyPressed(INPUT_PAUSE)) {

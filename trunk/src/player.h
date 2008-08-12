@@ -21,29 +21,15 @@ public:
 	Player(int x, int y);
 	~Player();
 
-	//methods
 	void draw(float dt);
 	void drawGUI(float dt);
 	void update(float dt);
 	void moveTo(int gridX, int gridY);
-	void move(float x, float y, float dt);
 	bool canPass(int collision);
-	void changeAbility(int direction);
-	void doAbility(float dt);
-	void doWarps();
-	void doFalling(float dt);
-	void doSprings(float dt);
-	void doArrowPads(float dt);
-	void doItems();
-	void doWater();
-	void setFacingStraight();
-	void doMovement(float dt);
-	void doIce(float dt);
 	void dealDamage(float damage, bool makesFlash);
 	void dealDamageAndKnockback(float damage, bool makesFlash, float knockbackDist, float knockbackerX, float knockbackerY);
 	void dealDamageAndKnockback(float damage, bool makesFlash, bool alwaysKnockback, float knockbackDist, float knockbackerX, float knockbackerY);
 	void freeze(float duration);
-	void doShrinkTunnels(float dt);
 
 	//Accessors/mutators
 	bool isInvisible();
@@ -79,9 +65,7 @@ public:
 	float dx, dy;
 	float alpha;
 	float mana;
-	CollisionCircle *collisionCircle;
 	int selectedAbility;
-	float speedModifier;
 	int startedFallingX;					//X position where the player started falling
 	int startedFallingY;					//Y position where the player started falling
 	int enteredWaterX, enteredWaterY;		//Grid position the player was on before entering water
@@ -97,15 +81,28 @@ public:
 
 	bool invincible;
 
+	CollisionCircle *collisionCircle;
 	WeaponParticleSystem *fireBreathParticle;
 	WeaponParticleSystem *iceBreathParticle;
 
 private:
 
-	float health;
-	
-	float timeFrozen, freezeDuration;
-	float springVelocity;
+	void doMove(float dt);
+	void changeAbility(int direction);
+	void doAbility(float dt);
+	void doWarps();
+	void doFalling(float dt);
+	void doSprings(float dt);
+	void doArrowPads(float dt);
+	void doItems();
+	void doWater();
+	void setFacingStraight();
+	void setFacingDirection();
+	void updateVelocities(float dt);
+	void doIce(float dt);
+	void doShrinkTunnels(float dt);
+
+	float health, timeFrozen, freezeDuration, springVelocity;
 	Tongue *tongue;
 	Worm *worm;
 	

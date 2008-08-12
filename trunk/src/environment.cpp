@@ -1200,14 +1200,6 @@ bool Environment::playerCollision(int x, int y, float dt) {
 	int gridY = y / 64;
 
     bool onIce = collision[thePlayer->gridX][thePlayer->gridY] == ICE;
-	
-	//Activate or deactivate evil walls
-	if (collision[thePlayer->gridX][thePlayer->gridY] == EVIL_WALL_TRIGGER) {
-		evilWallManager->activateEvilWall(ids[thePlayer->gridX][thePlayer->gridY]);
-	}
-	if (collision[thePlayer->gridX][thePlayer->gridY] == EVIL_WALL_DEACTIVATOR) {
-		evilWallManager->deactivateEvilWall(ids[thePlayer->gridX][thePlayer->gridY]);
-	}
 
 	//Check all neighbor squares
 	for (int i = gridX - 2; i <= gridX + 2; i++) {

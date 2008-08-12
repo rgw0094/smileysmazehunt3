@@ -50,15 +50,10 @@ void Worm::update() {
 }
 
 void Worm::draw() {
-
-	if (!debugMode) return;
-
 	std::list<WormNode>::iterator i;
-
 	for (i = theWorms.begin(); i != theWorms.end(); i++) {
 		resources->GetSprite("clownChainDot")->Render(getScreenX(i->x),getScreenY(i->y));
 	}
-
 }
 
 WormNode Worm::getNode(int nodeNumber) {
