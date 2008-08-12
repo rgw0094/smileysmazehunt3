@@ -87,17 +87,17 @@ FireBossTwo::FireBossTwo(int gridX, int gridY, int _groupID) {
 
 	//Set up valid locations
 	//Top Left
-	chasePoints[TOP_LEFT].x = x - 7*64;
-	chasePoints[TOP_LEFT].y = y - 4*64;
+	chasePoints[TOP_LEFT].x = x - 6*64;
+	chasePoints[TOP_LEFT].y = y - 5*64;
 	//Top Right
-	chasePoints[TOP_RIGHT].x = x + 7*64;
-	chasePoints[TOP_RIGHT].y = y - 4*64;
+	chasePoints[TOP_RIGHT].x = x + 6*64;
+	chasePoints[TOP_RIGHT].y = y - 5*64;
 	//Bottom Left
-	chasePoints[BOTTOM_LEFT].x = x - 7*64;
-	chasePoints[BOTTOM_LEFT].y = y + 4*64;
+	chasePoints[BOTTOM_LEFT].x = x - 6*64;
+	chasePoints[BOTTOM_LEFT].y = y + 5*64;
 	//Bottom Right
-	chasePoints[BOTTOM_RIGHT].x = x + 7*64;
-	chasePoints[BOTTOM_RIGHT].y = y + 4*64;
+	chasePoints[BOTTOM_RIGHT].x = x + 6*64;
+	chasePoints[BOTTOM_RIGHT].y = y + 5*64;
 
 	//Set up flame launchers
 	//Top left
@@ -148,8 +148,6 @@ FireBossTwo::~FireBossTwo() {
 void FireBossTwo::draw(float dt) {
 
 	drawFlameLaunchers(dt);
-	drawFlameWalls(dt);
-	drawFireBalls(dt);
 
 	//Draw the boss' main sprite
 	resources->GetAnimation("phyrebozz")->SetFrame(facing);
@@ -183,6 +181,11 @@ void FireBossTwo::draw(float dt) {
 		}
 	}
 
+}
+
+void FireBossTwo::drawAfterSmiley(float dt) {
+	drawFlameWalls(dt);
+	drawFireBalls(dt);
 }
 
 /**
@@ -350,6 +353,7 @@ bool FireBossTwo::updateState(float dt) {
 			//Launch fireballs
 			if (timePassedSince(lastFireBall) > 2.0) {
 				addFireBall(x, y, getAngleBetween(x, y, thePlayer->x, thePlayer->y) - PI / 4.0, 500.0);
+				addFireBall(x, y, getAngleBetween(x, y, thePlayer->x, thePlayer->y), 500.0);
 				addFireBall(x, y, getAngleBetween(x, y, thePlayer->x, thePlayer->y) + PI / 4.0, 500.0);
 				lastFireBall = gameTime;
 			}
@@ -369,10 +373,7 @@ bool FireBossTwo::updateState(float dt) {
 						saidVitaminDialogYet = true;
 					} else {
 						hge->Effect_Play(resources->GetEffect("snd_fireBossDie"));
-						setState(FIREBOSS_USING_NOVA);
-						launchAllFlames();
-						moving = false;
-						dx = dy = 0.0;
+						setState(FIREBOSS_ATTACK);
 					}
 				}
 			}
@@ -425,7 +426,6 @@ bool FireBossTwo::updateState(float dt) {
 	// Phyrebozz launches various attacks at Smiley while floating over his pool.
 	//-----------------------------------------------
 	if (state == FIREBOSS_ATTACK) {
-		dx = 250 * cos(timePassedSince(timeEnteredState));
 
 		if (timePassedSince(lastFireBall) > 2.0) {
 			addFireBall(x, y, getAngleBetween(x, y, thePlayer->x, thePlayer->y), 400.0);
@@ -439,11 +439,13 @@ bool FireBossTwo::updateState(float dt) {
 	}
 	
 	//Set facing
+	setFacingPlayer();
+	/**
 	if (state == FIREBOSS_ATTACK || FIREBOSS_FIRST_BATTLE) {
 		facing = thePlayer->y < y ? UP : DOWN;
 	} else {
 		facing = getFacingDirection(dx, dy);
-	}
+	}*/
 
 	//Move
 	x += dx * dt;
@@ -460,7 +462,10 @@ void FireBossTwo::setState(int newState) {
 	state = newState;
 	timeEnteredState = gameTime;
 
-	if (newState == FIREBOSS_USING_NOVA) {
+	if (newState == FIREBOSS_ATTACK) {
+		launchAllFlames();
+		moving = false;
+		dx = dy = 0.0;
 		fireNova->FireAt(getScreenX(x), getScreenY(y));
 	}
 }
@@ -541,6 +546,42 @@ void FireBossTwo::startMoveToPoint(int _x, int _y, float speed) {
 	dy = speed * sin(angle);
 }
 
+void FireBossTwo::setFacingPlayer() {
+
+	int xDist = thePlayer->x - x;
+	int yDist = thePlayer->y - y;
+	if (xDist < 0 && yDist < 0) {
+		//Player up-left from enemy
+		if (abs(xDist) > abs(yDist)) {
+			facing = LEFT;
+		} else {
+			facing = UP;
+		}
+	} else if (xDist > 0 && yDist < 0) {
+		//Player up-right from enemy
+		if (abs(xDist) > abs(yDist)) {
+			facing = RIGHT;
+		} else {
+			facing = UP;
+		}
+	} else if (xDist < 0 && yDist > 0) {
+		//Player  left-down from enemy
+		if (abs(xDist) > abs(yDist)) {
+			facing = LEFT;
+		} else {
+			facing = DOWN;
+		}
+	} else if (xDist > 0 && yDist > 0) {
+		//Player right-down from enemy
+		if (abs(xDist) > abs(yDist)) {
+			facing = RIGHT;	
+		} else {
+			facing = DOWN;
+		}
+	}
+
+}
+
 ///////////////////////////// FIRE BALLS /////////////////////////////////
 
 /** 
@@ -560,6 +601,7 @@ void FireBossTwo::addFireBall(float x, float y, float angle, float speed) {
 	newFireBall.particle->Fire();
 	newFireBall.timeCreated = gameTime;
 	newFireBall.angle = angle;
+	newFireBall.hasExploded = false;
 
 	//Add it to the list
 	fireBallList.push_back(newFireBall);
@@ -574,61 +616,83 @@ void FireBossTwo::updateFireBalls(float dt) {
 	std::list<FireBall>::iterator i;
 	for (i = fireBallList.begin(); i != fireBallList.end(); i++) {
 
-		bool deleteOrb = false;
-
 		//Update particle
 		i->particle->MoveTo(getScreenX(i->x), getScreenY(i->y), true);
 		i->particle->Update(dt);
 
-		//Update collision box
-		i->collisionBox->SetRadius(i->x, i->y, 15);
-		
-		//Find angle to seek target
-		float xDist = i->x - thePlayer->x;
-		float targetAngle = atan((i->y - thePlayer->y) / xDist);
+		if (!i->hasExploded) {
 
-		//----------Do a bunch of SHIT----------
-		while (i->angle < 0.0) i->angle += 2.0*PI;
-		while (i->angle > 2.0*PI ) i->angle -= 2.0*PI;
-		while (targetAngle < 0.0) targetAngle += 2.0*PI;
-		while (targetAngle > 2.0*PI ) targetAngle -= 2.0*PI;
-		float temp = i->angle - targetAngle;
-		while (temp < 0) temp += 2.0*PI;
-		while (temp > 2.0*PI) temp -= 2.0*PI;
-		if (xDist > 0) {
-			if (temp <= PI) {
-				i->angle += (PI / 2.0) * dt;
-			} else if (temp > PI) {
-				i->angle -= (PI / 2.0) * dt;
+			bool explode = false;
+
+			//Update collision box
+			i->collisionBox->SetRadius(i->x, i->y, 15);
+			
+			//Find angle to seek target
+			float xDist = i->x - thePlayer->x;
+			float targetAngle = atan((i->y - thePlayer->y) / xDist);
+
+			//----------Do a bunch of SHIT----------
+			while (i->angle < 0.0) i->angle += 2.0*PI;
+			while (i->angle > 2.0*PI ) i->angle -= 2.0*PI;
+			while (targetAngle < 0.0) targetAngle += 2.0*PI;
+			while (targetAngle > 2.0*PI ) targetAngle -= 2.0*PI;
+			float temp = i->angle - targetAngle;
+			while (temp < 0) temp += 2.0*PI;
+			while (temp > 2.0*PI) temp -= 2.0*PI;
+			if (xDist > 0) {
+				if (temp <= PI) {
+					i->angle += (PI / 2.0) * dt;
+				} else if (temp > PI) {
+					i->angle -= (PI / 2.0) * dt;
+				}
+			} else {
+				if (temp <= PI) {
+					i->angle -= (PI / 2.0) * dt;
+				} else if (temp > PI) {
+					i->angle += (PI / 2.0) * dt;
+				}
 			}
+			//----------------------------------------
+
+			i->x += i->speed * cos(i->angle) * dt;
+			i->y += i->speed * sin(i->angle) * dt;
+
+			//Environment collision
+			if (theEnvironment->collisionAt(i->x, i->y) == UNWALKABLE) {
+				explode = true;
+			}	
+
+			//Player collision
+			if (!explode && thePlayer->collisionCircle->testBox(i->collisionBox)) {
+				thePlayer->dealDamage(ORB_DAMAGE, true);
+				explode = true;
+			}
+
+			if (explode) {
+				i->hasExploded = true;
+				delete i->particle;
+				i->particle = new hgeParticleSystem(&resources->GetParticleSystem("smallExplosion")->info);
+				i->particle->FireAt(getScreenX(i->x), getScreenY(i->y));
+				i->particle->TrackBoundingBox(true);
+				i->radius = 5.0;
+				i->timeExploded = gameTime;
+			}
+
 		} else {
-			if (temp <= PI) {
-				i->angle -= (PI / 2.0) * dt;
-			} else if (temp > PI) {
-				i->angle += (PI / 2.0) * dt;
+
+			if (i->radius < 50.0) i->radius += 60.0 * dt;
+
+			i->collisionBox->SetRadius(i->x, i->y, i->radius);
+			if (thePlayer->collisionCircle->testBox(i->collisionBox)) {
+				thePlayer->dealDamage(ORB_DAMAGE, true);
 			}
-		}
-		//----------------------------------------
 
-		i->x += i->speed * cos(i->angle) * dt;
-		i->y += i->speed * sin(i->angle) * dt;
+			if (timePassedSince(i->timeExploded) > 0.96) {
+				delete i->particle;
+				delete i->collisionBox;
+				i = fireBallList.erase(i);
+			}
 
-		//Environment collision
-		if (theEnvironment->collisionAt(i->x, i->y) == UNWALKABLE) {
-			deleteOrb = true;
-		}	
-
-		//Player collision
-		if (!deleteOrb && thePlayer->collisionCircle->testBox(i->collisionBox)) {
-			thePlayer->dealDamage(ORB_DAMAGE, false);
-			deleteOrb = true;
-		}
-
-		//Delete orbs marked for deletion
-		if (deleteOrb) {
-			delete i->particle;
-			delete i->collisionBox;
-			i = fireBallList.erase(i);
 		}
 
 	}

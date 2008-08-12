@@ -171,6 +171,11 @@ Particle bombFuse {
  sprite=particleGraphic2
  resgroup=1
 }
+Particle smallExplosion {
+ filename=smallexplosion.psi
+ sprite=particleGraphic13
+ resgroup=1
+}
 Particle explosion {
  filename=explosion.psi
  sprite=particleGraphic11

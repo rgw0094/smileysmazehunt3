@@ -56,6 +56,7 @@ extern int gameState;
 #define HOVER_DURATION 5.0
 #define SPRING_VELOCITY 210.0
 #define JESUS_SANDLE_TIME 1.65
+#define SPEED_BOOTS_MODIFIER 1.75
 
 /**
  * Constructor
@@ -144,8 +145,6 @@ Player::~Player() {
  */
 void Player::update(float dt) {
 
-	speedModifier = 1.0f;
-
 	//Do level exits
 	if (theEnvironment->collision[gridX][gridY] == PLAYER_END) {
 		loadEffectManager->startEffect(0, 0, theEnvironment->ids[gridX][gridY]);
@@ -170,34 +169,6 @@ void Player::update(float dt) {
 	saveManager->playerGridX = gridX;
 	saveManager->playerGridY = gridY;
 
-	//GAY gives you life when you press L
-	if (hge->Input_KeyDown(HGEK_L)) {
-		health += 1.0;
-		if (health > getMaxHealth()) health = getMaxHealth();
-	}
-
-	//GAY moves smiley with the num pad
-	if (hge->Input_KeyDown(HGEK_NUMPAD8)) {
-		gridY--;
-		x = gridX * 64.0 + 32.0;
-		y = gridY * 64.0 + 32.0;
-	}
-	if (hge->Input_KeyDown(HGEK_NUMPAD2) || hge->Input_KeyDown(HGEK_NUMPAD5)) {
-		gridY++;	
-		x = gridX * 64.0 + 32.0;
-		y = gridY * 64.0 + 32.0;
-	}
-	if (hge->Input_KeyDown(HGEK_NUMPAD4)) {
-		gridX--;
-		x = gridX * 64.0 + 32.0;
-		y = gridY * 64.0 + 32.0;
-	}
-	if (hge->Input_KeyDown(HGEK_NUMPAD6)) {
-		gridX++;
-		x = gridX * 64.0 + 32.0;
-		y = gridY * 64.0 + 32.0;
-	}
-
 	//Update cloaking alpha
 	alpha = (cloaked) ? 75.0f : 255.0f;
 	resources->GetAnimation("player")->SetColor(ARGB(alpha,255,255,255));
@@ -215,12 +186,8 @@ void Player::update(float dt) {
 	}
 
 	//Update timed statuses
-	if (flashing && timePassedSince(startedFlashing) > 1.5) {
-		flashing = false;
-	}
-	if (frozen && timePassedSince(timeFrozen) > freezeDuration) {
-		frozen = false;
-	}
+	if (flashing && timePassedSince(startedFlashing) > 1.5) flashing = false;
+	if (frozen && timePassedSince(timeFrozen) > freezeDuration) frozen = false;
 
 	//Update shit if in Knockback state
 	if (!falling && !sliding && knockback && timePassedSince(startedKnockBack) > KNOCKBACK_DURATION) {
@@ -247,8 +214,13 @@ void Player::update(float dt) {
 	//Do worm (for smilelets)
 	worm->update();
 
+	//Update health and mana
+	mana += (getMaxMana() / 2.0) * dt;
+	if (mana < 0.0f) mana = 0.0f;
+	if (mana > getMaxMana()) mana = getMaxMana();
+	if (health > getMaxHealth()) health = getMaxHealth();
+
 	//Do shit
-	doMovement(dt);
 	doWarps();
 	doFalling(dt);
 	doArrowPads(dt);
@@ -258,18 +230,9 @@ void Player::update(float dt) {
 	doWater();
 	doIce(dt);
 	doShrinkTunnels(dt);
-	
-	//Update health and mana
-	mana += (getMaxMana() / 2.0) * dt;
-	if (mana < 0.0f) mana = 0.0f;
-	if (mana > getMaxMana()) mana = getMaxMana();
-	if (health > getMaxHealth()) health = getMaxHealth();
-
-	//Move
-	if (inShallowWater && !springing && !(selectedAbility == WATER_BOOTS)) speedModifier = 0.5f;
-	if (sprinting && !sliding && !iceSliding && !onWater) speedModifier *= 1.75f;
-	if (springing) speedModifier = 1.0f;
-	move(speedModifier*dx*dt,speedModifier*dy*dt,dt);
+	setFacingDirection();
+	updateVelocities(dt);
+	doMove(dt);
 
 	//Die
 	if (health <= 0.0f) {
@@ -280,40 +243,15 @@ void Player::update(float dt) {
 }
 
 /**
- * Attempts to move the player the specified distance
- *	xDist		distance to move in the x direction
- *	yDist		distance to move in the y direction
+ * Does movement for this frame based on current dx/dy.
  */
-void Player::move(float xDist, float yDist, float dt) {
-	
-	if (frozen) return;
+void Player::doMove(float dt) {
 
-	if (xDist > 64.0) xDist = 64.0;
-	if (yDist > 64.0) yDist = 64.0;
-
-	if (iceSliding) {
-		xDist *= 1.2;
-		yDist *= 1.2;
-	}
-
-	//Distance to look ahead in the x direction
-	float checkXDist;
-	if (xDist < 0.0) {
-		checkXDist = min(-1.0, xDist);
-	} else {
-		checkXDist = max(1.0, xDist);
-	}
-
-	//Distance to look ahead in the y direction
-	float checkYDist;
-	if (yDist < 0.0) {
-		checkYDist = min(-1.0, yDist);
-	} else {
-		checkYDist = max(1.0, yDist);
-	}
+	float xDist = dx * dt;
+	float yDist = dy * dt;
 
 	//Check for collision with frozen enemies
-	collisionCircle->set(x + checkXDist, y + checkYDist, (PLAYER_WIDTH/2.0-3.0)*shrinkScale);
+	collisionCircle->set(x + xDist, y + yDist, (PLAYER_WIDTH/2.0-3.0)*shrinkScale);
 	bool dickens = enemyManager->collidesWithFrozenEnemy(collisionCircle);
 	collisionCircle->set(x,y,(PLAYER_WIDTH/2.0-3.0)*shrinkScale);
 	if (dickens) return;
@@ -322,8 +260,8 @@ void Player::move(float xDist, float yDist, float dt) {
 	//Make sure the player isn't going to move perfectly diagonally
 	//from one grid square to another. If they will, move the player a little
 	//to push them off the diagonal.
-	int nextX = getGridX(x + checkXDist);
-	int nextY = getGridY(y + checkYDist);
+	int nextX = getGridX(x + xDist);
+	int nextY = getGridY(y + yDist);
 	bool useGayFix = (theEnvironment->collision[nextX][nextY] == ICE || theEnvironment->collision[nextX][nextY] == SPRING_PAD);
 	if (useGayFix && nextX > gridX && nextY > gridY) {
 		//Up Right
@@ -350,8 +288,8 @@ void Player::move(float xDist, float yDist, float dt) {
  
 	//Move left or right
 	if (xDist != 0.0) {
-		if (!theEnvironment->playerCollision(x + checkXDist, y, dt)) {	
-			x += checkXDist;
+		if (!theEnvironment->playerCollision(x + xDist, y, dt)) {	
+			x += xDist;
 		} else {
 			//Since Smiley just ran into something, maybe its a locked door. Dickens!
 			if (xDist > 0) {
@@ -364,15 +302,16 @@ void Player::move(float xDist, float yDist, float dt) {
 			if (iceSliding) {
 				dx = -dx;
 				facing = (facing == RIGHT) ? LEFT : RIGHT;
+			} else {
+				dx = 0;
 			}
-			else dx = 0;
 		}
 	}
 
 	//Move up or down
 	if (yDist != 0.0) {
-		if (!theEnvironment->playerCollision(x, y+checkYDist, dt)) {	
-			y += checkYDist;
+		if (!theEnvironment->playerCollision(x, y+yDist, dt)) {	
+			y += yDist;
 		} else {
 			//Since Smiley just ran into something, maybe its a locked door. Dickens!
 			if (yDist > 0) {
@@ -385,8 +324,9 @@ void Player::move(float xDist, float yDist, float dt) {
 			if (iceSliding) {
 				dy = -dy;
 				facing = (facing == UP) ? DOWN : UP;
+			} else {
+				dy = 0;
 			}
-			else dy = 0;
 		}
 	}
 	
@@ -450,9 +390,9 @@ void Player::draw(float dt) {
 	//Debug mode
 	if (debugMode) {
 		collisionCircle->draw();
+		//worm->draw();
 	}
-
-	worm->draw();	
+	
 }
 
 
@@ -1223,7 +1163,6 @@ void Player::doWater() {
 				lastLavaDamage = gameTime;
 				health -= .25f;
 			}
-			speedModifier = 0.6f;
 		}
 		//Exit Lava
 		if (hoveringYOffset > 0.0f || inLava && theEnvironment->collisionAt(baseX,baseY) != WALK_LAVA) {
@@ -1276,11 +1215,15 @@ void Player::doWater() {
 }
 
 /**
- * Listens for movement input from the player and acts accordingly.
+ * Updates dx/dy by listening for movement input from the player and other shit.
  */
-void Player::doMovement(float dt) {
+void Player::updateVelocities(float dt) {
 
-	if (frozen || drowning || falling) return;
+	if (falling) return;	//handled in doFalling() method
+	if (frozen || drowning) {
+		dx = dy = 0.0;
+		return;
+	}
 
 	//Determine acceleration - normal ground or slime
 	float accel = (theEnvironment->collision[gridX][gridY] == SLIME && hoveringYOffset==0.0) ? SLIME_ACCEL : PLAYER_ACCEL; 
@@ -1294,30 +1237,11 @@ void Player::doMovement(float dt) {
 	//Decelerate
 	if (!iceSliding && !sliding && !springing) {
 		if ((input->keyDown(INPUT_AIM) && !iceSliding && !knockback) || (!input->keyDown(INPUT_LEFT) && !input->keyDown(INPUT_RIGHT) && !knockback))
-			if (dx > 0) dx -= accel*dt; else if (dx < 0) dx += accel*dt;
+			if (dx > 0) dx -= accel*dt; 
+			else if (dx < 0) dx += accel*dt;
 		if ((input->keyDown(INPUT_AIM) && !iceSliding && !knockback) || (!input->keyDown(INPUT_UP) && !input->keyDown(INPUT_DOWN) && !knockback))
-			if (dy > 0) dy -= accel*dt; else if (dy < 0) dy += accel*dt;
-	}
-	
-	//Set facing direction
-	if (!iceSliding && !knockback && !springing && theEnvironment->collision[gridX][gridY] != SPRING_PAD) {
-			
-		if (input->keyDown(INPUT_LEFT)) facing = LEFT;
-		else if (input->keyDown(INPUT_RIGHT)) facing = RIGHT;
-		else if (input->keyDown(INPUT_UP)) facing = UP;
-		else if (input->keyDown(INPUT_DOWN)) facing = DOWN;
-
-		//Diagonals
-		if (input->keyDown(INPUT_LEFT) && input->keyDown(INPUT_UP)) {
-			facing = UP_LEFT;
-		} else if (input->keyDown(INPUT_RIGHT) && input->keyDown(INPUT_UP)) {
-			facing=UP_RIGHT;
-		} else if (input->keyDown(INPUT_LEFT) && input->keyDown(INPUT_DOWN)) {
-			facing = DOWN_LEFT;
-		} else if (input->keyDown(INPUT_RIGHT) && input->keyDown(INPUT_DOWN)) {
-			facing = DOWN_RIGHT;
-		}
-			
+			if (dy > 0) dy -= accel*dt; 
+			else if (dy < 0) dy += accel*dt;
 	}
 
 	if (!input->keyDown(INPUT_AIM) && !iceSliding && !sliding && !knockback && !springing) {
@@ -1339,6 +1263,45 @@ void Player::doMovement(float dt) {
 		}
 	}
 
+	if ((inShallowWater || inLava) && !springing && selectedAbility != WATER_BOOTS) {
+		dx *= 0.5;
+		dy *= 0.5;
+	}
+	if (sprinting && !springing && !sliding && !iceSliding && !onWater) {
+		dx *= SPEED_BOOTS_MODIFIER;
+		dy *= SPEED_BOOTS_MODIFIER;
+	}
+	if (iceSliding) {
+		dx *= 1.2;
+		dy *= 1.2;
+	}
+
+}
+
+/**
+ * Sets the player's facing direction based on what directional keys are pressed.
+ */
+void Player::setFacingDirection() {
+	
+	if (!frozen && !drowning && !falling && !iceSliding && !knockback && !springing && theEnvironment->collision[gridX][gridY] != SPRING_PAD) {
+			
+		if (input->keyDown(INPUT_LEFT)) facing = LEFT;
+		else if (input->keyDown(INPUT_RIGHT)) facing = RIGHT;
+		else if (input->keyDown(INPUT_UP)) facing = UP;
+		else if (input->keyDown(INPUT_DOWN)) facing = DOWN;
+
+		//Diagonals
+		if (input->keyDown(INPUT_LEFT) && input->keyDown(INPUT_UP)) {
+			facing = UP_LEFT;
+		} else if (input->keyDown(INPUT_RIGHT) && input->keyDown(INPUT_UP)) {
+			facing=UP_RIGHT;
+		} else if (input->keyDown(INPUT_LEFT) && input->keyDown(INPUT_DOWN)) {
+			facing = DOWN_LEFT;
+		} else if (input->keyDown(INPUT_RIGHT) && input->keyDown(INPUT_DOWN)) {
+			facing = DOWN_RIGHT;
+		}
+			
+	}
 }
 
 /**

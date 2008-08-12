@@ -18,7 +18,10 @@ struct FireBall {
 	hgeParticleSystem *particle;
 	hgeRect *collisionBox;
 	bool alive;
+	float radius;
 	float x,y,angle,speed,timeCreated,dx,dy;
+	bool hasExploded;
+	float timeExploded;
 };
 
 struct FlameWall {
@@ -39,6 +42,7 @@ public:
 	~FireBossTwo();
 
 	void draw(float dt);
+	void drawAfterSmiley(float dt);
 	bool update(float dt);
 	bool updateState(float dt);
 	
@@ -59,6 +63,7 @@ public:
 	void startChasing();
 	void startMoveToPoint(int x, int y, float speed);
 	void doDamage(float damage, bool makeFlash);
+	void setFacingPlayer();
 	void die();
 	void setState(int newState);
 	
