@@ -3,6 +3,9 @@
  * Kevin
  * Hillary
 
+=== ROAD MAP ===
+ * Have Fenwar make more appearances than just in Smolder Hollow and the end
+
 === Programming To Do ===
  * When enemy graphics overlap draw them so that the lower enemy on the screen is on top
  * Finish Phyrebozz 2
@@ -12,7 +15,6 @@
  * Calypso 2
  * Parallax pits - Use ID layer to change HUE to match the level
  * Tentacles are too easy right now.  Change their movement pattern?
- * Have Fenwar make more appearances than just in Smolder Hollow and the end
  * Make the fountain heal you
  * Make not just switches but moving cylinders/mirrors/arrows make a noise.  That way if a far off switch is activating them they don't move silently.  We still need to have the sounds be dependent on how far Smiley is from them though since otherwise levels would just be constant switch-activation noises due to the turrets.
 
