@@ -40,6 +40,11 @@ EnemyManager::~EnemyManager() {
 	if (deathParticles) delete deathParticles;
 }
 
+bool SortEnemiesPredicate(const EnemyStruct &lhs, const EnemyStruct &rhs) {
+  return lhs.enemy->y < rhs.enemy->y;
+}
+
+
 /**
  * Add an enemy to the list
  */
@@ -197,6 +202,8 @@ void EnemyManager::update(float dt) {
 
 		}
 	}
+
+	enemyList.sort(SortEnemiesPredicate);
 
 }
 
