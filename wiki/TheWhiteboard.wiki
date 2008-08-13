@@ -26,7 +26,6 @@
 === Graphics To Do ===
  * Mirror switch graphic 	 
  * Arrow switch graphic (bunny) 	 
- * Shrink tunnel switch graphic
 
 ===Done===
 ||Item||Date||Done By||
