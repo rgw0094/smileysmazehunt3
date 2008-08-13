@@ -139,8 +139,6 @@ bool LoadScreen::update(float dt, float mouseX, float mouseY) {
  */
 void LoadScreen::draw(float dt) {
 
-	std::string nameString = "";
-
 	//draw background
 	resources->GetSprite("menuBackground")->Render(0,0);
 
@@ -154,15 +152,14 @@ void LoadScreen::draw(float dt) {
 		//Save file info - don't draw if the delete prompt is up
 		if (!(deletePrompt && selectedFile == i)) {
 			if (saveManager->isFileEmpty(i)) {
-				nameString = "Empty";
+				resources->GetFont("bigLoadFnt")->printf(saveBoxes[i].x + 100, saveBoxes[i].y + 5, 
+					HGETEXT_LEFT, "Empty");
 			} else {
-				nameString = "File ";
-				nameString += intToString(i+1);
+				resources->GetFont("bigLoadFnt")->printf(saveBoxes[i].x + 100, saveBoxes[i].y + 5, 
+					HGETEXT_LEFT, "File %d", i+1);
 			}
-			resources->GetFont("bigLoadFnt")->printf(saveBoxes[i].x + 100, saveBoxes[i].y + 5, 
-				HGETEXT_LEFT, nameString.c_str());
 			resources->GetFont("curlz")->printf(saveBoxes[i].x + 150, saveBoxes[i].y + 70, 
-				HGETEXT_LEFT, "Time Played: %s", getTime(saveManager->getTimePlayed(i)));
+				HGETEXT_LEFT, "Time Played: %s", getTimeString(saveManager->getTimePlayed(i)));
 			resources->GetFont("curlz")->printf(saveBoxes[i].x + 630, saveBoxes[i].y + 70, 
 				HGETEXT_RIGHT, "Complete: %d", saveManager->getCompletion(i));
 		}

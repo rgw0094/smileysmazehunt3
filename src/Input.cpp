@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <basetsd.h>
 #include <dinput.h>
+#include <string>
 #include "resource.h"
 #include "smiley.h"
 
@@ -394,7 +395,7 @@ void Input::setEditMode(int whichInput) {
 /**
  * Returns the name of the specified input. Used for the menu.
  */
-char* Input::getInputName(int whichInput) {
+const char* Input::getInputName(int whichInput) {
 	switch (whichInput) {
 		case INPUT_LEFT: return "Left";
 		case INPUT_RIGHT: return "Right";
@@ -413,39 +414,47 @@ char* Input::getInputName(int whichInput) {
 /**
  * Returns a description of the specified input. Used for the menu.
  */
-char* Input::getInputDescription(int whichInput) {
-		
+std::string Input::getInputDescription(int whichInput) {
+
+	std::string description;
+
 	//Edit mode
 	if (inputs[whichInput].editMode) {
-		return "Press Button";
-	
+		description = "Press Button";
+		return description;
+
 	//Keyboard - use HGE function
 	} else if (inputs[whichInput].device == DEVICE_KEYBOARD) {
-		return hge->Input_GetKeyName(inputs[whichInput].code);
-	
-	//One of the gamepads - use terrible C string functions
+		description = hge->Input_GetKeyName(inputs[whichInput].code);
+		return description;
+
+	//One of the gamepad buttons
+	} else if (inputs[whichInput].code > 0) {
+		
+		description = "GP Button ";
+		description += intToString(inputs[whichInput].code);
+		return description;
+
+	//Joypad
 	} else {
-
-		char * desc = (char*)malloc(25);
-		strcpy(desc, "GP\0");
-
-		//Special case - direction pad
+		
 		switch (inputs[whichInput].code) {
 			case JOYSTICK_LEFT:
-				strcat(desc, " Left\0"); return desc;
+				description = "GP Left";
+				return description;
 			case JOYSTICK_RIGHT:
-				strcat(desc, " Right\0"); return desc;
+				description = "GP Right";
+				return description;
 			case JOYSTICK_UP:
-				strcat(desc, " Up\0"); return desc;
+				description = "GP Up";
+				return description;
 			case JOYSTICK_DOWN:
-				strcat(desc, " Down\0"); return desc;
+				description = "GP Down";
+				return description;
+			default:
+				description = "FUCK";
+				return description;
 		}
-
-		//Button number
-		strcat(desc, " Button ");
-		strcat(desc, intToString(inputs[whichInput].code));
-
-		return desc;
 
 	}
 

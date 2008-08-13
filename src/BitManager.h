@@ -23,8 +23,6 @@ private:
 	
 	unsigned char byte;
 	int counter;
-	void setBit(int position,bool bit);
-	void setTrue(int position);
 	int getBit(int position);
 
 };

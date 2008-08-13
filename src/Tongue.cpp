@@ -123,8 +123,8 @@ void Tongue::update(float dt) {
 void Tongue::draw(float dt) {
 	if (attacking) {
 		resources->GetAnimation("smileyTongue")->RenderEx(
-			thePlayer->screenX + thePlayer->mouthXOffset[thePlayer->facing],
-			thePlayer->screenY - thePlayer->springOffset + thePlayer->mouthYOffset[thePlayer->facing] - thePlayer->hoveringYOffset,
+			getScreenX(thePlayer->x) + thePlayer->mouthXOffset[thePlayer->facing],
+			getScreenY(thePlayer->y) - thePlayer->springOffset + thePlayer->mouthYOffset[thePlayer->facing] - thePlayer->hoveringYOffset,
 			thePlayer->angles[thePlayer->facing] + (thePlayer->facing == LEFT ? -1 : 1) * tongueOffsetAngle, 
 			thePlayer->scale, thePlayer->scale);
 

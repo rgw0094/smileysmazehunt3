@@ -56,7 +56,7 @@ extern GameData *gameData;
 extern LoadEffectManager *loadEffectManager;
 
 //Sprites
-extern hgeSprite *itemLayer[256], *mainLayer[256], *walkLayer[256];
+extern hgeSprite *itemLayer[512];
 
 /**
  * Constructor
@@ -506,7 +506,8 @@ void Environment::draw(float dt) {
 				//Terrain
 				int theTerrain = terrain[i+xGridOffset][j+yGridOffset];
 				if (theTerrain > 0 && theTerrain < 256) {
-					mainLayer[theTerrain]->Render(drawX,drawY);
+					resources->GetAnimation("mainLayer")->SetFrame(theTerrain);
+					resources->GetAnimation("mainLayer")->Render(drawX,drawY);
 				} else {
 					resources->GetSprite("blackScreen")->RenderStretch(drawX, drawY, drawX+64, drawY+64);
 				}
@@ -588,21 +589,37 @@ void Environment::draw(float dt) {
 						resources->GetAnimation("savePoint")->Update(dt);
 						resources->GetAnimation("savePoint")->Render(drawX, drawY);
 
-					//Non-animated collision tiles
+					//Remember where the fountain is, it is drawn later
 					} else if (theCollision == FOUNTAIN) {
 						fountainOnScreen = true;
 						fountainX = i;
 						fountainY = j;
-					} else if (theCollision >= UP_ARROW && theCollision <= LEFT_ARROW) {
-						if (ids[i+xGridOffset][j+yGridOffset] == -1 || ids[i+xGridOffset][j+yGridOffset] == 990) { //render red arrow
-							walkLayer[theCollision]->SetColor(ARGB(255,255,0,255));							
-							walkLayer[theCollision]->Render(drawX,drawY);
-						} else { //it's a rotating arrow, make it green
-							walkLayer[theCollision]->SetColor(ARGB(255,0,255,255));
-							walkLayer[theCollision]->Render(drawX,drawY);							
-						}
+
+					//Non-animated collision tiles
 					} else {
-						walkLayer[theCollision]->Render(drawX,drawY);
+
+						//Set to current tile
+						resources->GetAnimation("walkLayer")->SetFrame(theCollision);
+
+						//Set color values
+						if (theCollision >= UP_ARROW && theCollision <= LEFT_ARROW) {
+							if (ids[i+xGridOffset][j+yGridOffset] == -1 || ids[i+xGridOffset][j+yGridOffset] == 990) {
+								//render normal, red arrow
+								resources->GetAnimation("walkLayer")->SetColor(ARGB(255,255,0,255));							
+							} else { 
+								//it's a rotating arrow, make it green
+								resources->GetAnimation("walkLayer")->SetColor(ARGB(255,0,255,255));					
+							}
+						} else if (theCollision == SHALLOW_WATER) {
+							resources->GetAnimation("walkLayer")->SetColor(ARGB(125,255,255,255));
+						} else if (theCollision == SLIME) {
+							resources->GetAnimation("walkLayer")->SetColor(ARGB(200,255,255,255));
+						}
+
+						//Draw it and set the color back to normal
+						resources->GetAnimation("walkLayer")->Render(drawX,drawY);
+						resources->GetAnimation("walkLayer")->SetColor(ARGB(255,255,255,255));
+
 					}
 				}
 
@@ -709,7 +726,8 @@ void Environment::drawAfterSmiley(float dt) {
 				if ((collision[gridX][gridY] == SHRINK_TUNNEL_HORIZONTAL || 
 						collision[gridX][gridY] == SHRINK_TUNNEL_VERTICAL) &&
 						!(thePlayer->gridY == gridY+1 && !thePlayer->isInShrinkTunnel())) {
-					walkLayer[collision[gridX][gridY]]->Render(drawX, drawY);
+					resources->GetAnimation("walkLayer")->SetFrame(collision[gridX][gridY]);
+					resources->GetAnimation("walkLayer")->Render(drawX, drawY);
 				}
 
 			}

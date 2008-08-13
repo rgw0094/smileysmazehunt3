@@ -15,7 +15,7 @@ extern HTEXTURE mapTexture;
 extern hgeResourceManager *resources;
 extern Environment *theEnvironment;
 extern Player *thePlayer;
-extern hgeSprite *mainLayer[256], *walkLayer[256], *itemLayer[256];
+extern hgeSprite *itemLayer[512];
 
 /**
  * Constructor
@@ -57,7 +57,8 @@ void Map::draw(float dt) {
 				drawY = windowY+(j-gridYOffset)*squareSize - ((int)yOffset%24);
 
 				//Main Layer
-				mainLayer[theEnvironment->terrain[i][j]]->RenderStretch(drawX,drawY,drawX+squareSize,drawY+squareSize);
+				resources->GetAnimation("mainLayer")->SetFrame(theEnvironment->terrain[i][j]);
+				resources->GetAnimation("mainLayer")->RenderStretch(drawX,drawY,drawX+squareSize,drawY+squareSize);
 
 				//Walk Layer
 				int c = theEnvironment->collision[i][j];
@@ -69,7 +70,8 @@ void Map::draw(float dt) {
 						c != SHRINK_TUNNEL_HORIZONTAL &&
 						c != SHRINK_TUNNEL_VERTICAL &&					
 						!(isWarp(c) && theEnvironment->variable[i][j] == 990)) {
-					walkLayer[theEnvironment->collision[i][j]]->RenderStretch(drawX,drawY,drawX+squareSize,drawY+squareSize);
+					resources->GetAnimation("walkLayer")->SetFrame(theEnvironment->collision[i][j]);
+					resources->GetAnimation("walkLayer")->RenderStretch(drawX,drawY,drawX+squareSize,drawY+squareSize);
 				}
 				
 				//Item Layer
@@ -124,33 +126,11 @@ void Map::draw(float dt) {
 				drawX = windowX+(i-gridXOffset)*squareSize - ((int)xOffset%24);
 				drawY = windowY+(j-gridYOffset)*squareSize - ((int)yOffset%24);
 
-				mainLayer[0]->RenderStretch(drawX,drawY,drawX+squareSize,drawY+squareSize);
+				resources->GetAnimation("mainLayer")->SetFrame(0);
+				resources->GetAnimation("mainLayer")->RenderStretch(drawX,drawY,drawX+squareSize,drawY+squareSize);
 			}
 		}
 	}
-
-	//Draw fog of war
-	/*
-	hge->Gfx_SetClipping(windowX,windowY,600,432);
-	for (int i = gridXOffset-8; i < gridXOffset + gridWidth+8; i++) {
-		for (int j = gridYOffset-8; j < gridYOffset + gridHeight+8; j++) {
-			//if (inBounds(i,j) && i%8 == 0 && j%8 == 0 && !saveManager->isExplored(i,j)) {
-			//	drawX = windowX+(i-gridXOffset)*squareSize - ((int)xOffset%24) - 24.0f;
-			//	drawY = windowY+(j-gridYOffset)*squareSize - ((int)yOffset%24) - 24.0f;
-			//	resources->GetSprite("mapFogOfWar")->Render(drawX,drawY);
-			//}
-			if (inBounds(i,j) && saveManager->isExplored(i,j)) {
-				drawX = 
-				//up
-				if (inBounds(i,j-1) && !saveManager->isExplored(i,j-1)) {
-					resources->GetSprite("mapFogOfWar"
-				}
-			}
-		}
-	}
-	
-	hge->Gfx_SetClipping(0,0,1024,768);
-	*/
 
 	//Top left
 	resources->GetSprite("mapBackground")->Render(windowX - 30, windowY - 30);

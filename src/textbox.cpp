@@ -95,7 +95,8 @@ void TextBox::setDialogue(int _npcID, int _textID) {
 	}
 
 	paramString = "NPC";
-	paramString = paramString + intToString(textID) + "Pages";
+	paramString += intToString(textID);
+	paramString += "Pages";
 	numPages = atoi(gameData->getGameText(paramString.c_str()));
 	currentPage = 1;
 	strcpy(text, "-");
@@ -115,7 +116,8 @@ void TextBox::setHint() {
 	npcID = BILL_CLINTON;
 	textID = getCurrentHint();
 	paramString = "Hint";
-	paramString = paramString + intToString(textID) + "Pages";
+	paramString += intToString(textID);
+	paramString += "Pages";
 	numPages = atoi(gameData->getGameText(paramString.c_str()));
 	currentPage = 1;
 	strcpy(text, "-");
@@ -199,7 +201,9 @@ void TextBox::draw(float dt) {
 
 		//Print the current page of the hint
 		paramString = "Hint";
-		paramString = paramString + intToString(textID) + "-" + intToString(currentPage);
+		paramString += intToString(textID);
+		paramString += "-";
+		paramString += intToString(currentPage);
 		resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, gameData->getGameText(paramString.c_str()));
 
 		//Draw next page/OK icon
@@ -219,12 +223,15 @@ void TextBox::draw(float dt) {
 			graphic->Render(x+60-32, y+50-32);
 		}
 		paramString = "NPC";
-		paramString = paramString + intToString(textID) + "Name";
+		paramString += intToString(textID);
+		paramString += "Name";
 		resources->GetFont("textBoxNameFnt")->printf(x + 220, y+20, HGETEXT_CENTER, "%s", gameData->getGameText(paramString.c_str()));
 
 		//Print the current page of the conversation
 		paramString = "NPC";
-		paramString = paramString + intToString(textID) + "-" + intToString(currentPage);
+		paramString += intToString(textID);
+		paramString += "-";
+		paramString += intToString(currentPage);
 		resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, gameData->getGameText(paramString.c_str()));
 
 		//Draw next page/OK icon

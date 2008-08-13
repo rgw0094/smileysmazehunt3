@@ -25,7 +25,7 @@ ChangeManager::~ChangeManager() {
  * will be removed from the change list, otherwise it will be added.
  */
 void ChangeManager::change(int area, int x, int y) {
-	if (!removeChange(area,x,y)) addChange(area,x,y);    
+	if (!removeChange(area,x,y)) addChange(area,x,y);
 }
 
 /**
@@ -77,7 +77,7 @@ void ChangeManager::addChange(int area, int x, int y) {
  * Returns a string representation of the changes stored in the
  * Change Manager.
  */ 
-char* ChangeManager::toString() {
+string ChangeManager::toString() {
 
 	string returnString = "";
 	
@@ -99,9 +99,7 @@ char* ChangeManager::toString() {
 
 	}
 
-	char* dickens = (char*)malloc(returnString.size() + 3);
-	strcpy(dickens,returnString.c_str());
-	return dickens;
+	return returnString.c_str();
 
 }
 

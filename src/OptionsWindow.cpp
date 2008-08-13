@@ -133,7 +133,7 @@ void OptionsWindow::draw(float dt) {
 			resources->GetFont("controls")->SetColor(ARGB(255,255,255,255));
 			resources->GetFont("controls")->SetScale(0.7);
 			resources->GetFont("controls")->printf(x + 65.0, y + 40.0, HGETEXT_CENTER,
-					input->getInputDescription(currentInput));
+					input->getInputDescription(currentInput).c_str());
 			resources->GetFont("controls")->SetColor(ARGB(255,0,0,0));
 
 		}
