@@ -5,8 +5,10 @@
 
 === ROAD MAP ===
  * Have Fenwar make more appearances than just in Smolder Hollow and the end
+ * End Credits
 
 === Programming To Do ===
+ * Make fountain class
  * When enemy graphics overlap draw them so that the lower enemy on the screen is on top
  * Finish Phyrebozz 2
  * Lovecraftian Boss
