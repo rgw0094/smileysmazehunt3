@@ -9,7 +9,6 @@
 
 === Programming To Do ===
  * Make fountain class
- * When enemy graphics overlap draw them so that the lower enemy on the screen is on top
  * Finish Phyrebozz 2
  * Lovecraftian Boss
  * King Tut
@@ -31,6 +30,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Draw rearmost overlapping enemies first||8/12/08||RGW||
 ||Fix memory leaks from string functions||8/12/08||RGW||
 ||Add Timed Tiles to SpecialTileManager||8/10/08||RGW||
 ||Bugfix: Tongue looks like the dickens on springs||8/9/08||RGW||
