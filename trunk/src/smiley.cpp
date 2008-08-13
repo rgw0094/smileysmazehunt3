@@ -113,9 +113,10 @@ int distance(int x1, int y1, int x2, int y2) {
 /**
  * Sets time to a string in the format HH:MM:SS for the specified number of seconds
  */ 
-char *getTime(int time) {
+const char *getTimeString(int time) {
 
-	char * timeString = (char*)malloc(100);
+	std::string timeString;
+
 	char hours[2];
 	char minutes[2];
 	char seconds[2];
@@ -141,13 +142,12 @@ char *getTime(int time) {
 	}
 
 	//Build the time string
-	strcpy(timeString, hours);
-	strcat(timeString, ":");
-	strcat(timeString, minutes);
-	strcat(timeString, ":");
-	strcat(timeString, seconds);
-	
-	return timeString;
+	timeString = hours;
+	timeString += ":";
+	timeString += minutes;
+	timeString += ":";
+	timeString += seconds;
+	return timeString.c_str();
 }
 
 
@@ -155,29 +155,29 @@ char *getTime(int time) {
  * Returns the specified integer as a string because the designers of C were too 
  * distracted by their beards to write a language that doESNT SUCK ASS FUCK SHIT
  */
-char *intToString(int dickens) {
-	char * intString = (char*)malloc(10);
-	itoa(dickens, intString,10);
-	return intString;
+const char *intToString(int n) {
+	std::string numberString = "";
+	char number[10];
+	itoa(n, number, 10);
+	numberString += number;
+	return numberString.c_str();
 }
 
 /**
  * Returns the int as a string, with the given number of digits
  */
-char *intToString(int dickens, int digits) {
-	char * intString = (char*)malloc(digits);
-	
+const char *intToString(int number, int digits) {
+
 	std::string returnString;
 	std::string placeholder;
 
-	returnString = intToString(dickens);
+	returnString = intToString(number);
 
 	while (returnString.size() < digits) {
-		returnString.insert(0,"0");        				
+		returnString.insert(0,"0");			
 	}
 
-	strcpy(intString,returnString.c_str());
-	return intString;
+	return returnString.c_str();
 
 }
 

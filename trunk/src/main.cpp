@@ -36,11 +36,9 @@ SoundManager *soundManager;
 GameData *gameData;
 LoadEffectManager *loadEffectManager;
 
-//Textures
-HTEXTURE mainLayerTexture, walkLayerTexture;
 
 //Sprites
-hgeSprite *mainLayer[256], *itemLayer[512], *walkLayer[256];
+hgeSprite *itemLayer[512];
 
 //Variables
 float gameTime = 0.0;
@@ -66,20 +64,13 @@ void loadResources() {
 	hge->Resource_AttachPack("Data/Fonts.zip");
 	hge->Resource_AttachPack("Data/GameData.zip");
 
-	//Load textures
-	mainLayerTexture = hge->Texture_Load("Graphics/mainlayer.png");
-	walkLayerTexture = hge->Texture_Load("Graphics/walklayer.PNG");
 
-	//Load tiles
+	//Load item layer
 	for (int i = 0; i < 16; i++) {
 		for (int j = 0; j < 16; j++) {
 			itemLayer[j*16 + i] = new hgeSprite(resources->GetTexture("itemLayer1"),i*64,j*64,64,64);
-			mainLayer[j*16 + i] = new hgeSprite(mainLayerTexture,i*64,j*64,64,64);
-			walkLayer[j*16 + i] = new hgeSprite(walkLayerTexture,i*64,j*64,64,64);
 		}
 	}
-
-	//Second item layer
 	for (int i = 0; i < 16; i++) {
 		for (int j = 0; j < 16; j++) {
 			itemLayer[256+j*16+i] = new hgeSprite(resources->GetTexture("itemLayer2"),i*64,j*64,64,64);
@@ -87,8 +78,6 @@ void loadResources() {
 	}
 
 	//Set sprite alphas
-	walkLayer[SHALLOW_WATER]->SetColor(ARGB(125,255,255,255));
-	walkLayer[SLIME]->SetColor(ARGB(200,255,255,255));
 	resources->GetSprite("iceBlock")->SetColor(ARGB(200,255,255,255));
 	resources->GetSprite("reflectionShield")->SetColor(ARGB(100,255,255,255));
 	resources->GetSprite("playerShadow")->SetColor(ARGB(75,255,255,255));
@@ -189,9 +178,9 @@ bool FrameFunc() {
 			
 			//If the loading effect isn't active, update the game objects
 			if (!loadEffectManager->isEffectActive()) {
+				thePlayer->update(dt);
 				theEnvironment->update(dt);
 				bossManager->update(dt);
-				thePlayer->update(dt);
 				enemyManager->update(dt);
 				lootManager->update(dt);
 				projectileManager->update(dt);
@@ -302,13 +291,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		// Free loaded shit
 		delete resources;
-		for (int i = 0; i < 256; i++) {
-			if (mainLayer[i]) delete mainLayer[i];
-			if (walkLayer[i]) delete walkLayer[i];
-		}
-		for (int i = 0; i < 512; i++) {
-			if (itemLayer[i]) delete itemLayer[i];
-		}
+		for (int i = 0; i < 512; i++) delete itemLayer[i];
 		delete thePlayer;
 		delete theEnvironment;
 		delete windowManager;

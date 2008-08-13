@@ -1300,7 +1300,7 @@ Sprite laserProjectile {
 }
 
 ;**************************
-;******** Textures ********
+;******** Tiles ********
 ;**************************
 Texture itemLayer1 {
  filename="Graphics/itemlayer1.png"
@@ -1310,6 +1310,38 @@ Texture itemLayer2 {
  filename="Graphics/itemlayer2.png"
  resgroup=2
 }
+Texture mainLayerTx {
+ filename="Graphics/mainlayer.png"
+ resgroup=2
+}
+Texture walkLayerTx {
+ filename="Graphics/walklayer.png"
+ resgroup=2
+}
+Animation mainLayer {
+ texture=mainLayerTx
+ rect=0,0,64,64
+ frames=256
+ fps=10.0
+ mode=NOLOOP
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=2
+}
+Animation walkLayer {
+ texture=walkLayerTx
+ rect=0,0,64,64
+ frames=256
+ fps=10.0
+ mode=NOLOOP
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=2
+}
+
+;**************************
+;******** Textures ********
+;**************************
 Texture general {
  filename="Graphics/sprites.png"
  resgroup=2

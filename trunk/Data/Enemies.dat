@@ -362,11 +362,11 @@ numEnemies="52"
 23PSpeed=    "400"
 23PDamage=   "25"
 
-;Snowman
+;Ranged Snowman
 24GCol=      "8"
 24GRow=      "1"
 24NumFrames= "2"
-24EnemyType= "0"
+24EnemyType= "15"
 24WanderType="0"
 24HP=        "100"
 24Damage=    "25"

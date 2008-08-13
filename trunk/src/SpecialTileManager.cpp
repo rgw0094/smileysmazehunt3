@@ -9,6 +9,7 @@
 
 #include "hgeparticle.h"
 #include "hgeresource.h"
+#include "hgeanim.h"
 
 #define MUSHROOM_EXPLODE_TIME 5.0
 #define MUSHROOM_GROW_TIME 2.0
@@ -22,7 +23,6 @@
 
 #define SILLY_PAD_TIME 30		//Number of seconds silly pads stay active
 
-extern hgeSprite *walkLayer[256];
 extern Environment *theEnvironment;
 extern Player *thePlayer;
 extern ProjectileManager *projectileManager;
@@ -123,10 +123,11 @@ void SpecialTileManager::drawIceBlocks(float dt) {
 	for(i = iceBlockList.begin(); i != iceBlockList.end(); i++) {
 		float scale = !i->hasBeenMelted ? 1.0 : 1.0 - min(1.0, timePassedSince(i->timeMelted));
 		//Scale the size of the ice block based on its "health"
-		walkLayer[FIRE_DESTROY]->SetHotSpot(32.0,32.0);
-		walkLayer[FIRE_DESTROY]->RenderEx(getScreenX(i->gridX*64.0+32.0), getScreenY(i->gridY*64.0+32.0), 
-			0.0, scale, scale);
-		walkLayer[FIRE_DESTROY]->SetHotSpot(0.0,0.0);
+		resources->GetAnimation("walkLayer")->SetFrame(FIRE_DESTROY);
+		resources->GetAnimation("walkLayer")->SetHotSpot(32.0,32.0);
+		resources->GetAnimation("walkLayer")->RenderEx(getScreenX(i->gridX*64.0+32.0), 
+			getScreenY(i->gridY*64.0+32.0), 0.0, scale, scale);
+		resources->GetAnimation("walkLayer")->SetHotSpot(0.0,0.0);
 	}
 }
 
@@ -202,9 +203,10 @@ void SpecialTileManager::drawTimedTiles(float dt) {
 				resources->GetAnimation("lava")->Render(getScreenX(i->gridX*64), getScreenY(i->gridY*64));
 				resources->GetAnimation("lava")->SetColor(ARGB(255, 255, 255, 255));
 			} else {
-				walkLayer[i->newTile]->SetColor(ARGB(i->alpha, 255, 255, 255));
-				walkLayer[i->newTile]->Render(getScreenX(i->gridX*64), getScreenY(i->gridY*64));
-				walkLayer[i->newTile]->SetColor(ARGB(255, 255, 255, 255));
+				resources->GetAnimation("walkLayer")->SetFrame(i->newTile);
+				resources->GetAnimation("walkLayer")->SetColor(ARGB(i->alpha, 255, 255, 255));
+				resources->GetAnimation("walkLayer")->Render(getScreenX(i->gridX*64), getScreenY(i->gridY*64));
+				resources->GetAnimation("walkLayer")->SetColor(ARGB(255, 255, 255, 255));
 			}
 		}
 	}
@@ -424,24 +426,24 @@ void SpecialTileManager::drawMushrooms (float dt) {
 	for(i = theMushrooms.begin(); i != theMushrooms.end(); i++) {
 		switch (i->state) {
 			case MUSHROOM_STATE_IDLING:
-				walkLayer[i->graphicsIndex]->Render(getScreenX(i->x),getScreenY(i->y));
+				resources->GetAnimation("walkLayer")->SetFrame(i->graphicsIndex);
+				resources->GetAnimation("walkLayer")->Render(getScreenX(i->x),getScreenY(i->y));
 				if (debugMode) i->mushroomCollisionCircle->draw();
 				break;
 			case MUSHROOM_STATE_EXPLODING:
 				break;
 			case MUSHROOM_STATE_GROWING:
 				//temporarily change the hot spot of the graphic so it grows from the center
-				walkLayer[i->graphicsIndex]->SetHotSpot(32.0,32.0);
+				resources->GetAnimation("walkLayer")->SetFrame(i->graphicsIndex);
+				resources->GetAnimation("walkLayer")->SetHotSpot(32.0,32.0);
 				
 				//Calculate size to draw it, then draw it
 				float percentage = timePassedSince(i->beginGrowTime) / MUSHROOM_GROW_TIME;
 				percentage = min(percentage, 1.0); //Cap the size at 1 to prevent it from "overgrowing"
-				walkLayer[i->graphicsIndex]->RenderEx((int)getScreenX(i->x+32),(int)getScreenY(i->y+32),0.0,percentage,percentage);
+				resources->GetAnimation("walkLayer")->RenderEx((int)getScreenX(i->x+32),(int)getScreenY(i->y+32),0.0,percentage,percentage);
 
 				//change hot spot back
-                walkLayer[i->graphicsIndex]->SetHotSpot(0.0,0.0);
-
-
+                resources->GetAnimation("walkLayer")->SetHotSpot(0.0,0.0);
 				break;
 		};
 	}

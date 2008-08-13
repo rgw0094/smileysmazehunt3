@@ -2,6 +2,7 @@
 #define _INPUT_H_
 
 #define STRICT
+#include <string>
 #include <windows.h>
 #include <basetsd.h>
 #include <dinput.h>
@@ -61,8 +62,8 @@ public:
 	void loadInputs();
 	void setEditMode(int whichInput);
 	bool isEditModeEnabled(int whichInput);
-	char* getInputName(int whichInput);
-	char* getInputDescription(int whichInput);
+	const char *getInputName(int whichInput);
+	std::string getInputDescription(int whichInput);
 	void listenForNewInput(int whichInput);
 
 	//Variables

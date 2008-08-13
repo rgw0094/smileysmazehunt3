@@ -21,11 +21,8 @@
 #include "hgefont.h"
 #include "hgeresource.h"
 
-//Textures
-extern HTEXTURE particleTexture;
-extern HGE *hge;
-
 //Objects
+extern HGE *hge;
 extern Environment *theEnvironment;
 extern EnemyManager *enemyManager;
 extern hgeParticleSystem *iceBreathParticle;
@@ -57,6 +54,7 @@ extern int gameState;
 #define SPRING_VELOCITY 210.0
 #define JESUS_SANDLE_TIME 1.65
 #define SPEED_BOOTS_MODIFIER 1.75
+#define MOVE_SPEED 300.0
 
 /**
  * Constructor
@@ -69,18 +67,15 @@ Player::Player(int _gridX, int _gridY) {
 	worm = new Worm(_gridX,_gridY);
 	health = getMaxHealth();
 	mana = getMaxMana();
-	scale = hoverScale = shrinkScale = 1.0f;
-	speed = 300.0f;
-	rotation = 0;
+	scale = hoverScale = shrinkScale = 1.0;
+	rotation = 0.0;
 	facing = DOWN;
 	radius = DEFAULT_RADIUS;
 	collisionCircle = new CollisionCircle();
 	collisionCircle->set(x,y,PLAYER_WIDTH/2-3);
 	selectedAbility = saveManager->hasAbility[CANE] ? CANE : NO_ABILITY;;
-	alpha = 255.0f;
-	hoveringYOffset = 0;
-	timeFrozen = 0.0;
-	freezeDuration = 0.0;
+	alpha = 255.0;
+	hoveringYOffset = springOffset = 0.0;
 	invincible = false;
 
 	//Load Particles
@@ -145,6 +140,11 @@ Player::~Player() {
  */
 void Player::update(float dt) {
 
+	//Movement stuff
+	setFacingDirection();
+	updateVelocities(dt);
+	doMove(dt);
+
 	//Do level exits
 	if (theEnvironment->collision[gridX][gridY] == PLAYER_END) {
 		loadEffectManager->startEffect(0, 0, theEnvironment->ids[gridX][gridY]);
@@ -160,8 +160,6 @@ void Player::update(float dt) {
 		lastGridY = gridY;
 		gridY = newGridY;
 	}
-	screenX = getScreenX(x);
-	screenY = getScreenY(y);
 	baseX = x + 0;
 	baseY = y + 15 * shrinkScale;
 	baseGridX = baseX / 64.0;
@@ -178,12 +176,6 @@ void Player::update(float dt) {
 	
 	//Update Smiley's collisionCircle
 	collisionCircle->set(x,y,(PLAYER_WIDTH/2-3)*shrinkScale);
-
-	//Keep track of where the player was before entering deep water
-	if (!theEnvironment->isDeepWaterAt(gridX, gridY) && !theEnvironment->isArrowAt(gridX,gridY)) {
-		enteredWaterX = gridX;
-		enteredWaterY = gridY;
-	}
 
 	//Update timed statuses
 	if (flashing && timePassedSince(startedFlashing) > 1.5) flashing = false;
@@ -230,9 +222,6 @@ void Player::update(float dt) {
 	doWater();
 	doIce(dt);
 	doShrinkTunnels(dt);
-	setFacingDirection();
-	updateVelocities(dt);
-	doMove(dt);
 
 	//Die
 	if (health <= 0.0f) {
@@ -249,6 +238,19 @@ void Player::doMove(float dt) {
 
 	float xDist = dx * dt;
 	float yDist = dy * dt;
+
+	if ((inShallowWater || inLava) && !springing && selectedAbility != WATER_BOOTS) {
+		xDist *= 0.5;
+		yDist *= 0.5;
+	}
+	if (sprinting && !springing && !sliding && !iceSliding && !onWater) {
+		xDist *= SPEED_BOOTS_MODIFIER;
+		yDist *= SPEED_BOOTS_MODIFIER;
+	}
+	if (iceSliding) {
+		xDist *= 1.2;
+		yDist *= 1.2;
+	}
 
 	//Check for collision with frozen enemies
 	collisionCircle->set(x + xDist, y + yDist, (PLAYER_WIDTH/2.0-3.0)*shrinkScale);
@@ -346,8 +348,8 @@ void Player::draw(float dt) {
 	//Draw Smiley's shadow
 	if ((hoveringYOffset > 0.0f || drowning || springing || (onWater && waterWalk) || (!falling && theEnvironment->collisionAt(x,y+15) != WALK_LAVA))) {
 		if (drowning) resources->GetSprite("playerShadow")->SetColor(ARGB(255,255,255,255));
-		resources->GetSprite("playerShadow")->RenderEx(screenX,
-			screenY + (22.0*shrinkScale),0.0f,scale*shrinkScale,scale*shrinkScale);
+		resources->GetSprite("playerShadow")->RenderEx(getScreenX(x),
+			getScreenY(y) + (22.0*shrinkScale),0.0f,scale*shrinkScale,scale*shrinkScale);
 		if (drowning) resources->GetSprite("playerShadow")->SetColor(ARGB(50,255,255,255));
 	}
 
@@ -355,13 +357,12 @@ void Player::draw(float dt) {
 	if (!drowning && (flashing && int(gameTime * 100) % 20 > 15 || !flashing)) {
 		//Draw UP, UP_LEFT, UP_RIGHT tongues before smiley
 		if (facing == UP || facing == UP_LEFT || facing == UP_RIGHT) {
-				tongue->draw(dt);
+			tongue->draw(dt);
 		}
 		//Draw Smiley sprite
 		resources->GetAnimation("player")->SetFrame(facing);
-		resources->GetAnimation("player")->RenderEx(screenX,
-			screenY-hoveringYOffset-springOffset,rotation,
-			scale*hoverScale*shrinkScale,scale*hoverScale*shrinkScale);
+		resources->GetAnimation("player")->RenderEx(512.0, 384.0 - hoveringYOffset - springOffset, 
+			rotation, scale * hoverScale * shrinkScale, scale * hoverScale * shrinkScale);
 		//Draw every other tongue after smiley
 		if (facing != UP && facing != UP_LEFT && facing != UP_RIGHT) {
 			tongue->draw(dt);
@@ -384,7 +385,7 @@ void Player::draw(float dt) {
 
 	//Draw reflection shield
 	if (reflectionShieldActive) {
-		resources->GetSprite("reflectionShield")->Render(screenX,screenY);
+		resources->GetSprite("reflectionShield")->Render(getScreenX(x), getScreenY(y));
 	}
 
 	//Debug mode
@@ -430,19 +431,19 @@ void Player::drawGUI(float dt) {
 	//Jesus bar
 	if (waterWalk) {
 		resources->GetSprite("bossHealthBar")->RenderStretch(
-			512 - 30.0, 
-			384 - 55.0 - hoveringYOffset, 
-			512 - 30.0 + 60.0f*((JESUS_SANDLE_TIME-(gameTime-startedWaterWalk))/JESUS_SANDLE_TIME), 
-			384 - 50.0 - hoveringYOffset);
+			512.0 - 30.0, 
+			384.0 - 55.0 - hoveringYOffset, 
+			512.0 - 30.0 + 60.0f*((JESUS_SANDLE_TIME-(gameTime-startedWaterWalk))/JESUS_SANDLE_TIME), 
+			384.0 - 50.0 - hoveringYOffset);
 	}
 
 	//Hover bar
 	if (isHovering) {
 		resources->GetSprite("bossHealthBar")->RenderStretch(
-			512 - 30.0, 
-			384 - 55.0 - hoveringYOffset, 
-			512 - 30.0 + 60.0f*((HOVER_DURATION-(gameTime-timeStartedHovering))/HOVER_DURATION), 
-			384 - 50.0 - hoveringYOffset);
+			512.0 - 30.0, 
+			384.0 - 55.0 - hoveringYOffset, 
+			512.0 - 30.0 + 60.0f*((HOVER_DURATION-(gameTime-timeStartedHovering))/HOVER_DURATION), 
+			384.0 - 50.0 - hoveringYOffset);
 	}
 
 	//Draw selected ability
@@ -605,13 +606,13 @@ void Player::doAbility(float dt) {
 		//Start breathing fire
 		if (!breathingFire) {
 			breathingFire = true;
-			fireBreathParticle->FireAt(screenX + mouthXOffset[facing], screenY + mouthYOffset[facing]);
+			fireBreathParticle->FireAt(getScreenX(x) + mouthXOffset[facing], getScreenY(y) + mouthYOffset[facing]);
 			soundManager->playAbilityEffect("snd_fireBreath", true);
 		}
 
 		//Update breath direction and location
 		fireBreathParticle->info.fDirection = angles[facing];
-		fireBreathParticle->MoveTo(screenX + mouthXOffset[facing], screenY + mouthYOffset[facing], false);
+		fireBreathParticle->MoveTo(getScreenX(x) + mouthXOffset[facing], getScreenY(y) + mouthYOffset[facing], false);
 
 	//Stop breathing fire
 	} else if (breathingFire) {
@@ -677,8 +678,8 @@ void Player::doAbility(float dt) {
 	if (breathingIce) {
 
 		iceBreathParticle->info.fDirection = angles[facing];
-		iceBreathParticle->FireAt(screenX + mouthXOffset[facing], screenY + mouthYOffset[facing]);
-		iceBreathParticle->MoveTo(screenX + mouthXOffset[facing], screenY + mouthYOffset[facing], false);
+		iceBreathParticle->FireAt(getScreenX(x) + mouthXOffset[facing], getScreenY(y) + mouthYOffset[facing]);
+		iceBreathParticle->MoveTo(getScreenX(x) + mouthXOffset[facing], getScreenY(y) + mouthYOffset[facing], false);
 		iceBreathParticle->Update(dt);
 
 		if (timePassedSince(startedIceBreath) > 0.6) {
@@ -843,8 +844,6 @@ void Player::doSprings(float dt) {
 		springing = true;
 		startedSpringing = gameTime;
 		dx = dy = 0;
-		startSpringX = x;
-		startSpringY = y;
 		//Start the spring animation
 		theEnvironment->activated[gridX][gridY] = gameTime;
 		if (superSpring) {
@@ -1212,6 +1211,12 @@ void Player::doWater() {
 	//Determine if the player is on water
 	onWater = (hoveringYOffset == 0.0f) && theEnvironment->isDeepWaterAt(baseGridX,baseGridY);
 
+	//Keep track of where the player was before entering deep water
+	if (!theEnvironment->isDeepWaterAt(gridX, gridY) && !theEnvironment->isArrowAt(gridX,gridY)) {
+		enteredWaterX = gridX;
+		enteredWaterY = gridY;
+	}
+
 }
 
 /**
@@ -1247,33 +1252,20 @@ void Player::updateVelocities(float dt) {
 	if (!input->keyDown(INPUT_AIM) && !iceSliding && !sliding && !knockback && !springing) {
 		//Move Left
 		if (input->keyDown(INPUT_LEFT)) {
-			if (dx > -1*speed && !sliding) dx -= accel*dt;
+			if (dx > -1*MOVE_SPEED && !sliding) dx -= accel*dt;
 		}
 		//Move Right
 		if (input->keyDown(INPUT_RIGHT)) {
-			if (dx < speed && !sliding) dx += accel*dt;
+			if (dx < MOVE_SPEED && !sliding) dx += accel*dt;
 		}
 		//Move Up
 		if (input->keyDown(INPUT_UP)) {
-			if (dy > -1*speed && !sliding) dy -= accel*dt;
+			if (dy > -1*MOVE_SPEED && !sliding) dy -= accel*dt;
 		}
 		//Move Down
 		if (input->keyDown(INPUT_DOWN)) {
-			if (dy < speed && !sliding) dy += accel*dt;
+			if (dy < MOVE_SPEED && !sliding) dy += accel*dt;
 		}
-	}
-
-	if ((inShallowWater || inLava) && !springing && selectedAbility != WATER_BOOTS) {
-		dx *= 0.5;
-		dy *= 0.5;
-	}
-	if (sprinting && !springing && !sliding && !iceSliding && !onWater) {
-		dx *= SPEED_BOOTS_MODIFIER;
-		dy *= SPEED_BOOTS_MODIFIER;
-	}
-	if (iceSliding) {
-		dx *= 1.2;
-		dy *= 1.2;
 	}
 
 }
@@ -1313,20 +1305,20 @@ void Player::doIce(float dt) {
 	if (!springing && hoveringYOffset == 0.0f && !iceSliding && theEnvironment->collisionAt(x,y) == ICE) {
 		if (lastGridX < gridX) {
 			facing = RIGHT;
-			dx = speed;
+			dx = MOVE_SPEED;
 			dy = 0;
 		} else if (lastGridX > gridX) {
 			facing = LEFT;
-			dx = -speed;
+			dx = -MOVE_SPEED;
 			dy = 0;
 		} else if (lastGridY < gridY) {
 			facing = DOWN;
 			dx = 0;
-			dy = speed;
+			dy = MOVE_SPEED;
 		} else if (lastGridY > gridY) {
 			facing = UP;
 			dx = 0;
-			dy = -speed;
+			dy = -MOVE_SPEED;
 		}
 		iceSliding = true;
 	}

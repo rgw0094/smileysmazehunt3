@@ -167,8 +167,6 @@ void EvilWall::drawEvilWall() {
 
 	bool edge;
 	double angle;
-
-	//hge->System_Log("(%d %d) (%d %d) %d",xBeginWall,yBeginWall,xDraw,yDraw,dir);
 	
 	for (gridY = 0; gridY < height; gridY++) {
 		for (gridX = 0; gridX < width; gridX++) {
@@ -239,7 +237,6 @@ void EvilWall::doCollision() {
 
 //Mutators
 void EvilWall::setBeginWallPosition(int gridX, int gridY) {
-	hge->System_Log("Evil wall setBeginWallPosition %d %d",gridX,gridY);
 	xBeginWall=gridX;
 	yBeginWall=gridY;
 }

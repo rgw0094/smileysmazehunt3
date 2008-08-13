@@ -343,8 +343,6 @@ void SaveManager::save() {
 
 	//Write the string to the save file
 	outputFile.write(outputString.c_str(), outputString.length());
-	outputString.clear();
-	outputString = "";
 
 	//Close the file!
 	outputFile.close();
@@ -395,7 +393,6 @@ void SaveManager::saveFileInfo() {
 
 	std::ofstream infoFile;
 	std::string infoString;
-	std::string numberString;
 
 	infoFile.open("Data/Save/info.dat");
 	infoString = "";
@@ -406,35 +403,11 @@ void SaveManager::saveFileInfo() {
 		//Whether or not the file is empty
 		infoString += files[i].empty ? "1" : "0";
 		
-		//Time played (6 digits) I wish C strings didn't suck dick
-		if (files[i].timePlayed < 10) {
-			numberString = "00000";
-			numberString += intToString(files[i].timePlayed);
-		} else if (files[i].timePlayed < 100) {
-			numberString = "0000";
-			numberString += intToString(files[i].timePlayed);
-		} else if (files[i].timePlayed < 1000) {
-			numberString = "000";
-			numberString += intToString(files[i].timePlayed);
-		} else if (files[i].timePlayed < 10000) {
-			numberString = "00";
-			numberString += intToString(files[i].timePlayed);
-		} else if (files[i].timePlayed < 100000) { 
-			numberString = "0";
-			numberString += intToString(files[i].timePlayed);		
-		} else {
-			numberString = intToString(files[i].timePlayed);
-		}
-		infoString += numberString.c_str();
+		//Time played (6 digits)
+		infoString += intToString(files[i].timePlayed, 6);
 
 		//Completion percentage
-		if (files[i].completion < 10) {
-			numberString = "0";
-			numberString += intToString(files[i].completion);
-		} else {
-			numberString = intToString(files[i].completion);
-		}
-		infoString += numberString.c_str();
+		infoString += intToString(files[i].completion, 2);
 
 	}
 
@@ -483,6 +456,8 @@ void SaveManager::loadFileInfo() {
 		}
 
 	}
+
+	inFile.close();
 
 }
 

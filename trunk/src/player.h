@@ -60,8 +60,6 @@ public:
 	int gridX,gridY;						//Global grid coordinates
 	int lastGridX, lastGridY;
 	float springOffset;
-	float screenX, screenY;					//Screen coordinates
-	float speed;
 	float dx, dy;
 	float alpha;
 	float mana;
@@ -71,7 +69,6 @@ public:
 	int enteredWaterX, enteredWaterY;		//Grid position the player was on before entering water
 	int enteredSpringX, enteredSpringY;
 	float hoveringYOffset;					//Y Offset for player sprite while hovering
-	int startSpringX, startSpringY;
 	float fallingDx, fallingDy;
 
 	//Constants

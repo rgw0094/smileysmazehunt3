@@ -1,5 +1,7 @@
 #include <list>
 
+using namespace std;
+
 struct Change {
 	int x,int y;
 	int area;
@@ -15,7 +17,7 @@ public:
 	void change(int area, int x, int y);
 	bool isChanged(int area, int x, int y);
 	void reset();
-	char* toString();
+	string toString();
 
 private:
 	std::list<Change> theChanges;

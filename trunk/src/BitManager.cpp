@@ -7,26 +7,23 @@ extern HGE *hge;
 BitManager::BitManager() {
 	counter=0; //Start at position 0
 	byte=0; //Fill the byte with 0's
-	
-
 }
 
-BitManager::~BitManager() {
-
-}
+BitManager::~BitManager() { }
 
 /*
- * This function adds a bit on at the current counter position. If the unsigned char is
- * full, return true.
+ * This function adds a bit to the bit string. The current position in the bit string
+ * is tracked, and when a new bit is added, that value is set to the bit argument.
+ * If the unsigned char is full, return true.
  */
-
 bool BitManager::addBit(bool bit) {
-	setBit(7-counter,bit);
+
+	if (bit) {	
+		byte = byte | (unsigned char)pow(2, 7-counter); // | is the bitwise OR
+	} 
+
 	counter++;
-
-	if (counter > 7) return true;
-
-	return false;
+	return (counter > 7);
 }
 
 unsigned char BitManager::getCurrentChar() {
@@ -62,16 +59,6 @@ twoBools BitManager::getNextBit() {
 }
 
 // Private ////////////////////////////////////////////////////
-
-void BitManager::setBit(int position, bool bit) {
-	if (bit) {	
-		setTrue(position);
-	} 
-}
-
-void BitManager::setTrue(int position) {
-	byte = byte | (unsigned char)pow(2,position); // | is the bitwise OR
-}
 
 int BitManager::getBit(int position) {
 	//pow(2,8-position) makes a byte of: 10000000 for position 0, 01000000 for position 1, etc.
