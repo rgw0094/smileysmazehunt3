@@ -8,7 +8,6 @@
  * End Credits
 
 === Programming To Do ===
- * Make fountain class
  * Finish Phyrebozz 2
  * Lovecraftian Boss
  * King Tut
@@ -30,6 +29,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Make fountain class||8/13/08||RGW||
 ||Draw rearmost overlapping enemies first||8/12/08||RGW||
 ||Fix memory leaks from string functions||8/12/08||RGW||
 ||Add Timed Tiles to SpecialTileManager||8/10/08||RGW||
