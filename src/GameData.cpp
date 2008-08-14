@@ -30,36 +30,33 @@ Ability GameData::getAbilityInfo(int abilityID) {
 	return abilities[abilityID];
 }
 
-char *GameData::getGameText(const char *text) {
+const char *GameData::getGameText(const char *text) {
 	return gameText->GetString(text);
 }
 
-char *GameData::getAreaName(int area) {
-
-	char * areaName = (char*)malloc(32);
+const char *GameData::getAreaName(int area) {
 	
 	//Set zone specific info
 	if (area == FOUNTAIN_AREA) {
-		areaName = "Smiley Town";
+		return "Smiley Town";
 	} else if (area == OLDE_TOWNE) {
-		areaName = "Dunes of Salabia";
+		return "Dunes of Salabia";
 	} else if (area == SMOLDER_HOLLOW) {
-		areaName = "Smolder Hollow";
+		return "Smolder Hollow";
 	} else if (area == FOREST_OF_FUNGORIA) {
-		areaName = "Forest of Fundoria";
+		return "Forest of Fundoria";
 	} else if (area == SESSARIA_SNOWPLAINS) {
-		areaName = "Sessaria Snowplains";
+		return "Sessaria Snowplains";
 	} else if (area == TUTS_TOMB) {
-		areaName = "Tut's Tomb";
+		return "Tut's Tomb";
 	} else if (area == WORLD_OF_DESPAIR) {
-		areaName = "Realm of Despair";
+		return "Realm of Despair";
 	} else if (area == CASTLE_OF_EVIL) {
-		areaName = "Castle Of Evil";
+		return "Castle Of Evil";
 	} else if (area == SERPENTINE_PATH) {
-		areaName = "The Serpentine Path";
+		return "The Serpentine Path";
 	}
 	
-	return areaName;
 }
 
 ////////// Private functions //////////////////

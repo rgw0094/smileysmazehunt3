@@ -13,6 +13,7 @@ class SpecialTileManager;
 class EvilWallManager;
 class TapestryManager;
 class Smilelet;
+class Fountain;
 
 //-------- Collision Layer ---------//
 #define NUM_COLLISION 36
@@ -127,7 +128,6 @@ public:
 	bool hitSigns(Tongue *tongue);
 	bool hitSaveShrine(Tongue *tongue);
 	bool validPath(int x1, int y1, int x2, int y2, int radius, bool canPass[256]);
-	void drawFountain();
 	bool testCollision(hgeRect *box, bool canPass[256], bool ignoreSillyPads);
 	bool testCollision(hgeRect *box, bool canPass[256]);
 	bool playerOnCylinder(int x, int y);
@@ -158,10 +158,8 @@ public:
 	int xGridOffset,yGridOffset;	//Number of squares the top left corner is from (0,0)
 	float xOffset,yOffset;			//Number of pixels the player is off alignment with the grid
 	int startX, int startY;			//Level entrance
-	bool fountainOnScreen;
 	float drawX,drawY;				//Location to draw a tile
 	int offScreenRange;				//Number of tiles offscreen to draw
-	bool hasFountain;				//Whether or not this area has a fountain
 
 	hgeParticleManager *environmentParticles;
 
@@ -170,6 +168,7 @@ private:
 	SpecialTileManager *specialTileManager;
 	EvilWallManager *evilWallManager; //Evil walls which move and try to kill smiley
 	TapestryManager *tapestryManager;
+	Fountain *fountain;
 	Smilelet *smilelet;
 	hgeRect *collisionBox;
 

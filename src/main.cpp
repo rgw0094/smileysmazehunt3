@@ -45,7 +45,6 @@ float gameTime = 0.0;
 int frameCounter = 0;
 int gameState = MENU;
 bool debugMode;
-int fountainX, fountainY;
 float darkness = 0.0;
 
 //Save file stuff
@@ -219,7 +218,6 @@ bool RenderFunc() {
 		thePlayer->draw(dt);
 		bossManager->drawAfterSmiley(dt);
 		theEnvironment->drawAfterSmiley(dt);
-		theEnvironment->drawFountain();
 		projectileManager->draw(dt);
 		if (darkness > 0.0) shadeScreen(darkness);
 		loadEffectManager->draw(dt);
@@ -289,23 +287,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//Start HGE. When this function returns it means the program is exiting.
 		hge->System_Start();
 
-		// Free loaded shit
-		delete resources;
-		for (int i = 0; i < 512; i++) delete itemLayer[i];
-		delete thePlayer;
-		delete theEnvironment;
-		delete windowManager;
-		delete saveManager;
-		delete theMenu;
-		delete lootManager;
-		delete projectileManager;
-		delete npcManager;
-		delete input;
-		delete enemyGroupManager;
-		delete soundManager;
-		delete bossManager;
-		delete gameData;
-		delete loadEffectManager;
 	}
 	else MessageBox(NULL, hge->System_GetErrorMessage(), "Error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 

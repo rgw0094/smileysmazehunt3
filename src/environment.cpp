@@ -24,6 +24,7 @@
 #include "ChangeManager.h"
 #include "enemy.h"
 #include "Smilelet.h"
+#include "Fountain.h"
 
 #include <string>
 #include <sstream>
@@ -32,8 +33,6 @@
 
 //Variables
 extern bool debugMode;
-extern int fountainX, fountainY;
-extern int musicVolume;
 extern float gameTime;
 
 //Objects
@@ -65,7 +64,6 @@ Environment::Environment() {
 	
 	//Load particles
 	environmentParticles = new hgeParticleManager();
-	resources->GetParticleSystem("fountain")->Fire();
 
 	//Load animations
 	silverCylinder = new hgeAnimation(resources->GetTexture("animations"),5,20,0,3*64,64,64);
@@ -130,6 +128,7 @@ Environment::~Environment() {
 	delete specialTileManager;
 	delete tapestryManager;
 	delete smilelet;
+	if (fountain) delete fountain;
 
 	delete collisionBox;
 	delete silverCylinder;
@@ -164,8 +163,6 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 	char threeBuffer[3];
 
 	saveManager->currentArea = id;
-	hasFountain = false;
-	fountainOnScreen = false;
 
 	//Delete all objects from the previous area.
 	bossManager->reset();
@@ -178,6 +175,11 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 	specialTileManager->reset();
 	evilWallManager->reset();
 	smilelet->reset();
+
+	if (fountain) {
+		delete fountain;
+		fountain = NULL;
+	}
 
 	//Clear old level data
 	for (int i = 0; i < 256; i++) {
@@ -293,9 +295,7 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 
 			//Big ass fountain location
 			if (collision[col][row] == FOUNTAIN) {
-				hasFountain = true;
-				fountainX = -7;
-				fountainY = -7;
+				fountain = new Fountain(col, row);
 			}
 			
 			//Flames
@@ -491,12 +491,9 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
  */
 void Environment::draw(float dt) {
 
-	fountainOnScreen = false;
-	int offscreenRange = (hasFountain ? 6 : 1);
-
 	//Loop through each tile to draw shit
-	for (int j = -offscreenRange; j <= screenHeight + offscreenRange; j++) {
-		for (int i = -offscreenRange; i <= screenWidth + offscreenRange; i++) {
+	for (int j = -1; j <= screenHeight + 1; j++) {
+		for (int i = -1; i <= screenWidth + 1; i++) {
 			
 			drawX = int(float(i)*64.0f - xOffset);
 			drawY = int(float(j)*64.0f - yOffset);
@@ -521,6 +518,7 @@ void Environment::draw(float dt) {
 					theCollision != UNWALKABLE_PROJECTILE && 		
 					theCollision != FLAME &&
 					theCollision != FIRE_DESTROY &&
+					theCollision != FOUNTAIN && 
 					!(isWarp(theCollision) && 
 					variable[i + xGridOffset][j + yGridOffset] == 990)) {
 					
@@ -589,12 +587,6 @@ void Environment::draw(float dt) {
 						resources->GetAnimation("savePoint")->Update(dt);
 						resources->GetAnimation("savePoint")->Render(drawX, drawY);
 
-					//Remember where the fountain is, it is drawn later
-					} else if (theCollision == FOUNTAIN) {
-						fountainOnScreen = true;
-						fountainX = i;
-						fountainY = j;
-
 					//Non-animated collision tiles
 					} else {
 
@@ -644,9 +636,9 @@ void Environment::draw(float dt) {
 		}
 	}
 
-	//If the area has a big ass fountain draw the top part after the player
-	if (hasFountain && fountainOnScreen) {
-		resources->GetSprite("bigFountainBottom")->Render(fountainX*64.0 - xOffset + 32, fountainY*64.0 - yOffset + 32);
+	//Draw fountain before smiley if he is below it
+	if (fountain && !fountain->isAboveSmiley()) {
+		fountain->draw(dt);
 	}
 
 	//Draw environment particles
@@ -733,26 +725,13 @@ void Environment::drawAfterSmiley(float dt) {
 			}
 		}
 	}
-}
 
-
-/**
- * Draws a big ass fountain. This is called after the main draw() function is called for
- * both the Environment and the Player so that it is drawn over top of the Player. It only
- * draws the top part of the fountain which the player can walk behind
- */
-void Environment::drawFountain() {
-	if (!hasFountain || !fountainOnScreen) return;
-	if (-400 < getScreenX(fountainX) < 1700 && -400 < getScreenY(fountainY) < 1600) {
-		resources->GetSprite("bigFountainTop")->Render(fountainX*64.0 - xOffset + 32, fountainY*64.0 - yOffset + 32);
-		resources->GetAnimation("fountainRipple")->Render(fountainX*64.0 - xOffset + 32, fountainY*64.0 - yOffset - 40);
-		resources->GetSprite("smallFountain")->Render(fountainX*64.0 - xOffset + 32, fountainY*64.0 - yOffset - 83);
-		resources->GetAnimation("fountainRipple")->RenderEx(fountainX*64.0 - xOffset + 32, fountainY*64.0 - yOffset - 183,0.0f,.35f,.4f);
-		resources->GetParticleSystem("fountain")->MoveTo(fountainX*64.0 - xOffset + 32, fountainY*64.0 - yOffset - 180, true);
-		resources->GetParticleSystem("fountain")->Render();
+	//Draw fountain after smiley if he is above it
+	if (fountain && fountain->isAboveSmiley()) {
+		fountain->draw(dt);
 	}
-}
 
+}
 
 /**
  * Update the environment variables
@@ -783,8 +762,6 @@ void Environment::update(float dt) {
 	greenCylinderRev->Update(dt);
 	yellowCylinderRev->Update(dt);
 	whiteCylinderRev->Update(dt);
-	resources->GetAnimation("fountainRipple")->Update(dt);
-	resources->GetParticleSystem("fountain")->Update(dt);
 
 	//Determine the grid offset to figure out which tiles to draw
 	xGridOffset = thePlayer->gridX - screenWidth/2;
@@ -813,17 +790,10 @@ void Environment::update(float dt) {
 		}
 	}
 
-	//update the mushrooms
 	specialTileManager->update(dt);
-
-	//update the evil walls
 	evilWallManager->update(dt);
-
-	//Update tapestries
 	tapestryManager->update(dt);
-
-	
-	//Update smilelets
+	fountain->update(dt);
 	smilelet->update();
 
 }

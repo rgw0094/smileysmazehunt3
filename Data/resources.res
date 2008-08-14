@@ -323,9 +323,9 @@ Music castleOfEvilMusic {
  resgroup=11
 }
 
-;**************************
-;******** FOUNTAIN ********
-;**************************
+;*********************************************
+;******** FOUNTAIN (Resource group 69 ********
+;*********************************************
 Animation fountainRipple {
  texture="Graphics/fountain.png"
  rect=0,0,338,95
@@ -334,28 +334,21 @@ Animation fountainRipple {
  mode=FORWARD,LOOP
  hotspot=169,47.5
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=4
+ resgroup=69
 }
-Sprite bigFountainTop {
+Sprite fountainBottom {
  texture="Graphics/fountain.png"
- rect=0,380,340,128
+ rect=0,380,340,172
  hotspot=170,120
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=4
+ resgroup=69
 }
-Sprite bigFountainBottom {
- texture="Graphics/fountain.png"
- rect=0,508,340,44
- hotspot=170,-5
- blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=4
-}
-Sprite smallFountain {
+Sprite fountainTop {
  texture="Graphics/fountain.png"
  rect=340,380,118,173
  hotspot=59,120
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=4
+ resgroup=69
 }
 
 

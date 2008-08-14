@@ -202,6 +202,9 @@
 					RelativePath=".\src\EvilWallManager.cpp">
 				</File>
 				<File
+					RelativePath=".\src\Fountain.cpp">
+				</File>
+				<File
 					RelativePath=".\src\lootmanager.cpp">
 				</File>
 				<File
@@ -435,6 +438,9 @@
 				</File>
 				<File
 					RelativePath=".\src\EvilWallManager.h">
+				</File>
+				<File
+					RelativePath=".\src\Fountain.h">
 				</File>
 				<File
 					RelativePath=".\src\lootmanager.h">
