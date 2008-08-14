@@ -203,6 +203,7 @@ void EnemyManager::update(float dt) {
 		}
 	}
 
+	//Sort enemies so that the rearmost overlapping enemies will be drawn last!!!
 	enemyList.sort(SortEnemiesPredicate);
 
 }

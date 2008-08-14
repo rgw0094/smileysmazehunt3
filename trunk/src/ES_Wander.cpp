@@ -44,28 +44,35 @@ ES_Wander::~ES_Wander() {
 
 void ES_Wander::update(float dt) {
 	
-	float checkX = max(4.0, owner->x + owner->dx*dt);
-	float checkY = max(4.0, owner->y + owner->dy*dt);
+	float checkX = owner->x + owner->dx*dt;
+	float checkY = owner->y + owner->dy*dt;
 	bool changeDir = false;
 
 	//Change direction if the enemy is going to hit a wall next frame
 	owner->futureCollisionBox->SetRadius(checkX, checkY, 28.0f);
 	if (theEnvironment->enemyCollision(owner->futureCollisionBox,owner,dt)) {
 		changeDir = true;
+
+		//Move the enemy all the way up to the wall. This ensures that spikey balls don't
+		//get out of synch with each other.
+		if (owner->dx > 0.0) {
+			owner->x += (64.0 - int(owner->x) % 64 - owner->radius);
+		} else if (owner->dx < 0.0) {
+			owner->x -= int(owner->x) % 64 - owner->radius;
+		}
+
+		if (owner->dy > 0.0) {
+
+		} else if (owner->dy < 0.0) {
+
+		}
+
 	}
 
 	//Change direction after random periods of time
 	if (owner->wanderType == WANDER_NORMAL && nextDirChangeTime <= gameTime) {
 		changeDir = true;
 	}
-
-	//This is fucked
-	//Enemies that go back and forth should bounce off each other
-	//if (owner->wanderType == WANDER_LEFT_RIGHT || owner->wanderType == WANDER_UP_DOWN) {
-	//	if (enemyManager->collidesWithEnemy(owner->futureCollisionBox)) {
-	//		changeDir = true;
-	//	}
-	//}
 
 	if (changeDir) {
 

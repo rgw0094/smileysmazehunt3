@@ -39,8 +39,8 @@ public:
 
 	EnemyInfo getEnemyInfo(int enemyID);
 	Ability getAbilityInfo(int abilityID);
-	char *getGameText(const char *text);
-	char *getAreaName(int area);
+	const char *getGameText(const char *text);
+	const char *getAreaName(int area);
 
 
 private:
