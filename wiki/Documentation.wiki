@@ -15,6 +15,13 @@
 ||12||Hover||Castle of Evil||Calypso||0%||
 || || ||Serpentine Path|| ||0%||
 
+=Resource IDs=
+This is a list of resource ids that are actually used. If you add shit to resources.res don't set the resid to any of these!!
+
+||id||Purpose||
+||69||Fountain||
+||>=100||Bosses||
+
 =Zones=  
 
 ||*ID*||*Area Name*||*Map File*||
