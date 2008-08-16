@@ -8,7 +8,7 @@
  * End Credits
 
 === Programming To Do ===
- * Fenwar Manager*
+ * Fenwar Manager
  * Finish Phyrebozz 2
  * Lovecraftian Boss
  * King Tut
