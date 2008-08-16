@@ -8,6 +8,7 @@
  * End Credits
 
 === Programming To Do ===
+ * Save player health and mana
  * Fenwar Manager
  * Finish Phyrebozz 2
  * Lovecraftian Boss
