@@ -122,8 +122,7 @@ void shadeScreen(int alpha);
 float getAngleBetween(int x1, int y1, int x2, int y2);
 float timePassedSince(float time);
 int getKeyIndex(int area);
-void loadGameObjects();
-void initAbilities();
+void loadGame(int fileNumber);
 int roundUp(float num);
 int getCurrentHint();
 

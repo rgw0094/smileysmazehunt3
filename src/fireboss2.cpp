@@ -52,6 +52,7 @@ extern bool debugMode;
 #define CHASE_FIREBALL_SPEED 1000.0
 #define CHASE_FIREBALL_DAMAGE 0.5
 #define CHASE_SPEED 700.0
+#define LAVA_DURATION 25.0;
 
 //Attributes
 #define HEALTH 10.00

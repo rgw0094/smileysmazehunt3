@@ -47,6 +47,7 @@ public:
 	int currentSave;
 	int currentArea;
 	int playerGridX, playerGridY;
+	float playerHealth, playerMana;
 
 	//Stuff in inventory
 	bool hasAbility[12];

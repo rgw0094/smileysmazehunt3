@@ -155,9 +155,7 @@ Environment::~Environment() {
  *	playerX		x location to put Smiley, or 0 for default
  *  playerY		y location to put Smiley, or 0 for default
  */
-void Environment::loadArea(int id, int from, int playerX, int playerY) {
-
-	hge->System_Log("Loading area: %d, placing Player at (%d,%d)", id, playerX, playerY);
+void Environment::loadArea(int id, int from) {
 
 	std::ifstream areaFile;
 	char threeBuffer[3];
@@ -334,6 +332,7 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 			} else if (collision[col][row] == EVIL_WALL_RESTART) {
 				evilWallManager->setSmileyRestartPosition(ids[col][row],col,row);
 			}
+
 		}
 		//Read the newline
 		areaFile.read(threeBuffer,1);
@@ -415,12 +414,7 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 		for (int j = 0; j < areaHeight; j++) {
 
 			//Put the player in the correct starting location
-			if (playerX > 0 && playerY > 0) {
-				thePlayer->moveTo(playerX,playerY);
-				startX = playerX;
-				startY = playerY;
-				playerPlaced = true;
-			} else if (!playerPlaced && collision[i][j] == PLAYER_START && ids[i][j] == from) {
+			if (!playerPlaced && collision[i][j] == PLAYER_START && ids[i][j] == from) {
 				thePlayer->moveTo(i,j);
 				startX = i;
 				startY = j;
@@ -475,10 +469,9 @@ void Environment::loadArea(int id, int from, int playerX, int playerY) {
 		}
 	}
 	
-	//Update this and the enemies once to get shit set up
+	//Update to get shit set up
 	update(0.0);
 	enemyManager->update(0.0);
-	thePlayer->update(0.0);
 
 	//Tell the LoadEffectManager to display the new area name
 	loadEffectManager->displayNewAreaName();

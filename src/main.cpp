@@ -272,14 +272,54 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		loadResources();
 
-		//Load non-game objects. These only need to be created once and
-		//persist until the program is closed!
+		hge->System_Log("*****Creating Objects*****");
+		hge->System_Log("Creating SaveManager");
 		saveManager = new SaveManager();
+		
+		hge->System_Log("Creating Menu");
 		theMenu = new Menu();
+
+		hge->System_Log("Creating Input");
 		input = new Input();
+
+		hge->System_Log("Creating SoundManager");
 		soundManager = new SoundManager();
+		
+		hge->System_Log("Creating GameData");
 		gameData = new GameData();
+		
+		hge->System_Log("Creating LoadEffectManager");
 		loadEffectManager = new LoadEffectManager();
+		
+		hge->System_Log("Creating Enemy Manager");
+		enemyManager = new EnemyManager();
+		
+		hge->System_Log("Creating Loot Manager");
+		lootManager = new LootManager();
+		
+		hge->System_Log("Creating Projectile Manager");
+		projectileManager = new ProjectileManager();
+		
+		hge->System_Log("Creating NPC Manager");
+		npcManager = new NPCManager();
+		
+		hge->System_Log("Creating Enemy Group Manager");
+		enemyGroupManager = new EnemyGroupManager();
+
+		hge->System_Log("Creating Boss Manager");
+		bossManager = new BossManager();
+
+		hge->System_Log("Creating Window Manager");
+		windowManager = new WindowManager();
+
+		hge->System_Log("Creating Player");
+		thePlayer = new Player();
+
+		//Environment must be created last!
+		hge->System_Log("Creating Environment");
+		theEnvironment = new Environment();
+
+		hge->System_Log("******************************");
 
 		//Open the menu
 		theMenu->open(TITLE_SCREEN);

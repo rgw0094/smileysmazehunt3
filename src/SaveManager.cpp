@@ -1,5 +1,3 @@
-#include "SaveManager.h"
-
 #include <fstream>
 #include <stdlib.h>
 #include <time.h>
@@ -7,6 +5,8 @@
 #include <sstream>
 #include <iostream>
 
+#include "SaveManager.h"
+#include "Player.h"
 #include "Environment.h"
 #include "hge.h"
 #include "smiley.h"
@@ -14,6 +14,7 @@
 #include "BitManager.h"
 
 extern Environment *theEnvironment;
+extern Player *thePlayer;
 extern HGE *hge;
 
 extern float timePlayed;
@@ -81,17 +82,18 @@ void SaveManager::resetCurrentData() {
 
 	for (int i = 0; i < NUM_BOSSES; i++) killedBoss[i] = false;
 	
-	if (currentSave == 3) { //make it a REAL GAME
+	//make it a REAL GAME
+	if (currentSave == 3) { 
 		for (int i = 0; i < NUM_ABILITIES; i++) hasAbility[i] = false;
-
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 4; j++) {
 				numKeys[i][j] = 0;
 			}
 		}
-	} else { //Start with keys and abilities
+
+	//Start with keys and abilities
+	} else { 
 		for (int i = 0; i < NUM_ABILITIES; i++) hasAbility[i] = true;
-	
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 4; j++) {
 				numKeys[i][j] = 5;
@@ -119,6 +121,8 @@ void SaveManager::resetCurrentData() {
 	timePlayed = 0;
 	playerGridX = 0;
 	playerGridY = 0;
+	playerHealth = 5.0;
+	playerMana = 100.0;
 }
 
 /**
@@ -191,6 +195,12 @@ void SaveManager::load(int fileNumber) {
 	playerGridX = atoi(threeBuffer);
 	inFile.read(threeBuffer,3);
 	playerGridY = atoi(threeBuffer);
+
+	//Health and mana
+	inFile.read(threeBuffer, 3);
+	playerHealth = float(atoi(threeBuffer)) / 4.0;
+	inFile.read(threeBuffer, 3);
+	playerMana = float(atoi(threeBuffer));
 
 	//Load changed shit
 	inFile.read(threeBuffer, 3);
@@ -304,6 +314,10 @@ void SaveManager::save() {
 	outputString += intToString(currentArea);
 	outputString += intToString(playerGridX, 3);
 	outputString += intToString(playerGridY, 3);
+
+	//Health and mana
+	outputString += intToString(thePlayer->getHealth() * 4, 3);
+	outputString += intToString(thePlayer->getMana(), 3);
 
 	//Changed shit
 	outputString += changeManager->toString();

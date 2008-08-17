@@ -135,7 +135,7 @@ void LoadEffectManager::update(float dt) {
 				lootManager->update(0.0);
 				projectileManager->update(0.0);
 			} else {
-				theEnvironment->loadArea(destinationArea,saveManager->currentArea,0,0);
+				theEnvironment->loadArea(destinationArea, saveManager->currentArea);
 				zoneTextAlpha = 255.0;
 			}
 			
