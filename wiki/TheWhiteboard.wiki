@@ -3,13 +3,9 @@
  * Kevin
  * Hillary
 
-=== ROAD MAP ===
- * Have Fenwar make more appearances than just in Smolder Hollow and the end
- * End Credits
-
 === Programming To Do ===
  * Save player health and mana
- * Fenwar Manager
+ * End Credits
  * Finish Phyrebozz 2
  * Lovecraftian Boss
  * King Tut
