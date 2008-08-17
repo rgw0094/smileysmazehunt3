@@ -59,12 +59,12 @@ extern int gameState;
 /**
  * Constructor
  */
-Player::Player(int _gridX, int _gridY) {
+Player::Player() {
 		
 	//Initialize variables
-	moveTo(_gridX, _gridY);
+	moveTo(0, 0);
 	tongue = new Tongue();
-	worm = new Worm(_gridX,_gridY);
+	worm = new Worm(0,0);
 	health = getMaxHealth();
 	mana = getMaxMana();
 	scale = hoverScale = shrinkScale = 1.0;
@@ -1565,4 +1565,12 @@ bool Player::isInShrinkTunnel() {
 void Player::modifyVelocity(double xVel,double yVel) {
 	dx += xVel;
 	dy += yVel;
+}
+
+void Player::setMana(float amount) {
+	mana = amount;
+}
+
+float Player::getMana() {
+	return mana;
 }

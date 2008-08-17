@@ -30,7 +30,6 @@ struct FlameWall {
 	FireBall fireBalls[FLAME_WALL_NUM_PARTICLES];
 };
 
-//Struct for the 5 locations the boss moves between
 struct ChasePoint {
 	int x, y;
 };

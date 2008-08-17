@@ -18,7 +18,7 @@ struct velocity {
 class Player {
 
 public:
-	Player(int x, int y);
+	Player();
 	~Player();
 
 	void draw(float dt);
@@ -39,6 +39,8 @@ public:
 	bool isFlashing();
 	bool isInShrinkTunnel();
 	void setHealth(float amount);
+	void setMana(float amount);
+	float getMana();
 	float getHealth();
 	float getMaxHealth();
 	float getMaxMana();
@@ -62,7 +64,6 @@ public:
 	float springOffset;
 	float dx, dy;
 	float alpha;
-	float mana;
 	int selectedAbility;
 	int startedFallingX;					//X position where the player started falling
 	int startedFallingY;					//Y position where the player started falling
@@ -99,7 +100,7 @@ private:
 	void doIce(float dt);
 	void doShrinkTunnels(float dt);
 
-	float health, timeFrozen, freezeDuration, springVelocity;
+	float health, mana, timeFrozen, freezeDuration, springVelocity;
 	Tongue *tongue;
 	Worm *worm;
 	

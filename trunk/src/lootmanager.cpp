@@ -101,8 +101,8 @@ void LootManager::update(float dt) {
 			if (i->type == LOOT_HEALTH) {
 				thePlayer->setHealth(thePlayer->getHealth() + 1.0);
 			} else if (i->type == LOOT_MANA) {
-				thePlayer->mana += 20.0f;
-				if (thePlayer->mana > thePlayer->getMaxMana()) thePlayer->mana = thePlayer->getMaxMana();
+				thePlayer->setMana(thePlayer->getMana() + 20.0);
+				if (thePlayer->getMana() > thePlayer->getMaxMana()) thePlayer->setMana(thePlayer->getMaxMana());
 			} else if (i->type == LOOT_NEW_ABILITY) {
 				saveManager->hasAbility[i->ability] = true;
 				thePlayer->selectedAbility = i->ability;

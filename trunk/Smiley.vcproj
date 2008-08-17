@@ -110,7 +110,7 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<Filter
-				Name="EnemyFramework"
+				Name="Enemy Framework"
 				Filter="">
 				<File
 					RelativePath=".\src\BaseEnemy.cpp">
@@ -134,7 +134,7 @@
 					RelativePath=".\src\ES_Wander.cpp">
 				</File>
 				<Filter
-					Name="enemies"
+					Name="Enemies"
 					Filter="">
 					<File
 						RelativePath=".\src\E_BatletDist.cpp">
@@ -187,22 +187,13 @@
 				</Filter>
 			</Filter>
 			<Filter
-				Name="gameobj"
+				Name="Game Objects"
 				Filter="">
 				<File
 					RelativePath=".\src\collisioncircle.cpp">
 				</File>
 				<File
-					RelativePath=".\src\environment.cpp">
-				</File>
-				<File
-					RelativePath=".\src\EvilWall.cpp">
-				</File>
-				<File
-					RelativePath=".\src\EvilWallManager.cpp">
-				</File>
-				<File
-					RelativePath=".\src\Fountain.cpp">
+					RelativePath=".\src\FenwarManager.cpp">
 				</File>
 				<File
 					RelativePath=".\src\lootmanager.cpp">
@@ -214,44 +205,64 @@
 					RelativePath=".\src\npcmanager.cpp">
 				</File>
 				<File
-					RelativePath=".\src\player.cpp">
-				</File>
-				<File
 					RelativePath=".\src\ProjectileManager.cpp">
-				</File>
-				<File
-					RelativePath=".\src\Smilelet.cpp">
-				</File>
-				<File
-					RelativePath=".\src\SpecialTileManager.cpp">
-				</File>
-				<File
-					RelativePath=".\src\TapestryManager.cpp">
-				</File>
-				<File
-					RelativePath=".\src\Tongue.cpp">
 				</File>
 				<File
 					RelativePath=".\src\weaponparticle.cpp">
 				</File>
-				<File
-					RelativePath=".\src\Worm.cpp">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-					</FileConfiguration>
-				</File>
+				<Filter
+					Name="Environment"
+					Filter="">
+					<File
+						RelativePath=".\src\environment.cpp">
+					</File>
+					<File
+						RelativePath=".\src\EvilWall.cpp">
+					</File>
+					<File
+						RelativePath=".\src\EvilWallManager.cpp">
+					</File>
+					<File
+						RelativePath=".\src\Fountain.cpp">
+					</File>
+					<File
+						RelativePath=".\src\Smilelet.cpp">
+					</File>
+					<File
+						RelativePath=".\src\SpecialTileManager.cpp">
+					</File>
+					<File
+						RelativePath=".\src\TapestryManager.cpp">
+					</File>
+				</Filter>
+				<Filter
+					Name="Player"
+					Filter="">
+					<File
+						RelativePath=".\src\player.cpp">
+					</File>
+					<File
+						RelativePath=".\src\Tongue.cpp">
+					</File>
+					<File
+						RelativePath=".\src\Worm.cpp">
+						<FileConfiguration
+							Name="Debug|Win32">
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32">
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+						</FileConfiguration>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
-				Name="system"
+				Name="System"
 				Filter="">
 				<File
 					RelativePath=".\src\BitManager.cpp">
@@ -282,7 +293,7 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="boss"
+				Name="Bosses"
 				Filter="">
 				<File
 					RelativePath=".\src\BossManager.cpp">
@@ -313,7 +324,7 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="ui"
+				Name="UI"
 				Filter="">
 				<File
 					RelativePath=".\src\Button.cpp">
@@ -322,7 +333,7 @@
 					RelativePath=".\src\Slider.cpp">
 				</File>
 				<Filter
-					Name="mainmenu"
+					Name="Main Menu"
 					Filter="">
 					<File
 						RelativePath=".\src\DeathScreen.cpp">
@@ -341,7 +352,7 @@
 					</File>
 				</Filter>
 				<Filter
-					Name="gamemenu"
+					Name="Game Menu"
 					Filter="">
 					<File
 						RelativePath=".\src\inventory.cpp">
@@ -378,7 +389,7 @@
 				RelativePath=".\src\resource1.h">
 			</File>
 			<Filter
-				Name="boss"
+				Name="Bosses"
 				Filter="">
 				<File
 					RelativePath=".\src\boss.h">
@@ -409,7 +420,7 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="EnemyFramework"
+				Name="Enemy Framework"
 				Filter="">
 				<File
 					RelativePath=".\src\enemy.h">
@@ -425,22 +436,13 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="gameobj"
+				Name="Game Objects"
 				Filter="">
 				<File
 					RelativePath=".\src\collisioncircle.h">
 				</File>
 				<File
-					RelativePath=".\src\environment.h">
-				</File>
-				<File
-					RelativePath=".\src\EvilWall.h">
-				</File>
-				<File
-					RelativePath=".\src\EvilWallManager.h">
-				</File>
-				<File
-					RelativePath=".\src\Fountain.h">
+					RelativePath=".\src\FenwarManager.h">
 				</File>
 				<File
 					RelativePath=".\src\lootmanager.h">
@@ -452,32 +454,52 @@
 					RelativePath=".\src\npcmanager.h">
 				</File>
 				<File
-					RelativePath=".\src\player.h">
-				</File>
-				<File
 					RelativePath=".\src\ProjectileManager.h">
-				</File>
-				<File
-					RelativePath=".\src\Smilelet.h">
-				</File>
-				<File
-					RelativePath=".\src\SpecialTileManager.h">
-				</File>
-				<File
-					RelativePath=".\src\TapestryManager.h">
-				</File>
-				<File
-					RelativePath=".\src\Tongue.h">
 				</File>
 				<File
 					RelativePath=".\src\weaponparticle.h">
 				</File>
-				<File
-					RelativePath=".\src\Worm.h">
-				</File>
+				<Filter
+					Name="Environment"
+					Filter="">
+					<File
+						RelativePath=".\src\environment.h">
+					</File>
+					<File
+						RelativePath=".\src\EvilWall.h">
+					</File>
+					<File
+						RelativePath=".\src\EvilWallManager.h">
+					</File>
+					<File
+						RelativePath=".\src\Fountain.h">
+					</File>
+					<File
+						RelativePath=".\src\Smilelet.h">
+					</File>
+					<File
+						RelativePath=".\src\SpecialTileManager.h">
+					</File>
+					<File
+						RelativePath=".\src\TapestryManager.h">
+					</File>
+				</Filter>
+				<Filter
+					Name="Player"
+					Filter="">
+					<File
+						RelativePath=".\src\player.h">
+					</File>
+					<File
+						RelativePath=".\src\Tongue.h">
+					</File>
+					<File
+						RelativePath=".\src\Worm.h">
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
-				Name="system"
+				Name="System"
 				Filter="">
 				<File
 					RelativePath=".\src\BitManager.h">
@@ -505,7 +527,7 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="ui"
+				Name="UI"
 				Filter="">
 				<File
 					RelativePath=".\src\Button.h">
@@ -514,7 +536,7 @@
 					RelativePath=".\src\Slider.h">
 				</File>
 				<Filter
-					Name="gamemenu"
+					Name="Game Menu"
 					Filter="">
 					<File
 						RelativePath=".\src\BaseWindow.h">
@@ -542,7 +564,7 @@
 					</File>
 				</Filter>
 				<Filter
-					Name="mainmenu"
+					Name="Main Menu"
 					Filter="">
 					<File
 						RelativePath=".\src\DeathScreen.h">

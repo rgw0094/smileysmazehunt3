@@ -183,53 +183,16 @@ const char *intToString(int number, int digits) {
 
 
 /**
- * Creates fresh instances of all game objects and managers
+ * This is called from the LoadMenu and the DeathMenu to load a save file and start
+ * the game.
  */
-void loadGameObjects() {
-
-	hge->System_Log("*****Loading Game Objects*****");
-
-	hge->System_Log("Creating Player");
-	if (thePlayer) delete thePlayer;
-	thePlayer = new Player(saveManager->playerGridX, saveManager->playerGridY);
-
-	hge->System_Log("Creating Enemy Manager");
-	if (enemyManager) delete enemyManager;
-	enemyManager = new EnemyManager();
-	
-	hge->System_Log("Creating Loot Manager");
-	if (lootManager) delete lootManager;
-	lootManager = new LootManager();
-		
-	hge->System_Log("Creating Projectile Manager");
-	if (projectileManager) delete projectileManager;
-	projectileManager = new ProjectileManager();
-		
-	hge->System_Log("Creating NPC Manager");
-	if (npcManager) delete npcManager;
-	npcManager = new NPCManager();
-
-	hge->System_Log("Creating Enemy Group Manager");
-	if (enemyGroupManager) delete enemyGroupManager;
-	enemyGroupManager = new EnemyGroupManager();
-
-	hge->System_Log("Creating Boss Manager");
-	if (bossManager) delete bossManager;
-	bossManager = new BossManager();
-
-	hge->System_Log("Creating Window Manager");
-	if (windowManager) delete windowManager;
-	windowManager = new WindowManager();
-
-	//Environment must be created last!
-	hge->System_Log("Creating Environment");
-	if (theEnvironment) delete theEnvironment;
-	theEnvironment = new Environment();
-	theEnvironment->loadArea(saveManager->currentArea, saveManager->currentArea, 
-		saveManager->playerGridX, saveManager->playerGridY);
-
-	hge->System_Log("******************************");
-
+void loadGame(int fileNumber) {
+	saveManager->load(fileNumber);
+	enterGameState(GAME);
+	theEnvironment->loadArea(saveManager->currentArea, saveManager->currentArea);
+	thePlayer->moveTo(saveManager->playerGridX, saveManager->playerGridY);
+	thePlayer->setHealth(saveManager->playerHealth);
+	thePlayer->setMana(saveManager->playerMana);
 }
 
 /**

@@ -92,13 +92,13 @@ bool LoadScreen::update(float dt, float mouseX, float mouseY) {
 		if (saveManager->isFileEmpty(selectedFile)) {
 			//New game
 			saveManager->startNewGame(selectedFile);
-			loadGameObjects();
 			enterGameState(GAME);
+			theEnvironment->loadArea(saveManager->currentArea, saveManager->currentArea);
+			thePlayer->setHealth(saveManager->playerHealth);
+			thePlayer->setMana(saveManager->playerMana);
 		} else {
 			//Load game
-			saveManager->load(selectedFile);
-			loadGameObjects();
-			enterGameState(GAME);
+			loadGame(selectedFile);
 		}
 	}
 

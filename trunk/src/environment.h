@@ -114,7 +114,7 @@ public:
 	void drawAfterSmiley(float dt);
 	void drawGrid(float dt);
 	void update(float dt);
-	void loadArea(int id, int from, int playerX, int playerY);
+	void loadArea(int id, int from);
 	int gatherItem(int x, int y);
 	int collisionAt(float x, float y);
 	bool playerCollision(int x, int y,float dt);
