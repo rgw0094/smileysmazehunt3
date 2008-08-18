@@ -14,6 +14,10 @@ extern bool debugMode;
 extern EnemyManager *enemyManager;
 
 #define CANDY_HEALTH 100
+#define CANDY_ARM_X_OFFSET 45
+#define CANDY_ARM_Y_OFFSET -20
+#define CANDY_LEG_X_OFFSET 29
+#define CANDY_LEG_Y_OFFSET 38
 
 CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 	gridX = _gridX;
@@ -22,6 +26,9 @@ CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 
 	x = gridX * 64 + 32;
 	y = gridY * 64 + 32;
+
+	leftArmRot=-10*PI/180;
+	rightArmRot=10*PI/180;
 }
 
 CandyBoss::~CandyBoss() {
@@ -32,6 +39,12 @@ CandyBoss::~CandyBoss() {
 void CandyBoss::draw(float dt) {
 	resources->GetAnimation("bartli")->SetFrame(0);
 	resources->GetAnimation("bartli")->Render(getScreenX(x),getScreenY(y));
+
+	resources->GetSprite("bartliArm")->RenderEx(getScreenX(x-CANDY_ARM_X_OFFSET),getScreenY(y+CANDY_ARM_Y_OFFSET),rightArmRot);
+	resources->GetSprite("bartliArm")->RenderEx(getScreenX(x+CANDY_ARM_X_OFFSET),getScreenY(y+CANDY_ARM_Y_OFFSET),leftArmRot,-1.0,1.0);
+
+	resources->GetSprite("bartliLeg")->Render(getScreenX(x-CANDY_LEG_X_OFFSET),getScreenY(y+CANDY_LEG_Y_OFFSET));
+	resources->GetSprite("bartliLeg")->RenderEx(getScreenX(x+CANDY_LEG_X_OFFSET),getScreenY(y+CANDY_LEG_Y_OFFSET),0.0,-1.0,1.0);
 }
 
 void CandyBoss::drawAfterSmiley(float dt) {

@@ -19,6 +19,8 @@ private:
 	double x,y;
 	int groupID;
 
+	double leftArmRot,rightArmRot;
+
 
 
 };
