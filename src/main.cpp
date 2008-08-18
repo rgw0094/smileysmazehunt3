@@ -16,6 +16,7 @@
 #include "smiley.h"
 #include "environment.h"
 #include "LoadEffectManager.h"
+#include "FenwarManager.h"
 
 //Global Objects
 HGE *hge=0;
@@ -35,6 +36,7 @@ SaveManager *saveManager;
 SoundManager *soundManager;
 GameData *gameData;
 LoadEffectManager *loadEffectManager;
+FenwarManager *fenwarManager;
 
 
 //Sprites
@@ -177,13 +179,18 @@ bool FrameFunc() {
 			
 			//If the loading effect isn't active, update the game objects
 			if (!loadEffectManager->isEffectActive()) {
-				thePlayer->update(dt);
-				theEnvironment->update(dt);
-				bossManager->update(dt);
-				enemyManager->update(dt);
-				lootManager->update(dt);
-				projectileManager->update(dt);
-				npcManager->update(dt);
+				
+				fenwarManager->update(dt);
+
+				if (!fenwarManager->isEncounterActive()) {
+					thePlayer->update(dt);
+					theEnvironment->update(dt);
+					bossManager->update(dt);
+					enemyManager->update(dt);
+					lootManager->update(dt);
+					projectileManager->update(dt);
+					npcManager->update(dt);
+				}
 			}
 
 		}
@@ -218,6 +225,7 @@ bool RenderFunc() {
 		thePlayer->draw(dt);
 		bossManager->drawAfterSmiley(dt);
 		theEnvironment->drawAfterSmiley(dt);
+		fenwarManager->draw(dt);
 		projectileManager->draw(dt);
 		if (darkness > 0.0) shadeScreen(darkness);
 		loadEffectManager->draw(dt);
@@ -315,7 +323,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		hge->System_Log("Creating Player");
 		thePlayer = new Player();
 
-		//Environment must be created last!
+		hge->System_Log("Creating FenwarManager");
+		fenwarManager = new FenwarManager();
+
+		//Environment must be created after Player!
 		hge->System_Log("Creating Environment");
 		theEnvironment = new Environment();
 

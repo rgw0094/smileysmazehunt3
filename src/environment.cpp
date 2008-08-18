@@ -23,8 +23,9 @@
 #include "TapestryManager.h"
 #include "ChangeManager.h"
 #include "enemy.h"
-#include "Smilelet.h"
+#include "SmileletManager.h"
 #include "Fountain.h"
+#include "FenwarManager.h"
 
 #include <string>
 #include <sstream>
@@ -53,6 +54,7 @@ extern Input *input;
 extern SoundManager *soundManager;
 extern GameData *gameData;
 extern LoadEffectManager *loadEffectManager;
+extern FenwarManager *fenwarManager;
 
 //Sprites
 extern hgeSprite *itemLayer[512];
@@ -97,20 +99,14 @@ Environment::Environment() {
 	whiteCylinderRev = new hgeAnimation(resources->GetTexture("animations"),5,20,0,8*64,64,64);
 	whiteCylinderRev->SetMode(HGEANIM_FWD);
 
-	//Manager for special tiles
 	hge->System_Log("Creating Environment.SpecialTileManager");
 	specialTileManager = new SpecialTileManager();
-
-	//Evil walls
 	hge->System_Log("Creating Environment.EvilWallManager");
 	evilWallManager = new EvilWallManager();
-
-	//Tapestries
 	hge->System_Log("Creating Environment.TapestryManager");
 	tapestryManager = new TapestryManager();
-
-	//Smilelets (guys that follow Smiley)
-	smilelet = new Smilelet();
+	hge->System_Log("Creating Environment.SmileletManager");
+	smilelet = new SmileletManager();
 
 	resources->GetAnimation("savePoint")->Play();
 	collisionBox = new hgeRect();
@@ -173,6 +169,7 @@ void Environment::loadArea(int id, int from) {
 	specialTileManager->reset();
 	evilWallManager->reset();
 	smilelet->reset();
+	fenwarManager->reset();
 
 	if (fountain) {
 		delete fountain;
@@ -311,7 +308,7 @@ void Environment::loadArea(int id, int from) {
 				specialTileManager->addMushroom(col,row,collision[col][row]);
 			}
 
-			//Smilelet
+			//SmileletManager
 			if (collision[col][row] == SMILELET) {
 				smilelet->addSmilelet(col,row,ids[col][row]);
 				collision[col][row] = WALKABLE;
@@ -374,8 +371,13 @@ void Environment::loadArea(int id, int from) {
 			enemy = atoi(threeBuffer);
 			enemyLayer[col][row] = enemy-1;
 
+			//ID 255 is a fenwar encounter
+			if (enemy == 255) {
+
+				fenwarManager->addFenwarEncounter(col, row, ids[col][row]);
+
 			//IDs 240-256 are bosses
-			if (enemy >= 240) {
+			} else if (enemy >= 240) {
 
 				//Spawn the boss if it has never been killed
 				if (!saveManager->isBossKilled(enemy)) {
@@ -666,17 +668,11 @@ void Environment::draw(float dt) {
 		}
 	}
 
-	//Draw the evil walls
+	//Draw other shit
 	evilWallManager->draw(dt);
-
-	//Draw tapestries
 	tapestryManager->draw(dt);
-
-	//Draw smilelets
 	smilelet->drawBeforeSmiley();
 	smilelet->drawAfterSmiley();
-
-	//Draw the mushrooms
 	specialTileManager->draw(dt);
 
 }

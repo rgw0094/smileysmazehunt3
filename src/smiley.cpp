@@ -191,6 +191,7 @@ void loadGame(int fileNumber) {
 	enterGameState(GAME);
 	theEnvironment->loadArea(saveManager->currentArea, saveManager->currentArea);
 	thePlayer->moveTo(saveManager->playerGridX, saveManager->playerGridY);
+	thePlayer->update(0.0);
 	thePlayer->setHealth(saveManager->playerHealth);
 	thePlayer->setMana(saveManager->playerMana);
 }

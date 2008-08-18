@@ -193,9 +193,6 @@
 					RelativePath=".\src\collisioncircle.cpp">
 				</File>
 				<File
-					RelativePath=".\src\FenwarManager.cpp">
-				</File>
-				<File
 					RelativePath=".\src\lootmanager.cpp">
 				</File>
 				<File
@@ -223,10 +220,13 @@
 						RelativePath=".\src\EvilWallManager.cpp">
 					</File>
 					<File
+						RelativePath=".\src\FenwarManager.cpp">
+					</File>
+					<File
 						RelativePath=".\src\Fountain.cpp">
 					</File>
 					<File
-						RelativePath=".\src\Smilelet.cpp">
+						RelativePath=".\src\SmileletManager.cpp">
 					</File>
 					<File
 						RelativePath=".\src\SpecialTileManager.cpp">
@@ -442,9 +442,6 @@
 					RelativePath=".\src\collisioncircle.h">
 				</File>
 				<File
-					RelativePath=".\src\FenwarManager.h">
-				</File>
-				<File
 					RelativePath=".\src\lootmanager.h">
 				</File>
 				<File
@@ -472,10 +469,13 @@
 						RelativePath=".\src\EvilWallManager.h">
 					</File>
 					<File
+						RelativePath=".\src\FenwarManager.h">
+					</File>
+					<File
 						RelativePath=".\src\Fountain.h">
 					</File>
 					<File
-						RelativePath=".\src\Smilelet.h">
+						RelativePath=".\src\SmileletManager.h">
 					</File>
 					<File
 						RelativePath=".\src\SpecialTileManager.h">

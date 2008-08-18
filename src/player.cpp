@@ -16,7 +16,7 @@
 #include "Tongue.h"
 #include "LoadEffectManager.h"
 #include "Worm.h"
-#include "Smilelet.h"
+#include "SmileletManager.h"
 
 #include "hgefont.h"
 #include "hgeresource.h"
@@ -169,7 +169,6 @@ void Player::update(float dt) {
 
 	//Update cloaking alpha
 	alpha = (cloaked) ? 75.0f : 255.0f;
-	resources->GetAnimation("player")->SetColor(ARGB(alpha,255,255,255));
 
 	//Explore!
 	saveManager->explore(gridX,gridY);
@@ -361,6 +360,7 @@ void Player::draw(float dt) {
 		}
 		//Draw Smiley sprite
 		resources->GetAnimation("player")->SetFrame(facing);
+		resources->GetAnimation("player")->SetColor(ARGB(alpha,255,255,255));
 		resources->GetAnimation("player")->RenderEx(512.0, 384.0 - hoveringYOffset - springOffset, 
 			rotation, scale * hoverScale * shrinkScale, scale * hoverScale * shrinkScale);
 		//Draw every other tongue after smiley

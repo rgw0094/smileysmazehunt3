@@ -65,7 +65,7 @@ FireBoss::FireBoss(int gridX, int gridY, int _groupID) {
 	droppedLoot = false;
 
 	fireNova = new WeaponParticleSystem("firenova.psi", resources->GetSprite("particleGraphic13"), PARTICLE_FIRE_NOVA);
-	fenwarWarp = new hgeParticleSystem("fenwarwarp.psi", resources->GetSprite("particleGraphic13"));
+	fenwarWarp = new hgeParticleSystem(&resources->GetParticleSystem("fenwarwarp")->info);
 
 	//Set up valid locations
 	//Center
