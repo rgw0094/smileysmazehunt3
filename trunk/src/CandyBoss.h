@@ -20,6 +20,7 @@ private:
 	int groupID;
 
 	double leftArmRot,rightArmRot;
+	double leftLegY,rightLegY;
 
 
 
