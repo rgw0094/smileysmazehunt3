@@ -1,6 +1,3 @@
-/**
- * This might be the worst code in the project.
- */
 #include "smiley.h"
 #include "textbox.h"
 #include "player.h"
@@ -219,7 +216,9 @@ void TextBox::draw(float dt) {
 		resources->GetSprite("textBox")->Render(x,y);
 
 		//Display the NPC's face and name. npcID -1 means don't draw anything!
-		if (npcID != -1) {
+		if (npcID == 255) {
+			resources->GetSprite("fenwarDown")->Render(x+60, y+50);
+		} else if (npcID != -1) {
 			graphic->Render(x+60-32, y+50-32);
 		}
 		paramString = "NPC";

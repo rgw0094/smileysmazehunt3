@@ -12,8 +12,9 @@ class BaseEnemy;
 class SpecialTileManager;
 class EvilWallManager;
 class TapestryManager;
-class Smilelet;
+class SmileletManager;
 class Fountain;
+class FenwarManager;
 
 //-------- Collision Layer ---------//
 #define NUM_COLLISION 36
@@ -81,7 +82,6 @@ class Fountain;
 #define BLUE_CYLINDER_UP 61
 #define BROWN_CYLINDER_UP 62
 #define SILVER_CYLINDER_UP 63
-//...
 #define SMILELET 64
 #define SMILELET_FLOWER_SAD 65
 #define SMILELET_FLOWER_HAPPY 66
@@ -169,7 +169,7 @@ private:
 	EvilWallManager *evilWallManager; //Evil walls which move and try to kill smiley
 	TapestryManager *tapestryManager;
 	Fountain *fountain;
-	Smilelet *smilelet;
+	SmileletManager *smilelet;
 	hgeRect *collisionBox;
 
 	hgeAnimation *silverCylinder, *brownCylinder, *blueCylinder, *greenCylinder, *yellowCylinder, *whiteCylinder;

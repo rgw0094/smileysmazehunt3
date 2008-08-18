@@ -1,5 +1,8 @@
 [HGESTRINGTABLE]
 
+;NPC >= 100 < 240 is for bosses
+;NPC >= 240 is for fenwar encounters
+
 GotCane = "You got Bill Clinton's Cane! You can now receive the President's wisdom whenever you wish."
 GotFireBreath = "You got the Fire Breath!  Don't sneeze around a dry forest!"
 GotFrisbee = "You got the Frisbee!  Use it to stun enemies and hit far away switches!"
@@ -335,7 +338,7 @@ NPC151Pages = "1"
 NPC151-1 = "Oh dear, I've been defeated."
 
 ;Phyrebozz Round 2
-NPC160Name = "Load Phyrebozz"
+NPC160Name = "Lord Phyrebozz"
 NPC160Pages = "1"
 NPC160-1 = "You again! dickens dickens dickens"
 NPC161Name = "Lord Phyrebozz"
@@ -344,3 +347,13 @@ NPC161-1 = "I see you have gotten stronger since our last battle Smiley. Unfortu
 NPC162Name = "Load Phyrebozz"
 NPC162Pages = "1"
 NPC162-1 = "Gwwaaarrghhh (Dickens)"
+
+
+;==============================================FENWAR ENCOUNTERS=====================================
+NPC240Name = "Fenwar"
+NPC240Pages = "3"
+NPC240-1 = "Hi, I'm Fenwar"
+NPC240-2 = "This is an example Fenwar encounter"
+NPC240-3 = "I hope you like it"
+
+

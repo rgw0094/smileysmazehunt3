@@ -230,8 +230,19 @@ Sprite fenwarDown {
  rect=0,0,62,73
  hotspot=31,36
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=6
+ resgroup=1
 }
+Music fenwarLietmotif {
+ filename="fenwarlietmotif.mod"
+ amplify=50
+ resgroup=1
+}
+Particle fenwarwarp {
+ filename=fenwarwarp.psi
+ sprite=particleGraphic13
+ resgroup=1
+}
+
 
 
 ;*********************
