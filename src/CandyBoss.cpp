@@ -14,10 +14,13 @@ extern bool debugMode;
 extern EnemyManager *enemyManager;
 
 #define CANDY_HEALTH 100
+
 #define CANDY_ARM_X_OFFSET 45
 #define CANDY_ARM_Y_OFFSET -20
 #define CANDY_LEG_X_OFFSET 29
 #define CANDY_LEG_Y_OFFSET 38
+
+#define CANDY_STATE_
 
 CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 	gridX = _gridX;
