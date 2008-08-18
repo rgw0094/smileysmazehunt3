@@ -4,7 +4,6 @@
  * Hillary
 
 === Programming To Do ===
- * Save player health and mana
  * End Credits
  * Finish Phyrebozz 2
  * Lovecraftian Boss
@@ -28,6 +27,7 @@
 ===Done===
 ||Item||Date||Done By||
 ||Fenwar Manager||8/17/08||RGW||
+||Save Player health/mana||8/17/08||RGW||
 ||Make fountain class||8/13/08||RGW||
 ||Draw rearmost overlapping enemies first||8/12/08||RGW||
 ||Fix memory leaks from string functions||8/12/08||RGW||
