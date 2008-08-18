@@ -1234,7 +1234,21 @@ Animation bartli {
  frames=2
  fps=20.0
  mode=LOOP,PINGPONG
- hotspot=55,116
+ hotspot=55,86
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=102
+}
+Sprite bartliArm {
+ texture="Graphics/Bartli.png"
+ rect=31,147,40,15
+ hotspot=39,7
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=102
+}
+Sprite bartliLeg {
+ texture="Graphics/Bartli.png"
+ rect=5,143,17,26
+ hotspot=8,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=102
 }
