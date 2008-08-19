@@ -20,7 +20,12 @@ extern EnemyManager *enemyManager;
 #define CANDY_LEG_X_OFFSET 29
 #define CANDY_LEG_Y_OFFSET 38
 
-#define CANDY_STATE_
+#define CANDY_STATE_INACTIVE 0
+#define CANDY_STATE_RUNNING_AROUND 1
+#define CANDY_STATE_JUMPING 2
+#define CANDY_STATE_THROWING_CANDY 3
+#define CANDY_STATE_FIRING_PROJECTILES 4
+
 
 CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 	gridX = _gridX;
