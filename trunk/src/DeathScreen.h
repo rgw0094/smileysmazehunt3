@@ -20,8 +20,6 @@ public:
 	//Draw methods
 	void draw(float dt);
 	bool update(float dt, float mouseX, float mouseY);
-	void enterScreen();
-	void exitScreen();
 
 	Button *buttons[NUM_BUTTONS];
 	float alpha;

@@ -2,10 +2,11 @@
 #include "smiley.h"
 #include "Input.h"
 #include "TitleScreen.h"
-#include "LoadScreen.h"
+#include "SelectFileScreen.h"
 #include "OptionsScreen.h"
 #include "DeathScreen.h"
 #include "SoundManager.h"
+#include "LoadingScreen.h"
 
 #include "hge.h"
 #include "hgestrings.h"
@@ -20,7 +21,6 @@ extern Input *input;
 
 //Variables
 extern int gameState;
-extern float gameStart;
 
 /**
  * Constructor
@@ -43,25 +43,26 @@ Menu::~Menu() {
  */
 void Menu::setScreen(int screen) {
 
-	//Close old screen
-	if (menuScreen) {
-		menuScreen->exitScreen();
-		//delete menuScreen;
-	}
-
-	//Open new screen
 	currentScreen = screen;
+
 	if (currentScreen == TITLE_SCREEN) {
 		menuScreen = new TitleScreen();
 	} else if (currentScreen == OPTIONS_SCREEN) {
 		menuScreen = new OptionsScreen();
 	} else if (currentScreen == LOAD_SCREEN) {
-		menuScreen = new LoadScreen();
+		menuScreen = new SelectFileScreen();
 	} else if (currentScreen == DEATH_SCREEN) {
 		menuScreen = new DeathScreen();
 	}
-	menuScreen->enterScreen();
 
+}
+
+/**
+ * Opens the loading screen to load the specified file.
+ */
+void Menu::openLoadScreen(int file) {
+	currentScreen = LOADING_SCREEN;
+	menuScreen = new LoadingScreen(file);
 }
 
 /** 
@@ -100,7 +101,7 @@ void Menu::draw(float dt) {
 	menuScreen->draw(dt);
 
 	//Draw the mouse
-	if (hge->Input_IsMouseOver()) {
+	if (hge->Input_IsMouseOver() && currentScreen != LOADING_SCREEN) {
 		resources->GetSprite("mouseCursor")->Render(mouseX, mouseY);
 	}
 

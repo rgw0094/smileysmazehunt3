@@ -21,6 +21,8 @@ extern float darkness;
 DeathScreen::DeathScreen() {
 	buttons[QUIT_BUTTON] = new Button(250.0, 650.0, "Quit");
 	buttons[CONTINUE_BUTTON] = new Button(1024.0-250.0-250.0, 650.0, "Continue");
+	alpha = 0;
+	darkness = 0.0;
 }
 
 /**
@@ -29,19 +31,6 @@ DeathScreen::DeathScreen() {
 DeathScreen::~DeathScreen() {
 	for (int i = 0; i < NUM_BUTTONS; i++) delete buttons[i];
 }
-
-/**
- * Called when the screen opens
- */
-void DeathScreen::enterScreen() {
-	alpha = 0;
-	darkness = 0.0;
-}
-
-/**
- * Called when the screen closes
- */
-void DeathScreen::exitScreen() {}
 
 /**
  * Updates the death screen
@@ -56,11 +45,13 @@ bool DeathScreen::update(float dt, float mouseX, float mouseY) {
 	//Click Quit
 	if (buttons[QUIT_BUTTON]->isClicked()) {
 		theMenu->setScreen(TITLE_SCREEN);
+		return false;
 	}
 
 	//Click Continue
 	if (buttons[CONTINUE_BUTTON]->isClicked()) {
-		loadGame(saveManager->currentSave);
+		theMenu->openLoadScreen(saveManager->currentSave);
+		return false;
 	}
 
 	return false;

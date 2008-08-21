@@ -38,7 +38,6 @@ GameData *gameData;
 LoadEffectManager *loadEffectManager;
 FenwarManager *fenwarManager;
 
-
 //Sprites
 hgeSprite *itemLayer[512];
 
@@ -48,10 +47,6 @@ int frameCounter = 0;
 int gameState = MENU;
 bool debugMode;
 float darkness = 0.0;
-
-//Save file stuff
-float timePlayed;
-
 
 /**
  * Performs an initial load of game resources. Most resources are loaded dynamically
@@ -249,7 +244,11 @@ bool RenderFunc() {
  */
 bool ExitFunc() {
 
-	saveManager->saveFileInfo();
+	//If they manually close the program while the game is active we still
+	//want to count their time played!
+	if (gameState == GAME) {
+		saveManager->saveTimePlayed();
+	}
 
 	//Exit normally 
 	return true;

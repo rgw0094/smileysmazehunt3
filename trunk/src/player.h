@@ -10,11 +10,6 @@ class hgeRect;
 class Worm;
 struct WormNode;
 
-struct velocity {
-	double x,y;
-	float timeBegan,duration;
-};
-
 class Player {
 
 public:
@@ -51,7 +46,7 @@ public:
 	WormNode getWormNode(int num);
 	Tongue *getTongue();
 
-	//variables
+	//variables that might be directly accessed by other objects (which isn't great)
 	float scale,hoverScale,shrinkScale;		//Scales to draw smiley
 	float rotation;							//Smiley's sprite rotation angle in radians
 	float radius;
@@ -61,16 +56,9 @@ public:
 	int baseGridX, baseGridY;				//The grid coordinate of the center of smiley's shadow
 	int gridX,gridY;						//Global grid coordinates
 	int lastGridX, lastGridY;
-	float springOffset;
-	float dx, dy;
-	float alpha;
 	int selectedAbility;
-	int startedFallingX;					//X position where the player started falling
-	int startedFallingY;					//Y position where the player started falling
-	int enteredWaterX, enteredWaterY;		//Grid position the player was on before entering water
-	int enteredSpringX, enteredSpringY;
-	float hoveringYOffset;					//Y Offset for player sprite while hovering
-	float fallingDx, fallingDy;
+	float springOffset;
+	float hoveringYOffset;
 
 	//Constants
 	float angles[8];
@@ -85,6 +73,7 @@ public:
 
 private:
 
+	//Private methods
 	void doMove(float dt);
 	void changeAbility(int direction);
 	void doAbility(float dt);
@@ -100,10 +89,19 @@ private:
 	void doIce(float dt);
 	void doShrinkTunnels(float dt);
 
-	float health, mana, timeFrozen, freezeDuration, springVelocity;
 	Tongue *tongue;
 	Worm *worm;
 	
+	float health, mana, 
+	float springVelocity;
+	int startedFallingX;					//X position where the player started falling
+	int startedFallingY;					//Y position where the player started falling
+	int enteredWaterX, enteredWaterY;		//Grid position the player was on before entering water
+	int enteredSpringX, enteredSpringY;
+	
+	float fallingDx, fallingDy;
+	float dx, dy;
+
 	//Time variables
 	float startedFlashing;
 	float startedKnockBack;
@@ -117,15 +115,14 @@ private:
 	float lastLavaDamage;			//Last time the player took damage from lava
 	float startedWaterWalk;
 	float startedDrowning;
-	float lastMove;					//Last time a movement key was pressed
 	float lastOrb;
 	float timeToSlide;
-	float startedCane;
 	float springTime;				//How long to be in the air after touching a spring pad
-	float lastHit;					//Last time smiley was hit by something
 	float timeEnteredShrinkTunnel;  //Time smiley entered the shrink tunnel
 	float timeInShrinkTunnel;		//Time to take to go through the shrink tunnel
 	float timeStartedHovering;
+	float timeFrozen;
+	float freezeDuration;
 
 	//State info
 	bool breathingFire;				//If using Fire Breath ability

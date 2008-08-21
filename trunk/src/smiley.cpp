@@ -15,7 +15,6 @@
 #include "hgerect.h"
 
 extern bool debugMode;
-extern float timePlayed, gameStart;
 extern int gameState;
 extern hgeResourceManager *resources;
 extern float gameTime;
@@ -43,8 +42,14 @@ void enterGameState(int newState) {
 		resources->Purge(RES_MENU);
 	}
 
+	//If leaving game state save the player's playing time
+	if (gameState == GAME) {
+		saveManager->saveTimePlayed();
+	}
+
 	gameState = newState;
 
+	//Entering game state
 	if (gameState == GAME) {
 		gameTime = 0;
 		frameCounter = 0;
@@ -73,17 +78,12 @@ void drawCollisionBox(hgeRect *box, int color) {
 
 }
 
-
-
-
-
 /**
  * Return whether a grid coordinate is in bounds or not
  */
 bool inBounds(int gridX, int gridY) {
 	return (gridX >= 0 && gridY >= 0 && gridX < theEnvironment->areaWidth && gridY < theEnvironment->areaHeight);
 }
-
 
 /**
  * Returns the screen x position given the global x position
@@ -92,14 +92,12 @@ int getScreenX(int x) {
 	return x - theEnvironment->xGridOffset*64.0 - theEnvironment->xOffset;
 }
 
-
 /**
  * Returns the screen y position given the global y position
  */
 int getScreenY(int y) {
 	return y - theEnvironment->yGridOffset*64.0 - theEnvironment->yOffset;										  
 }
-
 
 /**
  * Returns the distance between 2 points
@@ -150,7 +148,6 @@ const char *getTimeString(int time) {
 	return timeString.c_str();
 }
 
-
 /**
  * Returns the specified integer as a string because the designers of C were too 
  * distracted by their beards to write a language that doESNT SUCK ASS FUCK SHIT
@@ -179,21 +176,6 @@ const char *intToString(int number, int digits) {
 
 	return returnString.c_str();
 
-}
-
-
-/**
- * This is called from the LoadMenu and the DeathMenu to load a save file and start
- * the game.
- */
-void loadGame(int fileNumber) {
-	saveManager->load(fileNumber);
-	enterGameState(GAME);
-	theEnvironment->loadArea(saveManager->currentArea, saveManager->currentArea);
-	thePlayer->moveTo(saveManager->playerGridX, saveManager->playerGridY);
-	thePlayer->update(0.0);
-	thePlayer->setHealth(saveManager->playerHealth);
-	thePlayer->setMana(saveManager->playerMana);
 }
 
 /**
@@ -285,7 +267,6 @@ int getGridY(int y) {
 	return (y - y%64) / 64;
 }
 
-
 /**
  * Returns the length of the straight line connecting (x,y) to the
  * player's position.
@@ -333,7 +314,6 @@ bool isWarp(int id) {
 	return (id == BLUE_WARP || id == RED_WARP || id == GREEN_WARP || YELLOW_WARP);
 }
 
-
 /**
  * Returns the parent area of the given area. Only the 5 parent areas have keys, so this method
  * is used to determine which of these 5 areas to save the key to!! The number returned is the
@@ -355,7 +335,6 @@ int getKeyIndex(int area) {
 			return 4;
 	}
 }
-
 
 /**
  * Rounds a float up to the nearest integer.

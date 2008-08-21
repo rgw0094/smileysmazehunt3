@@ -24,20 +24,6 @@ TitleScreen::~TitleScreen() {
 }
 
 /**
- * Called when this screen opens
- */
-void TitleScreen::enterScreen() {
-
-}
-
-/**
- * Called when this screen closes
- */
-void TitleScreen::exitScreen() {
-
-}
-
-/**
  * Draws the title screen
  */
 void TitleScreen::draw(float dt) {

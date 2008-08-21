@@ -22,6 +22,7 @@ public:
 	void load(int fileNumber);
 	void save();
 	void deleteFile(int fileNumber);
+	void saveTimePlayed();
 	void startNewGame(int fileNumber);
 	void saveFileInfo();
 	void loadFileInfo();
@@ -44,6 +45,7 @@ public:
 	float damageReceived;
 
 	//Save data
+	float timeFileLoaded;	//used to track playing time
 	int currentSave;
 	int currentArea;
 	int playerGridX, playerGridY;
