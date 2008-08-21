@@ -1252,6 +1252,13 @@ Sprite bartliLeg {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=102
 }
+Sprite bartliShadow {
+ texture="Graphics/Bartli.png"
+ rect=73,144,92,18
+ hotspot=46,9
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=102
+}
 
 ;*****************************
 ;******** PROJECTILES ********

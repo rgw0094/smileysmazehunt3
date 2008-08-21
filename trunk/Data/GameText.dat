@@ -340,13 +340,24 @@ NPC151-1 = "Oh dear, I've been defeated."
 ;Phyrebozz Round 2
 NPC160Name = "Lord Phyrebozz"
 NPC160Pages = "1"
-NPC160-1 = "You again! dickens dickens dickens"
+NPC160-1 = "You again! Dickens, dickens, dickens."
 NPC161Name = "Lord Phyrebozz"
 NPC161Pages = "1"
-NPC161-1 = "I see you have gotten stronger since our last battle Smiley. Unfortunately for you I remembered my vitamins this morning!"
+NPC161-1 = "I see you have gotten stronger since our last battle Smiley. Unfortunately for you, I remembered my vitamins this morning!"
 NPC162Name = "Load Phyrebozz"
 NPC162Pages = "1"
-NPC162-1 = "Gwwaaarrghhh (Dickens)"
+NPC162-1 = "Gwwaaarrghhh (Dickens)."
+
+;Bartli
+NPC170Name = "Bartli"
+NPC170Pages = "2"
+NPC170-1 = "Let's participate in a yuge battle! Be afraid, Smiley, as I have consumed larger tubs of lard than you."
+NPC170-2 = "Put your name on the defeat and pass it in."
+NPC171Name = "Bartli"
+NPC171Pages = "1"
+NPC171-1 = "Oh, my, goodness gracious me. And you thought Pennsylvania was a perfect rectangle?"
+
+
 
 
 ;==============================================FENWAR ENCOUNTERS=====================================
