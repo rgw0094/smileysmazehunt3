@@ -4,6 +4,7 @@
  * Hillary
 
 === Programming To Do ===
+ * Loading screen
  * End Credits
  * Finish Phyrebozz 2
  * Lovecraftian Boss
