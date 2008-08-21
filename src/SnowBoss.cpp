@@ -231,7 +231,7 @@ bool SnowBoss::update(float dt) {
 		y+=SLIDE_SPEED*sin(slidingAngle)*dt;
 		
 
-		//if Portlt slid into a wall, stop sliding!
+		//if Portly slid into a wall, stop sliding!
 		if (theEnvironment->testCollision(collisionBoxes[0],penguinCanPass)) {
 			enterState(SNOWBOSS_WADDLING);
 		}

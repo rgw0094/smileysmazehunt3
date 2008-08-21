@@ -15,13 +15,22 @@ public:
 	void enterState(int _state);
 
 private:
-	int gridX,gridY;
-	double x,y;
-	int groupID;
+
 
 	double leftArmRot,rightArmRot;
 	double leftLegY,rightLegY;
 
+	double runDirection;
+
+	//Variables common for all bosses
+	int groupID;
+	bool startedIntroDialogue;
+	bool droppedLoot;
+	int gridX,gridY;
+	double x,y;
+	int state;
+	float timeEnteredState;
+	hgeRect *collisionRect;
 
 
 };
