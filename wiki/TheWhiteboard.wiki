@@ -19,7 +19,6 @@
  * Bouncing spikey enemies that I put to appear in line with each other in game sometimes are not in line when testing, making it a lot harder to get by them than planned.
  * You can still walk diagonally between two arrow blocks.
  * When using fire on the shore of deep water, if you immediately (through the inventory) put on Jesus' Sandals and walk on the water the flame breath will continue to be used long enough to hit ice blocks that should be out of reach.
- * The shrink blocks are a bit glitched. If there is an alignment like this: |- And you go into the vertical one while holding RIGHT, you can get stuck. Also, just by running into one, then turning just as you enter it, you get stuck. To get unstuck, just unshrink and move around, then shrink again.
 
 === Graphics To Do ===
  * Mirror switch graphic 	 
