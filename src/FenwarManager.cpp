@@ -7,6 +7,7 @@
 #include "SoundManager.h"
 #include "Player.h"
 #include "WindowManager.h"
+#include "SaveManager.h"
 
 #include "hgeresource.h"
 
@@ -15,6 +16,7 @@ extern Player *thePlayer;
 extern SoundManager *soundManager;
 extern hgeResourceManager *resources;
 extern WindowManager *windowManager;
+extern SaveManager *saveManager;
 
 extern bool debugMode;
 extern float gameTime;
@@ -106,6 +108,7 @@ void FenwarManager::update(float dt) {
 				if (timePassedSince(i->timeEnteredState) > 2.0) {
 					//Fenwar encounter is finished
 					soundManager->playPreviousMusic();
+					saveManager->change(i->gridX, i->gridY);
 					i = fenwarEncounterList.erase(i);
 				}
 			}

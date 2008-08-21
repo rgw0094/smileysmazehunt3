@@ -17,9 +17,6 @@ extern Environment *theEnvironment;
 extern Player *thePlayer;
 extern HGE *hge;
 
-extern float timePlayed;
-extern float gameStart;
-
 /**
  * Constructor
  */ 
@@ -118,11 +115,13 @@ void SaveManager::resetCurrentData() {
 	money = 0;
 	for (int i = 0; i < 3; i++) numUpgrades[i] = 0;
 	currentArea = FOUNTAIN_AREA;
-	timePlayed = 0;
 	playerGridX = 0;
 	playerGridY = 0;
 	playerHealth = 5.0;
 	playerMana = 100.0;
+
+	timeFileLoaded = hge->Timer_GetTime();
+
 }
 
 /**
@@ -147,9 +146,6 @@ void SaveManager::load(int fileNumber) {
 	else if (currentSave == 2) inFile.open("Data/Save/file3.sav");
 	else if (currentSave == 3) inFile.open("Data/Save/file4.sav");
 	
-	//Load time played
-	timePlayed = files[fileNumber].timePlayed;
-
 	//Load abilties
 	for (int i = 0; i < NUM_ABILITIES; i++) {
 		inFile.read(buffer,1);
@@ -258,6 +254,8 @@ void SaveManager::load(int fileNumber) {
 			}
 		}
 	}
+
+	timeFileLoaded = hge->Timer_GetTime();
 
 }
 
@@ -375,9 +373,17 @@ void SaveManager::startNewGame(int fileNumber) {
 	files[fileNumber].completion = 0;
 	
 	currentSave = fileNumber;
-	
+
 	saveFileInfo();
 	resetCurrentData();
+
+	theEnvironment->loadArea(FOUNTAIN_AREA, FOUNTAIN_AREA);
+	thePlayer->setHealth(playerHealth);
+	thePlayer->setMana(playerMana);
+
+	playerGridX = thePlayer->gridX;
+	playerGridY = thePlayer->gridY;	
+	
 	save();
 
 }
@@ -415,7 +421,7 @@ void SaveManager::saveFileInfo() {
 	for (int i = 0; i < 4; i++) {
 
 		//Whether or not the file is empty
-		infoString += files[i].empty ? "1" : "0";
+		infoString += files[i].empty ? "Y" : "N";
 		
 		//Time played (6 digits)
 		infoString += intToString(files[i].timePlayed, 6);
@@ -437,7 +443,6 @@ void SaveManager::saveFileInfo() {
 void SaveManager::loadFileInfo() {
 
 	std::ifstream inFile;
-	char oneBuffer[1];
 	char twoBuffer[2];
 	char sixBuffer[6];
 	inFile.open("Data/Save/info.dat");
@@ -456,8 +461,9 @@ void SaveManager::loadFileInfo() {
 		for (int i = 0; i < 4; i++) {
 
 			//Empty file
-			inFile.read(oneBuffer,1);
-			files[i].empty = (atoi(oneBuffer) == 1);
+			inFile.read(twoBuffer,1);
+			twoBuffer[1] = '\0';
+			files[i].empty = (strcmp(twoBuffer, "Y") == 0);
 
 			//Time played
 			inFile.read(sixBuffer,6);
@@ -473,6 +479,16 @@ void SaveManager::loadFileInfo() {
 
 	inFile.close();
 
+}
+
+/**
+ * Increments the current save file's time played by the amount of time that has passed
+ * since the file was loaded. This is called when the player returns to the main menu or
+ * if they manually close the program while still in game state.
+ */
+void SaveManager::saveTimePlayed() {
+	files[currentSave].timePlayed += hge->Timer_GetTime() - timeFileLoaded;
+	saveFileInfo();
 }
 
 /**

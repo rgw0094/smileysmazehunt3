@@ -74,7 +74,6 @@ Player::Player() {
 	collisionCircle = new CollisionCircle();
 	collisionCircle->set(x,y,PLAYER_WIDTH/2-3);
 	selectedAbility = saveManager->hasAbility[CANE] ? CANE : NO_ABILITY;;
-	alpha = 255.0;
 	hoveringYOffset = springOffset = 0.0;
 	invincible = false;
 
@@ -83,7 +82,7 @@ Player::Player() {
 	iceBreathParticle = new WeaponParticleSystem("icebreath.psi", resources->GetSprite("particleGraphic4"), PARTICLE_ICE_BREATH);
 
 	//Time variables
-	startedIceBreath = lastOrb = lastHit = lastLavaDamage = -5.0f;
+	startedIceBreath = lastOrb = lastLavaDamage = -5.0f;
 	stoppedAttacking = gameTime;
 	startedFlashing = -10.0;
 	timeEnteredShrinkTunnel = -10.0;
@@ -136,12 +135,19 @@ Player::~Player() {
 }
 
 /**
- * Update the player object
+ * Update the player object. The general flow of this method is that all movement related
+ * stuff is handled first, which results in a new position. Then things are updated based 
+ * on that new position!
  */
 void Player::update(float dt) {
 
 	//Movement stuff
 	setFacingDirection();
+	doFalling(dt);
+	doIce(dt);
+	doSprings(dt);
+	doArrowPads(dt);
+	doShrinkTunnels(dt);
 	updateVelocities(dt);
 	doMove(dt);
 
@@ -165,10 +171,7 @@ void Player::update(float dt) {
 	baseGridX = baseX / 64.0;
 	baseGridY = baseY / 64.0;
 	saveManager->playerGridX = gridX;
-	saveManager->playerGridY = gridY;
-
-	//Update cloaking alpha
-	alpha = (cloaked) ? 75.0f : 255.0f;
+	saveManager->playerGridY = gridY;	
 
 	//Explore!
 	saveManager->explore(gridX,gridY);
@@ -183,26 +186,24 @@ void Player::update(float dt) {
 	//Update shit if in Knockback state
 	if (!falling && !sliding && knockback && timePassedSince(startedKnockBack) > KNOCKBACK_DURATION) {
 		knockback = false;
-		dx = dy = 0;
+		dx = dy = 0.0;
 		//Help slow the player down if they are on ice by using PLAYER_ACCEL for 1 frame
 		if (theEnvironment->collision[gridX][gridY] == ICE) {
-			if (dx > 0) dx -= PLAYER_ACCEL; else if (dx < 0) dx += PLAYER_ACCEL;
-			if (dy > 0) dy -= PLAYER_ACCEL; else if (dy < 0) dy += PLAYER_ACCEL;
+			if (dx > 0.0) dx -= PLAYER_ACCEL; else if (dx < 0.0) dx += PLAYER_ACCEL;
+			if (dy > 0.0) dy -= PLAYER_ACCEL; else if (dy < 0.0) dy += PLAYER_ACCEL;
 		}
 	}
 	
-	//Do Tongue
+	//Do Attack
 	if (input->keyPressed(INPUT_ATTACK) && !breathingFire && !frozen && !isHovering &&
 			!falling && !springing && !cloaked && !shrinkActive && !drowning &
 			!reflectionShieldActive &&
 			frameCounter > windowManager->frameLastWindowClosed) {			
 		saveManager->numTongueLicks++;
 		tongue->startAttack();
-		dx = dy = 0;
 	}
-	tongue->update(dt);
 
-	//Do worm (for smilelets)
+	tongue->update(dt);
 	worm->update();
 
 	//Update health and mana
@@ -211,16 +212,11 @@ void Player::update(float dt) {
 	if (mana > getMaxMana()) mana = getMaxMana();
 	if (health > getMaxHealth()) health = getMaxHealth();
 
-	//Do shit
 	doWarps();
-	doFalling(dt);
-	doArrowPads(dt);
-	doSprings(dt);
+	
 	doAbility(dt);
 	doItems();
 	doWater();
-	doIce(dt);
-	doShrinkTunnels(dt);
 
 	//Die
 	if (health <= 0.0f) {
@@ -360,7 +356,7 @@ void Player::draw(float dt) {
 		}
 		//Draw Smiley sprite
 		resources->GetAnimation("player")->SetFrame(facing);
-		resources->GetAnimation("player")->SetColor(ARGB(alpha,255,255,255));
+		resources->GetAnimation("player")->SetColor(ARGB((cloaked) ? 75.0 : 255.0,255,255,255));
 		resources->GetAnimation("player")->RenderEx(512.0, 384.0 - hoveringYOffset - springOffset, 
 			rotation, scale * hoverScale * shrinkScale, scale * hoverScale * shrinkScale);
 		//Draw every other tongue after smiley
@@ -393,7 +389,7 @@ void Player::draw(float dt) {
 		collisionCircle->draw();
 		//worm->draw();
 	}
-	
+
 }
 
 
@@ -1224,7 +1220,8 @@ void Player::doWater() {
  */
 void Player::updateVelocities(float dt) {
 
-	if (falling) return;	//handled in doFalling() method
+	if (falling || inShrinkTunnel || iceSliding || sliding || springing) return;
+
 	if (frozen || drowning) {
 		dx = dy = 0.0;
 		return;
@@ -1249,6 +1246,7 @@ void Player::updateVelocities(float dt) {
 			else if (dy < 0) dy += accel*dt;
 	}
 
+	//Movement input
 	if (!input->keyDown(INPUT_AIM) && !iceSliding && !sliding && !knockback && !springing) {
 		//Move Left
 		if (input->keyDown(INPUT_LEFT)) {
@@ -1335,12 +1333,17 @@ void Player::doIce(float dt) {
 	}
 
 	//Stop puzzle ice
-	if (iceSliding && (theEnvironment->collisionAt(x,y) != ICE || hoveringYOffset > 0.0f || springing)) {
-		//Only stop once the player is in the middle of the square
-		if (facing == RIGHT && (int)x % 64 > 31 ||
-				facing == LEFT && (int)x % 64 < 33 ||
-				facing == UP && (int)y % 64 < 31 ||
-				facing == DOWN && (int)y % 64 > 33) {
+	int c = theEnvironment->collisionAt(x,y);
+	if (iceSliding && c != ICE) {
+		
+		//If the player is on a new special tile, stop sliding now. Otherwise only 
+		//stop once the player is in the middle of the square.
+		if (c == SPRING_PAD || c == SHRINK_TUNNEL_HORIZONTAL || c == SHRINK_TUNNEL_VERTICAL ||
+				c == UP_ARROW || c == DOWN_ARROW || c == LEFT_ARROW || c == RIGHT_ARROW ||
+				(facing == RIGHT && (int)x % 64 > 31) ||
+				(facing == LEFT && (int)x % 64 < 33) ||
+				(facing == UP && (int)y % 64 < 31) ||
+				(facing == DOWN && (int)y % 64 > 33)) {
 			dx = dy = 0;
 			iceSliding = false;
 		}
@@ -1357,6 +1360,9 @@ void Player::moveTo(int _gridX, int _gridY) {
 	x = gridX*64+32;
 	y = gridY*64+32;
 	dx = dy = 0;
+
+	hge->System_Log("moving player to %d %d", gridX, gridY);
+
 }
 
 /**
@@ -1441,33 +1447,34 @@ void Player::freeze(float duration) {
  */ 
 void Player::doShrinkTunnels(float dt) {
 
-	//Enter shrink tunnelB
-	int shrinkTunnel = theEnvironment->collision[gridX][gridY];
-	if (!springing && !sliding && (shrinkTunnel == SHRINK_TUNNEL_HORIZONTAL || shrinkTunnel == SHRINK_TUNNEL_VERTICAL)) {
+	int c = theEnvironment->collision[gridX][gridY];
+
+	//Enter shrink tunnel
+	if (!inShrinkTunnel && !springing && !sliding && (c == SHRINK_TUNNEL_HORIZONTAL || c == SHRINK_TUNNEL_VERTICAL)) {
 		
 		timeEnteredShrinkTunnel = gameTime;
 		inShrinkTunnel = true;
 		dx = dy = 0;
 
 		//Entering from left (going right)
-		if (shrinkTunnel == SHRINK_TUNNEL_HORIZONTAL && facing == RIGHT || facing == UP_RIGHT || facing == DOWN_RIGHT)	{
+		if (c == SHRINK_TUNNEL_HORIZONTAL && facing == RIGHT || facing == UP_RIGHT || facing == DOWN_RIGHT)	{
 			dx = SHRINK_TUNNEL_SPEED;
-			timeToSlide = (64.0 - float(x) + (float(gridX)*64.0+32.0)) / SHRINK_TUNNEL_SPEED;
+			timeInShrinkTunnel = (64.0 - float(x) + (float(gridX)*64.0+32.0)) / SHRINK_TUNNEL_SPEED;
 
 		//Entering from right (going left)
-		} else if (shrinkTunnel == SHRINK_TUNNEL_HORIZONTAL && facing == LEFT || facing == UP_LEFT || facing == DOWN_LEFT) {
+		} else if (c == SHRINK_TUNNEL_HORIZONTAL && facing == LEFT || facing == UP_LEFT || facing == DOWN_LEFT) {
 			dx = -SHRINK_TUNNEL_SPEED;
-			timeToSlide = (64.0f + float(x) - (float(gridX)*64.0f+32.0f)) / SHRINK_TUNNEL_SPEED;
+			timeInShrinkTunnel = (64.0 + float(x) - (float(gridX)*64.0+32.0)) / SHRINK_TUNNEL_SPEED;
 		
 		//Entering from top (going down)
-		} else if (shrinkTunnel == SHRINK_TUNNEL_VERTICAL && facing == DOWN || facing == DOWN_LEFT || facing == DOWN_RIGHT) {
+		} else if (c == SHRINK_TUNNEL_VERTICAL && facing == DOWN || facing == DOWN_LEFT || facing == DOWN_RIGHT) {
 			dy = SHRINK_TUNNEL_SPEED;
-			timeToSlide = (64.0f - float(y) + (float(gridY)*64.0f+32.0f)) / SHRINK_TUNNEL_SPEED;
+			timeInShrinkTunnel = (64.0 - float(y) + (float(gridY)*64.0+32.0)) / SHRINK_TUNNEL_SPEED;
 		
 		//Entering from bottom (going up)
-		} else if (shrinkTunnel == SHRINK_TUNNEL_VERTICAL && facing == UP || facing == UP_LEFT || facing == UP_RIGHT) {
+		} else if (c == SHRINK_TUNNEL_VERTICAL && facing == UP || facing == UP_LEFT || facing == UP_RIGHT) {
 			dy = -SHRINK_TUNNEL_SPEED;
-			timeToSlide = (64.0f + float(y) - (float(gridY)*64.0f+32.0f)) / SHRINK_TUNNEL_SPEED;
+			timeInShrinkTunnel = (64.0 + float(y) - (float(gridY)*64.0+32.0)) / SHRINK_TUNNEL_SPEED;
 		}
 
 	}

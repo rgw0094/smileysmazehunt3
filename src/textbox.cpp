@@ -64,7 +64,6 @@ TextBox::~TextBox() {
 void TextBox::init() {
 
 	fadeAlpha = 255.0;
-	thePlayer->dx = thePlayer->dy = 0;
 	lastKeyPressFrame = frameCounter;
 	timeStarted = gameTime;
 	fadingOut = false;

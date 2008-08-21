@@ -339,13 +339,16 @@
 						RelativePath=".\src\DeathScreen.cpp">
 					</File>
 					<File
-						RelativePath=".\src\LoadScreen.cpp">
+						RelativePath=".\src\LoadingScreen.cpp">
 					</File>
 					<File
 						RelativePath=".\src\menu.cpp">
 					</File>
 					<File
 						RelativePath=".\src\OptionsScreen.cpp">
+					</File>
+					<File
+						RelativePath=".\src\SelectFileScreen.cpp">
 					</File>
 					<File
 						RelativePath=".\src\TitleScreen.cpp">
@@ -570,7 +573,7 @@
 						RelativePath=".\src\DeathScreen.h">
 					</File>
 					<File
-						RelativePath=".\src\LoadScreen.h">
+						RelativePath=".\src\LoadingScreen.h">
 					</File>
 					<File
 						RelativePath=".\src\menu.h">
@@ -580,6 +583,9 @@
 					</File>
 					<File
 						RelativePath=".\src\OptionsScreen.h">
+					</File>
+					<File
+						RelativePath=".\src\SelectFileScreen.h">
 					</File>
 					<File
 						RelativePath=".\src\TitleScreen.h">

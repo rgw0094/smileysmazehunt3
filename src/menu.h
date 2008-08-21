@@ -9,6 +9,7 @@ class MenuScreen;
 #define LOAD_SCREEN 1
 #define OPTIONS_SCREEN 2
 #define DEATH_SCREEN 3
+#define LOADING_SCREEN 4
 
 class Menu {
 
@@ -21,6 +22,7 @@ public:
 	bool update(float dt);
 	void open(int _state);
 	void setScreen(int screen);
+	void openLoadScreen(int file);
 
 	//Variables
 	float mouseX, mouseY;

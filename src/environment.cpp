@@ -106,7 +106,7 @@ Environment::Environment() {
 	hge->System_Log("Creating Environment.TapestryManager");
 	tapestryManager = new TapestryManager();
 	hge->System_Log("Creating Environment.SmileletManager");
-	smilelet = new SmileletManager();
+	smileletManager = new SmileletManager();
 
 	resources->GetAnimation("savePoint")->Play();
 	collisionBox = new hgeRect();
@@ -123,7 +123,7 @@ Environment::~Environment() {
 	delete evilWallManager;
 	delete specialTileManager;
 	delete tapestryManager;
-	delete smilelet;
+	delete smileletManager;
 	if (fountain) delete fountain;
 
 	delete collisionBox;
@@ -168,7 +168,7 @@ void Environment::loadArea(int id, int from) {
 	tapestryManager->reset();
 	specialTileManager->reset();
 	evilWallManager->reset();
-	smilelet->reset();
+	smileletManager->reset();
 	fenwarManager->reset();
 
 	if (fountain) {
@@ -288,6 +288,11 @@ void Environment::loadArea(int id, int from) {
 			areaFile.read(threeBuffer,3);
 			collision[col][row] = atoi(threeBuffer);
 
+			//Player start
+			if (collision[col][row] == PLAYER_START && ids[col][row] == from) {
+				thePlayer->moveTo(col, row);
+			}
+
 			//Big ass fountain location
 			if (collision[col][row] == FOUNTAIN) {
 				fountain = new Fountain(col, row);
@@ -310,7 +315,7 @@ void Environment::loadArea(int id, int from) {
 
 			//SmileletManager
 			if (collision[col][row] == SMILELET) {
-				smilelet->addSmilelet(col,row,ids[col][row]);
+				smileletManager->addSmilelet(col,row,ids[col][row]);
 				collision[col][row] = WALKABLE;
 			}
 			
@@ -319,8 +324,6 @@ void Environment::loadArea(int id, int from) {
 				evilWallManager->addEvilWall(ids[col][row]);
 				evilWallManager->setState(ids[col][row],0);
 			}
-
-            //Rob DO NOT put an else here
 			if (collision[col][row] == EVIL_WALL_POSITION) {					
 				evilWallManager->setBeginWallPosition(ids[col][row],col,row);
 				evilWallManager->setSpeed(ids[col][row],variable[col][row]);
@@ -371,12 +374,14 @@ void Environment::loadArea(int id, int from) {
 			enemy = atoi(threeBuffer);
 			enemyLayer[col][row] = enemy-1;
 
-			//ID 255 is a fenwar encounter
+			//255 is a fenwar encounter
 			if (enemy == 255) {
 
-				fenwarManager->addFenwarEncounter(col, row, ids[col][row]);
+				if (!saveManager->isTileChanged(col, row)) {
+					fenwarManager->addFenwarEncounter(col, row, ids[col][row]);
+				}
 
-			//IDs 240-256 are bosses
+			//240-256 are bosses
 			} else if (enemy >= 240) {
 
 				//Spawn the boss if it has never been killed
@@ -384,7 +389,7 @@ void Environment::loadArea(int id, int from) {
 					bossManager->spawnBoss(enemy, variable[col][row], col, row);
 				}
 
-			//IDs 1-127 are enemies
+			//1-127 are enemies
 			} else if (enemy > 0 && enemy < 128) {
 
 				if (ids[col][row] == ENEMYGROUP_ENEMY) {
@@ -396,7 +401,7 @@ void Environment::loadArea(int id, int from) {
 					enemyManager->addEnemy(enemy-1,col,row, .2, .2, variable[col][row]);
 				}
 
-			//IDs 128 - 239 are NPCs
+			//128 - 239 are NPCs
 			} else if (enemy >= 128 && enemy < 240) {
 				npcManager->addNPC(enemy-128,ids[col][row],col,row);
 			} 
@@ -410,18 +415,9 @@ void Environment::loadArea(int id, int from) {
 	areaFile.read(threeBuffer,1);	//newline
 
 
-	//Set up stuff
-	bool playerPlaced = false;
+	//Load changes
 	for (int i = 0; i < areaWidth; i++) {
 		for (int j = 0; j < areaHeight; j++) {
-
-			//Put the player in the correct starting location
-			if (!playerPlaced && collision[i][j] == PLAYER_START && ids[i][j] == from) {
-				thePlayer->moveTo(i,j);
-				startX = i;
-				startY = j;
-				playerPlaced = true;
-			}
 
 			//If there is an item at this tile check to see if it has already
 			//been collected
@@ -671,8 +667,8 @@ void Environment::draw(float dt) {
 	//Draw other shit
 	evilWallManager->draw(dt);
 	tapestryManager->draw(dt);
-	smilelet->drawBeforeSmiley();
-	smilelet->drawAfterSmiley();
+	smileletManager->drawBeforeSmiley();
+	smileletManager->drawAfterSmiley();
 	specialTileManager->draw(dt);
 
 }
@@ -702,11 +698,10 @@ void Environment::drawAfterSmiley(float dt) {
 					itemLayer[item[gridX][gridY]]->Render(drawX,drawY);
 				}
 
-				//Shrink tunnels unless Smiley is directly underneath it and not 
-				//yet in the shrink tunnel
+				//Shrink tunnels unless Smiley is directly underneath it and not shrunk
 				if ((collision[gridX][gridY] == SHRINK_TUNNEL_HORIZONTAL || 
 						collision[gridX][gridY] == SHRINK_TUNNEL_VERTICAL) &&
-						!(thePlayer->gridY == gridY+1 && !thePlayer->isInShrinkTunnel())) {
+						!(thePlayer->gridY == gridY+1 && !thePlayer->isShrunk())) {
 					resources->GetAnimation("walkLayer")->SetFrame(collision[gridX][gridY]);
 					resources->GetAnimation("walkLayer")->Render(drawX, drawY);
 				}
@@ -783,7 +778,7 @@ void Environment::update(float dt) {
 	evilWallManager->update(dt);
 	tapestryManager->update(dt);
 	fountain->update(dt);
-	smilelet->update();
+	smileletManager->update();
 
 }
 

@@ -157,7 +157,6 @@ public:
 	int screenWidth, screenHeight;	//Number of squares that fit on the screen
 	int xGridOffset,yGridOffset;	//Number of squares the top left corner is from (0,0)
 	float xOffset,yOffset;			//Number of pixels the player is off alignment with the grid
-	int startX, int startY;			//Level entrance
 	float drawX,drawY;				//Location to draw a tile
 	int offScreenRange;				//Number of tiles offscreen to draw
 
@@ -169,7 +168,7 @@ private:
 	EvilWallManager *evilWallManager; //Evil walls which move and try to kill smiley
 	TapestryManager *tapestryManager;
 	Fountain *fountain;
-	SmileletManager *smilelet;
+	SmileletManager *smileletManager;
 	hgeRect *collisionBox;
 
 	hgeAnimation *silverCylinder, *brownCylinder, *blueCylinder, *greenCylinder, *yellowCylinder, *whiteCylinder;
