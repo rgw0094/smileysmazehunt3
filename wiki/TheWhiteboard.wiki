@@ -4,6 +4,7 @@
  * Hillary
 
 === Programming To Do ===
+ * Make it so you can't walk diagonally between two arrow blocks. (expand gay fix in Player.move - right now its only for entering ice and springs.
  * End Credits
  * Finish Phyrebozz 2
  * Lovecraftian Boss
@@ -17,7 +18,6 @@
 
 === Bugs To Consider ===
  * Bouncing spikey enemies that I put to appear in line with each other in game sometimes are not in line when testing, making it a lot harder to get by them than planned.
- * You can still walk diagonally between two arrow blocks.
  * When using fire on the shore of deep water, if you immediately (through the inventory) put on Jesus' Sandals and walk on the water the flame breath will continue to be used long enough to hit ice blocks that should be out of reach.
 
 === Graphics To Do ===
