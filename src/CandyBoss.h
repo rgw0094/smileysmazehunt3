@@ -24,6 +24,7 @@ private:
 	double reflectOffTopBoundary(double angle);
 	double reflectOffBottomBoundary(double angle);
 	double makeAngleProper(double angle); //makes it go from 0 to 2 pi
+	void updateCollisionRect();
 
 	//variables specific to Bartli
 
@@ -38,6 +39,7 @@ private:
 	int groupID;
 	bool startedIntroDialogue;
 	bool droppedLoot;
+	bool shouldDrawAfterSmiley;
 	int gridX,gridY;
 	int initialGridX,initialGridY;
 	double x,y;
