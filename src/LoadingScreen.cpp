@@ -3,6 +3,7 @@
 #include "smiley.h"
 #include "Environment.h"
 #include "Player.h"
+#include "SoundManager.h"
 #include "hgeresource.h"
 
 extern HGE *hge;
@@ -10,6 +11,7 @@ extern hgeResourceManager *resources;
 extern SaveManager *saveManager;
 extern Environment *theEnvironment;
 extern Player *thePlayer;
+extern SoundManager *soundManager;
 
 LoadingScreen::LoadingScreen(int _fileNumber) {
 
@@ -43,11 +45,11 @@ bool LoadingScreen::update(float dt, float mouseX, float mouseY) {
 
 	//Make sure the load screen is up for at least a little bit so that it doesn't just flash up
 	//if the person's computer is too fast.
-	if (hge->Timer_GetTime() - timeEnteredScreen > 1.0) {
+	if (hge->Timer_GetTime() - timeEnteredScreen > 1.1) {
 
 		theEnvironment->loadArea(saveManager->currentArea, saveManager->currentArea);
 		thePlayer->moveTo(saveManager->playerGridX, saveManager->playerGridY);
-		thePlayer->update(0.0);
+		theEnvironment->update(0.0); //update for screen offsets
 		thePlayer->setHealth(saveManager->playerHealth);
 		thePlayer->setMana(saveManager->playerMana);
 

@@ -105,12 +105,6 @@ void WeaponParticleSystem::Update(float fDeltaTime) {
 			}
 		}
 
-		if (type == PARTICLE_FIRE_NOVA2) {
-			//Turn ground into lava
-			theEnvironment->addTimedTile(getGridX(par->vecLocation.x + theEnvironment->xGridOffset*64 + theEnvironment->xOffset), 
-				getGridY(par->vecLocation.y + theEnvironment->yGridOffset*64 + theEnvironment->yOffset), WALK_LAVA, 5.0);
-		}
-
 		//Update shit
 		vecAccel = par->vecLocation-vecLocation;
 		vecAccel.Normalize();

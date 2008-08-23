@@ -44,7 +44,10 @@ public:
 	void drawAfterSmiley(float dt);
 	bool update(float dt);
 	bool updateState(float dt);
-	
+
+	void launchFireNova();
+	void updateFireNova(float dt);
+
 	void addFireBall(float x, float y, float angle, float speed);
 	void drawFireBalls(float dt);
 	void updateFireBalls(float dt);
@@ -56,9 +59,9 @@ public:
 	void resetFlameWalls();
 
 	void drawFlameLaunchers(float dt);
-	void launchFlames();
-	void launchAllFlames();
+	void launchFlames(bool allFlames);
 	void updateFlameLaunchers(float dt);
+
 	void startChasing();
 	void startMoveToPoint(int x, int y, float speed);
 	void doDamage(float damage, bool makeFlash);
@@ -83,6 +86,7 @@ private:
 	bool saidVitaminDialogYet;
 
 	float lastFlameLaunchTime;
+	float lastFireNovaTime;
 	float timeToMove;
 	float timeStartedMove;
 	float timeEnteredState;

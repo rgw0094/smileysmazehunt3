@@ -78,6 +78,7 @@ public:
 	void drawSillyPads(float dt);
 	void resetSillyPads();
 	bool isSillyPadAt(int gridX, int gridY);
+	bool destroySillyPad(int gridX, int gridY);
 
 	void addIceBlock(int gridX, int gridY);
 	void updateIceBlocks(float dt);
