@@ -44,7 +44,7 @@ extern Environment *theEnvironment;
 //Attributes
 #define CANDY_WIDTH 106
 #define CANDY_HEIGHT 128
-#define CANDY_RUN_SPEED 200.0
+#define CANDY_RUN_SPEED 800.0
 
 CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 	initialGridX = gridX = _gridX;
@@ -58,6 +58,7 @@ CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 
 	startedIntroDialogue = false;
 	droppedLoot = false;
+	shouldDrawAfterSmiley = false;
 	state = CANDY_STATE_INACTIVE;
 	timeEnteredState = gameTime;
 
@@ -80,20 +81,36 @@ CandyBoss::~CandyBoss() {
 
 
 void CandyBoss::draw(float dt) {
-	resources->GetSprite("bartliShadow")->Render(getScreenX(x),getScreenY(y+CANDY_HEIGHT/2));
 
-	resources->GetAnimation("bartli")->SetFrame(0);
-	resources->GetAnimation("bartli")->Render(getScreenX(x),getScreenY(y));
+	if (!shouldDrawAfterSmiley) {
+		resources->GetSprite("bartliShadow")->Render(getScreenX(x),getScreenY(y+CANDY_HEIGHT/2));
 
-	resources->GetSprite("bartliArm")->RenderEx(getScreenX(x-CANDY_ARM_X_OFFSET),getScreenY(y+CANDY_ARM_Y_OFFSET),rightArmRot);
-	resources->GetSprite("bartliArm")->RenderEx(getScreenX(x+CANDY_ARM_X_OFFSET),getScreenY(y+CANDY_ARM_Y_OFFSET),leftArmRot,-1.0,1.0);
+		resources->GetAnimation("bartli")->SetFrame(0);
+		resources->GetAnimation("bartli")->Render(getScreenX(x),getScreenY(y));
 
-	resources->GetSprite("bartliLeg")->Render(getScreenX(x-CANDY_LEG_X_OFFSET),getScreenY(y+CANDY_LEG_Y_OFFSET+rightLegY));
-	resources->GetSprite("bartliLeg")->RenderEx(getScreenX(x+CANDY_LEG_X_OFFSET),getScreenY(y+CANDY_LEG_Y_OFFSET+leftLegY),0.0,-1.0,1.0);
+		resources->GetSprite("bartliArm")->RenderEx(getScreenX(x-CANDY_ARM_X_OFFSET),getScreenY(y+CANDY_ARM_Y_OFFSET),rightArmRot);
+		resources->GetSprite("bartliArm")->RenderEx(getScreenX(x+CANDY_ARM_X_OFFSET),getScreenY(y+CANDY_ARM_Y_OFFSET),leftArmRot,-1.0,1.0);
+
+		resources->GetSprite("bartliLeg")->Render(getScreenX(x-CANDY_LEG_X_OFFSET),getScreenY(y+CANDY_LEG_Y_OFFSET+rightLegY));
+		resources->GetSprite("bartliLeg")->RenderEx(getScreenX(x+CANDY_LEG_X_OFFSET),getScreenY(y+CANDY_LEG_Y_OFFSET+leftLegY),0.0,-1.0,1.0);
+	}
+
+	if (debugMode) drawCollisionBox(collisionRect,RED);
 }
 
 void CandyBoss::drawAfterSmiley(float dt) {
+	if (shouldDrawAfterSmiley) {
+		resources->GetSprite("bartliShadow")->Render(getScreenX(x),getScreenY(y+CANDY_HEIGHT/2));
 
+		resources->GetAnimation("bartli")->SetFrame(0);
+		resources->GetAnimation("bartli")->Render(getScreenX(x),getScreenY(y));
+
+		resources->GetSprite("bartliArm")->RenderEx(getScreenX(x-CANDY_ARM_X_OFFSET),getScreenY(y+CANDY_ARM_Y_OFFSET),rightArmRot);
+		resources->GetSprite("bartliArm")->RenderEx(getScreenX(x+CANDY_ARM_X_OFFSET),getScreenY(y+CANDY_ARM_Y_OFFSET),leftArmRot,-1.0,1.0);
+
+		resources->GetSprite("bartliLeg")->Render(getScreenX(x-CANDY_LEG_X_OFFSET),getScreenY(y+CANDY_LEG_Y_OFFSET+rightLegY));
+		resources->GetSprite("bartliLeg")->RenderEx(getScreenX(x+CANDY_LEG_X_OFFSET),getScreenY(y+CANDY_LEG_Y_OFFSET+leftLegY),0.0,-1.0,1.0);
+	}
 }
 
 bool CandyBoss::update(float dt) {
@@ -101,7 +118,8 @@ bool CandyBoss::update(float dt) {
 	if (state == CANDY_STATE_INACTIVE && !startedIntroDialogue) {
 		if (enemyGroupManager->groups[groupID].triggeredYet) {
 			windowManager->openDialogueTextBox(-1, CANDY_INTRO_TEXT);
-			runDirection = 3*PI/2+0.1;//hge->Random_Int(0,360) * PI/180;
+			runDirection = PI/2;
+			while (runDirection >= PI/4 && runDirection <= 3*PI/4) runDirection = hge->Random_Float(0,2*PI);
 			startedIntroDialogue = true;
 		} else {
 			return false;
@@ -117,6 +135,9 @@ bool CandyBoss::update(float dt) {
 	if (state == CANDY_STATE_RUNNING) {
 		updateRun(dt);
 	}
+
+	updateCollisionRect();
+	shouldDrawAfterSmiley = (y > thePlayer->y);
 }
 
 void CandyBoss::enterState(int _state) {
@@ -141,7 +162,7 @@ void CandyBoss::initBossBoundaries () {
 			setBoundary=true;
 		} else {
 			if (theEnvironment->collision[curX][initialGridY] == UNWALKABLE) {
-				leftBoundary = curX * 64 + 32 + CANDY_WIDTH/2; //Add half a Bartli width so the edge of her, not the center, touches the wall
+				leftBoundary = curX * 64 + 64 + CANDY_WIDTH/2; //Add half a Bartli width so the edge of her, not the center, touches the wall
 				setBoundary=true;
 			}
 		}
@@ -156,7 +177,7 @@ void CandyBoss::initBossBoundaries () {
 			setBoundary=true;
 		} else {
 			if (theEnvironment->collision[curX][initialGridY] == UNWALKABLE) {
-				rightBoundary = curX * 64 + 32 - CANDY_WIDTH/2; //Subtract half a Bartli width so the edge of her, not the center, touches the wall
+				rightBoundary = curX * 64 - CANDY_WIDTH/2; //Subtract half a Bartli width so the edge of her, not the center, touches the wall
 				setBoundary=true;
 			}
 		}
@@ -170,8 +191,8 @@ void CandyBoss::initBossBoundaries () {
 			topBoundary=0;
 			setBoundary=true;
 		} else {
-			if (theEnvironment->collision[initialGridX][curY] == UNWALKABLE) {
-				topBoundary = curY * 64 + 32 + CANDY_HEIGHT/2; //Add half a Bartli height so the edge of her, not the center, touches the wall
+			if (theEnvironment->collision[initialGridX][curY] == UNWALKABLE ) {
+				topBoundary = curY * 64 + 64 + CANDY_HEIGHT/2; //Add half a Bartli height so the edge of her, not the center, touches the wall
 				setBoundary=true;
 			}
 		}
@@ -186,7 +207,7 @@ void CandyBoss::initBossBoundaries () {
 			setBoundary=true;
 		} else {
 			if (theEnvironment->collision[initialGridX][curY] == UNWALKABLE) {
-				bottomBoundary = curY * 64 + 32 - CANDY_HEIGHT/2; //Subtract half a Bartli height so the edge of her, not the center, touches the wall
+				bottomBoundary = curY * 64 - CANDY_HEIGHT/2; //Subtract half a Bartli height so the edge of her, not the center, touches the wall
 				setBoundary=true;
 			}
 		}
@@ -206,6 +227,8 @@ void CandyBoss::updateRun(float dt) {
 	if (x >= rightBoundary) runDirection = reflectOffRightBoundary(runDirection);
 	if (y <= topBoundary) runDirection = reflectOffTopBoundary(runDirection);
 	if (y >= bottomBoundary) runDirection = reflectOffBottomBoundary(runDirection);
+
+	runDirection += hge->Random_Float(0,1)*dt;
 }
 
 double CandyBoss::reflectOffLeftBoundary(double angle) {
@@ -228,14 +251,14 @@ double CandyBoss::reflectOffRightBoundary(double angle) {
 
 	angle = makeAngleProper(angle);
 
-	if (!(angle >= PI/2 && angle < 3*PI/2)) { //first make sure Bartli is moving right
+	if (angle >= 3*PI/2 || angle <= PI/2) { //first make sure Bartli is moving right
 		returnAngle =  -angle; //reflect off of 0 radians (angle 0 is the right wall)
 		returnAngle += PI; //now reflect it
 	} else {
 		returnAngle =  angle;
 	}
 
-	return makeAngleProper(angle);
+	return makeAngleProper(returnAngle);
 }
 
 double CandyBoss::reflectOffTopBoundary(double angle) {
@@ -270,4 +293,11 @@ double CandyBoss::makeAngleProper(double angle) {
 	while (angle >= 2*PI) angle -= 2*PI;
 
 	return angle;
+}
+
+void CandyBoss::updateCollisionRect() {
+	collisionRect->x1 = x - CANDY_WIDTH/2;
+	collisionRect->y1 = y - CANDY_HEIGHT/2;
+	collisionRect->x2 = x + CANDY_WIDTH/2;
+	collisionRect->y2 = y + CANDY_HEIGHT/2;
 }
