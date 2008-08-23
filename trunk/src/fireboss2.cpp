@@ -45,14 +45,20 @@ extern bool debugMode;
 #define BOTTOM_RIGHT 2
 #define BOTTOM_LEFT 3
 
-#define FLAME_LAUNCH_DELAY 3.0
+#define FLAME_LAUNCH_DELAY 6.0
 #define FLAME_WALL_DAMAGE 1.0
-#define FLAME_WALL_SPEED 300.0
+#define FLAME_WALL_SPEED 220.0
 #define CHASE_FIREBALL_DELAY 1.0
-#define CHASE_FIREBALL_SPEED 1000.0
+#define CHASE_FIREBALL_SPEED 800.0
 #define CHASE_FIREBALL_DAMAGE 0.5
 #define CHASE_SPEED 700.0
-#define LAVA_DURATION 25.0;
+
+#define CHASE_DELAY 8.0
+#define LAVA_DURATION 25.0
+
+//This is the time between when the lava fades and when Fireboss does his nova again.
+//This allows the player some time to set up silly pads to avoid being owned.
+#define TIME_WITH_NO_LAVA 5.0
 
 //Attributes
 #define HEALTH 10.00
@@ -83,6 +89,7 @@ FireBossTwo::FireBossTwo(int gridX, int gridY, int _groupID) {
 	floatY = 0.0f;
 	droppedLoot = false;
 	saidVitaminDialogYet = false;
+	lastFireNovaTime = - 10.0;
 
 	fireNova = new WeaponParticleSystem("firenova.psi", resources->GetSprite("particleGraphic13"), PARTICLE_FIRE_NOVA2);
 
@@ -330,8 +337,37 @@ bool FireBossTwo::update(float dt) {
 			return true;
 		}
 	}
+
+	updateFireNova(dt);
 	
 	return false;
+}
+
+/**
+ * Turns ground that the fire nova touches into lava.
+ */
+void FireBossTwo::updateFireNova(float dt) {
+	float timePassed = timePassedSince(lastFireNovaTime);
+	if (timePassed < 1.1) {
+		int radius = int(timePassed * 4.5);
+		for (int gridX = getGridX(x) - radius; gridX <= getGridX(x) + radius; gridX++) {
+			for (int gridY = getGridY(y) - radius; gridY <= getGridY(y) + radius; gridY++) {
+				//Make sure distance is less than radius so that the lava is created as a circle
+				if (distance(gridX, gridY, getGridX(x), getGridY(y)) <= radius) {
+					theEnvironment->addTimedTile(gridX, gridY, WALK_LAVA, LAVA_DURATION);
+				}
+			}
+		}
+	}
+}
+
+/**
+ * Does big attack with fire nova and flame launchers
+ */
+void FireBossTwo::launchFireNova() {
+	fireNova->FireAt(getScreenX(x), getScreenY(y));
+	lastFireNovaTime = gameTime;
+	launchFlames(true);
 }
 
 /**
@@ -375,10 +411,32 @@ bool FireBossTwo::updateState(float dt) {
 					} else {
 						hge->Effect_Play(resources->GetEffect("snd_fireBossDie"));
 						setState(FIREBOSS_ATTACK);
+						//Do big attack to own smiley
+						launchFireNova();
 					}
 				}
 			}
 
+		}
+
+	}
+
+	//---Attack State--------------------------------
+	// Phyrebozz launches various attacks at Smiley while floating over his pool.
+	//-----------------------------------------------
+	if (state == FIREBOSS_ATTACK) {
+
+		if (timePassedSince(lastFireBall) > 2.0) {
+			addFireBall(x, y, getAngleBetween(x, y, thePlayer->x, thePlayer->y) - PI / 4.0, 500.0);
+			addFireBall(x, y, getAngleBetween(x, y, thePlayer->x, thePlayer->y), 500.0);
+			addFireBall(x, y, getAngleBetween(x, y, thePlayer->x, thePlayer->y) + PI / 4.0, 500.0);
+			lastFireBall = gameTime;
+		}
+
+		//if (timePassedSince(timeEnteredState) > CHASE_DELAY) {
+			//startChasing();
+		if (timePassedSince(lastFireNovaTime) > LAVA_DURATION + TIME_WITH_NO_LAVA) {
+			launchFireNova();
 		}
 
 	}
@@ -422,31 +480,9 @@ bool FireBossTwo::updateState(float dt) {
 			dx = dy = 0;
 		}
 	}
-
-	//---Attack State--------------------------------
-	// Phyrebozz launches various attacks at Smiley while floating over his pool.
-	//-----------------------------------------------
-	if (state == FIREBOSS_ATTACK) {
-
-		if (timePassedSince(lastFireBall) > 2.0) {
-			addFireBall(x, y, getAngleBetween(x, y, thePlayer->x, thePlayer->y), 400.0);
-			lastFireBall = gameTime;
-		}
-
-		if (timePassedSince(timeEnteredState) > 8.0) {
-			startChasing();
-		}
-
-	}
 	
 	//Set facing
 	setFacingPlayer();
-	/**
-	if (state == FIREBOSS_ATTACK || FIREBOSS_FIRST_BATTLE) {
-		facing = thePlayer->y < y ? UP : DOWN;
-	} else {
-		facing = getFacingDirection(dx, dy);
-	}*/
 
 	//Move
 	x += dx * dt;
@@ -464,10 +500,8 @@ void FireBossTwo::setState(int newState) {
 	timeEnteredState = gameTime;
 
 	if (newState == FIREBOSS_ATTACK) {
-		launchAllFlames();
 		moving = false;
 		dx = dy = 0.0;
-		fireNova->FireAt(getScreenX(x), getScreenY(y));
 	}
 }
 
@@ -519,7 +553,7 @@ void FireBossTwo::die() {
 void FireBossTwo::startChasing() {
 	
 	chaseCounter = 0;
-	state = FIREBOSS_CHASE;
+	setState(FIREBOSS_CHASE);
 
 	//Determine the chase point closest to Smiley to start at
 	int dist1 = distance(thePlayer->x, thePlayer->y, chasePoints[TOP_LEFT].x, chasePoints[TOP_LEFT].y);
@@ -765,6 +799,10 @@ void FireBossTwo::updateFlameWalls(float dt) {
 		if (i->direction == UP) i->y -= FLAME_WALL_SPEED * dt;
 		if (i->direction == DOWN) i->y += FLAME_WALL_SPEED * dt;
 
+		//Multiple fireballs might hit the same hilly pad in the same frame. We want all the fireballs to
+		//dissapear so we can't destroy them until we know what fireballs have hit them
+		std::list<Point> sillyPadsToDestroy;
+
 		//For each individual fireball in the flame wall
 		for (int j = 0; j < FLAME_WALL_NUM_PARTICLES; j++) {
 
@@ -789,6 +827,15 @@ void FireBossTwo::updateFlameWalls(float dt) {
 					deleteFireBall = true;
 				}	
 
+				//Silly pad collision
+				if (!deleteFireBall && theEnvironment->hasSillyPad(getGridX(i->fireBalls[j].x), getGridY(i->fireBalls[j].y))) {
+					deleteFireBall = true;
+					Point sillyPadToDestroy;
+					sillyPadToDestroy.x = getGridX(i->fireBalls[j].x);
+					sillyPadToDestroy.y = getGridY(i->fireBalls[j].y);
+					sillyPadsToDestroy.push_back(sillyPadToDestroy);
+				}
+
 				//Player collision
 				if (!deleteFireBall && thePlayer->collisionCircle->testBox(i->fireBalls[j].collisionBox)) {
 					thePlayer->dealDamage(FLAME_WALL_DAMAGE, false);
@@ -805,6 +852,14 @@ void FireBossTwo::updateFlameWalls(float dt) {
 
 			}
 
+		}
+
+		//Destroy all silly pads hit by the flame wall
+		std::list<Point>::iterator it;
+		for (it = sillyPadsToDestroy.begin(); it != sillyPadsToDestroy.end(); it++) {
+			theEnvironment->destroySillyPad(i->x, i->y);
+			hge->System_Log("%d %d", i->x, i->y);
+			it = sillyPadsToDestroy.erase(it);
 		}
 
 		//If all of the fireballs in the wall are dead, remove the wall
@@ -838,9 +893,12 @@ void FireBossTwo::resetFlameWalls() {
 /////////////////////////////// FLAME LAUNCHERS /////////////////////////////
 
 /**
- * Randomly chooses flame launchers to launch flames.
+ * Launches the flame launchers.
+ *
+ * @param allFlames		If this is true all flame launchers will launch. Otherwise
+ *						they will only launch if Smiley is in their launch trajectory.
  */
-void FireBossTwo::launchFlames() {
+void FireBossTwo::launchFlames(bool allFlames) {
 	int facing, gridX, gridY;
 	for (int i = 0; i < 8; i++) {
 
@@ -848,22 +906,23 @@ void FireBossTwo::launchFlames() {
 		gridX = flameLaunchers[i].gridX;
 		gridY = flameLaunchers[i].gridY;
 
+		bool blockedBySillyPad = (
+			(facing == DOWN && theEnvironment->hasSillyPad(gridX, gridY + 1)) || 
+			(facing == UP && theEnvironment->hasSillyPad(gridX, gridY - 1)) ||
+			(facing == LEFT && theEnvironment->hasSillyPad(gridX - 1, gridY)) || 
+			(facing == RIGHT && theEnvironment->hasSillyPad(gridX + 1, gridY)));
+
 		//Only fire if not blocked by a silly pad and the player is in their flame wall trajectory
-		if (hge->Random_Int(0,10000) <= 10000 && 
-				(facing == DOWN && !theEnvironment->hasSillyPad(gridX, gridY + 1) && thePlayer->gridX >= gridX - 1 && thePlayer->gridX <= gridX + 1) ||
-				(facing == UP && !theEnvironment->hasSillyPad(gridX, gridY - 1) && thePlayer->gridX >= gridX - 1 && thePlayer->gridX <= gridX + 1) ||
-				(facing == LEFT && !theEnvironment->hasSillyPad(gridX - 1, gridY) && thePlayer->gridY >= gridY - 1 && thePlayer->gridY <= gridY + 1) ||
-				(facing == RIGHT && !theEnvironment->hasSillyPad(gridX + 1, gridY) && thePlayer->gridY >= gridY - 1 && thePlayer->gridY <= gridY + 1)) {
-			addFlameWall(flameLaunchers[i].gridX*64+32, flameLaunchers[i].gridY*64+32, flameLaunchers[i].facing);
+		if (!blockedBySillyPad) {
+			if (allFlames || //if allFlames flag is true don't worry about where Smiley is
+					(facing == DOWN && thePlayer->gridX >= gridX - 1 && thePlayer->gridX <= gridX + 1) ||
+					(facing == UP && thePlayer->gridX >= gridX - 1 && thePlayer->gridX <= gridX + 1) ||
+					(facing == LEFT && thePlayer->gridY >= gridY - 1 && thePlayer->gridY <= gridY + 1) ||
+					(facing == RIGHT && thePlayer->gridY >= gridY - 1 && thePlayer->gridY <= gridY + 1)) {
+				addFlameWall(flameLaunchers[i].gridX*64+32, flameLaunchers[i].gridY*64+32, flameLaunchers[i].facing);
+			}
 		}
 
-	}
-	lastFlameLaunchTime = gameTime;
-}
-
-void FireBossTwo::launchAllFlames() {
-	for (int i = 0; i < 8; i++) {
-		addFlameWall(flameLaunchers[i].gridX*64+32, flameLaunchers[i].gridY*64+32, flameLaunchers[i].facing);
 	}
 	lastFlameLaunchTime = gameTime;
 }
@@ -876,7 +935,9 @@ void FireBossTwo::drawFlameLaunchers(float dt) {
 }
 
 void FireBossTwo::updateFlameLaunchers(float dt) {
-	//if (timePassedSince(lastFlameLaunchTime) > FLAME_LAUNCH_DELAY) {
-	//	launchFlames();
-	//}
+	if (state == FIREBOSS_ATTACK) {
+		if (timePassedSince(lastFlameLaunchTime) > FLAME_LAUNCH_DELAY) {
+			launchFlames(false);
+		}
+	}
 }

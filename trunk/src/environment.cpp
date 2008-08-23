@@ -1503,6 +1503,10 @@ bool Environment::hasSillyPad(int gridX, int gridY) {
 	return specialTileManager->isSillyPadAt(gridX, gridY);
 }
 
+bool Environment::destroySillyPad(int gridX, int gridY) {
+	return specialTileManager->destroySillyPad(gridX, gridY);
+}
+
 void Environment::addTimedTile(int gridX, int gridY, int tile, float duration) {
 	specialTileManager->addTimedTile(gridX, gridY, tile, duration);
 }

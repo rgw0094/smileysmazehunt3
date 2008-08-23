@@ -21,7 +21,7 @@
 #define MUSHROOM_EXPLOSION_DAMAGE 0.75
 #define MUSHROOM_EXPLOSION_KNOCKBACK 156.0
 
-#define SILLY_PAD_TIME 30		//Number of seconds silly pads stay active
+#define SILLY_PAD_TIME 40		//Number of seconds silly pads stay active
 
 extern Environment *theEnvironment;
 extern Player *thePlayer;
@@ -312,6 +312,21 @@ bool SpecialTileManager::isSillyPadAt(int gridX, int gridY) {
 			return true;
 		}
 	}
+}
+
+/**
+ * If there is a silly pad at the specified square, destroy it. Returns whether
+ * or not a silly pad was destroyed
+ */
+bool SpecialTileManager::destroySillyPad(int gridX, int gridY) {
+	std::list<SillyPad>::iterator i;
+	for(i = sillyPadList.begin(); i != sillyPadList.end(); i++) {
+		if (i->gridX == gridX && i->gridY == gridY) {
+			i = sillyPadList.erase(i);
+			return true;
+		}
+	}
+	return false;
 }
 
 /**

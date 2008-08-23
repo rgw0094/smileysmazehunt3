@@ -1360,9 +1360,6 @@ void Player::moveTo(int _gridX, int _gridY) {
 	x = gridX*64+32;
 	y = gridY*64+32;
 	dx = dy = 0;
-
-	hge->System_Log("moving player to %d %d", gridX, gridY);
-
 }
 
 /**

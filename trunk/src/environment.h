@@ -141,6 +141,7 @@ public:
 	void setTerrainCollisionBox(hgeRect *box, int whatFor, int gridX, int gridY);
 	void placeSillyPad(int gridX, int gridY);
 	bool hasSillyPad(int gridX, int gridY);
+	bool destroySillyPad(int gridX, int gridY);
 	void addTimedTile(int gridX, int gridY, int tile, float duration);
 	bool isTimedTileAt(int gridX, int gridY);
 	bool isTimedTileAt(int gridX, int gridY, int tile);
