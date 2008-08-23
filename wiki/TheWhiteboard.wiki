@@ -19,7 +19,6 @@
  * Bouncing spikey enemies that I put to appear in line with each other in game sometimes are not in line when testing, making it a lot harder to get by them than planned.
  * You can still walk diagonally between two arrow blocks.
  * When using fire on the shore of deep water, if you immediately (through the inventory) put on Jesus' Sandals and walk on the water the flame breath will continue to be used long enough to hit ice blocks that should be out of reach.
- * Use the shortcut from smhollow to despair. You'll be falling through the Realm of Despair, and flying to another location on the map (presumably the location you were just at in smhollow).
 
 === Graphics To Do ===
  * Mirror switch graphic 	 
@@ -27,6 +26,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Bugfix: Falling when entering RoD||8/23/08||RGW||
 ||Loading Screen||8/20/08||RGW||
 ||Fenwar Manager||8/17/08||RGW||
 ||Save Player health/mana||8/17/08||RGW||
