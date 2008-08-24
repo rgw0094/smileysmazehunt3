@@ -13,11 +13,12 @@ extern Environment *theEnvironment;
 extern Player *thePlayer;
 extern SoundManager *soundManager;
 
-LoadingScreen::LoadingScreen(int _fileNumber) {
+LoadingScreen::LoadingScreen(int _fileNumber, bool _fromLoadScreen) {
 
 	fileNumber = _fileNumber;
 	timeEnteredScreen = hge->Timer_GetTime();
 	startedLoadYet = false;
+	fromLoadScreen = _fromLoadScreen;
 
 }
 
@@ -26,7 +27,12 @@ LoadingScreen::~LoadingScreen() {
 }
 
 void LoadingScreen::draw(float dt) {
-	resources->GetSprite("menuBackground")->Render(0,0);
+
+	if (fromLoadScreen) {
+		resources->GetSprite("menuBackground")->Render(0,0);
+	} else {
+		shadeScreen(255.0);
+	}
 
 	resources->GetFont("titleFnt")->printf(512,150,HGETEXT_CENTER, "Loading...");
 }
@@ -50,6 +56,7 @@ bool LoadingScreen::update(float dt, float mouseX, float mouseY) {
 		theEnvironment->loadArea(saveManager->currentArea, saveManager->currentArea);
 		thePlayer->moveTo(saveManager->playerGridX, saveManager->playerGridY);
 		theEnvironment->update(0.0); //update for screen offsets
+		thePlayer->reset();
 		thePlayer->setHealth(saveManager->playerHealth);
 		thePlayer->setMana(saveManager->playerMana);
 

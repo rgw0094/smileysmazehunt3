@@ -7,7 +7,7 @@ class LoadingScreen : public MenuScreen {
 
 public:
 
-	LoadingScreen(int fileNumber);
+	LoadingScreen(int fileNumber, bool fromLoadScreen);
 	~LoadingScreen();
 
 	//Draw methods
@@ -18,6 +18,7 @@ public:
 	float timeEnteredScreen;
 	int fileNumber;
 	bool startedLoadYet;
+	bool fromLoadScreen;
 
 };
 

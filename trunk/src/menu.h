@@ -22,7 +22,7 @@ public:
 	bool update(float dt);
 	void open(int _state);
 	void setScreen(int screen);
-	void openLoadScreen(int file);
+	void openLoadScreen(int file, bool fromLoadScreen);
 
 	//Variables
 	float mouseX, mouseY;

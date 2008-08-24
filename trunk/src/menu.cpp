@@ -60,9 +60,9 @@ void Menu::setScreen(int screen) {
 /**
  * Opens the loading screen to load the specified file.
  */
-void Menu::openLoadScreen(int file) {
+void Menu::openLoadScreen(int file, bool fromLoadScreen) {
 	currentScreen = LOADING_SCREEN;
-	menuScreen = new LoadingScreen(file);
+	menuScreen = new LoadingScreen(file, fromLoadScreen);
 }
 
 /** 

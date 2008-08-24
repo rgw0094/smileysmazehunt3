@@ -89,7 +89,7 @@ bool SelectFileScreen::update(float dt, float mouseX, float mouseY) {
 
 	//Click start button - open the loading menu screen to handle loading
 	if (buttons[START_BUTTON]->isClicked()) {
-		theMenu->openLoadScreen(selectedFile);
+		theMenu->openLoadScreen(selectedFile, true);
 		return false;
 	}
 

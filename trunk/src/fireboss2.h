@@ -22,6 +22,7 @@ struct FireBall {
 	float x,y,angle,speed,timeCreated,dx,dy;
 	bool hasExploded;
 	float timeExploded;
+	bool homing, explodes;
 };
 
 struct FlameWall {
@@ -45,11 +46,11 @@ public:
 	bool update(float dt);
 	bool updateState(float dt);
 
-	void launchFireNova();
 	void updateFireNova(float dt);
 
-	void addFireBall(float x, float y, float angle, float speed);
-	void drawFireBalls(float dt);
+	void addFireBall(float x, float y, float angle, float speed, bool homing, bool explodes);
+	void drawFireBallsBeforePhyrebozz(float dt);
+	void drawFireBallsAfterPhyrebozz(float dt);
 	void updateFireBalls(float dt);
 	void resetFireBalls();
 	
@@ -75,8 +76,7 @@ private:
 	int startX, startY;
 	float x, y;
 	float dx,dy;
-	float lastHitByTongue;
-	float lastFireBall;
+	float lastAttackTime;
 	bool startedIntroDialogue;
 	float startedFlashing;
 	bool flashing, increaseAlpha;
@@ -84,20 +84,17 @@ private:
 	float floatY;
 	bool droppedLoot;
 	bool saidVitaminDialogYet;
-
-	float lastFlameLaunchTime;
 	float lastFireNovaTime;
 	float timeToMove;
 	float timeStartedMove;
 	float timeEnteredState;
-	int chaseCounter;
 	bool moving;
+	float attackAngle;
 
 	//Graphics
 	WeaponParticleSystem *fireNova;
 	hgeRect *collisionBoxes[3];
 
-	ChasePoint chasePoints[4];
 	FlameLauncher flameLaunchers[8];
 
 	std::list<FireBall> fireBallList;
