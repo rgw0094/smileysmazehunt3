@@ -50,7 +50,7 @@ bool DeathScreen::update(float dt, float mouseX, float mouseY) {
 
 	//Click Continue
 	if (buttons[CONTINUE_BUTTON]->isClicked()) {
-		theMenu->openLoadScreen(saveManager->currentSave);
+		theMenu->openLoadScreen(saveManager->currentSave, false);
 		return false;
 	}
 

@@ -61,38 +61,19 @@ extern int gameState;
  */
 Player::Player() {
 		
-	//Initialize variables
 	moveTo(0, 0);
+	reset();
+
 	tongue = new Tongue();
 	worm = new Worm(0,0);
 	health = getMaxHealth();
 	mana = getMaxMana();
-	scale = hoverScale = shrinkScale = 1.0;
-	rotation = 0.0;
-	facing = DOWN;
-	radius = DEFAULT_RADIUS;
 	collisionCircle = new CollisionCircle();
 	collisionCircle->set(x,y,PLAYER_WIDTH/2-3);
-	selectedAbility = saveManager->hasAbility[CANE] ? CANE : NO_ABILITY;;
-	hoveringYOffset = springOffset = 0.0;
-	invincible = false;
 
 	//Load Particles
 	fireBreathParticle = new WeaponParticleSystem("firebreath.psi", resources->GetSprite("particleGraphic1"), PARTICLE_FIRE_BREATH);
 	iceBreathParticle = new WeaponParticleSystem("icebreath.psi", resources->GetSprite("particleGraphic4"), PARTICLE_ICE_BREATH);
-
-	//Time variables
-	startedIceBreath = lastOrb = lastLavaDamage = -5.0f;
-	stoppedAttacking = gameTime;
-	startedFlashing = -10.0;
-	timeEnteredShrinkTunnel = -10.0;
-
-	//State variables
-	reflectionShieldActive = flashing = knockback = sliding =  
-		onWarp = falling = breathingFire = inLava = inShallowWater = 
-		waterWalk = onWater = drowning = shrinkActive = sprinting = isHovering = 
-		cloaked = springing = usingCane = iceSliding = frozen = 
-		inShrinkTunnel = false;
 	
 	//Set up constants
 	angles[UP] = PI * 0.0;
@@ -134,6 +115,28 @@ Player::~Player() {
 	delete worm;
 }
 
+void Player::reset() {
+
+	scale = hoverScale = shrinkScale = 1.0;
+	rotation = 0.0;
+	facing = DOWN;
+	radius = DEFAULT_RADIUS;
+	selectedAbility = saveManager->hasAbility[CANE] ? CANE : NO_ABILITY;;
+	hoveringYOffset = springOffset = 0.0;
+	invincible = false;
+	startedIceBreath = lastOrb = lastLavaDamage = -5.0f;
+	stoppedAttacking = gameTime;
+	startedFlashing = -10.0;
+	timeEnteredShrinkTunnel = -10.0;
+
+	//State variables
+	reflectionShieldActive = flashing = knockback = sliding =  
+		onWarp = falling = breathingFire = inLava = inShallowWater = 
+		waterWalk = onWater = drowning = shrinkActive = sprinting = isHovering = 
+		cloaked = springing = usingCane = iceSliding = frozen = 
+		inShrinkTunnel = false;
+}
+
 /**
  * Update the player object. The general flow of this method is that all movement related
  * stuff is handled first, which results in a new position. Then things are updated based 
@@ -151,27 +154,15 @@ void Player::update(float dt) {
 	updateVelocities(dt);
 	doMove(dt);
 
+	//Update location stuff now that the player's movement for this frame
+	//has been completed
+	updateLocation();
+
 	//Do level exits
 	if (theEnvironment->collision[gridX][gridY] == PLAYER_END) {
 		loadEffectManager->startEffect(0, 0, theEnvironment->ids[gridX][gridY]);
 		return;
 	}	
-
-	//Update location stuff
-	int newGridX = x / 64.0;
-	int newGridY = y / 64.0;
-	if (newGridX != gridX || newGridY != gridY) {
-		lastGridX = gridX;
-		gridX = newGridX;
-		lastGridY = gridY;
-		gridY = newGridY;
-	}
-	baseX = x + 0;
-	baseY = y + 15 * shrinkScale;
-	baseGridX = baseX / 64.0;
-	baseGridY = baseY / 64.0;
-	saveManager->playerGridX = gridX;
-	saveManager->playerGridY = gridY;	
 
 	//Explore!
 	saveManager->explore(gridX,gridY);
@@ -224,6 +215,19 @@ void Player::update(float dt) {
 		theMenu->open(DEATH_SCREEN);
 	}
 
+}
+
+void Player::updateLocation() {
+	lastGridX = gridX;
+	lastGridY = gridY;
+	gridX = x / 64.0;
+	gridY = y / 64.0;
+	baseX = x + 0;
+	baseY = y + 15 * shrinkScale;
+	baseGridX = baseX / 64.0;
+	baseGridY = baseY / 64.0;
+	saveManager->playerGridX = gridX;
+	saveManager->playerGridY = gridY;	
 }
 
 /**
@@ -938,6 +942,7 @@ void Player::doFalling(float dt) {
 
 	//Start falling
 	if (!springing && hoveringYOffset == 0.0f && !falling && theEnvironment->collisionAt(baseX,baseY) == PIT) {
+		hge->System_Log("dickens");
 		dx = dy = 0;
 		falling = true;
 		startedFalling = gameTime;
@@ -960,14 +965,11 @@ void Player::doFalling(float dt) {
 	//Stop falling
 	if (falling && timePassedSince(startedFalling) > 2.0) {
 		falling = false;
-		x = startedFallingX*64 + 32;
-		y = startedFallingY*64 + 32;
+		moveTo(startedFallingX, startedFallingY);
 		dx = dy = 0;
-		scale = 1.0f;
-		rotation = 0.0f;
-		flashing = true;
-		startedFlashing = gameTime;
-		health -= .5f;
+		scale = 1.0;
+		rotation = 0.0;
+		this->dealDamage(0.5, true);
 	}
 
 	//Keep track of where the player was before he fell
@@ -1192,9 +1194,7 @@ void Player::doWater() {
 		if (drowning && gameTime - 4.0f > startedDrowning) {
 			drowning = false;
 			moveTo(enteredWaterX, enteredWaterY);
-			flashing = true;
-			startedFlashing = gameTime;
-			health -= .5f;
+			dealDamage(0.5, true);
 
 			//If smiley was placed onto an up cylinder, toggle its switch
 			if (isCylinderUp(theEnvironment->collision[gridX][gridY])) {
@@ -1359,7 +1359,8 @@ void Player::moveTo(int _gridX, int _gridY) {
 	gridY = _gridY;
 	x = gridX*64+32;
 	y = gridY*64+32;
-	dx = dy = 0;
+	dx = dy = 0.0;
+	updateLocation();
 }
 
 /**

@@ -25,6 +25,7 @@ public:
 	void dealDamageAndKnockback(float damage, bool makesFlash, float knockbackDist, float knockbackerX, float knockbackerY);
 	void dealDamageAndKnockback(float damage, bool makesFlash, bool alwaysKnockback, float knockbackDist, float knockbackerX, float knockbackerY);
 	void freeze(float duration);
+	void reset();
 
 	//Accessors/mutators
 	bool isInvisible();
@@ -74,6 +75,7 @@ public:
 private:
 
 	//Private methods
+	void updateLocation();
 	void doMove(float dt);
 	void changeAbility(int direction);
 	void doAbility(float dt);
