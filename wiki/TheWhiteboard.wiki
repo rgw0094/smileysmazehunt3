@@ -15,7 +15,6 @@
 
 === Programming To Do ===
  * Make it so you can't walk diagonally between two arrow blocks. (expand gay fix in Player.move - right now its only for entering ice and springs)
- * End Credits
  * Lovecraftian Boss
  * King Tut
  * Bartli
@@ -34,6 +33,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Credits Screen||8/24/08||RGW||
 ||Organize Resource Groups||8/24/08||RGW||
 ||Phyrebozz 2||8/23/08||RGW||
 ||Bugfix: Falling when entering RoD||8/23/08||RGW||
