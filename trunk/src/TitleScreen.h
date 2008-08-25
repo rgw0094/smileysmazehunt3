@@ -6,10 +6,11 @@
 
 class Button;
 
-#define NUM_BUTTONS 3
+#define NUM_BUTTONS 4
 #define PLAY_BUTTON 0
 #define OPTIONS_BUTTON 1
 #define EXIT_BUTTON 2
+#define CREDITS_BUTTON 3
 
 class TitleScreen : public MenuScreen {
 

@@ -10,6 +10,7 @@ class MenuScreen;
 #define OPTIONS_SCREEN 2
 #define DEATH_SCREEN 3
 #define LOADING_SCREEN 4
+#define CREDITS_SCREEN 5
 
 class Menu {
 

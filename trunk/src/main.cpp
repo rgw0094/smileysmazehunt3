@@ -90,6 +90,64 @@ void loadResources() {
 }
 
 /**
+ * Loads the static game objects that persist until the program closes.
+ */
+void loadGameObjects() {
+
+	hge->System_Log("*****Creating Objects*****");
+	hge->System_Log("Creating SaveManager");
+	saveManager = new SaveManager();
+	
+	hge->System_Log("Creating Menu");
+	theMenu = new Menu();
+
+	hge->System_Log("Creating Input");
+	input = new Input();
+
+	hge->System_Log("Creating SoundManager");
+	soundManager = new SoundManager();
+		
+	hge->System_Log("Creating GameData");
+	gameData = new GameData();
+	
+	hge->System_Log("Creating LoadEffectManager");
+	loadEffectManager = new LoadEffectManager();
+		
+	hge->System_Log("Creating Enemy Manager");
+	enemyManager = new EnemyManager();
+		
+	hge->System_Log("Creating Loot Manager");
+	lootManager = new LootManager();
+		
+	hge->System_Log("Creating Projectile Manager");
+	projectileManager = new ProjectileManager();
+		
+	hge->System_Log("Creating NPC Manager");
+	npcManager = new NPCManager();
+	
+	hge->System_Log("Creating Enemy Group Manager");
+	enemyGroupManager = new EnemyGroupManager();
+
+	hge->System_Log("Creating Boss Manager");
+	bossManager = new BossManager();
+
+	hge->System_Log("Creating Window Manager");
+	windowManager = new WindowManager();
+
+	hge->System_Log("Creating Player");
+	thePlayer = new Player();
+
+	hge->System_Log("Creating FenwarManager");
+	fenwarManager = new FenwarManager();
+
+	//Environment must be created after Player!
+	hge->System_Log("Creating Environment");
+	theEnvironment = new Environment();
+
+	hge->System_Log("******************************");
+}
+
+/**
  * Put all gay debug input here.
  */
 void doDebugInput() {
@@ -278,58 +336,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	if(hge->System_Initiate()) {
 
 		loadResources();
-
-		hge->System_Log("*****Creating Objects*****");
-		hge->System_Log("Creating SaveManager");
-		saveManager = new SaveManager();
-		
-		hge->System_Log("Creating Menu");
-		theMenu = new Menu();
-
-		hge->System_Log("Creating Input");
-		input = new Input();
-
-		hge->System_Log("Creating SoundManager");
-		soundManager = new SoundManager();
-		
-		hge->System_Log("Creating GameData");
-		gameData = new GameData();
-		
-		hge->System_Log("Creating LoadEffectManager");
-		loadEffectManager = new LoadEffectManager();
-		
-		hge->System_Log("Creating Enemy Manager");
-		enemyManager = new EnemyManager();
-		
-		hge->System_Log("Creating Loot Manager");
-		lootManager = new LootManager();
-		
-		hge->System_Log("Creating Projectile Manager");
-		projectileManager = new ProjectileManager();
-		
-		hge->System_Log("Creating NPC Manager");
-		npcManager = new NPCManager();
-		
-		hge->System_Log("Creating Enemy Group Manager");
-		enemyGroupManager = new EnemyGroupManager();
-
-		hge->System_Log("Creating Boss Manager");
-		bossManager = new BossManager();
-
-		hge->System_Log("Creating Window Manager");
-		windowManager = new WindowManager();
-
-		hge->System_Log("Creating Player");
-		thePlayer = new Player();
-
-		hge->System_Log("Creating FenwarManager");
-		fenwarManager = new FenwarManager();
-
-		//Environment must be created after Player!
-		hge->System_Log("Creating Environment");
-		theEnvironment = new Environment();
-
-		hge->System_Log("******************************");
+		loadGameObjects();
 
 		//Open the menu
 		theMenu->open(TITLE_SCREEN);
@@ -337,8 +344,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//Start HGE. When this function returns it means the program is exiting.
 		hge->System_Start();
 
+	} else {
+		MessageBox(NULL, hge->System_GetErrorMessage(), "Error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 	}
-	else MessageBox(NULL, hge->System_GetErrorMessage(), "Error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 
 	// Clean up and shutdown
 	hge->System_Shutdown();

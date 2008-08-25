@@ -8,9 +8,11 @@
 #include "GameData.h"
 #include "ProjectileManager.h"
 #include "Player.h"
+#include "hgestrings.h"
 #include <string>
 
 extern Player *thePlayer;
+extern HGE *hge;
 
 GameData::GameData() {
 	loadEnemyData();
@@ -28,6 +30,10 @@ EnemyInfo GameData::getEnemyInfo(int enemyID) {
 
 Ability GameData::getAbilityInfo(int abilityID) {
 	return abilities[abilityID];
+}
+
+std::list<EnemyName> GameData::getEnemyNames() {
+	return enemyNameList;
 }
 
 const char *GameData::getGameText(const char *text) {
@@ -168,12 +174,18 @@ void GameData::loadEnemyData() {
 	for (int i = 0; i < numEnemies; i++) {
 		itoa(i, num, 10);
 
+		//Enemy name
+		varName = intToString(i);
+		varName += "Name";
+		if (enemyStringTable->GetString(varName.c_str()) != 0) {
+			addEnemyName(i, enemyStringTable->GetString(varName.c_str()));
+		}
+
 		//Has one graphic?
 		varName = intToString(i);
 		varName += "OneGraphic";
 		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].hasOneGraphic = false;
 		else enemyInfo[i].hasOneGraphic = (strcmp(enemyStringTable->GetString(varName.c_str()), "T") == 0);
-
 		
 		//Graphics column
 		varName = intToString(i);
@@ -350,3 +362,26 @@ void GameData::loadEnemyData() {
 	}
 
 } // end loadEnemyData()
+
+/**
+ * Adds an enemy name to the list of enemy names if it doesn't already exist.
+ */
+void GameData::addEnemyName(int id, std::string name) {
+	
+	bool alreadyExists = false;
+	
+	std::list<EnemyName>::iterator i;
+	for (i = enemyNameList.begin(); i != enemyNameList.end(); i++) {
+		if (strcmp(name.c_str(), i->name.c_str()) == 0) {
+			alreadyExists = true;
+		}
+	}
+
+	if (!alreadyExists) {
+		EnemyName enemyName;
+		enemyName.name = name;
+		enemyName.id = id;
+		enemyNameList.push_back(enemyName);
+	}
+
+}

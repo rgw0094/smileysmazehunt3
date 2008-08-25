@@ -7,6 +7,7 @@
 #include "DeathScreen.h"
 #include "SoundManager.h"
 #include "LoadingScreen.h"
+#include "CreditsScreen.h"
 
 #include "hge.h"
 #include "hgestrings.h"
@@ -53,6 +54,8 @@ void Menu::setScreen(int screen) {
 		menuScreen = new SelectFileScreen();
 	} else if (currentScreen == DEATH_SCREEN) {
 		menuScreen = new DeathScreen();
+	} else if (currentScreen == CREDITS_SCREEN) {
+		menuScreen = new CreditsScreen();
 	}
 
 }
@@ -66,7 +69,7 @@ void Menu::openLoadScreen(int file, bool fromLoadScreen) {
 }
 
 /** 
- * Update the menu. Returns whether or not Exit was pressed.
+ * Update the menu. Returns true if the program should exit.
  */
 bool Menu::update(float dt) {
 	
@@ -97,11 +100,10 @@ bool Menu::update(float dt) {
 void Menu::draw(float dt) {
 
 	//Draw the current screen
-	resources->GetSprite("menuBackground")->SetColor(ARGB(255,255,255,255));
 	menuScreen->draw(dt);
 
 	//Draw the mouse
-	if (hge->Input_IsMouseOver() && currentScreen != LOADING_SCREEN) {
+	if (hge->Input_IsMouseOver() && currentScreen != LOADING_SCREEN && currentScreen != CREDITS_SCREEN) {
 		resources->GetSprite("mouseCursor")->Render(mouseX, mouseY);
 	}
 
