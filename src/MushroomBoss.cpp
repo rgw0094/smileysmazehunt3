@@ -148,9 +148,8 @@ MushroomBoss::~MushroomBoss() {
 	if (explosions) delete explosions;
 	if (collisionRects[1]) delete collisionRects[1];
 	if (collisionRects[0]) delete collisionRects[0];
+	resources->Purge(RES_MUSHBOOM);
 }
-
-
 
 bool MushroomBoss::update(float dt) {
 	

@@ -76,7 +76,7 @@ CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 }
 
 CandyBoss::~CandyBoss() {
-
+	resources->Purge(RES_BARTLI);
 }
 
 
