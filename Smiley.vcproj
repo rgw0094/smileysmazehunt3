@@ -336,6 +336,9 @@
 					Name="Main Menu"
 					Filter="">
 					<File
+						RelativePath=".\src\CreditsScreen.cpp">
+					</File>
+					<File
 						RelativePath=".\src\DeathScreen.cpp">
 					</File>
 					<File
@@ -569,6 +572,9 @@
 				<Filter
 					Name="Main Menu"
 					Filter="">
+					<File
+						RelativePath=".\src\CreditsScreen.h">
+					</File>
 					<File
 						RelativePath=".\src\DeathScreen.h">
 					</File>

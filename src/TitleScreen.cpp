@@ -11,9 +11,12 @@ extern hgeResourceManager *resources;
  * Constructor
  */ 
 TitleScreen::TitleScreen() {
-	buttons[EXIT_BUTTON] = new Button(100.0, 650.0, "Exit");
-	buttons[OPTIONS_BUTTON] = new Button(512.0-125.0, 650.0, "Options");
-	buttons[PLAY_BUTTON] = new Button(1024.0-100.0-250.0, 650.0, "Play");
+
+	buttons[EXIT_BUTTON] = new Button(125.0, 645.0, "Exit");
+	buttons[PLAY_BUTTON] = new Button(1024.0-125.0-250.0, 645.0, "Play");
+
+	buttons[OPTIONS_BUTTON] = new Button(512.0-125.0, 680.0, "Options");
+	buttons[CREDITS_BUTTON] = new Button(512.0-125.0, 605.0, "Credits");
 }
 
 /**
@@ -60,6 +63,11 @@ bool TitleScreen::update(float dt, float mouseX, float mouseY) {
 	//Controls button clicked
 	if (buttons[OPTIONS_BUTTON]->isClicked()) {
 		theMenu->setScreen(OPTIONS_SCREEN);
+	}
+
+	//Credits button clicked
+	if (buttons[CREDITS_BUTTON]->isClicked()) {
+		theMenu->setScreen(CREDITS_SCREEN);
 	}
 
 	//Exit button clicked

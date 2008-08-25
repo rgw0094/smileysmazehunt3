@@ -3,6 +3,7 @@
 numEnemies="52"
 
 ;Croc
+0Name=      "Crazy Croc"
 0GCol=      "0"
 0GRow=      "0"
 0EnemyType= "4"
@@ -16,6 +17,7 @@ numEnemies="52"
 0Chases=    "T"
 
 ;Gumdrop
+1Name=      "Gumdrop"
 1GCol=      "0"
 1GRow=      "1"
 1NumFrames= "2"
@@ -28,6 +30,7 @@ numEnemies="52"
 1Land=      "T"
 
 ;Evil Eye
+2Name=      "Evil Eye"
 2GCol=      "1"
 2GRow=      "2"
 2EnemyType= "1"
@@ -45,6 +48,7 @@ numEnemies="52"
 2ImmuneStun="T"
 
 ;Ranged Squirrel
+3Name=      "Squirrel"
 3GCol=      "0"
 3GRow=      "8"
 3EnemyType= "15"
@@ -64,6 +68,7 @@ numEnemies="52"
 3PDamage=   "25"
 
 ;Ice Floater
+4Name=      "Ice Floater"
 4GCol=      "9"
 4GRow=      "0"
 4EnemyType= "9"
@@ -78,6 +83,7 @@ numEnemies="52"
 4Chases=    "T"
 
 ;Evil circle (horizontal)
+5Name=      "Evil Circle"
 5OneGraphic="T"
 5GCol=      "10"
 5GRow=      "0"
@@ -110,6 +116,7 @@ numEnemies="52"
 6Invincible="T"
 
 ;Cactlet
+7Name=      "Cactlet"
 7GCol=      "4"
 7GRow=      "3"
 7EnemyType= "0"
@@ -124,6 +131,7 @@ numEnemies="52"
 7Chases=    "T"
 
 ;Sentinel
+8Name=      "Sentinel"
 8GCol=      "2"
 8GRow=      "2"
 8EnemyType= "0"
@@ -147,6 +155,7 @@ numEnemies="52"
 8ImmuneStun="T"
 
 ;Bomb generator bomb
+9Name=      "Mr. Bigglesworth"
 9GCol=      "8"
 9GRow=      "4"
 9EnemyType= "3"
@@ -160,7 +169,8 @@ numEnemies="52"
 9Slime=     "T"
 9Invincible="T"
 
-;Clown Chain
+;Crab with clown
+10Name=      "Clown Crab"
 10GCol=      "0"
 10GRow=      "5"
 10NumFrames= "2"
@@ -175,6 +185,7 @@ numEnemies="52"
 10Slime=     "T"
 
 ;Batlet distributor
+11Name=      "Batlet Distributor"
 11GCol=      "0"
 11GRow=      "6"
 11NumFrames= "2"
@@ -190,6 +201,7 @@ numEnemies="52"
 11Invincible="T"
 
 ;Buzzard
+12Name=      "Buzzard"
 12GCol=      "3"
 12GRow=      "2"
 12EnemyType= "7"
@@ -203,6 +215,7 @@ numEnemies="52"
 12Slime=     "T"
 
 ;SadShooter
+13Name=      "Sad Shooter"
 13GCol=      "12"
 13GRow=      "4"
 13EnemyType= "8"
@@ -216,6 +229,7 @@ numEnemies="52"
 13Slime=     "T"
 
 ;Earth Floater
+14Name=      "Earth Floater"
 14GCol=      "8"
 14GRow=      "0"
 14EnemyType= "9"
@@ -243,6 +257,7 @@ numEnemies="52"
 15ImmuneStun="T"
 
 ;Tentacle, small and green
+16Name=      "Small Green Tentacle"
 16GCol=      "8"
 16GRow=      "2"
 16NumFrames= "2"
@@ -258,6 +273,7 @@ numEnemies="52"
 16Variable1= "3"
 
 ;Tentacle, large and yellow/orange/red
+17Name=      "Huge Ass Tentacle"
 17GCol=      "8"
 17GRow=      "3"
 17NumFrames= "2"
@@ -274,6 +290,7 @@ numEnemies="52"
 17Variable1= "18"
 
 ;Brown turtle
+18Name=      "Turtle"
 18GCol=      "0"
 18GRow=      "7"
 18EnemyType= "0"
@@ -287,6 +304,7 @@ numEnemies="52"
 18Chases=    "T"
 
 ;Fangy wanderer
+19Name=      "Fangy"
 19GCol=      "0"
 19GRow=      "3"
 19EnemyType= "0"
@@ -300,6 +318,7 @@ numEnemies="52"
 19Chases=    "F"
 
 ;Fire floater
+20Name=      "Fire Floater"
 20GCol=      "0"
 20GRow=      "2"
 20EnemyType= "9"
@@ -363,6 +382,7 @@ numEnemies="52"
 23PDamage=   "25"
 
 ;Ranged Snowman
+24Snowman=   "Sinful Snowman"
 24GCol=      "8"
 24GRow=      "1"
 24NumFrames= "2"
@@ -384,6 +404,7 @@ numEnemies="52"
 24PDamage=   "25"
 
 ;Blue head wanderer
+25Name=      "Blue Circle Thing"
 25GCol=      "4"
 25GRow=      "0"
 25EnemyType= "0"
@@ -423,6 +444,7 @@ numEnemies="52"
 27Chases=    "F"
 
 ;Skull charger
+28Name=      "Skullie"
 28GCol=      "0"
 28GRow=      "4"
 28NumFrames= "2"
@@ -471,6 +493,7 @@ numEnemies="52"
 30Chases=    "F"
 
 ;Clockwise Turret, start UP
+31Turret=    "Turret"
 31GCol=      "8"
 31GRow=      "5"
 31EnemyType= "12"
@@ -735,6 +758,7 @@ numEnemies="52"
 42PType=     "6"
 
 ;Mushroomlet
+43Name=      "Mushroomlet"
 43GCol=      "4"
 43GRow=      "2"
 43EnemyType= "4"
@@ -749,6 +773,7 @@ numEnemies="52"
 43Mushrooms= "T"
 
 ;Ghost
+44Name=      "Gay Ass Ghost"
 44GCol=      "12"
 44GRow=      "6"
 44EnemyType= "13"
@@ -789,6 +814,7 @@ numEnemies="52"
 46Chases=    "T"
 
 ;Snake
+47Name=      "Sinister Snake"
 47GCol=      "8"
 47GRow=      "7"
 47NumFrames= "2"
@@ -804,6 +830,7 @@ numEnemies="52"
 47Chases=    "T"
 
 ;Mummy Ranged
+48Name=      "Mortifying Mummy"
 48GCol=      "4"
 48GRow=      "7"
 48EnemyType= "15"
@@ -851,6 +878,7 @@ numEnemies="52"
 50Chases=    "T"
 
 ;Hopping eye
+51Name=      "Hopping Eye"
 51GCol=      "8"
 51GRow=      "8"
 51EnemyType= "16"
