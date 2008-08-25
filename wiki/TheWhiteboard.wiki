@@ -29,6 +29,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Organize Resource Groups||8/24/08||RGW||
 ||Phyrebozz 2||8/23/08||RGW||
 ||Bugfix: Falling when entering RoD||8/23/08||RGW||
 ||Loading Screen||8/20/08||RGW||
