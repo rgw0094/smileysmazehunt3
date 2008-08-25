@@ -3,6 +3,10 @@
  * Kevin
  * Hillary
 
+=== Road Map ===
+Opening Cinematic
+World Map
+
 === Data To Do ===
  * Bill Clinton hints
  * Enemy names
