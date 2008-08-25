@@ -4,8 +4,9 @@
  * Hillary
 
 === Road Map ===
-Opening Cinematic
-World Map
+* Opening Cinematic
+* World Map
+* Balance stuff
 
 === Data To Do ===
  * Bill Clinton hints
