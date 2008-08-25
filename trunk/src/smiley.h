@@ -16,11 +16,15 @@
 
 //Resource Groups
 #define RES_MENU 10
+#define RES_CREDITS 11
 #define RES_PHYREBOZZ 100
 #define RES_PORTLYPENGUIN 101
 #define RES_GARMBORN 102
 #define RES_CORNWALLIS 103
+#define RES_MUSHBOOM 104
 #define RES_CALYPSO 105
+#define RES_BARTLI 106
+#define RES_FENWAR 110
 
 #define NUM_BOSSES 12
 
