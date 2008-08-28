@@ -190,6 +190,7 @@ void GameData::loadEnemyData() {
 		//Graphics column
 		varName = intToString(i);
 		varName += "GCol";
+		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].gCol = 0;
 		enemyInfo[i].gCol = atoi(enemyStringTable->GetString(varName.c_str()));
 hge->System_Log("row");
 		//Graphics row
