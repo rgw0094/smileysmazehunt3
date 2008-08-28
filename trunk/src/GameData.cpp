@@ -17,7 +17,7 @@ extern HGE *hge;
 GameData::GameData() {
 	loadEnemyData();
 	//loadAbilityData();
-	//gameText = new hgeStringTable("Data/GameText.dat");
+	gameText = new hgeStringTable("Data/GameText.dat");
 }
 
 GameData::~GameData() {
