@@ -175,11 +175,11 @@ void GameData::loadEnemyData() {
 		itoa(i, num, 10);
 
 		//Enemy name
-		varName = intToString(i);
-		varName += "Name";
-		if (enemyStringTable->GetString(varName.c_str()) != 0) {
-			addEnemyName(i, enemyStringTable->GetString(varName.c_str()));
-		}
+		//varName = intToString(i);
+		//varName += "Name";
+		//if (enemyStringTable->GetString(varName.c_str()) != 0) {
+		//	addEnemyName(i, enemyStringTable->GetString(varName.c_str()));
+		//}
 
 		//Has one graphic?
 		varName = intToString(i);
