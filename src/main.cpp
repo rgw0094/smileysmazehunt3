@@ -18,6 +18,8 @@
 #include "LoadEffectManager.h"
 #include "FenwarManager.h"
 
+#using <mscorlib.dll>
+
 //Global Objects
 HGE *hge=0;
 hgeResourceManager *resources;
@@ -335,14 +337,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	if(hge->System_Initiate()) {
 
-		loadResources();
-		loadGameObjects();
+		try {
 
-		//Open the menu
-		theMenu->open(TITLE_SCREEN);
+			loadResources();
+			loadGameObjects();
 
-		//Start HGE. When this function returns it means the program is exiting.
-		hge->System_Start();
+			//Open the menu
+			theMenu->open(TITLE_SCREEN);
+
+			//Start HGE. When this function returns it means the program is exiting.
+			hge->System_Start();
+
+		} catch(System::Exception *ex) {
+			MessageBox(NULL, "A fatal error has occurred and the program must exit. \nCheck Smiley.log for more information. \nIt sure would be nice to display the message here but C++ sucks ass", "Error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+			hge->System_Log("----FATAL ERROR----------");
+			hge->System_Log("%s", ex->ToString());
+			exit(1);
+		}
 
 	} else {
 		MessageBox(NULL, hge->System_GetErrorMessage(), "Error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
