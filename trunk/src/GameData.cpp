@@ -14,7 +14,6 @@
 #using <mscorlib.dll>
 using namespace System;
 
-
 extern Player *thePlayer;
 extern HGE *hge;
 
@@ -168,8 +167,6 @@ void GameData::loadAbilityData() {
  */
 void GameData::loadEnemyData() {
 
-	char num[2];
-	char param[68];
 	std::string varName;
 	
 	try {
@@ -178,7 +175,6 @@ void GameData::loadEnemyData() {
 		int numEnemies = atoi(enemyStringTable->GetString("numEnemies"));
 
 		for (int i = 0; i < numEnemies; i++) {
-			itoa(i, num, 10);
 
 			//Enemy name
 			varName = intToString(i);
@@ -348,26 +344,28 @@ void GameData::loadEnemyData() {
 				if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].rangedType = PROJECTILE_1;
 				else enemyInfo[i].rangedType = atoi(enemyStringTable->GetString(varName.c_str()));
 				//Ranged Attack Range
-				strcpy(param, num);
-				strcat(param, "Range");
-				enemyInfo[i].range = atoi(enemyStringTable->GetString(param));
+				varName = intToString(i);
+				varName += "Range";
+				enemyInfo[i].range = atoi(enemyStringTable->GetString(varName.c_str()));
 				//Ranged Attack Delay
-				strcpy(param, num);
-				strcat(param, "Delay");
-				enemyInfo[i].delay = atoi(enemyStringTable->GetString(param));
+				varName = intToString(i);
+				varName += "Delay";
+				enemyInfo[i].delay = atoi(enemyStringTable->GetString(varName.c_str()));
 				//Projectile Speed
-				strcpy(param, num);
-				strcat(param, "PSpeed");
-				enemyInfo[i].projectileSpeed = atoi(enemyStringTable->GetString(param));
+				varName = intToString(i);
+				varName += "PSpeed";
+				enemyInfo[i].projectileSpeed = atoi(enemyStringTable->GetString(varName.c_str()));
 				//Projectile Damage
-				strcpy(param, num);
-				strcat(param, "PDamage");
-				enemyInfo[i].projectileDamage = (float)atoi(enemyStringTable->GetString(param)) / 100.0;
+				varName = intToString(i);
+				varName += "PDamage";
+				enemyInfo[i].projectileDamage = (float)atoi(enemyStringTable->GetString(varName.c_str())) / 100.0;
 			}
 
 		}
 	} catch(Exception *ex) {
-		hge->System_Log("GAY NIGGERS %s", ex->Message);
+		hge->System_Log("Error loading enemy data:");
+		hge->System_Log("%s", ex->ToString());
+		exit(1);
 	}
 
 } // end loadEnemyData()
