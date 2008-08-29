@@ -34,6 +34,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Error Handling||8/28/08||RGW||
 ||Credits Screen||8/24/08||RGW||
 ||Organize Resource Groups||8/24/08||RGW||
 ||Phyrebozz 2||8/23/08||RGW||
