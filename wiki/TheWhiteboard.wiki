@@ -2,6 +2,7 @@
  * Patric
  * Kevin
  * Hillary
+ * Sarah Palin
 
 === Road Map ===
  * Opening Cinematic
