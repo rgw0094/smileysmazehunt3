@@ -113,6 +113,7 @@ void SaveManager::resetCurrentData() {
 	}
 
 	money = 0;
+	tutorialManCompleted = false;
 	for (int i = 0; i < 3; i++) numUpgrades[i] = 0;
 	currentArea = FOUNTAIN_AREA;
 	playerGridX = 0;
@@ -230,6 +231,10 @@ void SaveManager::load(int fileNumber) {
 	inFile.read(fiveBuffer, 5);
 	damageReceived = atoi(fiveBuffer);
 
+	//Tutorial Man
+	inFile.read(buffer, 1);
+	tutorialManCompleted = atoi(buffer) == 1;
+
 	//Load exploration data
 	twoBools nextTwoBools;
 	unsigned char nextChar;
@@ -325,6 +330,9 @@ void SaveManager::save() {
 	outputString += intToString(numEnemiesKilled, 5);
 	outputString += intToString(damageDealt, 5);
 	outputString += intToString(damageReceived, 5);
+
+	//Tutorial Man
+	outputString += intToString(tutorialManCompleted ? 1 : 0);
 
 	//Exploration data
 	unsigned char nextCharToWrite;

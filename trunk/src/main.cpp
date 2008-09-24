@@ -236,8 +236,9 @@ bool FrameFunc() {
 			if (!loadEffectManager->isEffectActive()) {
 				
 				fenwarManager->update(dt);
+				theEnvironment->updateTutorialMan(dt);
 
-				if (!fenwarManager->isEncounterActive()) {
+				if (!fenwarManager->isEncounterActive() && !theEnvironment->isTutorialManActive()) {
 					thePlayer->update(dt);
 					theEnvironment->update(dt);
 					bossManager->update(dt);

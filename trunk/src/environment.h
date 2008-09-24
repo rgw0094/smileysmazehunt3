@@ -15,6 +15,7 @@ class TapestryManager;
 class SmileletManager;
 class Fountain;
 class FenwarManager;
+class TutorialMan;
 
 //-------- Collision Layer ---------//
 #define NUM_COLLISION 36
@@ -145,6 +146,9 @@ public:
 	void addTimedTile(int gridX, int gridY, int tile, float duration);
 	bool isTimedTileAt(int gridX, int gridY);
 	bool isTimedTileAt(int gridX, int gridY, int tile);
+	void reset();
+	void updateTutorialMan(float dt);
+	bool isTutorialManActive();
     
 	//variables
 	int areaWidth,areaHeight;		//Width and height of the area in squares
@@ -170,6 +174,7 @@ private:
 	TapestryManager *tapestryManager;
 	Fountain *fountain;
 	SmileletManager *smileletManager;
+	TutorialMan *tutorialMan;
 	hgeRect *collisionBox;
 
 	hgeAnimation *silverCylinder, *brownCylinder, *blueCylinder, *greenCylinder, *yellowCylinder, *whiteCylinder;

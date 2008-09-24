@@ -26,6 +26,7 @@
 #include "SmileletManager.h"
 #include "Fountain.h"
 #include "FenwarManager.h"
+#include "TutorialMan.h"
 
 #include <string>
 #include <sstream>
@@ -124,6 +125,7 @@ Environment::~Environment() {
 	delete specialTileManager;
 	delete tapestryManager;
 	delete smileletManager;
+	if (tutorialMan) delete tutorialMan;
 	if (fountain) delete fountain;
 
 	delete collisionBox;
@@ -142,23 +144,11 @@ Environment::~Environment() {
 
 }
 
-
 /**
- * Loads an area.
- *
- *	id			id of the zone to load
- *	from		id of the zone Smiley is coming from
- *	playerX		x location to put Smiley, or 0 for default
- *  playerY		y location to put Smiley, or 0 for default
+ * Resets all information about the current area.
  */
-void Environment::loadArea(int id, int from) {
+void Environment::reset() {
 
-	std::ifstream areaFile;
-	char threeBuffer[3];
-
-	saveManager->currentArea = id;
-
-	//Delete all objects from the previous area.
 	bossManager->reset();
 	enemyManager->reset();
 	projectileManager->reset();
@@ -176,6 +166,11 @@ void Environment::loadArea(int id, int from) {
 		fountain = NULL;
 	}
 
+	if (tutorialMan) {
+		delete tutorialMan;
+		tutorialMan = NULL;
+	}
+
 	//Clear old level data
 	for (int i = 0; i < 256; i++) {
 		for (int j = 0; j < 256; j++) {
@@ -188,6 +183,26 @@ void Environment::loadArea(int id, int from) {
 			enemyLayer[i][j] = -1;
 		}
 	}
+
+}
+
+/**
+ * Loads an area.
+ *
+ *	id			id of the zone to load
+ *	from		id of the zone Smiley is coming from
+ *	playerX		x location to put Smiley, or 0 for default
+ *  playerY		y location to put Smiley, or 0 for default
+ */
+void Environment::loadArea(int id, int from) {
+
+	std::ifstream areaFile;
+	char threeBuffer[3];
+
+	saveManager->currentArea = id;
+
+	//Delete all objects from the previous area.
+	reset();
 
 	//Set zone specific info
 	if (areaFile.is_open()) areaFile.close();
@@ -291,6 +306,10 @@ void Environment::loadArea(int id, int from) {
 			//Player start
 			if (collision[col][row] == PLAYER_START && ids[col][row] == from) {
 				thePlayer->moveTo(col, row);
+				//Shitty hard-coded spawn location for the tutorial man
+				if (saveManager->currentArea == FOUNTAIN_AREA && !saveManager->tutorialManCompleted) {
+					tutorialMan = new TutorialMan(thePlayer->gridX, thePlayer->gridY + 4);
+				}
 			}
 
 			//Big ass fountain location
@@ -670,6 +689,7 @@ void Environment::draw(float dt) {
 	smileletManager->drawBeforeSmiley();
 	smileletManager->drawAfterSmiley();
 	specialTileManager->draw(dt);
+	if (tutorialMan) tutorialMan->draw(dt);
 
 }
 
@@ -777,8 +797,8 @@ void Environment::update(float dt) {
 	specialTileManager->update(dt);
 	evilWallManager->update(dt);
 	tapestryManager->update(dt);
-	fountain->update(dt);
 	smileletManager->update();
+	if (fountain) fountain->update(dt);
 
 }
 
@@ -1517,4 +1537,12 @@ bool Environment::isTimedTileAt(int gridX, int gridY) {
 
 bool Environment::isTimedTileAt(int gridX, int gridY, int tile) {
 	return specialTileManager->isTimedTileAt(gridX, gridY, tile);
+}
+
+void Environment::updateTutorialMan(float dt) {
+	if (tutorialMan) tutorialMan->update(dt);
+}
+
+bool Environment::isTutorialManActive() {
+	return (tutorialMan && tutorialMan->isActive());
 }

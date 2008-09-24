@@ -48,6 +48,7 @@ public:
 	float timeFileLoaded;	//used to track playing time
 	int currentSave;
 	int currentArea;
+	bool tutorialManCompleted;
 	int playerGridX, playerGridY;
 	float playerHealth, playerMana;
 

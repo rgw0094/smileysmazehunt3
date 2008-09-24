@@ -508,6 +508,18 @@ Sprite billClinton {
  hotspot=32,32
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
+Sprite tutorialManUp {
+ texture=npcTx
+ rect=192,386,64,64
+ hotspot=32,32
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite tutorialManDown {
+ texture=npcTx
+ rect=0,386,64,64
+ hotspot=32,32
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
 Animation abilities {
  texture=general
  rect=192,0,64,64

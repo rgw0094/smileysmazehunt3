@@ -46,7 +46,7 @@ Hint3-6 = "Thanks so much!  I hope to see you at the event!"
 
 ;=============================================SIGNS======================================
 ;FOUNTAIN.SMH
-Sign1 = "Smiley's house"
+Sign1 = "Smiley's house\n\nIgnore all these warps, they are just here for testing!"
 Sign2 = "Welcome to Smiley Town.\nPopulation: 5"
 Sign3 = "Stuck?  Trying hitting a switch with your tongue."
 Sign4 = "Watch out for enemies!  Attack them with your tongue to destroy them!"
@@ -250,8 +250,6 @@ NPC18Pages = "1"
 NPC18-1 = "Do dank dungeons desire dutiful detergent dolloping?"
 
 
-
-
 ;==============================================BOSSES=====================================
 ;Lord Phyrebawz
 NPC100Name = "Fenwar"
@@ -358,8 +356,6 @@ NPC171Pages = "1"
 NPC171-1 = "Oh, my, goodness gracious me. And you thought Pennsylvania was a perfect rectangle?"
 
 
-
-
 ;==============================================FENWAR ENCOUNTERS=====================================
 NPC240Name = "Fenwar"
 NPC240Pages = "3"
@@ -368,3 +364,14 @@ NPC240-2 = "This is an example Fenwar encounter"
 NPC240-3 = "I hope you like it"
 
 
+;==============================================OTHER SHIT=====================================
+NPC900Name = "Tutorial Man"
+NPC900Pages = "1"
+NPC900-1 = "Hey! You there!"
+NPC901Name = "Tutorial Man"
+NPC901Pages = "5"
+NPC901-1 = "Excuse me, I can't help but think that you are about to go on a great adventure."
+NPC901-2 = "I'm sure a brave adventurer such as yourself already knows to set his controls by pressing escape and going to the Controls menu, so I don't even need to tell you that."
+NPC901-3 = "Of course you also know that it's always a good idea to talk to everyone in town before heading out on a great adventure."
+NPC901-4 = "You look so prepared that you must also know that you can talk to people and read signs simply by licking them, which can be done by pressing the 'Attack' button."
+NPC901-5 = "Well EXCUSE ME Mr. grizzled veteran, I'm sorry for wasting your time telling you things you already know! Gosh, people these days..."

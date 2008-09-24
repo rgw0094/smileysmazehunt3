@@ -234,6 +234,9 @@
 					<File
 						RelativePath=".\src\TapestryManager.cpp">
 					</File>
+					<File
+						RelativePath=".\src\TutorialMan.cpp">
+					</File>
 				</Filter>
 				<Filter
 					Name="Player"
@@ -488,6 +491,9 @@
 					</File>
 					<File
 						RelativePath=".\src\TapestryManager.h">
+					</File>
+					<File
+						RelativePath=".\src\TutorialMan.h">
 					</File>
 				</Filter>
 				<Filter
