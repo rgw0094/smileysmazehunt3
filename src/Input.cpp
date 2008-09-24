@@ -452,7 +452,7 @@ std::string Input::getInputDescription(int whichInput) {
 				description = "GP Down";
 				return description;
 			default:
-				description = "FUCK";
+				description = "Invalid";
 				return description;
 		}
 
