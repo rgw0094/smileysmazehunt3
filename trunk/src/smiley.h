@@ -53,7 +53,7 @@
 #define HOLD 2
 
 //Level ids
-#define NUM_AREAS 9
+#define NUM_AREAS 10
 #define FOUNTAIN_AREA 0
 #define OLDE_TOWNE 1
 #define TUTS_TOMB 2
@@ -63,6 +63,7 @@
 #define SERPENTINE_PATH 6
 #define CASTLE_OF_EVIL 7
 #define SMOLDER_HOLLOW 8
+#define DEBUG_AREA 9
 
 //State
 #define MENU 10

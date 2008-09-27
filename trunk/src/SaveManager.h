@@ -1,6 +1,8 @@
 #ifndef _SAVEMANAGER_H_
 #define _SAVEMANAGER_H_
 
+#include "smiley.h"
+
 class ChangeManager;
 class BitManager;
 
@@ -55,7 +57,7 @@ public:
 	//Stuff in inventory
 	bool hasAbility[12];
 	int numKeys[5][4];
-	int numGems[9][4];
+	int numGems[NUM_AREAS][4];
 	int numUpgrades[3];
 	int money;	
 
@@ -65,7 +67,7 @@ private:
 	BitManager *bitManager;
 
 	SaveFile files[4];
-	bool explored[9][256][256];
+	bool explored[NUM_AREAS][256][256];
 	bool killedBoss[12];
 
 };
