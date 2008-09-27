@@ -233,6 +233,9 @@ void Environment::loadArea(int id, int from) {
 	} else if (id == CASTLE_OF_EVIL) {
 		soundManager->playMusic("castleOfEvilMusic");
 		areaFile.open("Data/Maps/castle.smh");
+	} else if (id == DEBUG_AREA) {
+		soundManager->stopMusic();
+		areaFile.open("Data/Maps/debug.smh");
 	}
 
 	//id range - ignore it
@@ -302,15 +305,6 @@ void Environment::loadArea(int id, int from) {
 		for (int col = 0; col < areaWidth; col++) {
 			areaFile.read(threeBuffer,3);
 			collision[col][row] = atoi(threeBuffer);
-
-			//Player start
-			if (collision[col][row] == PLAYER_START && ids[col][row] == from) {
-				thePlayer->moveTo(col, row);
-				//Shitty hard-coded spawn location for the tutorial man
-				if (saveManager->currentArea == FOUNTAIN_AREA && !saveManager->tutorialManCompleted) {
-					tutorialMan = new TutorialMan(thePlayer->gridX, thePlayer->gridY + 4);
-				}
-			}
 
 			//Big ass fountain location
 			if (collision[col][row] == FOUNTAIN) {
@@ -486,6 +480,28 @@ void Environment::loadArea(int id, int from) {
 		}
 	}
 	
+
+	//Place the player. If after the first pass there was no zone entrance for where the player came from,
+	//scan the area again and put the player in the first start square.
+	int playerX = -1;
+	int playerY = -1;
+	for (int i = 0; i < 2; i++) {
+		if (playerX == -1 && playerY == -1) {
+			for (int row = 0; row < areaHeight; row++) {
+				for (int col = 0; col < areaWidth; col++) {
+					if (collision[col][row] == PLAYER_START && (ids[col][row] == from || i == 1)) {
+						playerX = col;
+						playerY = row;
+					}
+				}
+			}
+		}
+	}
+	thePlayer->moveTo(playerX, playerY);
+	if (saveManager->currentArea == FOUNTAIN_AREA && !saveManager->tutorialManCompleted) {
+		tutorialMan = new TutorialMan(thePlayer->gridX, thePlayer->gridY + 4);
+	}
+
 	//Update to get shit set up
 	update(0.0);
 	enemyManager->update(0.0);

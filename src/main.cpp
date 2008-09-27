@@ -49,6 +49,8 @@ int frameCounter = 0;
 int gameState = MENU;
 bool debugMode;
 float darkness = 0.0;
+bool debugMovePressed = false;
+float lastDebugMoveTime = 0.0;
 
 /**
  * Performs an initial load of game resources. Most resources are loaded dynamically
@@ -169,11 +171,29 @@ void doDebugInput() {
 			thePlayer->setHealth(thePlayer->getMaxHealth());
 		}
 
+		//Teleport to warp zone
+		if (hge->Input_KeyDown(HGEK_F1)) {
+			if (!loadEffectManager->isEffectActive()) {
+				loadEffectManager->startEffect(-1, -1, DEBUG_AREA);
+			}
+		}
+
 		//Move smiley with num pad
-		if (hge->Input_KeyDown(HGEK_NUMPAD8)) thePlayer->moveTo(thePlayer->gridX, thePlayer->gridY - 1);
-		if (hge->Input_KeyDown(HGEK_NUMPAD5)) thePlayer->moveTo(thePlayer->gridX, thePlayer->gridY + 1);
-		if (hge->Input_KeyDown(HGEK_NUMPAD4)) thePlayer->moveTo(thePlayer->gridX - 1, thePlayer->gridY);
-		if (hge->Input_KeyDown(HGEK_NUMPAD6)) thePlayer->moveTo(thePlayer->gridX + 1, thePlayer->gridY);
+		int xMove = 0;
+		int yMove = 0;
+		if (hge->Input_GetKeyState(HGEK_NUMPAD8) || hge->Input_GetKeyState(HGEK_NUMPAD5) || hge->Input_GetKeyState(HGEK_NUMPAD4) || hge->Input_GetKeyState(HGEK_NUMPAD6)) {
+			if (!debugMovePressed) {
+				debugMovePressed = true;
+				lastDebugMoveTime = gameTime;
+			}
+			if (hge->Input_KeyDown(HGEK_NUMPAD8) || (timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(HGEK_NUMPAD8))) yMove = -1;
+			if (hge->Input_KeyDown(HGEK_NUMPAD5) || (timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(HGEK_NUMPAD5))) yMove = 1;
+			if (hge->Input_KeyDown(HGEK_NUMPAD4) || (timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(HGEK_NUMPAD4))) xMove = -1;
+			if (hge->Input_KeyDown(HGEK_NUMPAD6) || (timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(HGEK_NUMPAD6))) xMove = 1;
+		} else {
+			debugMovePressed = false;
+		}
+		if (abs(xMove) > 0 || abs(yMove) > 0) thePlayer->moveTo(thePlayer->gridX + xMove, thePlayer->gridY + yMove);
 
 	}
 
@@ -193,7 +213,7 @@ bool FrameFunc() {
 	input->UpdateInput();
 	
 	//Input for taking screenshots
-	if (hge->Input_KeyDown(HGEK_F1)) {
+	if (hge->Input_KeyDown(HGEK_F9)) {
 		hge->System_Snapshot();
 	}
 	

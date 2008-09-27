@@ -61,6 +61,10 @@ const char *GameData::getAreaName(int area) {
 		return "Castle Of Evil";
 	} else if (area == SERPENTINE_PATH) {
 		return "The Serpentine Path";
+	} else if (area == DEBUG_AREA) {
+		return "Debug Area";
+	} else {
+		return "Dickens";
 	}
 	
 }
