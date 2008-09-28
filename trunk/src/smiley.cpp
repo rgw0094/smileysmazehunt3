@@ -152,30 +152,24 @@ const char *getTimeString(int time) {
  * Returns the specified integer as a string because the designers of C were too 
  * distracted by their beards to write a language that doESNT SUCK ASS FUCK SHIT
  */
-const char *intToString(int n) {
+std::string intToString(int n) {
 	std::string numberString = "";
 	char number[10];
 	itoa(n, number, 10);
 	numberString += number;
-	return numberString.c_str();
+	return numberString;
 }
 
 /**
  * Returns the int as a string, with the given number of digits
  */
-const char *intToString(int number, int digits) {
-
+std::string intToString(int number, int digits) {
 	std::string returnString;
-	std::string placeholder;
-
 	returnString = intToString(number);
-
 	while (returnString.size() < digits) {
 		returnString.insert(0,"0");			
 	}
-
-	return returnString.c_str();
-
+	return returnString;
 }
 
 /**
