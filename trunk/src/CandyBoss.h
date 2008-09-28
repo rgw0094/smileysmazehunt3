@@ -38,6 +38,8 @@ private:
 	float timeStoppedJump;
 	float jumpSpeed;
 
+	double bigAir; //how high in the air Bartli is
+
 	//Variables common for all bosses
 	int groupID;
 	bool startedIntroDialogue;
