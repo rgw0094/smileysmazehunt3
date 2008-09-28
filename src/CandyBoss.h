@@ -4,7 +4,9 @@
 #include "boss.h"
 
 class CandyBoss : public Boss {
+
 public:
+
 	CandyBoss(int _gridX,int _gridY,int _groupID);
 	~CandyBoss();
 
@@ -17,23 +19,24 @@ public:
 private:
 
 	//methods
-	void initBossBoundaries();
+	void drawBartli();
+	void initCanPass();
 	void updateRun(float dt);
-	double reflectOffLeftBoundary(double angle);
-	double reflectOffRightBoundary(double angle);
-	double reflectOffTopBoundary(double angle);
-	double reflectOffBottomBoundary(double angle);
-	double makeAngleProper(double angle); //makes it go from 0 to 2 pi
-	void updateCollisionRect();
+	void updateJumping(float dt);
+	void setCollisionBox(hgeRect *box, float x, float y);
 
 	//variables specific to Bartli
-
 	double leftArmRot,rightArmRot;
 	double leftLegY,rightLegY;
-
-	double runDirection;
-
-	int leftBoundary,rightBoundary,topBoundary,bottomBoundary; //the boundaries of the arena which the Bartli's x,y should not go past
+	double angle;
+	bool canPass[256];
+	bool jumping;
+	float jumpYOffset;
+	float jumpDistance;
+	float timeStartedJump;
+	float timeToJump;
+	float timeStoppedJump;
+	float jumpSpeed;
 
 	//Variables common for all bosses
 	int groupID;
@@ -45,10 +48,9 @@ private:
 	double x,y;
 	int state;
 	float timeEnteredState;
-	hgeRect *collisionRect;
-
+	hgeRect *collisionBox;
+	hgeRect *futureCollisionBox;
 
 };
-
 
 #endif
