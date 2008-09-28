@@ -171,18 +171,12 @@ void GameData::loadEnemyData() {
 	char num[2];
 	char param[68];
 	std::string varName;
-	hge->System_Log("Nigger: Loading enemy shit");
-	enemyStringTable = new hgeStringTable("Data/Enemies.dat");
 
-	hge->System_Log("Nigger: using atoi to get num enemies");
+	enemyStringTable = new hgeStringTable("Data/Enemies.dat");
 	int numEnemies = atoi(enemyStringTable->GetString("numEnemies"));
-	hge->System_Log("Nigger2");
 
 	for (int i = 0; i < numEnemies; i++) {
-
-		hge->System_Log("Nigger1: %d", i);
 		itoa(i, num, 10);
-		hge->System_Log("Nigger2");
 
 		//Enemy name
 		varName = intToString(i);
