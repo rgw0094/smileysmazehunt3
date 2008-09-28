@@ -2,6 +2,7 @@
 #define _SMILEY_H_
 
 #include <stdlib.h>
+#include <string>
 #include "hgerect.h"
 
 //Constants
@@ -113,8 +114,8 @@ int getGridX(int x);
 int getGridY(int y);
 int distance(int x1, int y1, int x2, int y2);
 const char *getTimeString(int seconds);
-const char *intToString(int dickens);
-const char *intToString(int dickens, int numDigits);
+std::string intToString(int dickens);
+std::string intToString(int dickens, int numDigits);
 bool isCylinderSwitchLeft(int id);
 bool isCylinderSwitchRight(int id);
 bool isCylinderUp(int id);
