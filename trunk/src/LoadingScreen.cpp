@@ -52,9 +52,10 @@ bool LoadingScreen::update(float dt, float mouseX, float mouseY) {
 	//Make sure the load screen is up for at least a little bit so that it doesn't just flash up
 	//if the person's computer is too fast.
 	if (hge->Timer_GetTime() - timeEnteredScreen > 1.1) {
-
+		int x = saveManager->playerGridX;
+		int y = saveManager->playerGridY;
 		theEnvironment->loadArea(saveManager->currentArea, saveManager->currentArea);
-		thePlayer->moveTo(saveManager->playerGridX, saveManager->playerGridY);
+		thePlayer->moveTo(x, y);
 		theEnvironment->update(0.0); //update for screen offsets
 		thePlayer->reset();
 		thePlayer->setHealth(saveManager->playerHealth);
