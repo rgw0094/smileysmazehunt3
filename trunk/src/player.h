@@ -25,6 +25,7 @@ public:
 	void dealDamageAndKnockback(float damage, bool makesFlash, float knockbackDist, float knockbackerX, float knockbackerY);
 	void dealDamageAndKnockback(float damage, bool makesFlash, bool alwaysKnockback, float knockbackDist, float knockbackerX, float knockbackerY);
 	void freeze(float duration);
+	void stun(float duration);
 	void reset();
 
 	//Accessors/mutators
@@ -125,6 +126,8 @@ private:
 	float timeStartedHovering;
 	float timeFrozen;
 	float freezeDuration;
+	float stunDuration;
+	float timeStartedStun;
 
 	//State info
 	bool breathingFire;				//If using Fire Breath ability
@@ -149,6 +152,7 @@ private:
 	bool usingCane;
 	bool inShrinkTunnel;
 	bool frozen;
+	bool stunned;
 
 };
 

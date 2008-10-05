@@ -110,6 +110,12 @@ Sprite bloodSplatGraphic {
  hotspot=16,16
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
+Sprite shockwaveGraphic {
+ texture=particlesTx
+ rect=0,96,32,32
+ hotspot=16,16
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
 Particle enemyBlockCloud {
  filename=particle1.psi
  sprite=particleGraphic13
@@ -181,6 +187,10 @@ Particle smileysCane {
 Particle flame {
  filename=flame.psi
  sprite=particleGraphic13
+}
+Particle shockwave {
+ filename=shockwave.psi
+ sprite=shockwaveGraphic
 }
 
 ;********************************************

@@ -173,6 +173,7 @@ void Player::update(float dt) {
 	//Update timed statuses
 	if (flashing && timePassedSince(startedFlashing) > 1.5) flashing = false;
 	if (frozen && timePassedSince(timeFrozen) > freezeDuration) frozen = false;
+	if (stunned && timePassedSince(timeStartedStun) > stunDuration) stunned = false;
 
 	//Update shit if in Knockback state
 	if (!falling && !sliding && knockback && timePassedSince(startedKnockBack) > KNOCKBACK_DURATION) {
@@ -204,7 +205,6 @@ void Player::update(float dt) {
 	if (health > getMaxHealth()) health = getMaxHealth();
 
 	doWarps();
-	
 	doAbility(dt);
 	doItems();
 	doWater();
@@ -375,6 +375,16 @@ void Player::draw(float dt) {
 	//Draw an ice block over smiley if he is frozen;
 	if (frozen) {
 		resources->GetSprite("iceBlock")->Render(getScreenX(x),getScreenY(y));
+	}
+
+	if (stunned) {
+		float angle;
+		for (int n = 0; n < 5; n++) {
+			angle = ((float(n)+1.0)/5.0) * 2.0*PI + gameTime;
+			resources->GetSprite("stunStar")->Render(
+				getScreenX(x + cos(angle)*25), 
+				getScreenY(y + sin(angle)*7) - 30.0);
+		}
 	}
 
 	//Breath Attacks - draw on top of player if facing up, left or down
@@ -1220,9 +1230,10 @@ void Player::doWater() {
  */
 void Player::updateVelocities(float dt) {
 
+	//For the following states, velocities are handled in their respective update methods
 	if (falling || inShrinkTunnel || iceSliding || sliding || springing) return;
 
-	if (frozen || drowning) {
+	if (frozen || drowning || stunned) {
 		dx = dy = 0.0;
 		return;
 	}
@@ -1437,6 +1448,14 @@ void Player::freeze(float duration) {
 		frozen = true;
 		timeFrozen = gameTime;
 		freezeDuration = duration;
+	}
+}
+
+void Player::stun(float duration) {
+	if (!falling) {
+		stunned = true;
+		timeStartedStun = gameTime;
+		stunDuration = duration;
 	}
 }
 
