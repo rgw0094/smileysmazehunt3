@@ -81,8 +81,11 @@ void WeaponParticleSystem::Update(float fDeltaTime) {
 			continue;
 		}
 
+		float x = par->vecLocation.x + theEnvironment->xGridOffset*64.0 + theEnvironment->xOffset;
+		float y = par->vecLocation.y + theEnvironment->yGridOffset*64.0 + theEnvironment->yOffset;
+
 		//Kill particles that hit a wall
-		if (theEnvironment->collisionAt(par->vecLocation.x + theEnvironment->xGridOffset*64.0 + theEnvironment->xOffset, par->vecLocation.y + theEnvironment->yGridOffset*64.0 + theEnvironment->yOffset) == UNWALKABLE) {
+		if (theEnvironment->collisionAt(x, y) == UNWALKABLE) {
 			nParticlesAlive--;
 			memcpy(par, &particles[nParticlesAlive], sizeof(hgeParticle));
 			i--;
@@ -92,16 +95,21 @@ void WeaponParticleSystem::Update(float fDeltaTime) {
 
 		//Do collision
 		if (type == PARTICLE_ICE_BREATH) {
-			enemyManager->freezeEnemies(par->vecLocation.x + theEnvironment->xGridOffset*64.0 + theEnvironment->xOffset, par->vecLocation.y + theEnvironment->yGridOffset*64.0 + theEnvironment->yOffset);
+			enemyManager->freezeEnemies(x, y);
 		} else if (type == PARTICLE_FIRE_NOVA || type == PARTICLE_FIRE_NOVA2) {
-			collisionBox->SetRadius(par->vecLocation.x + theEnvironment->xGridOffset*64 + theEnvironment->xOffset, par->vecLocation.y + theEnvironment->yGridOffset*64 + theEnvironment->yOffset, par->fSize);
+			collisionBox->SetRadius(x, y, par->fSize);
 			if (thePlayer->collisionCircle->testBox(collisionBox)) {
 				thePlayer->dealDamage(NOVA_DAMAGE, true);
 			}
 		} else if (type == PARTICLE_ICE_NOVA) {
-			collisionBox->SetRadius(par->vecLocation.x + theEnvironment->xGridOffset*64 + theEnvironment->xOffset, par->vecLocation.y + theEnvironment->yGridOffset*64 + theEnvironment->yOffset, par->fSize);
+			collisionBox->SetRadius(x, y, par->fSize);
 			if (thePlayer->collisionCircle->testBox(collisionBox)) {
 				thePlayer->freeze(ICE_NOVA_FREEZE_DURATION);
+			}
+		} else if (type == PARTICLE_SHOCKWAVE) {
+			collisionBox->SetRadius(x, y, par->fSize);
+			if (thePlayer->collisionCircle->testBox(collisionBox)) {
+				thePlayer->stun(3.0);
 			}
 		}
 

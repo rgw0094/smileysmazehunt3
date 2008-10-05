@@ -15,6 +15,7 @@ class CollisionCircle;
 #define PARTICLE_FIRE_NOVA 2
 #define PARTICLE_FIRE_NOVA2 3
 #define PARTICLE_ICE_NOVA 4
+#define PARTICLE_SHOCKWAVE 5
 
 #define ICE_NOVA_FREEZE_DURATION 2.0
 

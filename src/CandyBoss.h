@@ -3,6 +3,15 @@
 
 #include "boss.h"
 
+class CollisionCircle;
+
+struct Nova {
+	float x, y, radius;
+	hgeParticleSystem *particle;
+	CollisionCircle *collisionCircle;
+	float timeSpawned;
+};
+
 class CandyBoss : public Boss {
 
 public:
@@ -20,7 +29,11 @@ private:
 
 	//methods
 	void drawBartli();
+	void spawnNova(float x, float y);
+	void updateNovas(float dt);
+	void drawNovas(float dt);
 	void initCanPass();
+	void updateLimbs(float dt);
 	void updateRun(float dt);
 	void updateJumping(float dt);
 	void setCollisionBox(hgeRect *box, float x, float y);
@@ -37,10 +50,15 @@ private:
 	float timeToJump;
 	float timeStoppedJump;
 	float jumpSpeed;
+	int numJumps;
+	float speedMultiplier;
 
+<<<<<<< .mine
+=======
 	double bigAir; //how high in the air Bartli is
 
 	//Variables common for all bosses
+>>>>>>> .r440
 	int groupID;
 	bool startedIntroDialogue;
 	bool droppedLoot;
@@ -52,6 +70,7 @@ private:
 	float timeEnteredState;
 	hgeRect *collisionBox;
 	hgeRect *futureCollisionBox;
+	std::list<Nova> novaList;
 
 };
 

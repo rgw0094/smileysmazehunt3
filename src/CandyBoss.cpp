@@ -6,9 +6,11 @@
 #include "EnemyManager.h"
 #include "EnemyGroupManager.h"
 #include "WindowManager.h"
-#include "Smiley.h" //For getScreenX and getScreenY
+#include "Smiley.h"
 #include "SoundManager.h"
 #include "Environment.h"
+#include "collisioncircle.h"
+#include "WeaponParticle.h"
 
 extern HGE *hge;
 extern hgeResourceManager *resources;
@@ -34,8 +36,9 @@ extern Environment *theEnvironment;
 #define CANDY_STATE_INACTIVE 0
 #define CANDY_STATE_RUNNING 1
 #define CANDY_STATE_JUMPING 2
-#define CANDY_STATE_THROWING_CANDY 3
-#define CANDY_STATE_FIRING_PROJECTILES 4
+#define CANDY_STATE_MULTI_JUMP 3
+#define CANDY_STATE_THROWING_CANDY 4
+#define CANDY_STATE_FIRING_PROJECTILES 5
 
 //Text
 #define CANDY_INTRO_TEXT 170
@@ -45,8 +48,10 @@ extern Environment *theEnvironment;
 #define CANDY_WIDTH 106
 #define CANDY_HEIGHT 128
 #define CANDY_RUN_SPEED 800.0
-
-#define CANDY_JUMP_DELAY 0.75
+#define CANDY_JUMP_DELAY 0.35
+#define COLLISION_DAMAGE 1.0
+#define SHOCKWAVE_STUN_DURATION 3.0
+#define SHOCKWAVE_DAMAGE 0.25
 
 CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 	initialGridX = gridX = _gridX;
@@ -74,6 +79,7 @@ CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 	rightArmRot=CANDY_ARM_INITIAL_ROT;
 	leftLegY = rightLegY = 0;
 	jumpYOffset = 0.0;
+	speedMultiplier = 1.0;
 
 }
 
@@ -87,6 +93,7 @@ CandyBoss::~CandyBoss() {
  * This is always called before Smiley is drawn.
  */
 void CandyBoss::draw(float dt) {
+	drawNovas(dt);
 	if (!shouldDrawAfterSmiley) {
 		drawBartli();
 	}
@@ -119,6 +126,11 @@ bool CandyBoss::update(float dt) {
 		soundManager->playMusic("bossMusic");
 	}
 
+	//Bartli gets faster the longer the battle goes on
+	if (state == CANDY_STATE_RUNNING || state == CANDY_STATE_JUMPING) {
+		speedMultiplier += 0.005 * dt;
+	}
+
 	if (state == CANDY_STATE_RUNNING) {
 		updateRun(dt);
 		if (timePassedSince(timeEnteredState) > 8.0) {
@@ -128,9 +140,29 @@ bool CandyBoss::update(float dt) {
 
 	if (state == CANDY_STATE_JUMPING) {
 		updateJumping(dt);
+		if (numJumps >= 10) {
+			enterState(CANDY_STATE_RUNNING);
+		}
+	}
+
+	if (state == CANDY_STATE_MULTI_JUMP) {
+		updateJumping(dt);
+		if (numJumps >= 5) {
+			enterState(CANDY_STATE_RUNNING);
+		}
 	}
 
 	setCollisionBox(collisionBox, x, y);
+	if (thePlayer->collisionCircle->testBox(collisionBox) && jumpYOffset < 65.0) {
+		if (state == CANDY_STATE_MULTI_JUMP) {
+			thePlayer->dealDamage(0.25, false);
+		} else {
+			thePlayer->dealDamageAndKnockback(COLLISION_DAMAGE, true, 150.0, x, y);
+		}
+	}
+
+	updateLimbs(dt);
+	updateNovas(dt);
 	shouldDrawAfterSmiley = (y > thePlayer->y);
 }
 
@@ -169,24 +201,30 @@ void CandyBoss::enterState(int _state) {
 		} while (angle > angleBetween - PI/4.0 && angle < angleBetween + PI/4.0);
 	}
 
-	if (state == CANDY_STATE_JUMPING) {
-		
+	if (state == CANDY_STATE_JUMPING || state == CANDY_STATE_MULTI_JUMP) {
+		numJumps = 0;	
 	}
 
 }
 
+void CandyBoss::updateLimbs(float dt) {
+	if (state == CANDY_STATE_RUNNING) {
+		leftLegY = 5.0*sin(timePassedSince(timeEnteredState)*20);
+		rightLegY = -5.0*sin(timePassedSince(timeEnteredState)*20);
+	}
+	if (state == CANDY_STATE_RUNNING || state == CANDY_STATE_JUMPING || state == CANDY_STATE_MULTI_JUMP) {
+		leftArmRot = -CANDY_ARM_INITIAL_ROT + 15*PI/180*sin(timePassedSince(timeEnteredState)*7);
+		rightArmRot = CANDY_ARM_INITIAL_ROT - 15*PI/180*sin(timePassedSince(timeEnteredState)*7);
+	}
+}
+
 /**
- * Updates the run state. Bartli runs around bouncing off the walls.
+ * Run state - Bartli runs around bouncing off the walls.
  */
 void CandyBoss::updateRun(float dt) {
 
-	leftLegY = 5.0*sin(timePassedSince(timeEnteredState)*20);
-	rightLegY = -5.0*sin(timePassedSince(timeEnteredState)*20);
-	leftArmRot = -CANDY_ARM_INITIAL_ROT + 15*PI/180*sin(timePassedSince(timeEnteredState)*7);
-	rightArmRot = CANDY_ARM_INITIAL_ROT - 15*PI/180*sin(timePassedSince(timeEnteredState)*7);
-
-	float xDist = CANDY_RUN_SPEED * cos(angle) * dt;
-	float yDist = CANDY_RUN_SPEED * sin(angle) * dt;
+	float xDist = CANDY_RUN_SPEED * speedMultiplier * cos(angle) * dt;
+	float yDist = CANDY_RUN_SPEED * speedMultiplier * sin(angle) * dt;
 	setCollisionBox(futureCollisionBox, x + xDist, y + yDist);
 
 	//When bartli hits a wall, bounce off it towards smiley
@@ -208,25 +246,38 @@ void CandyBoss::updateRun(float dt) {
 
 }
 
+/**
+ * Jumping states - In normal jump Bartli jumps around, causing shockwaves when she lands. If the player is
+ * hit by a shockwave he is stunned and Bartli will jump on him several times and then go to the next state. Or,
+ * if the player dodges Bartli long enough she will go to the next state.
+ */
 void CandyBoss::updateJumping(float dt) {
 
 	//Start jump
-	if (!jumping && timePassedSince(timeStoppedJump) > CANDY_JUMP_DELAY) {
+	if (!jumping && timePassedSince(timeStoppedJump) > (state == CANDY_STATE_MULTI_JUMP ? 0.0 : CANDY_JUMP_DELAY)) {
 
 		jumping = true;
-		angle = getAngleBetween(x, y, thePlayer->x, thePlayer->y);
-		jumpDistance = distance(x, y, thePlayer->x, thePlayer->y);
-		if (jumpDistance > 400.0) jumpDistance = 400.0;
+		numJumps++;
+
+		//Try to jump on smiley. The y offset is so her feet land at smiley's location
+		angle = getAngleBetween(x, y, thePlayer->x, thePlayer->y - 40.0);
+		jumpDistance = min(400.0, distance(x, y, thePlayer->x, thePlayer->y - 40));
+
+		//If Bartli is in multi jump state she should jump up and down on the player
+		if (state != CANDY_STATE_MULTI_JUMP) {
+			angle += hge->Random_Float(-PI/8.0, PI/8.0);
+			jumpDistance += hge->Random_Float(-100.0, 100.0);
+		}		
 	
-		jumpSpeed = max(400.0, (jumpDistance/400.0)*700.0);
+		timeToJump = 0.5 * (1.0 / speedMultiplier);
+		jumpSpeed = jumpDistance / timeToJump;
 		timeStartedJump = gameTime;
-		timeToJump = jumpDistance / float(jumpSpeed);
 
 	}
 
 	if (jumping) {
 
-		jumpYOffset = (jumpDistance / 3.0) * sin((timePassedSince(timeStartedJump)/timeToJump) * PI);
+		jumpYOffset = 150.0 * sin((timePassedSince(timeStartedJump)/timeToJump) * PI);
 		
 		x += jumpSpeed * cos(angle) * dt;
 		y += jumpSpeed * sin(angle) * dt;
@@ -235,6 +286,7 @@ void CandyBoss::updateJumping(float dt) {
 			jumping = false;
 			timeStoppedJump = gameTime;
 			jumpYOffset = 0.0;
+			if (state == CANDY_STATE_JUMPING) spawnNova(x, y);
 		}
 
 	}
@@ -253,4 +305,49 @@ void CandyBoss::initCanPass() {
 		canPass[i] = false;
 	}
 	canPass[WALKABLE] = true;
+}
+
+void CandyBoss::spawnNova(float _x, float _y) {
+	Nova newNova;
+	newNova.x = _x;
+	newNova.y = _y;
+	newNova.radius = 0.0;
+	newNova.timeSpawned = gameTime;
+	newNova.particle = new hgeParticleSystem(&resources->GetParticleSystem("shockwave")->info);
+	newNova.particle->info.fParticleLifeMax = newNova.particle->info.fParticleLifeMin = 1.0;
+	newNova.particle->FireAt(getScreenX(_x), getScreenY(_y));
+	newNova.collisionCircle = new CollisionCircle();
+
+	novaList.push_back(newNova);
+}
+
+void CandyBoss::updateNovas(float dt) {
+	for (std::list<Nova>::iterator i = novaList.begin(); i != novaList.end(); i++) {
+
+		i->particle->MoveTo(getScreenX(i->x), getScreenY(i->y), true);
+		i->particle->Update(dt);
+		i->radius += 280.0 * dt;
+		i->collisionCircle->set(i->x, i->y, i->radius);
+
+		if (thePlayer->collisionCircle->testCircle(i->collisionCircle)) {
+			thePlayer->stun(SHOCKWAVE_STUN_DURATION);
+			thePlayer->dealDamage(SHOCKWAVE_DAMAGE, false);
+			if (state == CANDY_STATE_JUMPING) {
+				enterState(CANDY_STATE_MULTI_JUMP);
+			}
+		}
+
+		if (timePassedSince(i->timeSpawned) > i->particle->info.fParticleLifeMax) {
+			delete i->particle;
+			delete i->collisionCircle;
+			i = novaList.erase(i);
+		}
+	}
+}
+
+void CandyBoss::drawNovas(float dt) {
+	for (std::list<Nova>::iterator i = novaList.begin(); i != novaList.end(); i++) {
+		i->particle->Render();
+		if (debugMode) i->collisionCircle->draw();
+	}
 }
