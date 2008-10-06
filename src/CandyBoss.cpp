@@ -122,7 +122,7 @@ bool CandyBoss::update(float dt) {
 
 	//Activate the boss when the intro dialogue is closed
 	if (state == CANDY_STATE_INACTIVE && startedIntroDialogue && !windowManager->isTextBoxOpen()) {
-		enterState(CANDY_STATE_JUMPING);
+		enterState(CANDY_STATE_RUNNING);
 		soundManager->playMusic("bossMusic");
 	}
 
