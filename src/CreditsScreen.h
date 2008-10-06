@@ -27,12 +27,15 @@ public:
 private:
 
 	void init();
-	void drawBossList();
 
 	std::list<CreditsItem> enemyList;
+	std::list<CreditsItem> bossList;
+	std::list<CreditsItem> npcList;
 	float offset;
 	float bossStart;
+	float npcStart;
 	float timeScreenOpened;
+	float endY;
 	bool resourcesCachedYet;
 
 };

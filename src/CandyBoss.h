@@ -53,12 +53,6 @@ private:
 	int numJumps;
 	float speedMultiplier;
 
-<<<<<<< .mine
-=======
-	double bigAir; //how high in the air Bartli is
-
-	//Variables common for all bosses
->>>>>>> .r440
 	int groupID;
 	bool startedIntroDialogue;
 	bool droppedLoot;
