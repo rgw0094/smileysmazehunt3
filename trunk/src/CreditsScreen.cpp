@@ -14,6 +14,8 @@ extern Menu *theMenu;
 
 #define TITLE_START 300.0
 #define ENEMY_START 1300.0
+#define NUM_UNIQUE_BOSSES 7
+#define NUM_UNIQUE_NPCS 12
 
 CreditsScreen::CreditsScreen() {
 	init();
@@ -40,22 +42,29 @@ void CreditsScreen::draw(float dt) {
 	resources->GetFont("titleFnt")->printf(512.0,TITLE_START - offset,HGETEXT_CENTER,"Smiley's Maze Hunt");
 	resources->GetFont("curlz")->printf(512.0,TITLE_START + 100.0 - offset,HGETEXT_CENTER,"Created By:\nRob Walsh\nErik Interval\n Ryan Manion");
 
-	//Enemy title
+	//Enemies
 	resources->GetFont("titleFnt")->printf(512.0,ENEMY_START-offset,HGETEXT_CENTER,"Enemies");
-
-	//Enemy list
 	for (std::list<CreditsItem>::iterator i = enemyList.begin(); i != enemyList.end(); i++) {
 		i->graphic->Render(i->x, i->y - offset);
-		resources->GetFont("curlz")->printf(i->x, i->y + 40 - offset, HGETEXT_CENTER, i->name.c_str());
+		resources->GetFont("curlz")->printf(i->x, i->y + i->graphic->GetHeight()/2.0 + 20.0 - offset, HGETEXT_CENTER, i->name.c_str());
 	}
 
-	//Bosses title
+	//Bosses
 	resources->GetFont("titleFnt")->printf(512.0,bossStart-offset,HGETEXT_CENTER,"Bosses");
+	for (std::list<CreditsItem>::iterator i = bossList.begin(); i != bossList.end(); i++) {
+		i->graphic->Render(i->x, i->y - offset);
+		resources->GetFont("curlz")->printf(i->x, i->y + i->graphic->GetHeight()/2.0 + 20.0 - offset, HGETEXT_CENTER, i->name.c_str());
+	}
 
-	//Boss list
-	drawBossList();
+	//NPCs
+	resources->GetFont("titleFnt")->printf(512.0, npcStart-offset, HGETEXT_CENTER, "NPCs");
+	for (std::list<CreditsItem>::iterator i = npcList.begin(); i != npcList.end(); i++) {
+		i->graphic->Render(i->x, i->y - offset);
+		resources->GetFont("curlz")->printf(i->x, i->y + i->graphic->GetHeight()/2.0 + 20.0 - offset, HGETEXT_CENTER, i->name.c_str());
+	}
 
-}
+	resources->GetFont("titleFnt")->printf(512.0, endY - offset, HGETEXT_CENTER, "The End");
+}	
 
 bool CreditsScreen::update(float dt, float mouseX, float mouseY) {
 	
@@ -66,16 +75,15 @@ bool CreditsScreen::update(float dt, float mouseX, float mouseY) {
 	}
 
 	//The screen slowly scrolls down
-	if (hge->Timer_GetTime() - timeScreenOpened > 2.0) {
+	if ((hge->Timer_GetTime() - timeScreenOpened > 1.5) && offset + 350 < endY) {
 		offset += SPEED * dt;
 	}
 
+	//Input
 	if (hge->Input_KeyDown(HGEK_ENTER)) {
 		theMenu->setScreen(TITLE_SCREEN);
 		return false;
 	}
-
-
 	if (hge->Input_KeyDown(HGEK_DOWN)) offset += 400.0;
 	if (hge->Input_KeyDown(HGEK_UP)) offset -= 400.0;
 
@@ -86,6 +94,8 @@ bool CreditsScreen::update(float dt, float mouseX, float mouseY) {
  * Initializes enemy and boss lists that will scroll down
  */
 void CreditsScreen::init() {
+
+	std::string param;
 
 	//-------Initialize enemies--------
 	int enemyCounter = 0;
@@ -107,63 +117,82 @@ void CreditsScreen::init() {
 		enemyCounter++;
 	}
 
+	//-------Initialize bosses---------
 	bossStart = ENEMY_START + 135.0 + 175.0 * enemyCounter + 450.0;
+	float bossY = bossStart + 200.0;
+	for (int i = 0; i < NUM_UNIQUE_BOSSES; i++) {
+		
+		CreditsItem newBoss;
+		newBoss.x = 512.0;
+
+		if (i == 0) {
+			newBoss.name = "Load Phyrebozz";
+			newBoss.graphic = resources->GetSprite("creditsPhyrebozz");
+		} else if (i == 1) {
+			newBoss.name = "Portly Penguin";
+			newBoss.graphic = resources->GetSprite("creditsPortlyPenguin");
+		} else if (i == 2) {
+			newBoss.name = "Lord Garmborn";
+			newBoss.graphic = resources->GetSprite("creditsGarmborn");
+		} else if (i == 3) {
+			newBoss.name = "Cornwallis";
+			newBoss.graphic = resources->GetSprite("creditsCornwallis");
+		} else if (i == 4) {
+			newBoss.name = "Calypso";
+			newBoss.graphic = resources->GetSprite("creditsCalypso");
+		} else if (i == 5) {
+			newBoss.name = "Brian Fungus";
+			newBoss.graphic = resources->GetSprite("creditsBrianFungus");
+		} else if (i == 6) {
+			newBoss.name = "Bartli";
+			newBoss.graphic = resources->GetSprite("creditsBartli");
+		}
+
+		if (i > 0) bossY += newBoss.graphic->GetHeight()/2 + 25.0 + 400.0;
+		newBoss.y = bossY;
+		bossList.push_back(newBoss);
+	}
+
+	//-------Initialize NPCs--------
+	npcStart = bossY + 700.0;
+	for (int i = 0; i < NUM_UNIQUE_NPCS; i++) {
+
+		CreditsItem newNPC;
+		newNPC.x = 512.0;
+		newNPC.y = npcStart + 135.0 + 400.0 * i;
+		newNPC.graphic = new hgeSprite(resources->GetTexture("npcTx"), 0, 64*i, 64.0, 64.0);
+		newNPC.graphic->SetHotSpot(32.0,32.0);
+
+		if (i == 0) {
+			newNPC.name = "Glen";
+		} else if (i == 1) {
+			newNPC.name = "Jethro";
+		} else if (i == 2) {
+			newNPC.name = "Abner Longfellow";
+		} else if (i == 3) {
+			newNPC.name = "Esky";
+		} else if (i == 4) {
+			newNPC.name = "Moesky";
+		} else if (i == 5) {
+			newNPC.name = "Captain Speirdyke";
+		} else if (i == 6) {
+			newNPC.name = "Randeep";
+		} else if (i == 7) {
+			newNPC.name = "Fauna Biologist";
+		} else if (i == 8) {
+			newNPC.name = "Bill Clinton";
+		} else if (i == 9) {
+			newNPC.name = "Yauyau";
+		} else if (i == 10) {
+			newNPC.name = "Akil";
+		} else if (i == 11) {
+			newNPC.name = "Pharaoh Moan";
+		}
+
+		npcList.push_back(newNPC);
+	}
+
+	endY = npcStart + NUM_UNIQUE_NPCS * 400.0 + 500.0;
 
 }
-
-void CreditsScreen::drawBossList() {
-
-	float y = bossStart + 200.0 - offset;
-
-	//Phyrebozz
-	resources->GetSprite("creditsPhyrebozz")->Render(512.0, y);
-	y += resources->GetSprite("creditsPhyrebozz")->GetHeight()/2 + 25.0;
-	resources->GetFont("curlz")->printf(512.0, y, HGETEXT_CENTER, "Lord Phyrebozz");
-	
-	y += 400.0;
-
-	//Portly Penguin
-	resources->GetSprite("creditsPortlyPenguin")->Render(512.0, y);
-	y += resources->GetSprite("creditsPortlyPenguin")->GetHeight()/2 + 25.0;
-	resources->GetFont("curlz")->printf(512.0, y, HGETEXT_CENTER, "Portly Penguin");
-	
-	y += 450.0;
-
-	//Garmborn
-	resources->GetSprite("creditsGarmborn")->Render(512.0, y);
-	y += resources->GetSprite("creditsGarmborn")->GetHeight()/2 + 25.0;
-	resources->GetFont("curlz")->printf(512.0, y, HGETEXT_CENTER, "Lord Garmborn");
-	
-	y += 400.0;
-
-	//Cornwallis
-	resources->GetSprite("creditsCornwallis")->Render(512.0, y);
-	y += resources->GetSprite("creditsCornwallis")->GetHeight()/2 + 25.0;
-	resources->GetFont("curlz")->printf(512.0, y, HGETEXT_CENTER, "Cornwallis");
-
-	y += 400.0;
-
-	//Calypso
-	resources->GetSprite("creditsCalypso")->Render(512.0, y);
-	y += resources->GetSprite("creditsCalypso")->GetHeight()/2 + 25.0;
-	resources->GetFont("curlz")->printf(512.0, y, HGETEXT_CENTER, "Calypso");
-
-	y += 400.0;
-
-	//Brian Fungus
-	resources->GetSprite("creditsBrianFungus")->Render(512.0, y);
-	y += resources->GetSprite("creditsBrianFungus")->GetHeight()/2 + 25.0;
-	resources->GetFont("curlz")->printf(512.0, y, HGETEXT_CENTER, "Brian Fungus");
-	
-	y += 400.0;
-
-	//Bartli
-	resources->GetSprite("creditsBartli")->Render(512.0, y);
-	y += resources->GetSprite("creditsBartli")->GetHeight()/2 + 25.0;
-	resources->GetFont("curlz")->printf(512.0, y, HGETEXT_CENTER, "Bartli");
-	
-
-}
-
-
 
