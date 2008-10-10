@@ -26,7 +26,6 @@ public:
 	void openLoadScreen(int file, bool fromLoadScreen);
 
 	//Variables
-	float mouseX, mouseY;
 	MenuScreen *menuScreen;
 	int currentScreen;
 

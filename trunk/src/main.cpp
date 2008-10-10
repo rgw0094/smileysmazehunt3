@@ -95,7 +95,6 @@ void loadGameObjects() {
 
 	hge->System_Log("*****Creating Objects*****");
 
-	//I need to make the player load inside SMH so it can go in the right order
 	smh = new SMH();
 	smh->init();
 

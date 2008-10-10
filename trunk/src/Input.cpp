@@ -319,6 +319,42 @@ bool SmileyInput::keyPressed(int key) {
 }
 
 //-----------------------------------------------------------------------------
+// Name: getMouseX()
+// Desc: Returns x coordinate of the mouse.
+//-----------------------------------------------------------------------------
+float SmileyInput::getMouseX() {
+	float x, y;
+	hge->Input_GetMousePos(&x, &y);
+	return x;
+}
+
+//-----------------------------------------------------------------------------
+// Name: getMouseY()
+// Desc: Returns the y coordinate of the mouse
+//-----------------------------------------------------------------------------
+float SmileyInput::getMouseY() {
+	float x, y;
+	hge->Input_GetMousePos(&x, &y);
+	return y;
+}
+
+//-----------------------------------------------------------------------------
+// Name: isMouseInWindow()
+// Desc: Returns whether or not the mouse is currently in the window.
+//-----------------------------------------------------------------------------
+bool SmileyInput::isMouseInWindow() {
+	return hge->Input_IsMouseOver();
+}
+
+//-----------------------------------------------------------------------------
+// Name: setMousePosition()
+// Desc: Sets the mouse position
+//-----------------------------------------------------------------------------
+void SmileyInput::setMousePosition(float x, float y) {
+	hge->Input_SetMousePos(x, y);
+}
+
+//-----------------------------------------------------------------------------
 // Name: saveInputs()
 // Desc: Saves the input values to Smiley.ini
 //-----------------------------------------------------------------------------
