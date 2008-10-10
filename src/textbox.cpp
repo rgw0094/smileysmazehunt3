@@ -1,13 +1,12 @@
+#include "SMH.h"
 #include "smiley.h"
 #include "textbox.h"
 #include "player.h"
 #include "npcmanager.h"
-#include "Input.h"
 #include "WindowManager.h"
 #include "Shop.h"
 #include "SaveManager.h"
 #include "SoundManager.h"
-#include "GameData.h"
 
 #include "hgedistort.h"
 #include "hgesprite.h"
@@ -17,12 +16,11 @@
 extern SaveManager *saveManager;
 extern NPCManager *npcManager;
 extern HGE *hge;
+extern SMH *smh;
 extern Player *thePlayer;
 extern hgeResourceManager *resources;
-extern Input *input;
 extern WindowManager *windowManager;
 extern SoundManager *soundManager;
-extern GameData *gameData;
 
 extern float gameTime;
 extern int frameCounter;
@@ -93,7 +91,7 @@ void TextBox::setDialogue(int _npcID, int _textID) {
 	paramString = "NPC";
 	paramString += intToString(textID);
 	paramString += "Pages";
-	numPages = atoi(gameData->getGameText(paramString.c_str()));
+	numPages = atoi(smh->Data()->getGameText(paramString.c_str()));
 	currentPage = 1;
 	strcpy(text, "-");
 
@@ -114,7 +112,7 @@ void TextBox::setHint() {
 	paramString = "Hint";
 	paramString += intToString(textID);
 	paramString += "Pages";
-	numPages = atoi(gameData->getGameText(paramString.c_str()));
+	numPages = atoi(smh->Data()->getGameText(paramString.c_str()));
 	currentPage = 1;
 	strcpy(text, "-");
 	fadeAlpha = 0.0;
@@ -145,19 +143,19 @@ void TextBox::setNewAbility(int _ability) {
 	ability = _ability;
 
 	if (ability == CANE) {
-		strcpy(text, gameData->getGameText("GotCane"));
+		strcpy(text, smh->Data()->getGameText("GotCane"));
 	} else if (ability == WATER_BOOTS) {
-		strcpy(text, gameData->getGameText("GotJesusSandals"));
+		strcpy(text, smh->Data()->getGameText("GotJesusSandals"));
 	} else if (ability == FRISBEE) {
-		strcpy(text, gameData->getGameText("GotFrisbee"));
+		strcpy(text, smh->Data()->getGameText("GotFrisbee"));
 	} else if (ability == FIRE_BREATH) {
-		strcpy(text, gameData->getGameText("GotFireBreath"));
+		strcpy(text, smh->Data()->getGameText("GotFireBreath"));
 	} else if (ability == SPRINT_BOOTS) {
-		strcpy(text, gameData->getGameText("GotSprintBoots"));
+		strcpy(text, smh->Data()->getGameText("GotSprintBoots"));
 	} else if (ability == LIGHTNING_ORB) {
-		strcpy(text, gameData->getGameText("GotLightningOrb"));
+		strcpy(text, smh->Data()->getGameText("GotLightningOrb"));
 	} else if (ability == REFLECTION_SHIELD) {
-		strcpy(text, gameData->getGameText("GotReflectionShield"));
+		strcpy(text, smh->Data()->getGameText("GotReflectionShield"));
 	}
 
 }
@@ -174,7 +172,7 @@ void TextBox::setSign(int signId) {
 	std::string paramString;
 	paramString = "Sign";
 	paramString += intToString(signId);
-	strcpy(text, gameData->getGameText(paramString.c_str()));
+	strcpy(text, smh->Data()->getGameText(paramString.c_str()));
 
 }
 
@@ -200,7 +198,7 @@ void TextBox::draw(float dt) {
 		paramString += intToString(textID);
 		paramString += "-";
 		paramString += intToString(currentPage);
-		resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, gameData->getGameText(paramString.c_str()));
+		resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, smh->Data()->getGameText(paramString.c_str()));
 
 		//Draw next page/OK icon
 		if (currentPage == numPages) {
@@ -223,14 +221,14 @@ void TextBox::draw(float dt) {
 		paramString = "NPC";
 		paramString += intToString(textID);
 		paramString += "Name";
-		resources->GetFont("textBoxNameFnt")->printf(x + 220, y+20, HGETEXT_CENTER, "%s", gameData->getGameText(paramString.c_str()));
+		resources->GetFont("textBoxNameFnt")->printf(x + 220, y+20, HGETEXT_CENTER, "%s", smh->Data()->getGameText(paramString.c_str()));
 
 		//Print the current page of the conversation
 		paramString = "NPC";
 		paramString += intToString(textID);
 		paramString += "-";
 		paramString += intToString(currentPage);
-		resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, gameData->getGameText(paramString.c_str()));
+		resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, smh->Data()->getGameText(paramString.c_str()));
 
 		//Draw next page/OK icon
 		if (currentPage == numPages) {
@@ -296,7 +294,7 @@ bool TextBox::update(float dt) {
 	}
 
 	//Input to close the box or go to the next dialog page
-	if (input->keyPressed(INPUT_ATTACK) && lastKeyPressFrame != frameCounter) {
+	if (smh->Input()->keyPressed(INPUT_ATTACK) && lastKeyPressFrame != frameCounter) {
 		lastKeyPressFrame = frameCounter;
 
 		//Last page - close the box

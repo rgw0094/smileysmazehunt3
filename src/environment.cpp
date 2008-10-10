@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "smiley.h"
 #include "environment.h"
 #include "EnemyManager.h"
@@ -11,9 +12,7 @@
 #include "boss.h"
 #include "EnemyGroupManager.h"
 #include "WindowManager.h"
-#include "Input.h"
 #include "SoundManager.h"
-#include "GameData.h"
 #include "hgeparticle.h"
 #include "Tongue.h"
 #include "SpecialTileManager.h"
@@ -39,6 +38,7 @@ extern float gameTime;
 
 //Objects
 extern HGE *hge;
+extern SMH *smh;
 extern Player *thePlayer;
 extern SaveManager *saveManager;
 extern EnemyManager *enemyManager;
@@ -51,9 +51,7 @@ extern WindowManager *windowManager;
 extern BossManager *bossManager;
 extern hgeResourceManager *resources;
 extern EnemyGroupManager *enemyGroupManager;
-extern Input *input;
 extern SoundManager *soundManager;
-extern GameData *gameData;
 extern LoadEffectManager *loadEffectManager;
 extern FenwarManager *fenwarManager;
 
@@ -1241,10 +1239,10 @@ bool Environment::playerCollision(int x, int y, float dt) {
 					if (abs(collisionBox->x1 - x) < thePlayer->radius) return true;
 				}
 
-				bool onlyDownPressed = input->keyDown(INPUT_DOWN) && !input->keyDown(INPUT_UP) && !input->keyDown(INPUT_LEFT) && !input->keyDown(INPUT_RIGHT);
-				bool onlyUpPressed = !input->keyDown(INPUT_DOWN) && input->keyDown(INPUT_UP) && !input->keyDown(INPUT_LEFT) && !input->keyDown(INPUT_RIGHT);
-				bool onlyLeftPressed = !input->keyDown(INPUT_DOWN) && !input->keyDown(INPUT_UP) && input->keyDown(INPUT_LEFT) && !input->keyDown(INPUT_RIGHT);
-				bool onlyRightPressed = !input->keyDown(INPUT_DOWN) && !input->keyDown(INPUT_UP) && !input->keyDown(INPUT_LEFT) && input->keyDown(INPUT_RIGHT);
+				bool onlyDownPressed = smh->Input()->keyDown(INPUT_DOWN) && !smh->Input()->keyDown(INPUT_UP) && !smh->Input()->keyDown(INPUT_LEFT) && !smh->Input()->keyDown(INPUT_RIGHT);
+				bool onlyUpPressed = !smh->Input()->keyDown(INPUT_DOWN) && smh->Input()->keyDown(INPUT_UP) && !smh->Input()->keyDown(INPUT_LEFT) && !smh->Input()->keyDown(INPUT_RIGHT);
+				bool onlyLeftPressed = !smh->Input()->keyDown(INPUT_DOWN) && !smh->Input()->keyDown(INPUT_UP) && smh->Input()->keyDown(INPUT_LEFT) && !smh->Input()->keyDown(INPUT_RIGHT);
+				bool onlyRightPressed = !smh->Input()->keyDown(INPUT_DOWN) && !smh->Input()->keyDown(INPUT_UP) && !smh->Input()->keyDown(INPUT_LEFT) && smh->Input()->keyDown(INPUT_RIGHT);
 				float angle;
 
 				//Top left corner

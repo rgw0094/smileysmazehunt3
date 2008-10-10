@@ -1,14 +1,14 @@
+#include "SMH.h"
 #include "OptionsWindow.h"
 #include "hgerect.h"
 #include "Button.h"
 #include "Slider.h"
 #include "hgeresource.h"
-#include "Input.h"
 #include "SoundManager.h"
 
 extern HGE *hge;
+extern SMH *smh;
 extern hgeResourceManager *resources;
-extern Input *input;
 extern SoundManager *soundManager;
 
 #define TOP_LEFT_X 182.0
@@ -71,12 +71,12 @@ bool OptionsWindow::update(float dt) {
 			//Listen for click to enable edit mode
 			inputBox->Set(x, y, x + 130.0, y + 30.0);
 			if (mousePressed && inputBox->TestPoint(mouseX, mouseY)) {
-				input->setEditMode(currentInput);
+				smh->Input()->setEditMode(currentInput);
 			}
 
 			//If the input is in edit mode, listen for the new input
-			if (input->isEditModeEnabled(currentInput)) {
-				input->listenForNewInput(currentInput);
+			if (smh->Input()->isEditModeEnabled(currentInput)) {
+				smh->Input()->listenForNewInput(currentInput);
 			}
 
 		}
@@ -120,10 +120,10 @@ void OptionsWindow::draw(float dt) {
 			resources->GetFont("controls")->SetScale(0.8);
 			resources->GetFont("controls")->SetColor(ARGB(255,255,255,255));
 			resources->GetFont("controls")->Render(x + 65.0, y, HGETEXT_CENTER, 
-				input->getInputName(currentInput));
+				smh->Input()->getInputName(currentInput));
 
 			//Input box
-			if (input->isEditModeEnabled(currentInput)) {
+			if (smh->Input()->isEditModeEnabled(currentInput)) {
 				resources->GetSprite("selectedControlsBox")->Render(x,y+35);
 			} else {
 				resources->GetSprite("controlsBox")->Render(x,y+35);
@@ -133,7 +133,7 @@ void OptionsWindow::draw(float dt) {
 			resources->GetFont("controls")->SetColor(ARGB(255,255,255,255));
 			resources->GetFont("controls")->SetScale(0.7);
 			resources->GetFont("controls")->printf(x + 65.0, y + 40.0, HGETEXT_CENTER,
-					input->getInputDescription(currentInput).c_str());
+					smh->Input()->getInputDescription(currentInput).c_str());
 			resources->GetFont("controls")->SetColor(ARGB(255,0,0,0));
 
 		}

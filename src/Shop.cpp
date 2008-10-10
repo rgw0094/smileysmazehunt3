@@ -1,20 +1,14 @@
-/**
- * Shop.cpp
- *
- * Captain Spierdyke's shop. The shop appears after the player
- * reads Spierdyke's dialog.
- */
+#include "SMH.h"
 #include "shop.h"
 #include "hge.h"
 #include "hgeresource.h"
-#include "Input.h"
 #include "SaveManager.h"
 #include "Player.h"
 #include "WindowManager.h"
 
 extern HGE *hge;
+extern SMH *smh;
 extern hgeResourceManager *resources;
-extern Input *input;
 extern SaveManager *saveManager;
 extern float gameTime;
 extern Player *thePlayer;
@@ -104,18 +98,18 @@ void Shop::draw(float dt) {
 bool Shop::update(float dt) {
 
 	//Move selection left
-	if (input->keyPressed(INPUT_LEFT)) {
+	if (smh->Input()->keyPressed(INPUT_LEFT)) {
 		if (currentSelection == 0) currentSelection = EXIT;
 		else currentSelection--;
 	}
 
 	//Move selection right
-	if (input->keyPressed(INPUT_RIGHT)) {
+	if (smh->Input()->keyPressed(INPUT_RIGHT)) {
 		if (currentSelection == EXIT) currentSelection = HEALTH;
 		else currentSelection++;
 	}
 
-	if (input->keyPressed(INPUT_ATTACK)) {
+	if (smh->Input()->keyPressed(INPUT_ATTACK)) {
 		switch (currentSelection) {
 			case HEALTH:
 			case MANA:

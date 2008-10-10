@@ -1,8 +1,8 @@
+#include "SMH.h"
 #include "smiley.h"
 #include "lootmanager.h"
 #include "player.h"
 #include "SaveManager.h"
-#include "GameData.h"
 #include "collisioncircle.h"
 #include "WindowManager.h"
 #include "environment.h"
@@ -10,13 +10,13 @@
 #include "hgesprite.h"
 #include "hgeresource.h"
 
+extern SMH *smh;
 extern Environment *theEnvironment;
 extern WindowManager *windowManager;
 extern SaveManager *saveManager;
 extern Player *thePlayer;
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern GameData *gameData;
 extern float gameTime;
 
 /**

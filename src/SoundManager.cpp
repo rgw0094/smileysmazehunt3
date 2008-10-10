@@ -1,11 +1,9 @@
 #include "hge.h"
 #include "hgeresource.h"
 #include "SoundManager.h"
-#include "Input.h"
 
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern Input *input;
 
 /** 
  * Constructor

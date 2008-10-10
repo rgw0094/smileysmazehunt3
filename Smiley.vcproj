@@ -289,6 +289,9 @@
 					RelativePath=".\src\SaveManager.cpp">
 				</File>
 				<File
+					RelativePath=".\src\SMH.cpp">
+				</File>
+				<File
 					RelativePath=".\src\smiley.cpp">
 				</File>
 				<File
@@ -520,16 +523,13 @@
 					RelativePath=".\src\ChangeManager.h">
 				</File>
 				<File
-					RelativePath=".\src\GameData.h">
-				</File>
-				<File
-					RelativePath=".\src\Input.h">
-				</File>
-				<File
 					RelativePath=".\src\LoadEffectManager.h">
 				</File>
 				<File
 					RelativePath=".\src\SaveManager.h">
+				</File>
+				<File
+					RelativePath=".\src\SMH.h">
 				</File>
 				<File
 					RelativePath=".\src\smiley.h">

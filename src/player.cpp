@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "smiley.h"
 #include "EnemyManager.h"
 #include "ProjectileManager.h"
@@ -6,10 +7,8 @@
 #include "npcmanager.h"
 #include "minimenu.h"
 #include "menu.h"
-#include "Input.h"
 #include "SaveManager.h"
 #include "WindowManager.h"
-#include "GameData.h"
 #include "SoundManager.h"
 #include "collisioncircle.h"
 #include "weaponparticle.h"
@@ -23,6 +22,7 @@
 
 //Objects
 extern HGE *hge;
+extern SMH *smh;
 extern Environment *theEnvironment;
 extern EnemyManager *enemyManager;
 extern hgeParticleSystem *iceBreathParticle;
@@ -32,9 +32,7 @@ extern NPCManager *npcManager;
 extern WindowManager *windowManager;
 extern Menu *theMenu;
 extern hgeResourceManager *resources;
-extern Input *input;
 extern SaveManager *saveManager;
-extern GameData *gameData;
 extern SoundManager *soundManager;
 extern LoadEffectManager *loadEffectManager;
 
@@ -187,7 +185,7 @@ void Player::update(float dt) {
 	}
 	
 	//Do Attack
-	if (input->keyPressed(INPUT_ATTACK) && !breathingFire && !frozen && !isHovering &&
+	if (smh->Input()->keyPressed(INPUT_ATTACK) && !breathingFire && !frozen && !isHovering &&
 			!falling && !springing && !cloaked && !shrinkActive && !drowning &
 			!reflectionShieldActive &&
 			frameCounter > windowManager->frameLastWindowClosed) {			
@@ -512,7 +510,7 @@ void Player::changeAbility(int direction) {
 	if (direction == LEFT) {
 		selectedAbility--;
 		if (selectedAbility < 0) selectedAbility = NUM_ABILITIES - 1;
-		while (gameData->getAbilityInfo(selectedAbility).type == PASSIVE || !saveManager->hasAbility[selectedAbility]) {
+		while (smh->Data()->getAbilityInfo(selectedAbility).type == PASSIVE || !saveManager->hasAbility[selectedAbility]) {
 			selectedAbility--;
 			if (selectedAbility < 0) selectedAbility = NUM_ABILITIES - 1;
 		}
@@ -522,7 +520,7 @@ void Player::changeAbility(int direction) {
 	if (direction == RIGHT) {
 		selectedAbility++;
 		if (selectedAbility > NUM_ABILITIES - 1) selectedAbility = 0;
-		while (gameData->getAbilityInfo(selectedAbility).type == PASSIVE || !saveManager->hasAbility[selectedAbility]) {
+		while (smh->Data()->getAbilityInfo(selectedAbility).type == PASSIVE || !saveManager->hasAbility[selectedAbility]) {
 			selectedAbility++;
 			if (selectedAbility > NUM_ABILITIES - 1) selectedAbility = 0;
 		}
@@ -538,9 +536,9 @@ void Player::doAbility(float dt) {
 
 	//Input for scrolling through selected abilities
 	if (saveManager->hasAbility[CANE]) {
-		if (input->keyPressed(INPUT_PREVIOUS_ABILITY)) {
+		if (smh->Input()->keyPressed(INPUT_PREVIOUS_ABILITY)) {
 			changeAbility(LEFT);
-		} else if  (input->keyPressed(INPUT_NEXT_ABILITY)) {
+		} else if  (smh->Input()->keyPressed(INPUT_NEXT_ABILITY)) {
 			changeAbility(RIGHT);
 		}
 	}
@@ -553,8 +551,8 @@ void Player::doAbility(float dt) {
 	bool wasHovering = isHovering;
 	isHovering = ((isHovering || theEnvironment->collision[gridX][gridY] == HOVER_PAD) &&
 			selectedAbility == HOVER &&
-			input->keyDown(INPUT_ABILITY) &&
-			mana >= gameData->getAbilityInfo(HOVER).manaCost*dt);
+			smh->Input()->keyDown(INPUT_ABILITY) &&
+			mana >= smh->Data()->getAbilityInfo(HOVER).manaCost*dt);
 	
 	//For debug purposes H will always hover
 	if (hge->Input_GetKeyState(HGEK_H)) isHovering = true;
@@ -583,21 +581,21 @@ void Player::doAbility(float dt) {
 	//////////// Reflection Shield //////////////
 
 	reflectionShieldActive = (canUseAbility &&
-							 input->keyDown(INPUT_ABILITY) &&
+							 smh->Input()->keyDown(INPUT_ABILITY) &&
 							 selectedAbility == REFLECTION_SHIELD && 
-							 mana >= gameData->getAbilityInfo(REFLECTION_SHIELD).manaCost*dt);
-	if (reflectionShieldActive) mana -= gameData->getAbilityInfo(REFLECTION_SHIELD).manaCost*dt;
+							 mana >= smh->Data()->getAbilityInfo(REFLECTION_SHIELD).manaCost*dt);
+	if (reflectionShieldActive) mana -= smh->Data()->getAbilityInfo(REFLECTION_SHIELD).manaCost*dt;
 
 	////////////// Tut's Mask //////////////
 
-	cloaked = (!frozen && input->keyDown(INPUT_ABILITY) &&
+	cloaked = (!frozen && smh->Input()->keyDown(INPUT_ABILITY) &&
 			   selectedAbility == TUTS_MASK && 
-			   mana >= gameData->getAbilityInfo(TUTS_MASK).manaCost*dt);
-	if (cloaked) mana -= gameData->getAbilityInfo(TUTS_MASK).manaCost*dt;
+			   mana >= smh->Data()->getAbilityInfo(TUTS_MASK).manaCost*dt);
+	if (cloaked) mana -= smh->Data()->getAbilityInfo(TUTS_MASK).manaCost*dt;
 	
 	////////////// Sprint Boots //////////////
 	
-	sprinting = (canUseAbility && input->keyDown(INPUT_ABILITY) &&
+	sprinting = (canUseAbility && smh->Input()->keyDown(INPUT_ABILITY) &&
 				 selectedAbility == SPRINT_BOOTS && 
 				 theEnvironment->collision[gridX][gridY] != LEFT_ARROW &&
 				 theEnvironment->collision[gridX][gridY] != RIGHT_ARROW &&
@@ -608,10 +606,10 @@ void Player::doAbility(float dt) {
 	
 	////////////// Fire Breath //////////////
 
-	if (canUseAbility && selectedAbility == FIRE_BREATH && input->keyDown(INPUT_ABILITY) 
-			&& mana >= gameData->getAbilityInfo(FIRE_BREATH).manaCost*(breathingFire ? dt : .25f)) {
+	if (canUseAbility && selectedAbility == FIRE_BREATH && smh->Input()->keyDown(INPUT_ABILITY) 
+			&& mana >= smh->Data()->getAbilityInfo(FIRE_BREATH).manaCost*(breathingFire ? dt : .25f)) {
 
-		mana -= gameData->getAbilityInfo(FIRE_BREATH).manaCost*dt;
+		mana -= smh->Data()->getAbilityInfo(FIRE_BREATH).manaCost*dt;
 
 		//Start breathing fire
 		if (!breathingFire) {
@@ -633,31 +631,31 @@ void Player::doAbility(float dt) {
 
 	/////////////////// Triggered Abilities ///////////////
 
-	if (input->keyPressed(INPUT_ABILITY) && canUseAbility) {
+	if (smh->Input()->keyPressed(INPUT_ABILITY) && canUseAbility) {
 
 		//Shoot lightning orbs
-		if (selectedAbility == LIGHTNING_ORB && mana >= gameData->getAbilityInfo(LIGHTNING_ORB).manaCost) {
-			mana -= gameData->getAbilityInfo(LIGHTNING_ORB).manaCost;
+		if (selectedAbility == LIGHTNING_ORB && mana >= smh->Data()->getAbilityInfo(LIGHTNING_ORB).manaCost) {
+			mana -= smh->Data()->getAbilityInfo(LIGHTNING_ORB).manaCost;
 			lastOrb = gameTime;
 			projectileManager->addProjectile(x, y, 700.0, angles[facing]-.5*PI, getLightningOrbDamage(), false, PROJECTILE_LIGHTNING_ORB, true);
 		}
 
 		//Start using cane
-		if (selectedAbility == CANE && !usingCane && mana >= gameData->getAbilityInfo(CANE).manaCost) {
+		if (selectedAbility == CANE && !usingCane && mana >= smh->Data()->getAbilityInfo(CANE).manaCost) {
 			usingCane = true;
 			resources->GetParticleSystem("smileysCane")->FireAt(getScreenX(x), getScreenY(y));
 			timeStartedCane = gameTime;
 		}
 
 		//Place Silly Pad
-		if (selectedAbility == SILLY_PAD && mana >= gameData->getAbilityInfo(SILLY_PAD).manaCost) {
+		if (selectedAbility == SILLY_PAD && mana >= smh->Data()->getAbilityInfo(SILLY_PAD).manaCost) {
 			theEnvironment->placeSillyPad(gridX, gridY);
-			mana -= gameData->getAbilityInfo(SILLY_PAD).manaCost;
+			mana -= smh->Data()->getAbilityInfo(SILLY_PAD).manaCost;
 		}
 
 		//Start Ice Breath
-		if (selectedAbility == ICE_BREATH && timePassedSince(startedIceBreath) > 1.5 && mana >= gameData->getAbilityInfo(ICE_BREATH).manaCost) {
-			mana -= gameData->getAbilityInfo(ICE_BREATH).manaCost;
+		if (selectedAbility == ICE_BREATH && timePassedSince(startedIceBreath) > 1.5 && mana >= smh->Data()->getAbilityInfo(ICE_BREATH).manaCost) {
+			mana -= smh->Data()->getAbilityInfo(ICE_BREATH).manaCost;
 			hge->Effect_Play(resources->GetEffect("snd_iceBreath"));
 			startedIceBreath = gameTime;
 			iceBreathParticle->Fire();
@@ -665,8 +663,8 @@ void Player::doAbility(float dt) {
 		}
 		
 		//Throw frisbee
-		if (selectedAbility == FRISBEE && !projectileManager->frisbeeActive() && mana >= gameData->getAbilityInfo(FRISBEE).manaCost) {
-			mana -= gameData->getAbilityInfo(FRISBEE).manaCost;
+		if (selectedAbility == FRISBEE && !projectileManager->frisbeeActive() && mana >= smh->Data()->getAbilityInfo(FRISBEE).manaCost) {
+			mana -= smh->Data()->getAbilityInfo(FRISBEE).manaCost;
 			projectileManager->addProjectile(x,y,400.0,angles[facing]-.5*PI,0,false,PROJECTILE_FRISBEE, true);
 		}
 
@@ -769,14 +767,14 @@ void Player::doAbility(float dt) {
 
 	resources->GetParticleSystem("smileysCane")->Update(dt);
 	if (usingCane) {
-		mana -= gameData->getAbilityInfo(CANE).manaCost*dt;
+		mana -= smh->Data()->getAbilityInfo(CANE).manaCost*dt;
 	}
 
 	//Stop using cane
 	if (usingCane) {
-		if (!input->keyDown(INPUT_ABILITY) || input->keyDown(INPUT_LEFT) || 
-				input->keyDown(INPUT_RIGHT) || input->keyDown(INPUT_UP) || 
-				input->keyDown(INPUT_DOWN)) {
+		if (!smh->Input()->keyDown(INPUT_ABILITY) || smh->Input()->keyDown(INPUT_LEFT) || 
+				smh->Input()->keyDown(INPUT_RIGHT) || smh->Input()->keyDown(INPUT_UP) || 
+				smh->Input()->keyDown(INPUT_DOWN)) {
 			usingCane = false;
 			resources->GetParticleSystem("smileysCane")->Stop(false);
 		}
@@ -952,7 +950,6 @@ void Player::doFalling(float dt) {
 
 	//Start falling
 	if (!springing && hoveringYOffset == 0.0f && !falling && theEnvironment->collisionAt(baseX,baseY) == PIT) {
-		hge->System_Log("dickens");
 		dx = dy = 0;
 		falling = true;
 		startedFalling = gameTime;
@@ -1249,30 +1246,30 @@ void Player::updateVelocities(float dt) {
 
 	//Decelerate
 	if (!iceSliding && !sliding && !springing) {
-		if ((input->keyDown(INPUT_AIM) && !iceSliding && !knockback) || (!input->keyDown(INPUT_LEFT) && !input->keyDown(INPUT_RIGHT) && !knockback))
+		if ((smh->Input()->keyDown(INPUT_AIM) && !iceSliding && !knockback) || (!smh->Input()->keyDown(INPUT_LEFT) && !smh->Input()->keyDown(INPUT_RIGHT) && !knockback))
 			if (dx > 0) dx -= accel*dt; 
 			else if (dx < 0) dx += accel*dt;
-		if ((input->keyDown(INPUT_AIM) && !iceSliding && !knockback) || (!input->keyDown(INPUT_UP) && !input->keyDown(INPUT_DOWN) && !knockback))
+		if ((smh->Input()->keyDown(INPUT_AIM) && !iceSliding && !knockback) || (!smh->Input()->keyDown(INPUT_UP) && !smh->Input()->keyDown(INPUT_DOWN) && !knockback))
 			if (dy > 0) dy -= accel*dt; 
 			else if (dy < 0) dy += accel*dt;
 	}
 
 	//Movement input
-	if (!input->keyDown(INPUT_AIM) && !iceSliding && !sliding && !knockback && !springing) {
+	if (!smh->Input()->keyDown(INPUT_AIM) && !iceSliding && !sliding && !knockback && !springing) {
 		//Move Left
-		if (input->keyDown(INPUT_LEFT)) {
+		if (smh->Input()->keyDown(INPUT_LEFT)) {
 			if (dx > -1*MOVE_SPEED && !sliding) dx -= accel*dt;
 		}
 		//Move Right
-		if (input->keyDown(INPUT_RIGHT)) {
+		if (smh->Input()->keyDown(INPUT_RIGHT)) {
 			if (dx < MOVE_SPEED && !sliding) dx += accel*dt;
 		}
 		//Move Up
-		if (input->keyDown(INPUT_UP)) {
+		if (smh->Input()->keyDown(INPUT_UP)) {
 			if (dy > -1*MOVE_SPEED && !sliding) dy -= accel*dt;
 		}
 		//Move Down
-		if (input->keyDown(INPUT_DOWN)) {
+		if (smh->Input()->keyDown(INPUT_DOWN)) {
 			if (dy < MOVE_SPEED && !sliding) dy += accel*dt;
 		}
 	}
@@ -1286,19 +1283,19 @@ void Player::setFacingDirection() {
 	
 	if (!frozen && !drowning && !falling && !iceSliding && !knockback && !springing && theEnvironment->collision[gridX][gridY] != SPRING_PAD) {
 			
-		if (input->keyDown(INPUT_LEFT)) facing = LEFT;
-		else if (input->keyDown(INPUT_RIGHT)) facing = RIGHT;
-		else if (input->keyDown(INPUT_UP)) facing = UP;
-		else if (input->keyDown(INPUT_DOWN)) facing = DOWN;
+		if (smh->Input()->keyDown(INPUT_LEFT)) facing = LEFT;
+		else if (smh->Input()->keyDown(INPUT_RIGHT)) facing = RIGHT;
+		else if (smh->Input()->keyDown(INPUT_UP)) facing = UP;
+		else if (smh->Input()->keyDown(INPUT_DOWN)) facing = DOWN;
 
 		//Diagonals
-		if (input->keyDown(INPUT_LEFT) && input->keyDown(INPUT_UP)) {
+		if (smh->Input()->keyDown(INPUT_LEFT) && smh->Input()->keyDown(INPUT_UP)) {
 			facing = UP_LEFT;
-		} else if (input->keyDown(INPUT_RIGHT) && input->keyDown(INPUT_UP)) {
+		} else if (smh->Input()->keyDown(INPUT_RIGHT) && smh->Input()->keyDown(INPUT_UP)) {
 			facing=UP_RIGHT;
-		} else if (input->keyDown(INPUT_LEFT) && input->keyDown(INPUT_DOWN)) {
+		} else if (smh->Input()->keyDown(INPUT_LEFT) && smh->Input()->keyDown(INPUT_DOWN)) {
 			facing = DOWN_LEFT;
-		} else if (input->keyDown(INPUT_RIGHT) && input->keyDown(INPUT_DOWN)) {
+		} else if (smh->Input()->keyDown(INPUT_RIGHT) && smh->Input()->keyDown(INPUT_DOWN)) {
 			facing = DOWN_RIGHT;
 		}
 			

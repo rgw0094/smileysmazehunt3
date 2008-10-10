@@ -1,8 +1,7 @@
+#include "SMH.h"
 #include "inventory.h"
 #include "player.h"
-#include "Input.h"
 #include "SaveManager.h"
-#include "GameData.h"
 #include "smiley.h"
 
 #include "hgerect.h"
@@ -13,11 +12,10 @@
 
 //Objects
 extern HGE *hge;
+extern SMH *smh;
 extern Player *thePlayer;
 extern hgeResourceManager *resources;
-extern Input *input;
 extern SaveManager *saveManager;
-extern GameData *gameData;
 
 //Sprites
 extern hgeSprite *itemLayer[256];
@@ -56,13 +54,13 @@ void Inventory::draw(float dt) {
 				resources->GetAnimation("abilities")->Render(INVENTORY_X_OFFSET + 40 + i*SQUARE_SIZE, INVENTORY_Y_OFFSET + 40 + j*SQUARE_SIZE);
 				//Draw the ability name and info if it is highlighted
 				if (cursorX == i && cursorY == j) {
-					resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET+170,INVENTORY_Y_OFFSET+275,HGETEXT_CENTER,"%s", gameData->getAbilityInfo(j*4 + i).name);
+					resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET+170,INVENTORY_Y_OFFSET+275,HGETEXT_CENTER,"%s", smh->Data()->getAbilityInfo(j*4 + i).name);
 					resources->GetFont("description")->printfb(
 						INVENTORY_X_OFFSET+40,	//box x
 						INVENTORY_Y_OFFSET+340,	//box y
 						275.0, 200.0,			//width and height of box
 						HGETEXT_LEFT | HGETEXT_TOP, //Alignment
-						"%s", gameData->getAbilityInfo(j*4 + i).description);
+						"%s", smh->Data()->getAbilityInfo(j*4 + i).description);
 
 				}
 			}
@@ -140,27 +138,27 @@ void Inventory::draw(float dt) {
 bool Inventory::update(float dt) {
 	
 	//Highlight currently active item
-	if (gameData->getAbilityInfo(cursorY*4 + cursorX).type != PASSIVE && saveManager->hasAbility[cursorY*4 + cursorX]) {
+	if (smh->Data()->getAbilityInfo(cursorY*4 + cursorX).type != PASSIVE && saveManager->hasAbility[cursorY*4 + cursorX]) {
 		cursorY = (thePlayer->selectedAbility - (thePlayer->selectedAbility % 4)) / 4;
 		cursorX = thePlayer->selectedAbility % 4;
 	}
 
 	//Process Input to move cursor
-	if (input->keyPressed(INPUT_LEFT)) {
+	if (smh->Input()->keyPressed(INPUT_LEFT)) {
 		if (cursorX > 0) cursorX--;
 	}
-	if (input->keyPressed(INPUT_RIGHT)) {
+	if (smh->Input()->keyPressed(INPUT_RIGHT)) {
 		if (cursorX < WIDTH-1) cursorX++;
 	}
-	if (input->keyPressed(INPUT_UP)) {
+	if (smh->Input()->keyPressed(INPUT_UP)) {
 		if (cursorY > 0) cursorY--;
 	}
-	if (input->keyPressed(INPUT_DOWN)) {
+	if (smh->Input()->keyPressed(INPUT_DOWN)) {
 		if (cursorY < HEIGHT-1) cursorY++;
 	}
 
 	//Update selected ability
-	if (gameData->getAbilityInfo(cursorY*4 + cursorX).type != PASSIVE && saveManager->hasAbility[cursorY*4 + cursorX]) {
+	if (smh->Data()->getAbilityInfo(cursorY*4 + cursorX).type != PASSIVE && saveManager->hasAbility[cursorY*4 + cursorX]) {
 		thePlayer->selectedAbility = cursorY*4 + cursorX;
 	}
 

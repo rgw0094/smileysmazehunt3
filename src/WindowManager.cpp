@@ -1,17 +1,17 @@
+#include "SMH.h"
 #include "hge.h"
 #include "WindowManager.h"
 #include "BaseWindow.h"
 #include "inventory.h"
 #include "map.h"
 #include "minimenu.h"
-#include "input.h"
 #include "textbox.h"
 #include "player.h"
 #include "tongue.h"
 
 extern Player *thePlayer;
-extern Input *input;
 extern HGE *hge;
+extern SMH *smh;
 
 /**
  * Constructor.
@@ -95,11 +95,11 @@ void WindowManager::update(float dt) {
 
 	//Handle input for scrolling through game menu windows
 	if (gameMenuOpen) {
-		if (input->keyPressed(INPUT_PREVIOUS_ABILITY)) {
+		if (smh->Input()->keyPressed(INPUT_PREVIOUS_ABILITY)) {
 			currentMenuWindow--;
 			if (currentMenuWindow < 0) currentMenuWindow = NUM_MENU_WINDOWS-1;
 			openGameMenu(currentMenuWindow);
-		} else if (input->keyPressed(INPUT_NEXT_ABILITY)) {
+		} else if (smh->Input()->keyPressed(INPUT_NEXT_ABILITY)) {
 			currentMenuWindow++;
 			if (currentMenuWindow >= NUM_MENU_WINDOWS) currentMenuWindow = 0;
 			openGameMenu(currentMenuWindow);

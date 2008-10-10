@@ -1,6 +1,6 @@
+#include "SMH.h"
 #include "menu.h"
 #include "smiley.h"
-#include "Input.h"
 #include "TitleScreen.h"
 #include "SelectFileScreen.h"
 #include "OptionsScreen.h"
@@ -15,10 +15,10 @@
 
 //Objects
 extern HGE *hge;
+extern SMH *smh;
 extern hgeStringTable *stringTable;
 extern hgeResourceManager *resources;
 extern SoundManager *soundManager;
-extern Input *input;
 
 //Variables
 extern int gameState;
@@ -78,10 +78,10 @@ bool Menu::update(float dt) {
 
 	//Keyboard/Gamepad input to move mouse
 	if (hge->Input_IsMouseOver()) {
-		if (input->keyDown(INPUT_LEFT)) mouseX -= 700.0f*dt;
-		if (input->keyDown(INPUT_RIGHT)) mouseX += 700.0f*dt;
-		if (input->keyDown(INPUT_DOWN)) mouseY += 700.0f*dt;
-		if (input->keyDown(INPUT_UP)) mouseY -= 700.0f*dt;
+		if (smh->Input()->keyDown(INPUT_LEFT)) mouseX -= 700.0f*dt;
+		if (smh->Input()->keyDown(INPUT_RIGHT)) mouseX += 700.0f*dt;
+		if (smh->Input()->keyDown(INPUT_DOWN)) mouseY += 700.0f*dt;
+		if (smh->Input()->keyDown(INPUT_UP)) mouseY -= 700.0f*dt;
 		if (mouseX < 1.0) mouseX = 1.0;
 		if (mouseX > 1023.0) mouseX = 1023.0;
 		if (mouseY < 1.0) mouseY = 1.0;

@@ -1,7 +1,7 @@
+#include "SMH.h"
 #include "map.h"
 #include "environment.h"
 #include "player.h"
-#include "Input.h"
 #include "SaveManager.h"
 #include "smiley.h"
 
@@ -9,8 +9,8 @@
 #include "hgesprite.h"
 
 extern HGE *hge;
+extern SMH *smh;
 extern SaveManager *saveManager;
-extern Input *input;
 extern HTEXTURE mapTexture;
 extern hgeResourceManager *resources;
 extern Environment *theEnvironment;
@@ -143,25 +143,25 @@ void Map::draw(float dt) {
 bool Map::update(float dt) {
 
 	//Do input
-	if (input->keyDown(INPUT_LEFT)) {
+	if (smh->Input()->keyDown(INPUT_LEFT)) {
 		if (xOffset > 0) {
 			xOffset -= 400.0f*dt;
 			if (xOffset < 0.0f) xOffset = 0.0f;
 		}
 	}
-	if (input->keyDown(INPUT_RIGHT)) {
+	if (smh->Input()->keyDown(INPUT_RIGHT)) {
 		if (xOffset < theEnvironment->areaWidth*24 - gridWidth*24) {
 			xOffset += 400.0f*dt;
 			if (xOffset > theEnvironment->areaWidth*24) xOffset = theEnvironment->areaWidth*24;
 		}
 	}
-	if (input->keyDown(INPUT_UP)) {
+	if (smh->Input()->keyDown(INPUT_UP)) {
 		if (yOffset > 0.0f) {
 			yOffset -= 400.0f*dt;
 			if (yOffset < 0.0f) yOffset = 0.0f;
 		}
 	}
-	if (input->keyDown(INPUT_DOWN)) {
+	if (smh->Input()->keyDown(INPUT_DOWN)) {
 		if (yOffset < theEnvironment->areaHeight*24 - gridHeight*24) {
 			yOffset += 400.0f*dt;
 			if (yOffset > theEnvironment->areaHeight*24) yOffset = theEnvironment->areaHeight*24;

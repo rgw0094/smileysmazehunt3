@@ -6,17 +6,16 @@
 #include "minimenu.h"
 #include "npcmanager.h"
 #include "boss.h"
-#include "Input.h"
 #include "EnemyGroupManager.h"
 #include "WindowManager.h"
 #include "resource1.h"
 #include "SaveManager.h"
 #include "SoundManager.h"
-#include "GameData.h"
 #include "smiley.h"
 #include "environment.h"
 #include "LoadEffectManager.h"
 #include "FenwarManager.h"
+#include "SMH.h"
 
 #using <mscorlib.dll>
 
@@ -31,14 +30,13 @@ LootManager *lootManager;
 ProjectileManager *projectileManager;
 NPCManager *npcManager;
 BossManager *bossManager;
-Input *input;
 EnemyGroupManager *enemyGroupManager;
 WindowManager *windowManager;
 SaveManager *saveManager;
 SoundManager *soundManager;
-GameData *gameData;
 LoadEffectManager *loadEffectManager;
 FenwarManager *fenwarManager;
+SMH *smh;
 
 //Sprites
 hgeSprite *itemLayer[512];
@@ -105,15 +103,9 @@ void loadGameObjects() {
 	hge->System_Log("Creating Menu");
 	theMenu = new Menu();
 
-	hge->System_Log("Creating Input");
-	input = new Input();
-
 	hge->System_Log("Creating SoundManager");
 	soundManager = new SoundManager();
-		
-	hge->System_Log("Creating GameData");
-	gameData = new GameData();
-	
+			
 	hge->System_Log("Creating LoadEffectManager");
 	loadEffectManager = new LoadEffectManager();
 		
@@ -210,7 +202,7 @@ bool FrameFunc() {
 	doDebugInput();
 
 	//Update the input
-	input->UpdateInput();
+	smh->Input()->UpdateInput();
 	
 	//Input for taking screenshots
 	if (hge->Input_KeyDown(HGEK_F9)) {
@@ -227,7 +219,7 @@ bool FrameFunc() {
 		frameCounter++;
 
 		//Toggle game menu
-		if (input->keyPressed(INPUT_PAUSE)) {
+		if (smh->Input()->keyPressed(INPUT_PAUSE)) {
 			if (windowManager->isGameMenuOpen()) {
 				windowManager->closeWindow();
 			} else if (!windowManager->isOpenWindow()) {
@@ -338,7 +330,7 @@ bool ExitFunc() {
 /**
  * Application entry point.
  */
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {	
 	// Get HGE interface
 	hge = hgeCreate(HGE_VERSION);
 
@@ -347,7 +339,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	hge->System_SetState(HGE_FRAMEFUNC, FrameFunc);
 	hge->System_SetState(HGE_RENDERFUNC, RenderFunc);
 	hge->System_SetState(HGE_EXITFUNC, ExitFunc);
-	hge->System_SetState(HGE_TITLE, "Smiley's Maze Hunt 3");
+	hge->System_SetState(HGE_TITLE, "Smiley's Maze Hunt");
 	hge->System_SetState(HGE_WINDOWED, true);
 	hge->System_SetState(HGE_SCREENWIDTH, SCREEN_WIDTH);
 	hge->System_SetState(HGE_SCREENHEIGHT, SCREEN_HEIGHT);
@@ -363,7 +355,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			loadResources();
 			loadGameObjects();
 
-			//Open the menu
+			smh = new SMH();
+
+			//Open the menu (this should go in menu constructor maybe)
 			theMenu->open(TITLE_SCREEN);
 
 			//Start HGE. When this function returns it means the program is exiting.
