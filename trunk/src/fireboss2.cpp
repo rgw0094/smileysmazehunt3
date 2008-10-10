@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "smiley.h"
 #include "fireboss2.h"
 #include "environment.h"
@@ -5,22 +6,20 @@
 #include "enemyGroupManager.h"
 #include "Player.h"
 #include "CollisionCircle.h"
-#include "SaveManager.h"
 #include "SoundManager.h"
 #include "WeaponParticle.h"
 #include "Tongue.h"
 #include "ProjectileManager.h"
 #include "WindowManager.h"
 
+extern SMH *smh;
 extern HGE *hge;
 extern WindowManager *windowManager;
 extern bool debugMode;
-extern Player *thePlayer;
 extern Environment *theEnvironment;
 extern LootManager *lootManager;
 extern hgeResourceManager *resources;
 extern EnemyGroupManager *enemyGroupManager;
-extern SaveManager *saveManager;
 extern SoundManager *soundManager;
 extern ProjectileManager *projectileManager;
 
@@ -249,12 +248,12 @@ bool FireBossTwo::update(float dt) {
 	if (state != FIREBOSS_FRIENDLY) {
 		for (int i = 0; i < 3; i++) {
 			//Smiley's tongue
-			if (thePlayer->getTongue()->testCollision(collisionBoxes[i])) {
-				doDamage(thePlayer->getDamage(), true);
+			if (smh->player->getTongue()->testCollision(collisionBoxes[i])) {
+				doDamage(smh->player->getDamage(), true);
 			}
 			//Lightning orbs
 			if (projectileManager->killProjectilesInBox(collisionBoxes[i], PROJECTILE_LIGHTNING_ORB) > 0) {
-				doDamage(thePlayer->getLightningOrbDamage() * 2.0, true);
+				doDamage(smh->player->getLightningOrbDamage() * 2.0, true);
 			}
 		}
 	}
@@ -272,8 +271,8 @@ bool FireBossTwo::update(float dt) {
 	//Check collision with Smiley
 	if (state != FIREBOSS_FRIENDLY) {
 		for (int i = 0; i < 3; i++) {
-			if (thePlayer->collisionCircle->testBox(collisionBoxes[i])) {
-				thePlayer->dealDamageAndKnockback(0.25, true, 150, x, y);
+			if (smh->player->collisionCircle->testBox(collisionBoxes[i])) {
+				smh->player->dealDamageAndKnockback(0.25, true, 150, x, y);
 			}
 		}
 	}
@@ -348,9 +347,9 @@ bool FireBossTwo::updateState(float dt) {
 
 			//Launch fireballs
 			if (timePassedSince(lastAttackTime) > 2.0) {
-				addFireBall(x, y, getAngleBetween(x, y, thePlayer->x, thePlayer->y) - PI / 4.0, 500.0, true, true);
-				addFireBall(x, y, getAngleBetween(x, y, thePlayer->x, thePlayer->y), 500.0, true, true);
-				addFireBall(x, y, getAngleBetween(x, y, thePlayer->x, thePlayer->y) + PI / 4.0, 500.0, true, true);
+				addFireBall(x, y, getAngleBetween(x, y, smh->player->x, smh->player->y) - PI / 4.0, 500.0, true, true);
+				addFireBall(x, y, getAngleBetween(x, y, smh->player->x, smh->player->y), 500.0, true, true);
+				addFireBall(x, y, getAngleBetween(x, y, smh->player->x, smh->player->y) + PI / 4.0, 500.0, true, true);
 				lastAttackTime = gameTime;
 			}
 
@@ -401,12 +400,12 @@ bool FireBossTwo::updateState(float dt) {
 		} else if (timePassedSince(lastAttackTime) > 3.0) {
 			if (hge->Random_Int(0,100000) < 50000) {
 				//3 homing fireballs
-				addFireBall(x, y, getAngleBetween(x, y, thePlayer->x, thePlayer->y) - PI / 4.0, 500.0, true, true);
-				addFireBall(x, y, getAngleBetween(x, y, thePlayer->x, thePlayer->y), 500.0, true, true);
-				addFireBall(x, y, getAngleBetween(x, y, thePlayer->x, thePlayer->y) + PI / 4.0, 500.0, true, true);
+				addFireBall(x, y, getAngleBetween(x, y, smh->player->x, smh->player->y) - PI / 4.0, 500.0, true, true);
+				addFireBall(x, y, getAngleBetween(x, y, smh->player->x, smh->player->y), 500.0, true, true);
+				addFireBall(x, y, getAngleBetween(x, y, smh->player->x, smh->player->y) + PI / 4.0, 500.0, true, true);
 			} else {
 				//arc of fireballs
-				attackAngle = getAngleBetween(x, y, thePlayer->x, thePlayer->y);
+				attackAngle = getAngleBetween(x, y, smh->player->x, smh->player->y);
 				for (int i = -3; i <= 3; i++) {
 					addFireBall(x, y, attackAngle + float(i)*(PI/24.0) + hge->Random_Float(0.0, 2.0*PI), 450.0, false, true);
 				}
@@ -445,7 +444,7 @@ bool FireBossTwo::updateState(float dt) {
 		
 		//Launch stream of fireballs
 		if (timePassedSince(lastAttackTime) > 0.05) {
-			addFireBall(x, y-50.0, getAngleBetween(x,y,thePlayer->x,thePlayer->y), 700.0, false, false);
+			addFireBall(x, y-50.0, getAngleBetween(x,y,smh->player->x,smh->player->y), 700.0, false, false);
 			lastAttackTime = gameTime;
 		}
 
@@ -527,7 +526,7 @@ void FireBossTwo::die() {
 	windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS2_VICTORY);	
 	facing = DOWN;
 	alpha = 255;
-	saveManager->killBoss(FIRE_BOSS2);
+	smh->saveManager->killBoss(FIRE_BOSS2);
 	enemyGroupManager->notifyOfDeath(groupID);
 	soundManager->fadeOutMusic();
 }
@@ -547,8 +546,8 @@ void FireBossTwo::startMoveToPoint(int _x, int _y, float speed) {
 
 void FireBossTwo::setFacingPlayer() {
 
-	int xDist = thePlayer->x - x;
-	int yDist = thePlayer->y - y;
+	int xDist = smh->player->x - x;
+	int yDist = smh->player->y - y;
 	if (xDist < 0 && yDist < 0) {
 		//Player up-left from enemy
 		if (abs(xDist) > abs(yDist)) {
@@ -632,8 +631,8 @@ void FireBossTwo::updateFireBalls(float dt) {
 			if (i->homing) {
 
 				//Find angle to seek target
-				float xDist = i->x - thePlayer->x;
-				float targetAngle = atan((i->y - thePlayer->y) / xDist);
+				float xDist = i->x - smh->player->x;
+				float targetAngle = atan((i->y - smh->player->y) / xDist);
 
 				//----------Do a bunch of SHIT----------
 				while (i->angle < 0.0) i->angle += 2.0*PI;
@@ -673,8 +672,8 @@ void FireBossTwo::updateFireBalls(float dt) {
 			}	
 
 			//Player collision
-			if (!explode && thePlayer->collisionCircle->testBox(i->collisionBox)) {
-				thePlayer->dealDamage(ORB_DAMAGE, true);
+			if (!explode && smh->player->collisionCircle->testBox(i->collisionBox)) {
+				smh->player->dealDamage(ORB_DAMAGE, true);
 				explode = true;
 			}
 
@@ -700,8 +699,8 @@ void FireBossTwo::updateFireBalls(float dt) {
 			if (i->radius < 50.0) i->radius += 60.0 * dt;
 
 			i->collisionBox->SetRadius(i->x, i->y, i->radius);
-			if (thePlayer->collisionCircle->testBox(i->collisionBox)) {
-				thePlayer->dealDamage(ORB_DAMAGE, true);
+			if (smh->player->collisionCircle->testBox(i->collisionBox)) {
+				smh->player->dealDamage(ORB_DAMAGE, true);
 			}
 
 			if (timePassedSince(i->timeExploded) > 0.96) {
@@ -837,8 +836,8 @@ void FireBossTwo::updateFlameWalls(float dt) {
 				}
 
 				//Player collision
-				if (!deleteFireBall && thePlayer->collisionCircle->testBox(i->fireBalls[j].collisionBox)) {
-					thePlayer->dealDamage(FLAME_WALL_DAMAGE, false);
+				if (!deleteFireBall && smh->player->collisionCircle->testBox(i->fireBalls[j].collisionBox)) {
+					smh->player->dealDamage(FLAME_WALL_DAMAGE, false);
 					deleteFireBall = true;
 				}
 
@@ -915,10 +914,10 @@ void FireBossTwo::launchFlames(bool allFlames) {
 		//Only fire if not blocked by a silly pad and the player is in their flame wall trajectory
 		if (!blockedBySillyPad) {
 			if (allFlames || //if allFlames flag is true don't worry about where Smiley is
-					(facing == DOWN && thePlayer->gridX >= gridX - 1 && thePlayer->gridX <= gridX + 1) ||
-					(facing == UP && thePlayer->gridX >= gridX - 1 && thePlayer->gridX <= gridX + 1) ||
-					(facing == LEFT && thePlayer->gridY >= gridY - 1 && thePlayer->gridY <= gridY + 1) ||
-					(facing == RIGHT && thePlayer->gridY >= gridY - 1 && thePlayer->gridY <= gridY + 1)) {
+					(facing == DOWN && smh->player->gridX >= gridX - 1 && smh->player->gridX <= gridX + 1) ||
+					(facing == UP && smh->player->gridX >= gridX - 1 && smh->player->gridX <= gridX + 1) ||
+					(facing == LEFT && smh->player->gridY >= gridY - 1 && smh->player->gridY <= gridY + 1) ||
+					(facing == RIGHT && smh->player->gridY >= gridY - 1 && smh->player->gridY <= gridY + 1)) {
 				addFlameWall(flameLaunchers[i].gridX*64+32, flameLaunchers[i].gridY*64+32, flameLaunchers[i].facing);
 			}
 		}
@@ -930,6 +929,6 @@ void FireBossTwo::launchFlames(bool allFlames) {
 void FireBossTwo::drawFlameLaunchers(float dt) {
 	for (int i = 0; i < 8; i++) {
 		resources->GetSprite("flameLauncher")->RenderEx(getScreenX(flameLaunchers[i].gridX*64+32), 
-			getScreenY(flameLaunchers[i].gridY*64+32), thePlayer->angles[flameLaunchers[i].facing]);
+			getScreenY(flameLaunchers[i].gridY*64+32), smh->player->angles[flameLaunchers[i].facing]);
 	}
 }

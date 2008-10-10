@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "smiley.h"
 #include "DespairBoss.h"
 #include "hgeresource.h"
@@ -5,7 +6,6 @@
 #include "Player.h"
 #include "Environment.h"
 #include "ProjectileManager.h"
-#include "SaveManager.h"
 #include "LootManager.h"
 #include "SoundManager.h"
 #include "weaponparticle.h"
@@ -14,15 +14,14 @@
 #include "CollisionCircle.h"
 #include "WindowManager.h"
 
+extern SMH *smh;
 extern hgeResourceManager *resources;
 extern WindowManager *windowManager;
 extern EnemyGroupManager *enemyGroupManager;
-extern Player *thePlayer;
 extern float gameTime;
 extern bool debugMode;
 extern ProjectileManager *projectileManager;
 extern Environment *theEnvironment;
-extern SaveManager *saveManager;
 extern LootManager *lootManager;
 extern SoundManager *soundManager;
 extern HGE *hge;
@@ -123,8 +122,8 @@ DespairBoss::~DespairBoss() {
  */
 bool DespairBoss::update(float dt) {
 
-	shouldDrawAfterSmiley = thePlayer->y < y + 60.0 && 
-		(thePlayer->x > x-60 && thePlayer->x < x+60) && !isInEvilMode();
+	shouldDrawAfterSmiley = smh->player->y < y + 60.0 && 
+		(smh->player->x > x-60 && smh->player->x < x+60) && !isInEvilMode();
 
 	damageCollisionBox->Set(x-60, y+floatingOffset-75, x+60, y+floatingOffset+75);
 	collisionBox->Set(x-60,y+45+floatingOffset-30, x+60, y+45+floatingOffset+35);
@@ -137,8 +136,8 @@ bool DespairBoss::update(float dt) {
 	}
 
 	//Smiley collision
-	if (thePlayer->collisionCircle->testBox(isInEvilMode() ? damageCollisionBox : collisionBox)) {
-		thePlayer->dealDamageAndKnockback(COLLISION_DAMAGE, true, isInEvilMode() ? 0 : 165, x, y);
+	if (smh->player->collisionCircle->testBox(isInEvilMode() ? damageCollisionBox : collisionBox)) {
+		smh->player->dealDamageAndKnockback(COLLISION_DAMAGE, true, isInEvilMode() ? 0 : 165, x, y);
 	}	
 
 	//When smiley triggers the boss' enemy block start his dialogue.
@@ -165,9 +164,9 @@ bool DespairBoss::update(float dt) {
 		dx = 200.0 * cos(hoveringTime);
 		
 		//Move vertically to stay close to smiley
-		if (y > thePlayer->y - 250.0) {
+		if (y > smh->player->y - 250.0) {
 			y -= 100.0*dt;
-		} else if (y < thePlayer->y - 250.0) {
+		} else if (y < smh->player->y - 250.0) {
 			y += 100.0*dt;
 		}
 		if (y < startY) {
@@ -192,7 +191,7 @@ bool DespairBoss::update(float dt) {
 
 			//Left hand - fire only
 			if (projectileType == PROJECTILE_FIRE) {
-				angle = getAngleBetween(x-65,y-60,thePlayer->x, thePlayer->y);
+				angle = getAngleBetween(x-65,y-60,smh->player->x, smh->player->y);
 				for (int i = 0; i < numProjectiles; i++) {
 					addProjectile(projectileType, x-65, y-60+floatingOffset, 
 						angle + hge->Random_Float(-PI/12.0, PI/12.0), speed);
@@ -201,7 +200,7 @@ bool DespairBoss::update(float dt) {
 			
 			//Right hand - fire and ice
 			if (projectileType == PROJECTILE_FIRE || projectileType == PROJECTILE_ICE) {
-				angle = getAngleBetween(x+65,y-60,thePlayer->x, thePlayer->y);
+				angle = getAngleBetween(x+65,y-60,smh->player->x, smh->player->y);
 				for (int i = 0; i < numProjectiles; i++) {
 					addProjectile(projectileType, x+65, y-60+floatingOffset, 
 						angle + hge->Random_Float(-PI/12.0, PI/12.0), speed);
@@ -261,20 +260,20 @@ bool DespairBoss::update(float dt) {
 		if (floatingOffset > 10.0) floatingOffset = 10.0;
 
 		//Take damage from Smiley's tongue
-		if (thePlayer->getTongue()->testCollision(damageCollisionBox) &&
+		if (smh->player->getTongue()->testCollision(damageCollisionBox) &&
 				timePassedSince(lastHitByTongue) > .5) {
-			health -= thePlayer->getDamage();
+			health -= smh->player->getDamage();
 			lastHitByTongue = gameTime;
 		}
 
 		//Take damage from the flame breath
-		if (thePlayer->fireBreathParticle->testCollision(damageCollisionBox)) {
-			health -= thePlayer->getFireBreathDamage()*dt;
+		if (smh->player->fireBreathParticle->testCollision(damageCollisionBox)) {
+			health -= smh->player->getFireBreathDamage()*dt;
 		}
 
 		//Take damage from lightning orbs
 		if (projectileManager->killProjectilesInCircle(x, y, 90, PROJECTILE_LIGHTNING_ORB) > 0) {
-			health -= thePlayer->getLightningOrbDamage();
+			health -= smh->player->getLightningOrbDamage();
 		}
 
 		//Frisbees still have no effect
@@ -290,7 +289,7 @@ bool DespairBoss::update(float dt) {
 			health = 0.0f;
 			setState(DESPAIRBOSS_FRIENDLY);		
 			windowManager->openDialogueTextBox(-1, DESPAIRBOSS_DEFEATTEXT);	
-			saveManager->killBoss(DESPAIR_BOSS);
+			smh->saveManager->killBoss(DESPAIR_BOSS);
 			enemyGroupManager->notifyOfDeath(groupID);
 			soundManager->fadeOutMusic();
 		}
@@ -361,8 +360,8 @@ bool DespairBoss::update(float dt) {
 	//After charging smiley slowly back away from him
 	if (state == DESPAIRBOSS_EVIL_CHARGE_COOLDOWN) {
 
-		dx = -100.0 * cos(getAngleBetween(x, y, thePlayer->x, thePlayer->y));
-		dy = -100.0 * sin(getAngleBetween(x, y, thePlayer->x, thePlayer->y));
+		dx = -100.0 * cos(getAngleBetween(x, y, smh->player->x, smh->player->y));
+		dy = -100.0 * sin(getAngleBetween(x, y, smh->player->x, smh->player->y));
 		
 		if (timePassedSince(timeEnteredState) > 0.5) {
 			if (chargeCounter > EVIL_NUM_CHARGES) {
@@ -405,7 +404,7 @@ bool DespairBoss::update(float dt) {
 	if (state == DESPAIRBOSS_EVIL_CHARGING || state == DESPAIRBOSS_EVIL_STOPPING_CHARGE || state == DESPAIRBOSS_EVIL_CHARGE_COOLDOWN) {
 		if (timePassedSince(lastLaserTime) > LASER_DELAY) {
 			lastLaserTime = gameTime;
-			float angle = getAngleBetween(x, y, thePlayer->x, thePlayer->y) +
+			float angle = getAngleBetween(x, y, smh->player->x, smh->player->y) +
 				hge->Random_Float(-(PI/16.0), PI/16.0);
 			//Left eye
 			projectileManager->addProjectile(x - 10 + 50*cos(angle), 
@@ -526,7 +525,7 @@ void DespairBoss::addProjectile(int type, float x, float y, float angle, float s
 	switch (type) {
 		case PROJECTILE_ICE:
 			newProjectile.particle = new hgeParticleSystem(&resources->GetParticleSystem("iceOrb")->info);
-			newProjectile.timeUntilNova = distance(x, y, thePlayer->x, thePlayer->y) / ICE_SPEED;
+			newProjectile.timeUntilNova = distance(x, y, smh->player->x, smh->player->y) / ICE_SPEED;
 			newProjectile.hasNovaed = false;
 			break;
 		case PROJECTILE_FIRE:
@@ -570,10 +569,10 @@ void DespairBoss::updateProjectiles(float dt) {
 	
 		if (i->type == PROJECTILE_FIRE) {
 			//Fire projectiles home
-			if (i->y < thePlayer->y) {
-				if (i->x < thePlayer->x) {
+			if (i->y < smh->player->y) {
+				if (i->x < smh->player->x) {
 					i->dx += 1000.0*dt;
-				} else if (i->x > thePlayer->x) {
+				} else if (i->x > smh->player->x) {
 					i->dx -= 1000.0*dt;
 				}
 			}
@@ -617,12 +616,12 @@ void DespairBoss::updateProjectiles(float dt) {
 		}
 
 		//Check for collision with smiley
-		if (!deleteProjectile && thePlayer->collisionCircle->testBox(i->collisionBox)) {
+		if (!deleteProjectile && smh->player->collisionCircle->testBox(i->collisionBox)) {
 			deleteProjectile = true;
 			switch (i->type) {
 				case PROJECTILE_ICE:
-					thePlayer->dealDamage(ICE_DAMAGE, false);
-					thePlayer->freeze(FREEZE_DURATION);
+					smh->player->dealDamage(ICE_DAMAGE, false);
+					smh->player->freeze(FREEZE_DURATION);
 					//Don't delete the ice nova if it hits Smiley.
 					deleteProjectile = false;
 					if (!i->hasNovaed) {
@@ -637,7 +636,7 @@ void DespairBoss::updateProjectiles(float dt) {
 					}
 					break;
 				case PROJECTILE_FIRE:
-					thePlayer->dealDamage(FIRE_DAMAGE, false);
+					smh->player->dealDamage(FIRE_DAMAGE, false);
 					break;
 			}
 		}
@@ -679,8 +678,8 @@ void DespairBoss::setState(int newState) {
 	}
 
 	if (newState == DESPAIRBOSS_EVIL_CHARGING) {
-		chargeAngle = getAngleBetween(x, y, thePlayer->x, thePlayer->y);
-		timeToCharge = sqrt(2 * distance(x, y, thePlayer->x, thePlayer->y) / EVIL_CHARGE_ACCEL);
+		chargeAngle = getAngleBetween(x, y, smh->player->x, smh->player->y);
+		timeToCharge = sqrt(2 * distance(x, y, smh->player->x, smh->player->y) / EVIL_CHARGE_ACCEL);
 	}
 
 	state = newState;

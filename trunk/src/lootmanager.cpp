@@ -2,7 +2,6 @@
 #include "smiley.h"
 #include "lootmanager.h"
 #include "player.h"
-#include "SaveManager.h"
 #include "collisioncircle.h"
 #include "WindowManager.h"
 #include "environment.h"
@@ -13,8 +12,6 @@
 extern SMH *smh;
 extern Environment *theEnvironment;
 extern WindowManager *windowManager;
-extern SaveManager *saveManager;
-extern Player *thePlayer;
 extern HGE *hge;
 extern hgeResourceManager *resources;
 extern float gameTime;
@@ -95,17 +92,17 @@ void LootManager::update(float dt) {
 		collisionBox->SetRadius(i->x, i->y, radius[i->type]);
 
 		//Test for collision
-		if (thePlayer->collisionCircle->testBox(collisionBox)) {
+		if (smh->player->collisionCircle->testBox(collisionBox)) {
 
 			//Give the player the loot
 			if (i->type == LOOT_HEALTH) {
-				thePlayer->setHealth(thePlayer->getHealth() + 1.0);
+				smh->player->setHealth(smh->player->getHealth() + 1.0);
 			} else if (i->type == LOOT_MANA) {
-				thePlayer->setMana(thePlayer->getMana() + 20.0);
-				if (thePlayer->getMana() > thePlayer->getMaxMana()) thePlayer->setMana(thePlayer->getMaxMana());
+				smh->player->setMana(smh->player->getMana() + 20.0);
+				if (smh->player->getMana() > smh->player->getMaxMana()) smh->player->setMana(smh->player->getMaxMana());
 			} else if (i->type == LOOT_NEW_ABILITY) {
-				saveManager->hasAbility[i->ability] = true;
-				thePlayer->selectedAbility = i->ability;
+				smh->saveManager->hasAbility[i->ability] = true;
+				smh->player->selectedAbility = i->ability;
 				windowManager->openNewAbilityTextBox(i->ability);
 			}
 			//Delete the loot

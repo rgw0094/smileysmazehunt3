@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string>
 #include "hgerect.h"
+#include "smiley.h"
 
 //Constants
 #define PI 3.14159265357989232684

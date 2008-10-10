@@ -2,10 +2,11 @@
 #include "Player.h"
 #include "Environment.h"
 #include "hge.h"
+#include "SMH.h"
 
+extern SMH *smh;
 extern HGE *hge;
 extern Environment *theEnvironment;
-extern Player *thePlayer;
 
 EvilWallManager::EvilWallManager() {
 
@@ -67,11 +68,11 @@ void EvilWallManager::deactivateEvilWall(int id) {
 void EvilWallManager::update(float dt) {
 
 	//Activate or deactivate evil walls
-	if (theEnvironment->collision[thePlayer->gridX][thePlayer->gridY] == EVIL_WALL_TRIGGER) {
-		activateEvilWall(theEnvironment->ids[thePlayer->gridX][thePlayer->gridY]);
+	if (theEnvironment->collision[smh->player->gridX][smh->player->gridY] == EVIL_WALL_TRIGGER) {
+		activateEvilWall(theEnvironment->ids[smh->player->gridX][smh->player->gridY]);
 	}
-	if (theEnvironment->collision[thePlayer->gridX][thePlayer->gridY] == EVIL_WALL_DEACTIVATOR) {
-		deactivateEvilWall(theEnvironment->ids[thePlayer->gridX][thePlayer->gridY]);
+	if (theEnvironment->collision[smh->player->gridX][smh->player->gridY] == EVIL_WALL_DEACTIVATOR) {
+		deactivateEvilWall(theEnvironment->ids[smh->player->gridX][smh->player->gridY]);
 	}
 
 	std::list<EvilWallStruct>::iterator i;

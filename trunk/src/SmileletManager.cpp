@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "smiley.h"
 #include "SmileletManager.h"
 #include "CollisionCircle.h"
@@ -11,7 +12,7 @@
 
 using namespace std;
 
-extern Player *thePlayer;
+extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
 extern Environment *theEnvironment;
@@ -66,7 +67,7 @@ void SmileletManager::update() {
 					checkForNearbyFlower();
 					checkedForFlower=true;
 				}				
-				if (needsToPanic || thePlayer->isFlashing() || !thePlayer->isShrunk()) {
+				if (needsToPanic || smh->player->isFlashing() || !smh->player->isShrunk()) {
 					initiatePanic();
 					needsToPanic = false;
 				}
@@ -145,7 +146,7 @@ void SmileletManager::reset() {
 // Private //////////////////////////
 
 void SmileletManager::doSmileletWait(std::list<oneSmilelet>::iterator c) {
-	if (thePlayer->isShrunk() && thePlayer->collisionCircle->testCircle(c->collisionCircle)) {
+	if (smh->player->isShrunk() && smh->player->collisionCircle->testCircle(c->collisionCircle)) {
 		queueSmilelet(c);
 	}	
 }
@@ -153,8 +154,8 @@ void SmileletManager::doSmileletWait(std::list<oneSmilelet>::iterator c) {
 void SmileletManager::queueSmilelet(std::list<oneSmilelet>::iterator c) {
 	c->state = SMILELET_STATE_FOLLOWING_SMILEY;
 	c->wormPosition = nextWormPosition;
-	c->smileyHitX = thePlayer->x;
-	c->smileyHitY = thePlayer->y;
+	c->smileyHitX = smh->player->x;
+	c->smileyHitY = smh->player->y;
 
 	nextWormPosition++;
 	numFollowing++;
@@ -167,9 +168,9 @@ void SmileletManager::doSmileletFollow(std::list<oneSmilelet>::iterator c) {
 	WormNode node;
 	hgeRect collisionRect;
 	
-	node = thePlayer->getWormNode((c->wormPosition+1)*DISTANCE_BETWEEN_SMILELETS);
+	node = smh->player->getWormNode((c->wormPosition+1)*DISTANCE_BETWEEN_SMILELETS);
 
-	if (distance(node.x,node.y,c->x,c->y) <= SMILELET_RADIUS + thePlayer->radius + 4) {
+	if (distance(node.x,node.y,c->x,c->y) <= SMILELET_RADIUS + smh->player->radius + 4) {
 		c->beginFollow = true;
 	} else { //Bob up and down in excited anticipation
 		c->y = c->initialYPosition - (sin(timePassedSince(c->timeBeganBobbing)*10)*sin(timePassedSince(c->timeBeganBobbing)*10)) * 10.0; 
@@ -243,8 +244,8 @@ void SmileletManager::checkForNearbyFlower() {
 	bool foundFlower=false;
 	int dir;
 
-	gX = thePlayer->gridX;
-	gY = thePlayer->gridY;
+	gX = smh->player->gridX;
+	gY = smh->player->gridY;
 	if (isFlowerAt(gX-1,gY)) {
 		foundFlower = true;
 		flowerGridX = gX-1;

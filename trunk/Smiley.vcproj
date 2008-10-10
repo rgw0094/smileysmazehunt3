@@ -526,9 +526,6 @@
 					RelativePath=".\src\LoadEffectManager.h">
 				</File>
 				<File
-					RelativePath=".\src\SaveManager.h">
-				</File>
-				<File
 					RelativePath=".\src\SMH.h">
 				</File>
 				<File

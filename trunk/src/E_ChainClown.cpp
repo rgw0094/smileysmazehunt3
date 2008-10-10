@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "smiley.h"
 #include "enemy.h"
 #include "EnemyState.h"
@@ -6,9 +7,9 @@
 #include "hgeresource.h"
 #include "CollisionCircle.h"
 
+extern SMH *smh;
 extern hgeResourceManager *resources;
 extern Environment *theEnvironment;
-extern Player *thePlayer;
 extern HGE *hge;
 
 #define CLOWN_SPRING_CONSTANT .05
@@ -96,8 +97,8 @@ void E_ChainClown::update(float dt) {
 	xClown += xClownVel*dt;
 	yClown += yClownVel*dt;
 
-	if (distance(xClown, yClown, thePlayer->x, thePlayer->y) <= CLOWN_RADIUS + thePlayer->collisionCircle->radius) {
-		thePlayer->dealDamageAndKnockback(damage,true,100,xClown,yClown);
+	if (distance(xClown, yClown, smh->player->x, smh->player->y) <= CLOWN_RADIUS + smh->player->collisionCircle->radius) {
+		smh->player->dealDamageAndKnockback(damage,true,100,xClown,yClown);
 		xClownVel=-xClownVel;
 		yClownVel=-yClownVel;
 	}

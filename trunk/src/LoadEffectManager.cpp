@@ -6,7 +6,6 @@
 #include "LoadEffectManager.h"
 #include "smiley.h"
 #include "hgeresource.h"
-#include "SaveManager.h"
 #include "Environment.h"
 #include "WindowManager.h"
 #include "EnemyManager.h"
@@ -17,13 +16,11 @@
 extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern SaveManager *saveManager;
 extern Environment *theEnvironment;
 extern WindowManager *windowManager;
 extern LootManager *lootManager;
 extern ProjectileManager *projectileManager;
 extern EnemyManager *enemyManager;
-extern Player *thePlayer;
 
 #define STATE_IN 0
 #define STATE_OUT 1
@@ -110,7 +107,7 @@ void LoadEffectManager::draw(float dt) {
 			resources->GetFont("newAreaFnt")->SetColor(ARGB(zoneTextAlpha,255,255,255));
 		}
 		resources->GetFont("newAreaFnt")->printf(512,200,HGETEXT_CENTER, 
-			smh->Data()->getAreaName(saveManager->currentArea));
+			smh->gameData->getAreaName(smh->saveManager->currentArea));
 	}
 
 }
@@ -127,15 +124,15 @@ void LoadEffectManager::update(float dt) {
 			loadingEffectScale = 0.0;
 
 			//Relocate Smiley
-			if (destinationArea == saveManager->currentArea) {
+			if (destinationArea == smh->saveManager->currentArea) {
 				//Move smiley to a new location in the same area
-				thePlayer->moveTo(destinationX, destinationY);
+				smh->player->moveTo(destinationX, destinationY);
 				theEnvironment->update(0.0);
 				enemyManager->update(0.0);
 				lootManager->update(0.0);
 				projectileManager->update(0.0);
 			} else {
-				theEnvironment->loadArea(destinationArea, saveManager->currentArea);
+				theEnvironment->loadArea(destinationArea, smh->saveManager->currentArea);
 				zoneTextAlpha = 255.0;
 			}
 			

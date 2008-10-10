@@ -1,22 +1,20 @@
 /**
  * Handles the player's encounters with fenwar.
  */  
-
+#include "SMH.h"
 #include "smiley.h"
 #include "FenwarManager.h"
 #include "SoundManager.h"
 #include "Player.h"
 #include "WindowManager.h"
-#include "SaveManager.h"
 
 #include "hgeresource.h"
 
+extern SMH *smh;
 extern HGE *hge;
-extern Player *thePlayer;
 extern SoundManager *soundManager;
 extern hgeResourceManager *resources;
 extern WindowManager *windowManager;
-extern SaveManager *saveManager;
 
 extern bool debugMode;
 extern float gameTime;
@@ -66,7 +64,7 @@ void FenwarManager::update(float dt) {
 		if (!i->triggered) {
 			
 			//When the player gets close, trigger the encounter
-			if (distance(i->x, i->y, thePlayer->x, thePlayer->y) < TRIGGER_DISTANCE) {
+			if (distance(i->x, i->y, smh->player->x, smh->player->y) < TRIGGER_DISTANCE) {
 				i->triggered = true;
 				i->state = STATE_WARPING_IN;
 				i->timeEnteredState = gameTime;
@@ -108,7 +106,7 @@ void FenwarManager::update(float dt) {
 				if (timePassedSince(i->timeEnteredState) > 2.0) {
 					//Fenwar encounter is finished
 					soundManager->playPreviousMusic();
-					saveManager->change(i->gridX, i->gridY);
+					smh->saveManager->change(i->gridX, i->gridY);
 					i = fenwarEncounterList.erase(i);
 				}
 			}

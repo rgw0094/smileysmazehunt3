@@ -1,10 +1,11 @@
+#include "SMH.h"
 #include "Fountain.h"
 #include "smiley.h"
 #include "player.h"
 #include "hgeresource.h"
 
+extern SMH *smh;
 extern hgeResourceManager *resources;
-extern Player *thePlayer;
 
 #define RES_FOUNTAIN 69
 
@@ -19,13 +20,13 @@ Fountain::~Fountain() {
 }
 
 bool Fountain::isAboveSmiley() {
-	return (y + 32.0 > thePlayer->y);
+	return (y + 32.0 > smh->player->y);
 }
 
 void Fountain::draw(float dt) {
 
 	//No need to draw the fountain if Smiley isn't by it!
-	if (distance(x, y, thePlayer->x, thePlayer->y) < 1000) {
+	if (distance(x, y, smh->player->x, smh->player->y) < 1000) {
 
 		resources->GetAnimation("fountainRipple")->Update(dt);
 

@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "Worm.h"
 #include "Smiley.h"
 #include "Player.h"
@@ -7,7 +8,7 @@
 using namespace std;
 
 extern HGE *hge;
-extern Player *thePlayer;
+extern SMH *smh;
 extern hgeResourceManager *resources;
 
 extern bool debugMode;
@@ -43,7 +44,7 @@ void Worm::update() {
 
 	i = theWorms.begin();
 
-	if ((int)thePlayer->x != i->x || (int)thePlayer->y != i->y) {
+	if ((int)smh->player->x != i->x || (int)smh->player->y != i->y) {
 		addWormTrail();
 	}
 
@@ -78,8 +79,8 @@ void Worm::reset() {
 	std::list<WormNode>::iterator i;
 	
 	for (i = theWorms.begin(); i != theWorms.end(); i++) {
-		i->x = thePlayer->x;
-		i->y = thePlayer->y;
+		i->x = smh->player->x;
+		i->y = smh->player->y;
 		i->dir = DOWN;
        }
 }
@@ -110,10 +111,10 @@ void Worm::addWormTrail() {
 		
 		left = right = up = down = false;
 
-		if (curX > (int)thePlayer->x) {curX--; left=true;}
-		if (curX < (int)thePlayer->x) {curX++; right=true;}
-		if (curY > (int)thePlayer->y) {curY--; up=true;}
-		if (curY < (int)thePlayer->y) {curY++; down=true;}
+		if (curX > (int)smh->player->x) {curX--; left=true;}
+		if (curX < (int)smh->player->x) {curX++; right=true;}
+		if (curY > (int)smh->player->y) {curY--; up=true;}
+		if (curY < (int)smh->player->y) {curY++; down=true;}
 
 		int direction = 0;
 		
@@ -137,7 +138,7 @@ void Worm::addWormTrail() {
 		
 		addWormNode(curX,curY,direction);
 		
-		if (curX==(int)thePlayer->x && curY==(int)thePlayer->y) {
+		if (curX==(int)smh->player->x && curY==(int)smh->player->y) {
 			exitWhile=true;
 		}
 

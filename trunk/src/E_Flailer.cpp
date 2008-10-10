@@ -1,7 +1,4 @@
-/**
- * Enemy that attacks with a flail. Any sprite can be used with this
- * enemy type.
- */
+#include "SMH.h"
 #include "smiley.h"
 #include "enemy.h"
 #include "hge.h"
@@ -12,10 +9,10 @@
 #include "environment.h"
 #include "CollisionCircle.h"
 
+extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
 extern ProjectileManager *projectileManager;
-extern Player *thePlayer;
 extern Environment *theEnvironment;
 extern float gameTime;
 
@@ -99,14 +96,14 @@ void E_Flailer::update(float dt) {
 	//If the flail enemy has a straight path to the player, try to maneuver so that
 	//the flail will hit him
 	boolean shouldMove = true;
-	if (theEnvironment->validPath(x, y, thePlayer->x, thePlayer->y, 26, canPass)) {
+	if (theEnvironment->validPath(x, y, smh->player->x, smh->player->y, 26, canPass)) {
 
 		if (distanceFromPlayer() <= MAX_SPIN_LENGTH - 10) {
-			dx = -speed * cos (getAngleBetween(x, y, thePlayer->x, thePlayer->y));
-			dy = -speed * sin (getAngleBetween(x, y, thePlayer->x, thePlayer->y));
+			dx = -speed * cos (getAngleBetween(x, y, smh->player->x, smh->player->y));
+			dy = -speed * sin (getAngleBetween(x, y, smh->player->x, smh->player->y));
 		} else  if (distanceFromPlayer() >= MAX_SPIN_LENGTH + 10) {
-			dx = speed * cos (getAngleBetween(x, y, thePlayer->x, thePlayer->y));
-			dy = speed * sin (getAngleBetween(x, y, thePlayer->x, thePlayer->y));
+			dx = speed * cos (getAngleBetween(x, y, smh->player->x, smh->player->y));
+			dy = speed * sin (getAngleBetween(x, y, smh->player->x, smh->player->y));
 		} else {
 			shouldMove = false;
 		}
@@ -200,8 +197,8 @@ void E_Flailer::updateFlail(float dt) {
 
 	//Check flail collision - it only hurts th player when it is swinging!
 	if (flailing || coolingDown) {
-		if (distance(flailX, flailY, thePlayer->x, thePlayer->y) <= FLAIL_RADIUS + thePlayer->collisionCircle->radius) {	
-			thePlayer->dealDamageAndKnockback(damage,true,100,flailX,flailY);
+		if (distance(flailX, flailY, smh->player->x, smh->player->y) <= FLAIL_RADIUS + smh->player->collisionCircle->radius) {	
+			smh->player->dealDamageAndKnockback(damage,true,100,flailX,flailY);
 			flailDx *= -1;
 			flailDy *= -1;
 		}

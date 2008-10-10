@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "environment.h"
 #include "EnemyState.h"
 #include "hge.h"
@@ -5,9 +6,9 @@
 #include "enemy.h"
 #include "hgeanim.h"
 
+extern SMH *smh;
 extern HGE *hge;
 extern Environment *theEnvironment;
-extern Player *thePlayer;
 
 DefaultEnemy::DefaultEnemy(int id, int x, int y, int groupID) {
 

@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "smiley.h"
 #include "npcManager.h"
 #include "collisioncircle.h"
@@ -10,9 +11,9 @@
 #include "hgestrings.h"
 #include "hgesprite.h"
 
+extern SMH *smh;
 extern HGE *hge;
 extern WindowManager *windowManager;
-extern Player *thePlayer;
 extern Environment *theEnvironment;
 extern hgeStringTable *stringTable;
 extern float gameTime;

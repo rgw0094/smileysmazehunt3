@@ -14,7 +14,6 @@
 #include "EnemyState.h"
 #include "EnemyManager.h"
 
-extern Player *thePlayer;
 extern Environment *theEnvironment;
 extern hgeResourceManager *resources;
 extern SMH *smh;
@@ -53,37 +52,37 @@ void BaseEnemy::initEnemy(int _id, int _gridX, int _gridY, int _groupID) {
 	flashing = false;
 
 	//Load enemy info
-	enemyType = smh->Data()->getEnemyInfo(id).enemyType;
-	wanderType = smh->Data()->getEnemyInfo(id).wanderType;
-	health = maxHealth = (float)smh->Data()->getEnemyInfo(id).hp / 100.0;
-	damage = (float)smh->Data()->getEnemyInfo(id).damage / 100.0;
-	radius = smh->Data()->getEnemyInfo(id).radius;
-	speed = smh->Data()->getEnemyInfo(id).speed;
-	immuneToTongue = smh->Data()->getEnemyInfo(id).immuneToTongue;
-	immuneToFire = smh->Data()->getEnemyInfo(id).immuneToFire;
-	immuneToStun = smh->Data()->getEnemyInfo(id).immuneToStun;
-	immuneToLightning = smh->Data()->getEnemyInfo(id).immuneToLightning;
-	chases = smh->Data()->getEnemyInfo(id).chases;
-	variable1 = smh->Data()->getEnemyInfo(id).variable1;
-	variable2 = smh->Data()->getEnemyInfo(id).variable2;
-	hasRangedAttack = smh->Data()->getEnemyInfo(id).hasRangedAttack;
+	enemyType = smh->gameData->getEnemyInfo(id).enemyType;
+	wanderType = smh->gameData->getEnemyInfo(id).wanderType;
+	health = maxHealth = (float)smh->gameData->getEnemyInfo(id).hp / 100.0;
+	damage = (float)smh->gameData->getEnemyInfo(id).damage / 100.0;
+	radius = smh->gameData->getEnemyInfo(id).radius;
+	speed = smh->gameData->getEnemyInfo(id).speed;
+	immuneToTongue = smh->gameData->getEnemyInfo(id).immuneToTongue;
+	immuneToFire = smh->gameData->getEnemyInfo(id).immuneToFire;
+	immuneToStun = smh->gameData->getEnemyInfo(id).immuneToStun;
+	immuneToLightning = smh->gameData->getEnemyInfo(id).immuneToLightning;
+	chases = smh->gameData->getEnemyInfo(id).chases;
+	variable1 = smh->gameData->getEnemyInfo(id).variable1;
+	variable2 = smh->gameData->getEnemyInfo(id).variable2;
+	hasRangedAttack = smh->gameData->getEnemyInfo(id).hasRangedAttack;
 	if (hasRangedAttack) {
-		rangedType = smh->Data()->getEnemyInfo(id).rangedType;	
-		weaponRange = smh->Data()->getEnemyInfo(id).range;
-		rangedAttackDelay = smh->Data()->getEnemyInfo(id).delay;
-		projectileSpeed = smh->Data()->getEnemyInfo(id).projectileSpeed; //Here is a float-to-int conversion
-		projectileDamage = smh->Data()->getEnemyInfo(id).projectileDamage;
+		rangedType = smh->gameData->getEnemyInfo(id).rangedType;	
+		weaponRange = smh->gameData->getEnemyInfo(id).range;
+		rangedAttackDelay = smh->gameData->getEnemyInfo(id).delay;
+		projectileSpeed = smh->gameData->getEnemyInfo(id).projectileSpeed; //Here is a float-to-int conversion
+		projectileDamage = smh->gameData->getEnemyInfo(id).projectileDamage;
 	}
 
 	//Set pathing shit
 	for (int i = 0; i < 256; i++) canPass[i] = false;
-	canPass[WALKABLE] = smh->Data()->getEnemyInfo(id).land;
-	canPass[SLIME] = smh->Data()->getEnemyInfo(id).slime;
-	canPass[WALK_LAVA] = smh->Data()->getEnemyInfo(id).lava;
-	canPass[DIZZY_MUSHROOM_1] = canPass[DIZZY_MUSHROOM_2] = smh->Data()->getEnemyInfo(id).mushrooms;
-	canPass[SHALLOW_WATER] = smh->Data()->getEnemyInfo(id).shallowWater;
-	canPass[DEEP_WATER] = smh->Data()->getEnemyInfo(id).deepWater;
-	canPass[GREEN_WATER] = smh->Data()->getEnemyInfo(id).deepWater;
+	canPass[WALKABLE] = smh->gameData->getEnemyInfo(id).land;
+	canPass[SLIME] = smh->gameData->getEnemyInfo(id).slime;
+	canPass[WALK_LAVA] = smh->gameData->getEnemyInfo(id).lava;
+	canPass[DIZZY_MUSHROOM_1] = canPass[DIZZY_MUSHROOM_2] = smh->gameData->getEnemyInfo(id).mushrooms;
+	canPass[SHALLOW_WATER] = smh->gameData->getEnemyInfo(id).shallowWater;
+	canPass[DEEP_WATER] = smh->gameData->getEnemyInfo(id).deepWater;
+	canPass[GREEN_WATER] = smh->gameData->getEnemyInfo(id).deepWater;
 	canPass[LEFT_ARROW] = true;
 	canPass[RIGHT_ARROW] = true;
 	canPass[UP_ARROW] = true;
@@ -104,27 +103,27 @@ void BaseEnemy::initEnemy(int _id, int _gridX, int _gridY, int _groupID) {
 
 	//Load graphics - each one has a 1 border transparent pixel layer around it except
 	// for batlet caves because the graphics need to be put next to each other
-	int borderSize = (smh->Data()->getEnemyInfo(id).enemyType == ENEMY_BATLET_DIST ? 0 : 1);
-	int size = (smh->Data()->getEnemyInfo(id).enemyType == ENEMY_BATLET_DIST ? 64 : 62);
+	int borderSize = (smh->gameData->getEnemyInfo(id).enemyType == ENEMY_BATLET_DIST ? 0 : 1);
+	int size = (smh->gameData->getEnemyInfo(id).enemyType == ENEMY_BATLET_DIST ? 64 : 62);
 	graphic[LEFT] = new hgeAnimation(resources->GetTexture("enemies"), 
-		smh->Data()->getEnemyInfo(id).numFrames, 3, 
-		smh->Data()->getEnemyInfo(id).gCol*64+borderSize, 
-		smh->Data()->getEnemyInfo(id).gRow*64+borderSize, size, size);
+		smh->gameData->getEnemyInfo(id).numFrames, 3, 
+		smh->gameData->getEnemyInfo(id).gCol*64+borderSize, 
+		smh->gameData->getEnemyInfo(id).gRow*64+borderSize, size, size);
 	graphic[LEFT]->Play();
 	graphic[RIGHT] = new hgeAnimation(resources->GetTexture("enemies"), 
-		smh->Data()->getEnemyInfo(id).numFrames, 3, 
-		smh->Data()->getEnemyInfo(id).gCol*64 + 64 * (smh->Data()->getEnemyInfo(id).hasOneGraphic ? 0 : smh->Data()->getEnemyInfo(id).numFrames)+borderSize, 
-		smh->Data()->getEnemyInfo(id).gRow*64+borderSize, size, size);
+		smh->gameData->getEnemyInfo(id).numFrames, 3, 
+		smh->gameData->getEnemyInfo(id).gCol*64 + 64 * (smh->gameData->getEnemyInfo(id).hasOneGraphic ? 0 : smh->gameData->getEnemyInfo(id).numFrames)+borderSize, 
+		smh->gameData->getEnemyInfo(id).gRow*64+borderSize, size, size);
 	graphic[RIGHT]->Play();
 	graphic[UP] = new hgeAnimation(resources->GetTexture("enemies"), 
-		smh->Data()->getEnemyInfo(id).numFrames, 3, 
-		smh->Data()->getEnemyInfo(id).gCol*64 + 2 * 64 * (smh->Data()->getEnemyInfo(id).hasOneGraphic ? 0 : smh->Data()->getEnemyInfo(id).numFrames)+borderSize, 
-		smh->Data()->getEnemyInfo(id).gRow*64+borderSize, size, size);
+		smh->gameData->getEnemyInfo(id).numFrames, 3, 
+		smh->gameData->getEnemyInfo(id).gCol*64 + 2 * 64 * (smh->gameData->getEnemyInfo(id).hasOneGraphic ? 0 : smh->gameData->getEnemyInfo(id).numFrames)+borderSize, 
+		smh->gameData->getEnemyInfo(id).gRow*64+borderSize, size, size);
 	graphic[UP]->Play();
 	graphic[DOWN] = new hgeAnimation(resources->GetTexture("enemies"), 
-		smh->Data()->getEnemyInfo(id).numFrames, 3, 
-		smh->Data()->getEnemyInfo(id).gCol*64 + 3 * 64 * (smh->Data()->getEnemyInfo(id).hasOneGraphic ? 0 : smh->Data()->getEnemyInfo(id).numFrames)+borderSize,
-		smh->Data()->getEnemyInfo(id).gRow*64+borderSize, size, size);
+		smh->gameData->getEnemyInfo(id).numFrames, 3, 
+		smh->gameData->getEnemyInfo(id).gCol*64 + 3 * 64 * (smh->gameData->getEnemyInfo(id).hasOneGraphic ? 0 : smh->gameData->getEnemyInfo(id).numFrames)+borderSize,
+		smh->gameData->getEnemyInfo(id).gRow*64+borderSize, size, size);
 	graphic[DOWN]->Play();
 
 	//Set graphic hot spots
@@ -184,8 +183,8 @@ void BaseEnemy::dealDamageAndKnockback(float damage, float knockbackDist,
  * Returns whether or not the enemy is within <range> squares of the player.
  */
 bool BaseEnemy::inChaseRange(int range) {
-	return (chases && mapPath[gridX][gridY] <= range && mapPath[gridX][gridY] > 0 && !thePlayer->isInvisible() &&
-		theEnvironment->collision[thePlayer->gridX][thePlayer->gridY] != ENEMY_NO_WALK);
+	return (chases && mapPath[gridX][gridY] <= range && mapPath[gridX][gridY] > 0 && !smh->player->isInvisible() &&
+		theEnvironment->collision[smh->player->gridX][smh->player->gridY] != ENEMY_NO_WALK);
 }
 
 /**
@@ -193,7 +192,7 @@ bool BaseEnemy::inChaseRange(int range) {
  * at its current position.
  */
 bool BaseEnemy::canShootPlayer() {
-	return (distanceFromPlayer() <= weaponRange && theEnvironment->validPath(x, y, thePlayer->x, thePlayer->y, 26, canPass));
+	return (distanceFromPlayer() <= weaponRange && theEnvironment->validPath(x, y, smh->player->x, smh->player->y, 26, canPass));
 }
 
 /**
@@ -201,9 +200,9 @@ bool BaseEnemy::canShootPlayer() {
  * player's position.
  */
 int BaseEnemy::distanceFromPlayer() {
-	if (x == thePlayer->x && y == thePlayer->y) return 0;
-	int xDist = abs(x - thePlayer->x);
-	int yDist = abs(y - thePlayer->y);
+	if (x == smh->player->x && y == smh->player->y) return 0;
+	int xDist = abs(x - smh->player->x);
+	int yDist = abs(y - smh->player->y);
 	return sqrt(float(xDist*xDist) + float(yDist*yDist));
 }
 
@@ -251,7 +250,7 @@ void BaseEnemy::doAStar() {
 	int lowValue;
 
 	//Only update map path if the enemies are within 10 tiles of smiley
-	if (abs(gridX - thePlayer->gridX) + abs(gridY - thePlayer->gridY) > 10) {
+	if (abs(gridX - smh->player->gridX) + abs(gridY - smh->player->gridY) > 10) {
 		return;
 	}
 
@@ -265,7 +264,7 @@ void BaseEnemy::doAStar() {
 	for (int i = startX; i < endX; i++) {
 		for (int j = startY; j < endY; j++) {
 			//If the player is at (i,j), the distance from (i,j) is 0
-			if (i == thePlayer->gridX && j == thePlayer->gridY) {
+			if (i == smh->player->gridX && j == smh->player->gridY) {
 				mapPath[i][j] = 0;
 			//If (i,j) is inaccessible, set distance to 999
 			} else if (!canPass[theEnvironment->collision[i][j]] || theEnvironment->hasSillyPad(i, j)) {			
@@ -354,8 +353,8 @@ void BaseEnemy::setFacingPlayer() {
 void BaseEnemy::setFacingPlayer(int maximumDistance, int defaultDirection) {
 
 	if (distanceFromPlayer() < maximumDistance) {
-		int xDist = thePlayer->x - x;
-		int yDist = thePlayer->y - y;
+		int xDist = smh->player->x - x;
+		int yDist = smh->player->y - y;
 		if (xDist < 0 && yDist < 0) {
 			//Player up-left from enemy
 			if (abs(xDist) > abs(yDist)) {
@@ -461,10 +460,10 @@ void BaseEnemy::baseUpdate(float dt) {
 
 	//Fire breath collision
 	if (!immuneToFire) {
-		if (thePlayer->fireBreathParticle->testCollision(collisionBox)) {
+		if (smh->player->fireBreathParticle->testCollision(collisionBox)) {
 			frozen = false;
-			dealDamageAndKnockback(thePlayer->getFireBreathDamage()*dt, 
-				500.0*dt,thePlayer->x, thePlayer->y);
+			dealDamageAndKnockback(smh->player->getFireBreathDamage()*dt, 
+				500.0*dt,smh->player->x, smh->player->y);
 		}
 	}
 
@@ -556,7 +555,7 @@ bool BaseEnemy::doTongueCollision(Tongue *tongue, float damage) {
 		//Make sure the enemy wasn't already hit by this attack
 		if (timePassedSince(lastHitByWeapon) > .5) {
 			lastHitByWeapon = gameTime;
-			dealDamageAndKnockback(damage, 65.0, thePlayer->x, thePlayer->y);
+			dealDamageAndKnockback(damage, 65.0, smh->player->x, smh->player->y);
 			startFlashing();
 			return true;
 		}
@@ -571,8 +570,8 @@ bool BaseEnemy::doTongueCollision(Tongue *tongue, float damage) {
  * override this for something more specific.
  */ 
 void BaseEnemy::doPlayerCollision() {
-	if (dealsCollisionDamage && thePlayer->collisionCircle->testBox(collisionBox)) {
-		thePlayer->dealDamageAndKnockback(damage, true, 115, x, y);
+	if (dealsCollisionDamage && smh->player->collisionCircle->testBox(collisionBox)) {
+		smh->player->dealDamageAndKnockback(damage, true, 115, x, y);
 	}
 }
 

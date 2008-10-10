@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "smiley.h"
 #include "enemy.h"
 #include "EnemyState.h"
@@ -7,9 +8,9 @@
 #include "ProjectileManager.h"
 #include "CollisionCircle.h"
 
+extern SMH *smh;
 extern hgeResourceManager *resources;
 extern Environment *theEnvironment;
-extern Player *thePlayer;
 extern HGE *hge;
 extern ProjectileManager *projectileManager;
 
@@ -25,7 +26,7 @@ E_SadShooter::E_SadShooter(int id, int x, int y, int groupID) {
 
 	collisionBlocker = new hgeRect;
 
-	double angleToSmiley = getAngleBetween(x,y,thePlayer->x,thePlayer->y);
+	double angleToSmiley = getAngleBetween(x,y,smh->player->x,smh->player->y);
 	int i;
 	
 	for (i=0;i<NUM_BLOCKERS;i++) {
@@ -49,7 +50,7 @@ E_SadShooter::~E_SadShooter() {
 }
 
 void E_SadShooter::draw(float dt) {
-	float angleToSmiley = getAngleBetween(x,y,thePlayer->x,thePlayer->y);
+	float angleToSmiley = getAngleBetween(x,y,smh->player->x,smh->player->y);
 	
 	graphic[1]->RenderEx(screenX,screenY,angleToSmiley+PI/2);
 
@@ -62,7 +63,7 @@ void E_SadShooter::draw(float dt) {
 
 void E_SadShooter::update(float dt) {
 
-	float angleToSmiley = getAngleBetween(x,y,thePlayer->x,thePlayer->y);
+	float angleToSmiley = getAngleBetween(x,y,smh->player->x,smh->player->y);
 
 	for(int i=0;i<NUM_BLOCKERS;i++) {
 		double angleSubtracted = angleToSmiley - (sadBlockers[i].angle+sadBlockers[i].desiredAngleOffset);
@@ -89,8 +90,8 @@ void E_SadShooter::update(float dt) {
 		sadBlockers[i].x = x + sadBlockers[i].distance*cos(sadBlockers[i].angle);
 		sadBlockers[i].y = y + sadBlockers[i].distance*sin(sadBlockers[i].angle);
 
-		if (distance(sadBlockers[i].x,sadBlockers[i].y,thePlayer->x,thePlayer->y) <= BLOCKER_RADIUS + thePlayer->collisionCircle->radius) {
-			thePlayer->dealDamageAndKnockback(damage,true,100,sadBlockers[i].x,sadBlockers[i].y);			
+		if (distance(sadBlockers[i].x,sadBlockers[i].y,smh->player->x,smh->player->y) <= BLOCKER_RADIUS + smh->player->collisionCircle->radius) {
+			smh->player->dealDamageAndKnockback(damage,true,100,sadBlockers[i].x,sadBlockers[i].y);			
 		}
 
 		collisionBlocker->x1=sadBlockers[i].x-BLOCKER_RADIUS+3; //add 3 to make the rect a bit smaller so it better approximates the circle

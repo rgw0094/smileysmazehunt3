@@ -10,7 +10,7 @@
 #include "hgestrings.h"
 #include <string>
 
-extern Player *thePlayer;
+extern SMH *smh;
 extern HGE *hge;
 
 GameData::GameData() {
@@ -98,7 +98,7 @@ void GameData::loadAbilityData() {
 	strcpy(abilities[FIRE_BREATH].description, 
 		"Allows you to breath deadly fire breath.\n\nMana Cost: 10/second\n");
 	strcat(abilities[FIRE_BREATH].description, "Damage: ");
-	strcat(abilities[FIRE_BREATH].description, intToString(thePlayer->getFireBreathDamage()).c_str());
+	strcat(abilities[FIRE_BREATH].description, intToString(smh->player->getFireBreathDamage()).c_str());
 	strcat(abilities[FIRE_BREATH].description, " per second.");
 	abilities[FIRE_BREATH].type = HOLD;
 	abilities[FIRE_BREATH].manaCost = 10;
@@ -129,7 +129,7 @@ void GameData::loadAbilityData() {
 	strcpy(abilities[LIGHTNING_ORB].description, 
 		"Shoots orbs of lightning. \n\n\nMana Cost: 5\n");
 	strcat(abilities[LIGHTNING_ORB].description, "Damage: ");
-	strcat(abilities[LIGHTNING_ORB].description, intToString(thePlayer->getLightningOrbDamage()).c_str());
+	strcat(abilities[LIGHTNING_ORB].description, intToString(smh->player->getLightningOrbDamage()).c_str());
 	abilities[LIGHTNING_ORB].type = ACTIVATED;
 	abilities[LIGHTNING_ORB].manaCost = 5;
 

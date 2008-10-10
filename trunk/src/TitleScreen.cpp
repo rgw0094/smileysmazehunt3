@@ -32,11 +32,11 @@ TitleScreen::~TitleScreen() {
 void TitleScreen::draw(float dt) {
 
 	//Draw background
-	smh->DrawSprite("menuBackground", 0,0);
+	smh->drawSprite("menuBackground", 0,0);
 
 	//Title
-	smh->GetFont("titleFnt")->printf(512,50, HGETEXT_CENTER, "Smiley's Maze");
-	smh->GetFont("titleFnt")->printf(512,150, HGETEXT_CENTER, "Hunt");
+	smh->getFont("titleFnt")->printf(512,50, HGETEXT_CENTER, "Smiley's Maze");
+	smh->getFont("titleFnt")->printf(512,150, HGETEXT_CENTER, "Hunt");
 
 	//Draw buttons
 	for (int i = 0; i < NUM_BUTTONS; i++) {

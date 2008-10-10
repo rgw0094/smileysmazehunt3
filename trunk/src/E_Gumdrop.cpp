@@ -1,11 +1,12 @@
+#include "SMH.h"
 #include "enemy.h"
 #include "player.h"
 #include "ProjectileManager.h"
 #include "hgeresource.h"
 #include "smiley.h"
 
+extern SMH *smh;
 extern hgeResourceManager *resources;
-extern Player *thePlayer;
 extern ProjectileManager *projectileManager;
 extern float gameTime;
 
@@ -69,10 +70,10 @@ void E_Gumdrop::update(float dt) {
 			setFacingPlayer(1000, DOWN);
 
 			//Shoot at smiley
-			if (!thePlayer->isInvisible() && timePassedSince(lastAttackTime) > ATTACK_DELAY) {
+			if (!smh->player->isInvisible() && timePassedSince(lastAttackTime) > ATTACK_DELAY) {
 				lastAttackTime = gameTime;
 				projectileManager->addProjectile(x, y, ATTACK_VELOCITY, 
-					getAngleBetween(x, y, thePlayer->x, thePlayer->y), damage, 
+					getAngleBetween(x, y, smh->player->x, smh->player->y), damage, 
 					true, PROJECTILE_1, true);
 			}
 

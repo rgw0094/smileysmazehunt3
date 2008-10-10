@@ -1,17 +1,16 @@
+#include "SMH.h"
 #include "DeathScreen.h"
 #include "hgeresource.h"
 #include "menu.h"
 #include "environment.h"
 #include "player.h"
-#include "SaveManager.h"
 #include "Button.h"
 #include "Smiley.h"
 
+extern SMH *smh;
 extern Menu *theMenu;
 extern hgeResourceManager *resources;
 extern Environment *theEnvironment;
-extern Player *thePlayer;
-extern SaveManager *saveManager;
 
 extern float darkness;
 
@@ -50,7 +49,7 @@ bool DeathScreen::update(float dt, float mouseX, float mouseY) {
 
 	//Click Continue
 	if (buttons[CONTINUE_BUTTON]->isClicked()) {
-		theMenu->openLoadScreen(saveManager->currentSave, false);
+		theMenu->openLoadScreen(smh->saveManager->currentSave, false);
 		return false;
 	}
 
@@ -65,7 +64,7 @@ void DeathScreen::draw(float dt) {
 	//Keep drawing the environment and player while the screen is fading in
 	if (alpha < 255.0) {
 		theEnvironment->draw(dt);
-		thePlayer->draw(dt);
+		smh->player->draw(dt);
 	}
 
 	//Death screen background fades in

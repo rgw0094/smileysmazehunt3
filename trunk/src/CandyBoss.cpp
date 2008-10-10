@@ -1,5 +1,5 @@
 #include "CandyBoss.h"
-
+#include "SMH.h"
 #include "hge.h"
 #include "hgeresource.h"
 #include "Player.h"
@@ -12,9 +12,9 @@
 #include "collisioncircle.h"
 #include "WeaponParticle.h"
 
+extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern Player *thePlayer;
 extern float gameTime;
 extern bool debugMode;
 extern EnemyGroupManager *enemyGroupManager;
@@ -153,17 +153,17 @@ bool CandyBoss::update(float dt) {
 	}
 
 	setCollisionBox(collisionBox, x, y);
-	if (thePlayer->collisionCircle->testBox(collisionBox) && jumpYOffset < 65.0) {
+	if (smh->player->collisionCircle->testBox(collisionBox) && jumpYOffset < 65.0) {
 		if (state == CANDY_STATE_MULTI_JUMP) {
-			thePlayer->dealDamage(0.25, false);
+			smh->player->dealDamage(0.25, false);
 		} else {
-			thePlayer->dealDamageAndKnockback(COLLISION_DAMAGE, true, 150.0, x, y);
+			smh->player->dealDamageAndKnockback(COLLISION_DAMAGE, true, 150.0, x, y);
 		}
 	}
 
 	updateLimbs(dt);
 	updateNovas(dt);
-	shouldDrawAfterSmiley = (y > thePlayer->y);
+	shouldDrawAfterSmiley = (y > smh->player->y);
 }
 
 
@@ -195,7 +195,7 @@ void CandyBoss::enterState(int _state) {
 	if (state == CANDY_STATE_RUNNING) {
 		//Start running in a random direction that doesn't result in Bartli immediately charging the player
 		//because there is no way to dodge it and that would be gay.
-		float angleBetween = getAngleBetween(x, y, thePlayer->x, thePlayer->y);
+		float angleBetween = getAngleBetween(x, y, smh->player->x, smh->player->y);
 		do {
 			angle = hge->Random_Float(0.0, PI);
 		} while (angle > angleBetween - PI/4.0 && angle < angleBetween + PI/4.0);
@@ -229,11 +229,11 @@ void CandyBoss::updateRun(float dt) {
 
 	//When bartli hits a wall, bounce off it towards smiley
 	if (theEnvironment->testCollision(futureCollisionBox, canPass)) {
-		if (distance(x, y, thePlayer->x, thePlayer->y) < 50.0) {
+		if (distance(x, y, smh->player->x, smh->player->y) < 50.0) {
 			//If Smiley is standing next to a wall bartli can get stuck on him
 			angle += PI/2.0;
 		} else {
-			angle = getAngleBetween(x, y, thePlayer->x, thePlayer->y) + hge->Random_Float(-PI/6.0, PI/6.0);
+			angle = getAngleBetween(x, y, smh->player->x, smh->player->y) + hge->Random_Float(-PI/6.0, PI/6.0);
 			//Make sure the new angle won't result in running into a wall
 			while (!theEnvironment->validPath(x, y, x + xDist * cos(angle), y + yDist * sin(angle), 28, canPass)) {
 				angle += hge->Random_Float(-PI/6.0, PI/6.0);
@@ -260,9 +260,9 @@ void CandyBoss::updateJumping(float dt) {
 		numJumps++;
 
 		//Try to jump on smiley. The y offset is so her feet land at smiley's location
-		angle = getAngleBetween(x, y, thePlayer->x, thePlayer->y - 40.0);
-		jumpDistance = min(400.0, distance(x, y, thePlayer->x, thePlayer->y - 40));
-
+		angle = getAngleBetween(x, y, smh->player->x, smh->player->y - 40.0);
+		jumpDistance = min(400.0, distance(x, y, smh->player->x, smh->player->y - 40));
+	
 		//If Bartli is in multi jump state she should jump up and down on the player
 		if (state != CANDY_STATE_MULTI_JUMP) {
 			angle += hge->Random_Float(-PI/8.0, PI/8.0);
@@ -329,9 +329,9 @@ void CandyBoss::updateNovas(float dt) {
 		i->radius += 280.0 * dt;
 		i->collisionCircle->set(i->x, i->y, i->radius);
 
-		if (thePlayer->collisionCircle->testCircle(i->collisionCircle)) {
-			thePlayer->stun(SHOCKWAVE_STUN_DURATION);
-			thePlayer->dealDamage(SHOCKWAVE_DAMAGE, false);
+		if (smh->player->collisionCircle->testCircle(i->collisionCircle)) {
+			smh->player->stun(SHOCKWAVE_STUN_DURATION);
+			smh->player->dealDamage(SHOCKWAVE_DAMAGE, false);
 			if (state == CANDY_STATE_JUMPING) {
 				enterState(CANDY_STATE_MULTI_JUMP);
 			}

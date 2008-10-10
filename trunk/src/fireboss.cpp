@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "smiley.h"
 #include "fireboss.h"
 #include "environment.h"
@@ -5,21 +6,19 @@
 #include "enemyGroupManager.h"
 #include "Player.h"
 #include "CollisionCircle.h"
-#include "SaveManager.h"
 #include "SoundManager.h"
 #include "WeaponParticle.h"
 #include "Tongue.h"
 #include "WindowManager.h"
 
+extern SMH *smh;
 extern HGE *hge;
 extern WindowManager *windowManager;
 extern bool debugMode;
-extern Player *thePlayer;
 extern Environment *theEnvironment;
 extern LootManager *lootManager;
 extern hgeResourceManager *resources;
 extern EnemyGroupManager *enemyGroupManager;
-extern SaveManager *saveManager;
 extern SoundManager *soundManager;
 extern float gameTime;
 
@@ -158,7 +157,7 @@ bool FireBoss::update(float dt) {
 	floatY = 15.0f*sin(hge->Timer_GetTime()*3.0f);
 
 	//When the player enters his chamber shut the doors and start the intro dialogue
-	if (state == FIREBOSS_INACTIVE && !startedIntroDialogue && thePlayer->gridY == startY+5  && thePlayer->gridX == startX && thePlayer->y < (startY+5)*64+33) {
+	if (state == FIREBOSS_INACTIVE && !startedIntroDialogue && smh->player->gridY == startY+5  && smh->player->gridX == startX && smh->player->y < (startY+5)*64+33) {
 		windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS_INTRO);
 		startedIntroDialogue = true;
 		soundManager->fadeOutMusic();
@@ -272,8 +271,8 @@ bool FireBoss::update(float dt) {
 		else if (dy > 0) facing = DOWN;
 		else facing = (dx > 0 ? RIGHT : LEFT);
 	} else if (state == FIREBOSS_ATTACK) {
-		if (y < thePlayer->y) facing = DOWN;
-		else if (y > thePlayer->y) facing = UP;
+		if (y < smh->player->y) facing = DOWN;
+		else if (y > smh->player->y) facing = UP;
 	}
 
 	//Shoot fire orbs every 10 seconds
@@ -285,12 +284,12 @@ bool FireBoss::update(float dt) {
 	//Check collision with Smiley's tongue
 	if (state != FIREBOSS_FRIENDLY && !flashing) {
 		for (int i = 0; i < 3; i++) {
-			if (thePlayer->getTongue()->testCollision(collisionBoxes[i]) && timePassedSince(lastHitByTongue) >= 0.5) {
+			if (smh->player->getTongue()->testCollision(collisionBoxes[i]) && timePassedSince(lastHitByTongue) >= 0.5) {
 				resources->GetAnimation("phyrebozzDownMouth")->Play();
 				resources->GetAnimation("phyrebozzLeftMouth")->Play();
 				resources->GetAnimation("phyrebozzRightMouth")->Play();
 				lastHitByTongue = gameTime;
-				health -= thePlayer->getDamage();
+				health -= smh->player->getDamage();
 				if (health > 0.0f) {
 					hge->Effect_Play(resources->GetEffect("snd_fireBossHit"));
 				}
@@ -316,8 +315,8 @@ bool FireBoss::update(float dt) {
 	//Check collision with Smiley
 	if (state != FIREBOSS_FRIENDLY) {
 		for (int i = 0; i < 3; i++) {
-			if (thePlayer->collisionCircle->testBox(collisionBoxes[i])) {
-				thePlayer->dealDamageAndKnockback(0.25, true, 150, x, y);
+			if (smh->player->collisionCircle->testBox(collisionBoxes[i])) {
+				smh->player->dealDamageAndKnockback(0.25, true, 150, x, y);
 			}
 		}
 	}
@@ -333,7 +332,7 @@ bool FireBoss::update(float dt) {
 		windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS_VICTORY);	
 		facing = DOWN;
 		alpha = 255;
-		saveManager->killBoss(FIRE_BOSS);
+		smh->saveManager->killBoss(FIRE_BOSS);
 		enemyGroupManager->notifyOfDeath(groupID);
 		soundManager->fadeOutMusic();
 	}
@@ -409,7 +408,7 @@ void FireBoss::updateOrbs(float dt) {
 		i->collisionBox->SetRadius(i->x, i->y, 15);
 
 		//Move towards player
-		float angle = getAngleBetween(i->x,i->y,thePlayer->x,thePlayer->y);
+		float angle = getAngleBetween(i->x,i->y,smh->player->x,smh->player->y);
 		i->dx = 130 * cos(angle);
 		i->dy = 130 * sin(angle);
 		i->x += i->dx*dt;
@@ -419,8 +418,8 @@ void FireBoss::updateOrbs(float dt) {
 		if (gameTime > i->timeCreated + 6.3f) deleteOrb = true;
 
 		//Enemy collision
-		if (thePlayer->collisionCircle->testBox(i->collisionBox) && !deleteOrb) {
-			thePlayer->dealDamage(ORB_DAMAGE, false);
+		if (smh->player->collisionCircle->testBox(i->collisionBox) && !deleteOrb) {
+			smh->player->dealDamage(ORB_DAMAGE, false);
 			deleteOrb = true;
 		}
 

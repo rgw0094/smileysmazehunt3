@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "weaponparticle.h"
 #include "environment.h"
 #include "EnemyManager.h"
@@ -9,7 +10,7 @@
 HGE	*WeaponParticleSystem::hge=0;
 
 //Objects
-extern Player *thePlayer;
+extern SMH *smh;
 extern Environment *theEnvironment;
 extern EnemyManager *enemyManager;
 
@@ -98,18 +99,18 @@ void WeaponParticleSystem::Update(float fDeltaTime) {
 			enemyManager->freezeEnemies(x, y);
 		} else if (type == PARTICLE_FIRE_NOVA || type == PARTICLE_FIRE_NOVA2) {
 			collisionBox->SetRadius(x, y, par->fSize);
-			if (thePlayer->collisionCircle->testBox(collisionBox)) {
-				thePlayer->dealDamage(NOVA_DAMAGE, true);
+			if (smh->player->collisionCircle->testBox(collisionBox)) {
+				smh->player->dealDamage(NOVA_DAMAGE, true);
 			}
 		} else if (type == PARTICLE_ICE_NOVA) {
 			collisionBox->SetRadius(x, y, par->fSize);
-			if (thePlayer->collisionCircle->testBox(collisionBox)) {
-				thePlayer->freeze(ICE_NOVA_FREEZE_DURATION);
+			if (smh->player->collisionCircle->testBox(collisionBox)) {
+				smh->player->freeze(ICE_NOVA_FREEZE_DURATION);
 			}
 		} else if (type == PARTICLE_SHOCKWAVE) {
 			collisionBox->SetRadius(x, y, par->fSize);
-			if (thePlayer->collisionCircle->testBox(collisionBox)) {
-				thePlayer->stun(3.0);
+			if (smh->player->collisionCircle->testBox(collisionBox)) {
+				smh->player->stun(3.0);
 			}
 		}
 

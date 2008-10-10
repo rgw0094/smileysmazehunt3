@@ -1,6 +1,4 @@
-/**
- * Batlet Distributor
- */
+#include "SMH.h"
 #include "smiley.h"
 #include "enemy.h"
 #include "hge.h"
@@ -13,10 +11,10 @@
 #include "Tongue.h"
 #include "WeaponParticle.h"
 
+extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
 extern ProjectileManager *projectileManager;
-extern Player *thePlayer;
 extern Environment *theEnvironment;
 extern float gameTime;
 
@@ -167,15 +165,15 @@ void E_BatletDist::updateBatlets(float dt) {
 		bool collision = false;
 
 		//Check for collision with Smiley
-		if (thePlayer->collisionCircle->testBox(i->collisionBox)) {
-			thePlayer->dealDamage(BATLET_DAMAGE, true);
+		if (smh->player->collisionCircle->testBox(i->collisionBox)) {
+			smh->player->dealDamage(BATLET_DAMAGE, true);
 			collision = true;
 		}
 
 		//Check for collision with walls and Smiley's weapons
 		if ((!isOverlappingDist(i->x, i->y) && theEnvironment->collisionAt(i->x, i->y) == UNWALKABLE) ||
-				thePlayer->getTongue()->testCollision(i->collisionBox) ||
-				thePlayer->fireBreathParticle->testCollision(i->collisionBox)) {
+				smh->player->getTongue()->testCollision(i->collisionBox) ||
+				smh->player->fireBreathParticle->testCollision(i->collisionBox)) {
 			collision = true;
 		}
 		
@@ -190,7 +188,7 @@ void E_BatletDist::updateBatlets(float dt) {
 
 		//After the batlets move away from BD they dive bomb Smiley
 		if (!i->startedDiveBomb && timePassedSince(i->timeSpawned) > 1.0) {
-			i->angle = getAngleBetween(i->x, i->y, thePlayer->x, thePlayer->y) +
+			i->angle = getAngleBetween(i->x, i->y, smh->player->x, smh->player->y) +
 				hge->Random_Float(-.1*PI, .1*PI);
 			i->dx = 600.0*cos(i->angle);
 			i->dy = 600.0*sin(i->angle);

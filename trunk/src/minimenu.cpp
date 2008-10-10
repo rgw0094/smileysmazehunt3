@@ -1,7 +1,6 @@
 #include "SMH.h"
 #include "minimenu.h"
 #include "menu.h"
-#include "SaveManager.h"
 #include "hge.h"
 #include "hgeresource.h"
 #include "smiley.h"
@@ -14,7 +13,6 @@ extern SMH *smh;
 extern HTEXTURE menuItemTexture;
 extern Menu *theMenu;
 extern hgeResourceManager *resources;
-extern SaveManager *saveManager;
 extern WindowManager *windowManager;
 extern float gameTime;
 
@@ -83,10 +81,10 @@ bool MiniMenu::update(float dt) {
 
 	//Keyboard/Gamepad input to move mouse
 	if (hge->Input_IsMouseOver()) {
-		if (smh->Input()->keyDown(INPUT_LEFT)) mouseX -= 700.0f*dt;
-		if (smh->Input()->keyDown(INPUT_RIGHT)) mouseX += 700.0f*dt;
-		if (smh->Input()->keyDown(INPUT_DOWN)) mouseY += 700.0f*dt;
-		if (smh->Input()->keyDown(INPUT_UP)) mouseY -= 700.0f*dt;
+		if (smh->input->keyDown(INPUT_LEFT)) mouseX -= 700.0f*dt;
+		if (smh->input->keyDown(INPUT_RIGHT)) mouseX += 700.0f*dt;
+		if (smh->input->keyDown(INPUT_DOWN)) mouseY += 700.0f*dt;
+		if (smh->input->keyDown(INPUT_UP)) mouseY -= 700.0f*dt;
 		if (mouseX < 1.0) mouseX = 1.0;
 		if (mouseX > 1023.0) mouseX = 1023.0;
 		if (mouseY < 1.0) mouseY = 1.0;
@@ -107,11 +105,11 @@ bool MiniMenu::update(float dt) {
 					return false;
 				case MINIMENU_QUIT:
 					theMenu->open(TITLE_SCREEN);
-					saveManager->incrementTimePlayed(saveManager->currentSave, gameTime);
-					saveManager->saveFileInfo();
+					smh->saveManager->incrementTimePlayed(smh->saveManager->currentSave, gameTime);
+					smh->saveManager->saveFileInfo();
 					return false;
 				case MINIMENU_SAVE:
-					saveManager->save();
+					smh->saveManager->save();
 					return false;
 				case MINIMENU_OPTIONS:
 					windowManager->openWindow(new OptionsWindow());

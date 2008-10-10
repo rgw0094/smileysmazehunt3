@@ -1,23 +1,22 @@
 /**
  * Smiley's Maze Hunt 3 global functions
  */
+#include "SMH.h"
 #include "smiley.h"
 #include "environment.h"
 #include "player.h"
 #include "hgerect.h"
 #include "boss.h"
-#include "SaveManager.h"
 
 extern bool debugMode;
 extern int gameState;
 extern hgeResourceManager *resources;
 extern float gameTime;
 extern int frameCounter;
-extern SaveManager *saveManager;
 
+extern SMH *smh;
 extern HGE *hge;
 extern Environment *theEnvironment;
-extern Player *thePlayer;
 
 /**
  * Switches the game state
@@ -31,7 +30,7 @@ void enterGameState(int newState) {
 
 	//If leaving game state save the player's playing time
 	if (gameState == GAME) {
-		saveManager->saveTimePlayed();
+		smh->saveManager->saveTimePlayed();
 	}
 
 	gameState = newState;
@@ -253,8 +252,8 @@ int getGridY(int y) {
  * player's position.
  */
 int distanceFromPlayer(float x, float y) {
-	int xDist = abs(x - thePlayer->x);
-	int yDist = abs(y - thePlayer->y);
+	int xDist = abs(x - smh->player->x);
+	int yDist = abs(y - smh->player->y);
 
 	return sqrt(float(xDist*xDist) + float(yDist*yDist));
 }
@@ -301,7 +300,7 @@ bool isWarp(int id) {
  * [area] index of SaveManager.numKeys[area][key color] for the parent area.
  */
 int getKeyIndex(int area) {
-	switch (saveManager->currentArea) {
+	switch (smh->saveManager->currentArea) {
 		case OLDE_TOWNE:
 		case TUTS_TOMB:
 		case SMOLDER_HOLLOW:
@@ -329,19 +328,19 @@ int roundUp(float num) {
  * Returns the current hint number based on what boss has been killed.
  */
 int getCurrentHint() {
-	if (saveManager->isBossKilled(FIRE_BOSS2)) {
+	if (smh->saveManager->isBossKilled(FIRE_BOSS2)) {
 		return 7;
-	} else if (saveManager->isBossKilled(MUSHROOM_BOSS)) {
+	} else if (smh->saveManager->isBossKilled(MUSHROOM_BOSS)) {
 		return 6;
-	} else if (saveManager->isBossKilled(DESPAIR_BOSS)) {
+	} else if (smh->saveManager->isBossKilled(DESPAIR_BOSS)) {
 		return 5;
-	} else if (saveManager->isBossKilled(DESERT_BOSS)) {
+	} else if (smh->saveManager->isBossKilled(DESERT_BOSS)) {
 		return 4;
-	} else if (saveManager->isBossKilled(FOREST_BOSS)) {
+	} else if (smh->saveManager->isBossKilled(FOREST_BOSS)) {
 		return 3;
-	} else if (saveManager->isBossKilled(SNOW_BOSS)) {
+	} else if (smh->saveManager->isBossKilled(SNOW_BOSS)) {
 		return 2;
-	} else if (saveManager->isBossKilled(FIRE_BOSS)) {
+	} else if (smh->saveManager->isBossKilled(FIRE_BOSS)) {
 		return 1;
 	} else {
 		return 0;

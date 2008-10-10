@@ -4,7 +4,6 @@
 #include "EnemyManager.h"
 #include "lootmanager.h"
 #include "ProjectileManager.h"
-#include "SaveManager.h"
 #include "player.h"
 #include "collisioncircle.h"
 #include "npcmanager.h"
@@ -39,8 +38,6 @@ extern float gameTime;
 //Objects
 extern HGE *hge;
 extern SMH *smh;
-extern Player *thePlayer;
-extern SaveManager *saveManager;
 extern EnemyManager *enemyManager;
 extern LootManager *lootManager;
 extern ProjectileManager *projectileManager;
@@ -197,7 +194,7 @@ void Environment::loadArea(int id, int from) {
 	std::ifstream areaFile;
 	char threeBuffer[3];
 
-	saveManager->currentArea = id;
+	smh->saveManager->currentArea = id;
 
 	//Delete all objects from the previous area.
 	reset();
@@ -388,7 +385,7 @@ void Environment::loadArea(int id, int from) {
 			//255 is a fenwar encounter
 			if (enemy == 255) {
 
-				if (!saveManager->isTileChanged(col, row)) {
+				if (!smh->saveManager->isTileChanged(col, row)) {
 					fenwarManager->addFenwarEncounter(col, row, ids[col][row]);
 				}
 
@@ -396,7 +393,7 @@ void Environment::loadArea(int id, int from) {
 			} else if (enemy >= 240) {
 
 				//Spawn the boss if it has never been killed
-				if (!saveManager->isBossKilled(enemy)) {
+				if (!smh->saveManager->isBossKilled(enemy)) {
 					bossManager->spawnBoss(enemy, variable[col][row], col, row);
 				}
 
@@ -433,7 +430,7 @@ void Environment::loadArea(int id, int from) {
 			//If there is an item at this tile check to see if it has already
 			//been collected
 			if (item[i][j] > 0 && item[i][j] < 16) {
-				if (saveManager->isTileChanged(i,j)) {
+				if (smh->saveManager->isTileChanged(i,j)) {
 					item[i][j] = NONE;
 				}
 			}
@@ -441,7 +438,7 @@ void Environment::loadArea(int id, int from) {
 			//If there is a door on this tile check to see if it has already
 			//been opened
 			if (collision[i][j] >= RED_KEYHOLE && collision[i][j] <= BLUE_KEYHOLE) {
-				if (saveManager->isTileChanged(i,j)) {
+				if (smh->saveManager->isTileChanged(i,j)) {
 					collision[i][j] = WALKABLE;
 				}
 			}
@@ -449,14 +446,14 @@ void Environment::loadArea(int id, int from) {
 			//If there is a bombable wall at this square check to see if it has
 			//already been bombed
 			if (collision[i][j] == BOMBABLE_WALL) {
-				if (saveManager->isTileChanged(i,j)) {
+				if (smh->saveManager->isTileChanged(i,j)) {
 					collision[i][j] = WALKABLE;
 				}
 			}
 
 			//Flip switches that have been marked as changed
 			if (isCylinderSwitchLeft(collision[i][j]) || isCylinderSwitchRight(collision[i][j])) {
-				if (saveManager->isTileChanged( i, j)) {
+				if (smh->saveManager->isTileChanged( i, j)) {
 					int id = ids[i][j];
 					//Scan the area for cylinders linked to this switch
 					for (int k = 0; k < areaWidth; k++) {
@@ -495,9 +492,9 @@ void Environment::loadArea(int id, int from) {
 			}
 		}
 	}
-	thePlayer->moveTo(playerX, playerY);
-	if (saveManager->currentArea == FOUNTAIN_AREA && !saveManager->tutorialManCompleted) {
-		tutorialMan = new TutorialMan(thePlayer->gridX, thePlayer->gridY + 4);
+	smh->player->moveTo(playerX, playerY);
+	if (smh->saveManager->currentArea == FOUNTAIN_AREA && !smh->saveManager->tutorialManCompleted) {
+		tutorialMan = new TutorialMan(smh->player->gridX, smh->player->gridY + 4);
 	}
 
 	//Update to get shit set up
@@ -682,8 +679,8 @@ void Environment::draw(float dt) {
 			hge->Gfx_RenderLine(0,i*64.0 - yOffset,SCREEN_WIDTH,i*64.0 - yOffset);
 		}
 		//Draw Terrain collision boxes
-		for (int i = thePlayer->gridX - 2; i <= thePlayer->gridX + 2; i++) {
-			for (int j = thePlayer->gridY - 2; j <= thePlayer->gridY + 2; j++) {
+		for (int i = smh->player->gridX - 2; i <= smh->player->gridX + 2; i++) {
+			for (int j = smh->player->gridY - 2; j <= smh->player->gridY + 2; j++) {
 				if (inBounds(i,j)) {
 					//Set collision box depending on collision type
 					if (hasSillyPad(i,j)) {
@@ -691,7 +688,7 @@ void Environment::draw(float dt) {
 					} else {
 						setTerrainCollisionBox(collisionBox, collision[i][j], i, j);
 					}
-					if (!thePlayer->canPass(collision[i][j]) || hasSillyPad(i,j)) drawCollisionBox(collisionBox, GREEN);
+					if (!smh->player->canPass(collision[i][j]) || hasSillyPad(i,j)) drawCollisionBox(collisionBox, GREEN);
 				}
 			}
 		}
@@ -727,15 +724,15 @@ void Environment::drawAfterSmiley(float dt) {
 				//and lick through it.
 				if (ids[gridX][gridY] == DRAW_AFTER_SMILEY || 
 						(ids[gridX][gridY-1] == DRAW_AFTER_SMILEY && 
-						thePlayer->gridX == gridX && 
-						thePlayer->gridY < gridY)) {
+						smh->player->gridX == gridX && 
+						smh->player->gridY < gridY)) {
 					itemLayer[item[gridX][gridY]]->Render(drawX,drawY);
 				}
 
 				//Shrink tunnels unless Smiley is directly underneath it and not shrunk
 				if ((collision[gridX][gridY] == SHRINK_TUNNEL_HORIZONTAL || 
 						collision[gridX][gridY] == SHRINK_TUNNEL_VERTICAL) &&
-						!(thePlayer->gridY == gridY+1 && !thePlayer->isShrunk())) {
+						!(smh->player->gridY == gridY+1 && !smh->player->isShrunk())) {
 					resources->GetAnimation("walkLayer")->SetFrame(collision[gridX][gridY]);
 					resources->GetAnimation("walkLayer")->Render(drawX, drawY);
 				}
@@ -782,12 +779,12 @@ void Environment::update(float dt) {
 	whiteCylinderRev->Update(dt);
 
 	//Determine the grid offset to figure out which tiles to draw
-	xGridOffset = thePlayer->gridX - screenWidth/2;
-	yGridOffset = thePlayer->gridY - screenHeight/2;
+	xGridOffset = smh->player->gridX - screenWidth/2;
+	yGridOffset = smh->player->gridY - screenHeight/2;
 
 	//Determine the tile offset for smooth movement
-	xOffset = thePlayer->x - float(thePlayer->gridX) * float(64.0);
-	yOffset = thePlayer->y - float(thePlayer->gridY) * float(64.0);
+	xOffset = smh->player->x - float(smh->player->gridX) * float(64.0);
+	yOffset = smh->player->y - float(smh->player->gridY) * float(64.0);
 
 	//Update each grid square
 	for (int i = 0; i < areaWidth; i++) {
@@ -796,7 +793,7 @@ void Environment::update(float dt) {
 			//Update timed switches
 			if (isCylinderSwitchLeft(collision[i][j]) || isCylinderSwitchRight(collision[i][j])) {
 				if (variable[i][j] != -1 && activated[i][j] + (float)variable[i][j] < gameTime && 
-						saveManager->isTileChanged( i, j)) {
+						smh->saveManager->isTileChanged( i, j)) {
 					
 					//Make sure the player isn't on top of any of the cylinders that will pop up
 					if (!playerOnCylinder(i,j)) {
@@ -840,27 +837,27 @@ void Environment::unlockDoor(int gridX, int gridY) {
 	bool doorOpened = false;
 
 	//If this square is a door and the player has the key, unlock it
-	if (collision[gridX][gridY] == RED_KEYHOLE && saveManager->numKeys[getKeyIndex(saveManager->currentArea)][RED_KEY-1] > 0) {
+	if (collision[gridX][gridY] == RED_KEYHOLE && smh->saveManager->numKeys[getKeyIndex(smh->saveManager->currentArea)][RED_KEY-1] > 0) {
 		collision[gridX][gridY] = WALKABLE;
-		saveManager->numKeys[getKeyIndex(saveManager->currentArea)][RED_KEY-1]--;
+		smh->saveManager->numKeys[getKeyIndex(smh->saveManager->currentArea)][RED_KEY-1]--;
 		doorOpened = true;
-	} else  if (collision[gridX][gridY] == BLUE_KEYHOLE && saveManager->numKeys[getKeyIndex(saveManager->currentArea)][BLUE_KEY-1] > 0) {
+	} else  if (collision[gridX][gridY] == BLUE_KEYHOLE && smh->saveManager->numKeys[getKeyIndex(smh->saveManager->currentArea)][BLUE_KEY-1] > 0) {
 		collision[gridX][gridY] = WALKABLE;
-		saveManager->numKeys[getKeyIndex(saveManager->currentArea)][BLUE_KEY-1]--;
+		smh->saveManager->numKeys[getKeyIndex(smh->saveManager->currentArea)][BLUE_KEY-1]--;
 		doorOpened = true;
-	} else if (collision[gridX][gridY] == YELLOW_KEYHOLE && saveManager->numKeys[getKeyIndex(saveManager->currentArea)][YELLOW_KEY-1] > 0) {
+	} else if (collision[gridX][gridY] == YELLOW_KEYHOLE && smh->saveManager->numKeys[getKeyIndex(smh->saveManager->currentArea)][YELLOW_KEY-1] > 0) {
 		collision[gridX][gridY] = WALKABLE;
-		saveManager->numKeys[getKeyIndex(saveManager->currentArea)][YELLOW_KEY-1]--;
+		smh->saveManager->numKeys[getKeyIndex(smh->saveManager->currentArea)][YELLOW_KEY-1]--;
 		doorOpened = true;
-	} else if (collision[gridX][gridY] == GREEN_KEYHOLE && saveManager->numKeys[getKeyIndex(saveManager->currentArea)][GREEN_KEY-1] > 0) {
+	} else if (collision[gridX][gridY] == GREEN_KEYHOLE && smh->saveManager->numKeys[getKeyIndex(smh->saveManager->currentArea)][GREEN_KEY-1] > 0) {
 		collision[gridX][gridY] = WALKABLE;
-		saveManager->numKeys[getKeyIndex(saveManager->currentArea)][GREEN_KEY-1]--;
+		smh->saveManager->numKeys[getKeyIndex(smh->saveManager->currentArea)][GREEN_KEY-1]--;
 		doorOpened = true;
 	}
 
 	//Remember that this door was opened!
 	if (doorOpened) {
-		saveManager->change( gridX, gridY);
+		smh->saveManager->change( gridX, gridY);
 	}
 
 }
@@ -916,8 +913,8 @@ bool Environment::toggleSwitches(hgeRect *box, bool playSoundFarAway) {
 bool Environment::toggleSwitches(Tongue *tongue) {
 	
 	//Loop through all the squares adjacent to Smiley
-	for (int gridX = thePlayer->gridX - 2; gridX <= thePlayer->gridX + 2; gridX++) {
-		for (int gridY = thePlayer->gridY - 2; gridY <= thePlayer->gridY + 2; gridY++) {
+	for (int gridX = smh->player->gridX - 2; gridX <= smh->player->gridX + 2; gridX++) {
+		for (int gridY = smh->player->gridY - 2; gridY <= smh->player->gridY + 2; gridY++) {
 
 			//Make sure the square is in bounds
 			if (inBounds(gridX,gridY)) {
@@ -1043,7 +1040,7 @@ bool Environment::toggleSwitchAt(int gridX, int gridY, bool playSoundFarAway) {
 	}
 
 	//Play switch sound if the switch is somewhat close to Smiley
-	if (hasSwitch && (playSoundFarAway || distance(gridX, gridY, thePlayer->gridX, thePlayer->gridY) < 15)) {
+	if (hasSwitch && (playSoundFarAway || distance(gridX, gridY, smh->player->gridX, smh->player->gridY) < 15)) {
 		hge->Effect_Play(resources->GetEffect("snd_switch"));
 	}
 
@@ -1066,7 +1063,7 @@ void Environment::flipCylinderSwitch(int gridX, int gridY) {
 		resources->GetAnimation("greenSwitch")->SetMode(HGEANIM_FWD);
 		resources->GetAnimation("yellowSwitch")->SetMode(HGEANIM_FWD);
 		resources->GetAnimation("whiteSwitch")->SetMode(HGEANIM_FWD);
-		saveManager->change(gridX, gridY);
+		smh->saveManager->change(gridX, gridY);
 	} else if (isCylinderSwitchRight(collision[gridX][gridY])) {
 		collision[gridX][gridY] -= 16;
 		resources->GetAnimation("silverSwitch")->SetMode(HGEANIM_REV);
@@ -1075,7 +1072,7 @@ void Environment::flipCylinderSwitch(int gridX, int gridY) {
 		resources->GetAnimation("greenSwitch")->SetMode(HGEANIM_REV);
 		resources->GetAnimation("yellowSwitch")->SetMode(HGEANIM_REV);
 		resources->GetAnimation("whiteSwitch")->SetMode(HGEANIM_REV);
-		saveManager->change(gridX, gridY);
+		smh->saveManager->change(gridX, gridY);
 	}
 
 	//Play animation
@@ -1135,7 +1132,7 @@ int Environment::gatherItem(int x, int y) {
 	int retVal = item[x][y];
 	if (retVal > 0 && retVal < 16) {
 		item[x][y] = NONE;
-		saveManager->change( x, y);
+		smh->saveManager->change( x, y);
 		return retVal;
 	} else {
 		return NONE;
@@ -1205,7 +1202,7 @@ bool Environment::playerCollision(int x, int y, float dt) {
 	int gridX = x / 64;
 	int gridY = y / 64;
 
-    bool onIce = collision[thePlayer->gridX][thePlayer->gridY] == ICE;
+    bool onIce = collision[smh->player->gridX][smh->player->gridY] == ICE;
 
 	//Check all neighbor squares
 	for (int i = gridX - 2; i <= gridX + 2; i++) {
@@ -1214,11 +1211,11 @@ bool Environment::playerCollision(int x, int y, float dt) {
 			//Special logic for shrink tunnels
 			bool canPass;
 			if (collision[i][j] == SHRINK_TUNNEL_HORIZONTAL) {
-				canPass = thePlayer->isShrunk() && j == thePlayer->gridY;
+				canPass = smh->player->isShrunk() && j == smh->player->gridY;
 			} else if (collision[i][j] == SHRINK_TUNNEL_VERTICAL) {
-				canPass = thePlayer->isShrunk() && i == thePlayer->gridX;
+				canPass = smh->player->isShrunk() && i == smh->player->gridX;
 			} else {
-				canPass = thePlayer->canPass(collision[i][j]);
+				canPass = smh->player->canPass(collision[i][j]);
 			}
 
 			//Ignore squares off the map
@@ -1229,75 +1226,75 @@ bool Environment::playerCollision(int x, int y, float dt) {
 
 				//Test top and bottom of box
 				if (x > collisionBox->x1 && x < collisionBox->x2) {
-					if (abs(collisionBox->y2 - y) < thePlayer->radius) return true;
-					if (abs(collisionBox->y1 - y) < thePlayer->radius) return true;
+					if (abs(collisionBox->y2 - y) < smh->player->radius) return true;
+					if (abs(collisionBox->y1 - y) < smh->player->radius) return true;
 				}
 
 				//Test left and right side of box
 				if (y > collisionBox->y1 && y < collisionBox->y2) {
-					if (abs(collisionBox->x2 - x) < thePlayer->radius) return true;
-					if (abs(collisionBox->x1 - x) < thePlayer->radius) return true;
+					if (abs(collisionBox->x2 - x) < smh->player->radius) return true;
+					if (abs(collisionBox->x1 - x) < smh->player->radius) return true;
 				}
 
-				bool onlyDownPressed = smh->Input()->keyDown(INPUT_DOWN) && !smh->Input()->keyDown(INPUT_UP) && !smh->Input()->keyDown(INPUT_LEFT) && !smh->Input()->keyDown(INPUT_RIGHT);
-				bool onlyUpPressed = !smh->Input()->keyDown(INPUT_DOWN) && smh->Input()->keyDown(INPUT_UP) && !smh->Input()->keyDown(INPUT_LEFT) && !smh->Input()->keyDown(INPUT_RIGHT);
-				bool onlyLeftPressed = !smh->Input()->keyDown(INPUT_DOWN) && !smh->Input()->keyDown(INPUT_UP) && smh->Input()->keyDown(INPUT_LEFT) && !smh->Input()->keyDown(INPUT_RIGHT);
-				bool onlyRightPressed = !smh->Input()->keyDown(INPUT_DOWN) && !smh->Input()->keyDown(INPUT_UP) && !smh->Input()->keyDown(INPUT_LEFT) && smh->Input()->keyDown(INPUT_RIGHT);
+				bool onlyDownPressed = smh->input->keyDown(INPUT_DOWN) && !smh->input->keyDown(INPUT_UP) && !smh->input->keyDown(INPUT_LEFT) && !smh->input->keyDown(INPUT_RIGHT);
+				bool onlyUpPressed = !smh->input->keyDown(INPUT_DOWN) && smh->input->keyDown(INPUT_UP) && !smh->input->keyDown(INPUT_LEFT) && !smh->input->keyDown(INPUT_RIGHT);
+				bool onlyLeftPressed = !smh->input->keyDown(INPUT_DOWN) && !smh->input->keyDown(INPUT_UP) && smh->input->keyDown(INPUT_LEFT) && !smh->input->keyDown(INPUT_RIGHT);
+				bool onlyRightPressed = !smh->input->keyDown(INPUT_DOWN) && !smh->input->keyDown(INPUT_UP) && !smh->input->keyDown(INPUT_LEFT) && smh->input->keyDown(INPUT_RIGHT);
 				float angle;
 
 				//Top left corner
-				if (distance(collisionBox->x1, collisionBox->y1, x, y) < thePlayer->radius) {
-					if (thePlayer->isOnIce()) return true;
-					angle = getAngleBetween(collisionBox->x1, collisionBox->y1, thePlayer->x, thePlayer->y);
-					if (onlyDownPressed && thePlayer->facing == DOWN && x < collisionBox->x1 && thePlayer->canPass(collision[i-1][j]) && !hasSillyPad(i-1,j) && !onIce) {
+				if (distance(collisionBox->x1, collisionBox->y1, x, y) < smh->player->radius) {
+					if (smh->player->isOnIce()) return true;
+					angle = getAngleBetween(collisionBox->x1, collisionBox->y1, smh->player->x, smh->player->y);
+					if (onlyDownPressed && smh->player->facing == DOWN && x < collisionBox->x1 && smh->player->canPass(collision[i-1][j]) && !hasSillyPad(i-1,j) && !onIce) {
 						angle -= 4.0 * PI * dt;
-					} else if (onlyRightPressed && thePlayer->facing == RIGHT && y < collisionBox->y1 && thePlayer->canPass(collision[i][j-1]) && !hasSillyPad(i,j-1) && !onIce) {
+					} else if (onlyRightPressed && smh->player->facing == RIGHT && y < collisionBox->y1 && smh->player->canPass(collision[i][j-1]) && !hasSillyPad(i,j-1) && !onIce) {
 						angle += 4.0 * PI * dt;
 					} else return true;
-					thePlayer->x = collisionBox->x1 + (thePlayer->radius+1) * cos(angle);
-					thePlayer->y = collisionBox->y1 + (thePlayer->radius+1) * sin(angle);
+					smh->player->x = collisionBox->x1 + (smh->player->radius+1) * cos(angle);
+					smh->player->y = collisionBox->y1 + (smh->player->radius+1) * sin(angle);
 					return true;
 				}
 
 				//Top right corner
-				if (distance(collisionBox->x2, collisionBox->y1, x, y) < thePlayer->radius) {
-					if (thePlayer->isOnIce()) return true;
-					angle = getAngleBetween(collisionBox->x2, collisionBox->y1, thePlayer->x, thePlayer->y);
-					if (onlyDownPressed && thePlayer->facing == DOWN && x > collisionBox->x2 && thePlayer->canPass(collision[i+1][j]) && !hasSillyPad(i+1,j) && !onIce) {
+				if (distance(collisionBox->x2, collisionBox->y1, x, y) < smh->player->radius) {
+					if (smh->player->isOnIce()) return true;
+					angle = getAngleBetween(collisionBox->x2, collisionBox->y1, smh->player->x, smh->player->y);
+					if (onlyDownPressed && smh->player->facing == DOWN && x > collisionBox->x2 && smh->player->canPass(collision[i+1][j]) && !hasSillyPad(i+1,j) && !onIce) {
 						angle += 4.0 * PI * dt;
-					} else if (onlyLeftPressed && thePlayer->facing == LEFT && y < collisionBox->y1 && thePlayer->canPass(collision[i][j-1]) && !hasSillyPad(i,j-1) && !onIce) {
+					} else if (onlyLeftPressed && smh->player->facing == LEFT && y < collisionBox->y1 && smh->player->canPass(collision[i][j-1]) && !hasSillyPad(i,j-1) && !onIce) {
 						angle -= 4.0 * PI * dt;
 					} else return true;
-					thePlayer->x = collisionBox->x2 + (thePlayer->radius+1) * cos(angle);
-					thePlayer->y = collisionBox->y1 + (thePlayer->radius+1) * sin(angle);
+					smh->player->x = collisionBox->x2 + (smh->player->radius+1) * cos(angle);
+					smh->player->y = collisionBox->y1 + (smh->player->radius+1) * sin(angle);
 					return true;
 				}
 
 				//Bottom right corner
-				if (distance(collisionBox->x2, collisionBox->y2, x, y) < thePlayer->radius) {
-					if (thePlayer->isOnIce()) return true;
-					angle = getAngleBetween(collisionBox->x2, collisionBox->y2, thePlayer->x, thePlayer->y);
-					if (onlyUpPressed && thePlayer->facing == UP && x > collisionBox->x2 && thePlayer->canPass(collision[i+1][j]) && !hasSillyPad(i+1,j) && !onIce) {
+				if (distance(collisionBox->x2, collisionBox->y2, x, y) < smh->player->radius) {
+					if (smh->player->isOnIce()) return true;
+					angle = getAngleBetween(collisionBox->x2, collisionBox->y2, smh->player->x, smh->player->y);
+					if (onlyUpPressed && smh->player->facing == UP && x > collisionBox->x2 && smh->player->canPass(collision[i+1][j]) && !hasSillyPad(i+1,j) && !onIce) {
 						angle -= 4.0 * PI * dt;
-					} else if (onlyLeftPressed && thePlayer->facing == LEFT && y > collisionBox->y2 && thePlayer->canPass(collision[i][j+1]) && !hasSillyPad(i,j+1) && !onIce) {
+					} else if (onlyLeftPressed && smh->player->facing == LEFT && y > collisionBox->y2 && smh->player->canPass(collision[i][j+1]) && !hasSillyPad(i,j+1) && !onIce) {
 						angle += 4.0 * PI * dt;
 					} else return true;
-					thePlayer->x = collisionBox->x2 + (thePlayer->radius+1) * cos(angle);
-					thePlayer->y = collisionBox->y2 + (thePlayer->radius+1) * sin(angle);
+					smh->player->x = collisionBox->x2 + (smh->player->radius+1) * cos(angle);
+					smh->player->y = collisionBox->y2 + (smh->player->radius+1) * sin(angle);
 					return true;
 				}
 				
 				//Bottom left corner
-				if (distance(collisionBox->x1, collisionBox->y2, x, y) < thePlayer->radius) {
-					if (thePlayer->isOnIce()) return true;
-					angle = getAngleBetween(collisionBox->x1, collisionBox->y2, thePlayer->x, thePlayer->y);
-					if (onlyUpPressed && thePlayer->facing == UP && x < collisionBox->x1 && thePlayer->canPass(collision[i-1][j]) && !hasSillyPad(i-1,j) && !onIce) {
+				if (distance(collisionBox->x1, collisionBox->y2, x, y) < smh->player->radius) {
+					if (smh->player->isOnIce()) return true;
+					angle = getAngleBetween(collisionBox->x1, collisionBox->y2, smh->player->x, smh->player->y);
+					if (onlyUpPressed && smh->player->facing == UP && x < collisionBox->x1 && smh->player->canPass(collision[i-1][j]) && !hasSillyPad(i-1,j) && !onIce) {
 						angle += 4.0 * PI * dt;
-					} else if (onlyRightPressed && thePlayer->facing == RIGHT && y > collisionBox->y2 && thePlayer->canPass(collision[i][j+1]) && !hasSillyPad(i, j+1) && !onIce) {
+					} else if (onlyRightPressed && smh->player->facing == RIGHT && y > collisionBox->y2 && smh->player->canPass(collision[i][j+1]) && !hasSillyPad(i, j+1) && !onIce) {
 						angle -= 4.0 * PI * dt;
 					} else return true;
-					thePlayer->x = collisionBox->x1 + (thePlayer->radius+1) * cos(angle);
-					thePlayer->y = collisionBox->y2 + (thePlayer->radius+1) * sin(angle);
+					smh->player->x = collisionBox->x1 + (smh->player->radius+1) * cos(angle);
+					smh->player->y = collisionBox->y2 + (smh->player->radius+1) * sin(angle);
 					return true;
 				}
 				
@@ -1315,7 +1312,7 @@ bool Environment::playerCollision(int x, int y, float dt) {
 void Environment::bombWall(int x,int y) {
 	if (inBounds(x,y) && collision[x][y] == BOMBABLE_WALL) {
 		collision[x][y]=WALKABLE;
-		saveManager->change( x, y);
+		smh->saveManager->change( x, y);
 	}
 }
 
@@ -1388,8 +1385,8 @@ bool Environment::hitSigns(Tongue *tongue) {
 	
 	std::string paramString;
 
-	for (int i = thePlayer->gridX - 2; i <= thePlayer->gridX + 2; i++) {
-		for (int j = thePlayer->gridY - 2; j <= thePlayer->gridY + 2; j++) {
+	for (int i = smh->player->gridX - 2; i <= smh->player->gridX + 2; i++) {
+		for (int j = smh->player->gridY - 2; j <= smh->player->gridY + 2; j++) {
 			if (inBounds(i,j) && collision[i][j] == SIGN) {
 				collisionBox->SetRadius(i*64+32,j*64+32,24);
 				if (tongue->testCollision(collisionBox)) {
@@ -1407,8 +1404,8 @@ bool Environment::hitSigns(Tongue *tongue) {
  * Opens the save menu if box collides with a save shrine
  */
 bool Environment::hitSaveShrine(Tongue *tongue) {
-	for (int i = thePlayer->gridX - 2; i <= thePlayer->gridX + 2; i++) {
-		for (int j = thePlayer->gridY - 2; j <= thePlayer->gridY + 2; j++) {
+	for (int i = smh->player->gridX - 2; i <= smh->player->gridX + 2; i++) {
+		for (int j = smh->player->gridY - 2; j <= smh->player->gridY + 2; j++) {
 			if (inBounds(i,j) && collision[i][j] == SAVE_SHRINE) {
 				collisionBox->SetRadius(i*64+32,j*64+32,24);
 				if (tongue->testCollision(collisionBox)) {
@@ -1471,12 +1468,12 @@ bool Environment::testCollision(hgeRect *box, bool canPass[256], bool ignoreSill
 bool Environment::playerOnCylinder(int x, int y) {
 	bool retVal = false;
 	//Make sure the player isn't on top of any of the cylinders that will pop up
-	for (int k = thePlayer->gridX-1; k <= thePlayer->gridX+1; k++) {
-		for (int l = thePlayer->gridY-1; l <= thePlayer->gridY+1; l++) {
+	for (int k = smh->player->gridX-1; k <= smh->player->gridX+1; k++) {
+		for (int l = smh->player->gridY-1; l <= smh->player->gridY+1; l++) {
 			if (ids[k][l] == ids[x][y] && isCylinderDown(collision[k][l])) {
 				collisionBox->SetRadius(k*64+32,l*64+32,32);
 				//Player collides with a cylinder
-				if (thePlayer->collisionCircle->testBox(collisionBox)) {
+				if (smh->player->collisionCircle->testBox(collisionBox)) {
 					retVal = true;
 				}
 			}
