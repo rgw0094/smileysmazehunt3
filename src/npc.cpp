@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "smiley.h"
 #include "npc.h"
 #include "player.h"
@@ -9,11 +10,11 @@
 #include "hgeresource.h"
 #include "hgesprite.h"
 
+extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
 extern WindowManager *windowManager;
 extern bool debugMode;
-extern Player *thePlayer;
 extern Environment *theEnvironment;
 extern NPCManager *npcManager;
 extern float gameTime;
@@ -78,10 +79,10 @@ void NPC::update(float dt) {
 
 	//If in conversation, stand still and face the player
 	if (inConversation) {
-		if (thePlayer->x > x+32) facing = RIGHT;
-		else if (thePlayer->x < x-32) facing = LEFT;
-		else if (thePlayer->y > y+32) facing = DOWN;
-		else if (thePlayer->y < y-32) facing = UP;
+		if (smh->player->x > x+32) facing = RIGHT;
+		else if (smh->player->x < x-32) facing = LEFT;
+		else if (smh->player->y > y+32) facing = DOWN;
+		else if (smh->player->y < y-32) facing = UP;
 		return;
 	}
 
@@ -105,7 +106,7 @@ void NPC::update(float dt) {
 	//Move
 	futureCollisionBox->SetRadius(x + dx*dt*3.0f, y + dy*dt*3.0f, 32);
 	futureCollisionBox2->SetRadius(x + dx*dt*3.0f, y + dy*dt*3.0f, 34);
-	if (thePlayer->collisionCircle->testBox(futureCollisionBox2)) {
+	if (smh->player->collisionCircle->testBox(futureCollisionBox2)) {
 		//If colliding with the player, enter rest mode
 		stage = REST_STAGE;
 	} else if (!theEnvironment->testCollision(futureCollisionBox, canPass) && 

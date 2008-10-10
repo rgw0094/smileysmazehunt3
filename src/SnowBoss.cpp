@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "smiley.h"
 #include "hgeresource.h"
 #include "SnowBoss.h"
@@ -8,25 +9,23 @@
 #include "environment.h"
 #include "EnemyManager.h"
 #include "lootmanager.h"
-#include "SaveManager.h"
 #include "SoundManager.h"
 #include "WeaponParticle.h"
 #include "CollisionCircle.h"
 #include "Tongue.h"
 #include "WindowManager.h"
 
+extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
 extern bool debugMode;
 extern EnemyGroupManager *enemyGroupManager;
-extern Player *thePlayer;
 extern ProjectileManager *projectileManager;
 extern WindowManager *windowManager;
 extern Environment *theEnvironment;
 extern bool debugMode;
 extern EnemyManager *enemyManager;
 extern LootManager *lootManager;
-extern SaveManager *saveManager;
 extern SoundManager *soundManager;
 extern float gameTime;
 
@@ -130,23 +129,23 @@ bool SnowBoss::update(float dt) {
 	updateIceBlocks(dt);
 
 	//Check collision with Smiley's tongue
-	if (thePlayer->getTongue()->testCollision(collisionBoxes[0]) ||
-		thePlayer->getTongue()->testCollision(collisionBoxes[1]) ||
-		thePlayer->getTongue()->testCollision(collisionBoxes[2])) {
-			thePlayer->freeze(LICK_FREEZE_DURATION);
+	if (smh->player->getTongue()->testCollision(collisionBoxes[0]) ||
+		smh->player->getTongue()->testCollision(collisionBoxes[1]) ||
+		smh->player->getTongue()->testCollision(collisionBoxes[2])) {
+			smh->player->freeze(LICK_FREEZE_DURATION);
 	}
 
 	//Check collision with Smiley
 	if (state == SNOWBOSS_SLIDING) { //test only collisionbox 0
-		if (thePlayer->collisionCircle->testBox(collisionBoxes[0])) {
-			thePlayer->dealDamageAndKnockback(PENGUIN_SLIDING_DAMAGE, true, 150, x, y);
+		if (smh->player->collisionCircle->testBox(collisionBoxes[0])) {
+			smh->player->dealDamageAndKnockback(PENGUIN_SLIDING_DAMAGE, true, 150, x, y);
 		}
 	} else {
-		if (thePlayer->collisionCircle->testBox(collisionBoxes[0]) ||
-			thePlayer->collisionCircle->testBox(collisionBoxes[1]) ||
-			thePlayer->collisionCircle->testBox(collisionBoxes[2])) {
+		if (smh->player->collisionCircle->testBox(collisionBoxes[0]) ||
+			smh->player->collisionCircle->testBox(collisionBoxes[1]) ||
+			smh->player->collisionCircle->testBox(collisionBoxes[2])) {
 				
-				thePlayer->dealDamageAndKnockback(PENGUIN_COLLISION_DAMAGE, true, 150, x, y);
+				smh->player->dealDamageAndKnockback(PENGUIN_COLLISION_DAMAGE, true, 150, x, y);
 	
 		}
 	} //end if SLIDING
@@ -167,15 +166,15 @@ bool SnowBoss::update(float dt) {
 		}
 
 		//chase the player
-		if (x < thePlayer->x) {
+		if (x < smh->player->x) {
 			x += SNOWBOSS_SPEED * dt;
-		} else if (x > thePlayer->x) {
+		} else if (x > smh->player->x) {
 			x -= SNOWBOSS_SPEED * dt;
 		}
 		
-		if (y < thePlayer->y) {
+		if (y < smh->player->y) {
 			y += SNOWBOSS_SPEED * dt;
-		} else if (y > thePlayer->y) {
+		} else if (y > smh->player->y) {
 			y -= SNOWBOSS_SPEED * dt;
 		}
 	
@@ -191,7 +190,7 @@ bool SnowBoss::update(float dt) {
 		//launch fish
 		if (numFishLaunched == 0 || timePassedSince(lastFishLaunched) > TIME_BETWEEN_FISH) {
 			//subtract 51 from y to get around the penguin's mouth
-			float angleToSmiley = getAngleBetween(x,y-51.0,thePlayer->x,thePlayer->y);
+			float angleToSmiley = getAngleBetween(x,y-51.0,smh->player->x,smh->player->y);
 			angleToSmiley += hge->Random_Float(-PI/4,PI/4);
 			float angle2 = angleToSmiley-0.5;
 			float angle3 = angleToSmiley+0.5;
@@ -215,7 +214,7 @@ bool SnowBoss::update(float dt) {
 	} //end if throwing fish
 
 	if (state==SNOWBOSS_BEGIN_SLIDING) {
-		slidingAngle=getAngleBetween(x,y,thePlayer->x,thePlayer->y);
+		slidingAngle=getAngleBetween(x,y,smh->player->x,smh->player->y);
 		
 		if (timePassedSince(timeEnteredState) > BEGIN_SLIDE_TIME) {
 			
@@ -333,7 +332,7 @@ bool SnowBoss::update(float dt) {
 		if (!droppedLoot) {
 			lootManager->addLoot(LOOT_NEW_ABILITY, xLoot, yLoot, FRISBEE);
 			droppedLoot = true;
-			saveManager->killBoss(SNOW_BOSS);
+			smh->saveManager->killBoss(SNOW_BOSS);
 			enemyGroupManager->notifyOfDeath(groupID);
 			soundManager->playMusic("iceMusic");
 		}
@@ -431,7 +430,7 @@ void SnowBoss::updateIceBlocks(float dt) {
 	for (int i=0;i<24;i++) {
 		
 		//tests to see if smiley hit the block with fire breath
-		if (thePlayer->fireBreathParticle->testCollision(iceBlocks[i].collisionBox)) {
+		if (smh->player->fireBreathParticle->testCollision(iceBlocks[i].collisionBox)) {
 			iceBlocks[i].life -= ICE_BLOCK_DAMAGE_FROM_FIRE * dt;
 		}
 

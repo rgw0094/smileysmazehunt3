@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "smiley.h"
 #include "enemy.h"
 #include "EnemyState.h"
@@ -9,9 +10,9 @@
 #include "tongue.h"
 #include "CollisionCircle.h"
 
+extern SMH *smh;
 extern hgeResourceManager *resources;
 extern Environment *theEnvironment;
-extern Player *thePlayer;
 extern HGE *hge;
 extern float gameTime;
 
@@ -33,7 +34,7 @@ E_Tentacle::E_Tentacle(int id, int x, int y, int groupID) {
 	//Call parent's init function
 	initEnemy(id, x, y, groupID);
 
-	double angleToSmiley = getAngleBetween(x*64+32,y*64+32,thePlayer->x,thePlayer->y);
+	double angleToSmiley = getAngleBetween(x*64+32,y*64+32,smh->player->x,smh->player->y);
 	int i;
 
 	for (i=0;i<NUM_NODES;i++) {
@@ -85,7 +86,7 @@ void E_Tentacle::update(float dt) {
 		}		
 	}
 
-	double angleToSmiley = getAngleBetween(x,y,thePlayer->x,thePlayer->y);
+	double angleToSmiley = getAngleBetween(x,y,smh->player->x,smh->player->y);
 	double angleSubtracted = angleToSmiley - angle;
 
 	while (angleSubtracted < 0) angleSubtracted += 2*PI;
@@ -113,8 +114,8 @@ void E_Tentacle::update(float dt) {
 		tentacleNodes[i].position.y = y+i*variable1*sin(tentacleNodes[i].angle);
 
 		//Collision with smiley
-		if (distance(tentacleNodes[i].position.x,tentacleNodes[i].position.y,thePlayer->x,thePlayer->y) <= radius + thePlayer->collisionCircle->radius) {
-			thePlayer->dealDamageAndKnockback(damage,true,100,tentacleNodes[i].position.x,tentacleNodes[i].position.y);			
+		if (distance(tentacleNodes[i].position.x,tentacleNodes[i].position.y,smh->player->x,smh->player->y) <= radius + smh->player->collisionCircle->radius) {
+			smh->player->dealDamageAndKnockback(damage,true,100,tentacleNodes[i].position.x,tentacleNodes[i].position.y);			
 		}		
 
 	}
@@ -147,11 +148,11 @@ bool E_Tentacle::doTongueCollision(Tongue *tongue, float damage) {
 			if (timePassedSince(lastHitByWeapon) > TENTACLE_IMMUNE_TIME) {
 				
 				lastHitByWeapon = gameTime;
-				dealDamageAndKnockback(thePlayer->getDamage(), 0.0, thePlayer->x, thePlayer->y);
+				dealDamageAndKnockback(smh->player->getDamage(), 0.0, smh->player->x, smh->player->y);
 				startFlashing();
 				
 				//Knockback by rotating it away from smiley a bit
-				double angleToSmiley = getAngleBetween(x,y,thePlayer->x,thePlayer->y);
+				double angleToSmiley = getAngleBetween(x,y,smh->player->x,smh->player->y);
 				double angleSubtracted = angleToSmiley - angle;
 
 				while (angleSubtracted < 0) angleSubtracted += 2*PI;

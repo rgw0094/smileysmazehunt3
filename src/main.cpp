@@ -9,7 +9,6 @@
 #include "EnemyGroupManager.h"
 #include "WindowManager.h"
 #include "resource1.h"
-#include "SaveManager.h"
 #include "SoundManager.h"
 #include "smiley.h"
 #include "environment.h"
@@ -23,7 +22,6 @@
 HGE *hge=0;
 hgeResourceManager *resources;
 Environment *theEnvironment;
-Player *thePlayer;
 EnemyManager *enemyManager;
 Menu *theMenu;
 LootManager *lootManager;
@@ -32,7 +30,6 @@ NPCManager *npcManager;
 BossManager *bossManager;
 EnemyGroupManager *enemyGroupManager;
 WindowManager *windowManager;
-SaveManager *saveManager;
 SoundManager *soundManager;
 LoadEffectManager *loadEffectManager;
 FenwarManager *fenwarManager;
@@ -97,9 +94,11 @@ void loadResources() {
 void loadGameObjects() {
 
 	hge->System_Log("*****Creating Objects*****");
-	hge->System_Log("Creating SaveManager");
-	saveManager = new SaveManager();
-	
+
+	//I need to make the player load inside SMH so it can go in the right order
+	smh = new SMH();
+	smh->init();
+
 	hge->System_Log("Creating Menu");
 	theMenu = new Menu();
 
@@ -130,9 +129,6 @@ void loadGameObjects() {
 	hge->System_Log("Creating Window Manager");
 	windowManager = new WindowManager();
 
-	hge->System_Log("Creating Player");
-	thePlayer = new Player();
-
 	hge->System_Log("Creating FenwarManager");
 	fenwarManager = new FenwarManager();
 
@@ -155,12 +151,12 @@ void doDebugInput() {
 
 		//Toggle invincibility
 		if (hge->Input_KeyDown(HGEK_I)) {
-			thePlayer->invincible = !thePlayer->invincible;
+			smh->player->invincible = !smh->player->invincible;
 		}
 		
 		//Gives you life when you press L
 		if (hge->Input_KeyDown(HGEK_L)) {
-			thePlayer->setHealth(thePlayer->getMaxHealth());
+			smh->player->setHealth(smh->player->getMaxHealth());
 		}
 
 		//Teleport to warp zone
@@ -185,7 +181,7 @@ void doDebugInput() {
 		} else {
 			debugMovePressed = false;
 		}
-		if (abs(xMove) > 0 || abs(yMove) > 0) thePlayer->moveTo(thePlayer->gridX + xMove, thePlayer->gridY + yMove);
+		if (abs(xMove) > 0 || abs(yMove) > 0) smh->player->moveTo(smh->player->gridX + xMove, smh->player->gridY + yMove);
 
 	}
 
@@ -202,7 +198,7 @@ bool FrameFunc() {
 	doDebugInput();
 
 	//Update the input
-	smh->Input()->UpdateInput();
+	smh->input->UpdateInput();
 	
 	//Input for taking screenshots
 	if (hge->Input_KeyDown(HGEK_F9)) {
@@ -219,7 +215,7 @@ bool FrameFunc() {
 		frameCounter++;
 
 		//Toggle game menu
-		if (smh->Input()->keyPressed(INPUT_PAUSE)) {
+		if (smh->input->keyPressed(INPUT_PAUSE)) {
 			if (windowManager->isGameMenuOpen()) {
 				windowManager->closeWindow();
 			} else if (!windowManager->isOpenWindow()) {
@@ -251,7 +247,7 @@ bool FrameFunc() {
 				theEnvironment->updateTutorialMan(dt);
 
 				if (!fenwarManager->isEncounterActive() && !theEnvironment->isTutorialManActive()) {
-					thePlayer->update(dt);
+					smh->player->update(dt);
 					theEnvironment->update(dt);
 					bossManager->update(dt);
 					enemyManager->update(dt);
@@ -290,21 +286,21 @@ bool RenderFunc() {
 		enemyManager->draw(dt);
 		npcManager->draw(dt);
 		bossManager->drawBeforeSmiley(dt);
-		thePlayer->draw(dt);
+		smh->player->draw(dt);
 		bossManager->drawAfterSmiley(dt);
 		theEnvironment->drawAfterSmiley(dt);
 		fenwarManager->draw(dt);
 		projectileManager->draw(dt);
 		if (darkness > 0.0) shadeScreen(darkness);
 		loadEffectManager->draw(dt);
-		thePlayer->drawGUI(dt);
+		smh->player->drawGUI(dt);
 		windowManager->draw(dt);
 
 	}
 
 	if (debugMode) {
 		//Grid co-ords and fps
-		resources->GetFont("curlz")->printf(1000,5,HGETEXT_RIGHT,"(%d,%d)  FPS: %d",thePlayer->gridX,thePlayer->gridY, hge->Timer_GetFPS());
+		resources->GetFont("curlz")->printf(1000,5,HGETEXT_RIGHT,"(%d,%d)  FPS: %d",smh->player->gridX,smh->player->gridY, hge->Timer_GetFPS());
 	}
 
 	//Finish rendering
@@ -320,7 +316,7 @@ bool ExitFunc() {
 	//If they manually close the program while the game is active we still
 	//want to count their time played!
 	if (gameState == GAME) {
-		saveManager->saveTimePlayed();
+		smh->saveManager->saveTimePlayed();
 	}
 
 	//Exit normally 
@@ -351,11 +347,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	if(hge->System_Initiate()) {
 
 		try {
-
+			
 			loadResources();
 			loadGameObjects();
-
-			smh = new SMH();
 
 			//Open the menu (this should go in menu constructor maybe)
 			theMenu->open(TITLE_SCREEN);
@@ -364,9 +358,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			hge->System_Start();
 
 		} catch(System::Exception *ex) {
-			MessageBox(NULL, "A fatal error has occurred and the program must exit. \nCheck Smiley.log for more information. \nIt sure would be nice to display the message here but C++ sucks ass", "Error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 			hge->System_Log("----FATAL ERROR----------");
 			hge->System_Log("%s", ex->ToString());
+			MessageBox(NULL, "A fatal error has occurred and the program must exit. \nCheck Smiley.log for more information. \nIt sure would be nice to display the message here but C++ sucks ass", "Error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 			exit(1);
 		}
 

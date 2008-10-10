@@ -6,15 +6,12 @@
 #include "player.h"
 #include "smiley.h"
 #include "menu.h"
-#include "SaveManager.h"
 #include "Environment.h"
 
 extern HGE *hge;
 extern SMH *smh;
 extern hgeResourceManager *resources;
-extern Player *thePlayer;
 extern Menu *theMenu;
-extern SaveManager *saveManager;
 extern Environment *theEnvironment;
 
 /**
@@ -82,7 +79,7 @@ bool SelectFileScreen::update(float dt, float mouseX, float mouseY) {
 
 	//Click delete button
 	if (buttons[DELETE_BUTTON]->isClicked()) {
-		if (!saveManager->isFileEmpty(selectedFile)) {
+		if (!smh->saveManager->isFileEmpty(selectedFile)) {
 			deletePrompt = true;
 		}
 	}
@@ -96,7 +93,7 @@ bool SelectFileScreen::update(float dt, float mouseX, float mouseY) {
 	//Update save box selection
 	if (!deletePrompt) {
 		for (int i = 0; i < 4; i++) {
-			if ((hge->Input_KeyDown(HGEK_LBUTTON) || smh->Input()->keyPressed(INPUT_ATTACK)) && saveBoxes[i].collisionBox->TestPoint(mouseX, mouseY)) {
+			if ((hge->Input_KeyDown(HGEK_LBUTTON) || smh->input->keyPressed(INPUT_ATTACK)) && saveBoxes[i].collisionBox->TestPoint(mouseX, mouseY)) {
 				selectedFile = i;
 			}
 		}
@@ -109,9 +106,9 @@ bool SelectFileScreen::update(float dt, float mouseX, float mouseY) {
 		} else if (mouseY > y + 75 + 145*(selectedFile) && mouseY < y + 125 + 145*(selectedFile) && mouseX > x+245 && mouseX < x+310) {
 			mouseOn = ON_DELETE_NO;
 		} 
-		if (hge->Input_KeyDown(HGEK_LBUTTON) || smh->Input()->keyPressed(INPUT_ATTACK)) {
+		if (hge->Input_KeyDown(HGEK_LBUTTON) || smh->input->keyPressed(INPUT_ATTACK)) {
 			if (mouseOn == ON_DELETE_YES) {
-				saveManager->deleteFile(selectedFile);
+				smh->saveManager->deleteFile(selectedFile);
 				deletePrompt = false;
 			} else if (mouseOn == ON_DELETE_NO) {
 				deletePrompt = false;
@@ -142,7 +139,7 @@ void SelectFileScreen::draw(float dt) {
 		resources->GetSprite("menuSaveBox")->Render(saveBoxes[i].x, saveBoxes[i].y);
 		//Save file info - don't draw if the delete prompt is up
 		if (!(deletePrompt && selectedFile == i)) {
-			if (saveManager->isFileEmpty(i)) {
+			if (smh->saveManager->isFileEmpty(i)) {
 				resources->GetFont("bigLoadFnt")->printf(saveBoxes[i].x + 100, saveBoxes[i].y + 5, 
 					HGETEXT_LEFT, "Empty");
 			} else {
@@ -150,9 +147,9 @@ void SelectFileScreen::draw(float dt) {
 					HGETEXT_LEFT, "File %d", i+1);
 			}
 			resources->GetFont("curlz")->printf(saveBoxes[i].x + 150, saveBoxes[i].y + 70, 
-				HGETEXT_LEFT, "Time Played: %s", getTimeString(saveManager->getTimePlayed(i)));
+				HGETEXT_LEFT, "Time Played: %s", getTimeString(smh->saveManager->getTimePlayed(i)));
 			resources->GetFont("curlz")->printf(saveBoxes[i].x + 630, saveBoxes[i].y + 70, 
-				HGETEXT_RIGHT, "Complete: %d", saveManager->getCompletion(i));
+				HGETEXT_RIGHT, "Complete: %d", smh->saveManager->getCompletion(i));
 		}
 	}
 

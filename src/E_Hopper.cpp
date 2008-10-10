@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "enemy.h"
 #include "smiley.h"
 #include "environment.h"
@@ -8,8 +9,8 @@
 #include "hgeanim.h"
 
 extern float gameTime;
+extern SMH *smh;
 extern HGE *hge;
-extern Player *thePlayer;
 extern hgeResourceManager *resources;
 extern Environment *theEnvironment;
 
@@ -50,7 +51,7 @@ void E_Hopper::update(float dt) {
 
 		if (chases) {
 			//Hop towards Smiley
-			hopAngle = getAngleBetween(x, y, thePlayer->x, thePlayer->y);
+			hopAngle = getAngleBetween(x, y, smh->player->x, smh->player->y);
 			hopDistance = distanceFromPlayer();
 			if (hopDistance > 300.0) hopDistance = 300.0;
 		} else {
@@ -105,7 +106,7 @@ bool E_Hopper::doTongueCollision(Tongue *tongue, float damage) {
 			if (hopping) {
 				dx = dy = 0.0;
 			}
-			dealDamageAndKnockback(damage, 65.0, thePlayer->x, thePlayer->y);
+			dealDamageAndKnockback(damage, 65.0, smh->player->x, smh->player->y);
 			startFlashing();
 			return true;
 		}

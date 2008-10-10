@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "enemy.h"
 #include "hge.h"
 #include "hgeresource.h"
@@ -17,10 +18,10 @@
 #define ATTACK_DELAY 2.0
 #define ATTACK_DAMAGE .25
 
+extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
 extern ProjectileManager *projectileManager;
-extern Player *thePlayer;
 extern Environment *theEnvironment;
 extern float gameTime;
 
@@ -68,10 +69,10 @@ void E_EvilEye::update(float dt) {
 
 	//Shoot at the player if the eye is open
 	if (eyeState == EYE_OPEN) {
-		if (!thePlayer->isInvisible() && timePassedSince(lastAttackTime) > ATTACK_DELAY) {
+		if (!smh->player->isInvisible() && timePassedSince(lastAttackTime) > ATTACK_DELAY) {
 			lastAttackTime = gameTime;
 			projectileManager->addProjectile(x, y, ATTACK_VELOCITY, 
-				getAngleBetween(x, y, thePlayer->x, thePlayer->y), ATTACK_DAMAGE, 
+				getAngleBetween(x, y, smh->player->x, smh->player->y), ATTACK_DAMAGE, 
 				true, PROJECTILE_1, true);
 		}
 	}

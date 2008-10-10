@@ -41,5 +41,5 @@ void Button::update(float mouseX, float mouseY) {
 }
 
 bool Button::isClicked() {
-	return (highlighted && (hge->Input_KeyDown(HGEK_LBUTTON)|| smh->Input()->keyPressed(INPUT_ATTACK)));
+	return (highlighted && (hge->Input_KeyDown(HGEK_LBUTTON)|| smh->input->keyPressed(INPUT_ATTACK)));
 }

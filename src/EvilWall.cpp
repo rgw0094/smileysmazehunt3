@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "EvilWall.h"
 #include "Player.h"
 #include "Smiley.h"
@@ -10,12 +11,9 @@
 #define EVIL_WALL_STATE_APPEARING 1
 #define EVIL_WALL_STATE_MOVING 2
 #define EVIL_WALL_STATE_FADING 3
-
 #define EVIL_WALL_COLLISION_CIRCLE_IN 4
 #define EVIL_WALL_COLLISION_CIRCLE_OUT 5
-
 #define EVIL_WALL_APPEAR_TIME 1.0
-
 #define EVIL_WALL_DAMAGE 1.5
 
 //This tells the evil wall how far it has to be drawn to cover the entire width or height
@@ -25,8 +23,8 @@
 
 extern hgeResourceManager *resources;
 extern float gameTime;
-extern Player *thePlayer;
 extern HGE *hge;
+extern SMH *smh;
 
 EvilWall::EvilWall() {
 	dir = UP;
@@ -134,8 +132,8 @@ void EvilWall::drawEvilWall() {
 	int smileyGridX,smileyGridY;
 	int gridX,gridY;
 
-	smileyGridX = thePlayer->x /64;
-	smileyGridY = thePlayer->y /64;
+	smileyGridX = smh->player->x /64;
+	smileyGridY = smh->player->y /64;
     	
 	switch (dir) {
 		case RIGHT:
@@ -196,8 +194,8 @@ void EvilWall::drawEvilWall() {
 void EvilWall::doCollision() {
 	int smileyGridX,smileyGridY;
 	
-	smileyGridX = thePlayer->x/64;
-	smileyGridY = thePlayer->y/64;
+	smileyGridX = smh->player->x/64;
+	smileyGridY = smh->player->y/64;
 	
 	switch (dir) {
 		case RIGHT:
@@ -226,11 +224,11 @@ void EvilWall::doCollision() {
 			break;
 	};
 
-	if (thePlayer->collisionCircle->testBox(collisionRect)) {
+	if (smh->player->collisionCircle->testBox(collisionRect)) {
 		state = EVIL_WALL_STATE_IDLE;
-		thePlayer->x = restartX*64+32;
-		thePlayer->y = restartY*64+32;
-		thePlayer->dealDamage(EVIL_WALL_DAMAGE,true);
+		smh->player->x = restartX*64+32;
+		smh->player->y = restartY*64+32;
+		smh->player->dealDamage(EVIL_WALL_DAMAGE,true);
 	}
 }
 

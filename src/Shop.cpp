@@ -2,16 +2,13 @@
 #include "shop.h"
 #include "hge.h"
 #include "hgeresource.h"
-#include "SaveManager.h"
 #include "Player.h"
 #include "WindowManager.h"
 
 extern HGE *hge;
 extern SMH *smh;
 extern hgeResourceManager *resources;
-extern SaveManager *saveManager;
 extern float gameTime;
-extern Player *thePlayer;
 extern WindowManager *windowManager;
 extern int frameCounter;
 
@@ -98,18 +95,18 @@ void Shop::draw(float dt) {
 bool Shop::update(float dt) {
 
 	//Move selection left
-	if (smh->Input()->keyPressed(INPUT_LEFT)) {
+	if (smh->input->keyPressed(INPUT_LEFT)) {
 		if (currentSelection == 0) currentSelection = EXIT;
 		else currentSelection--;
 	}
 
 	//Move selection right
-	if (smh->Input()->keyPressed(INPUT_RIGHT)) {
+	if (smh->input->keyPressed(INPUT_RIGHT)) {
 		if (currentSelection == EXIT) currentSelection = HEALTH;
 		else currentSelection++;
 	}
 
-	if (smh->Input()->keyPressed(INPUT_ATTACK)) {
+	if (smh->input->keyPressed(INPUT_ATTACK)) {
 		switch (currentSelection) {
 			case HEALTH:
 			case MANA:
@@ -127,19 +124,19 @@ bool Shop::update(float dt) {
 
 void Shop::purchaseItem(int item) {
 	
-	if (saveManager->money < costs[item]) {
+	if (smh->saveManager->money < costs[item]) {
 
 		//Play no money sound
 
 
 	} else {
 
-		saveManager->money -= costs[item];
-		saveManager->numUpgrades[item]++;
+		smh->saveManager->money -= costs[item];
+		smh->saveManager->numUpgrades[item]++;
 		hge->Effect_Play(resources->GetEffect("snd_purchaseUpgrade"));
 
 		if (currentSelection == HEALTH) {
-			thePlayer->setHealth(thePlayer->getHealth() + 1.0);
+			smh->player->setHealth(smh->player->getHealth() + 1.0);
 		}
 
 	}

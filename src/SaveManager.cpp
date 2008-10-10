@@ -5,7 +5,7 @@
 #include <sstream>
 #include <iostream>
 
-#include "SaveManager.h"
+#include "SMH.h"
 #include "Player.h"
 #include "Environment.h"
 #include "hge.h"
@@ -14,7 +14,7 @@
 #include "BitManager.h"
 
 extern Environment *theEnvironment;
-extern Player *thePlayer;
+extern SMH *smh;
 extern HGE *hge;
 
 /**
@@ -319,8 +319,8 @@ void SaveManager::save() {
 	outputString += intToString(playerGridY, 3);
 
 	//Health and mana
-	outputString += intToString(thePlayer->getHealth() * 4, 3);
-	outputString += intToString(thePlayer->getMana(), 3);
+	outputString += intToString(smh->player->getHealth() * 4, 3);
+	outputString += intToString(smh->player->getMana(), 3);
 
 	//Changed shit
 	outputString += changeManager->toString();
@@ -386,11 +386,11 @@ void SaveManager::startNewGame(int fileNumber) {
 	resetCurrentData();
 
 	theEnvironment->loadArea(FOUNTAIN_AREA, FOUNTAIN_AREA);
-	thePlayer->setHealth(playerHealth);
-	thePlayer->setMana(playerMana);
+	smh->player->setHealth(playerHealth);
+	smh->player->setMana(playerMana);
 
-	playerGridX = thePlayer->gridX;
-	playerGridY = thePlayer->gridY;	
+	playerGridX = smh->player->gridX;
+	playerGridY = smh->player->gridY;	
 	
 	save();
 

@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "Tongue.h"
 #include "Player.h"
 #include "smiley.h"
@@ -14,9 +15,9 @@ extern Environment *theEnvironment;
 extern NPCManager *npcManager;
 extern EnemyManager *enemyManager;
 extern hgeResourceManager *resources;
-extern Player *thePlayer;
 extern WindowManager *windowManager;
 extern HGE *hge;
+extern SMH *smh;
 
 extern float gameTime;
 extern bool debugMode;
@@ -73,7 +74,7 @@ void Tongue::update(float dt) {
 	if (!attacking) return;
 
 	//Hit Enemies
-	enemyManager->tongueCollision(this, thePlayer->getDamage());
+	enemyManager->tongueCollision(this, smh->player->getDamage());
 	
 	//Activate stuff - only one thing can be activated per attack
 	if (!hasActivatedSomething) {
@@ -123,18 +124,18 @@ void Tongue::update(float dt) {
 void Tongue::draw(float dt) {
 	if (attacking) {
 		resources->GetAnimation("smileyTongue")->RenderEx(
-			getScreenX(thePlayer->x) + thePlayer->mouthXOffset[thePlayer->facing],
-			getScreenY(thePlayer->y) - thePlayer->springOffset + thePlayer->mouthYOffset[thePlayer->facing] - thePlayer->hoveringYOffset,
-			thePlayer->angles[thePlayer->facing] + (thePlayer->facing == LEFT ? -1 : 1) * tongueOffsetAngle, 
-			thePlayer->scale, thePlayer->scale);
+			getScreenX(smh->player->x) + smh->player->mouthXOffset[smh->player->facing],
+			getScreenY(smh->player->y) - smh->player->springOffset + smh->player->mouthYOffset[smh->player->facing] - smh->player->hoveringYOffset,
+			smh->player->angles[smh->player->facing] + (smh->player->facing == LEFT ? -1 : 1) * tongueOffsetAngle, 
+			smh->player->scale, smh->player->scale);
 
 		//Draw tongue collision for debug mode
 		if (debugMode) {
 			numPoints = int((float)resources->GetAnimation("smileyTongue")->GetFrame() / (float)resources->GetAnimation("smileyTongue")->GetFrames() * (float)NUM_COLLISION_POINTS) + 1;
 			for (int i = 0; i < numPoints; i++) {
-				testAngle = -(PI / 2.0) + thePlayer->angles[thePlayer->facing] + (thePlayer->facing == LEFT ? -1 : 1) * tongueOffsetAngle;
-				pointX = thePlayer->x + thePlayer->mouthXOffset[thePlayer->facing] + (i+1)*(TONGUE_LENGTH / (NUM_COLLISION_POINTS-1)) * cos(testAngle);
-				pointY = thePlayer->y + thePlayer->mouthYOffset[thePlayer->facing] + (i+1)*(TONGUE_LENGTH / (NUM_COLLISION_POINTS-1)) * sin(testAngle);
+				testAngle = -(PI / 2.0) + smh->player->angles[smh->player->facing] + (smh->player->facing == LEFT ? -1 : 1) * tongueOffsetAngle;
+				pointX = smh->player->x + smh->player->mouthXOffset[smh->player->facing] + (i+1)*(TONGUE_LENGTH / (NUM_COLLISION_POINTS-1)) * cos(testAngle);
+				pointY = smh->player->y + smh->player->mouthYOffset[smh->player->facing] + (i+1)*(TONGUE_LENGTH / (NUM_COLLISION_POINTS-1)) * sin(testAngle);
 				collisionBox->SetRadius(pointX, pointY, 5.0);
 				drawCollisionBox(collisionBox, GREEN);
 			}
@@ -161,9 +162,9 @@ bool Tongue::testCollision(hgeRect *collisionBox) {
 	numPoints = int((float)resources->GetAnimation("smileyTongue")->GetFrame() / (float)resources->GetAnimation("smileyTongue")->GetFrames() * (float)NUM_COLLISION_POINTS) + 1;
 	
 	for (int i = 0; i < numPoints; i++) {
-		testAngle = -(PI / 2.0) + thePlayer->angles[thePlayer->facing] + (thePlayer->facing == LEFT ? -1 : 1) * tongueOffsetAngle;
-		pointX = thePlayer->x + thePlayer->mouthXOffset[thePlayer->facing] + (i+1)*(TONGUE_LENGTH / (NUM_COLLISION_POINTS-1)) * cos(testAngle);
-		pointY = thePlayer->y + thePlayer->mouthYOffset[thePlayer->facing] + (i+1)*(TONGUE_LENGTH / (NUM_COLLISION_POINTS-1)) * sin(testAngle);
+		testAngle = -(PI / 2.0) + smh->player->angles[smh->player->facing] + (smh->player->facing == LEFT ? -1 : 1) * tongueOffsetAngle;
+		pointX = smh->player->x + smh->player->mouthXOffset[smh->player->facing] + (i+1)*(TONGUE_LENGTH / (NUM_COLLISION_POINTS-1)) * cos(testAngle);
+		pointY = smh->player->y + smh->player->mouthYOffset[smh->player->facing] + (i+1)*(TONGUE_LENGTH / (NUM_COLLISION_POINTS-1)) * sin(testAngle);
 		if (collisionBox->TestPoint(pointX, pointY)) return true;
 	}
 	return false;
@@ -181,9 +182,9 @@ bool Tongue::testCollision(CollisionCircle *collisionCircle) {
 	numPoints = int((float)resources->GetAnimation("smileyTongue")->GetFrame() / (float)resources->GetAnimation("smileyTongue")->GetFrames() * (float)NUM_COLLISION_POINTS) + 1;
 	
 	for (int i = 0; i < numPoints; i++) {
-		testAngle = -(PI / 2.0) + thePlayer->angles[thePlayer->facing] + (thePlayer->facing == LEFT ? -1 : 1) * tongueOffsetAngle;
-		pointX = thePlayer->x + thePlayer->mouthXOffset[thePlayer->facing] + (i+1)*(TONGUE_LENGTH / (NUM_COLLISION_POINTS-1)) * cos(testAngle);
-		pointY = thePlayer->y + thePlayer->mouthYOffset[thePlayer->facing] + (i+1)*(TONGUE_LENGTH / (NUM_COLLISION_POINTS-1)) * sin(testAngle);
+		testAngle = -(PI / 2.0) + smh->player->angles[smh->player->facing] + (smh->player->facing == LEFT ? -1 : 1) * tongueOffsetAngle;
+		pointX = smh->player->x + smh->player->mouthXOffset[smh->player->facing] + (i+1)*(TONGUE_LENGTH / (NUM_COLLISION_POINTS-1)) * cos(testAngle);
+		pointY = smh->player->y + smh->player->mouthYOffset[smh->player->facing] + (i+1)*(TONGUE_LENGTH / (NUM_COLLISION_POINTS-1)) * sin(testAngle);
 		if (collisionCircle->testPoint(pointX, pointY)) return true;
 	}
 	return false;

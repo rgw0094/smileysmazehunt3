@@ -71,12 +71,12 @@ bool OptionsWindow::update(float dt) {
 			//Listen for click to enable edit mode
 			inputBox->Set(x, y, x + 130.0, y + 30.0);
 			if (mousePressed && inputBox->TestPoint(mouseX, mouseY)) {
-				smh->Input()->setEditMode(currentInput);
+				smh->input->setEditMode(currentInput);
 			}
 
 			//If the input is in edit mode, listen for the new input
-			if (smh->Input()->isEditModeEnabled(currentInput)) {
-				smh->Input()->listenForNewInput(currentInput);
+			if (smh->input->isEditModeEnabled(currentInput)) {
+				smh->input->listenForNewInput(currentInput);
 			}
 
 		}
@@ -120,10 +120,10 @@ void OptionsWindow::draw(float dt) {
 			resources->GetFont("controls")->SetScale(0.8);
 			resources->GetFont("controls")->SetColor(ARGB(255,255,255,255));
 			resources->GetFont("controls")->Render(x + 65.0, y, HGETEXT_CENTER, 
-				smh->Input()->getInputName(currentInput));
+				smh->input->getInputName(currentInput));
 
 			//Input box
-			if (smh->Input()->isEditModeEnabled(currentInput)) {
+			if (smh->input->isEditModeEnabled(currentInput)) {
 				resources->GetSprite("selectedControlsBox")->Render(x,y+35);
 			} else {
 				resources->GetSprite("controlsBox")->Render(x,y+35);
@@ -133,7 +133,7 @@ void OptionsWindow::draw(float dt) {
 			resources->GetFont("controls")->SetColor(ARGB(255,255,255,255));
 			resources->GetFont("controls")->SetScale(0.7);
 			resources->GetFont("controls")->printf(x + 65.0, y + 40.0, HGETEXT_CENTER,
-					smh->Input()->getInputDescription(currentInput).c_str());
+					smh->input->getInputDescription(currentInput).c_str());
 			resources->GetFont("controls")->SetColor(ARGB(255,0,0,0));
 
 		}

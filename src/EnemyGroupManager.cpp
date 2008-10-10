@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "EnemyGroupManager.h"
 #include "Environment.h"
 #include "Player.h"
@@ -5,7 +6,7 @@
 #include "EnemyManager.h"
 #include "hge.h"
 
-extern Player *thePlayer;
+extern SMH *smh;
 extern Environment *theEnvironment;
 extern hgeResourceManager *resources;
 extern EnemyManager *enemyManager;
@@ -101,8 +102,8 @@ void EnemyGroupManager::update(float dt) {
 
 
 	//If the player steps on a trigger
-	if (theEnvironment->ids[thePlayer->gridX][thePlayer->gridY] == ENEMYGROUP_TRIGGER) {
-		triggerGroup(theEnvironment->variable[thePlayer->gridX][thePlayer->gridY]);
+	if (theEnvironment->ids[smh->player->gridX][smh->player->gridY] == ENEMYGROUP_TRIGGER) {
+		triggerGroup(theEnvironment->variable[smh->player->gridX][smh->player->gridY]);
 	}
 
 }

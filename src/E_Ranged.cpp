@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "environment.h"
 #include "EnemyState.h"
 #include "hge.h"
@@ -8,11 +9,11 @@
 #include "hgeresource.h"
 #include "ProjectileManager.h"
 
+extern SMH *smh;
 extern HGE *hge;
 extern Environment *theEnvironment;
 extern hgeResourceManager *resources;
 extern ProjectileManager *projectileManager;
-extern Player *thePlayer;
 
 extern float gameTime;
 
@@ -51,10 +52,10 @@ void E_Ranged::update(float dt) {
 
 		if (timePassedSince(timeStartedRangedAttack) > 0.6 && !shotYet) {
 			//Fire ranged weapon
-			if (!frozen && !stunned && !thePlayer->isInvisible()) {		
+			if (!frozen && !stunned && !smh->player->isInvisible()) {		
 				shotYet = true;
 				projectileManager->addProjectile(x, y, projectileSpeed, 
-					getAngleBetween(x, y, thePlayer->x, thePlayer->y), 
+					getAngleBetween(x, y, smh->player->x, smh->player->y), 
 					projectileDamage, true, rangedType, true);
 			}
 		}

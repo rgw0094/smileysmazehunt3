@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "enemy.h"
 #include "EnemyState.h"
 #include "player.h"
@@ -5,9 +6,9 @@
 #include "hgeresource.h"
 #include "smiley.h"
 
+extern SMH *smh;
 extern hgeResourceManager *resources;
 extern Environment *theEnvironment;
-extern Player *thePlayer;
 extern HGE *hge;
 extern float gameTime;
 
@@ -56,18 +57,18 @@ void E_Buzzard::update(float dt) {
 	}
 
 	if (buzzardState == BUZZARD_FLYING) {
-		if (thePlayer->x > x) {
+		if (smh->player->x > x) {
 			xVelBuzz += BUZZ_ACC*dt;
 			if (xVelBuzz > speed) xVelBuzz = speed;
-		} else if (thePlayer->x < x) {
+		} else if (smh->player->x < x) {
 			xVelBuzz -= BUZZ_ACC*dt;
 			if (xVelBuzz < -speed) xVelBuzz = -speed;
 		}
 
-		if (thePlayer->y > y) {
+		if (smh->player->y > y) {
 			yVelBuzz += BUZZ_ACC*dt;
 			if (yVelBuzz > speed) yVelBuzz = speed;
-		} else if (thePlayer->y < y) {
+		} else if (smh->player->y < y) {
 			yVelBuzz -= BUZZ_ACC*dt;
 			if (yVelBuzz < -speed) yVelBuzz = -speed;
 		}

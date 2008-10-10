@@ -1,13 +1,11 @@
-/**
- * Enemy state where the enemy chases after the player using the A* algorithm.
- */
+#include "SMH.h"
 #include "EnemyState.h"
 #include "Player.h"
 #include "Environment.h"
 #include "smiley.h"
 #include "enemy.h"
 
-extern Player *thePlayer;
+extern SMH *smh;
 extern Environment *theEnvironment;
 
 /**
@@ -31,9 +29,9 @@ void ES_Chase::update(float dt) {
 
 	//If there is an unobstructed straight line to the player just
 	//run straight towards him
-	if (theEnvironment->validPath(owner->x, owner->y, thePlayer->x, thePlayer->y, 32, owner->canPass)) {
+	if (theEnvironment->validPath(owner->x, owner->y, smh->player->x, smh->player->y, 32, owner->canPass)) {
 
-		float angle = getAngleBetween(owner->x, owner->y, thePlayer->x, thePlayer->y);
+		float angle = getAngleBetween(owner->x, owner->y, smh->player->x, smh->player->y);
 		owner->dx = owner->speed * cos(angle);
 		owner->dy = owner->speed * sin(angle);
 

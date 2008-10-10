@@ -9,7 +9,6 @@
 #include "player.h"
 #include "tongue.h"
 
-extern Player *thePlayer;
 extern HGE *hge;
 extern SMH *smh;
 
@@ -95,11 +94,11 @@ void WindowManager::update(float dt) {
 
 	//Handle input for scrolling through game menu windows
 	if (gameMenuOpen) {
-		if (smh->Input()->keyPressed(INPUT_PREVIOUS_ABILITY)) {
+		if (smh->input->keyPressed(INPUT_PREVIOUS_ABILITY)) {
 			currentMenuWindow--;
 			if (currentMenuWindow < 0) currentMenuWindow = NUM_MENU_WINDOWS-1;
 			openGameMenu(currentMenuWindow);
-		} else if (smh->Input()->keyPressed(INPUT_NEXT_ABILITY)) {
+		} else if (smh->input->keyPressed(INPUT_NEXT_ABILITY)) {
 			currentMenuWindow++;
 			if (currentMenuWindow >= NUM_MENU_WINDOWS) currentMenuWindow = 0;
 			openGameMenu(currentMenuWindow);
@@ -108,7 +107,7 @@ void WindowManager::update(float dt) {
 
 	//When the text box is open keep updating Smiley's tongue
 	if (textBoxOpen) {
-		thePlayer->getTongue()->update(dt);
+		smh->player->getTongue()->update(dt);
 	}
 
 	//If the active window returns false, close it

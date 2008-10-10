@@ -1,7 +1,4 @@
-/**
- * Simple charging enemy.
- */
-
+#include "SMH.H"
 #include "enemy.h"
 #include "hge.h"
 #include "hgeresource.h"
@@ -12,10 +9,10 @@
 #include "smiley.h"
 #include "tongue.h"
 
+extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
 extern ProjectileManager *projectileManager;
-extern Player *thePlayer;
 extern Environment *theEnvironment;
 extern float gameTime;
 
@@ -73,7 +70,7 @@ bool E_Charger::doTongueCollision(Tongue *tongue, float damage) {
 		//Make sure the enemy wasn't already hit by this attack
 		if (timePassedSince(lastHitByWeapon) > .5) {
 			lastHitByWeapon = gameTime;
-			dealDamageAndKnockback(damage, 65.0, thePlayer->x, thePlayer->y);
+			dealDamageAndKnockback(damage, 65.0, smh->player->x, smh->player->y);
 			startFlashing();
 			//If charging, stop
 			if (chargeState == CHARGE_STATE_CHARGING) {
@@ -98,7 +95,7 @@ void E_Charger::update(float dt) {
 		//Charge if the player gets close and there is an open path
 		if (distanceFromPlayer() <= CHARGE_RADIUS && 
 				timePassedSince(timeStartedCharging + CHARGE_DURATION) > CHARGE_DELAY
-				&& theEnvironment->validPath(x, y, thePlayer->x, thePlayer->y, 16, canPass)) {
+				&& theEnvironment->validPath(x, y, smh->player->x, smh->player->y, 16, canPass)) {
 
 			chargeState = CHARGE_STATE_PAUSE;
 			timeStartedCharging = gameTime;
@@ -113,7 +110,7 @@ void E_Charger::update(float dt) {
 		//Start charging after a short pause.
 		if (timePassedSince(timeStartedCharging) > 0.5) {
 			timeStartedCharging = gameTime;
-			chargeAngle = getAngleBetween(x, y, thePlayer->x, thePlayer->y);
+			chargeAngle = getAngleBetween(x, y, smh->player->x, smh->player->y);
 
 			//Update state
 			chargeState = CHARGE_STATE_CHARGING;

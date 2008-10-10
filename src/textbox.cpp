@@ -5,7 +5,6 @@
 #include "npcmanager.h"
 #include "WindowManager.h"
 #include "Shop.h"
-#include "SaveManager.h"
 #include "SoundManager.h"
 
 #include "hgedistort.h"
@@ -13,11 +12,9 @@
 #include "hgefont.h"
 #include "hgeresource.h"
 
-extern SaveManager *saveManager;
 extern NPCManager *npcManager;
 extern HGE *hge;
 extern SMH *smh;
-extern Player *thePlayer;
 extern hgeResourceManager *resources;
 extern WindowManager *windowManager;
 extern SoundManager *soundManager;
@@ -84,14 +81,14 @@ void TextBox::setDialogue(int _npcID, int _textID) {
 	graphic = new hgeSprite(resources->GetTexture("npcTx"),0,npcID*64.0, 64,64);
 
 	//After Smiley gets the cane, Bill Clinton needs new dialogue
-	if (npcID == BILL_CLINTON && saveManager->hasAbility[CANE]) {
+	if (npcID == BILL_CLINTON && smh->saveManager->hasAbility[CANE]) {
 		textID = BILL_CLINTON_TEXT2;
 	}
 
 	paramString = "NPC";
 	paramString += intToString(textID);
 	paramString += "Pages";
-	numPages = atoi(smh->Data()->getGameText(paramString.c_str()));
+	numPages = atoi(smh->gameData->getGameText(paramString.c_str()));
 	currentPage = 1;
 	strcpy(text, "-");
 
@@ -112,7 +109,7 @@ void TextBox::setHint() {
 	paramString = "Hint";
 	paramString += intToString(textID);
 	paramString += "Pages";
-	numPages = atoi(smh->Data()->getGameText(paramString.c_str()));
+	numPages = atoi(smh->gameData->getGameText(paramString.c_str()));
 	currentPage = 1;
 	strcpy(text, "-");
 	fadeAlpha = 0.0;
@@ -143,19 +140,19 @@ void TextBox::setNewAbility(int _ability) {
 	ability = _ability;
 
 	if (ability == CANE) {
-		strcpy(text, smh->Data()->getGameText("GotCane"));
+		strcpy(text, smh->gameData->getGameText("GotCane"));
 	} else if (ability == WATER_BOOTS) {
-		strcpy(text, smh->Data()->getGameText("GotJesusSandals"));
+		strcpy(text, smh->gameData->getGameText("GotJesusSandals"));
 	} else if (ability == FRISBEE) {
-		strcpy(text, smh->Data()->getGameText("GotFrisbee"));
+		strcpy(text, smh->gameData->getGameText("GotFrisbee"));
 	} else if (ability == FIRE_BREATH) {
-		strcpy(text, smh->Data()->getGameText("GotFireBreath"));
+		strcpy(text, smh->gameData->getGameText("GotFireBreath"));
 	} else if (ability == SPRINT_BOOTS) {
-		strcpy(text, smh->Data()->getGameText("GotSprintBoots"));
+		strcpy(text, smh->gameData->getGameText("GotSprintBoots"));
 	} else if (ability == LIGHTNING_ORB) {
-		strcpy(text, smh->Data()->getGameText("GotLightningOrb"));
+		strcpy(text, smh->gameData->getGameText("GotLightningOrb"));
 	} else if (ability == REFLECTION_SHIELD) {
-		strcpy(text, smh->Data()->getGameText("GotReflectionShield"));
+		strcpy(text, smh->gameData->getGameText("GotReflectionShield"));
 	}
 
 }
@@ -172,7 +169,7 @@ void TextBox::setSign(int signId) {
 	std::string paramString;
 	paramString = "Sign";
 	paramString += intToString(signId);
-	strcpy(text, smh->Data()->getGameText(paramString.c_str()));
+	strcpy(text, smh->gameData->getGameText(paramString.c_str()));
 
 }
 
@@ -198,7 +195,7 @@ void TextBox::draw(float dt) {
 		paramString += intToString(textID);
 		paramString += "-";
 		paramString += intToString(currentPage);
-		resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, smh->Data()->getGameText(paramString.c_str()));
+		resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, smh->gameData->getGameText(paramString.c_str()));
 
 		//Draw next page/OK icon
 		if (currentPage == numPages) {
@@ -221,14 +218,14 @@ void TextBox::draw(float dt) {
 		paramString = "NPC";
 		paramString += intToString(textID);
 		paramString += "Name";
-		resources->GetFont("textBoxNameFnt")->printf(x + 220, y+20, HGETEXT_CENTER, "%s", smh->Data()->getGameText(paramString.c_str()));
+		resources->GetFont("textBoxNameFnt")->printf(x + 220, y+20, HGETEXT_CENTER, "%s", smh->gameData->getGameText(paramString.c_str()));
 
 		//Print the current page of the conversation
 		paramString = "NPC";
 		paramString += intToString(textID);
 		paramString += "-";
 		paramString += intToString(currentPage);
-		resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, smh->Data()->getGameText(paramString.c_str()));
+		resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, smh->gameData->getGameText(paramString.c_str()));
 
 		//Draw next page/OK icon
 		if (currentPage == numPages) {
@@ -294,7 +291,7 @@ bool TextBox::update(float dt) {
 	}
 
 	//Input to close the box or go to the next dialog page
-	if (smh->Input()->keyPressed(INPUT_ATTACK) && lastKeyPressFrame != frameCounter) {
+	if (smh->input->keyPressed(INPUT_ATTACK) && lastKeyPressFrame != frameCounter) {
 		lastKeyPressFrame = frameCounter;
 
 		//Last page - close the box
@@ -309,9 +306,9 @@ bool TextBox::update(float dt) {
 				return true; //Don't tell manager to close window
 
 			//Give smiley the cane the first time he talks to Bill Clinton
-			} else if (textBoxType == TYPE_DIALOG && npcID == BILL_CLINTON && !saveManager->hasAbility[CANE]) {
-				saveManager->hasAbility[CANE] = true;
-				thePlayer->selectedAbility = CANE;
+			} else if (textBoxType == TYPE_DIALOG && npcID == BILL_CLINTON && !smh->saveManager->hasAbility[CANE]) {
+				smh->saveManager->hasAbility[CANE] = true;
+				smh->player->selectedAbility = CANE;
 				setNewAbility(CANE);
 				return true;
 			

@@ -1,7 +1,6 @@
 #include "SMH.h"
 #include "inventory.h"
 #include "player.h"
-#include "SaveManager.h"
 #include "smiley.h"
 
 #include "hgerect.h"
@@ -13,9 +12,7 @@
 //Objects
 extern HGE *hge;
 extern SMH *smh;
-extern Player *thePlayer;
 extern hgeResourceManager *resources;
-extern SaveManager *saveManager;
 
 //Sprites
 extern hgeSprite *itemLayer[256];
@@ -49,18 +46,18 @@ void Inventory::draw(float dt) {
 	//Ability grid
 	for (int i = 0; i < WIDTH; i++) {
 		for (int j = 0; j < HEIGHT; j++) {
-			if (saveManager->hasAbility[j*4 + i]) {
+			if (smh->saveManager->hasAbility[j*4 + i]) {
 				resources->GetAnimation("abilities")->SetFrame(j*4+i);
 				resources->GetAnimation("abilities")->Render(INVENTORY_X_OFFSET + 40 + i*SQUARE_SIZE, INVENTORY_Y_OFFSET + 40 + j*SQUARE_SIZE);
 				//Draw the ability name and info if it is highlighted
 				if (cursorX == i && cursorY == j) {
-					resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET+170,INVENTORY_Y_OFFSET+275,HGETEXT_CENTER,"%s", smh->Data()->getAbilityInfo(j*4 + i).name);
+					resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET+170,INVENTORY_Y_OFFSET+275,HGETEXT_CENTER,"%s", smh->gameData->getAbilityInfo(j*4 + i).name);
 					resources->GetFont("description")->printfb(
 						INVENTORY_X_OFFSET+40,	//box x
 						INVENTORY_Y_OFFSET+340,	//box y
 						275.0, 200.0,			//width and height of box
 						HGETEXT_LEFT | HGETEXT_TOP, //Alignment
-						"%s", smh->Data()->getAbilityInfo(j*4 + i).description);
+						"%s", smh->gameData->getAbilityInfo(j*4 + i).description);
 
 				}
 			}
@@ -81,7 +78,7 @@ void Inventory::draw(float dt) {
 				resources->GetAnimation("keyIcons")->Render(INVENTORY_X_OFFSET + 345, INVENTORY_Y_OFFSET + 75 + j*50);
 			}
 			//Key numbers
-			resources->GetFont("numberFnt")->printf(INVENTORY_X_OFFSET+405+i*50,INVENTORY_Y_OFFSET+80+j*50,HGETEXT_CENTER,"%d",saveManager->numKeys[i][j]);
+			resources->GetFont("numberFnt")->printf(INVENTORY_X_OFFSET+405+i*50,INVENTORY_Y_OFFSET+80+j*50,HGETEXT_CENTER,"%d",smh->saveManager->numKeys[i][j]);
 		}
 	}	
 
@@ -89,7 +86,7 @@ void Inventory::draw(float dt) {
 	for (int i = 0; i < 3; i++) {
 		resources->GetAnimation("upgradeIcons")->SetFrame(i);
 		resources->GetAnimation("upgradeIcons")->Render(INVENTORY_X_OFFSET+355+i*90,INVENTORY_Y_OFFSET + 297);
-		resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET+400+i*90,INVENTORY_Y_OFFSET+302,HGETEXT_LEFT,"x%d",saveManager->numUpgrades[i]);
+		resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET+400+i*90,INVENTORY_Y_OFFSET+302,HGETEXT_LEFT,"x%d",smh->saveManager->numUpgrades[i]);
 	}
 
 	////////////Stats///////////////
@@ -98,32 +95,32 @@ void Inventory::draw(float dt) {
 	resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 335, 
 		HGETEXT_LEFT, "Maximum Mana: ");
 	resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 335, 
-		HGETEXT_RIGHT, "%d", int(thePlayer->getMaxMana()));
+		HGETEXT_RIGHT, "%d", int(smh->player->getMaxMana()));
 	//Damage multiplier
 	resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 355, 
 		HGETEXT_LEFT, "Damage Multiplier:");
 	resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 355, 
-		HGETEXT_RIGHT, "%1.3f", saveManager->getDamageModifier());
+		HGETEXT_RIGHT, "%1.3f", smh->saveManager->getDamageModifier());
 	//Number of licks
 	resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 375,
 		HGETEXT_LEFT, "Number Of Licks:");
 	resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 375,
-		HGETEXT_RIGHT, "%d", saveManager->numTongueLicks);
+		HGETEXT_RIGHT, "%d", smh->saveManager->numTongueLicks);
 	//Enemies killed
 	resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 395,
 		HGETEXT_LEFT, "Enemies Killed:");
 	resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 395,
-		HGETEXT_RIGHT, "%d", saveManager->numEnemiesKilled);
+		HGETEXT_RIGHT, "%d", smh->saveManager->numEnemiesKilled);
 	//Damage dealt
 	resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 415,
 		HGETEXT_LEFT, "Damage Dealt:");
 	resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 415,
-		HGETEXT_RIGHT, "%d", int(saveManager->damageDealt));
+		HGETEXT_RIGHT, "%d", int(smh->saveManager->damageDealt));
 	//Damage received
 	resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 435,
 		HGETEXT_LEFT, "Damage Taken:");
 	resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 435,
-		HGETEXT_RIGHT, "%d", int(saveManager->damageReceived));
+		HGETEXT_RIGHT, "%d", int(smh->saveManager->damageReceived));
 	resources->GetFont("inventoryFnt")->SetScale(1.0);
 	//////////End Stats////////////////
 	
@@ -138,28 +135,28 @@ void Inventory::draw(float dt) {
 bool Inventory::update(float dt) {
 	
 	//Highlight currently active item
-	if (smh->Data()->getAbilityInfo(cursorY*4 + cursorX).type != PASSIVE && saveManager->hasAbility[cursorY*4 + cursorX]) {
-		cursorY = (thePlayer->selectedAbility - (thePlayer->selectedAbility % 4)) / 4;
-		cursorX = thePlayer->selectedAbility % 4;
+	if (smh->gameData->getAbilityInfo(cursorY*4 + cursorX).type != PASSIVE && smh->saveManager->hasAbility[cursorY*4 + cursorX]) {
+		cursorY = (smh->player->selectedAbility - (smh->player->selectedAbility % 4)) / 4;
+		cursorX = smh->player->selectedAbility % 4;
 	}
 
 	//Process Input to move cursor
-	if (smh->Input()->keyPressed(INPUT_LEFT)) {
+	if (smh->input->keyPressed(INPUT_LEFT)) {
 		if (cursorX > 0) cursorX--;
 	}
-	if (smh->Input()->keyPressed(INPUT_RIGHT)) {
+	if (smh->input->keyPressed(INPUT_RIGHT)) {
 		if (cursorX < WIDTH-1) cursorX++;
 	}
-	if (smh->Input()->keyPressed(INPUT_UP)) {
+	if (smh->input->keyPressed(INPUT_UP)) {
 		if (cursorY > 0) cursorY--;
 	}
-	if (smh->Input()->keyPressed(INPUT_DOWN)) {
+	if (smh->input->keyPressed(INPUT_DOWN)) {
 		if (cursorY < HEIGHT-1) cursorY++;
 	}
 
 	//Update selected ability
-	if (smh->Data()->getAbilityInfo(cursorY*4 + cursorX).type != PASSIVE && saveManager->hasAbility[cursorY*4 + cursorX]) {
-		thePlayer->selectedAbility = cursorY*4 + cursorX;
+	if (smh->gameData->getAbilityInfo(cursorY*4 + cursorX).type != PASSIVE && smh->saveManager->hasAbility[cursorY*4 + cursorX]) {
+		smh->player->selectedAbility = cursorY*4 + cursorX;
 	}
 
 	return true;

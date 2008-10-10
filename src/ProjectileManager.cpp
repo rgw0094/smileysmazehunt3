@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "smiley.h"
 #include "environment.h"
 #include "ProjectileManager.h"
@@ -6,9 +7,9 @@
 #include "EnemyManager.h"
 #include "CollisionCircle.h"
 
+extern SMH *smh;
 extern HGE *hge;
 extern Environment *theEnvironment;
-extern Player *thePlayer;
 extern bool debugMode;
 extern hgeResourceManager *resources;
 extern EnemyManager *enemyManager;
@@ -72,7 +73,7 @@ void ProjectileManager::addProjectile(float x, float y, float speed, float angle
 	
 	if (id == PROJECTILE_LIGHTNING_ORB) {
 		newProjectile.waitingToReflect = false;
-		newProjectile.facing = thePlayer->facing;
+		newProjectile.facing = smh->player->facing;
 	}
 
 	if (id == PROJECTILE_FIREBALL) {
@@ -107,11 +108,11 @@ void ProjectileManager::update(float dt) {
 		i->collisionBox->SetRadius(i->x, i->y, projectileTypes[i->id].radius);
 		
 		//Do collision with Smiley
-		if (i->hostile && thePlayer->collisionCircle->testBox(i->collisionBox)) {
-			if (thePlayer->isReflectingProjectiles()) {
+		if (i->hostile && smh->player->collisionCircle->testBox(i->collisionBox)) {
+			if (smh->player->isReflectingProjectiles()) {
 				reflectProjectile(i);
 			} else {
-				thePlayer->dealDamage(i->damage, i->makesSmileyFlash);
+				smh->player->dealDamage(i->damage, i->makesSmileyFlash);
 				deleteProjectile = true;
 			}
 		}
@@ -135,7 +136,7 @@ void ProjectileManager::update(float dt) {
 			//Spin
 			i->frisbeeAngle += 4.0f*PI*dt;
 			//Destroy frisbees that get too far away from Smiley
-			if (abs(i->x - thePlayer->x) > 1080 || abs(i->y - thePlayer->y) > 810) {
+			if (abs(i->x - smh->player->x) > 1080 || abs(i->y - smh->player->y) > 810) {
 				deleteProjectile = true;
 			}
 		}

@@ -1,6 +1,4 @@
-/**
- * Floater
- */
+#include "SMH.H"
 #include "smiley.h"
 #include "enemy.h"
 #include "hge.h"
@@ -10,9 +8,9 @@
 #include "player.h"
 #include "CollisionCircle.h"
 
+extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern Player *thePlayer;
 extern Environment *theEnvironment;
 extern bool debugMode;
 extern float gameTime;
@@ -82,8 +80,8 @@ void E_Floater::update(float dt) {
 	}
 		
 	//Collision with player
-	if (thePlayer->collisionCircle->testBox(collisionBox)) {
-		thePlayer->dealDamageAndKnockback(damage, true, 115, x, y);
+	if (smh->player->collisionCircle->testBox(collisionBox)) {
+		smh->player->dealDamageAndKnockback(damage, true, 115, x, y);
 	}
 
 	move(dt);

@@ -1,14 +1,13 @@
+#include "SMH.h"
 #include "TutorialMan.h"
-#include "SaveManager.h"
 #include "hgeresource.h"
 #include "Player.h"
 #include "WindowManager.h"
 #include "smiley.h"
 
+extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern SaveManager *saveManager;
-extern Player *thePlayer;
 extern WindowManager *windowManager;
 
 #define FIRST_TEXT 900
@@ -35,7 +34,7 @@ void TutorialMan::update(float dt) {
 	if (state == FINISHED) return;
 
 	//Trigger the tutorial man when the player steps on his trigger square
-	if (state == INACTIVE && thePlayer->gridX == triggerGridX && thePlayer->gridY == triggerGridY) {
+	if (state == INACTIVE && smh->player->gridX == triggerGridX && smh->player->gridY == triggerGridY) {
 		state = FIRST_DIALOG;
 		windowManager->openDialogueTextBox(-1, FIRST_TEXT);
 	}
@@ -61,14 +60,14 @@ void TutorialMan::updateState(float dt) {
 	if (state == FIRST_DIALOG) {
 		if (!windowManager->isTextBoxOpen()) {
 			state = RUNNING_UP;
-			x = thePlayer->x;
-			y = thePlayer->y + 500.0;
+			x = smh->player->x;
+			y = smh->player->y + 500.0;
 		}
 	}
 
 	if (state == RUNNING_UP) {
 		y -= 300.0 * dt;
-		if (y < thePlayer->y + 100.0) {
+		if (y < smh->player->y + 100.0) {
 			state = SECOND_DIALOG;
 			windowManager->openDialogueTextBox(-1, SECOND_TEXT);
 		}
@@ -82,9 +81,9 @@ void TutorialMan::updateState(float dt) {
 
 	if (state == RUNNING_AWAY) {
 		y += 500.0 * dt;
-		if (y > thePlayer->y + 600.0) {
+		if (y > smh->player->y + 600.0) {
 			state = FINISHED;
-			saveManager->tutorialManCompleted = true;
+			smh->saveManager->tutorialManCompleted = true;
 		}
 	}
 

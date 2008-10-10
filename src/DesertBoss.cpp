@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "smiley.h"
 #include "hgeresource.h"
 #include "DesertBoss.h"
@@ -8,25 +9,23 @@
 #include "environment.h"
 #include "EnemyManager.h"
 #include "lootmanager.h"
-#include "SaveManager.h"
 #include "SoundManager.h"
 #include "weaponparticle.h"
 #include "CollisionCircle.h"
 #include "Tongue.h"
 #include "WindowManager.h"
 
+extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
 extern WindowManager *windowManager;
 extern bool debugMode;
 extern EnemyGroupManager *enemyGroupManager;
-extern Player *thePlayer;
 extern ProjectileManager *projectileManager;
 extern Environment *theEnvironment;
 extern bool debugMode;
 extern EnemyManager *enemyManager;
 extern LootManager *lootManager;
-extern SaveManager *saveManager;
 extern SoundManager *soundManager;
 extern float gameTime;
 
@@ -141,20 +140,20 @@ bool DesertBoss::update(float dt) {
 	if (state != DESERTBOSS_INACTIVE && state != DESERTBOSS_FRIENDLY) {
 
 		//Check collision with Smiley
-		if (thePlayer->collisionCircle->testBox(collisionBox)) {
-			thePlayer->dealDamageAndKnockback(COLLISION_DAMAGE, true, 150, x, y);
+		if (smh->player->collisionCircle->testBox(collisionBox)) {
+			smh->player->dealDamageAndKnockback(COLLISION_DAMAGE, true, 150, x, y);
 		}
 
 		//Check collision with Smiley's tongue
-		if (thePlayer->getTongue()->testCollision(collisionBox) && gameTime > lastHitByTongue + .34f) {
-			thePlayer->dealDamageAndKnockback(TONGUE_DAMAGE,true,150,x,y);
+		if (smh->player->getTongue()->testCollision(collisionBox) && gameTime > lastHitByTongue + .34f) {
+			smh->player->dealDamageAndKnockback(TONGUE_DAMAGE,true,150,x,y);
 		}
 
 		//The boss only takes damage from smiley's fire breath and when in
 		//IDLE or LAUNCHING_SPIKES state. Once he takes enough damage he goes to
 		//ground spike state
 		if (state == DESERTBOSS_LAUNCHING_SPIKES || state == DESERTBOSS_IDLE) {
-			if (thePlayer->fireBreathParticle->testCollision(collisionBox)) {
+			if (smh->player->fireBreathParticle->testCollision(collisionBox)) {
 				redness += (255/5.0)*dt;
 				health -= 20 * dt;
 				if (redness > 255.0) {
@@ -259,7 +258,7 @@ bool DesertBoss::update(float dt) {
 			soundManager->playMusic("oldeTowneMusic");
 			enemyGroupManager->notifyOfDeath(groupID);
 			lootManager->addLoot(LOOT_NEW_ABILITY, x, y, LIGHTNING_ORB);
-			saveManager->killBoss(DESERT_BOSS);
+			smh->saveManager->killBoss(DESERT_BOSS);
 			return true;
 		}
 	}
@@ -432,8 +431,8 @@ void DesertBoss::doGroundSpikeCollision(float dt) {
 		for (int j = 0; j < SPIKE_GRID_SIZE; j++) {
 			if (groundSpikes[i][j].showing) {
 				setGroundSpikeCollisionBox(groundSpikes[i][j].x, groundSpikes[i][j].y);
-				if (thePlayer->collisionCircle->testBox(spikeCollisionBox)) {
-					thePlayer->dealDamage(GROUND_SPIKE_DAMAGE, true);
+				if (smh->player->collisionCircle->testBox(spikeCollisionBox)) {
+					smh->player->dealDamage(GROUND_SPIKE_DAMAGE, true);
 				}
 			}
 		}
@@ -472,7 +471,7 @@ void DesertBoss::spawnCactlet() {
 		cactletGridX = getGridX(x + dist*cos(angle));
 		cactletGridY = getGridY(y + dist*sin(angle));
 
-	} while (abs(distance(cactletGridX, cactletGridY, thePlayer->gridX, thePlayer->gridY)) < 3);
+	} while (abs(distance(cactletGridX, cactletGridY, smh->player->gridX, smh->player->gridY)) < 3);
 
 	enemyManager->addEnemy(CACTLET_ENEMYID, cactletGridX,cactletGridY,0.0,0.5, -1);
 

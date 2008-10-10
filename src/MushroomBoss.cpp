@@ -1,3 +1,4 @@
+#include "smh.h"
 #include "smiley.h"
 #include "hgeresource.h"
 #include "MushroomBoss.h"
@@ -8,24 +9,22 @@
 #include "environment.h"
 #include "EnemyManager.h"
 #include "lootmanager.h"
-#include "SaveManager.h"
 #include "SoundManager.h"
 #include "WindowManager.h"
 #include "weaponparticle.h"
 #include "collisioncircle.h"
 
+extern SMH *smh;
 extern HGE *hge;
 extern WindowManager *windowManager;
 extern hgeResourceManager *resources;
 extern bool debugMode;
 extern EnemyGroupManager *enemyGroupManager;
-extern Player *thePlayer;
 extern ProjectileManager *projectileManager;
 extern Environment *theEnvironment;
 extern bool debugMode;
 extern EnemyManager *enemyManager;
 extern LootManager *lootManager;
-extern SaveManager *saveManager;
 extern SoundManager *soundManager;
 extern float gameTime;
 
@@ -179,14 +178,14 @@ bool MushroomBoss::update(float dt) {
 		doExplosions(dt);
 
 		//collision
-		if (thePlayer->collisionCircle->testBox(collisionRects[0]) || thePlayer->collisionCircle->testBox(collisionRects[1])) {
-			thePlayer->dealDamageAndKnockback(MUSHBOOM_DAMAGE,true,MUSHBOOM_KNOCKBACK_DISTANCE,x,y);
+		if (smh->player->collisionCircle->testBox(collisionRects[0]) || smh->player->collisionCircle->testBox(collisionRects[1])) {
+			smh->player->dealDamageAndKnockback(MUSHBOOM_DAMAGE,true,MUSHBOOM_KNOCKBACK_DISTANCE,x,y);
 		}
 	}
 	explosions->Update(dt);
 	explosions->Transpose(-1*(theEnvironment->xGridOffset*64 + theEnvironment->xOffset), -1*(theEnvironment->yGridOffset*64 + theEnvironment->yOffset));
 	
-	if (y < thePlayer->y) shouldDrawAfterSmiley = false;
+	if (y < smh->player->y) shouldDrawAfterSmiley = false;
 	else shouldDrawAfterSmiley = true;
 
 	if (state == MUSHBOOM_DYING_TEXT) {
@@ -202,7 +201,7 @@ bool MushroomBoss::update(float dt) {
 		if (!droppedLoot) {
 			lootManager->addLoot(LOOT_NEW_ABILITY, x, y, SILLY_PAD);
 			droppedLoot = true;
-			saveManager->killBoss(MUSHROOM_BOSS);
+			smh->saveManager->killBoss(MUSHROOM_BOSS);
 			enemyGroupManager->notifyOfDeath(groupID);
 			soundManager->playMusic("forestMusic");
 		}
@@ -304,7 +303,7 @@ void MushroomBoss::spawnMiniMushroom() {
 
 void MushroomBoss::spawnMiniMushroomProjectile() {
 	projectileManager->addProjectile(x,y,MINI_MUSHROOM_PROJECTILE_SPEED,
-			getAngleBetween(x,y,thePlayer->x,thePlayer->y)+hge->Random_Float(-PI/32,PI/32),
+			getAngleBetween(x,y,smh->player->x,smh->player->y)+hge->Random_Float(-PI/32,PI/32),
 			MINI_MUSHROOM_PROJECTILE_DAMAGE,true,MINI_MUSHROOM_PROJECTILE_ID,true);
 }
 
@@ -334,7 +333,7 @@ void MushroomBoss::doArms(float dt) {
 	if (throwState == MUSHBOOM_THROW_STATE_AIM) {
 		
 		if (timePassedSince(lastThrowTime) > BOMB_THROW_DELAY && !leftArmRotating && !rightArmRotating) {
-			if (thePlayer->x < x) { //throw with left arm (arm on right of screen) toward left of screen
+			if (smh->player->x < x) { //throw with left arm (arm on right of screen) toward left of screen
 				leftArmRotating=true;
 				thrownFromLeft=false;
 				leftArmRotateDir=1;
@@ -379,7 +378,7 @@ void MushroomBoss::doArms(float dt) {
 				//throw bomb
 				//The direction will be UP_LEFT, LEFT, or DOWN_LEFT, based on increments of PI/3 (divides the circle into 6 pieces)
 				int dir = LEFT;
-				float angleToSmiley = getAngleBetween(x,y,thePlayer->x,thePlayer->y);
+				float angleToSmiley = getAngleBetween(x,y,smh->player->x,smh->player->y);
 				if (angleToSmiley < 5*PI/6) dir = DOWN_LEFT;
 				if (angleToSmiley > 7*PI/6 ) dir = UP_LEFT;
 				
@@ -400,7 +399,7 @@ void MushroomBoss::doArms(float dt) {
 				//Throw bomb
 				//The direction will be UP_RIGHT, RIGHT, or DOWN_RIGHT, based on increments of PI/3 (divides the circle into 6 pieces)
 				int dir = RIGHT;
-				float angleToSmiley = getAngleBetween(x,y,thePlayer->x,thePlayer->y);
+				float angleToSmiley = getAngleBetween(x,y,smh->player->x,smh->player->y);
 				if (angleToSmiley > PI && angleToSmiley < 11*PI/6) dir = UP_RIGHT;
 				if (angleToSmiley <= PI && angleToSmiley > PI/6) dir = DOWN_RIGHT;
 				
@@ -461,8 +460,8 @@ void MushroomBoss::addBomb(float _x,float _y) {
 	newBomb.x0=newBomb.xBomb=_x;
 	newBomb.y0=newBomb.yBomb=_y;
 
-	float angleToSmiley = getAngleBetween(_x,_y,thePlayer->x,thePlayer->y);
-	float distanceToSmiley = distance(_x,_y,thePlayer->x,thePlayer->y);
+	float angleToSmiley = getAngleBetween(_x,_y,smh->player->x,smh->player->y);
+	float distanceToSmiley = distance(_x,_y,smh->player->x,smh->player->y);
 
 	angleToSmiley += hge->Random_Float(-0.314159,0.314159);
 	distanceToSmiley += hge->Random_Float(-48,48);
@@ -539,12 +538,12 @@ void MushroomBoss::doExplosions(float dt) {
 			i->stillExpanding=false;
 		}
 
-		if (i->collisionCircle->testCircle(thePlayer->collisionCircle)) {
+		if (i->collisionCircle->testCircle(smh->player->collisionCircle)) {
 			if (i->stillExpanding) {
-				float angleToSmiley = getAngleBetween(i->collisionCircle->x,i->collisionCircle->y,thePlayer->x,thePlayer->y);
-				thePlayer->modifyVelocity(EXPLOSION_KNOCKBACK_POWER * cos(angleToSmiley),EXPLOSION_KNOCKBACK_POWER * sin(angleToSmiley));
+				float angleToSmiley = getAngleBetween(i->collisionCircle->x,i->collisionCircle->y,smh->player->x,smh->player->y);
+				smh->player->modifyVelocity(EXPLOSION_KNOCKBACK_POWER * cos(angleToSmiley),EXPLOSION_KNOCKBACK_POWER * sin(angleToSmiley));
 			}
-			thePlayer->dealDamage(EXPLOSION_DAMAGE,true);
+			smh->player->dealDamage(EXPLOSION_DAMAGE,true);
 		}
 		
 		if (timePassedSince(i->timeBegan) >= EXPLOSION_LIFE_TIME) {

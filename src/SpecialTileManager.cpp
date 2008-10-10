@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "smiley.h"
 #include "SpecialTileManager.h"
 #include "player.h"
@@ -24,10 +25,10 @@
 #define SILLY_PAD_TIME 40		//Number of seconds silly pads stay active
 
 extern Environment *theEnvironment;
-extern Player *thePlayer;
 extern ProjectileManager *projectileManager;
 extern hgeResourceManager *resources;
 extern HGE *hge;
+extern SMH *smh;
 
 extern float gameTime;
 extern bool debugMode;
@@ -104,7 +105,7 @@ void SpecialTileManager::updateIceBlocks(float dt) {
 	std::list<IceBlock>::iterator i;
 	for(i = iceBlockList.begin(); i != iceBlockList.end(); i++) {
 		collisionBox->SetRadius(i->gridX*64.0+32.0, i->gridY*64.0+32.0,30.0);
-		if (!i->hasBeenMelted && thePlayer->fireBreathParticle->testCollision(collisionBox)) {
+		if (!i->hasBeenMelted && smh->player->fireBreathParticle->testCollision(collisionBox)) {
 			i->hasBeenMelted = true;
 			i->timeMelted = gameTime;
 		}
@@ -294,9 +295,9 @@ void SpecialTileManager::updateSillyPads(float dt) {
 		if (timePassedSince(i->timePlaced) > SILLY_PAD_TIME ||
 				projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_FRISBEE) > 0 ||
 				projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_LIGHTNING_ORB) > 0 ||
-				thePlayer->iceBreathParticle->testCollision(collisionBox) ||
-				thePlayer->fireBreathParticle->testCollision(collisionBox) ||
-				thePlayer->getTongue()->testCollision(collisionBox)) {
+				smh->player->iceBreathParticle->testCollision(collisionBox) ||
+				smh->player->fireBreathParticle->testCollision(collisionBox) ||
+				smh->player->getTongue()->testCollision(collisionBox)) {
 			i = sillyPadList.erase(i);
 		}
 	}
@@ -378,13 +379,13 @@ void SpecialTileManager::updateFlames(float dt) {
 
 		//Damage and knock the player back if they run into the fire
 		i->collisionBox->SetRadius(i->x, i->y, 20.0);
-		if (thePlayer->collisionCircle->testBox(i->collisionBox)) {
-			thePlayer->dealDamageAndKnockback(1.0, true, true, 100.0, i->x, i->y); 
+		if (smh->player->collisionCircle->testBox(i->collisionBox)) {
+			smh->player->dealDamageAndKnockback(1.0, true, true, 100.0, i->x, i->y); 
 		}
 
 		//Flames are put out by ice breath. The flame isn't deleted yet so that
 		//the flame particle can animate to completion
-		if (i->timeFlamePutOut < 0.0 && thePlayer->iceBreathParticle->testCollision(i->collisionBox)) {
+		if (i->timeFlamePutOut < 0.0 && smh->player->iceBreathParticle->testCollision(i->collisionBox)) {
 			i->timeFlamePutOut = gameTime;
 			i->particle->Stop();
 		}
@@ -472,11 +473,11 @@ void SpecialTileManager::updateMushrooms(float dt) {
 	for(i = theMushrooms.begin(); i != theMushrooms.end(); i++) {
 		switch (i->state) {
 			case MUSHROOM_STATE_IDLING:
-				if (i->mushroomCollisionCircle->testCircle(thePlayer->collisionCircle) && !thePlayer->isFlashing()) {
+				if (i->mushroomCollisionCircle->testCircle(smh->player->collisionCircle) && !smh->player->isFlashing()) {
 					i->state = MUSHROOM_STATE_EXPLODING;
 					i->beginExplodeTime = gameTime;
 					explosions->SpawnPS(&resources->GetParticleSystem("explosionLarge")->info,i->x+32,i->y+32);
-					thePlayer->dealDamageAndKnockback(MUSHROOM_EXPLOSION_DAMAGE,true,MUSHROOM_EXPLOSION_KNOCKBACK,i->x+32,i->y+32);
+					smh->player->dealDamageAndKnockback(MUSHROOM_EXPLOSION_DAMAGE,true,MUSHROOM_EXPLOSION_KNOCKBACK,i->x+32,i->y+32);
                 }
 				break;
 			case MUSHROOM_STATE_EXPLODING:

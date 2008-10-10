@@ -1,12 +1,13 @@
+#include "SMH.h"
 #include "enemy.h"
 #include "player.h"
 #include "environment.h"
 #include "hgeresource.h"
 #include "smiley.h"
 
+extern SMH *smh;
 extern hgeResourceManager *resources;
 extern Environment *theEnvironment;
-extern Player *thePlayer;
 extern HGE *hge;
 extern float gameTime;
 
@@ -110,8 +111,8 @@ void E_BombGenerator::moveFuseParticle() {
 void E_BombGenerator::update(float dt) {
 
 	if (bombState == BOMB_GENERATOR_WAITING) {
-		if (theEnvironment->collision[int(thePlayer->x/64)][int(thePlayer->y/64)] == BOMB_PAD_UP || theEnvironment->collision[int(thePlayer->x/64)][int(thePlayer->y/64)] == BOMB_PAD_DOWN) {
-			if (theEnvironment->ids[int(thePlayer->x/64)][int(thePlayer->y)/64] == theEnvironment->ids[int(x/64)][int(y/64)]) {
+		if (theEnvironment->collision[int(smh->player->x/64)][int(smh->player->y/64)] == BOMB_PAD_UP || theEnvironment->collision[int(smh->player->x/64)][int(smh->player->y/64)] == BOMB_PAD_DOWN) {
+			if (theEnvironment->ids[int(smh->player->x/64)][int(smh->player->y)/64] == theEnvironment->ids[int(x/64)][int(y/64)]) {
 
 				bombSpawnAnimation->Play();
 				bombState=BOMB_GENERATOR_OPEN_DOOR;
@@ -165,7 +166,7 @@ void E_BombGenerator::update(float dt) {
 				break;
 		}; //end switch facing
 
-		if (distance(thePlayer->x,thePlayer->y,bomb.x,bomb.y) <= BOMB_PROXIMITY_TO_EXPLODE) {
+		if (distance(smh->player->x,smh->player->y,bomb.x,bomb.y) <= BOMB_PROXIMITY_TO_EXPLODE) {
 			bombState = BOMB_GENERATOR_BOMB_COUNTING_DOWN;
 			bombEyesGlowAnimation->Play();
 			startCountdownTime = gameTime;

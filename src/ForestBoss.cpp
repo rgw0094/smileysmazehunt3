@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "smiley.h"
 #include "ForestBoss.h"
 #include "hge.h"
@@ -7,23 +8,21 @@
 #include "ProjectileManager.h"
 #include "lootmanager.h"
 #include "environment.h"
-#include "SaveManager.h"
 #include "SoundManager.h"
 #include "Tongue.h"
 #include "WeaponParticle.h"
 #include "WindowManager.h"
 #include "CollisionCircle.h"
 
+extern SMH *smh;
 extern HGE *hge;
 extern WindowManager *windowManager;
 extern hgeResourceManager *resources;
-extern Player *thePlayer;
 extern EnemyGroupManager *enemyGroupManager;
 extern bool debugMode;
 extern ProjectileManager *projectileManager;
 extern LootManager *lootManager;
 extern Environment *theEnvironment;
-extern SaveManager *saveManager;
 extern SoundManager *soundManager;
 extern float gameTime;
 
@@ -85,14 +84,14 @@ bool ForestBoss::update(float dt) {
 	}
 
 	//Show Garmborn's tongue text the first time Smiley licks him.
-	if (thePlayer->getTongue()->testCollision(collisionBox) && !lickedYet) {
+	if (smh->player->getTongue()->testCollision(collisionBox) && !lickedYet) {
 		lickedYet = true;
 		windowManager->openDialogueTextBox(-1, FORESTBOSS_TONGUETEXT);
 	}
 
 	//Smiley collision
-	if (thePlayer->collisionCircle->testBox(collisionBox)) {
-		thePlayer->dealDamageAndKnockback(COLLISION_DAMAGE, true, 165, x, y);
+	if (smh->player->collisionCircle->testBox(collisionBox)) {
+		smh->player->dealDamageAndKnockback(COLLISION_DAMAGE, true, 165, x, y);
 	}	
 
 	//Update the treelets and owlets
@@ -160,7 +159,7 @@ bool ForestBoss::update(float dt) {
 			lootManager->addLoot(LOOT_NEW_ABILITY, x, y, SPRINT_BOOTS);
 			soundManager->playMusic("forestMusic");
 			enemyGroupManager->notifyOfDeath(groupID);
-			saveManager->killBoss(FOREST_BOSS);
+			smh->saveManager->killBoss(FOREST_BOSS);
 			return true; //Return true to delete the boss
 		}
 	}
@@ -203,8 +202,8 @@ void ForestBoss::updateTreelets(float dt) {
 										treeletLocs[i].y + 53.0);
 
 				//Smiley collision
-				if (thePlayer->collisionCircle->testBox(treeletCollisionBox)) {
-					thePlayer->dealDamageAndKnockback(TREELET_COLLISION_DAMAGE,true, 125,treeletLocs[i].x, treeletLocs[i].y);
+				if (smh->player->collisionCircle->testBox(treeletCollisionBox)) {
+					smh->player->dealDamageAndKnockback(TREELET_COLLISION_DAMAGE,true, 125,treeletLocs[i].x, treeletLocs[i].y);
 				}
 				
 				//Check for frisbee collision
@@ -317,7 +316,7 @@ void ForestBoss::spawnTreelets() {
 		do {
 			loc = hge->Random_Int(0,NUM_TREELET_LOCS);
 		} while(treeletLocs[loc].occupied || 
-			    (numTreeletsToSpawn <= 8 && abs(distance(treeletLocs[loc].x, treeletLocs[loc].y, thePlayer->x, thePlayer->y)) < 150));
+			    (numTreeletsToSpawn <= 8 && abs(distance(treeletLocs[loc].x, treeletLocs[loc].y, smh->player->x, smh->player->y)) < 150));
 
 
 		treeletLocs[loc].occupied = true;
@@ -430,15 +429,15 @@ void ForestBoss::updateOwlets(float dt) {
 		bool collision = false;
 
 		//Check for collision with Smiley
-		if (i->collisionCircle->testCircle(thePlayer->collisionCircle)) {
-			thePlayer->dealDamage(OWLET_DAMAGE, true);
+		if (i->collisionCircle->testCircle(smh->player->collisionCircle)) {
+			smh->player->dealDamage(OWLET_DAMAGE, true);
 			collision = true;
 		}
 
 		//Check for collision with walls and Smiley's weapons
 		if (theEnvironment->collisionAt(i->x, i->y) == UNWALKABLE ||
-				thePlayer->getTongue()->testCollision(i->collisionCircle) ||
-				thePlayer->fireBreathParticle->testCollision(i->collisionCircle)) {
+				smh->player->getTongue()->testCollision(i->collisionCircle) ||
+				smh->player->fireBreathParticle->testCollision(i->collisionCircle)) {
 			collision = true;
 		}
 
@@ -458,7 +457,7 @@ void ForestBoss::updateOwlets(float dt) {
 
 		//After the owlets move away from Garmborn they dive bomb Smiley
 		if (!i->startedDiveBomb && timePassedSince(i->timeSpawned) > 1.5) {
-			i->angle = getAngleBetween(i->x, i->y, thePlayer->x, thePlayer->y) +
+			i->angle = getAngleBetween(i->x, i->y, smh->player->x, smh->player->y) +
 				hge->Random_Float(-.1*PI, .1*PI);
 			i->dx = 600.0*cos(i->angle);
 			i->dy = 600.0*sin(i->angle);

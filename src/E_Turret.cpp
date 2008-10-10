@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "enemy.h"
 #include "player.h"
 #include "environment.h"
@@ -5,9 +6,9 @@
 #include "hgeresource.h"
 #include "smiley.h"
 
+extern SMH *smh;
 extern hgeResourceManager *resources;
 extern Environment *theEnvironment;
-extern Player *thePlayer;
 extern HGE *hge;
 extern float gameTime;
 extern ProjectileManager *projectileManager;

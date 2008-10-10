@@ -1,16 +1,15 @@
+#include "SMH.h"
 #include "LoadingScreen.h"
-#include "SaveManager.h"
 #include "smiley.h"
 #include "Environment.h"
 #include "Player.h"
 #include "SoundManager.h"
 #include "hgeresource.h"
 
+extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern SaveManager *saveManager;
 extern Environment *theEnvironment;
-extern Player *thePlayer;
 extern SoundManager *soundManager;
 
 LoadingScreen::LoadingScreen(int _fileNumber, bool _fromLoadScreen) {
@@ -41,10 +40,10 @@ bool LoadingScreen::update(float dt, float mouseX, float mouseY) {
 	
 	//Perform the load
 	if (!startedLoadYet) {
-		if (saveManager->isFileEmpty(fileNumber)) {
-			saveManager->startNewGame(fileNumber);
+		if (smh->saveManager->isFileEmpty(fileNumber)) {
+			smh->saveManager->startNewGame(fileNumber);
 		} else {
-			saveManager->load(fileNumber);
+			smh->saveManager->load(fileNumber);
 		}
 		startedLoadYet = true;
 	}
@@ -52,14 +51,14 @@ bool LoadingScreen::update(float dt, float mouseX, float mouseY) {
 	//Make sure the load screen is up for at least a little bit so that it doesn't just flash up
 	//if the person's computer is too fast.
 	if (hge->Timer_GetTime() - timeEnteredScreen > 1.1) {
-		int x = saveManager->playerGridX;
-		int y = saveManager->playerGridY;
-		theEnvironment->loadArea(saveManager->currentArea, saveManager->currentArea);
-		thePlayer->moveTo(x, y);
+		int x = smh->saveManager->playerGridX;
+		int y = smh->saveManager->playerGridY;
+		theEnvironment->loadArea(smh->saveManager->currentArea, smh->saveManager->currentArea);
+		smh->player->moveTo(x, y);
 		theEnvironment->update(0.0); //update for screen offsets
-		thePlayer->reset();
-		thePlayer->setHealth(saveManager->playerHealth);
-		thePlayer->setMana(saveManager->playerMana);
+		smh->player->reset();
+		smh->player->setHealth(smh->saveManager->playerHealth);
+		smh->player->setMana(smh->saveManager->playerMana);
 
 		enterGameState(GAME);
 	}
