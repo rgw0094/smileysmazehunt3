@@ -2,24 +2,24 @@
  * Handles the circle zooming in/out effect when Smiley is relocated to a new position and
  * displays the zone name text when Smiley enters a new zone.
  */
+#include "SMH.h"
 #include "LoadEffectManager.h"
 #include "smiley.h"
 #include "hgeresource.h"
 #include "SaveManager.h"
 #include "Environment.h"
 #include "WindowManager.h"
-#include "GameData.h"
 #include "EnemyManager.h"
 #include "LootManager.h"
 #include "ProjectileManager.h"
 #include "Player.h"
 
+extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
 extern SaveManager *saveManager;
 extern Environment *theEnvironment;
 extern WindowManager *windowManager;
-extern GameData *gameData;
 extern LootManager *lootManager;
 extern ProjectileManager *projectileManager;
 extern EnemyManager *enemyManager;
@@ -110,7 +110,7 @@ void LoadEffectManager::draw(float dt) {
 			resources->GetFont("newAreaFnt")->SetColor(ARGB(zoneTextAlpha,255,255,255));
 		}
 		resources->GetFont("newAreaFnt")->printf(512,200,HGETEXT_CENTER, 
-			gameData->getAreaName(saveManager->currentArea));
+			smh->Data()->getAreaName(saveManager->currentArea));
 	}
 
 }

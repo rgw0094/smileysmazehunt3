@@ -1,11 +1,11 @@
+#include "SMH.h"
 #include "CreditsScreen.h"
 #include "menu.h"
-#include "GameData.h"
 #include "Smiley.h"
 
 #include "hgeresource.h"
 
-extern GameData *gameData;
+extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
 extern Menu *theMenu;
@@ -100,7 +100,7 @@ void CreditsScreen::init() {
 	//-------Initialize enemies--------
 	int enemyCounter = 0;
 
-	std::list<EnemyName> enemyNames = gameData->getEnemyNames();
+	std::list<EnemyName> enemyNames = smh->Data()->getEnemyNames();
 	for (std::list<EnemyName>::iterator i = enemyNames.begin(); i != enemyNames.end(); i++) {
 
 		CreditsItem newEnemy;
@@ -108,8 +108,8 @@ void CreditsScreen::init() {
 		newEnemy.x = 341 + enemyCounter%2 * 341;
 		newEnemy.y = ENEMY_START + 135.0 + 175.0 * (enemyCounter - enemyCounter%2);
 		newEnemy.graphic = 	new hgeSprite(resources->GetTexture("enemies"), 
-			gameData->getEnemyInfo(i->id).gCol*64, 
-			gameData->getEnemyInfo(i->id).gRow*64, 64.0, 64.0);
+			smh->Data()->getEnemyInfo(i->id).gCol*64, 
+			smh->Data()->getEnemyInfo(i->id).gRow*64, 64.0, 64.0);
 		newEnemy.graphic->SetHotSpot(32.0,32.0);
 
 		enemyList.push_back(newEnemy);

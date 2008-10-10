@@ -1,12 +1,12 @@
+#include "SMH.h"
 #include "button.h"
 #include "hge.h"
 #include "hgefont.h"
 #include "hgeresource.h"
-#include "Input.h"
 
 extern HGE *hge;
+extern SMH *smh;
 extern hgeResourceManager *resources;
-extern Input *input;
 
 Button::Button(float _x, float _y, char* _text) {
 	width = 250.0f;
@@ -41,5 +41,5 @@ void Button::update(float mouseX, float mouseY) {
 }
 
 bool Button::isClicked() {
-	return (highlighted && (hge->Input_KeyDown(HGEK_LBUTTON)|| input->keyPressed(INPUT_ATTACK)));
+	return (highlighted && (hge->Input_KeyDown(HGEK_LBUTTON)|| smh->Input()->keyPressed(INPUT_ATTACK)));
 }

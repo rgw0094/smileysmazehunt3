@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "environment.h"
 #include "EnemyManager.h"
 #include "enemy.h"
@@ -5,7 +6,6 @@
 #include "ProjectileManager.h"
 #include "player.h"
 #include "EnemyGroupManager.h"
-#include "GameData.h"
 #include "CollisionCircle.h"
 #include "SaveManager.h"
 
@@ -13,6 +13,7 @@
 #include "hgeparticle.h"
 #include "hgeresource.h"
 
+extern SMH *smh;
 extern HGE *hge;
 extern Environment *theEnvironment;
 extern Player *thePlayer;
@@ -21,7 +22,6 @@ extern ProjectileManager *projectileManager;
 extern bool debugMode;
 extern hgeResourceManager *resources;
 extern EnemyGroupManager *enemyGroupManager;
-extern GameData *gameData;
 extern SaveManager *saveManager;
 extern float gameTime;
 
@@ -54,7 +54,7 @@ void EnemyManager::addEnemy(int id, int x, int y, float spawnHealthChance, float
 	newEnemy.spawnHealthChance = spawnHealthChance;
 	newEnemy.spawnManaChance = spawnManaChance;
 
-	switch (gameData->getEnemyInfo(id).enemyType) {
+	switch (smh->Data()->getEnemyInfo(id).enemyType) {
 		case ENEMY_EVIL_EYE:
 			newEnemy.enemy = new E_EvilEye(id, x, y, groupID);
 			newEnemy.spawnHealthChance = 0.0;
@@ -267,7 +267,7 @@ void EnemyManager::freezeEnemies(int x, int y) {
 	std::list<EnemyStruct>::iterator i;
 	for (i = enemyList.begin(); i != enemyList.end(); i++) {
 		//Check collision
-		if (!gameData->getEnemyInfo(i->enemy->id).immuneToFreeze && i->enemy->collisionBox->TestPoint(x,y)) {
+		if (!smh->Data()->getEnemyInfo(i->enemy->id).immuneToFreeze && i->enemy->collisionBox->TestPoint(x,y)) {
 			//Freeze sound effect is fucked up
 			//if (!dickens) hge->Effect_Play(resources->GetEffect("snd_freeze"));
 			dickens = true;
@@ -307,7 +307,7 @@ bool EnemyManager::hitEnemiesWithProjectile(hgeRect *collisionBox, float damage,
 			//Notify the enemy of what type of projectile it was hit with
 			i->enemy->hitWithProjectile(type);
 
-			if (gameData->getEnemyInfo(i->enemy->id).invincible) return true;
+			if (smh->Data()->getEnemyInfo(i->enemy->id).invincible) return true;
 
 			if (type == PROJECTILE_FRISBEE) {
 				if (!i->enemy->immuneToStun) {

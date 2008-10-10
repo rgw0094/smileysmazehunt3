@@ -1,4 +1,4 @@
-#include "Input.h"
+#include "SMH.h"
 #include "hge.h"
 #include <windows.h>
 #include <basetsd.h>
@@ -22,7 +22,7 @@ BOOL CALLBACK    EnumJoysticksCallback( const DIDEVICEINSTANCE* pdidInstance, VO
 /**
  * Constructor
  */
-Input::Input() {
+SmileyInput::SmileyInput() {
 
 	g_pDI=NULL;
 	g_pJoystick=NULL;
@@ -52,7 +52,7 @@ Input::Input() {
 /**
  * Destructor
  */ 
-Input::~Input() {
+SmileyInput::~SmileyInput() {
 	saveInputs();
 	FreeDirectInput();
 }
@@ -61,7 +61,7 @@ Input::~Input() {
 // Name: InitInput()
 // Desc: Acquires the gamepad
 //-----------------------------------------------------------------------------
-void Input::InitInput(HWND hDlg) { 
+void SmileyInput::InitInput(HWND hDlg) { 
 	acquiredJoystick = (FAILED(InitDirectInput(hDlg)) && FAILED(g_pJoystick->Acquire()));
 }
 
@@ -69,7 +69,7 @@ void Input::InitInput(HWND hDlg) {
 // Name: UpdateInput()
 // Desc: Updates the input
 //-----------------------------------------------------------------------------
-void Input::UpdateInput() {
+void SmileyInput::UpdateInput() {
 	
 	//Update previous states
 	for (int i = 0; i < NUM_INPUTS; i++) {
@@ -150,7 +150,7 @@ void Input::UpdateInput() {
 // Name: InitDirectInput()
 // Desc: Initialize the DirectInput variables.
 //-----------------------------------------------------------------------------
-HRESULT Input::InitDirectInput( HWND hDlg ) {
+HRESULT SmileyInput::InitDirectInput( HWND hDlg ) {
 	
     HRESULT hr;
 
@@ -235,7 +235,7 @@ BOOL CALLBACK EnumJoysticksCallback( const DIDEVICEINSTANCE* pdidInstance, VOID*
 // Name: FreeDirectInput()
 // Desc: Release the DirectInput variables.
 //-----------------------------------------------------------------------------
-VOID Input::FreeDirectInput() {
+VOID SmileyInput::FreeDirectInput() {
     // Unacquire the device one last time just in case 
     // the app tried to exit while the device is still acquired.
     if( g_pJoystick ) 
@@ -306,7 +306,7 @@ BOOL CALLBACK EnumAxesCallback(const DIDEVICEOBJECTINSTANCE* pdidoi, VOID* pCont
 // Name: keyDown()
 // Desc: Returns whether or not the specified key is currently pressed.
 //-----------------------------------------------------------------------------
-bool Input::keyDown(int key) {
+bool SmileyInput::keyDown(int key) {
 	return inputs[key].pressed;
 }
 
@@ -314,7 +314,7 @@ bool Input::keyDown(int key) {
 // Name: keyPressed()
 // Desc: Returns whether or not the specified key was pressed this frame.
 //-----------------------------------------------------------------------------
-bool Input::keyPressed(int key) {
+bool SmileyInput::keyPressed(int key) {
 	return (inputs[key].pressed && !inputs[key].prevPressed);
 }
 
@@ -322,7 +322,7 @@ bool Input::keyPressed(int key) {
 // Name: saveInputs()
 // Desc: Saves the input values to Smiley.ini
 //-----------------------------------------------------------------------------
-void Input::saveInputs() {
+void SmileyInput::saveInputs() {
 
 	//Save code for each input
 	hge->Ini_SetInt("Controls","left",inputs[INPUT_LEFT].code);
@@ -354,7 +354,7 @@ void Input::saveInputs() {
 // Name: loadInputs()
 // Desc: Loads the input values from Smiley.ini
 //-----------------------------------------------------------------------------
-void Input::loadInputs() {
+void SmileyInput::loadInputs() {
 
 	//Load code for each input
 	inputs[INPUT_LEFT].code = hge->Ini_GetInt("Controls","left",HGEK_LEFT);
@@ -386,7 +386,7 @@ void Input::loadInputs() {
 // Name: setEditMode()
 // Desc: Sets the specified input's editMode to true and the rest to false
 //-----------------------------------------------------------------------------
-void Input::setEditMode(int whichInput) {
+void SmileyInput::setEditMode(int whichInput) {
 	for (int i = 0; i < NUM_INPUTS; i++) {
 		inputs[i].editMode = (i == whichInput);
 	}
@@ -395,7 +395,7 @@ void Input::setEditMode(int whichInput) {
 /**
  * Returns the name of the specified input. Used for the menu.
  */
-const char* Input::getInputName(int whichInput) {
+const char* SmileyInput::getInputName(int whichInput) {
 	switch (whichInput) {
 		case INPUT_LEFT: return "Left";
 		case INPUT_RIGHT: return "Right";
@@ -414,7 +414,7 @@ const char* Input::getInputName(int whichInput) {
 /**
  * Returns a description of the specified input. Used for the menu.
  */
-std::string Input::getInputDescription(int whichInput) {
+std::string SmileyInput::getInputDescription(int whichInput) {
 
 	std::string description;
 
@@ -463,14 +463,14 @@ std::string Input::getInputDescription(int whichInput) {
 /**
  * Returns whether or not edit mode is enabled for the specified input.
  */
-bool Input::isEditModeEnabled(int whichInput) {
+bool SmileyInput::isEditModeEnabled(int whichInput) {
 	return inputs[whichInput].editMode;
 }
 
 /**
  * Listens for a new input.
  */
-void Input::listenForNewInput(int whichInput) {
+void SmileyInput::listenForNewInput(int whichInput) {
 
 	//Check keyboard buttons
 	for (int i = 0; i < 255; i++) {

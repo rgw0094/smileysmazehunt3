@@ -4,33 +4,20 @@
 #include "smiley.h"
 #include "environment.h"
 #include "player.h"
-#include "SaveManager.h"
-#include "EnemyManager.h"
-#include "EnemyGroupManager.h"
-#include "LootManager.h"
-#include "ProjectileManager.h"
-#include "NPCManager.h"
-#include "boss.h"
-#include "WindowManager.h"
 #include "hgerect.h"
+#include "boss.h"
+#include "SaveManager.h"
 
 extern bool debugMode;
 extern int gameState;
 extern hgeResourceManager *resources;
 extern float gameTime;
 extern int frameCounter;
+extern SaveManager *saveManager;
 
 extern HGE *hge;
 extern Environment *theEnvironment;
 extern Player *thePlayer;
-extern SaveManager *saveManager;
-extern EnemyGroupManager *enemyGroupManager;
-extern ProjectileManager *projectileManager;
-extern LootManager *lootManager;
-extern NPCManager *npcManager;
-extern EnemyManager *enemyManager;
-extern BossManager *bossManager;
-extern WindowManager *windowManager;
 
 /**
  * Switches the game state

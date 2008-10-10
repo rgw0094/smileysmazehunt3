@@ -1,6 +1,6 @@
+#include "SMH.h"
 #include "minimenu.h"
 #include "menu.h"
-#include "Input.h"
 #include "SaveManager.h"
 #include "hge.h"
 #include "hgeresource.h"
@@ -10,10 +10,10 @@
 #include "OptionsWindow.h"
 
 extern HGE *hge;
+extern SMH *smh;
 extern HTEXTURE menuItemTexture;
 extern Menu *theMenu;
 extern hgeResourceManager *resources;
-extern Input *input;
 extern SaveManager *saveManager;
 extern WindowManager *windowManager;
 extern float gameTime;
@@ -83,10 +83,10 @@ bool MiniMenu::update(float dt) {
 
 	//Keyboard/Gamepad input to move mouse
 	if (hge->Input_IsMouseOver()) {
-		if (input->keyDown(INPUT_LEFT)) mouseX -= 700.0f*dt;
-		if (input->keyDown(INPUT_RIGHT)) mouseX += 700.0f*dt;
-		if (input->keyDown(INPUT_DOWN)) mouseY += 700.0f*dt;
-		if (input->keyDown(INPUT_UP)) mouseY -= 700.0f*dt;
+		if (smh->Input()->keyDown(INPUT_LEFT)) mouseX -= 700.0f*dt;
+		if (smh->Input()->keyDown(INPUT_RIGHT)) mouseX += 700.0f*dt;
+		if (smh->Input()->keyDown(INPUT_DOWN)) mouseY += 700.0f*dt;
+		if (smh->Input()->keyDown(INPUT_UP)) mouseY -= 700.0f*dt;
 		if (mouseX < 1.0) mouseX = 1.0;
 		if (mouseX > 1023.0) mouseX = 1023.0;
 		if (mouseY < 1.0) mouseY = 1.0;
