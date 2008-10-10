@@ -9,15 +9,8 @@
 #include "LoadingScreen.h"
 #include "CreditsScreen.h"
 
-#include "hge.h"
-#include "hgestrings.h"
-#include "hgeresource.h"
-
 //Objects
-extern HGE *hge;
 extern SMH *smh;
-extern hgeStringTable *stringTable;
-extern hgeResourceManager *resources;
 extern SoundManager *soundManager;
 
 //Variables
@@ -73,11 +66,11 @@ void Menu::openLoadScreen(int file, bool fromLoadScreen) {
  */
 bool Menu::update(float dt) {
 	
-	//Update mouse location
-	hge->Input_GetMousePos(&mouseX, &mouseY);
+	float mouseX = smh->input->getMouseX();
+	float mouseY = smh->input->getMouseY();
 
 	//Keyboard/Gamepad input to move mouse
-	if (hge->Input_IsMouseOver()) {
+	if (smh->input->isMouseInWindow()) {	
 		if (smh->input->keyDown(INPUT_LEFT)) mouseX -= 700.0f*dt;
 		if (smh->input->keyDown(INPUT_RIGHT)) mouseX += 700.0f*dt;
 		if (smh->input->keyDown(INPUT_DOWN)) mouseY += 700.0f*dt;
@@ -86,7 +79,7 @@ bool Menu::update(float dt) {
 		if (mouseX > 1023.0) mouseX = 1023.0;
 		if (mouseY < 1.0) mouseY = 1.0;
 		if (mouseY > 767.0) mouseY = 767.0;
-		hge->Input_SetMousePos(mouseX,mouseY);
+		smh->input->setMousePosition(mouseX, mouseY);
 	}
 
 	//Update the current screen
@@ -103,8 +96,8 @@ void Menu::draw(float dt) {
 	menuScreen->draw(dt);
 
 	//Draw the mouse
-	if (hge->Input_IsMouseOver() && currentScreen != LOADING_SCREEN && currentScreen != CREDITS_SCREEN) {
-		resources->GetSprite("mouseCursor")->Render(mouseX, mouseY);
+	if (smh->input->isMouseInWindow() && currentScreen != LOADING_SCREEN && currentScreen != CREDITS_SCREEN) {
+		smh->drawSprite("mouseCursor", smh->input->getMouseX(), smh->input->getMouseY());
 	}
 
 }
