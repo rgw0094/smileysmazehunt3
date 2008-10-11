@@ -9,7 +9,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern EnemyManager *enemyManager;
 
 #define LASER_LENGTH 20.0
 
@@ -115,7 +114,7 @@ void ProjectileManager::update(float dt) {
 
 		//Do collision with enemies
 		if (!i->hostile || i->id==PROJECTILE_TURRET_CANNONBALL) {
-			if (enemyManager->hitEnemiesWithProjectile(i->collisionBox, i->damage, i->id)) {
+			if (smh->enemyManager->hitEnemiesWithProjectile(i->collisionBox, i->damage, i->id)) {
 				deleteProjectile = true;
 			}
 		}
@@ -272,7 +271,7 @@ void ProjectileManager::update(float dt) {
 		if (deleteProjectile) {
 			//if it was a mushroom, and it is hostile, spawn an enemy mushroomlet
 			if (i->id == PROJECTILE_MINI_MUSHROOM && i->hostile) {
-				enemyManager->addEnemy(MINI_MUSHROOM_ENEMYID,i->x/64,i->y/64,0.25,0.75,-1);
+				smh->enemyManager->addEnemy(MINI_MUSHROOM_ENEMYID,i->x/64,i->y/64,0.25,0.75,-1);
 			}
 			delete i->collisionBox;
 			delete i->terrainCollisionBox;

@@ -17,7 +17,6 @@ extern SMH *smh;
 extern HGE *hge;
 extern LootManager *lootManager;
 extern ProjectileManager *projectileManager;
-extern EnemyManager *enemyManager;
 
 #define STATE_IN 0
 #define STATE_OUT 1
@@ -125,7 +124,7 @@ void LoadEffectManager::update(float dt) {
 				//Move smiley to a new location in the same area
 				smh->player->moveTo(destinationX, destinationY);
 				smh->environment->update(0.0);
-				enemyManager->update(0.0);
+				smh->enemyManager->update(0.0);
 				lootManager->update(0.0);
 				projectileManager->update(0.0);
 			} else {

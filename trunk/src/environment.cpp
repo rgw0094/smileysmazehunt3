@@ -32,7 +32,6 @@
 //Objects
 extern HGE *hge;
 extern SMH *smh;
-extern EnemyManager *enemyManager;
 extern LootManager *lootManager;
 extern ProjectileManager *projectileManager;
 extern TextBox *theTextBox;
@@ -139,7 +138,7 @@ Environment::~Environment() {
 void Environment::reset() {
 
 	bossManager->reset();
-	enemyManager->reset();
+	smh->enemyManager->reset();
 	projectileManager->reset();
 	lootManager->reset();
 	smh->npcManager->reset();
@@ -400,7 +399,7 @@ void Environment::loadArea(int id, int from) {
 				}
 				if (ids[col][row] != ENEMYGROUP_ENEMY_POPUP) {
 					//Don't spawn popup enemies yet
-					enemyManager->addEnemy(enemy-1,col,row, .2, .2, variable[col][row]);
+					smh->enemyManager->addEnemy(enemy-1,col,row, .2, .2, variable[col][row]);
 				}
 
 			//128 - 239 are NPCs
@@ -493,7 +492,7 @@ void Environment::loadArea(int id, int from) {
 
 	//Update to get shit set up
 	update(0.0);
-	enemyManager->update(0.0);
+	smh->enemyManager->update(0.0);
 
 	//Tell the LoadEffectManager to display the new area name
 	loadEffectManager->displayNewAreaName();

@@ -7,7 +7,6 @@
 #include "hge.h"
 
 extern SMH *smh;
-extern EnemyManager *enemyManager;
 extern HGE *hge;
 
 EnemyGroupManager::EnemyGroupManager() {
@@ -122,7 +121,7 @@ void EnemyGroupManager::triggerGroup(int whichGroup) {
 				if (smh->environment->enemyLayer[i][j] != -1 &&
 					smh->environment->ids[i][j] == ENEMYGROUP_ENEMY_POPUP &&
 					smh->environment->variable[i][j] == whichGroup) {
-						enemyManager->addEnemy(smh->environment->enemyLayer[i][j], i, j, 0.25, 0.25, whichGroup);
+						smh->enemyManager->addEnemy(smh->environment->enemyLayer[i][j], i, j, 0.25, 0.25, whichGroup);
 						addEnemy(smh->environment->variable[i][j]);
 						smh->environment->environmentParticles->SpawnPS(&smh->resources->GetParticleSystem("treeletSpawn")->info, i*64+32, j*64+32);
 					}

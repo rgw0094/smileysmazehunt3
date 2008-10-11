@@ -17,7 +17,6 @@
 extern SMH *smh;
 extern HGE *hge;
 extern ProjectileManager *projectileManager;
-extern EnemyManager *enemyManager;
 extern LootManager *lootManager;
 
 #define TEXT_DESERTBOSS_INTRO 130
@@ -229,7 +228,7 @@ bool DesertBoss::update(float dt) {
 		enterState(DESERTBOSS_FRIENDLY);
 		smh->windowManager->openDialogueTextBox(-1, DESERTBOSS_DEFEATTEXT);
 		smh->soundManager->fadeOutMusic();
-		enemyManager->killEnemies(CACTLET_ENEMYID);
+		smh->enemyManager->killEnemies(CACTLET_ENEMYID);
 	}
 
 	//Cornwallis fades away after the player closes the defeat text box
@@ -464,7 +463,7 @@ void DesertBoss::spawnCactlet() {
 
 	} while (abs(distance(cactletGridX, cactletGridY, smh->player->gridX, smh->player->gridY)) < 3);
 
-	enemyManager->addEnemy(CACTLET_ENEMYID, cactletGridX,cactletGridY,0.0,0.5, -1);
+	smh->enemyManager->addEnemy(CACTLET_ENEMYID, cactletGridX,cactletGridY,0.0,0.5, -1);
 
 	//Spawn a sand cloud
 	sandClouds->SpawnPS(&smh->resources->GetParticleSystem("sandCloud")->info,
