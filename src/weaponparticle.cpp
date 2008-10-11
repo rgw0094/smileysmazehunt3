@@ -8,10 +8,7 @@
 #include "smiley.h"
 
 HGE	*WeaponParticleSystem::hge=0;
-
-//Objects
 extern SMH *smh;
-extern EnemyManager *enemyManager;
 
 /**
  * Constructor
@@ -95,7 +92,7 @@ void WeaponParticleSystem::Update(float fDeltaTime) {
 
 		//Do collision
 		if (type == PARTICLE_ICE_BREATH) {
-			enemyManager->freezeEnemies(x, y);
+			smh->enemyManager->freezeEnemies(x, y);
 		} else if (type == PARTICLE_FIRE_NOVA || type == PARTICLE_FIRE_NOVA2) {
 			collisionBox->SetRadius(x, y, par->fSize);
 			if (smh->player->collisionCircle->testBox(collisionBox)) {

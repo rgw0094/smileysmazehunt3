@@ -13,7 +13,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern EnemyManager *enemyManager;
 
 #define CANDY_HEALTH 100
 

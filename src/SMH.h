@@ -25,6 +25,7 @@ class MainMenu;
 class NPCManager;
 class WindowManager;
 class EnemyGroupManager;
+class EnemyManager;
 
 //Classes defined here
 class SMH;
@@ -65,6 +66,7 @@ public:
 
 	//Game objects
 	EnemyGroupManager *enemyGroupManager;
+	EnemyManager *enemyManager;
 	Environment *environment;
 	GameData *gameData;
 	SmileyInput *input;

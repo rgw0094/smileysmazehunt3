@@ -11,7 +11,6 @@
 #include "hgeresource.h"
 #include "hgeanim.h"
 
-extern EnemyManager *enemyManager;
 extern HGE *hge;
 extern SMH *smh;
 
@@ -67,7 +66,7 @@ void Tongue::update(float dt) {
 	if (!attacking) return;
 
 	//Hit Enemies
-	enemyManager->tongueCollision(this, smh->player->getDamage());
+	smh->enemyManager->tongueCollision(this, smh->player->getDamage());
 	
 	//Activate stuff - only one thing can be activated per attack
 	if (!hasActivatedSomething) {

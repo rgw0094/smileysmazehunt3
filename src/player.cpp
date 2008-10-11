@@ -21,7 +21,6 @@
 //Objects
 extern HGE *hge;
 extern SMH *smh;
-extern EnemyManager *enemyManager;
 extern hgeParticleSystem *iceBreathParticle;
 extern ProjectileManager *projectileManager;
 extern TextBox *theTextBox;
@@ -235,7 +234,7 @@ void Player::doMove(float dt) {
 
 	//Check for collision with frozen enemies
 	collisionCircle->set(x + xDist, y + yDist, (PLAYER_WIDTH/2.0-3.0)*shrinkScale);
-	bool dickens = enemyManager->collidesWithFrozenEnemy(collisionCircle);
+	bool dickens = smh->enemyManager->collidesWithFrozenEnemy(collisionCircle);
 	collisionCircle->set(x,y,(PLAYER_WIDTH/2.0-3.0)*shrinkScale);
 	if (dickens) return;
 

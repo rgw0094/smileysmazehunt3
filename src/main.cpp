@@ -18,7 +18,6 @@
 
 //Global Objects
 HGE *hge=0;
-EnemyManager *enemyManager;
 LootManager *lootManager;
 ProjectileManager *projectileManager;
 BossManager *bossManager;
@@ -59,24 +58,17 @@ void loadResources() {
  */
 void loadGameObjects() {
 
-	hge->System_Log("*****Creating Objects*****");
-
 	smh = new SMH();
 	smh->init();
 			
 	hge->System_Log("Creating LoadEffectManager");
 	loadEffectManager = new LoadEffectManager();
 		
-	hge->System_Log("Creating Enemy Manager");
-	enemyManager = new EnemyManager();
-		
 	hge->System_Log("Creating Loot Manager");
 	lootManager = new LootManager();
 		
 	hge->System_Log("Creating Projectile Manager");
-	projectileManager = new ProjectileManager();	
-	
-	
+	projectileManager = new ProjectileManager();		
 
 	hge->System_Log("Creating Boss Manager");
 	bossManager = new BossManager();
@@ -84,7 +76,6 @@ void loadGameObjects() {
 	hge->System_Log("Creating FenwarManager");
 	fenwarManager = new FenwarManager();
 
-	hge->System_Log("******************************");
 }
 
 /**
@@ -198,7 +189,7 @@ bool FrameFunc() {
 					smh->player->update(dt);
 					smh->environment->update(dt);
 					bossManager->update(dt);
-					enemyManager->update(dt);
+					smh->enemyManager->update(dt);
 					lootManager->update(dt);
 					projectileManager->update(dt);
 					smh->npcManager->update(dt);
@@ -231,7 +222,7 @@ bool RenderFunc() {
 		//Draw objects - order is very important!!!
 		smh->environment->draw(dt);
 		lootManager->draw(dt);
-		enemyManager->draw(dt);
+		smh->enemyManager->draw(dt);
 		smh->npcManager->draw(dt);
 		bossManager->drawBeforeSmiley(dt);
 		smh->player->draw(dt);

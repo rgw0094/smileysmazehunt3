@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "WindowFramework.h"
 #include "EnemyGroupManager.h"
+#include "EnemyManager.h"
 
 extern HGE *hge;
 
@@ -37,6 +38,9 @@ void SMH::init() {
 
 	log("Creating Player");
 	player = new Player();
+
+	log("Creating Enemy Manager");
+	enemyManager = new EnemyManager();
 
 	log("Creating Input");
 	input = new SmileyInput();

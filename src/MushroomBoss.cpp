@@ -16,7 +16,6 @@
 extern SMH *smh;
 extern HGE *hge;
 extern ProjectileManager *projectileManager;
-extern EnemyManager *enemyManager;
 extern LootManager *lootManager;
 
 #define MUSHBOOM_HEALTH 14.0
@@ -289,7 +288,7 @@ void MushroomBoss::doMiniMushrooms(float dt) {
 }
 
 void MushroomBoss::spawnMiniMushroom() {
-	enemyManager->addEnemy(MINI_MUSHROOM_ENEMYID, getGridX(x),getGridY(y),0.1,0.6, -1);
+	smh->enemyManager->addEnemy(MINI_MUSHROOM_ENEMYID, getGridX(x),getGridY(y),0.1,0.6, -1);
 }
 
 void MushroomBoss::spawnMiniMushroomProjectile() {
@@ -568,7 +567,7 @@ void MushroomBoss::initiateDeathSequence() {
 	killBombs();
 	killExplosions();
 	//Call func to get rid of mushroomlets
-	enemyManager->killEnemies(MINI_MUSHROOM_ENEMYID);
+	smh->enemyManager->killEnemies(MINI_MUSHROOM_ENEMYID);
 	
 	if (state <= MUSHBOOM_SPIRALING) {
 		enterState(MUSHBOOM_DYING_TEXT);

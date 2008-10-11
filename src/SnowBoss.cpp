@@ -15,7 +15,6 @@
 extern SMH *smh;
 extern HGE *hge;
 extern ProjectileManager *projectileManager;
-extern EnemyManager *enemyManager;
 extern LootManager *lootManager;
 
 SnowBoss::SnowBoss(int _gridX,int _gridY,int _groupID) {

@@ -14,7 +14,6 @@ using namespace std;
 
 extern SMH *smh;
 extern HGE *hge;
-extern EnemyManager *enemyManager;
 extern ProjectileManager *projectileManager;
 
 #define SMILELET_STATE_WAITING 0
@@ -183,7 +182,7 @@ void SmileletManager::doSmileletFollow(std::list<oneSmilelet>::iterator c) {
 		collisionRect.y1 = c->y - SMILELET_RADIUS;
 		collisionRect.y2 = c->y + SMILELET_RADIUS;
 		
-		if (enemyManager->testCollision(&collisionRect)) {
+		if (smh->enemyManager->testCollision(&collisionRect)) {
 			needsToPanic = true;
 		}
 

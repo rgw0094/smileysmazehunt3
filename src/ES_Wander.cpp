@@ -9,7 +9,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern EnemyManager *enemyManager;
 
 /**
  * Constructor
