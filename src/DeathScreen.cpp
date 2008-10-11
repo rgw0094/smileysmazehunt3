@@ -1,5 +1,4 @@
 #include "SMH.h"
-#include "DeathScreen.h"
 #include "hgeresource.h"
 #include "menu.h"
 #include "environment.h"
@@ -18,8 +17,8 @@ extern float darkness;
  * Constructor
  */
 DeathScreen::DeathScreen() {
-	buttons[QUIT_BUTTON] = new Button(250.0, 650.0, "Quit");
-	buttons[CONTINUE_BUTTON] = new Button(1024.0-250.0-250.0, 650.0, "Continue");
+	buttons[DS_QUIT_BUTTON] = new Button(250.0, 650.0, "Quit");
+	buttons[DS_CONTINUE_BUTTON] = new Button(1024.0-250.0-250.0, 650.0, "Continue");
 	alpha = 0;
 	darkness = 0.0;
 }
@@ -28,7 +27,7 @@ DeathScreen::DeathScreen() {
  * Destructor
  */
 DeathScreen::~DeathScreen() {
-	for (int i = 0; i < NUM_BUTTONS; i++) delete buttons[i];
+	for (int i = 0; i < DS_NUM_BUTTONS; i++) delete buttons[i];
 }
 
 /**
@@ -42,14 +41,14 @@ bool DeathScreen::update(float dt, float mouseX, float mouseY) {
 	}
 
 	//Click Quit
-	if (buttons[QUIT_BUTTON]->isClicked()) {
-		theMenu->setScreen(TITLE_SCREEN);
+	if (buttons[DS_QUIT_BUTTON]->isClicked()) {
+		smh->menu->setScreen(TITLE_SCREEN);
 		return false;
 	}
 
 	//Click Continue
-	if (buttons[CONTINUE_BUTTON]->isClicked()) {
-		theMenu->openLoadScreen(smh->saveManager->currentSave, false);
+	if (buttons[DS_CONTINUE_BUTTON]->isClicked()) {
+		smh->menu->openLoadScreen(smh->saveManager->currentSave, false);
 		return false;
 	}
 

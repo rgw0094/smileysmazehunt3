@@ -1,5 +1,4 @@
 #include "SMH.h"
-#include "CreditsScreen.h"
 #include "menu.h"
 #include "Smiley.h"
 
@@ -81,7 +80,7 @@ bool CreditsScreen::update(float dt, float mouseX, float mouseY) {
 
 	//Input
 	if (hge->Input_KeyDown(HGEK_ENTER)) {
-		theMenu->setScreen(TITLE_SCREEN);
+		smh->menu->setScreen(TITLE_SCREEN);
 		return false;
 	}
 	if (hge->Input_KeyDown(HGEK_DOWN)) offset += 400.0;

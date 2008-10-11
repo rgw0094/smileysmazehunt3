@@ -1,17 +1,14 @@
 #include "SMH.h"
 #include "minimenu.h"
 #include "menu.h"
-#include "hge.h"
 #include "hgeresource.h"
 #include "smiley.h"
 #include "Button.h"
 #include "WindowManager.h"
 #include "OptionsWindow.h"
 
-extern HGE *hge;
 extern SMH *smh;
 extern HTEXTURE menuItemTexture;
-extern Menu *theMenu;
 extern hgeResourceManager *resources;
 extern WindowManager *windowManager;
 extern float gameTime;
@@ -66,7 +63,7 @@ void MiniMenu::draw(float dt) {
 	}
 
 	//Draw the mouse
-	resources->GetSprite("mouseCursor")->Render(mouseX, mouseY);
+	smh->drawSprite("mouseCursor", smh->input->getMouseX(), smh->input->getMouseY());
 
 }
 
@@ -77,10 +74,11 @@ void MiniMenu::draw(float dt) {
 bool MiniMenu::update(float dt) {
 
 	//Update mouse
-	hge->Input_GetMousePos(&mouseX, &mouseY);
+	float mouseX = smh->input->getMouseX();
+	float mouseY = smh->input->getMouseY();
 
 	//Keyboard/Gamepad input to move mouse
-	if (hge->Input_IsMouseOver()) {
+	if (smh->input->isMouseInWindow()) {
 		if (smh->input->keyDown(INPUT_LEFT)) mouseX -= 700.0f*dt;
 		if (smh->input->keyDown(INPUT_RIGHT)) mouseX += 700.0f*dt;
 		if (smh->input->keyDown(INPUT_DOWN)) mouseY += 700.0f*dt;
@@ -89,9 +87,7 @@ bool MiniMenu::update(float dt) {
 		if (mouseX > 1023.0) mouseX = 1023.0;
 		if (mouseY < 1.0) mouseY = 1.0;
 		if (mouseY > 767.0) mouseY = 767.0;
-		hge->Input_SetMousePos(mouseX,mouseY);
-	} else {
-		mouseX = mouseY = 1.0;
+		smh->input->setMousePosition(mouseX, mouseY);
 	}
 
 	//Update buttons
@@ -104,7 +100,7 @@ bool MiniMenu::update(float dt) {
 				case MINIMENU_CANCEL:
 					return false;
 				case MINIMENU_QUIT:
-					theMenu->open(TITLE_SCREEN);
+					smh->menu->open(TITLE_SCREEN);
 					smh->saveManager->incrementTimePlayed(smh->saveManager->currentSave, gameTime);
 					smh->saveManager->saveFileInfo();
 					return false;

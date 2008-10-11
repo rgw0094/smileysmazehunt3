@@ -204,7 +204,7 @@ void Player::update(float dt) {
 	//Die
 	if (health <= 0.0f) {
 		flashing = false;
-		theMenu->open(DEATH_SCREEN);
+		smh->menu->open(DEATH_SCREEN);
 	}
 
 }

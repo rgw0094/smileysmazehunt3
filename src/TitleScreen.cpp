@@ -1,4 +1,3 @@
-#include "TitleScreen.h"
 #include "hgefont.h"
 #include "menu.h"
 #include "Button.h"
@@ -12,18 +11,18 @@ extern Menu *theMenu;
  */ 
 TitleScreen::TitleScreen() {
 
-	buttons[EXIT_BUTTON] = new Button(125.0, 645.0, "Exit");
-	buttons[PLAY_BUTTON] = new Button(1024.0-125.0-250.0, 645.0, "Play");
+	buttons[TS_EXIT_BUTTON] = new Button(125.0, 645.0, "Exit");
+	buttons[TS_PLAY_BUTTON] = new Button(1024.0-125.0-250.0, 645.0, "Play");
 
-	buttons[OPTIONS_BUTTON] = new Button(512.0-125.0, 680.0, "Options");
-	buttons[CREDITS_BUTTON] = new Button(512.0-125.0, 605.0, "Credits");
+	buttons[TS_OPTIONS_BUTTON] = new Button(512.0-125.0, 680.0, "Options");
+	buttons[TS_CREDITS_BUTTON] = new Button(512.0-125.0, 605.0, "Credits");
 }
 
 /**
  * Destructor
  */
 TitleScreen::~TitleScreen() {
-	for (int i = 0; i < NUM_BUTTONS; i++) delete buttons[i];
+	for (int i = 0; i < TS_NUM_BUTTONS; i++) delete buttons[i];
 }
 
 /**
@@ -39,7 +38,7 @@ void TitleScreen::draw(float dt) {
 	smh->getFont("titleFnt")->printf(512,150, HGETEXT_CENTER, "Hunt");
 
 	//Draw buttons
-	for (int i = 0; i < NUM_BUTTONS; i++) {
+	for (int i = 0; i < TS_NUM_BUTTONS; i++) {
 		buttons[i]->draw(dt);
 	}
 
@@ -51,27 +50,27 @@ void TitleScreen::draw(float dt) {
 bool TitleScreen::update(float dt, float mouseX, float mouseY) {
 
 	//Update buttons
-	for (int i = 0; i < NUM_BUTTONS; i++) {
+	for (int i = 0; i < TS_NUM_BUTTONS; i++) {
 		buttons[i]->update(mouseX, mouseY);
 	}
 
 	//Play button clicked
-	if (buttons[PLAY_BUTTON]->isClicked()) {
-		theMenu->setScreen(LOAD_SCREEN);
+	if (buttons[TS_PLAY_BUTTON]->isClicked()) {
+		smh->menu->setScreen(LOAD_SCREEN);
 	}
 
 	//Controls button clicked
-	if (buttons[OPTIONS_BUTTON]->isClicked()) {
-		theMenu->setScreen(OPTIONS_SCREEN);
+	if (buttons[TS_OPTIONS_BUTTON]->isClicked()) {
+		smh->menu->setScreen(OPTIONS_SCREEN);
 	}
 
 	//Credits button clicked
-	if (buttons[CREDITS_BUTTON]->isClicked()) {
-		theMenu->setScreen(CREDITS_SCREEN);
+	if (buttons[TS_CREDITS_BUTTON]->isClicked()) {
+		smh->menu->setScreen(CREDITS_SCREEN);
 	}
 
 	//Exit button clicked
-	if (buttons[EXIT_BUTTON]->isClicked()) {
+	if (buttons[TS_EXIT_BUTTON]->isClicked()) {
 		return true;
 	}
 

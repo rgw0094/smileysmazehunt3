@@ -23,7 +23,6 @@ HGE *hge=0;
 hgeResourceManager *resources;
 Environment *theEnvironment;
 EnemyManager *enemyManager;
-Menu *theMenu;
 LootManager *lootManager;
 ProjectileManager *projectileManager;
 NPCManager *npcManager;
@@ -97,9 +96,6 @@ void loadGameObjects() {
 
 	smh = new SMH();
 	smh->init();
-
-	hge->System_Log("Creating Menu");
-	theMenu = new Menu();
 
 	hge->System_Log("Creating SoundManager");
 	soundManager = new SoundManager();
@@ -206,7 +202,7 @@ bool FrameFunc() {
 	
 	if (gameState == MENU) {
 	
-		if (theMenu->update(dt)) return true;
+		if (smh->menu->update(dt)) return true;
 		if (hge->Input_KeyDown(HGEK_ESCAPE)) return true;
 
 	} else if (gameState == GAME) {
@@ -275,7 +271,7 @@ bool RenderFunc() {
 	hge->Gfx_BeginScene();
 
 	if (gameState == MENU) {
-		theMenu->draw(dt);
+		smh->menu->draw(dt);
 
 	} else {
 		
@@ -351,7 +347,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			loadGameObjects();
 
 			//Open the menu (this should go in menu constructor maybe)
-			theMenu->open(TITLE_SCREEN);
+			smh->menu->open(TITLE_SCREEN);
 
 			//Start HGE. When this function returns it means the program is exiting.
 			hge->System_Start();

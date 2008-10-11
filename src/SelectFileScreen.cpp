@@ -1,5 +1,4 @@
 #include "SMH.h"
-#include "SelectFileScreen.h"
 #include "hgeresource.h"
 #include "hge.h"
 #include "hgestrings.h"
@@ -7,6 +6,7 @@
 #include "smiley.h"
 #include "menu.h"
 #include "Environment.h"
+#include "Button.h"
 
 extern HGE *hge;
 extern SMH *smh;
@@ -26,9 +26,9 @@ SelectFileScreen::SelectFileScreen() {
 	mouseOn = -1;
 
 	//Buttons
-	buttons[BACK_BUTTON] = new Button(100.0, 650.0, "Back");
-	buttons[DELETE_BUTTON] = new Button(512.0-125.0, 650.0, "Delete");
-	buttons[START_BUTTON] = new Button(1024.0-100.0-250.0, 650.0, "Start");
+	buttons[SFS_BACK_BUTTON] = new Button(100.0, 650.0, "Back");
+	buttons[SFS_DELETE_BUTTON] = new Button(512.0-125.0, 650.0, "Delete");
+	buttons[SFS_START_BUTTON] = new Button(1024.0-100.0-250.0, 650.0, "Start");
 
 	//Save boxes
 	for (int i = 0; i < 4; i++) {
@@ -67,26 +67,26 @@ void SelectFileScreen::exitScreen() {
 bool SelectFileScreen::update(float dt, float mouseX, float mouseY) {
 
 	//Update buttons
-	for (int i = 0; i < NUM_BUTTONS; i++) {
+	for (int i = 0; i < SFS_NUM_BUTTONS; i++) {
 		buttons[i]->update(mouseX, mouseY);
 	}
 
 	//Click back button
-	if (buttons[BACK_BUTTON]->isClicked()) {
-		theMenu->setScreen(TITLE_SCREEN);
+	if (buttons[SFS_BACK_BUTTON]->isClicked()) {
+		smh->menu->setScreen(TITLE_SCREEN);
 		return false;
 	}
 
 	//Click delete button
-	if (buttons[DELETE_BUTTON]->isClicked()) {
+	if (buttons[SFS_DELETE_BUTTON]->isClicked()) {
 		if (!smh->saveManager->isFileEmpty(selectedFile)) {
 			deletePrompt = true;
 		}
 	}
 
 	//Click start button - open the loading menu screen to handle loading
-	if (buttons[START_BUTTON]->isClicked()) {
-		theMenu->openLoadScreen(selectedFile, true);
+	if (buttons[SFS_START_BUTTON]->isClicked()) {
+		smh->menu->openLoadScreen(selectedFile, true);
 		return false;
 	}
 
@@ -176,7 +176,7 @@ void SelectFileScreen::draw(float dt) {
 	}
 
 	//Draw buttons
-	for (int i = 0; i < NUM_BUTTONS; i++) {
+	for (int i = 0; i < SFS_NUM_BUTTONS; i++) {
 		buttons[i]->draw(dt);
 	}
 
