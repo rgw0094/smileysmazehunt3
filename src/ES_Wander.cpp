@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "EnemyState.h"
 #include "hge.h"
 #include "environment.h"
@@ -6,10 +7,9 @@
 #include "hgerect.h"
 #include "smiley.h"
 
+extern SMH *smh;
 extern HGE *hge;
-extern Environment *theEnvironment;
 extern EnemyManager *enemyManager;
-extern float gameTime;
 
 /**
  * Constructor
@@ -50,7 +50,7 @@ void ES_Wander::update(float dt) {
 
 	//Change direction if the enemy is going to hit a wall next frame
 	owner->futureCollisionBox->SetRadius(checkX, checkY, 28.0f);
-	if (theEnvironment->enemyCollision(owner->futureCollisionBox,owner,dt)) {
+	if (smh->environment->enemyCollision(owner->futureCollisionBox,owner,dt)) {
 		changeDir = true;
 
 		//Move the enemy all the way up to the wall. This ensures that spikey balls don't
@@ -70,13 +70,13 @@ void ES_Wander::update(float dt) {
 	}
 
 	//Change direction after random periods of time
-	if (owner->wanderType == WANDER_NORMAL && nextDirChangeTime <= gameTime) {
+	if (owner->wanderType == WANDER_NORMAL && nextDirChangeTime <= smh->getGameTime()) {
 		changeDir = true;
 	}
 
 	if (changeDir) {
 
-		nextDirChangeTime = gameTime + hge->Random_Float(1.2, 2.0);
+		nextDirChangeTime = smh->getGameTime() + hge->Random_Float(1.2, 2.0);
 		currentAction = getNewDirection();
 
 		//Set dx/dy based on new direction
@@ -133,13 +133,13 @@ int ES_Wander::getNewDirection() {
 	while (!newDirFound) {
 		newDir = hge->Random_Int(minDir, maxDir);
 		if (newDir == WANDER_LEFT) {
-			collision = theEnvironment->collision[owner->gridX-1][owner->gridY];
+			collision = smh->environment->collision[owner->gridX-1][owner->gridY];
 		} else if (newDir == WANDER_RIGHT) {
-			collision = theEnvironment->collision[owner->gridX+1][owner->gridY];
+			collision = smh->environment->collision[owner->gridX+1][owner->gridY];
 		} else if (newDir == WANDER_UP) {
-			collision = theEnvironment->collision[owner->gridX][owner->gridY-1];
+			collision = smh->environment->collision[owner->gridX][owner->gridY-1];
 		} else if (newDir == WANDER_DOWN) {
-			collision = theEnvironment->collision[owner->gridX][owner->gridY+1];
+			collision = smh->environment->collision[owner->gridX][owner->gridY+1];
 		}
 		newDirFound = (newDir != currentAction && owner->canPass[collision]);
 		count++;
@@ -158,7 +158,7 @@ int ES_Wander::getNewDirection() {
  */
 void ES_Wander::enterState() {
 	currentAction = WANDER_DOWN;
-	nextDirChangeTime = gameTime - 1.0;
+	nextDirChangeTime = smh->getGameTime() - 1.0;
 }
 
 /**

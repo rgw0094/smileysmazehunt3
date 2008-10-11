@@ -11,9 +11,6 @@
 extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern Environment *theEnvironment;
-extern bool debugMode;
-extern float gameTime;
 
 /** 
  * Constructor
@@ -45,7 +42,7 @@ E_Ghost::~E_Ghost() {
 void E_Ghost::update(float dt) {
 
 	//Update floating shit
-	shadowOffset = 35.0 + 8.0 * cos(gameTime * 2.0);
+	shadowOffset = 35.0 + 8.0 * cos(smh->getGameTime() * 2.0);
 	collisionBox->SetRadius(x,y-shadowOffset,radius);
 		
 	//Collision with player - this is implemented
@@ -62,7 +59,7 @@ void E_Ghost::update(float dt) {
  */
 void E_Ghost::draw(float dt) {
 	
-	alpha = 150.0 + 150.0 * cos(gameTime * 2.0);
+	alpha = 150.0 + 150.0 * cos(smh->getGameTime() * 2.0);
 	if (alpha < 15.0) alpha = 15.0;
 	if (alpha > 150.0) alpha = 150.0;
 
@@ -74,7 +71,7 @@ void E_Ghost::draw(float dt) {
 	resources->GetSprite("playerShadow")->Render(screenX, screenY);
 	resources->GetSprite("playerShadow")->SetColor(ARGB(75.0, 255, 255, 255));
 
-	if (debugMode) {
+	if (smh->isDebugOn()) {
 		drawCollisionBox(collisionBox, RED);
 	}
 

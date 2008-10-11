@@ -6,7 +6,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern Environment *theEnvironment;
 
 EvilWallManager::EvilWallManager() {
 
@@ -68,11 +67,11 @@ void EvilWallManager::deactivateEvilWall(int id) {
 void EvilWallManager::update(float dt) {
 
 	//Activate or deactivate evil walls
-	if (theEnvironment->collision[smh->player->gridX][smh->player->gridY] == EVIL_WALL_TRIGGER) {
-		activateEvilWall(theEnvironment->ids[smh->player->gridX][smh->player->gridY]);
+	if (smh->environment->collision[smh->player->gridX][smh->player->gridY] == EVIL_WALL_TRIGGER) {
+		activateEvilWall(smh->environment->ids[smh->player->gridX][smh->player->gridY]);
 	}
-	if (theEnvironment->collision[smh->player->gridX][smh->player->gridY] == EVIL_WALL_DEACTIVATOR) {
-		deactivateEvilWall(theEnvironment->ids[smh->player->gridX][smh->player->gridY]);
+	if (smh->environment->collision[smh->player->gridX][smh->player->gridY] == EVIL_WALL_DEACTIVATOR) {
+		deactivateEvilWall(smh->environment->ids[smh->player->gridX][smh->player->gridY]);
 	}
 
 	std::list<EvilWallStruct>::iterator i;

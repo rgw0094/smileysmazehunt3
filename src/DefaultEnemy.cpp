@@ -8,7 +8,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern Environment *theEnvironment;
 
 DefaultEnemy::DefaultEnemy(int id, int x, int y, int groupID) {
 

@@ -15,8 +15,6 @@ extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
 extern ProjectileManager *projectileManager;
-extern Environment *theEnvironment;
-extern float gameTime;
 
 #define ACTIVATION_RADIUS 300
 #define SPAWN_DELAY 2.5
@@ -35,10 +33,10 @@ E_BatletDist::E_BatletDist(int id, int gridX, int gridY, int groupID) {
 
 	//Don't let the player walk on the batlet cave!
 	dealsCollisionDamage = false;
-	theEnvironment->collision[gridX][gridY] = UNWALKABLE;
-	theEnvironment->collision[gridX][gridY-1] = UNWALKABLE;
-	theEnvironment->collision[gridX+1][gridY] = UNWALKABLE;
-	theEnvironment->collision[gridX+1][gridY-1] = UNWALKABLE;
+	smh->environment->collision[gridX][gridY] = UNWALKABLE;
+	smh->environment->collision[gridX][gridY-1] = UNWALKABLE;
+	smh->environment->collision[gridX+1][gridY] = UNWALKABLE;
+	smh->environment->collision[gridX+1][gridY-1] = UNWALKABLE;
 
 	immuneToStun = true;
 	activated = false;
@@ -71,7 +69,7 @@ void E_BatletDist::update(float dt) {
 	//Spawn a batlet every now and then
 	if (activated && timePassedSince(lastSpawnTime) > SPAWN_DELAY) {
 		addBatlet();
-		lastSpawnTime = gameTime;
+		lastSpawnTime = smh->getGameTime();
 	}
 
 	//Update the batlets
@@ -102,7 +100,7 @@ void E_BatletDist::draw(float dt) {
 
 	//Draw blood splats
 	particles->Update(dt);
-	particles->Transpose(-1*(theEnvironment->xGridOffset*64 + theEnvironment->xOffset), -1*(theEnvironment->yGridOffset*64 + theEnvironment->yOffset));
+	particles->Transpose(-1*(smh->environment->xGridOffset*64 + smh->environment->xOffset), -1*(smh->environment->yGridOffset*64 + smh->environment->yOffset));
 	particles->Render();
 
 }
@@ -119,7 +117,7 @@ void E_BatletDist::addBatlet() {
 	newBatlet.x = x+32.0;
 	newBatlet.y = y-32.0;
 	newBatlet.startedDiveBomb = false;
-	newBatlet.timeSpawned = gameTime;
+	newBatlet.timeSpawned = smh->getGameTime();
 	newBatlet.collisionBox = new hgeRect();
 	newBatlet.collisionBox->SetRadius(newBatlet.x, newBatlet.y, 15);
 	newBatlet.scale = 0.0001;
@@ -171,7 +169,7 @@ void E_BatletDist::updateBatlets(float dt) {
 		}
 
 		//Check for collision with walls and Smiley's weapons
-		if ((!isOverlappingDist(i->x, i->y) && theEnvironment->collisionAt(i->x, i->y) == UNWALKABLE) ||
+		if ((!isOverlappingDist(i->x, i->y) && smh->environment->collisionAt(i->x, i->y) == UNWALKABLE) ||
 				smh->player->getTongue()->testCollision(i->collisionBox) ||
 				smh->player->fireBreathParticle->testCollision(i->collisionBox)) {
 			collision = true;

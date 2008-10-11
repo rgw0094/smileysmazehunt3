@@ -16,7 +16,6 @@
 extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern Environment *theEnvironment;
 extern WindowManager *windowManager;
 extern LootManager *lootManager;
 extern ProjectileManager *projectileManager;
@@ -127,12 +126,12 @@ void LoadEffectManager::update(float dt) {
 			if (destinationArea == smh->saveManager->currentArea) {
 				//Move smiley to a new location in the same area
 				smh->player->moveTo(destinationX, destinationY);
-				theEnvironment->update(0.0);
+				smh->environment->update(0.0);
 				enemyManager->update(0.0);
 				lootManager->update(0.0);
 				projectileManager->update(0.0);
 			} else {
-				theEnvironment->loadArea(destinationArea, smh->saveManager->currentArea);
+				smh->environment->loadArea(destinationArea, smh->saveManager->currentArea);
 				zoneTextAlpha = 255.0;
 			}
 			

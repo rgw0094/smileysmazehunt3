@@ -11,7 +11,6 @@ HGE	*WeaponParticleSystem::hge=0;
 
 //Objects
 extern SMH *smh;
-extern Environment *theEnvironment;
 extern EnemyManager *enemyManager;
 
 /**
@@ -82,11 +81,11 @@ void WeaponParticleSystem::Update(float fDeltaTime) {
 			continue;
 		}
 
-		float x = par->vecLocation.x + theEnvironment->xGridOffset*64.0 + theEnvironment->xOffset;
-		float y = par->vecLocation.y + theEnvironment->yGridOffset*64.0 + theEnvironment->yOffset;
+		float x = par->vecLocation.x + smh->environment->xGridOffset*64.0 + smh->environment->xOffset;
+		float y = par->vecLocation.y + smh->environment->yGridOffset*64.0 + smh->environment->yOffset;
 
 		//Kill particles that hit a wall
-		if (theEnvironment->collisionAt(x, y) == UNWALKABLE) {
+		if (smh->environment->collisionAt(x, y) == UNWALKABLE) {
 			nParticlesAlive--;
 			memcpy(par, &particles[nParticlesAlive], sizeof(hgeParticle));
 			i--;
@@ -289,7 +288,7 @@ bool WeaponParticleSystem::testCollision(hgeRect *collisionBox) {
 	weaponParticle *par=particles;
 	
 	for (int i=0; i<nParticlesAlive; i++) {
-		bool collides = collisionBox->TestPoint(par->vecLocation.x + theEnvironment->xGridOffset*64.0 + theEnvironment->xOffset, par->vecLocation.y + theEnvironment->yGridOffset*64.0 + theEnvironment->yOffset);
+		bool collides = collisionBox->TestPoint(par->vecLocation.x + smh->environment->xGridOffset*64.0 + smh->environment->xOffset, par->vecLocation.y + smh->environment->yGridOffset*64.0 + smh->environment->yOffset);
 		if (collides) return true;
 		par++;
 	}
@@ -302,7 +301,7 @@ bool WeaponParticleSystem::testCollision(CollisionCircle *collisionCircle) {
 	weaponParticle *par=particles;
 	
 	for (int i=0; i<nParticlesAlive; i++) {
-		bool collides = collisionCircle->testPoint(par->vecLocation.x + theEnvironment->xGridOffset*64.0 + theEnvironment->xOffset, par->vecLocation.y + theEnvironment->yGridOffset*64.0 + theEnvironment->yOffset);
+		bool collides = collisionCircle->testPoint(par->vecLocation.x + smh->environment->xGridOffset*64.0 + smh->environment->xOffset, par->vecLocation.y + smh->environment->yGridOffset*64.0 + smh->environment->yOffset);
 		if (collides) return true;
 		par++;
 	}

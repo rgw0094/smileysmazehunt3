@@ -14,13 +14,9 @@
 #include "EnemyState.h"
 #include "EnemyManager.h"
 
-extern Environment *theEnvironment;
 extern hgeResourceManager *resources;
 extern SMH *smh;
 extern HGE *hge;
-extern float gameTime;
-extern bool debugMode;
-
 
 #define ENEMY_FLASH_DURATION 0.5
 #define ENEMY_FROZEN_DURATION 3.0
@@ -175,7 +171,7 @@ void BaseEnemy::dealDamageAndKnockback(float damage, float knockbackDist,
 	
 	knockbackTime = .2;
 	knockback = true;
-	startedKnockback = gameTime;
+	startedKnockback = smh->getGameTime();
 
 }
 
@@ -184,7 +180,7 @@ void BaseEnemy::dealDamageAndKnockback(float damage, float knockbackDist,
  */
 bool BaseEnemy::inChaseRange(int range) {
 	return (chases && mapPath[gridX][gridY] <= range && mapPath[gridX][gridY] > 0 && !smh->player->isInvisible() &&
-		theEnvironment->collision[smh->player->gridX][smh->player->gridY] != ENEMY_NO_WALK);
+		smh->environment->collision[smh->player->gridX][smh->player->gridY] != ENEMY_NO_WALK);
 }
 
 /**
@@ -192,7 +188,7 @@ bool BaseEnemy::inChaseRange(int range) {
  * at its current position.
  */
 bool BaseEnemy::canShootPlayer() {
-	return (distanceFromPlayer() <= weaponRange && theEnvironment->validPath(x, y, smh->player->x, smh->player->y, 26, canPass));
+	return (distanceFromPlayer() <= weaponRange && smh->environment->validPath(x, y, smh->player->x, smh->player->y, 26, canPass));
 }
 
 /**
@@ -230,13 +226,13 @@ void BaseEnemy::move(float dt) {
 
 	//Move left or right
 	futureCollisionBox->SetRadius(x+xDist,y,28.0f);
-	if (!theEnvironment->enemyCollision(futureCollisionBox,this,dt)) {
+	if (!smh->environment->enemyCollision(futureCollisionBox,this,dt)) {
 		x += xDist;
 	}
 
 	//Move up or down
 	futureCollisionBox->SetRadius(x,y+yDist,28.0f);
-	if (!theEnvironment->enemyCollision(futureCollisionBox,this,dt)) {
+	if (!smh->environment->enemyCollision(futureCollisionBox,this,dt)) {
 		y += yDist;
 	}
 }
@@ -257,8 +253,8 @@ void BaseEnemy::doAStar() {
 	//For performance reasons only update mapPath in a 10 tile radius
 	int startX = (gridX <= 10) ? 0 : gridX - 10;
 	int startY = (gridY <= 10) ? 0 : gridY - 10;
-	int endX = (gridX >= theEnvironment->areaWidth - 10) ? theEnvironment->areaWidth : gridX + 10;
-	int endY = (gridY >= theEnvironment->areaHeight - 10) ? theEnvironment->areaHeight : gridY + 10;
+	int endX = (gridX >= smh->environment->areaWidth - 10) ? smh->environment->areaWidth : gridX + 10;
+	int endY = (gridY >= smh->environment->areaHeight - 10) ? smh->environment->areaHeight : gridY + 10;
 
 	//Initialize mapPath array
 	for (int i = startX; i < endX; i++) {
@@ -267,7 +263,7 @@ void BaseEnemy::doAStar() {
 			if (i == smh->player->gridX && j == smh->player->gridY) {
 				mapPath[i][j] = 0;
 			//If (i,j) is inaccessible, set distance to 999
-			} else if (!canPass[theEnvironment->collision[i][j]] || theEnvironment->hasSillyPad(i, j)) {			
+			} else if (!canPass[smh->environment->collision[i][j]] || smh->environment->hasSillyPad(i, j)) {			
 				mapPath[i][j] = 999;
 			//Otherwise put a -1
 			} else {
@@ -290,7 +286,7 @@ void BaseEnemy::doAStar() {
 					for (int ni = i-1; ni <= i+1; ni++) {
 						for (int nj = j-1; nj <= j+1; nj++) {
 							//Verify neighbor is on map and (ni,nj) != (i,j)
-							if (ni >= 0 && nj >= 0 && ni < theEnvironment->areaWidth && nj <= theEnvironment->areaHeight && !(ni == i && nj == j)) {
+							if (ni >= 0 && nj >= 0 && ni < smh->environment->areaWidth && nj <= smh->environment->areaHeight && !(ni == i && nj == j)) {
 								//Verify square hasn't been calculated yet and is accessible to this enemy
 								if (mapPath[ni][nj] >= 0 && mapPath[ni][nj] != 999) {
 									markMap[i][j] = true;	//this cell can be calculated
@@ -313,7 +309,7 @@ void BaseEnemy::doAStar() {
 					for (int ni = i-1; ni <= i+1; ni++) {
 						for (int nj = j-1; nj <= j+1; nj++) {
 							//Verify the neighbor is on the map
-							if (ni >= 0 && nj >= 0 && ni < theEnvironment->areaWidth && nj < theEnvironment->areaHeight && !(ni == i && nj == j)) {
+							if (ni >= 0 && nj >= 0 && ni < smh->environment->areaWidth && nj < smh->environment->areaHeight && !(ni == i && nj == j)) {
 								//Verify this square hasn't been calculated already
 								if (mapPath[ni][nj] >= 0) {
 									//Assign the value to lowvalue if it is lower
@@ -394,7 +390,7 @@ void BaseEnemy::setFacingPlayer(int maximumDistance, int defaultDirection) {
  */ 
 void BaseEnemy::startFlashing() {
 	flashing = true;
-	timeStartedFlashing = gameTime;
+	timeStartedFlashing = smh->getGameTime();
 }
 
 /**
@@ -478,7 +474,7 @@ void BaseEnemy::baseDraw(float dt) {
 
 	//Call the enemy's draw function. If the enemy is currently flashing,
 	//skip calling it some frames to create the flashing effect.
-	if (!flashing || int(gameTime * 100) % 10 > 5) {
+	if (!flashing || int(smh->getGameTime() * 100) % 10 > 5) {
 		draw(dt);
 	}
 
@@ -554,7 +550,7 @@ bool BaseEnemy::doTongueCollision(Tongue *tongue, float damage) {
 			
 		//Make sure the enemy wasn't already hit by this attack
 		if (timePassedSince(lastHitByWeapon) > .5) {
-			lastHitByWeapon = gameTime;
+			lastHitByWeapon = smh->getGameTime();
 			dealDamageAndKnockback(damage, 65.0, smh->player->x, smh->player->y);
 			startFlashing();
 			return true;
@@ -580,7 +576,7 @@ void BaseEnemy::doPlayerCollision() {
  * override this for something more specific.
  */
 void BaseEnemy::drawDebug() {
-	if (debugMode && dealsCollisionDamage) {
+	if (smh->isDebugOn() && dealsCollisionDamage) {
 		drawCollisionBox(collisionBox, RED);
 	}
 }

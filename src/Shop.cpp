@@ -8,7 +8,6 @@
 extern HGE *hge;
 extern SMH *smh;
 extern hgeResourceManager *resources;
-extern float gameTime;
 extern WindowManager *windowManager;
 extern int frameCounter;
 

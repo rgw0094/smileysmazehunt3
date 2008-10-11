@@ -6,7 +6,6 @@
 #include "enemyGroupManager.h"
 #include "Player.h"
 #include "CollisionCircle.h"
-#include "SoundManager.h"
 #include "WeaponParticle.h"
 #include "Tongue.h"
 #include "ProjectileManager.h"
@@ -15,16 +14,10 @@
 extern SMH *smh;
 extern HGE *hge;
 extern WindowManager *windowManager;
-extern bool debugMode;
-extern Environment *theEnvironment;
 extern LootManager *lootManager;
 extern hgeResourceManager *resources;
 extern EnemyGroupManager *enemyGroupManager;
-extern SoundManager *soundManager;
 extern ProjectileManager *projectileManager;
-
-extern float gameTime;
-extern bool debugMode;
 
 #define TEXT_FIREBOSS2_INTRO 160
 #define TEXT_FIREBOSS2_VITAMINS 161
@@ -67,7 +60,7 @@ FireBossTwo::FireBossTwo(int gridX, int gridY, int _groupID) {
 	health = maxHealth = HEALTH;
 	state = FIREBOSS_INACTIVE;
 	targetChasePoint = 0;	//Start at the middle location
-	lastAttackTime = timeEnteredState = gameTime;
+	lastAttackTime = timeEnteredState = smh->getGameTime();
 	startedIntroDialogue = false;
 	flashing = increaseAlpha = false;
 	floatY = 0.0;
@@ -156,7 +149,7 @@ void FireBossTwo::draw(float dt) {
 	}
 
 	//Draw collision boxes if in debug mode
-	if (debugMode) {
+	if (smh->isDebugOn()) {
 		for (int i = 0; i < 3; i++) {
 			drawCollisionBox(collisionBoxes[i], RED);
 		}
@@ -174,7 +167,7 @@ void FireBossTwo::drawAfterSmiley(float dt) {
 bool FireBossTwo::update(float dt) {
 
 	//Update floating offset
-	floatY = 15.0 * sin(gameTime * 3.0);
+	floatY = 15.0 * sin(smh->getGameTime() * 3.0);
 
 	//When the player enters his chamber shut the doors and start the intro dialogue
 	if (state == FIREBOSS_INACTIVE && !startedIntroDialogue) {
@@ -182,7 +175,7 @@ bool FireBossTwo::update(float dt) {
 		if (enemyGroupManager->groups[groupID].triggeredYet) {
 			windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS2_INTRO);
 			startedIntroDialogue = true;
-			soundManager->fadeOutMusic();
+			smh->soundManager->fadeOutMusic();
 			facing = UP;
 		} else {
 			//Before Phyrebozz is triggered there is no need to update anything!
@@ -198,7 +191,7 @@ bool FireBossTwo::update(float dt) {
 	if (state == FIREBOSS_INACTIVE && startedIntroDialogue && !windowManager->isTextBoxOpen()) {
 		setState(FIREBOSS_FIRST_BATTLE);
 		hge->Effect_Play(resources->GetEffect("snd_fireBossDie"));
-		soundManager->playMusic("bossMusic");
+		smh->soundManager->playMusic("bossMusic");
 	}
 
 	//Update alphas for flashing
@@ -300,7 +293,7 @@ bool FireBossTwo::update(float dt) {
 
 		//Done running away
 		if (alpha < 0.0f) {
-			soundManager->playPreviousMusic();
+			smh->soundManager->playPreviousMusic();
 			return true;
 		}
 	}
@@ -321,7 +314,7 @@ void FireBossTwo::updateFireNova(float dt) {
 			for (int gridY = getGridY(y) - radius; gridY <= getGridY(y) + radius; gridY++) {
 				//Make sure distance is less than radius so that the lava is created as a circle
 				if (distance(gridX, gridY, getGridX(x), getGridY(y)) <= radius) {
-					theEnvironment->addTimedTile(gridX, gridY, WALK_LAVA, 99999.0);
+					smh->environment->addTimedTile(gridX, gridY, WALK_LAVA, 99999.0);
 				}
 			}
 		}
@@ -350,7 +343,7 @@ bool FireBossTwo::updateState(float dt) {
 				addFireBall(x, y, getAngleBetween(x, y, smh->player->x, smh->player->y) - PI / 4.0, 500.0, true, true);
 				addFireBall(x, y, getAngleBetween(x, y, smh->player->x, smh->player->y), 500.0, true, true);
 				addFireBall(x, y, getAngleBetween(x, y, smh->player->x, smh->player->y) + PI / 4.0, 500.0, true, true);
-				lastAttackTime = gameTime;
+				lastAttackTime = smh->getGameTime();
 			}
 
 		}
@@ -371,7 +364,7 @@ bool FireBossTwo::updateState(float dt) {
 						setState(FIREBOSS_BATTLE);
 						//Do big attack to own smiley
 						fireNova->FireAt(getScreenX(x), getScreenY(y));
-						lastFireNovaTime = gameTime;
+						lastFireNovaTime = smh->getGameTime();
 						launchFlames(true);
 					}
 				}
@@ -410,7 +403,7 @@ bool FireBossTwo::updateState(float dt) {
 					addFireBall(x, y, attackAngle + float(i)*(PI/24.0) + hge->Random_Float(0.0, 2.0*PI), 450.0, false, true);
 				}
 			}
-			lastAttackTime = gameTime;
+			lastAttackTime = smh->getGameTime();
 		}
 
 		
@@ -427,7 +420,7 @@ bool FireBossTwo::updateState(float dt) {
 			for (int i = 0; i < 13; i ++) {
 				addFireBall(x, y, (2.0*PI/13.0)*float(i), 400.0, false, false);
 			}
-			lastAttackTime = gameTime;
+			lastAttackTime = smh->getGameTime();
 		}
 
 		//Return to default battle stage after a while
@@ -445,7 +438,7 @@ bool FireBossTwo::updateState(float dt) {
 		//Launch stream of fireballs
 		if (timePassedSince(lastAttackTime) > 0.05) {
 			addFireBall(x, y-50.0, getAngleBetween(x,y,smh->player->x,smh->player->y), 700.0, false, false);
-			lastAttackTime = gameTime;
+			lastAttackTime = smh->getGameTime();
 		}
 
 		//Return to default battle stage after a while
@@ -471,14 +464,14 @@ bool FireBossTwo::updateState(float dt) {
 void FireBossTwo::setState(int newState) {
 	
 	state = newState;
-	timeEnteredState = gameTime;
+	timeEnteredState = smh->getGameTime();
 
 	if (newState == FIREBOSS_LEET_ATTACK1 || FIREBOSS_LEET_ATTACK2) {
-		lastAttackTime = gameTime;
+		lastAttackTime = smh->getGameTime();
 	}
 
 	if (newState == FIREBOSS_BATTLE) {
-		lastAttackTime = gameTime;
+		lastAttackTime = smh->getGameTime();
 		moving = false;
 		dx = dy = 0.0;
 	}
@@ -502,7 +495,7 @@ void FireBossTwo::doDamage(float damage, bool makeFlash) {
 		//Start flashing
 		if (makeFlash) {
 			flashing = true;
-			startedFlashing = gameTime;
+			startedFlashing = smh->getGameTime();
 			alpha = 255;
 			increaseAlpha = false;
 		}
@@ -528,7 +521,7 @@ void FireBossTwo::die() {
 	alpha = 255;
 	smh->saveManager->killBoss(FIRE_BOSS2);
 	enemyGroupManager->notifyOfDeath(groupID);
-	soundManager->fadeOutMusic();
+	smh->soundManager->fadeOutMusic();
 }
 
 
@@ -536,7 +529,7 @@ void FireBossTwo::die() {
  * Starts phyrebozz moving toward a point at the specified speed.
  */ 
 void FireBossTwo::startMoveToPoint(int _x, int _y, float speed) {
-	timeStartedMove = gameTime;
+	timeStartedMove = smh->getGameTime();
 	moving = true;
 	timeToMove = distance(x, y, _x, _y) / speed;
 	float angle = getAngleBetween(x, y, _x, _y);
@@ -597,7 +590,7 @@ void FireBossTwo::addFireBall(float x, float y, float angle, float speed, bool h
 	newFireBall.collisionBox = new hgeRect();
 	newFireBall.particle = new hgeParticleSystem(&resources->GetParticleSystem("fireOrb")->info);
 	newFireBall.particle->Fire();
-	newFireBall.timeCreated = gameTime;
+	newFireBall.timeCreated = smh->getGameTime();
 	newFireBall.angle = angle;
 	newFireBall.hasExploded = false;
 	newFireBall.homing = homing;
@@ -667,7 +660,7 @@ void FireBossTwo::updateFireBalls(float dt) {
 			}
 
 			//Environment collision
-			if (theEnvironment->collisionAt(i->x, i->y) == UNWALKABLE) {
+			if (smh->environment->collisionAt(i->x, i->y) == UNWALKABLE) {
 				explode = true;
 			}	
 
@@ -685,7 +678,7 @@ void FireBossTwo::updateFireBalls(float dt) {
 					i->particle->FireAt(getScreenX(i->x), getScreenY(i->y));
 					i->particle->TrackBoundingBox(true);
 					i->radius = 5.0;
-					i->timeExploded = gameTime;
+					i->timeExploded = smh->getGameTime();
 				} else {
 					//If the fireball isn't one that explodes then just delete it now
 					delete i->particle;
@@ -724,7 +717,7 @@ void FireBossTwo::drawFireBallsBeforePhyrebozz(float dt) {
 	for (i = fireBallList.begin(); i != fireBallList.end(); i++) {
 		if (i->y <= y) {
 			i->particle->Render();
-			if (debugMode) {
+			if (smh->isDebugOn()) {
 				drawCollisionBox(i->collisionBox, RED);
 			}
 		}
@@ -740,7 +733,7 @@ void FireBossTwo::drawFireBallsAfterPhyrebozz(float dt) {
 	for (i = fireBallList.begin(); i != fireBallList.end(); i++) {
 		if (i->y > y) {
 			i->particle->Render();
-			if (debugMode) {
+			if (smh->isDebugOn()) {
 				drawCollisionBox(i->collisionBox, RED);
 			}
 		}
@@ -822,12 +815,12 @@ void FireBossTwo::updateFlameWalls(float dt) {
 				bool deleteFireBall = false;
 				
 				//Environment collision
-				if (theEnvironment->collisionAt(i->fireBalls[j].x, i->fireBalls[j].y) == UNWALKABLE) {
+				if (smh->environment->collisionAt(i->fireBalls[j].x, i->fireBalls[j].y) == UNWALKABLE) {
 					deleteFireBall = true;
 				}	
 
 				//Silly pad collision
-				if (!deleteFireBall && theEnvironment->hasSillyPad(getGridX(i->fireBalls[j].x), getGridY(i->fireBalls[j].y))) {
+				if (!deleteFireBall && smh->environment->hasSillyPad(getGridX(i->fireBalls[j].x), getGridY(i->fireBalls[j].y))) {
 					deleteFireBall = true;
 					Point sillyPadToDestroy;
 					sillyPadToDestroy.x = getGridX(i->fireBalls[j].x);
@@ -856,7 +849,7 @@ void FireBossTwo::updateFlameWalls(float dt) {
 		//Destroy all silly pads hit by the flame wall
 		std::list<Point>::iterator it;
 		for (it = sillyPadsToDestroy.begin(); it != sillyPadsToDestroy.end(); it++) {
-			theEnvironment->destroySillyPad(i->x, i->y);
+			smh->environment->destroySillyPad(i->x, i->y);
 			hge->System_Log("%d %d", i->x, i->y);
 			it = sillyPadsToDestroy.erase(it);
 		}
@@ -875,7 +868,7 @@ void FireBossTwo::drawFlameWalls(float dt) {
 		for (int j = 0; j < FLAME_WALL_NUM_PARTICLES; j++) {
 			if (i->fireBalls[j].alive) {
 				i->fireBalls[j].particle->Render();
-				if (debugMode) drawCollisionBox(i->fireBalls[j].collisionBox, RED);
+				if (smh->isDebugOn()) drawCollisionBox(i->fireBalls[j].collisionBox, RED);
 			}
 		}
 	}
@@ -906,10 +899,10 @@ void FireBossTwo::launchFlames(bool allFlames) {
 		gridY = flameLaunchers[i].gridY;
 
 		bool blockedBySillyPad = (
-			(facing == DOWN && theEnvironment->hasSillyPad(gridX, gridY + 1)) || 
-			(facing == UP && theEnvironment->hasSillyPad(gridX, gridY - 1)) ||
-			(facing == LEFT && theEnvironment->hasSillyPad(gridX - 1, gridY)) || 
-			(facing == RIGHT && theEnvironment->hasSillyPad(gridX + 1, gridY)));
+			(facing == DOWN && smh->environment->hasSillyPad(gridX, gridY + 1)) || 
+			(facing == UP && smh->environment->hasSillyPad(gridX, gridY - 1)) ||
+			(facing == LEFT && smh->environment->hasSillyPad(gridX - 1, gridY)) || 
+			(facing == RIGHT && smh->environment->hasSillyPad(gridX + 1, gridY)));
 
 		//Only fire if not blocked by a silly pad and the player is in their flame wall trajectory
 		if (!blockedBySillyPad) {

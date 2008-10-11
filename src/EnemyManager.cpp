@@ -14,13 +14,10 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern Environment *theEnvironment;
 extern LootManager *lootManager;
 extern ProjectileManager *projectileManager;
-extern bool debugMode;
 extern hgeResourceManager *resources;
 extern EnemyGroupManager *enemyGroupManager;
-extern float gameTime;
 
 /**
  * Constructor
@@ -153,7 +150,7 @@ void EnemyManager::draw(float dt) {
 
 	//Draw death effect
 	deathParticles->Update(dt);
-	deathParticles->Transpose(-1*(theEnvironment->xGridOffset*64 + theEnvironment->xOffset), -1*(theEnvironment->yGridOffset*64 + theEnvironment->yOffset));
+	deathParticles->Transpose(-1*(smh->environment->xGridOffset*64 + smh->environment->xOffset), -1*(smh->environment->yGridOffset*64 + smh->environment->yOffset));
 	deathParticles->Render();
 
 }
@@ -310,7 +307,7 @@ bool EnemyManager::hitEnemiesWithProjectile(hgeRect *collisionBox, float damage,
 				if (!i->enemy->immuneToStun) {
 					i->enemy->stunned = true;
 					i->enemy->stunLength = 2.0f;
-					i->enemy->startedStun = gameTime;
+					i->enemy->startedStun = smh->getGameTime();
 				}			
 			} 
 

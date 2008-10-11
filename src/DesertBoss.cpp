@@ -9,7 +9,6 @@
 #include "environment.h"
 #include "EnemyManager.h"
 #include "lootmanager.h"
-#include "SoundManager.h"
 #include "weaponparticle.h"
 #include "CollisionCircle.h"
 #include "Tongue.h"
@@ -19,15 +18,10 @@ extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
 extern WindowManager *windowManager;
-extern bool debugMode;
 extern EnemyGroupManager *enemyGroupManager;
 extern ProjectileManager *projectileManager;
-extern Environment *theEnvironment;
-extern bool debugMode;
 extern EnemyManager *enemyManager;
 extern LootManager *lootManager;
-extern SoundManager *soundManager;
-extern float gameTime;
 
 #define TEXT_DESERTBOSS_INTRO 130
 #define TEXT_DESERTBOSS_VICTORY 131
@@ -104,11 +98,11 @@ void DesertBoss::draw(float dt) {
 	}
 
 	sandClouds->Update(dt);
-	sandClouds->Transpose(-1*(theEnvironment->xGridOffset*64 + theEnvironment->xOffset), -1*(theEnvironment->yGridOffset*64 + theEnvironment->yOffset));
+	sandClouds->Transpose(-1*(smh->environment->xGridOffset*64 + smh->environment->xOffset), -1*(smh->environment->yGridOffset*64 + smh->environment->yOffset));
 	sandClouds->Render();
 
 	//Debug mode stuff
-	if (debugMode) {
+	if (smh->isDebugOn()) {
 		drawCollisionBox(collisionBox, RED);
 	}
 
@@ -132,7 +126,7 @@ bool DesertBoss::update(float dt) {
 	//Activate the boss when the intro dialogue is closed
 	if (state == DESERTBOSS_INACTIVE && startedIntroDialogue && !windowManager->isTextBoxOpen()) {
 		enterState(DESERTBOSS_LAUNCHING_SPIKES);
-		soundManager->playMusic("bossMusic");
+		smh->soundManager->playMusic("bossMusic");
 	}
 
 
@@ -145,7 +139,7 @@ bool DesertBoss::update(float dt) {
 		}
 
 		//Check collision with Smiley's tongue
-		if (smh->player->getTongue()->testCollision(collisionBox) && gameTime > lastHitByTongue + .34f) {
+		if (smh->player->getTongue()->testCollision(collisionBox) && smh->getGameTime() > lastHitByTongue + .34f) {
 			smh->player->dealDamageAndKnockback(TONGUE_DAMAGE,true,150,x,y);
 		}
 
@@ -169,7 +163,7 @@ bool DesertBoss::update(float dt) {
 					} else {
 						groundSpikeState = GSS_SHADOWS;
 					}
-					timeEnteredGSS = gameTime;
+					timeEnteredGSS = smh->getGameTime();
 					numGroundAttacks = 0;
 					spikeShadowAlpha = 0.0;
 				}
@@ -186,7 +180,7 @@ bool DesertBoss::update(float dt) {
 				for (int i = 0; i < NUM_SPIKE_STREAMS; i++) {				
 					projectileManager->addProjectile(x + 63.0*cos(spikeAngles[i]), y - 30.0 + 63.0*sin(spikeAngles[i]), 600, spikeAngles[i], FLYING_SPIKE_DAMAGE, true, PROJECTILE_CACTUS_SPIKE, false);
 				}
-				lastSpikeLaunch = gameTime;
+				lastSpikeLaunch = smh->getGameTime();
 			}
 			for (int i = 0; i < NUM_SPIKE_STREAMS; i++) {
 				spikeAngles[i] += spikeRotVelocity*dt;
@@ -213,7 +207,7 @@ bool DesertBoss::update(float dt) {
 			if (timePassedSince(lastCactletTime) > 1.5 || (numCactletsSpawned == 0 && timePassedSince(lastCactletTime) > 0.5)) {
 				spawnCactlet();
 				numCactletsSpawned++;
-				lastCactletTime = gameTime;
+				lastCactletTime = smh->getGameTime();
 				if (numCactletsSpawned >= 5) {
 					enterState(DESERTBOSS_IDLE);
 				}
@@ -225,7 +219,7 @@ bool DesertBoss::update(float dt) {
 		if (state == DESERTBOSS_IDLE) {
 
 			//Go back into spike launching state after a while
-			if (timeEnteredState + 4 < gameTime) {
+			if (timeEnteredState + 4 < smh->getGameTime()) {
 				enterState(DESERTBOSS_LAUNCHING_SPIKES);
 			}
 		}
@@ -237,7 +231,7 @@ bool DesertBoss::update(float dt) {
 		health = 0.0;
 		enterState(DESERTBOSS_FRIENDLY);
 		windowManager->openDialogueTextBox(-1, DESERTBOSS_DEFEATTEXT);
-		soundManager->fadeOutMusic();
+		smh->soundManager->fadeOutMusic();
 		enemyManager->killEnemies(CACTLET_ENEMYID);
 	}
 
@@ -255,7 +249,7 @@ bool DesertBoss::update(float dt) {
 		alpha -= 100.0*dt;
 		if (alpha < 0.0) {
 			alpha = 0.0;
-			soundManager->playMusic("oldeTowneMusic");
+			smh->soundManager->playMusic("oldeTowneMusic");
 			enemyGroupManager->notifyOfDeath(groupID);
 			lootManager->addLoot(LOOT_NEW_ABILITY, x, y, LIGHTNING_ORB);
 			smh->saveManager->killBoss(DESERT_BOSS);
@@ -272,8 +266,8 @@ bool DesertBoss::update(float dt) {
  * on Cornwallis.
  */
 bool DesertBoss::isValidSpikeLocation(int x, int y) {
-	if (theEnvironment->collisionAt(x,y) != WALKABLE && 
-		theEnvironment->collisionAt(x,y) != SHALLOW_WATER) return false;
+	if (smh->environment->collisionAt(x,y) != WALKABLE && 
+		smh->environment->collisionAt(x,y) != SHALLOW_WATER) return false;
 	spikeCollisionBox->SetRadius(x, y, 10.0);
 	if (collisionBox->Intersect(spikeCollisionBox)) return false;
 	return true;
@@ -306,7 +300,7 @@ void DesertBoss::updateGroundSpikeState(float dt) {
 	if (groundSpikeState == GSS_TEXT && !windowManager->isTextBoxOpen()) {
 		groundSpikeState = GSS_SHADOWS;
 		generateRandomGroundSpikes();
-		timeEnteredGSS = gameTime;
+		timeEnteredGSS = smh->getGameTime();
 	}
 
 	//Show the shadows for 1 second before the spikes shoot up
@@ -320,32 +314,32 @@ void DesertBoss::updateGroundSpikeState(float dt) {
 			resources->GetAnimation("groundSpike")->SetFrame(0);
 			resources->GetAnimation("groundSpike")->SetMode(HGEANIM_FWD |HGEANIM_NOLOOP);
 			resources->GetAnimation("groundSpike")->Play();
-			timeEnteredGSS = gameTime;
+			timeEnteredGSS = smh->getGameTime();
 		}
 	}
 
 	//Show the spikes shooting up
-	if (groundSpikeState == GSS_SPIKES_RAISING && timeEnteredGSS + 0.25 < gameTime) {
+	if (groundSpikeState == GSS_SPIKES_RAISING && timeEnteredGSS + 0.25 < smh->getGameTime()) {
 		groundSpikeState = GSS_SPIKES_UP;
 		resources->GetAnimation("groundSpike")->Stop();
-		timeEnteredGSS = gameTime;
+		timeEnteredGSS = smh->getGameTime();
 	}
 
 	//After the spikes have been up for a couple seconds they start going back down
-	if (groundSpikeState == GSS_SPIKES_UP && timeEnteredGSS + 1.0 < gameTime) {
+	if (groundSpikeState == GSS_SPIKES_UP && timeEnteredGSS + 1.0 < smh->getGameTime()) {
 		groundSpikeState = GSS_SPIKES_LOWERING;
 		resources->GetAnimation("groundSpike")->SetMode(HGEANIM_REV |HGEANIM_NOLOOP);
 		resources->GetAnimation("groundSpike")->Play();
-		timeEnteredGSS = gameTime;
+		timeEnteredGSS = smh->getGameTime();
 	}
 
 	//After the 3rd ground spike attack Cornwallis needs to cool down!
-	if (groundSpikeState == GSS_SPIKES_LOWERING && timeEnteredGSS + 0.25 < gameTime) {
+	if (groundSpikeState == GSS_SPIKES_LOWERING && timeEnteredGSS + 0.25 < smh->getGameTime()) {
 		numGroundAttacks++;
 		if (numGroundAttacks < 3) {
 			groundSpikeState = GSS_SHADOWS;
 			generateRandomGroundSpikes();
-			timeEnteredGSS = gameTime;
+			timeEnteredGSS = smh->getGameTime();
 			spikeShadowAlpha = 0.0;
 		} else {
 			groundSpikeState = GSS_COOLING_OFF;
@@ -365,7 +359,7 @@ void DesertBoss::updateGroundSpikeState(float dt) {
 			} else {
 				enterState(DESERTBOSS_SPAWNING_CACTLETS);
 				numCactletsSpawned = 0;
-				lastCactletTime = gameTime;
+				lastCactletTime = smh->getGameTime();
 			}
 		}
 	}
@@ -374,7 +368,7 @@ void DesertBoss::updateGroundSpikeState(float dt) {
 	if (groundSpikeState == GSS_COOLING_OFF_TEXT && !windowManager->isTextBoxOpen()) {
 		enterState(DESERTBOSS_SPAWNING_CACTLETS);
 		numCactletsSpawned = 0;
-		lastCactletTime = gameTime;
+		lastCactletTime = smh->getGameTime();
 	}
 
 	// ----end state transition stuff --------
@@ -413,7 +407,7 @@ void DesertBoss::drawGroundSpikes(float dt) {
 						getScreenX(groundSpikes[i][j].x), getScreenY(groundSpikes[i][j].y));
 				}
 				//Debug mode - collision boxes
-				if (debugMode) {
+				if (smh->isDebugOn()) {
 					setGroundSpikeCollisionBox(groundSpikes[i][j].x, groundSpikes[i][j].y);
 					drawCollisionBox(spikeCollisionBox, RED);
 				}
@@ -488,7 +482,7 @@ void DesertBoss::spawnCactlet() {
  */ 
 void DesertBoss::enterState(int _state) {
 	state = _state;
-	timeEnteredState = gameTime;
+	timeEnteredState = smh->getGameTime();
 
 	if (state == DESERTBOSS_LAUNCHING_SPIKES) {
 		spikeRotVelocity = 0.0;

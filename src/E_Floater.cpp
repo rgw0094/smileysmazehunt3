@@ -11,9 +11,6 @@
 extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern Environment *theEnvironment;
-extern bool debugMode;
-extern float gameTime;
 
 /** 
  * Constructor
@@ -47,11 +44,11 @@ E_Floater::~E_Floater() {
 void E_Floater::update(float dt) {
 
 	//Update angle
-	angleVel = angleCoefficient * cos(gameTime) * dt;
+	angleVel = angleCoefficient * cos(smh->getGameTime()) * dt;
 	angle += angleVel * dt;
 
 	//Update floating shit
-	shadowOffset = 35.0 + 12.0 * cos(gameTime * 2.0);
+	shadowOffset = 35.0 + 12.0 * cos(smh->getGameTime() * 2.0);
 	collisionBox->SetRadius(x,y-shadowOffset,radius);
 	
 	//Update position
@@ -69,12 +66,12 @@ void E_Floater::update(float dt) {
 		if (hge->Random_Int(0,1) == 1) angleCoefficient *= -1;
 
 		dirChangeDelay = hge->Random_Float(2.0,3.0);
-		lastDirChange = gameTime;
+		lastDirChange = smh->getGameTime();
 	}
 
 	//Change direction if the enemy is going to hit a wall next frame
 	futureCollisionBox->SetRadius(max(4.0, x + dx*dt), max(4.0, y + dy*dt), 28.0f);
-	if (theEnvironment->enemyCollision(futureCollisionBox,this,dt)) {
+	if (smh->environment->enemyCollision(futureCollisionBox,this,dt)) {
 		//Bounce 180 degrees off the wall
 		angle += PI;
 	}
@@ -97,7 +94,7 @@ void E_Floater::draw(float dt) {
 	graphic[facing]->Render(screenX, screenY - shadowOffset);
 	resources->GetSprite("playerShadow")->Render(screenX, screenY);
 
-	if (debugMode) {
+	if (smh->isDebugOn()) {
 		drawCollisionBox(collisionBox, RED);
 	}
 

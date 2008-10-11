@@ -8,9 +8,7 @@
 
 extern SMH *smh;
 extern hgeResourceManager *resources;
-extern Environment *theEnvironment;
 extern HGE *hge;
-extern float gameTime;
 extern ProjectileManager *projectileManager;
 
 
@@ -22,10 +20,10 @@ E_Turret::E_Turret(int id, int x, int y, int groupID) {
 	//Doesn't use framework states
 	currentState = NULL;
 
-	theEnvironment->collision[x][y] = UNWALKABLE_PROJECTILE;
+	smh->environment->collision[x][y] = UNWALKABLE_PROJECTILE;
 
 	direction = variable2;
-	timeOfLastShot=gameTime;
+	timeOfLastShot=smh->getGameTime();
 
 	xTurret=x*64+32;
 	yTurret=y*64+32;
@@ -55,7 +53,7 @@ void E_Turret::draw(float dt) {
 void E_Turret::update(float dt) {
 	int xOffset,yOffset;
 	if (timePassedSince(timeOfLastShot) >= rangedAttackDelay) {
-		timeOfLastShot=gameTime;
+		timeOfLastShot=smh->getGameTime();
 		float angle;
 		switch (direction) {
 			case UP:

@@ -9,7 +9,6 @@
 
 extern SMH *smh;
 extern hgeResourceManager *resources;
-extern Environment *theEnvironment;
 extern HGE *hge;
 
 #define CLOWN_SPRING_CONSTANT .05

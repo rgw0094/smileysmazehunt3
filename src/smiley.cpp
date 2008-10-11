@@ -8,15 +8,12 @@
 #include "hgerect.h"
 #include "boss.h"
 
-extern bool debugMode;
 extern int gameState;
 extern hgeResourceManager *resources;
-extern float gameTime;
 extern int frameCounter;
 
 extern SMH *smh;
 extern HGE *hge;
-extern Environment *theEnvironment;
 
 /**
  * Switches the game state
@@ -37,7 +34,7 @@ void enterGameState(int newState) {
 
 	//Entering game state
 	if (gameState == GAME) {
-		gameTime = 0;
+		smh->setGameTime(0.0);
 		frameCounter = 0;
 	}
 }
@@ -68,21 +65,21 @@ void drawCollisionBox(hgeRect *box, int color) {
  * Return whether a grid coordinate is in bounds or not
  */
 bool inBounds(int gridX, int gridY) {
-	return (gridX >= 0 && gridY >= 0 && gridX < theEnvironment->areaWidth && gridY < theEnvironment->areaHeight);
+	return (gridX >= 0 && gridY >= 0 && gridX < smh->environment->areaWidth && gridY < smh->environment->areaHeight);
 }
 
 /**
  * Returns the screen x position given the global x position
  */
 int getScreenX(int x) {
-	return x - theEnvironment->xGridOffset*64.0 - theEnvironment->xOffset;
+	return x - smh->environment->xGridOffset*64.0 - smh->environment->xOffset;
 }
 
 /**
  * Returns the screen y position given the global y position
  */
 int getScreenY(int y) {
-	return y - theEnvironment->yGridOffset*64.0 - theEnvironment->yOffset;										  
+	return y - smh->environment->yGridOffset*64.0 - smh->environment->yOffset;										  
 }
 
 /**
@@ -284,7 +281,7 @@ float getAngleBetween(int x1, int y1, int x2, int y2) {
  * Returns the amount of time that has passed since time
  */
 float timePassedSince(float time) {
-	return gameTime - time;
+	return smh->getGameTime() - time;
 }
 
 /**

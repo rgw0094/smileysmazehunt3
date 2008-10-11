@@ -6,7 +6,6 @@
 #include "enemyGroupManager.h"
 #include "Player.h"
 #include "CollisionCircle.h"
-#include "SoundManager.h"
 #include "WeaponParticle.h"
 #include "Tongue.h"
 #include "WindowManager.h"
@@ -14,13 +13,9 @@
 extern SMH *smh;
 extern HGE *hge;
 extern WindowManager *windowManager;
-extern bool debugMode;
-extern Environment *theEnvironment;
 extern LootManager *lootManager;
 extern hgeResourceManager *resources;
 extern EnemyGroupManager *enemyGroupManager;
-extern SoundManager *soundManager;
-extern float gameTime;
 
 //States
 #define FIREBOSS_INACTIVE 0
@@ -53,8 +48,8 @@ FireBoss::FireBoss(int gridX, int gridY, int _groupID) {
 	health = maxHealth = HEALTH;
 	state = FIREBOSS_INACTIVE;
 	currentLocation = 0;	//Start at the middle location
-	startedAttackMode = gameTime;
-	lastFireOrb = gameTime - 5.0f;
+	startedAttackMode = smh->getGameTime();
+	lastFireOrb = smh->getGameTime() - 5.0f;
 	speed = 200;
 	startedIntroDialogue = false;
 	flashing = increaseAlpha = false;
@@ -140,7 +135,7 @@ void FireBoss::draw(float dt) {
 	}
 
 	//Draw collision boxes if in debug mode
-	if (debugMode) {
+	if (smh->isDebugOn()) {
 		for (int i = 0; i < 3; i++) {
 			drawCollisionBox(collisionBoxes[i], RED);
 		}
@@ -160,7 +155,7 @@ bool FireBoss::update(float dt) {
 	if (state == FIREBOSS_INACTIVE && !startedIntroDialogue && smh->player->gridY == startY+5  && smh->player->gridX == startX && smh->player->y < (startY+5)*64+33) {
 		windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS_INTRO);
 		startedIntroDialogue = true;
-		soundManager->fadeOutMusic();
+		smh->soundManager->fadeOutMusic();
 
 		//Enable enemy blocks for the boss - normally this would be done with a trigger
 		//pad placed in the editor but we want the blocks to appear at the same time
@@ -172,15 +167,15 @@ bool FireBoss::update(float dt) {
 	//Activate the boss when the intro dialogue is closed
 	if (state == FIREBOSS_INACTIVE && startedIntroDialogue && !windowManager->isTextBoxOpen()) {
 		state = FIREBOSS_ATTACK;
-		startedAttackMode = gameTime;
+		startedAttackMode = smh->getGameTime();
 		hge->Effect_Play(resources->GetEffect("snd_fireBossDie"));
 		//Start fenwar warping out effect
 		fenwarLeave = true;
-		startedFenwarLeave = gameTime;
+		startedFenwarLeave = smh->getGameTime();
 		fenwarWarp->Fire();
 		fenwarAlpha = 255.0f;
 		//Start boxx music
-		soundManager->playMusic("bossMusic");
+		smh->soundManager->playMusic("bossMusic");
 	}
 
 	//Update fenwar warping out effect
@@ -188,7 +183,7 @@ bool FireBoss::update(float dt) {
 		fenwarAlpha -= 255.0f*dt;
 		resources->GetSprite("fenwarDown")->SetColor(ARGB(alpha,255,255,255));
 		if (fenwarAlpha < 0.0f) showFenwar = false;
-		if (gameTime > startedFenwarLeave + 2.0f) fenwarLeave = false;
+		if (smh->getGameTime() > startedFenwarLeave + 2.0f) fenwarLeave = false;
 	}
 
 	//Don't update if inactive!!!
@@ -260,7 +255,7 @@ bool FireBoss::update(float dt) {
 	} else if (state == FIREBOSS_ATTACK) {
 		fireNova->MoveTo(getScreenX(x),getScreenY(y+floatY),true);
 		fireNova->Update(dt);
-		if (gameTime > startedAttackMode + 2.0f) {
+		if (smh->getGameTime() > startedAttackMode + 2.0f) {
 			changeState(FIREBOSS_MOVE);
 		}
 	}
@@ -276,9 +271,9 @@ bool FireBoss::update(float dt) {
 	}
 
 	//Shoot fire orbs every 10 seconds
-	if (state != FIREBOSS_FRIENDLY && state != FIREBOSS_INACTIVE && gameTime > lastFireOrb + 10) {
+	if (state != FIREBOSS_FRIENDLY && state != FIREBOSS_INACTIVE && smh->getGameTime() > lastFireOrb + 10) {
 		addOrb(x,y-80+floatY);
-		lastFireOrb = gameTime;
+		lastFireOrb = smh->getGameTime();
 	}
 
 	//Check collision with Smiley's tongue
@@ -288,14 +283,14 @@ bool FireBoss::update(float dt) {
 				resources->GetAnimation("phyrebozzDownMouth")->Play();
 				resources->GetAnimation("phyrebozzLeftMouth")->Play();
 				resources->GetAnimation("phyrebozzRightMouth")->Play();
-				lastHitByTongue = gameTime;
+				lastHitByTongue = smh->getGameTime();
 				health -= smh->player->getDamage();
 				if (health > 0.0f) {
 					hge->Effect_Play(resources->GetEffect("snd_fireBossHit"));
 				}
 				//Start flashing
 				flashing = true;
-				startedFlashing = gameTime;
+				startedFlashing = smh->getGameTime();
 				alpha = 255;
 				increaseAlpha = false;
 			}
@@ -334,7 +329,7 @@ bool FireBoss::update(float dt) {
 		alpha = 255;
 		smh->saveManager->killBoss(FIRE_BOSS);
 		enemyGroupManager->notifyOfDeath(groupID);
-		soundManager->fadeOutMusic();
+		smh->soundManager->fadeOutMusic();
 	}
 	
 	//After you beat the boss he runs away!!
@@ -353,7 +348,7 @@ bool FireBoss::update(float dt) {
 
 		//Done running away
 		if (alpha < 0.0f) {
-			soundManager->playMusic("smolderHollowMusic");
+			smh->soundManager->playMusic("smolderHollowMusic");
 			return true;
 		}
 	}
@@ -375,7 +370,7 @@ void FireBoss::changeState(int changeTo) {
 
 	//Switch to attack
 	if (state == FIREBOSS_ATTACK) {
-		startedAttackMode = gameTime;
+		startedAttackMode = smh->getGameTime();
 		fireNova->FireAt(getScreenX(x),getScreenY(y));
 		hge->Effect_Play(resources->GetEffect("snd_fireBossNova"));
 	
@@ -386,7 +381,7 @@ void FireBoss::changeState(int changeTo) {
 		while ((newLoc = hge->Random_Int(0,4)) == currentLocation) { }
 		currentLocation = newLoc;
 		//Calculate path time
-		startedPath = gameTime;
+		startedPath = smh->getGameTime();
 		pathTime = sqrt((x-(float)locations[currentLocation].x)*(x-(float)locations[currentLocation].x) + (y-(float)locations[currentLocation].y)*(y-(float)locations[currentLocation].y)) / float(speed);
 	}
 }
@@ -415,7 +410,7 @@ void FireBoss::updateOrbs(float dt) {
 		i->y += i->dy*dt;
 
 		//Destroy orbs after 6 seconds
-		if (gameTime > i->timeCreated + 6.3f) deleteOrb = true;
+		if (smh->getGameTime() > i->timeCreated + 6.3f) deleteOrb = true;
 
 		//Enemy collision
 		if (smh->player->collisionCircle->testBox(i->collisionBox) && !deleteOrb) {
@@ -442,7 +437,7 @@ void FireBoss::drawOrbs(float dt) {
 	std::list<FireOrb>::iterator i;
 	for (i = theOrbs.begin(); i != theOrbs.end(); i++) {
 		i->particle->Render();
-		if (debugMode) {
+		if (smh->isDebugOn()) {
 			drawCollisionBox(i->collisionBox, RED);
 		}
 	}
@@ -460,7 +455,7 @@ void FireBoss::addOrb(float _x, float _y) {
 	newOrb.collisionBox = new hgeRect();
 	newOrb.particle = new hgeParticleSystem("fireorb.psi", resources->GetSprite("particleGraphic2"));
 	newOrb.particle->Fire();
-	newOrb.timeCreated = gameTime;
+	newOrb.timeCreated = smh->getGameTime();
 
 	//Add it to the list
 	theOrbs.push_back(newOrb);

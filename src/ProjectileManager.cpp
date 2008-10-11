@@ -9,11 +9,8 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern Environment *theEnvironment;
-extern bool debugMode;
 extern hgeResourceManager *resources;
 extern EnemyManager *enemyManager;
-extern float gameTime;
 
 #define LASER_LENGTH 20.0
 
@@ -126,7 +123,7 @@ void ProjectileManager::update(float dt) {
 
 		//Orbs, Frisbees, and Cannonballs can toggle switches
 		if (!deleteProjectile && i->id == PROJECTILE_LIGHTNING_ORB || i->id == PROJECTILE_FRISBEE || i->id == PROJECTILE_TURRET_CANNONBALL) {	
-			if (theEnvironment->toggleSwitches(i->collisionBox, i->id != PROJECTILE_TURRET_CANNONBALL)) {
+			if (smh->environment->toggleSwitches(i->collisionBox, i->id != PROJECTILE_TURRET_CANNONBALL)) {
 				deleteProjectile = true;
 			}
 		}
@@ -147,7 +144,7 @@ void ProjectileManager::update(float dt) {
 			//If the orb entered a square with a mirror on it this frame,
 			//calculate when the orb should reflect, and what direction it
 			//should go when it does
-			int mirror = theEnvironment->collisionAt(i->x, i->y);
+			int mirror = smh->environment->collisionAt(i->x, i->y);
 			if (i->changedGridSquare && (mirror == MIRROR_UP_LEFT || mirror == MIRROR_UP_RIGHT || mirror == MIRROR_DOWN_LEFT || mirror == MIRROR_DOWN_RIGHT)) {
 				i->waitingToReflect = true;		
 				if (mirror == MIRROR_UP_LEFT) {
@@ -262,12 +259,12 @@ void ProjectileManager::update(float dt) {
 			//For friendly frisbees and lightning orbs, ignore silly pads when testing
 			//collision. They will be taken care of in the environment class when it
 			//tests collision with silly pads.
-			if (!deleteProjectile && theEnvironment->testCollision(i->terrainCollisionBox, canPass, true)) {
+			if (!deleteProjectile && smh->environment->testCollision(i->terrainCollisionBox, canPass, true)) {
 				deleteProjectile = true;
 			}
 		} else {
 			//For all other projectiles test collision normally
-			if (!deleteProjectile && theEnvironment->testCollision(i->terrainCollisionBox, canPass)) {
+			if (!deleteProjectile && smh->environment->testCollision(i->terrainCollisionBox, canPass)) {
 				deleteProjectile = true;
 			}
 		}
@@ -316,7 +313,7 @@ void ProjectileManager::draw(float dt) {
 		}
 		
 		//Debug stuff
-		if (debugMode) {
+		if (smh->isDebugOn()) {
 			drawCollisionBox(i->collisionBox, RED);
 		}
 	}
@@ -345,7 +342,7 @@ void ProjectileManager::reflectProjectile(std::list<Projectile>::iterator projec
 
 	projectile->angle += PI;
 
-	projectile->timeReflected = gameTime;
+	projectile->timeReflected = smh->getGameTime();
 	projectile->dx = -1 * projectile->dx;
 	projectile->dy = -1 * projectile->dy;
 	projectile->hostile = !projectile->hostile;

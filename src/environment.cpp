@@ -11,7 +11,6 @@
 #include "boss.h"
 #include "EnemyGroupManager.h"
 #include "WindowManager.h"
-#include "SoundManager.h"
 #include "hgeparticle.h"
 #include "Tongue.h"
 #include "SpecialTileManager.h"
@@ -31,10 +30,6 @@
 #include <iostream>
 #include <fstream>
 
-//Variables
-extern bool debugMode;
-extern float gameTime;
-
 //Objects
 extern HGE *hge;
 extern SMH *smh;
@@ -48,7 +43,6 @@ extern WindowManager *windowManager;
 extern BossManager *bossManager;
 extern hgeResourceManager *resources;
 extern EnemyGroupManager *enemyGroupManager;
-extern SoundManager *soundManager;
 extern LoadEffectManager *loadEffectManager;
 extern FenwarManager *fenwarManager;
 
@@ -202,34 +196,34 @@ void Environment::loadArea(int id, int from) {
 	//Set zone specific info
 	if (areaFile.is_open()) areaFile.close();
 	if (id == FOUNTAIN_AREA) {
-		soundManager->playMusic("townMusic");
+		smh->soundManager->playMusic("townMusic");
 		areaFile.open("Data/Maps/fountain.smh");
 	} else if (id == OLDE_TOWNE) {
-		soundManager->playMusic("oldeTowneMusic");
+		smh->soundManager->playMusic("oldeTowneMusic");
 		areaFile.open("Data/Maps/oldetowne.smh");
 	} else if (id == SMOLDER_HOLLOW) {
-		soundManager->playMusic("smolderHollowMusic");
+		smh->soundManager->playMusic("smolderHollowMusic");
 		areaFile.open("Data/Maps/smhollow.smh");
 	} else if (id == FOREST_OF_FUNGORIA) {
-		soundManager->playMusic("forestMusic");
+		smh->soundManager->playMusic("forestMusic");
 		areaFile.open("Data/Maps/forest.smh");
 	} else if (id == SESSARIA_SNOWPLAINS) {
-		soundManager->playMusic("iceMusic");
+		smh->soundManager->playMusic("iceMusic");
 		areaFile.open("Data/Maps/snow.smh");
 	} else if (id == TUTS_TOMB) {
-		soundManager->playMusic("kingTutMusic");
+		smh->soundManager->playMusic("kingTutMusic");
 		areaFile.open("Data/Maps/tutstomb.smh");
 	} else if (id == WORLD_OF_DESPAIR) {
-		soundManager->playMusic("realmOfDespairMusic");
+		smh->soundManager->playMusic("realmOfDespairMusic");
 		areaFile.open("Data/Maps/despair.smh");
 	} else if (id == SERPENTINE_PATH) {
-		soundManager->playMusic("serpentinePathMusic");
+		smh->soundManager->playMusic("serpentinePathMusic");
 		areaFile.open("Data/Maps/path.smh");
 	} else if (id == CASTLE_OF_EVIL) {
-		soundManager->playMusic("castleOfEvilMusic");
+		smh->soundManager->playMusic("castleOfEvilMusic");
 		areaFile.open("Data/Maps/castle.smh");
 	} else if (id == DEBUG_AREA) {
-		soundManager->stopMusic();
+		smh->soundManager->stopMusic();
 		areaFile.open("Data/Maps/debug.smh");
 	}
 
@@ -558,49 +552,49 @@ void Environment::draw(float dt) {
 					} else if (theCollision == SHALLOW_GREEN_WATER) {
 						resources->GetAnimation("greenWater")->SetColor(ARGB(125,255,255,255));
 						resources->GetAnimation("greenWater")->Render(drawX,drawY);
-					} else if (theCollision == SPRING_PAD && gameTime - 0.5f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if (theCollision == SPRING_PAD && smh->getGameTime() - 0.5f < activated[i+xGridOffset][j+yGridOffset]) {
 						resources->GetAnimation("spring")->Render(drawX,drawY);
-					} else if (theCollision == SUPER_SPRING && gameTime - 0.5f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if (theCollision == SUPER_SPRING && smh->getGameTime() - 0.5f < activated[i+xGridOffset][j+yGridOffset]) {
 						resources->GetAnimation("superSpring")->Render(drawX, drawY);
 					
 					//Switch animations
-					} else if ((theCollision == SILVER_SWITCH_LEFT || theCollision == SILVER_SWITCH_RIGHT) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == SILVER_SWITCH_LEFT || theCollision == SILVER_SWITCH_RIGHT) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
 						resources->GetAnimation("silverSwitch")->Render(drawX,drawY);
-					} else if ((theCollision == BROWN_SWITCH_LEFT || theCollision == BROWN_SWITCH_RIGHT) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == BROWN_SWITCH_LEFT || theCollision == BROWN_SWITCH_RIGHT) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
 						resources->GetAnimation("brownSwitch")->Render(drawX,drawY);
-					} else if ((theCollision == BLUE_SWITCH_LEFT || theCollision == BLUE_SWITCH_RIGHT) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == BLUE_SWITCH_LEFT || theCollision == BLUE_SWITCH_RIGHT) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
 						resources->GetAnimation("blueSwitch")->Render(drawX,drawY);
-					} else if ((theCollision == GREEN_SWITCH_LEFT || theCollision == GREEN_SWITCH_RIGHT) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == GREEN_SWITCH_LEFT || theCollision == GREEN_SWITCH_RIGHT) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
 						resources->GetAnimation("greenSwitch")->Render(drawX,drawY);
-					} else if ((theCollision == YELLOW_SWITCH_LEFT || theCollision == YELLOW_SWITCH_RIGHT) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == YELLOW_SWITCH_LEFT || theCollision == YELLOW_SWITCH_RIGHT) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
 						resources->GetAnimation("yellowSwitch")->Render(drawX,drawY);
-					} else if ((theCollision == WHITE_SWITCH_LEFT || theCollision == WHITE_SWITCH_RIGHT) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == WHITE_SWITCH_LEFT || theCollision == WHITE_SWITCH_RIGHT) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
 						resources->GetAnimation("whiteSwitch")->Render(drawX,drawY);
 					
 					//Cylinder animations
-					} else if ((theCollision == SILVER_CYLINDER_DOWN) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == SILVER_CYLINDER_DOWN) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
 						silverCylinder->Render(drawX,drawY);
-					} else if ((theCollision == SILVER_CYLINDER_UP) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == SILVER_CYLINDER_UP) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
 						silverCylinderRev->Render(drawX,drawY);
-					} else if ((theCollision == BROWN_CYLINDER_DOWN) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == BROWN_CYLINDER_DOWN) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
 						brownCylinder->Render(drawX,drawY);
-					} else if ((theCollision == BROWN_CYLINDER_UP) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == BROWN_CYLINDER_UP) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
 						brownCylinderRev->Render(drawX,drawY);
-					} else if ((theCollision == BLUE_CYLINDER_DOWN) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == BLUE_CYLINDER_DOWN) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
 						blueCylinder->Render(drawX,drawY);
-					} else if ((theCollision == BLUE_CYLINDER_UP) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == BLUE_CYLINDER_UP) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
 						blueCylinderRev->Render(drawX,drawY);
-					} else if ((theCollision == GREEN_CYLINDER_DOWN) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == GREEN_CYLINDER_DOWN) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
 						greenCylinder->Render(drawX,drawY);
-					} else if ((theCollision == GREEN_CYLINDER_UP) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == GREEN_CYLINDER_UP) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
 						greenCylinderRev->Render(drawX,drawY);
-					} else if ((theCollision == YELLOW_CYLINDER_DOWN) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == YELLOW_CYLINDER_DOWN) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
 						yellowCylinder->Render(drawX,drawY);
-					} else if ((theCollision == YELLOW_CYLINDER_UP) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == YELLOW_CYLINDER_UP) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
 						yellowCylinderRev->Render(drawX,drawY);
-					} else if ((theCollision == WHITE_CYLINDER_DOWN) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == WHITE_CYLINDER_DOWN) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
 						whiteCylinder->Render(drawX,drawY);
-					} else if ((theCollision == WHITE_CYLINDER_UP) && gameTime - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == WHITE_CYLINDER_UP) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
 						whiteCylinderRev->Render(drawX,drawY);
 
 					//Save thing
@@ -668,7 +662,7 @@ void Environment::draw(float dt) {
 	environmentParticles->Render();
 
 	//Debug mode stuff
-	if (debugMode) {
+	if (smh->isDebugOn()) {
 
 		//Column lines
 		for (int i = 0; i <= screenWidth; i++) {
@@ -792,7 +786,7 @@ void Environment::update(float dt) {
 
 			//Update timed switches
 			if (isCylinderSwitchLeft(collision[i][j]) || isCylinderSwitchRight(collision[i][j])) {
-				if (variable[i][j] != -1 && activated[i][j] + (float)variable[i][j] < gameTime && 
+				if (variable[i][j] != -1 && activated[i][j] + (float)variable[i][j] < smh->getGameTime() && 
 						smh->saveManager->isTileChanged( i, j)) {
 					
 					//Make sure the player isn't on top of any of the cylinders that will pop up
@@ -983,7 +977,7 @@ bool Environment::toggleSwitchAt(int gridX, int gridY, bool playSoundFarAway) {
 	} else if (collision[gridX][gridY] == SHRINK_TUNNEL_SWITCH) {
 
 		hasSwitch = true;
-		activated[gridX][gridY] = gameTime;
+		activated[gridX][gridY] = smh->getGameTime();
 		//Loop through the grid and look for shrink tunnels with the same id as the switch
 		for (int i = 0; i < areaWidth; i++) {
 			for (int j = 0; j < areaHeight; j++) {
@@ -1001,7 +995,7 @@ bool Environment::toggleSwitchAt(int gridX, int gridY, bool playSoundFarAway) {
 	} else if (collision[gridX][gridY] == SPIN_ARROW_SWITCH) {
 
 		hasSwitch = true;
-		activated[gridX][gridY] = gameTime;
+		activated[gridX][gridY] = smh->getGameTime();
 
 		//Loop through the grid and look for arrows with the same id as the switch
 		for (int i = 0; i < areaWidth; i++) {
@@ -1024,7 +1018,7 @@ bool Environment::toggleSwitchAt(int gridX, int gridY, bool playSoundFarAway) {
 	} else if (collision[gridX][gridY] == MIRROR_SWITCH) {
 
 		hasSwitch = true;
-		activated[gridX][gridY] = gameTime;
+		activated[gridX][gridY] = smh->getGameTime();
 		
 		//Switch up and down cylinders
 		for (int i = 0; i < areaWidth; i++) {
@@ -1052,7 +1046,7 @@ bool Environment::toggleSwitchAt(int gridX, int gridY, bool playSoundFarAway) {
  */  
 void Environment::flipCylinderSwitch(int gridX, int gridY) {
 
-	activated[gridX][gridY] = gameTime;
+	activated[gridX][gridY] = smh->getGameTime();
 
 	//Flip switch in collision layer
 	if (isCylinderSwitchLeft(collision[gridX][gridY])) {
@@ -1082,7 +1076,7 @@ void Environment::flipCylinderSwitch(int gridX, int gridY) {
 	resources->GetAnimation("greenSwitch")->Play();
 	resources->GetAnimation("yellowSwitch")->Play();
 	resources->GetAnimation("whiteSwitch")->Play();
-	activated[gridX][gridY] = gameTime;
+	activated[gridX][gridY] = smh->getGameTime();
 
 	//Switch up and down cylinders if the player isn't on top of any down cylindersw
 	if (!playerOnCylinder(gridX,gridY)) {
@@ -1102,10 +1096,10 @@ void Environment::switchCylinders(int switchID) {
 			if (ids[i][j] == switchID) {
 				if (isCylinderUp(collision[i][j])) {
 					collision[i][j] -= 16;
-					activated[i][j] = gameTime;
+					activated[i][j] = smh->getGameTime();
 				} else if (isCylinderDown(collision[i][j])) {
 					collision[i][j] += 16;
-					activated[i][j] = gameTime;
+					activated[i][j] = smh->getGameTime();
 				}
 				silverCylinder->Play();
 				brownCylinder->Play();

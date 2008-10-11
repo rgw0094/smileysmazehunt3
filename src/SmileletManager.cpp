@@ -15,8 +15,6 @@ using namespace std;
 extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern Environment *theEnvironment;
-extern float gameTime;
 extern EnemyManager *enemyManager;
 extern ProjectileManager *projectileManager;
 
@@ -160,7 +158,7 @@ void SmileletManager::queueSmilelet(std::list<oneSmilelet>::iterator c) {
 	nextWormPosition++;
 	numFollowing++;
 	c->beginFollow = false;
-	c->timeBeganBobbing = gameTime;
+	c->timeBeganBobbing = smh->getGameTime();
 }
 
 void SmileletManager::doSmileletFollow(std::list<oneSmilelet>::iterator c) {
@@ -270,7 +268,7 @@ void SmileletManager::checkForNearbyFlower() {
 
 	if (foundFlower && numFollowing == 5) {
 		
-		timeEnteredState = gameTime;
+		timeEnteredState = smh->getGameTime();
 		std::list<oneSmilelet>::iterator i;
 		double curAngle = 0;
 		for (i = theSmilelets.begin(); i != theSmilelets.end(); i++) {
@@ -292,7 +290,7 @@ void SmileletManager::checkForNearbyFlower() {
 bool SmileletManager::isFlowerAt(int gridX,int gridY) {
 	if (!inBounds(gridX,gridY)) return false;
 	
-	return (theEnvironment->isSadSmileletFlowerAt(gridX,gridY));
+	return (smh->environment->isSadSmileletFlowerAt(gridX,gridY));
 }
 
 void SmileletManager::switchToCircleFlower() {
@@ -302,10 +300,10 @@ void SmileletManager::switchToCircleFlower() {
 		i->state = SMILELET_STATE_CIRCLE_FLOWER;
 	}
 
-	timeEnteredState = gameTime;
+	timeEnteredState = smh->getGameTime();
 
 	//Make flower happy, so Smiley can pass
-	theEnvironment->collision[flowerGridX][flowerGridY] = SMILELET_FLOWER_HAPPY;
+	smh->environment->collision[flowerGridX][flowerGridY] = SMILELET_FLOWER_HAPPY;
 }
 
 int SmileletManager::convertAngleToDir(double angle) {
@@ -333,7 +331,7 @@ void SmileletManager::initiatePanic() {
 		if (i->state == SMILELET_STATE_FOLLOWING_SMILEY) {
 			i->state = SMILELET_STATE_RUNNING_HOME;
 
-			i->timeBeganPanic = gameTime;
+			i->timeBeganPanic = smh->getGameTime();
 			i->beginPanicX = i->x;
 			i->beginPanicY = i->y;
 

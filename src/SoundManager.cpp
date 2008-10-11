@@ -1,6 +1,6 @@
+#include "SMH.h"
 #include "hge.h"
 #include "hgeresource.h"
-#include "SoundManager.h"
 
 extern HGE *hge;
 extern hgeResourceManager *resources;

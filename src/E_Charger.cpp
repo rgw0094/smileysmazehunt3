@@ -13,8 +13,6 @@ extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
 extern ProjectileManager *projectileManager;
-extern Environment *theEnvironment;
-extern float gameTime;
 
 //Charge constants
 #define CHARGE_RADIUS 350
@@ -69,7 +67,7 @@ bool E_Charger::doTongueCollision(Tongue *tongue, float damage) {
 			
 		//Make sure the enemy wasn't already hit by this attack
 		if (timePassedSince(lastHitByWeapon) > .5) {
-			lastHitByWeapon = gameTime;
+			lastHitByWeapon = smh->getGameTime();
 			dealDamageAndKnockback(damage, 65.0, smh->player->x, smh->player->y);
 			startFlashing();
 			//If charging, stop
@@ -95,10 +93,10 @@ void E_Charger::update(float dt) {
 		//Charge if the player gets close and there is an open path
 		if (distanceFromPlayer() <= CHARGE_RADIUS && 
 				timePassedSince(timeStartedCharging + CHARGE_DURATION) > CHARGE_DELAY
-				&& theEnvironment->validPath(x, y, smh->player->x, smh->player->y, 16, canPass)) {
+				&& smh->environment->validPath(x, y, smh->player->x, smh->player->y, 16, canPass)) {
 
 			chargeState = CHARGE_STATE_PAUSE;
-			timeStartedCharging = gameTime;
+			timeStartedCharging = smh->getGameTime();
 			setFacingPlayer();
 			setState(NULL);
 			dx = dy = 0;
@@ -109,7 +107,7 @@ void E_Charger::update(float dt) {
 
 		//Start charging after a short pause.
 		if (timePassedSince(timeStartedCharging) > 0.5) {
-			timeStartedCharging = gameTime;
+			timeStartedCharging = smh->getGameTime();
 			chargeAngle = getAngleBetween(x, y, smh->player->x, smh->player->y);
 
 			//Update state
@@ -122,15 +120,15 @@ void E_Charger::update(float dt) {
 		//Set dx/dy to charge towards player. Don't do this if the enemy is being 
 		//knocked back because it will override the knockback!
 		if (!knockback) {
-			dx = 600.0 * cos(chargeAngle) * sin(((gameTime - timeStartedCharging) / CHARGE_DURATION)*PI);
-			dy = 600.0 * sin(chargeAngle) * sin(((gameTime - timeStartedCharging) / CHARGE_DURATION)*PI);
+			dx = 600.0 * cos(chargeAngle) * sin(((smh->getGameTime() - timeStartedCharging) / CHARGE_DURATION)*PI);
+			dy = 600.0 * sin(chargeAngle) * sin(((smh->getGameTime() - timeStartedCharging) / CHARGE_DURATION)*PI);
 		}
 
 		//If the enemy hits a wall or the charge duration has expired,
 		//return to wander mode
 		futureCollisionBox->SetRadius(max(4.0, x + dx*dt), max(4.0, y + dy*dt), 28.0f);
 		if (timePassedSince(timeStartedCharging) > CHARGE_DURATION ||
-				theEnvironment->enemyCollision(futureCollisionBox,this,dt)) {
+				smh->environment->enemyCollision(futureCollisionBox,this,dt)) {
 			chargeState = CHARGE_STATE_NOT_CHARGING;
 			setState(new ES_Wander(this));
 		}

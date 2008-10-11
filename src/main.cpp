@@ -1,7 +1,7 @@
 #include "EnemyManager.h"
 #include "lootmanager.h"
 #include "ProjectileManager.h"
-#include "menu.h"
+#include "MainMenu.h"
 #include "player.h"
 #include "minimenu.h"
 #include "npcmanager.h"
@@ -9,7 +9,6 @@
 #include "EnemyGroupManager.h"
 #include "WindowManager.h"
 #include "resource1.h"
-#include "SoundManager.h"
 #include "smiley.h"
 #include "environment.h"
 #include "LoadEffectManager.h"
@@ -21,7 +20,6 @@
 //Global Objects
 HGE *hge=0;
 hgeResourceManager *resources;
-Environment *theEnvironment;
 EnemyManager *enemyManager;
 LootManager *lootManager;
 ProjectileManager *projectileManager;
@@ -29,7 +27,6 @@ NPCManager *npcManager;
 BossManager *bossManager;
 EnemyGroupManager *enemyGroupManager;
 WindowManager *windowManager;
-SoundManager *soundManager;
 LoadEffectManager *loadEffectManager;
 FenwarManager *fenwarManager;
 SMH *smh;
@@ -38,10 +35,8 @@ SMH *smh;
 hgeSprite *itemLayer[512];
 
 //Variables
-float gameTime = 0.0;
 int frameCounter = 0;
 int gameState = MENU;
-bool debugMode;
 float darkness = 0.0;
 bool debugMovePressed = false;
 float lastDebugMoveTime = 0.0;
@@ -96,9 +91,6 @@ void loadGameObjects() {
 
 	smh = new SMH();
 	smh->init();
-
-	hge->System_Log("Creating SoundManager");
-	soundManager = new SoundManager();
 			
 	hge->System_Log("Creating LoadEffectManager");
 	loadEffectManager = new LoadEffectManager();
@@ -127,9 +119,7 @@ void loadGameObjects() {
 	hge->System_Log("Creating FenwarManager");
 	fenwarManager = new FenwarManager();
 
-	//Environment must be created after Player!
-	hge->System_Log("Creating Environment");
-	theEnvironment = new Environment();
+	
 
 	hge->System_Log("******************************");
 }
@@ -140,7 +130,7 @@ void loadGameObjects() {
 void doDebugInput() {
 
 	//Toggle debug mode
-	if (hge->Input_KeyDown(HGEK_D)) debugMode = !debugMode;
+	if (hge->Input_KeyDown(HGEK_D)) smh->toggleDebugMode();
 
 	if (gameState == GAME) {
 
@@ -167,7 +157,7 @@ void doDebugInput() {
 		if (hge->Input_GetKeyState(HGEK_NUMPAD8) || hge->Input_GetKeyState(HGEK_NUMPAD5) || hge->Input_GetKeyState(HGEK_NUMPAD4) || hge->Input_GetKeyState(HGEK_NUMPAD6)) {
 			if (!debugMovePressed) {
 				debugMovePressed = true;
-				lastDebugMoveTime = gameTime;
+				lastDebugMoveTime = smh->getGameTime();
 			}
 			if (hge->Input_KeyDown(HGEK_NUMPAD8) || (timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(HGEK_NUMPAD8))) yMove = -1;
 			if (hge->Input_KeyDown(HGEK_NUMPAD5) || (timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(HGEK_NUMPAD5))) yMove = 1;
@@ -233,17 +223,17 @@ bool FrameFunc() {
 		if (!windowManager->isOpenWindow()) {
 			
 			//Keep track of the time that no windows are open.
-			gameTime += dt;
+			smh->setGameTime(smh->getGameTime() + dt);
 			
 			//If the loading effect isn't active, update the game objects
 			if (!loadEffectManager->isEffectActive()) {
 				
 				fenwarManager->update(dt);
-				theEnvironment->updateTutorialMan(dt);
+				smh->environment->updateTutorialMan(dt);
 
-				if (!fenwarManager->isEncounterActive() && !theEnvironment->isTutorialManActive()) {
+				if (!fenwarManager->isEncounterActive() && !smh->environment->isTutorialManActive()) {
 					smh->player->update(dt);
-					theEnvironment->update(dt);
+					smh->environment->update(dt);
 					bossManager->update(dt);
 					enemyManager->update(dt);
 					lootManager->update(dt);
@@ -276,14 +266,14 @@ bool RenderFunc() {
 	} else {
 		
 		//Draw objects - order is very important!!!
-		theEnvironment->draw(dt);
+		smh->environment->draw(dt);
 		lootManager->draw(dt);
 		enemyManager->draw(dt);
 		npcManager->draw(dt);
 		bossManager->drawBeforeSmiley(dt);
 		smh->player->draw(dt);
 		bossManager->drawAfterSmiley(dt);
-		theEnvironment->drawAfterSmiley(dt);
+		smh->environment->drawAfterSmiley(dt);
 		fenwarManager->draw(dt);
 		projectileManager->draw(dt);
 		if (darkness > 0.0) shadeScreen(darkness);
@@ -293,7 +283,7 @@ bool RenderFunc() {
 
 	}
 
-	if (debugMode) {
+	if (smh->isDebugOn()) {
 		//Grid co-ords and fps
 		resources->GetFont("curlz")->printf(1000,5,HGETEXT_RIGHT,"(%d,%d)  FPS: %d",smh->player->gridX,smh->player->gridY, hge->Timer_GetFPS());
 	}

@@ -7,7 +7,6 @@
 
 extern SMH *smh;
 extern ProjectileManager *projectileManager;
-extern float gameTime;
 
 ES_RangedAttack::ES_RangedAttack(BaseEnemy *_owner) {
 	owner = _owner;
@@ -24,8 +23,8 @@ void ES_RangedAttack::update(float dt) {
 
 	//Fire ranged weapon
 	if (!owner->frozen && !owner->stunned && !smh->player->isInvisible() &&
-		gameTime - owner->rangedAttackDelay > owner->lastRangedAttack) {
-			owner->lastRangedAttack = gameTime;
+		smh->getGameTime() - owner->rangedAttackDelay > owner->lastRangedAttack) {
+			owner->lastRangedAttack = smh->getGameTime();
 			projectileManager->addProjectile(owner->x, owner->y, owner->projectileSpeed, 
 				getAngleBetween(owner->x, owner->y, smh->player->x, smh->player->y), 
 				owner->projectileDamage, true, owner->rangedType, true);

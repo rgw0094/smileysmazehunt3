@@ -1,15 +1,13 @@
 #include "SMH.h"
 #include "hgeresource.h"
-#include "menu.h"
+#include "MainMenu.h"
 #include "environment.h"
 #include "player.h"
 #include "Button.h"
 #include "Smiley.h"
 
 extern SMH *smh;
-extern Menu *theMenu;
 extern hgeResourceManager *resources;
-extern Environment *theEnvironment;
 
 extern float darkness;
 
@@ -62,7 +60,7 @@ void DeathScreen::draw(float dt) {
 
 	//Keep drawing the environment and player while the screen is fading in
 	if (alpha < 255.0) {
-		theEnvironment->draw(dt);
+		smh->environment->draw(dt);
 		smh->player->draw(dt);
 	}
 

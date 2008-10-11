@@ -8,7 +8,6 @@
 #include "ProjectileManager.h"
 #include "lootmanager.h"
 #include "environment.h"
-#include "SoundManager.h"
 #include "Tongue.h"
 #include "WeaponParticle.h"
 #include "WindowManager.h"
@@ -19,12 +18,8 @@ extern HGE *hge;
 extern WindowManager *windowManager;
 extern hgeResourceManager *resources;
 extern EnemyGroupManager *enemyGroupManager;
-extern bool debugMode;
 extern ProjectileManager *projectileManager;
 extern LootManager *lootManager;
-extern Environment *theEnvironment;
-extern SoundManager *soundManager;
-extern float gameTime;
 
 ForestBoss::ForestBoss(int _gridX, int _gridY, int _groupID) {
 	gridX = _gridX;
@@ -80,7 +75,7 @@ bool ForestBoss::update(float dt) {
 	//Activate the boss when the intro dialogue is closed
 	if (state == FORESTBOSS_INACTIVE && startedIntroDialogue && !windowManager->isTextBoxOpen()) {
 		enterState(FORESTBOSS_BATTLE);
-		soundManager->playMusic("bossMusic");
+		smh->soundManager->playMusic("bossMusic");
 	}
 
 	//Show Garmborn's tongue text the first time Smiley licks him.
@@ -157,7 +152,7 @@ bool ForestBoss::update(float dt) {
 		//When the forest boss is done fading out the boss sequence is finished
 		if (alpha < 0.0) {
 			lootManager->addLoot(LOOT_NEW_ABILITY, x, y, SPRINT_BOOTS);
-			soundManager->playMusic("forestMusic");
+			smh->soundManager->playMusic("forestMusic");
 			enemyGroupManager->notifyOfDeath(groupID);
 			smh->saveManager->killBoss(FOREST_BOSS);
 			return true; //Return true to delete the boss
@@ -250,11 +245,11 @@ void ForestBoss::draw(float dt) {
 	
 	//Particles
 	particles->Update(dt);
-	particles->Transpose(-1*(theEnvironment->xGridOffset*64 + theEnvironment->xOffset), -1*(theEnvironment->yGridOffset*64 + theEnvironment->yOffset));
+	particles->Transpose(-1*(smh->environment->xGridOffset*64 + smh->environment->xOffset), -1*(smh->environment->yGridOffset*64 + smh->environment->yOffset));
 	particles->Render();
 
 	//Debug shit
-	if (debugMode) {
+	if (smh->isDebugOn()) {
 		drawCollisionBox(collisionBox, RED);
 		drawCollisionBox(frisbeeReflectBox, RED);
 	}
@@ -268,7 +263,7 @@ void ForestBoss::draw(float dt) {
 void ForestBoss::enterState(int _state) {
 
 	state = _state;
-	timeEnteredState = gameTime;
+	timeEnteredState = smh->getGameTime();
 
 	//If Garmborn just entered battle spawn the initial treelet locations.
 	if (state == FORESTBOSS_BATTLE) {
@@ -285,7 +280,7 @@ void ForestBoss::enterState(int _state) {
 	//If Garmborn was just defeated, show the defeat dialogue.
 	if (state == FORESTBOSS_DEFEATED) {
 		treeletsFadingOut = true;
-		soundManager->fadeOutMusic();
+		smh->soundManager->fadeOutMusic();
 		windowManager->openDialogueTextBox(-1, FORESTBOSS_DEFEATTEXT);
 		resetOwlets(true);
 	}
@@ -346,7 +341,7 @@ void ForestBoss::drawTreelets(float dt) {
 			}
 
 			//Debug mode - draw collision boxes
-			if (debugMode) {
+			if (smh->isDebugOn()) {
 				treeletCollisionBox->Set(treeletLocs[i].x - 48.0, 
 									 treeletLocs[i].y - 53.0,
 									 treeletLocs[i].x + 48.0,
@@ -383,7 +378,7 @@ void ForestBoss::spawnOwlet() {
 	newOwlet.collisionCircle = new CollisionCircle();
 	newOwlet.animation = new hgeAnimation(*resources->GetAnimation("owlet"));
 	newOwlet.animation->Play();
-	newOwlet.timeSpawned = gameTime;
+	newOwlet.timeSpawned = smh->getGameTime();
 	newOwlet.startedDiveBomb = false;
 
 	//When an owlet first spawns it floats slowly away from Garmborn
@@ -394,7 +389,7 @@ void ForestBoss::spawnOwlet() {
 	//Add it to the list
 	owlets.push_back(newOwlet);
 
-	lastOwletTime = gameTime;
+	lastOwletTime = smh->getGameTime();
 }
 
 /** 
@@ -409,7 +404,7 @@ void ForestBoss::drawOwlets(float dt) {
 		i->animation->Render(getScreenX(i->x),getScreenY(i->y));
 
 		//Debug mode - draw the collision Circle
-		if (debugMode) i->collisionCircle->draw();
+		if (smh->isDebugOn()) i->collisionCircle->draw();
 
 	}
 }
@@ -435,14 +430,14 @@ void ForestBoss::updateOwlets(float dt) {
 		}
 
 		//Check for collision with walls and Smiley's weapons
-		if (theEnvironment->collisionAt(i->x, i->y) == UNWALKABLE ||
+		if (smh->environment->collisionAt(i->x, i->y) == UNWALKABLE ||
 				smh->player->getTongue()->testCollision(i->collisionCircle) ||
 				smh->player->fireBreathParticle->testCollision(i->collisionCircle)) {
 			collision = true;
 		}
 
 		//Check for collision with walls
-		if (theEnvironment->collisionAt(i->x, i->y) == UNWALKABLE) {
+		if (smh->environment->collisionAt(i->x, i->y) == UNWALKABLE) {
 			collision = true;
 		}
 
