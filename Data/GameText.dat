@@ -119,7 +119,8 @@ Sign57 = "The next room is guarded by the Protectors.  They are invulnerable and
 Sign58 = "Did you read the last sign?  We're warning you."
 Sign59 = "Walk 3 more blocks to the right and you're toast."
 
-
+;CASTLE.SMH
+Sign60 = "There is a warp hidden in the Tapestry of Evil."
 
 
 
