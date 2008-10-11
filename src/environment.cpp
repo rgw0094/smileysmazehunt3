@@ -37,10 +37,8 @@ extern LootManager *lootManager;
 extern ProjectileManager *projectileManager;
 extern TextBox *theTextBox;
 extern hgeStringTable *stringTable;
-extern NPCManager *npcManager;
 extern BossManager *bossManager;
 extern hgeResourceManager *resources;
-extern EnemyGroupManager *enemyGroupManager;
 extern LoadEffectManager *loadEffectManager;
 extern FenwarManager *fenwarManager;
 
@@ -145,8 +143,8 @@ void Environment::reset() {
 	enemyManager->reset();
 	projectileManager->reset();
 	lootManager->reset();
-	npcManager->reset();
-	enemyGroupManager->resetGroups();
+	smh->npcManager->reset();
+	smh->enemyGroupManager->resetGroups();
 	tapestryManager->reset();
 	specialTileManager->reset();
 	evilWallManager->reset();
@@ -399,7 +397,7 @@ void Environment::loadArea(int id, int from) {
 
 				if (ids[col][row] == ENEMYGROUP_ENEMY) {
 					//If this enemy is part of a group, notify the manager
-					enemyGroupManager->addEnemy(variable[col][row]);
+					smh->enemyGroupManager->addEnemy(variable[col][row]);
 				}
 				if (ids[col][row] != ENEMYGROUP_ENEMY_POPUP) {
 					//Don't spawn popup enemies yet
@@ -408,7 +406,7 @@ void Environment::loadArea(int id, int from) {
 
 			//128 - 239 are NPCs
 			} else if (enemy >= 128 && enemy < 240) {
-				npcManager->addNPC(enemy-128,ids[col][row],col,row);
+				smh->npcManager->addNPC(enemy-128,ids[col][row],col,row);
 			} 
 		}
 		//Read the newline
@@ -640,7 +638,7 @@ void Environment::draw(float dt) {
 						//If this is an enemy block, draw it with the enemy group's
 						//block alpha
 						itemLayer[theItem]->SetColor(ARGB(
-							enemyGroupManager->groups[variable[i+xGridOffset][j+yGridOffset]].blockAlpha, 255, 255, 255));
+							smh->enemyGroupManager->groups[variable[i+xGridOffset][j+yGridOffset]].blockAlpha, 255, 255, 255));
 						itemLayer[theItem]->Render(drawX,drawY);
 						itemLayer[theItem]->SetColor(ARGB(255,255,255,255));
 					} else {

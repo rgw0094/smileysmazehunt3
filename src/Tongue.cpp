@@ -11,7 +11,6 @@
 #include "hgeresource.h"
 #include "hgeanim.h"
 
-extern NPCManager *npcManager;
 extern EnemyManager *enemyManager;
 extern hgeResourceManager *resources;
 extern HGE *hge;
@@ -74,7 +73,7 @@ void Tongue::update(float dt) {
 	//Activate stuff - only one thing can be activated per attack
 	if (!hasActivatedSomething) {
 		if (smh->environment->toggleSwitches(this) ||
-				npcManager->talkToNPCs(this) ||
+				smh->npcManager->talkToNPCs(this) ||
 				(!smh->windowManager->isOpenWindow() && smh->environment->hitSaveShrine(this)) ||
 				(!smh->windowManager->isTextBoxOpen() && smh->environment->hitSigns(this))) {
 			hasActivatedSomething = true;

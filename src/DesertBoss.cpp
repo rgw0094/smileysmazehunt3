@@ -17,7 +17,6 @@
 extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern EnemyGroupManager *enemyGroupManager;
 extern ProjectileManager *projectileManager;
 extern EnemyManager *enemyManager;
 extern LootManager *lootManager;
@@ -114,7 +113,7 @@ bool DesertBoss::update(float dt) {
 
 	//When smiley triggers the boss' enemy blocks start his dialogue.
 	if (state == DESERTBOSS_INACTIVE && !startedIntroDialogue) {
-		if (enemyGroupManager->groups[groupID].triggeredYet) {
+		if (smh->enemyGroupManager->groups[groupID].triggeredYet) {
 			smh->windowManager->openDialogueTextBox(-1, TEXT_DESERTBOSS_INTRO);
 			startedIntroDialogue = true;
 		} else {
@@ -249,7 +248,7 @@ bool DesertBoss::update(float dt) {
 		if (alpha < 0.0) {
 			alpha = 0.0;
 			smh->soundManager->playMusic("oldeTowneMusic");
-			enemyGroupManager->notifyOfDeath(groupID);
+			smh->enemyGroupManager->notifyOfDeath(groupID);
 			lootManager->addLoot(LOOT_NEW_ABILITY, x, y, LIGHTNING_ORB);
 			smh->saveManager->killBoss(DESERT_BOSS);
 			return true;

@@ -1,17 +1,16 @@
 #include "SMH.h"
 #include "MainMenu.h"
 #include "smiley.h"
+#include "hgeresource.h"
 
 extern SMH *smh;
-
-//Variables
-extern int gameState;
 
 /**
  * Constructor
  */
 MainMenu::MainMenu() {
 	menuScreen = NULL;
+	smh->resources->GetFont("controls")->SetColor(ARGB(255,0,0,0));
 	setScreen(TITLE_SCREEN);
 }
 

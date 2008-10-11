@@ -15,7 +15,6 @@ extern SMH *smh;
 extern HGE *hge;
 extern LootManager *lootManager;
 extern hgeResourceManager *resources;
-extern EnemyGroupManager *enemyGroupManager;
 extern ProjectileManager *projectileManager;
 
 #define TEXT_FIREBOSS2_INTRO 160
@@ -171,7 +170,7 @@ bool FireBossTwo::update(float dt) {
 	//When the player enters his chamber shut the doors and start the intro dialogue
 	if (state == FIREBOSS_INACTIVE && !startedIntroDialogue) {
 		//When Phyrebozz's group is triggered start the intro dialogue
-		if (enemyGroupManager->groups[groupID].triggeredYet) {
+		if (smh->enemyGroupManager->groups[groupID].triggeredYet) {
 			smh->windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS2_INTRO);
 			startedIntroDialogue = true;
 			smh->soundManager->fadeOutMusic();
@@ -519,7 +518,7 @@ void FireBossTwo::die() {
 	facing = DOWN;
 	alpha = 255;
 	smh->saveManager->killBoss(FIRE_BOSS2);
-	enemyGroupManager->notifyOfDeath(groupID);
+	smh->enemyGroupManager->notifyOfDeath(groupID);
 	smh->soundManager->fadeOutMusic();
 }
 

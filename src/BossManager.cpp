@@ -1,3 +1,4 @@
+#include "SMH.h"
 #include "boss.h"
 #include "fireboss.h"
 #include "DesertBoss.h"
@@ -8,10 +9,8 @@
 #include "Fireboss2.h"
 #include "CandyBoss.h"
 #include "EnemyGroupManager.h"
-#include "hge.h"
 
-extern EnemyGroupManager *enemyGroupManager;
-extern HGE *hge;
+extern SMH *smh;
 
 BossManager::BossManager() {
 }
@@ -25,7 +24,7 @@ BossManager::~BossManager() {
  */
 void BossManager::spawnBoss(int bossID, int groupID, int gridX, int gridY) {
 
-	hge->System_Log("Spawning Boss %d", bossID);
+	smh->log("Spawning Boss %d", bossID);
 
 	BossStruct newBoss;
 
@@ -48,14 +47,14 @@ void BossManager::spawnBoss(int bossID, int groupID, int gridX, int gridY) {
 		newBoss.boss = new CandyBoss(gridX, gridY, groupID);
 	} else {
 		//Unimplemented boss - exit the program
-		hge->System_Log("FATAL ERROR: BossManager.spawnBoss() received invalid boss ID!!!");
+		smh->log("FATAL ERROR: BossManager.spawnBoss() received invalid boss ID!!!");
 		exit(1);
 	}
 
 	bossList.push_back(newBoss);
 	
 	//Register the boss in its bossID group
-	enemyGroupManager->addEnemy(groupID);
+	smh->enemyGroupManager->addEnemy(groupID);
 
 }
 
