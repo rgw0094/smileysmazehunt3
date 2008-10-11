@@ -104,7 +104,7 @@ void SpecialTileManager::updateIceBlocks(float dt) {
 			i->hasBeenMelted = true;
 			i->timeMelted = smh->getGameTime();
 		}
-		if (i->hasBeenMelted && timePassedSince(i->timeMelted) > 1.0) {
+		if (i->hasBeenMelted && smh->timePassedSince(i->timeMelted) > 1.0) {
 			smh->environment->collision[i->gridX][i->gridY] = WALKABLE;
 			i = iceBlockList.erase(i);
 		}
@@ -117,7 +117,7 @@ void SpecialTileManager::updateIceBlocks(float dt) {
 void SpecialTileManager::drawIceBlocks(float dt) {
 	std::list<IceBlock>::iterator i;
 	for(i = iceBlockList.begin(); i != iceBlockList.end(); i++) {
-		float scale = !i->hasBeenMelted ? 1.0 : 1.0 - min(1.0, timePassedSince(i->timeMelted));
+		float scale = !i->hasBeenMelted ? 1.0 : 1.0 - min(1.0, smh->timePassedSince(i->timeMelted));
 		//Scale the size of the ice block based on its "health"
 		resources->GetAnimation("walkLayer")->SetFrame(FIRE_DESTROY);
 		resources->GetAnimation("walkLayer")->SetHotSpot(32.0,32.0);
@@ -166,7 +166,7 @@ void SpecialTileManager::addTimedTile(int gridX, int gridY, int tile, float dura
 void SpecialTileManager::updateTimedTiles(float dt) {
 	std::list<TimedTile>::iterator i;
 	for(i = timedTileList.begin(); i != timedTileList.end(); i++) {
-		if (timePassedSince(i->timeCreated) <= i->duration) {
+		if (smh->timePassedSince(i->timeCreated) <= i->duration) {
 			//Fading in
 			if (i->alpha < 255.0) {
 				i->alpha += 255.0 * dt;
@@ -268,7 +268,7 @@ void SpecialTileManager::drawSillyPads(float dt) {
 	std::list<SillyPad>::iterator i;
 	for(i = sillyPadList.begin(); i != sillyPadList.end(); i++) {
 		//Fade out during the last 2 seconds
-		float timeLeft = (float)SILLY_PAD_TIME - timePassedSince(i->timePlaced);
+		float timeLeft = (float)SILLY_PAD_TIME - smh->timePassedSince(i->timePlaced);
 		if (timeLeft < 1.0f) {
 			resources->GetSprite("sillyPad")->SetColor(ARGB((timeLeft/1.0f)*255.0f,255,255,255));
 		}
@@ -287,7 +287,7 @@ void SpecialTileManager::updateSillyPads(float dt) {
 		collisionBox->SetRadius(i->gridX*64.0+32.0, i->gridY*64.0+32.0, 32.0);
 
 		//Test collision and silly pad aging
-		if (timePassedSince(i->timePlaced) > SILLY_PAD_TIME ||
+		if (smh->timePassedSince(i->timePlaced) > SILLY_PAD_TIME ||
 				projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_FRISBEE) > 0 ||
 				projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_LIGHTNING_ORB) > 0 ||
 				smh->player->iceBreathParticle->testCollision(collisionBox) ||
@@ -386,7 +386,7 @@ void SpecialTileManager::updateFlames(float dt) {
 		}
 
 		//If the flame has been put out and is done animating, delete it
-		if (i->timeFlamePutOut > 0.0 && timePassedSince(i->timeFlamePutOut) > 0.4) {
+		if (i->timeFlamePutOut > 0.0 && smh->timePassedSince(i->timeFlamePutOut) > 0.4) {
 			delete i->collisionBox;
 			delete i->particle;
 			i = flameList.erase(i);
@@ -449,7 +449,7 @@ void SpecialTileManager::drawMushrooms (float dt) {
 				resources->GetAnimation("walkLayer")->SetHotSpot(32.0,32.0);
 				
 				//Calculate size to draw it, then draw it
-				float percentage = timePassedSince(i->beginGrowTime) / MUSHROOM_GROW_TIME;
+				float percentage = smh->timePassedSince(i->beginGrowTime) / MUSHROOM_GROW_TIME;
 				percentage = min(percentage, 1.0); //Cap the size at 1 to prevent it from "overgrowing"
 				resources->GetAnimation("walkLayer")->RenderEx((int)getScreenX(i->x+32),(int)getScreenY(i->y+32),0.0,percentage,percentage);
 
@@ -476,13 +476,13 @@ void SpecialTileManager::updateMushrooms(float dt) {
                 }
 				break;
 			case MUSHROOM_STATE_EXPLODING:
-				if (timePassedSince(i->beginExplodeTime) > MUSHROOM_EXPLODE_TIME) {
+				if (smh->timePassedSince(i->beginExplodeTime) > MUSHROOM_EXPLODE_TIME) {
 					i->beginGrowTime = smh->getGameTime();
 					i->state = MUSHROOM_STATE_GROWING;					
 				}
 				break;
 			case MUSHROOM_STATE_GROWING:
-				if (timePassedSince(i->beginGrowTime) > MUSHROOM_GROW_TIME) {
+				if (smh->timePassedSince(i->beginGrowTime) > MUSHROOM_GROW_TIME) {
 					i->state = MUSHROOM_STATE_IDLING;
 				}
 		}

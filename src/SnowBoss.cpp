@@ -12,14 +12,13 @@
 #include "WeaponParticle.h"
 #include "CollisionCircle.h"
 #include "Tongue.h"
-#include "WindowManager.h"
+#include "WindowFramework.h"
 
 extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
 extern EnemyGroupManager *enemyGroupManager;
 extern ProjectileManager *projectileManager;
-extern WindowManager *windowManager;
 extern EnemyManager *enemyManager;
 extern LootManager *lootManager;
 
@@ -105,7 +104,7 @@ bool SnowBoss::update(float dt) {
 	//When smiley triggers the boss' enemy blocks start his dialogue.
 	if (state == SNOWBOSS_INACTIVE && !startedIntroDialogue) {
 		if (enemyGroupManager->groups[groupID].triggeredYet) {
-			windowManager->openDialogueTextBox(-1, SNOWBOSS_INTROTEXT);
+			smh->windowManager->openDialogueTextBox(-1, SNOWBOSS_INTROTEXT);
 			startedIntroDialogue = true;
 		} else {
 			return false;
@@ -113,7 +112,7 @@ bool SnowBoss::update(float dt) {
 	}
 
     //Activate the boss when the intro dialogue is closed
-	if (state == SNOWBOSS_INACTIVE && startedIntroDialogue && !windowManager->isTextBoxOpen()) {
+	if (state == SNOWBOSS_INACTIVE && startedIntroDialogue && !smh->windowManager->isTextBoxOpen()) {
 		enterState(SNOWBOSS_WADDLING);
 		smh->soundManager->playMusic("bossMusic");
 	}
@@ -182,7 +181,7 @@ bool SnowBoss::update(float dt) {
 	if (state == SNOWBOSS_THROWING_FISH) {
 		
 		//launch fish
-		if (numFishLaunched == 0 || timePassedSince(lastFishLaunched) > TIME_BETWEEN_FISH) {
+		if (numFishLaunched == 0 || smh->timePassedSince(lastFishLaunched) > TIME_BETWEEN_FISH) {
 			//subtract 51 from y to get around the penguin's mouth
 			float angleToSmiley = getAngleBetween(x,y-51.0,smh->player->x,smh->player->y);
 			angleToSmiley += hge->Random_Float(-PI/4,PI/4);
@@ -210,7 +209,7 @@ bool SnowBoss::update(float dt) {
 	if (state==SNOWBOSS_BEGIN_SLIDING) {
 		slidingAngle=getAngleBetween(x,y,smh->player->x,smh->player->y);
 		
-		if (timePassedSince(timeEnteredState) > BEGIN_SLIDE_TIME) {
+		if (smh->timePassedSince(timeEnteredState) > BEGIN_SLIDE_TIME) {
 			
 			//drop mana loot
 			lootManager->addLoot(LOOT_MANA,x,y,NULL);
@@ -247,7 +246,7 @@ bool SnowBoss::update(float dt) {
 
 		
 		       
-		if (timePassedSince(timeEnteredState) > SLIDE_TIME) {
+		if (smh->timePassedSince(timeEnteredState) > SLIDE_TIME) {
 			enterState(SNOWBOSS_WADDLING);
 		}
 	} //end if sliding
@@ -267,7 +266,7 @@ bool SnowBoss::update(float dt) {
 			
 			health -= DAMAGE_FROM_DROWNING;
 			if (health <= 0) {
-				windowManager->openDialogueTextBox(-1, SNOWBOSS_DEFEATTEXT);
+				smh->windowManager->openDialogueTextBox(-1, SNOWBOSS_DEFEATTEXT);
 				enterState(SNOWBOSS_PRE_DEATH);
 			}
 		}
@@ -275,13 +274,13 @@ bool SnowBoss::update(float dt) {
 	}
 
 	if (state==SNOWBOSS_UNDERWATER) {
-		if (timePassedSince(timeEnteredState) > 0.1) {
+		if (smh->timePassedSince(timeEnteredState) > 0.1) {
 			if (!startedDrowningDialogue) {
 				startedDrowningDialogue = true;
-				windowManager->openDialogueTextBox(-1, SNOWBOSS_BATTLETEXT_1);
+				smh->windowManager->openDialogueTextBox(-1, SNOWBOSS_BATTLETEXT_1);
 			}
 		}
-		if (timePassedSince(timeEnteredState) > DROWNING_TIME && !windowManager->isTextBoxOpen()) {
+		if (smh->timePassedSince(timeEnteredState) > DROWNING_TIME && !smh->windowManager->isTextBoxOpen()) {
 			enterState(SNOWBOSS_JUMPING_TO_CENTER);
 			startX=x;
 			startY=y-64;
@@ -297,13 +296,13 @@ bool SnowBoss::update(float dt) {
 	} //end if underwater
 
 	if (state==SNOWBOSS_JUMPING_TO_CENTER) {
-		float portionTravelled=timePassedSince(timeEnteredState)/SNOWBOSS_JUMP_TIME;
+		float portionTravelled=smh->timePassedSince(timeEnteredState)/SNOWBOSS_JUMP_TIME;
 
 		x=startX + portionTravelled*(endX-startX);		
 		float dx = abs(x-startX);
 		y = 0.012*(dx-96)*(dx-96)+startY-64;
 
-		if (timePassedSince(timeEnteredState) > SNOWBOSS_JUMP_TIME) {
+		if (smh->timePassedSince(timeEnteredState) > SNOWBOSS_JUMP_TIME) {
 			//launch ice nova
 			xNova=x;yNova=y+64;
 			iceNova->MoveTo(getScreenX(xNova),getScreenY(yNova));
@@ -314,7 +313,7 @@ bool SnowBoss::update(float dt) {
 	}
 
 	if (state==SNOWBOSS_PRE_DEATH) {
-		if (!windowManager->isTextBoxOpen()) {
+		if (!smh->windowManager->isTextBoxOpen()) {
 			alpha=255;
 			enterState(SNOWBOSS_FADING);
 		}

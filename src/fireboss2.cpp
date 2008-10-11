@@ -9,11 +9,10 @@
 #include "WeaponParticle.h"
 #include "Tongue.h"
 #include "ProjectileManager.h"
-#include "WindowManager.h"
+#include "WindowFramework.h"
 
 extern SMH *smh;
 extern HGE *hge;
-extern WindowManager *windowManager;
 extern LootManager *lootManager;
 extern hgeResourceManager *resources;
 extern EnemyGroupManager *enemyGroupManager;
@@ -173,7 +172,7 @@ bool FireBossTwo::update(float dt) {
 	if (state == FIREBOSS_INACTIVE && !startedIntroDialogue) {
 		//When Phyrebozz's group is triggered start the intro dialogue
 		if (enemyGroupManager->groups[groupID].triggeredYet) {
-			windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS2_INTRO);
+			smh->windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS2_INTRO);
 			startedIntroDialogue = true;
 			smh->soundManager->fadeOutMusic();
 			facing = UP;
@@ -188,7 +187,7 @@ bool FireBossTwo::update(float dt) {
 	if (updateState(dt)) return true;
 
 	//Activate the boss when the intro dialogue is closed
-	if (state == FIREBOSS_INACTIVE && startedIntroDialogue && !windowManager->isTextBoxOpen()) {
+	if (state == FIREBOSS_INACTIVE && startedIntroDialogue && !smh->windowManager->isTextBoxOpen()) {
 		setState(FIREBOSS_FIRST_BATTLE);
 		hge->Effect_Play(resources->GetEffect("snd_fireBossDie"));
 		smh->soundManager->playMusic("bossMusic");
@@ -252,7 +251,7 @@ bool FireBossTwo::update(float dt) {
 	}
 
 	//Stop flashing after a while
-	if (flashing && timePassedSince(startedFlashing) > FLASH_DURATION) {
+	if (flashing && smh->timePassedSince(startedFlashing) > FLASH_DURATION) {
 		alpha = 255;
 		flashing = false;
 		resources->GetAnimation("phyrebozz")->SetColor(ARGB(255,alpha,alpha,alpha));
@@ -273,7 +272,7 @@ bool FireBossTwo::update(float dt) {
 	///////////////// Death Stuff /////////////////
 	
 	//After you beat the boss he runs away!!
-	if (state == FIREBOSS_FRIENDLY && !windowManager->isTextBoxOpen()) {
+	if (state == FIREBOSS_FRIENDLY && !smh->windowManager->isTextBoxOpen()) {
 		//Drop fire breath
 		if (!droppedLoot) {
 			lootManager->addLoot(LOOT_NEW_ABILITY, startX*64.0+32.0, (startY+5)*64.0+32.0, WATER_BOOTS);
@@ -307,7 +306,7 @@ bool FireBossTwo::update(float dt) {
  * Turns ground that the fire nova touches into lava.
  */
 void FireBossTwo::updateFireNova(float dt) {
-	float timePassed = timePassedSince(lastFireNovaTime);
+	float timePassed = smh->timePassedSince(lastFireNovaTime);
 	if (timePassed < 1.1) {
 		int radius = int(timePassed * 4.5);
 		for (int gridX = getGridX(x) - radius; gridX <= getGridX(x) + radius; gridX++) {
@@ -336,10 +335,10 @@ bool FireBossTwo::updateState(float dt) {
 		if (!moving) {
 
 			//Move back and forth
-			dx = 250 * cos(timePassedSince(timeEnteredState));
+			dx = 250 * cos(smh->timePassedSince(timeEnteredState));
 
 			//Launch fireballs
-			if (timePassedSince(lastAttackTime) > 2.0) {
+			if (smh->timePassedSince(lastAttackTime) > 2.0) {
 				addFireBall(x, y, getAngleBetween(x, y, smh->player->x, smh->player->y) - PI / 4.0, 500.0, true, true);
 				addFireBall(x, y, getAngleBetween(x, y, smh->player->x, smh->player->y), 500.0, true, true);
 				addFireBall(x, y, getAngleBetween(x, y, smh->player->x, smh->player->y) + PI / 4.0, 500.0, true, true);
@@ -355,9 +354,9 @@ bool FireBossTwo::updateState(float dt) {
 			if (!moving) {
 				startMoveToPoint(startX*64.0+32.0, startY*64.0+32.0, 250.0);
 			} else {
-				if (timePassedSince(timeStartedMove) > timeToMove) {
-					if (!saidVitaminDialogYet && !windowManager->isTextBoxOpen()) {
-						windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS2_VITAMINS);
+				if (smh->timePassedSince(timeStartedMove) > timeToMove) {
+					if (!saidVitaminDialogYet && !smh->windowManager->isTextBoxOpen()) {
+						smh->windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS2_VITAMINS);
 						saidVitaminDialogYet = true;
 					} else {
 						hge->Effect_Play(resources->GetEffect("snd_fireBossDie"));
@@ -381,7 +380,7 @@ bool FireBossTwo::updateState(float dt) {
 	if (state == FIREBOSS_BATTLE) {
 
 		//After a while do a leet attack
-		if (timePassedSince(timeEnteredState) > 13.0) {
+		if (smh->timePassedSince(timeEnteredState) > 13.0) {
 
 			if (hge->Random_Int(0,100000) < 50000) {
 				setState(FIREBOSS_LEET_ATTACK1);
@@ -390,7 +389,7 @@ bool FireBossTwo::updateState(float dt) {
 			}
 		
 		//Default attack
-		} else if (timePassedSince(lastAttackTime) > 3.0) {
+		} else if (smh->timePassedSince(lastAttackTime) > 3.0) {
 			if (hge->Random_Int(0,100000) < 50000) {
 				//3 homing fireballs
 				addFireBall(x, y, getAngleBetween(x, y, smh->player->x, smh->player->y) - PI / 4.0, 500.0, true, true);
@@ -416,7 +415,7 @@ bool FireBossTwo::updateState(float dt) {
 	if (state == FIREBOSS_LEET_ATTACK1) {
 
 		//Launch rotating rings
-		if (timePassedSince(lastAttackTime) > 0.75) {
+		if (smh->timePassedSince(lastAttackTime) > 0.75) {
 			for (int i = 0; i < 13; i ++) {
 				addFireBall(x, y, (2.0*PI/13.0)*float(i), 400.0, false, false);
 			}
@@ -424,7 +423,7 @@ bool FireBossTwo::updateState(float dt) {
 		}
 
 		//Return to default battle stage after a while
-		if (timePassedSince(timeEnteredState) > 5.0) {
+		if (smh->timePassedSince(timeEnteredState) > 5.0) {
 			setState(FIREBOSS_BATTLE);
 		}
 
@@ -436,13 +435,13 @@ bool FireBossTwo::updateState(float dt) {
 	if (state == FIREBOSS_LEET_ATTACK2) {
 		
 		//Launch stream of fireballs
-		if (timePassedSince(lastAttackTime) > 0.05) {
+		if (smh->timePassedSince(lastAttackTime) > 0.05) {
 			addFireBall(x, y-50.0, getAngleBetween(x,y,smh->player->x,smh->player->y), 700.0, false, false);
 			lastAttackTime = smh->getGameTime();
 		}
 
 		//Return to default battle stage after a while
-		if (timePassedSince(timeEnteredState) > 5.0) {
+		if (smh->timePassedSince(timeEnteredState) > 5.0) {
 			setState(FIREBOSS_BATTLE);
 		}
 
@@ -516,7 +515,7 @@ void FireBossTwo::die() {
 	hge->Effect_Play(resources->GetEffect("snd_fireBossDie"));
 	health = 0.0f;
 	setState(FIREBOSS_FRIENDLY);
-	windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS2_VICTORY);	
+	smh->windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS2_VICTORY);	
 	facing = DOWN;
 	alpha = 255;
 	smh->saveManager->killBoss(FIRE_BOSS2);
@@ -696,7 +695,7 @@ void FireBossTwo::updateFireBalls(float dt) {
 				smh->player->dealDamage(ORB_DAMAGE, true);
 			}
 
-			if (timePassedSince(i->timeExploded) > 0.96) {
+			if (smh->timePassedSince(i->timeExploded) > 0.96) {
 				delete i->particle;
 				delete i->collisionBox;
 				i = fireBallList.erase(i);

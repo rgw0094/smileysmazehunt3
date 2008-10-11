@@ -72,7 +72,7 @@ void SmileletManager::update() {
 				break;
 			case SMILELET_STATE_MOVE_TO_FLOWER:
 				doSmileletMoveToFlower(i);
-				if (timePassedSince(timeEnteredState) >= MOVE_TO_FLOWER_TIME && !switchedToCircleFlower) {
+				if (smh->timePassedSince(timeEnteredState) >= MOVE_TO_FLOWER_TIME && !switchedToCircleFlower) {
 					switchToCircleFlower();
 					switchedToCircleFlower=true;
 				}
@@ -171,12 +171,12 @@ void SmileletManager::doSmileletFollow(std::list<oneSmilelet>::iterator c) {
 	if (distance(node.x,node.y,c->x,c->y) <= SMILELET_RADIUS + smh->player->radius + 4) {
 		c->beginFollow = true;
 	} else { //Bob up and down in excited anticipation
-		c->y = c->initialYPosition - (sin(timePassedSince(c->timeBeganBobbing)*10)*sin(timePassedSince(c->timeBeganBobbing)*10)) * 10.0; 
+		c->y = c->initialYPosition - (sin(smh->timePassedSince(c->timeBeganBobbing)*10)*sin(smh->timePassedSince(c->timeBeganBobbing)*10)) * 10.0; 
 	}
 
 	if (c->beginFollow) {
 		c->x = node.x;
-		c->y = node.y - (sin(timePassedSince(c->timeBeganBobbing)*10)*sin(timePassedSince(c->timeBeganBobbing)*10)) * 10.0;
+		c->y = node.y - (sin(smh->timePassedSince(c->timeBeganBobbing)*10)*sin(smh->timePassedSince(c->timeBeganBobbing)*10)) * 10.0;
 		c->dir = node.dir;
 
 		collisionRect.x1 = c->x - SMILELET_RADIUS;
@@ -195,16 +195,16 @@ void SmileletManager::doSmileletFollow(std::list<oneSmilelet>::iterator c) {
 }
 
 void SmileletManager::doSmileletMoveToFlower(std::list<oneSmilelet>::iterator c) {
-	c->x = c->beginMoveToFlowerX+timePassedSince(timeEnteredState)/MOVE_TO_FLOWER_TIME*(c->endMoveToFlowerX - c->beginMoveToFlowerX);
-	c->y = c->beginMoveToFlowerY+timePassedSince(timeEnteredState)/MOVE_TO_FLOWER_TIME*(c->endMoveToFlowerY - c->beginMoveToFlowerY);
-	if (timePassedSince(timeEnteredState) > MOVE_TO_FLOWER_TIME) {
+	c->x = c->beginMoveToFlowerX+smh->timePassedSince(timeEnteredState)/MOVE_TO_FLOWER_TIME*(c->endMoveToFlowerX - c->beginMoveToFlowerX);
+	c->y = c->beginMoveToFlowerY+smh->timePassedSince(timeEnteredState)/MOVE_TO_FLOWER_TIME*(c->endMoveToFlowerY - c->beginMoveToFlowerY);
+	if (smh->timePassedSince(timeEnteredState) > MOVE_TO_FLOWER_TIME) {
 		c->x = c->endMoveToFlowerX;
 		c->y = c->endMoveToFlowerY;
 	}
 }
 
 void SmileletManager::doSmileletCircleFlower(std::list<oneSmilelet>::iterator c) {
-	double angle = timePassedSince(timeEnteredState) / CIRCLE_ANGLE_PERIOD;
+	double angle = smh->timePassedSince(timeEnteredState) / CIRCLE_ANGLE_PERIOD;
 	c->angle = angle + c->angleOffset;
 	
 	while (c->angle >= 2*PI) c->angle -= 2*PI;
@@ -215,14 +215,14 @@ void SmileletManager::doSmileletCircleFlower(std::list<oneSmilelet>::iterator c)
 }
 
 void SmileletManager::doSmileletRun(std::list<oneSmilelet>::iterator c) {
-	c->x = (float)c->beginPanicX + timePassedSince(c->timeBeganPanic) * SMILELET_PANIC_SPEED * cos(c->angle);
-	c->y = (float)c->beginPanicY + timePassedSince(c->timeBeganPanic) * SMILELET_PANIC_SPEED * sin(c->angle);
+	c->x = (float)c->beginPanicX + smh->timePassedSince(c->timeBeganPanic) * SMILELET_PANIC_SPEED * cos(c->angle);
+	c->y = (float)c->beginPanicY + smh->timePassedSince(c->timeBeganPanic) * SMILELET_PANIC_SPEED * sin(c->angle);
 
 	//Calculate how long it should take to get to the destination
 	double timeToDestination = distance(c->beginPanicX,c->beginPanicY,c->initialXPosition,c->initialYPosition) / SMILELET_PANIC_SPEED;
 
 	//If we've been running longer than that, stop running
-	if (timePassedSince(c->timeBeganPanic) >= timeToDestination) {
+	if (smh->timePassedSince(c->timeBeganPanic) >= timeToDestination) {
 		c->x = c->initialXPosition;
 		c->y = c->initialYPosition;
 		c->state = SMILELET_STATE_WAITING;

@@ -5,7 +5,7 @@
 #include "environment.h"
 #include "npcmanager.h"
 #include "CollisionCircle.h"
-#include "WindowManager.h"
+#include "WindowFramework.h"
 
 #include "hgeresource.h"
 #include "hgesprite.h"
@@ -13,7 +13,6 @@
 extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern WindowManager *windowManager;
 extern NPCManager *npcManager;
 
 /**
@@ -72,7 +71,7 @@ void NPC::update(float dt) {
 	collisionBox->SetRadius(x,y,32);
 
 	//Exit conversation
-	if (!windowManager->isTextBoxOpen()) inConversation = false;
+	if (!smh->windowManager->isTextBoxOpen()) inConversation = false;
 
 	//If in conversation, stand still and face the player
 	if (inConversation) {

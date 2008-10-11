@@ -7,10 +7,8 @@
 #include "player.h"
 #include "collisioncircle.h"
 #include "npcmanager.h"
-#include "minimenu.h"
 #include "boss.h"
 #include "EnemyGroupManager.h"
-#include "WindowManager.h"
 #include "hgeparticle.h"
 #include "Tongue.h"
 #include "SpecialTileManager.h"
@@ -24,6 +22,7 @@
 #include "Fountain.h"
 #include "FenwarManager.h"
 #include "TutorialMan.h"
+#include "WindowFramework.h"
 
 #include <string>
 #include <sstream>
@@ -39,7 +38,6 @@ extern ProjectileManager *projectileManager;
 extern TextBox *theTextBox;
 extern hgeStringTable *stringTable;
 extern NPCManager *npcManager;
-extern WindowManager *windowManager;
 extern BossManager *bossManager;
 extern hgeResourceManager *resources;
 extern EnemyGroupManager *enemyGroupManager;
@@ -89,6 +87,12 @@ Environment::Environment() {
 	whiteCylinderRev = new hgeAnimation(resources->GetTexture("animations"),5,20,0,8*64,64,64);
 	whiteCylinderRev->SetMode(HGEANIM_FWD);
 
+	resources->GetAnimation("water")->Play();
+	resources->GetAnimation("greenWater")->Play();
+	resources->GetAnimation("lava")->Play();
+	resources->GetAnimation("fountainRipple")->Play();
+	resources->GetAnimation("savePoint")->Play();
+
 	hge->System_Log("Creating Environment.SpecialTileManager");
 	specialTileManager = new SpecialTileManager();
 	hge->System_Log("Creating Environment.EvilWallManager");
@@ -98,7 +102,6 @@ Environment::Environment() {
 	hge->System_Log("Creating Environment.SmileletManager");
 	smileletManager = new SmileletManager();
 
-	resources->GetAnimation("savePoint")->Play();
 	collisionBox = new hgeRect();
 
 }
@@ -888,7 +891,7 @@ bool Environment::toggleSwitches(hgeRect *box, bool playSoundFarAway) {
 				setTerrainCollisionBox(collisionBox,collision[gridX][gridY],gridX,gridY);
 				
 				//Check collision with any switches
-				if (timePassedSince(activated[gridX][gridY]) > .5 && collisionBox->Intersect(box)) {
+				if (smh->timePassedSince(activated[gridX][gridY]) > .5 && collisionBox->Intersect(box)) {
 					if (toggleSwitchAt(gridX, gridY, playSoundFarAway)) return true;
 				}
 			}
@@ -917,7 +920,7 @@ bool Environment::toggleSwitches(Tongue *tongue) {
 				setTerrainCollisionBox(collisionBox,collision[gridX][gridY],gridX,gridY);
 				
 				//Check collision with any switches
-				if (timePassedSince(activated[gridX][gridY]) > .5 && tongue->testCollision(collisionBox)) {			
+				if (smh->timePassedSince(activated[gridX][gridY]) > .5 && tongue->testCollision(collisionBox)) {			
 					if (toggleSwitchAt(gridX, gridY, true)) {
 						return true;
 					}
@@ -1384,7 +1387,7 @@ bool Environment::hitSigns(Tongue *tongue) {
 			if (inBounds(i,j) && collision[i][j] == SIGN) {
 				collisionBox->SetRadius(i*64+32,j*64+32,24);
 				if (tongue->testCollision(collisionBox)) {
-					windowManager->openSignTextBox(ids[i][j]);
+					smh->windowManager->openSignTextBox(ids[i][j]);
 					return true;
 				}
 			}
@@ -1403,7 +1406,7 @@ bool Environment::hitSaveShrine(Tongue *tongue) {
 			if (inBounds(i,j) && collision[i][j] == SAVE_SHRINE) {
 				collisionBox->SetRadius(i*64+32,j*64+32,24);
 				if (tongue->testCollision(collisionBox)) {
-					windowManager->openWindow(new MiniMenu(MINIMENU_SAVEGAME));
+					smh->windowManager->openWindow(new MiniMenu(MINIMENU_SAVEGAME));
 					return true;
 				}
 			}

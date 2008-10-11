@@ -52,7 +52,7 @@ void E_Turret::draw(float dt) {
  */
 void E_Turret::update(float dt) {
 	int xOffset,yOffset;
-	if (timePassedSince(timeOfLastShot) >= rangedAttackDelay) {
+	if (smh->timePassedSince(timeOfLastShot) >= rangedAttackDelay) {
 		timeOfLastShot=smh->getGameTime();
 		float angle;
 		switch (direction) {

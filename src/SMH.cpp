@@ -4,6 +4,7 @@
 #include "hgeresource.h"
 #include "Environment.h"
 #include "Player.h"
+#include "WindowFramework.h"
 
 extern HGE *hge;
 
@@ -44,11 +45,58 @@ void SMH::init() {
 	log("Creating SoundManager");
 	soundManager = new SoundManager();
 
+	log("Creating WindowManager");
+	windowManager = new WindowManager();
+
 	//Create Environment last
 	log("Creating Environment");
 	environment = new Environment();
 
 	log("-------Initialization Complete-------");
+}
+
+/**
+ * This is called each frame to upadte all game objects.
+ */
+void SMH::drawGame(float dt) {
+
+}
+
+/**
+ * This is called each frame to draw all game objects.
+ */
+void SMH::updateGame(float dt) {
+
+	frameCounter++;
+
+}
+	
+/**
+ * Switches the game state
+ */
+void SMH::enterGameState(int newState) {
+
+	//If leaving the menu, clear all the menu resources
+	if (gameState == MENU) {	
+		resources->Purge(RES_MENU);
+	}
+
+	//If leaving game state save the player's playing time
+	if (gameState == GAME) {
+		saveManager->saveTimePlayed();
+	}
+
+	gameState = newState;
+
+	//Entering game state
+	if (gameState == GAME) {
+		gameTime = 0.0;
+		frameCounter = 0;
+	}
+}
+
+int SMH::getGameState() {
+	return gameState;
 }
 
 float SMH::getGameTime() {
@@ -69,6 +117,10 @@ bool SMH::isDebugOn() {
 
 void SMH::toggleDebugMode() {
 	debugMode = !debugMode;
+}
+
+int SMH::getCurrentFrame() {
+	return frameCounter;
 }
 
 ///// UTILITY FUNCTIONS /////
@@ -94,8 +146,18 @@ void SMH::drawSprite(const char* sprite, float x, float y, float width, float he
 	resources->GetSprite(sprite)->Render(x,y);//RenderStretch(x, y, x + width, x + height);
 }
 
+/**
+ * Writes a message to the game log.
+ */
 void SMH::log(const char* text) {
 	hge->System_Log(text);
+}
+
+/**
+ * Returns the amount of time that has passed since time
+ */
+float SMH::timePassedSince(float time) {
+	return gameTime - time;
 }
 
 ///// RESOURCE ACCESS /////

@@ -77,7 +77,7 @@ void E_Tentacle::update(float dt) {
 	int i;
 
 	if (knockback) {
-		if (timePassedSince(beginKnockbackTime) >= TENTACLE_IMMUNE_TIME) {
+		if (smh->timePassedSince(beginKnockbackTime) >= TENTACLE_IMMUNE_TIME) {
 			knockback=false;
 		} else {
 			angle += knockbackDirection * TENTACLE_KNOCKBACK_VEL * dt;
@@ -119,7 +119,7 @@ void E_Tentacle::update(float dt) {
 	}
 
 	//Growl, if variable > 10 (ensuring it's a large and not a small tentacle
-	if (timePassedSince(timeOfLastGrowl) >= TIME_BETWEEN_GROWLS && variable1 >= 10 && distanceFromPlayer() <= GROWL_DISTANCE) {
+	if (smh->timePassedSince(timeOfLastGrowl) >= TIME_BETWEEN_GROWLS && variable1 >= 10 && distanceFromPlayer() <= GROWL_DISTANCE) {
 		timeOfLastGrowl = smh->getGameTime();
 		hge->Effect_Play(resources->GetEffect("snd_fireWorm"));
 	}
@@ -143,7 +143,7 @@ bool E_Tentacle::doTongueCollision(Tongue *tongue, float damage) {
 		//Collision with tongue
 		if (!immuneToTongue && tongue->testCollision(collisionBox)) {
 			//Make sure the enemy wasn't already hit by this attack
-			if (timePassedSince(lastHitByWeapon) > TENTACLE_IMMUNE_TIME) {
+			if (smh->timePassedSince(lastHitByWeapon) > TENTACLE_IMMUNE_TIME) {
 				
 				lastHitByWeapon = smh->getGameTime();
 				dealDamageAndKnockback(smh->player->getDamage(), 0.0, smh->player->x, smh->player->y);

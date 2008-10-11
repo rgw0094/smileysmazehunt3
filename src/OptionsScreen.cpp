@@ -1,5 +1,5 @@
 #include "SMH.h"
-#include "OptionsWindow.h"
+#include "WindowFramework.h"
 #include "MainMenu.h"
 
 extern SMH *smh;

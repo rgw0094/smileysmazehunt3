@@ -5,7 +5,7 @@
 #include "Environment.h"
 #include "EnemyManager.h"
 #include "NPCManager.h"
-#include "WindowManager.h"
+#include "WindowFramework.h"
 #include "CollisionCircle.h"
 
 #include "hgeresource.h"
@@ -14,7 +14,6 @@
 extern NPCManager *npcManager;
 extern EnemyManager *enemyManager;
 extern hgeResourceManager *resources;
-extern WindowManager *windowManager;
 extern HGE *hge;
 extern SMH *smh;
 
@@ -50,7 +49,7 @@ Tongue::~Tongue() {
 void Tongue::startAttack() {
 
 	//Make sure it is ok to attack
-	if (attacking || windowManager->isTextBoxOpen()) {
+	if (attacking || smh->windowManager->isTextBoxOpen()) {
 		return;
 	}
 
@@ -76,8 +75,8 @@ void Tongue::update(float dt) {
 	if (!hasActivatedSomething) {
 		if (smh->environment->toggleSwitches(this) ||
 				npcManager->talkToNPCs(this) ||
-				(!windowManager->isOpenWindow() && smh->environment->hitSaveShrine(this)) ||
-				(!windowManager->isTextBoxOpen() && smh->environment->hitSigns(this))) {
+				(!smh->windowManager->isOpenWindow() && smh->environment->hitSaveShrine(this)) ||
+				(!smh->windowManager->isTextBoxOpen() && smh->environment->hitSigns(this))) {
 			hasActivatedSomething = true;
 		}
 	}

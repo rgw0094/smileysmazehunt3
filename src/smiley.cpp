@@ -10,34 +10,10 @@
 
 extern int gameState;
 extern hgeResourceManager *resources;
-extern int frameCounter;
 
 extern SMH *smh;
 extern HGE *hge;
 
-/**
- * Switches the game state
- */
-void enterGameState(int newState) {
-
-	//If leaving the menu, clear all the menu resources
-	if (gameState == MENU) {	
-		resources->Purge(RES_MENU);
-	}
-
-	//If leaving game state save the player's playing time
-	if (gameState == GAME) {
-		smh->saveManager->saveTimePlayed();
-	}
-
-	gameState = newState;
-
-	//Entering game state
-	if (gameState == GAME) {
-		smh->setGameTime(0.0);
-		frameCounter = 0;
-	}
-}
 
 /**
  * Draw a collision box. The color options are RED, GREEN, or BLUE. If any other value is
@@ -275,13 +251,6 @@ float getAngleBetween(int x1, int y1, int x2, int y2) {
 
 	return angle;
 
-}
-
-/**
- * Returns the amount of time that has passed since time
- */
-float timePassedSince(float time) {
-	return smh->getGameTime() - time;
 }
 
 /**

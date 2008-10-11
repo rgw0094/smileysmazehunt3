@@ -1,5 +1,5 @@
 #include "SMH.h"
-#include "inventory.h"
+#include "WindowFramework.h"
 #include "player.h"
 #include "smiley.h"
 

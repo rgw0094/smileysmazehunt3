@@ -60,7 +60,7 @@ void E_Floater::update(float dt) {
 	boolean changeDir = false;
 
 	//Change angle coefficient periodically
-	if (timePassedSince(lastDirChange) > dirChangeDelay) {
+	if (smh->timePassedSince(lastDirChange) > dirChangeDelay) {
 
 		angleCoefficient = hge->Random_Float(50.0, 100.0);
 		if (hge->Random_Int(0,1) == 1) angleCoefficient *= -1;

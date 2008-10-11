@@ -217,7 +217,7 @@ void BaseEnemy::move(float dt) {
 		//Knockback
 		xDist = dx*dt + knockbackXDist / knockbackTime*dt;
 		yDist = dy*dt + knockbackYDist / knockbackTime*dt;
-		if (timePassedSince(startedKnockback) > knockbackTime) knockback = false;
+		if (smh->timePassedSince(startedKnockback) > knockbackTime) knockback = false;
 	} else {
 		//Normal
 		xDist = dx*dt;
@@ -423,16 +423,16 @@ void BaseEnemy::baseUpdate(float dt) {
 	screenY = getScreenY(y);
 
 	//Update statuses
-	if (stunned && timePassedSince(startedStun) > stunLength) {
+	if (stunned && smh->timePassedSince(startedStun) > stunLength) {
 		stunned = false;
 	}
-	if (flashing && timePassedSince(timeStartedFlashing) > ENEMY_FLASH_DURATION) {
+	if (flashing && smh->timePassedSince(timeStartedFlashing) > ENEMY_FLASH_DURATION) {
 		flashing = false;
 	}
-	if (knockback && timePassedSince(startedKnockback) > knockbackTime) {
+	if (knockback && smh->timePassedSince(startedKnockback) > knockbackTime) {
 		knockback = false;
 	}
-	if (frozen && timePassedSince(timeFrozen) > ENEMY_FROZEN_DURATION) {
+	if (frozen && smh->timePassedSince(timeFrozen) > ENEMY_FROZEN_DURATION) {
 		frozen = false;
 	}
 
@@ -549,7 +549,7 @@ bool BaseEnemy::doTongueCollision(Tongue *tongue, float damage) {
 	if (tongue->testCollision(collisionBox)) {
 			
 		//Make sure the enemy wasn't already hit by this attack
-		if (timePassedSince(lastHitByWeapon) > .5) {
+		if (smh->timePassedSince(lastHitByWeapon) > .5) {
 			lastHitByWeapon = smh->getGameTime();
 			dealDamageAndKnockback(damage, 65.0, smh->player->x, smh->player->y);
 			startFlashing();

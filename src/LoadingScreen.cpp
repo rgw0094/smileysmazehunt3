@@ -54,7 +54,7 @@ bool LoadingScreen::update(float dt, float mouseX, float mouseY) {
 		smh->player->setHealth(smh->saveManager->playerHealth);
 		smh->player->setMana(smh->saveManager->playerMana);
 
-		enterGameState(GAME);
+		smh->enterGameState(GAME);
 	}
 	
 	return false;

@@ -106,7 +106,6 @@ struct Point {
 };
 
 //Global functions
-void enterGameState(int newState);
 bool inBounds(int gridX, int gridY);
 void drawCollisionBox(hgeRect *box, int color);
 int getScreenX(int x);
@@ -127,7 +126,6 @@ float maxFloat(float f1, float f2, float f3, float f4);
 int getFacingDirection(float dx, float dy);
 void shadeScreen(int alpha);
 float getAngleBetween(int x1, int y1, int x2, int y2);
-float timePassedSince(float time);
 int getKeyIndex(int area);
 int roundUp(float num);
 int getCurrentHint();

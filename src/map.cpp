@@ -1,5 +1,5 @@
 #include "SMH.h"
-#include "map.h"
+#include "WindowFramework.h"
 #include "environment.h"
 #include "player.h"
 #include "smiley.h"

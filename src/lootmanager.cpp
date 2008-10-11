@@ -3,24 +3,22 @@
 #include "lootmanager.h"
 #include "player.h"
 #include "collisioncircle.h"
-#include "WindowManager.h"
+#include "WindowFramework.h"
 #include "environment.h"
 
 #include "hgesprite.h"
 #include "hgeresource.h"
 
 extern SMH *smh;
-extern WindowManager *windowManager;
 extern HGE *hge;
-extern hgeResourceManager *resources;
 
 /**
  * Constructor
  */ 
 LootManager::LootManager() {
-	sprites[LOOT_HEALTH] = resources->GetSprite("healthLoot");
-	sprites[LOOT_MANA] = resources->GetSprite("manaLoot");
-	sprites[LOOT_NEW_ABILITY] = resources->GetSprite("newAbilityLoot");
+	sprites[LOOT_HEALTH] = smh->resources->GetSprite("healthLoot");
+	sprites[LOOT_MANA] = smh->resources->GetSprite("manaLoot");
+	sprites[LOOT_NEW_ABILITY] = smh->resources->GetSprite("newAbilityLoot");
 	radius[LOOT_HEALTH] = 15;
 	radius[LOOT_MANA] = 15;
 	radius[LOOT_NEW_ABILITY] = 33;
@@ -101,7 +99,7 @@ void LootManager::update(float dt) {
 			} else if (i->type == LOOT_NEW_ABILITY) {
 				smh->saveManager->hasAbility[i->ability] = true;
 				smh->player->selectedAbility = i->ability;
-				windowManager->openNewAbilityTextBox(i->ability);
+				smh->windowManager->openNewAbilityTextBox(i->ability);
 			}
 			//Delete the loot
 			i = theLoot.erase(i);

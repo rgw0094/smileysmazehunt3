@@ -41,7 +41,7 @@ E_Hopper::~E_Hopper() {
 
 void E_Hopper::update(float dt) {
 
-	if (!hopping && timePassedSince(timeStoppedHop) > 1.0) {
+	if (!hopping && smh->timePassedSince(timeStoppedHop) > 1.0) {
 		
 		//Start next hop
 		hopping = true;
@@ -68,10 +68,10 @@ void E_Hopper::update(float dt) {
 
 	if (hopping) {
 		
-		hopYOffset = (hopDistance / 3.0) * sin((timePassedSince(timeStartedHop)/timeToHop) * PI);
+		hopYOffset = (hopDistance / 3.0) * sin((smh->timePassedSince(timeStartedHop)/timeToHop) * PI);
 		collisionBox->SetRadius(x, y - hopYOffset, radius);
 		
-		if (timePassedSince(timeStartedHop) > timeToHop) {
+		if (smh->timePassedSince(timeStartedHop) > timeToHop) {
 			hopping = false;
 			timeStoppedHop = smh->getGameTime();
 			dx = dy = hopYOffset = 0.0;
@@ -98,7 +98,7 @@ bool E_Hopper::doTongueCollision(Tongue *tongue, float damage) {
 	if (tongue->testCollision(collisionBox)) {
 			
 		//Make sure the enemy wasn't already hit by this attack
-		if (timePassedSince(lastHitByWeapon) > .5) {
+		if (smh->timePassedSince(lastHitByWeapon) > .5) {
 			lastHitByWeapon = smh->getGameTime();
 			//If hopping, stop
 			if (hopping) {

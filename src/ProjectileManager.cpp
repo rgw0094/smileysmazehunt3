@@ -338,7 +338,7 @@ void ProjectileManager::reset() {
  */
 void ProjectileManager::reflectProjectile(std::list<Projectile>::iterator projectile) {
 	
-	if (timePassedSince(projectile->timeReflected) < 2.0) return;
+	if (smh->timePassedSince(projectile->timeReflected) < 2.0) return;
 
 	projectile->angle += PI;
 
@@ -426,7 +426,7 @@ bool ProjectileManager::reflectProjectilesInBox(hgeRect *collisionBox, int type)
 	bool retVal = false;
 	std::list<Projectile>::iterator i;
 	for (i = theProjectiles.begin(); i != theProjectiles.end(); i++) {
-		if (i->id == type && collisionBox->Intersect(i->collisionBox) && timePassedSince(i->timeReflected) > 1.0) {
+		if (i->id == type && collisionBox->Intersect(i->collisionBox) && smh->timePassedSince(i->timeReflected) > 1.0) {
 			reflectProjectile(i);
 		}
 	}
@@ -448,7 +448,7 @@ bool ProjectileManager::reflectProjectilesInCircle(float x, float y, float radiu
 	bool retVal = false;
 	std::list<Projectile>::iterator i;
 	for (i = theProjectiles.begin(); i != theProjectiles.end(); i++) {
-		if (i->id == type && distance(i->x, i->y, x, y) < radius && timePassedSince(i->timeReflected) > 1.0) {
+		if (i->id == type && distance(i->x, i->y, x, y) < radius && smh->timePassedSince(i->timeReflected) > 1.0) {
 			reflectProjectile(i);
 		}
 	}

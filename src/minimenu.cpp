@@ -1,16 +1,10 @@
 #include "SMH.h"
-#include "minimenu.h"
+#include "WindowFramework.h"
 #include "MainMenu.h"
-#include "hgeresource.h"
 #include "smiley.h"
 #include "Button.h"
-#include "WindowManager.h"
-#include "OptionsWindow.h"
 
 extern SMH *smh;
-extern HTEXTURE menuItemTexture;
-extern hgeResourceManager *resources;
-extern WindowManager *windowManager;
 
 /**
  * Constructor
@@ -107,7 +101,7 @@ bool MiniMenu::update(float dt) {
 					smh->saveManager->save();
 					return false;
 				case MINIMENU_OPTIONS:
-					windowManager->openWindow(new OptionsWindow());
+					smh->windowManager->openWindow(new OptionsWindow());
 					return true;
 			}
 		}
