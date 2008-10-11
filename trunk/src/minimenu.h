@@ -35,7 +35,6 @@ public:
 		
 	//Variables
 	int x, y;
-	float mouseX, mouseY;
 	float xOffset, yOffset;
 	int selected;
 

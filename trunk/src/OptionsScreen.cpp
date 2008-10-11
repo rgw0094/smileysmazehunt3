@@ -1,11 +1,8 @@
-#include "OptionsScreen.h"
+#include "SMH.h"
 #include "OptionsWindow.h"
-#include "hgeresource.h"
 #include "menu.h"
 
-extern Menu *theMenu;
-
-extern hgeResourceManager *resources;
+extern SMH *smh;
 
 OptionsScreen::OptionsScreen() {
 	optionsWindow = new OptionsWindow();
@@ -16,13 +13,13 @@ OptionsScreen::~OptionsScreen() {
 }
 
 void OptionsScreen::draw(float dt) {
-	resources->GetSprite("menuBackground")->Render(0,0);
+	smh->drawSprite("menuBackground", 0, 0);
 	optionsWindow->draw(dt);
 }
 
 bool OptionsScreen::update(float dt, float mouseX, float mouseY) {
 	if (!optionsWindow->update(dt)) {
-		theMenu->setScreen(TITLE_SCREEN);
+		smh->menu->setScreen(TITLE_SCREEN);
 	}
 	return false;
 }

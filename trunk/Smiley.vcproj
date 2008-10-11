@@ -576,28 +576,7 @@
 					Name="Main Menu"
 					Filter="">
 					<File
-						RelativePath=".\src\CreditsScreen.h">
-					</File>
-					<File
-						RelativePath=".\src\DeathScreen.h">
-					</File>
-					<File
-						RelativePath=".\src\LoadingScreen.h">
-					</File>
-					<File
 						RelativePath=".\src\menu.h">
-					</File>
-					<File
-						RelativePath=".\src\MenuScreen.h">
-					</File>
-					<File
-						RelativePath=".\src\OptionsScreen.h">
-					</File>
-					<File
-						RelativePath=".\src\SelectFileScreen.h">
-					</File>
-					<File
-						RelativePath=".\src\TitleScreen.h">
 					</File>
 				</Filter>
 			</Filter>

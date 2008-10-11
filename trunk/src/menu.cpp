@@ -1,13 +1,7 @@
 #include "SMH.h"
 #include "menu.h"
 #include "smiley.h"
-#include "TitleScreen.h"
-#include "SelectFileScreen.h"
-#include "OptionsScreen.h"
-#include "DeathScreen.h"
 #include "SoundManager.h"
-#include "LoadingScreen.h"
-#include "CreditsScreen.h"
 
 //Objects
 extern SMH *smh;
