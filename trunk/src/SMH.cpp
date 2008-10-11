@@ -3,8 +3,10 @@
 #include "hge.h"
 #include "hgeresource.h"
 #include "Environment.h"
+#include "NPCManager.h"
 #include "Player.h"
 #include "WindowFramework.h"
+#include "EnemyGroupManager.h"
 
 extern HGE *hge;
 
@@ -39,6 +41,9 @@ void SMH::init() {
 	log("Creating GameData");
 	gameData = new GameData();
 
+	log("Creating NPCManager");
+	npcManager = new NPCManager();
+
 	log("Creating MainMenu");
 	menu = new MainMenu();
 
@@ -47,6 +52,9 @@ void SMH::init() {
 
 	log("Creating WindowManager");
 	windowManager = new WindowManager();
+
+	log("Creating EnemyGroupManager");
+	enemyGroupManager = new EnemyGroupManager();
 
 	//Create Environment last
 	log("Creating Environment");

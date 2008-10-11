@@ -16,7 +16,6 @@
 extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern EnemyGroupManager *enemyGroupManager;
 extern ProjectileManager *projectileManager;
 extern LootManager *lootManager;
 
@@ -63,7 +62,7 @@ bool ForestBoss::update(float dt) {
 
 	//When smiley triggers the boss' enemy blocks start his dialogue.
 	if (state == FORESTBOSS_INACTIVE && !startedIntroDialogue) {
-		if (enemyGroupManager->groups[groupID].triggeredYet) {
+		if (smh->enemyGroupManager->groups[groupID].triggeredYet) {
 			smh->windowManager->openDialogueTextBox(-1, FORESTBOSS_INTROTEXT);
 			startedIntroDialogue = true;
 		} else {
@@ -152,7 +151,7 @@ bool ForestBoss::update(float dt) {
 		if (alpha < 0.0) {
 			lootManager->addLoot(LOOT_NEW_ABILITY, x, y, SPRINT_BOOTS);
 			smh->soundManager->playMusic("forestMusic");
-			enemyGroupManager->notifyOfDeath(groupID);
+			smh->enemyGroupManager->notifyOfDeath(groupID);
 			smh->saveManager->killBoss(FOREST_BOSS);
 			return true; //Return true to delete the boss
 		}

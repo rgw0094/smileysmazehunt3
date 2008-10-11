@@ -21,7 +21,9 @@ class BitManager;
 class Player;
 class Environment;
 class MainMenu;
+class NPCManager;
 class WindowManager;
+class EnemyGroupManager;
 
 //Classes defined here
 class SMH;
@@ -66,10 +68,12 @@ public:
 	HTEXTURE getTexture(const char* texture);
 
 	//Game objects
+	EnemyGroupManager *enemyGroupManager;
 	Environment *environment;
 	GameData *gameData;
 	SmileyInput *input;
 	MainMenu *menu;
+	NPCManager *npcManager;
 	Player *player;
 	hgeResourceManager *resources;
 	SaveManager *saveManager;

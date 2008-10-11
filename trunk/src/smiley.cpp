@@ -8,7 +8,6 @@
 #include "hgerect.h"
 #include "boss.h"
 
-extern int gameState;
 extern hgeResourceManager *resources;
 
 extern SMH *smh;

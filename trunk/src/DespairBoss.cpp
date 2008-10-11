@@ -15,7 +15,6 @@
 
 extern SMH *smh;
 extern hgeResourceManager *resources;
-extern EnemyGroupManager *enemyGroupManager;
 extern ProjectileManager *projectileManager;
 extern LootManager *lootManager;
 extern HGE *hge;
@@ -136,7 +135,7 @@ bool DespairBoss::update(float dt) {
 
 	//When smiley triggers the boss' enemy block start his dialogue.
 	if (state == DESPAIRBOSS_INACTIVE && !startedIntroDialogue) {
-		if (enemyGroupManager->groups[groupID].triggeredYet) {
+		if (smh->enemyGroupManager->groups[groupID].triggeredYet) {
 			smh->windowManager->openDialogueTextBox(-1, DESPAIRBOSS_INTROTEXT);
 			startedIntroDialogue = true;
 		} else {
@@ -284,7 +283,7 @@ bool DespairBoss::update(float dt) {
 			setState(DESPAIRBOSS_FRIENDLY);		
 			smh->windowManager->openDialogueTextBox(-1, DESPAIRBOSS_DEFEATTEXT);	
 			smh->saveManager->killBoss(DESPAIR_BOSS);
-			enemyGroupManager->notifyOfDeath(groupID);
+			smh->enemyGroupManager->notifyOfDeath(groupID);
 			smh->soundManager->fadeOutMusic();
 		}
 

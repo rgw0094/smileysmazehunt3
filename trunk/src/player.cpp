@@ -25,7 +25,6 @@ extern EnemyManager *enemyManager;
 extern hgeParticleSystem *iceBreathParticle;
 extern ProjectileManager *projectileManager;
 extern TextBox *theTextBox;
-extern NPCManager *npcManager;
 extern hgeResourceManager *resources;
 extern LoadEffectManager *loadEffectManager;
 

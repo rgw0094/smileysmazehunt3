@@ -13,7 +13,6 @@
 extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern NPCManager *npcManager;
 
 /**
  * Constructor
@@ -106,7 +105,7 @@ void NPC::update(float dt) {
 		//If colliding with the player, enter rest mode
 		stage = REST_STAGE;
 	} else if (!smh->environment->testCollision(futureCollisionBox, canPass) && 
-			!npcManager->npcCollision(futureCollisionBox, id)) {
+			!smh->npcManager->npcCollision(futureCollisionBox, id)) {
 		x += dx*dt;
 		y += dy*dt;
 	} else {

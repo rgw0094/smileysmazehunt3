@@ -17,7 +17,6 @@ extern HGE *hge;
 extern LootManager *lootManager;
 extern ProjectileManager *projectileManager;
 extern hgeResourceManager *resources;
-extern EnemyGroupManager *enemyGroupManager;
 
 /**
  * Constructor
@@ -113,7 +112,7 @@ void EnemyManager::killEnemies(int type) {
 	for (i = enemyList.begin(); i != enemyList.end(); i++) {
 		if (i->enemy->id == type) {
 			//Notify enemy group
-			enemyGroupManager->notifyOfDeath(i->enemy->groupID);
+			smh->enemyGroupManager->notifyOfDeath(i->enemy->groupID);
 
 			//Play death sound effect
 			if (i->enemy->frozen) {
@@ -170,7 +169,7 @@ void EnemyManager::update(float dt) {
 		if (i->enemy->health <= 0.0f) {
 
 			//Notify enemy group
-			enemyGroupManager->notifyOfDeath(i->enemy->groupID);
+			smh->enemyGroupManager->notifyOfDeath(i->enemy->groupID);
 
 			//Play death sound effect
 			if (i->enemy->frozen) {

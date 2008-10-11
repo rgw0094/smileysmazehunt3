@@ -17,7 +17,6 @@
 extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern EnemyGroupManager *enemyGroupManager;
 extern ProjectileManager *projectileManager;
 extern EnemyManager *enemyManager;
 extern LootManager *lootManager;
@@ -103,7 +102,7 @@ bool SnowBoss::update(float dt) {
 	
 	//When smiley triggers the boss' enemy blocks start his dialogue.
 	if (state == SNOWBOSS_INACTIVE && !startedIntroDialogue) {
-		if (enemyGroupManager->groups[groupID].triggeredYet) {
+		if (smh->enemyGroupManager->groups[groupID].triggeredYet) {
 			smh->windowManager->openDialogueTextBox(-1, SNOWBOSS_INTROTEXT);
 			startedIntroDialogue = true;
 		} else {
@@ -326,7 +325,7 @@ bool SnowBoss::update(float dt) {
 			lootManager->addLoot(LOOT_NEW_ABILITY, xLoot, yLoot, FRISBEE);
 			droppedLoot = true;
 			smh->saveManager->killBoss(SNOW_BOSS);
-			enemyGroupManager->notifyOfDeath(groupID);
+			smh->enemyGroupManager->notifyOfDeath(groupID);
 			smh->soundManager->playMusic("iceMusic");
 		}
 		if (alpha < 0) {

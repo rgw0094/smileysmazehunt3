@@ -14,7 +14,6 @@ extern SMH *smh;
 extern HGE *hge;
 extern LootManager *lootManager;
 extern hgeResourceManager *resources;
-extern EnemyGroupManager *enemyGroupManager;
 
 //States
 #define FIREBOSS_INACTIVE 0
@@ -159,7 +158,7 @@ bool FireBoss::update(float dt) {
 		//Enable enemy blocks for the boss - normally this would be done with a trigger
 		//pad placed in the editor but we want the blocks to appear at the same time
 		//that this other shit above happens
-		enemyGroupManager->enableBlocks(groupID);
+		smh->enemyGroupManager->enableBlocks(groupID);
 
 	}
 
@@ -327,7 +326,7 @@ bool FireBoss::update(float dt) {
 		facing = DOWN;
 		alpha = 255;
 		smh->saveManager->killBoss(FIRE_BOSS);
-		enemyGroupManager->notifyOfDeath(groupID);
+		smh->enemyGroupManager->notifyOfDeath(groupID);
 		smh->soundManager->fadeOutMusic();
 	}
 	

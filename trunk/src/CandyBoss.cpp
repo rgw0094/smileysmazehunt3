@@ -14,7 +14,6 @@
 extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern EnemyGroupManager *enemyGroupManager;
 extern EnemyManager *enemyManager;
 
 #define CANDY_HEALTH 100
@@ -106,7 +105,7 @@ bool CandyBoss::update(float dt) {
 
 	//When smiley triggers the boss' enemy blocks start his dialogue.
 	if (state == CANDY_STATE_INACTIVE && !startedIntroDialogue) {
-		if (enemyGroupManager->groups[groupID].triggeredYet) {
+		if (smh->enemyGroupManager->groups[groupID].triggeredYet) {
 			smh->windowManager->openDialogueTextBox(-1, CANDY_INTRO_TEXT);
 			startedIntroDialogue = true;
 		} else {

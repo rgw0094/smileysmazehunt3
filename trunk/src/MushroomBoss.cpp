@@ -16,7 +16,6 @@
 extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern EnemyGroupManager *enemyGroupManager;
 extern ProjectileManager *projectileManager;
 extern EnemyManager *enemyManager;
 extern LootManager *lootManager;
@@ -147,7 +146,7 @@ bool MushroomBoss::update(float dt) {
 	
 	//When smiley triggers the boss' enemy blocks start his dialogue.
 	if (state == MUSHBOOM_INACTIVE && !startedIntroDialogue) {
-		if (enemyGroupManager->groups[groupID].triggeredYet) {
+		if (smh->enemyGroupManager->groups[groupID].triggeredYet) {
 			smh->windowManager->openDialogueTextBox(-1, MUSHBOOM_INTROTEXT);
 			startedIntroDialogue = true;
 		} else {
@@ -195,7 +194,7 @@ bool MushroomBoss::update(float dt) {
 			lootManager->addLoot(LOOT_NEW_ABILITY, x, y, SILLY_PAD);
 			droppedLoot = true;
 			smh->saveManager->killBoss(MUSHROOM_BOSS);
-			enemyGroupManager->notifyOfDeath(groupID);
+			smh->enemyGroupManager->notifyOfDeath(groupID);
 			smh->soundManager->playMusic("forestMusic");
 		}
 		if (alpha < 0) {

@@ -9,7 +9,6 @@
 #include "hgefont.h"
 #include "hgeresource.h"
 
-extern NPCManager *npcManager;
 extern SMH *smh;
 extern hgeResourceManager *resources;
 

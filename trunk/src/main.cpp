@@ -22,9 +22,7 @@ hgeResourceManager *resources;
 EnemyManager *enemyManager;
 LootManager *lootManager;
 ProjectileManager *projectileManager;
-NPCManager *npcManager;
 BossManager *bossManager;
-EnemyGroupManager *enemyGroupManager;
 LoadEffectManager *loadEffectManager;
 FenwarManager *fenwarManager;
 SMH *smh;
@@ -60,13 +58,7 @@ void loadResources() {
 		for (int j = 0; j < 16; j++) {
 			itemLayer[256+j*16+i] = new hgeSprite(resources->GetTexture("itemLayer2"),i*64,j*64,64,64);
 		}
-	}
-
-	//Fonts
-	resources->GetFont("controls")->SetColor(ARGB(255,0,0,0));
-
-	//Start animations
-	
+	}	
 
 }
 
@@ -90,21 +82,15 @@ void loadGameObjects() {
 	lootManager = new LootManager();
 		
 	hge->System_Log("Creating Projectile Manager");
-	projectileManager = new ProjectileManager();
-		
-	hge->System_Log("Creating NPC Manager");
-	npcManager = new NPCManager();
+	projectileManager = new ProjectileManager();	
 	
-	hge->System_Log("Creating Enemy Group Manager");
-	enemyGroupManager = new EnemyGroupManager();
+	
 
 	hge->System_Log("Creating Boss Manager");
 	bossManager = new BossManager();
 
 	hge->System_Log("Creating FenwarManager");
 	fenwarManager = new FenwarManager();
-
-	
 
 	hge->System_Log("******************************");
 }
@@ -202,7 +188,7 @@ bool FrameFunc() {
 		//times, even if a window is open!
 		smh->windowManager->update(dt);
 		loadEffectManager->update(dt);
-		enemyGroupManager->update(dt);
+		smh->enemyGroupManager->update(dt);
 
 		//If no windows are open, update the game objects
 		if (!smh->windowManager->isOpenWindow()) {
@@ -223,7 +209,7 @@ bool FrameFunc() {
 					enemyManager->update(dt);
 					lootManager->update(dt);
 					projectileManager->update(dt);
-					npcManager->update(dt);
+					smh->npcManager->update(dt);
 				}
 			}
 
@@ -254,7 +240,7 @@ bool RenderFunc() {
 		smh->environment->draw(dt);
 		lootManager->draw(dt);
 		enemyManager->draw(dt);
-		npcManager->draw(dt);
+		smh->npcManager->draw(dt);
 		bossManager->drawBeforeSmiley(dt);
 		smh->player->draw(dt);
 		bossManager->drawAfterSmiley(dt);
@@ -270,7 +256,8 @@ bool RenderFunc() {
 
 	if (smh->isDebugOn()) {
 		//Grid co-ords and fps
-		resources->GetFont("curlz")->printf(1000,5,HGETEXT_RIGHT,"(%d,%d)  FPS: %d",smh->player->gridX,smh->player->gridY, hge->Timer_GetFPS());
+		resources->GetFont("curlz")->printf(1000,5,HGETEXT_RIGHT,"(%d,%d)  FPS: %d", 
+			smh->player->gridX, smh->player->gridY, hge->Timer_GetFPS());
 	}
 
 	//Finish rendering
