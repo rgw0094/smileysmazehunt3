@@ -544,34 +544,9 @@
 				<File
 					RelativePath=".\src\Slider.h">
 				</File>
-				<Filter
-					Name="Game Menu"
-					Filter="">
-					<File
-						RelativePath=".\src\BaseWindow.h">
-					</File>
-					<File
-						RelativePath=".\src\inventory.h">
-					</File>
-					<File
-						RelativePath=".\src\map.h">
-					</File>
-					<File
-						RelativePath=".\src\minimenu.h">
-					</File>
-					<File
-						RelativePath=".\src\OptionsWindow.h">
-					</File>
-					<File
-						RelativePath=".\src\Shop.h">
-					</File>
-					<File
-						RelativePath=".\src\textbox.h">
-					</File>
-					<File
-						RelativePath=".\src\WindowManager.h">
-					</File>
-				</Filter>
+				<File
+					RelativePath=".\src\WindowFramework.h">
+				</File>
 			</Filter>
 		</Filter>
 		<Filter

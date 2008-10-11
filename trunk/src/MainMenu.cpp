@@ -100,6 +100,6 @@ void MainMenu::open(int _state) {
 	smh->soundManager->stopAbilityChannel();
 	smh->soundManager->stopEnvironmentChannel();
 	smh->soundManager->playMusic("menuMusic");
-	enterGameState(MENU);
+	smh->enterGameState(MENU);
 	setScreen(_state);
 }

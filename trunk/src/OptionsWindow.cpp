@@ -1,5 +1,5 @@
 #include "SMH.h"
-#include "OptionsWindow.h"
+#include "WindowFramework.h"
 #include "hgerect.h"
 #include "Button.h"
 #include "Slider.h"
@@ -35,11 +35,6 @@ OptionsWindow::~OptionsWindow() {
 }
 
 bool OptionsWindow::update(float dt) {
-	
-	//Temporary
-	if (hge->Input_KeyDown(HGEK_ESCAPE)) {
-		return false;
-	}
 
 	//Get mouse input
 	hge->Input_GetMousePos(&mouseX, &mouseY);

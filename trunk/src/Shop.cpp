@@ -1,15 +1,12 @@
 #include "SMH.h"
-#include "shop.h"
+#include "WindowFramework.h"
 #include "hge.h"
 #include "hgeresource.h"
 #include "Player.h"
-#include "WindowManager.h"
 
 extern HGE *hge;
 extern SMH *smh;
 extern hgeResourceManager *resources;
-extern WindowManager *windowManager;
-extern int frameCounter;
 
 #define X_OFFSET 312.0
 #define Y_OFFSET 500.0
@@ -113,7 +110,7 @@ bool Shop::update(float dt) {
 				purchaseItem(currentSelection);
 				break;
 			case EXIT:
-				windowManager->frameLastWindowClosed = frameCounter;
+				smh->windowManager->frameLastWindowClosed = smh->getCurrentFrame();
 				return false;
 		}
 	}

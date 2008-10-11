@@ -6,14 +6,12 @@
 #include "environment.h"
 #include "NPC.h"
 #include "Tongue.h"
-#include "WindowManager.h"
+#include "WindowFramework.h"
 
 #include "hgestrings.h"
 #include "hgesprite.h"
 
 extern SMH *smh;
-extern HGE *hge;
-extern WindowManager *windowManager;
 extern hgeStringTable *stringTable;
 
 NPCManager::NPCManager() { 
@@ -89,7 +87,7 @@ bool NPCManager::talkToNPCs(Tongue *tongue) {
 	std::list<NPCStruct>::iterator i;
 	for (i = theNPCs.begin(); i != theNPCs.end(); i++) {
 		if (tongue->testCollision(i->npc->collisionBox)) {
-			windowManager->openDialogueTextBox(i->npc->id, i->npc->textID);
+			smh->windowManager->openDialogueTextBox(i->npc->id, i->npc->textID);
 			i->npc->inConversation = true;
 			return true;
 		}

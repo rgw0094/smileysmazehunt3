@@ -47,7 +47,7 @@ void E_Ranged::update(float dt) {
 	//Using ranged attack - enemy pauses for a second, faces the player and shoots.
 	if (usingRangedAttack) {
 
-		if (timePassedSince(timeStartedRangedAttack) > 0.6 && !shotYet) {
+		if (smh->timePassedSince(timeStartedRangedAttack) > 0.6 && !shotYet) {
 			//Fire ranged weapon
 			if (!frozen && !stunned && !smh->player->isInvisible()) {		
 				shotYet = true;
@@ -57,7 +57,7 @@ void E_Ranged::update(float dt) {
 			}
 		}
 
-		if (timePassedSince(timeStartedRangedAttack) > 1.2) {
+		if (smh->timePassedSince(timeStartedRangedAttack) > 1.2) {
 			lastRangedAttack = smh->getGameTime();
 			usingRangedAttack = false;
 			setState(new ES_Wander(this));
@@ -67,7 +67,7 @@ void E_Ranged::update(float dt) {
 	} else {
 
 		//Wander -> Ranged
-		if (hasRangedAttack && canShootPlayer() && timePassedSince(lastRangedAttack) > rangedAttackDelay) {
+		if (hasRangedAttack && canShootPlayer() && smh->timePassedSince(lastRangedAttack) > rangedAttackDelay) {
 			startRangedAttack();
 		}
 

@@ -8,11 +8,10 @@
 #include "CollisionCircle.h"
 #include "WeaponParticle.h"
 #include "Tongue.h"
-#include "WindowManager.h"
+#include "WindowFramework.h"
 
 extern SMH *smh;
 extern HGE *hge;
-extern WindowManager *windowManager;
 extern LootManager *lootManager;
 extern hgeResourceManager *resources;
 extern EnemyGroupManager *enemyGroupManager;
@@ -153,7 +152,7 @@ bool FireBoss::update(float dt) {
 
 	//When the player enters his chamber shut the doors and start the intro dialogue
 	if (state == FIREBOSS_INACTIVE && !startedIntroDialogue && smh->player->gridY == startY+5  && smh->player->gridX == startX && smh->player->y < (startY+5)*64+33) {
-		windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS_INTRO);
+		smh->windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS_INTRO);
 		startedIntroDialogue = true;
 		smh->soundManager->fadeOutMusic();
 
@@ -165,7 +164,7 @@ bool FireBoss::update(float dt) {
 	}
 
 	//Activate the boss when the intro dialogue is closed
-	if (state == FIREBOSS_INACTIVE && startedIntroDialogue && !windowManager->isTextBoxOpen()) {
+	if (state == FIREBOSS_INACTIVE && startedIntroDialogue && !smh->windowManager->isTextBoxOpen()) {
 		state = FIREBOSS_ATTACK;
 		startedAttackMode = smh->getGameTime();
 		hge->Effect_Play(resources->GetEffect("snd_fireBossDie"));
@@ -279,7 +278,7 @@ bool FireBoss::update(float dt) {
 	//Check collision with Smiley's tongue
 	if (state != FIREBOSS_FRIENDLY && !flashing) {
 		for (int i = 0; i < 3; i++) {
-			if (smh->player->getTongue()->testCollision(collisionBoxes[i]) && timePassedSince(lastHitByTongue) >= 0.5) {
+			if (smh->player->getTongue()->testCollision(collisionBoxes[i]) && smh->timePassedSince(lastHitByTongue) >= 0.5) {
 				resources->GetAnimation("phyrebozzDownMouth")->Play();
 				resources->GetAnimation("phyrebozzLeftMouth")->Play();
 				resources->GetAnimation("phyrebozzRightMouth")->Play();
@@ -298,7 +297,7 @@ bool FireBoss::update(float dt) {
 	}
 
 	//Stop flashing after a while
-	if (flashing && timePassedSince(startedFlashing) > FLASH_DURATION) {
+	if (flashing && smh->timePassedSince(startedFlashing) > FLASH_DURATION) {
 		alpha = 255;
 		flashing = false;
 		resources->GetAnimation("phyrebozz")->SetColor(ARGB(255,alpha,alpha,alpha));
@@ -324,7 +323,7 @@ bool FireBoss::update(float dt) {
 		health = 0.0f;
 		state = FIREBOSS_FRIENDLY;
 		killOrbs();
-		windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS_VICTORY);	
+		smh->windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS_VICTORY);	
 		facing = DOWN;
 		alpha = 255;
 		smh->saveManager->killBoss(FIRE_BOSS);
@@ -333,7 +332,7 @@ bool FireBoss::update(float dt) {
 	}
 	
 	//After you beat the boss he runs away!!
-	if (state == FIREBOSS_FRIENDLY && !windowManager->isTextBoxOpen()) {
+	if (state == FIREBOSS_FRIENDLY && !smh->windowManager->isTextBoxOpen()) {
 		//Drop fire breath
 		if (!droppedLoot) {
 			lootManager->addLoot(LOOT_NEW_ABILITY, startX*64.0+32.0, startY*64.0+32.0, FIRE_BREATH);

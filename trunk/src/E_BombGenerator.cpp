@@ -73,7 +73,7 @@ void E_BombGenerator::draw(float dt) {
 	} else if (bombState == BOMB_GENERATOR_BOMB_COUNTING_DOWN) {
 		bombEyesGlowAnimation->Render(getScreenX(bomb.x),getScreenY(bomb.y));
 		int countdownSeconds=0;
-		countdownSeconds = 3-int(timePassedSince(startCountdownTime));
+		countdownSeconds = 3-int(smh->timePassedSince(startCountdownTime));
 		resources->GetFont("curlz")->printf(getScreenX(bomb.x)-1,getScreenY(bomb.y)-18,HGETEXT_CENTER,"%d",countdownSeconds);
 	} else if (bombState == BOMB_GENERATOR_BOMB_EXPLODING) {
 		resources->GetParticleSystem("explosion")->Render();
@@ -177,7 +177,7 @@ void E_BombGenerator::update(float dt) {
 
 	if (bombState == BOMB_GENERATOR_BOMB_COUNTING_DOWN) {
 		bombEyesGlowAnimation->Update(dt);	
-		if (timePassedSince(startCountdownTime) >= 3.0) {
+		if (smh->timePassedSince(startCountdownTime) >= 3.0) {
 			bombState=BOMB_GENERATOR_BOMB_EXPLODING;
 			resources->GetParticleSystem("explosion")->FireAt(getScreenX(bomb.x),getScreenY(bomb.y));	
 		}
@@ -186,7 +186,7 @@ void E_BombGenerator::update(float dt) {
 	if (bombState == BOMB_GENERATOR_BOMB_EXPLODING) {
 		resources->GetParticleSystem("explosion")->MoveTo(getScreenX(bomb.x),getScreenY(bomb.y),true);
 		resources->GetParticleSystem("explosion")->Update(dt);
-		if (timePassedSince(startCountdownTime) >= 3.3f) {
+		if (smh->timePassedSince(startCountdownTime) >= 3.3f) {
 			//get rid of walls
 			int xtile=bomb.x/64, ytile=bomb.y/64;
 			for (int curYTile = ytile-1; curYTile <= ytile+1; curYTile++) {
@@ -198,7 +198,7 @@ void E_BombGenerator::update(float dt) {
 			
 
 		}
-		if (resources->GetParticleSystem("explosion")->GetParticlesAlive() == 0 && timePassedSince(startCountdownTime) >= 4.0) {
+		if (resources->GetParticleSystem("explosion")->GetParticlesAlive() == 0 && smh->timePassedSince(startCountdownTime) >= 4.0) {
 			bombState = BOMB_GENERATOR_WAITING;			
 		}
 		

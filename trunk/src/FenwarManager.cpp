@@ -5,14 +5,13 @@
 #include "smiley.h"
 #include "FenwarManager.h"
 #include "Player.h"
-#include "WindowManager.h"
+#include "WindowFramework.h"
 
 #include "hgeresource.h"
 
 extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern WindowManager *windowManager;
 
 #define TRIGGER_DISTANCE 300
 
@@ -71,22 +70,22 @@ void FenwarManager::update(float dt) {
 		} else {
 
 			if (i->state == STATE_WARPING_IN) {
-				if (timePassedSince(i->timeEnteredState) > 1.0) i->fenwarVisible = true;
-				if (timePassedSince(i->timeEnteredState) > 2.0) {
-					windowManager->openDialogueTextBox(255, i->id);
+				if (smh->timePassedSince(i->timeEnteredState) > 1.0) i->fenwarVisible = true;
+				if (smh->timePassedSince(i->timeEnteredState) > 2.0) {
+					smh->windowManager->openDialogueTextBox(255, i->id);
 					i->state = STATE_TALKING;
 					i->timeEnteredState = smh->getGameTime();
 				}
 			}
 
 			if (i->state == STATE_TALKING) {
-				if (!i->textBoxClosed && !windowManager->isTextBoxOpen()) {
+				if (!i->textBoxClosed && !smh->windowManager->isTextBoxOpen()) {
 					i->textBoxClosed = true;
 					i->timeTextBoxClosed = smh->getGameTime();
 				}
 				if (i->textBoxClosed) {
 					//Wait a second after the text box closes before starting to warp out
-					if (timePassedSince(i->timeTextBoxClosed) > 1.0) {
+					if (smh->timePassedSince(i->timeTextBoxClosed) > 1.0) {
 						i->state = STATE_WARPING_OUT;
 						i->timeEnteredState = smh->getGameTime();
 						particles->SpawnPS(&resources->GetParticleSystem("fenwarwarp")->info, getScreenX(i->x), getScreenY(i->y));
@@ -95,10 +94,10 @@ void FenwarManager::update(float dt) {
 			}
 		
 			if (i->state == STATE_WARPING_OUT) {
-				if (timePassedSince(i->timeEnteredState) > 0.8) {
+				if (smh->timePassedSince(i->timeEnteredState) > 0.8) {
 					i->fenwarVisible = false;
 				}
-				if (timePassedSince(i->timeEnteredState) > 2.0) {
+				if (smh->timePassedSince(i->timeEnteredState) > 2.0) {
 					//Fenwar encounter is finished
 					smh->soundManager->playPreviousMusic();
 					smh->saveManager->change(i->gridX, i->gridY);

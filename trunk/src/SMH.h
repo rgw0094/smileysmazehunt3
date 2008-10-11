@@ -21,6 +21,7 @@ class BitManager;
 class Player;
 class Environment;
 class MainMenu;
+class WindowManager;
 
 //Classes defined here
 class SMH;
@@ -40,10 +41,15 @@ public:
 	~SMH();
 
 	//Public methods
+	void updateGame(float dt);
+	void drawGame(float dt);
 	void init();
 	bool isDebugOn();
 	void toggleDebugMode();
 	void setGameTime(float dt);
+	void enterGameState(int newState);
+	int getCurrentFrame();
+	int getGameState();
 	float getGameTime();
 	float getRealTime();
 
@@ -52,6 +58,7 @@ public:
 	void drawSprite(const char* sprite, float x, float y);
 	void drawSprite(const char* sprite, float x, float y, float width, float height);
 	void log(const char* text);
+	float timePassedSince(float time);
 
 	//Resource access
 	hgeAnimation *getAnimation(const char* font);
@@ -61,17 +68,20 @@ public:
 	//Game objects
 	Environment *environment;
 	GameData *gameData;
+	SmileyInput *input;
 	MainMenu *menu;
 	Player *player;
+	hgeResourceManager *resources;
 	SaveManager *saveManager;
 	SoundManager *soundManager;
-	SmileyInput *input;
+	WindowManager *windowManager;
 
 private:
 
 	float gameTime;
+	int gameState;
+	int frameCounter;
 	bool debugMode;
-	hgeResourceManager *resources;
 
 };
 

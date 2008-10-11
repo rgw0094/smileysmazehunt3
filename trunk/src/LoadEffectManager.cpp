@@ -7,7 +7,7 @@
 #include "smiley.h"
 #include "hgeresource.h"
 #include "Environment.h"
-#include "WindowManager.h"
+#include "WindowFramework.h"
 #include "EnemyManager.h"
 #include "LootManager.h"
 #include "ProjectileManager.h"
@@ -16,7 +16,6 @@
 extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern WindowManager *windowManager;
 extern LootManager *lootManager;
 extern ProjectileManager *projectileManager;
 extern EnemyManager *enemyManager;
@@ -98,7 +97,7 @@ void LoadEffectManager::draw(float dt) {
 	}
 
 	//After entering a new zone, display the ZONE NAME for 2.5 seconds after entering
-	if (hge->Timer_GetTime() < timeLevelLoaded + 2.5 && !windowManager->isOpenWindow()) {
+	if (hge->Timer_GetTime() < timeLevelLoaded + 2.5 && !smh->windowManager->isOpenWindow()) {
 		//After 1.5 seconds start fading out the zone name
 		if (hge->Timer_GetTime() > timeLevelLoaded + 1.5) {
 			zoneTextAlpha -= 255.0f*dt;

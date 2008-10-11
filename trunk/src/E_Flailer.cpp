@@ -127,7 +127,7 @@ void E_Flailer::updateFlail(float dt) {
 
 	//Periodically use the flail attack if the enemy is in range to attack
 	if (canFlail && !(frozen|| stunned)) {
-		if (timePassedSince(timeStartedFlail) > FLAIL_DURATION + FLAIL_DELAY) {
+		if (smh->timePassedSince(timeStartedFlail) > FLAIL_DURATION + FLAIL_DELAY) {
 			timeStartedFlail = smh->getGameTime();
 			flailing = true;
 			flailAngleVel = 0.0;
@@ -150,7 +150,7 @@ void E_Flailer::updateFlail(float dt) {
 		flailY = y + currentFlailLength * sin(flailAngle);
 
 		//Stop flailing after 2 seconds
-		if (timePassedSince(timeStartedFlail) > FLAIL_DURATION) {
+		if (smh->timePassedSince(timeStartedFlail) > FLAIL_DURATION) {
 			flailing = false;
 			coolingDown = true;
 		}

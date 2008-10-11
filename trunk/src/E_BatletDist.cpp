@@ -67,7 +67,7 @@ void E_BatletDist::update(float dt) {
 	}
 
 	//Spawn a batlet every now and then
-	if (activated && timePassedSince(lastSpawnTime) > SPAWN_DELAY) {
+	if (activated && smh->timePassedSince(lastSpawnTime) > SPAWN_DELAY) {
 		addBatlet();
 		lastSpawnTime = smh->getGameTime();
 	}
@@ -185,7 +185,7 @@ void E_BatletDist::updateBatlets(float dt) {
 		}
 
 		//After the batlets move away from BD they dive bomb Smiley
-		if (!i->startedDiveBomb && timePassedSince(i->timeSpawned) > 1.0) {
+		if (!i->startedDiveBomb && smh->timePassedSince(i->timeSpawned) > 1.0) {
 			i->angle = getAngleBetween(i->x, i->y, smh->player->x, smh->player->y) +
 				hge->Random_Float(-.1*PI, .1*PI);
 			i->dx = 600.0*cos(i->angle);

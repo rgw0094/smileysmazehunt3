@@ -5,9 +5,9 @@
 #include "player.h"
 #include "environment.h"
 #include "npcmanager.h"
-#include "minimenu.h"
+#include "WindowFramework.h"
 #include "MainMenu.h"
-#include "WindowManager.h"
+#include "WindowFramework.h"
 #include "collisioncircle.h"
 #include "weaponparticle.h"
 #include "Tongue.h"
@@ -26,11 +26,8 @@ extern hgeParticleSystem *iceBreathParticle;
 extern ProjectileManager *projectileManager;
 extern TextBox *theTextBox;
 extern NPCManager *npcManager;
-extern WindowManager *windowManager;
 extern hgeResourceManager *resources;
 extern LoadEffectManager *loadEffectManager;
-
-extern int frameCounter;
 
 #define SLIME_ACCEL 500.0			//Player acceleration on slime
 #define PLAYER_ACCEL 5000.0		//Normal player acceleration
@@ -58,6 +55,10 @@ Player::Player() {
 	fireBreathParticle = new WeaponParticleSystem("firebreath.psi", resources->GetSprite("particleGraphic1"), PARTICLE_FIRE_BREATH);
 	iceBreathParticle = new WeaponParticleSystem("icebreath.psi", resources->GetSprite("particleGraphic4"), PARTICLE_ICE_BREATH);
 	
+	resources->GetSprite("iceBlock")->SetColor(ARGB(200,255,255,255));
+	resources->GetSprite("reflectionShield")->SetColor(ARGB(100,255,255,255));
+	resources->GetSprite("playerShadow")->SetColor(ARGB(75,255,255,255));
+
 	//Set up constants
 	angles[UP] = PI * 0.0;
 	angles[UP_RIGHT] = PI * .25;
@@ -154,12 +155,12 @@ void Player::update(float dt) {
 	collisionCircle->set(x,y,(PLAYER_WIDTH/2-3)*shrinkScale);
 
 	//Update timed statuses
-	if (flashing && timePassedSince(startedFlashing) > 1.5) flashing = false;
-	if (frozen && timePassedSince(timeFrozen) > freezeDuration) frozen = false;
-	if (stunned && timePassedSince(timeStartedStun) > stunDuration) stunned = false;
+	if (flashing && smh->timePassedSince(startedFlashing) > 1.5) flashing = false;
+	if (frozen && smh->timePassedSince(timeFrozen) > freezeDuration) frozen = false;
+	if (stunned && smh->timePassedSince(timeStartedStun) > stunDuration) stunned = false;
 
 	//Update shit if in Knockback state
-	if (!falling && !sliding && knockback && timePassedSince(startedKnockBack) > KNOCKBACK_DURATION) {
+	if (!falling && !sliding && knockback && smh->timePassedSince(startedKnockBack) > KNOCKBACK_DURATION) {
 		knockback = false;
 		dx = dy = 0.0;
 		//Help slow the player down if they are on ice by using PLAYER_ACCEL for 1 frame
@@ -173,7 +174,7 @@ void Player::update(float dt) {
 	if (smh->input->keyPressed(INPUT_ATTACK) && !breathingFire && !frozen && !isHovering &&
 			!falling && !springing && !cloaked && !shrinkActive && !drowning &
 			!reflectionShieldActive &&
-			frameCounter > windowManager->frameLastWindowClosed) {			
+			smh->getCurrentFrame() > smh->windowManager->frameLastWindowClosed) {			
 		smh->saveManager->numTongueLicks++;
 		tongue->startAttack();
 	}
@@ -549,7 +550,7 @@ void Player::doAbility(float dt) {
 
 	//Continue hovering
 	if (isHovering) {
-		if (timePassedSince(timeStartedHovering) > HOVER_DURATION) {
+		if (smh->timePassedSince(timeStartedHovering) > HOVER_DURATION) {
 			isHovering = false;
 		}
 		if (hoverScale < 1.2f) hoverScale += 0.4*dt;
@@ -639,7 +640,7 @@ void Player::doAbility(float dt) {
 		}
 
 		//Start Ice Breath
-		if (selectedAbility == ICE_BREATH && timePassedSince(startedIceBreath) > 1.5 && mana >= smh->gameData->getAbilityInfo(ICE_BREATH).manaCost) {
+		if (selectedAbility == ICE_BREATH && smh->timePassedSince(startedIceBreath) > 1.5 && mana >= smh->gameData->getAbilityInfo(ICE_BREATH).manaCost) {
 			mana -= smh->gameData->getAbilityInfo(ICE_BREATH).manaCost;
 			hge->Effect_Play(resources->GetEffect("snd_iceBreath"));
 			startedIceBreath = smh->getGameTime();
@@ -675,10 +676,10 @@ void Player::doAbility(float dt) {
 		iceBreathParticle->MoveTo(getScreenX(x) + mouthXOffset[facing], getScreenY(y) + mouthYOffset[facing], false);
 		iceBreathParticle->Update(dt);
 
-		if (timePassedSince(startedIceBreath) > 0.6) {
+		if (smh->timePassedSince(startedIceBreath) > 0.6) {
 			iceBreathParticle->Stop(false);
 		}
-		if (timePassedSince(startedIceBreath) > 1.2) {
+		if (smh->timePassedSince(startedIceBreath) > 1.2) {
 			breathingIce = false;
 		}
 			
@@ -763,11 +764,11 @@ void Player::doAbility(float dt) {
 			usingCane = false;
 			resources->GetParticleSystem("smileysCane")->Stop(false);
 		}
-		if (timePassedSince(timeStartedCane) > 3.0) {
+		if (smh->timePassedSince(timeStartedCane) > 3.0) {
 			resources->GetParticleSystem("smileysCane")->Stop(false);
 			usingCane = false;
 			facing = DOWN;
-			windowManager->openHintTextBox();
+			smh->windowManager->openHintTextBox();
 		}
 	}
 
@@ -864,7 +865,7 @@ void Player::doSprings(float dt) {
 	if (!falling && !sliding && springing && hoveringYOffset == 0.0f) {
 		
 		scale = 1.0f + sin(PI*((smh->getGameTime() - startedSpringing)/springTime)) * .2f;
-		springOffset =  sin(PI*(timePassedSince(startedSpringing)/springTime))* (springVelocity / 4.0);
+		springOffset =  sin(PI*(smh->timePassedSince(startedSpringing)/springTime))* (springVelocity / 4.0);
 		dx = dy = 0;
 
 		//Sprint left
@@ -911,7 +912,7 @@ void Player::doSprings(float dt) {
 	}
 
 	//Stop springing
-	if (springing && timePassedSince(startedSpringing) > springTime) {
+	if (springing && smh->timePassedSince(startedSpringing) > springTime) {
 		springing = false;
 		scale = 1.0;
 		x = gridX*64.0 + 32.0;
@@ -955,7 +956,7 @@ void Player::doFalling(float dt) {
 	}
 
 	//Stop falling
-	if (falling && timePassedSince(startedFalling) > 2.0) {
+	if (falling && smh->timePassedSince(startedFalling) > 2.0) {
 		falling = false;
 		moveTo(startedFallingX, startedFallingY);
 		dx = dy = 0;
@@ -1496,7 +1497,7 @@ void Player::doShrinkTunnels(float dt) {
 	}
 
 	//Exit shrink tunnel
-	if (timePassedSince(timeEnteredShrinkTunnel) > timeInShrinkTunnel) {
+	if (smh->timePassedSince(timeEnteredShrinkTunnel) > timeInShrinkTunnel) {
 		inShrinkTunnel = false;
 	}
 	

@@ -1,15 +1,8 @@
 #include "SMH.h"
-#include "hge.h"
-#include "WindowManager.h"
-#include "BaseWindow.h"
-#include "inventory.h"
-#include "map.h"
-#include "minimenu.h"
-#include "textbox.h"
+#include "WindowFramework.h"
 #include "player.h"
 #include "tongue.h"
 
-extern HGE *hge;
 extern SMH *smh;
 
 /**

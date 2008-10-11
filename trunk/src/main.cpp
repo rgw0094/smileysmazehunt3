@@ -3,11 +3,10 @@
 #include "ProjectileManager.h"
 #include "MainMenu.h"
 #include "player.h"
-#include "minimenu.h"
+#include "WindowFramework.h"
 #include "npcmanager.h"
 #include "boss.h"
 #include "EnemyGroupManager.h"
-#include "WindowManager.h"
 #include "resource1.h"
 #include "smiley.h"
 #include "environment.h"
@@ -26,7 +25,6 @@ ProjectileManager *projectileManager;
 NPCManager *npcManager;
 BossManager *bossManager;
 EnemyGroupManager *enemyGroupManager;
-WindowManager *windowManager;
 LoadEffectManager *loadEffectManager;
 FenwarManager *fenwarManager;
 SMH *smh;
@@ -35,8 +33,6 @@ SMH *smh;
 hgeSprite *itemLayer[512];
 
 //Variables
-int frameCounter = 0;
-int gameState = MENU;
 float darkness = 0.0;
 bool debugMovePressed = false;
 float lastDebugMoveTime = 0.0;
@@ -66,19 +62,11 @@ void loadResources() {
 		}
 	}
 
-	//Set sprite alphas
-	resources->GetSprite("iceBlock")->SetColor(ARGB(200,255,255,255));
-	resources->GetSprite("reflectionShield")->SetColor(ARGB(100,255,255,255));
-	resources->GetSprite("playerShadow")->SetColor(ARGB(75,255,255,255));
-
 	//Fonts
 	resources->GetFont("controls")->SetColor(ARGB(255,0,0,0));
 
 	//Start animations
-	resources->GetAnimation("water")->Play();
-	resources->GetAnimation("greenWater")->Play();
-	resources->GetAnimation("lava")->Play();
-	resources->GetAnimation("fountainRipple")->Play();
+	
 
 }
 
@@ -113,9 +101,6 @@ void loadGameObjects() {
 	hge->System_Log("Creating Boss Manager");
 	bossManager = new BossManager();
 
-	hge->System_Log("Creating Window Manager");
-	windowManager = new WindowManager();
-
 	hge->System_Log("Creating FenwarManager");
 	fenwarManager = new FenwarManager();
 
@@ -132,7 +117,7 @@ void doDebugInput() {
 	//Toggle debug mode
 	if (hge->Input_KeyDown(HGEK_D)) smh->toggleDebugMode();
 
-	if (gameState == GAME) {
+	if (smh->getGameState() == GAME) {
 
 		//Toggle invincibility
 		if (hge->Input_KeyDown(HGEK_I)) {
@@ -159,10 +144,10 @@ void doDebugInput() {
 				debugMovePressed = true;
 				lastDebugMoveTime = smh->getGameTime();
 			}
-			if (hge->Input_KeyDown(HGEK_NUMPAD8) || (timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(HGEK_NUMPAD8))) yMove = -1;
-			if (hge->Input_KeyDown(HGEK_NUMPAD5) || (timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(HGEK_NUMPAD5))) yMove = 1;
-			if (hge->Input_KeyDown(HGEK_NUMPAD4) || (timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(HGEK_NUMPAD4))) xMove = -1;
-			if (hge->Input_KeyDown(HGEK_NUMPAD6) || (timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(HGEK_NUMPAD6))) xMove = 1;
+			if (hge->Input_KeyDown(HGEK_NUMPAD8) || (smh->timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(HGEK_NUMPAD8))) yMove = -1;
+			if (hge->Input_KeyDown(HGEK_NUMPAD5) || (smh->timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(HGEK_NUMPAD5))) yMove = 1;
+			if (hge->Input_KeyDown(HGEK_NUMPAD4) || (smh->timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(HGEK_NUMPAD4))) xMove = -1;
+			if (hge->Input_KeyDown(HGEK_NUMPAD6) || (smh->timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(HGEK_NUMPAD6))) xMove = 1;
 		} else {
 			debugMovePressed = false;
 		}
@@ -180,6 +165,8 @@ bool FrameFunc() {
 
 	float dt = hge->Timer_GetDelta();
 
+	smh->updateGame(dt);
+
 	doDebugInput();
 
 	//Update the input
@@ -190,37 +177,35 @@ bool FrameFunc() {
 		hge->System_Snapshot();
 	}
 	
-	if (gameState == MENU) {
+	if (smh->getGameState() == MENU) {
 	
 		if (smh->menu->update(dt)) return true;
 		if (hge->Input_KeyDown(HGEK_ESCAPE)) return true;
 
-	} else if (gameState == GAME) {
-
-		frameCounter++;
+	} else if (smh->getGameState() == GAME) {
 
 		//Toggle game menu
 		if (smh->input->keyPressed(INPUT_PAUSE)) {
-			if (windowManager->isGameMenuOpen()) {
-				windowManager->closeWindow();
-			} else if (!windowManager->isOpenWindow()) {
-				windowManager->openGameMenu();
+			if (smh->windowManager->isGameMenuOpen()) {
+				smh->windowManager->closeWindow();
+			} else if (!smh->windowManager->isOpenWindow()) {
+				smh->windowManager->openGameMenu();
 			}
 		}
 
 		//Toggle options/exit
 		if (hge->Input_KeyDown(HGEK_ESCAPE)) {
-			windowManager->openWindow(new MiniMenu(MINIMENU_EXIT));
+			smh->windowManager->openWindow(new MiniMenu(MINIMENU_EXIT));
 		}
 
 		//Update windows. The load effect and enemy group managers need to be updated at all
 		//times, even if a window is open!
-		windowManager->update(dt);
+		smh->windowManager->update(dt);
 		loadEffectManager->update(dt);
 		enemyGroupManager->update(dt);
 
 		//If no windows are open, update the game objects
-		if (!windowManager->isOpenWindow()) {
+		if (!smh->windowManager->isOpenWindow()) {
 			
 			//Keep track of the time that no windows are open.
 			smh->setGameTime(smh->getGameTime() + dt);
@@ -260,7 +245,7 @@ bool RenderFunc() {
 	float dt=hge->Timer_GetDelta();
 	hge->Gfx_BeginScene();
 
-	if (gameState == MENU) {
+	if (smh->getGameState() == MENU) {
 		smh->menu->draw(dt);
 
 	} else {
@@ -279,7 +264,7 @@ bool RenderFunc() {
 		if (darkness > 0.0) shadeScreen(darkness);
 		loadEffectManager->draw(dt);
 		smh->player->drawGUI(dt);
-		windowManager->draw(dt);
+		smh->windowManager->draw(dt);
 
 	}
 
@@ -300,7 +285,7 @@ bool ExitFunc() {
 
 	//If they manually close the program while the game is active we still
 	//want to count their time played!
-	if (gameState == GAME) {
+	if (smh->getGameState() == GAME) {
 		smh->saveManager->saveTimePlayed();
 	}
 

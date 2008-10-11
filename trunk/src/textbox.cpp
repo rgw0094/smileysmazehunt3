@@ -1,10 +1,8 @@
 #include "SMH.h"
 #include "smiley.h"
-#include "textbox.h"
+#include "WindowFramework.h"
 #include "player.h"
 #include "npcmanager.h"
-#include "WindowManager.h"
-#include "Shop.h"
 
 #include "hgedistort.h"
 #include "hgesprite.h"
@@ -12,12 +10,8 @@
 #include "hgeresource.h"
 
 extern NPCManager *npcManager;
-extern HGE *hge;
 extern SMH *smh;
 extern hgeResourceManager *resources;
-extern WindowManager *windowManager;
-
-extern int frameCounter;
 
 //Dialog box types
 #define TYPE_SIGN 0
@@ -56,7 +50,7 @@ TextBox::~TextBox() {
 void TextBox::init() {
 
 	fadeAlpha = 255.0;
-	lastKeyPressFrame = frameCounter;
+	lastKeyPressFrame = smh->getCurrentFrame();
 	timeStarted = smh->getGameTime();
 	fadingOut = false;
 	distortion = NULL;
@@ -282,24 +276,24 @@ bool TextBox::update(float dt) {
 		for (int i = 0; i < PSYCHEDELIC_GRANULARITY; i++) {
 			for(int j = 0; j < PSYCHEDELIC_GRANULARITY; j++) {
 				distortion->SetColor(i, j, ARGB(fadeAlpha, 0, 0, 0));
-				distortion->SetDisplacement(j,i,cosf(hge->Timer_GetTime()*2+(i+j)/2)*15,sinf(hge->Timer_GetTime()*2+(i+j)/2)*15,HGEDISP_NODE);
+				distortion->SetDisplacement(j,i,cosf(smh->getRealTime()*2+(i+j)/2)*15,sinf(smh->getRealTime()*2+(i+j)/2)*15,HGEDISP_NODE);
 			}
 		}
 	}
 
 	//Input to close the box or go to the next dialog page
-	if (smh->input->keyPressed(INPUT_ATTACK) && lastKeyPressFrame != frameCounter) {
-		lastKeyPressFrame = frameCounter;
+	if (smh->input->keyPressed(INPUT_ATTACK) && lastKeyPressFrame != smh->getCurrentFrame()) {
+		lastKeyPressFrame = smh->getCurrentFrame();
 
 		//Last page - close the box
 		if (numPages == currentPage) {
 			
 			//Close the text box
-			windowManager->frameLastWindowClosed = frameCounter;
+			smh->windowManager->frameLastWindowClosed = smh->getCurrentFrame();
 			
 			//If this is spierdyke, open the shop
 			if (textBoxType == TYPE_DIALOG && npcID == SPIERDYKE) {
-				windowManager->openWindow(new Shop());
+				smh->windowManager->openWindow(new Shop());
 				return true; //Don't tell manager to close window
 
 			//Give smiley the cane the first time he talks to Bill Clinton
@@ -354,7 +348,7 @@ bool TextBox::doFadeOut(float dt) {
 	for (int i = 0; i < PSYCHEDELIC_GRANULARITY; i++) {
 		for(int j = 0; j < PSYCHEDELIC_GRANULARITY; j++) {
 			distortion->SetColor(i, j, ARGB(fadeAlpha, 0, 0, 0));
-			distortion->SetDisplacement(j,i,cosf(hge->Timer_GetTime()*10+(i+j)/2)*5,sinf(hge->Timer_GetTime()*10+(i+j)/2)*5,HGEDISP_NODE);
+			distortion->SetDisplacement(j,i,cosf(smh->getRealTime()*10+(i+j)/2)*5,sinf(smh->getRealTime()*10+(i+j)/2)*5,HGEDISP_NODE);
 		}
 	}
 

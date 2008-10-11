@@ -12,12 +12,11 @@
 #include "weaponparticle.h"
 #include "CollisionCircle.h"
 #include "Tongue.h"
-#include "WindowManager.h"
+#include "WindowFramework.h"
 
 extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern WindowManager *windowManager;
 extern EnemyGroupManager *enemyGroupManager;
 extern ProjectileManager *projectileManager;
 extern EnemyManager *enemyManager;
@@ -116,7 +115,7 @@ bool DesertBoss::update(float dt) {
 	//When smiley triggers the boss' enemy blocks start his dialogue.
 	if (state == DESERTBOSS_INACTIVE && !startedIntroDialogue) {
 		if (enemyGroupManager->groups[groupID].triggeredYet) {
-			windowManager->openDialogueTextBox(-1, TEXT_DESERTBOSS_INTRO);
+			smh->windowManager->openDialogueTextBox(-1, TEXT_DESERTBOSS_INTRO);
 			startedIntroDialogue = true;
 		} else {
 			return false;
@@ -124,7 +123,7 @@ bool DesertBoss::update(float dt) {
 	}
 
 	//Activate the boss when the intro dialogue is closed
-	if (state == DESERTBOSS_INACTIVE && startedIntroDialogue && !windowManager->isTextBoxOpen()) {
+	if (state == DESERTBOSS_INACTIVE && startedIntroDialogue && !smh->windowManager->isTextBoxOpen()) {
 		enterState(DESERTBOSS_LAUNCHING_SPIKES);
 		smh->soundManager->playMusic("bossMusic");
 	}
@@ -159,7 +158,7 @@ bool DesertBoss::update(float dt) {
 						//Show battle text 1 before the first spike attack
 						groundSpikeState = GSS_TEXT;
 						firstTimeLaunchingGroundSpikes = false;
-						windowManager->openDialogueTextBox(-1, DESERTBOSS_BATTLETEXT_1);
+						smh->windowManager->openDialogueTextBox(-1, DESERTBOSS_BATTLETEXT_1);
 					} else {
 						groundSpikeState = GSS_SHADOWS;
 					}
@@ -176,7 +175,7 @@ bool DesertBoss::update(float dt) {
 		if (state == DESERTBOSS_LAUNCHING_SPIKES) {	
 
 			//Launch spikes
-			if (timePassedSince(lastSpikeLaunch) > 0.1) {
+			if (smh->timePassedSince(lastSpikeLaunch) > 0.1) {
 				for (int i = 0; i < NUM_SPIKE_STREAMS; i++) {				
 					projectileManager->addProjectile(x + 63.0*cos(spikeAngles[i]), y - 30.0 + 63.0*sin(spikeAngles[i]), 600, spikeAngles[i], FLYING_SPIKE_DAMAGE, true, PROJECTILE_CACTUS_SPIKE, false);
 				}
@@ -189,7 +188,7 @@ bool DesertBoss::update(float dt) {
 			if (spikeRotVelocity > .65*PI) spikeRotVelocity = .65*PI;
 
 			//Stop launching spikes after 3 seconds
-			if (timePassedSince(timeEnteredState) > 4.0) {
+			if (smh->timePassedSince(timeEnteredState) > 4.0) {
 				enterState(DESERTBOSS_IDLE);
 			}
 
@@ -204,7 +203,7 @@ bool DesertBoss::update(float dt) {
 		if (state == DESERTBOSS_SPAWNING_CACTLETS) {
 			
 			//Spawn a cactlet every couple seconds until 5 have been spawned
-			if (timePassedSince(lastCactletTime) > 1.5 || (numCactletsSpawned == 0 && timePassedSince(lastCactletTime) > 0.5)) {
+			if (smh->timePassedSince(lastCactletTime) > 1.5 || (numCactletsSpawned == 0 && smh->timePassedSince(lastCactletTime) > 0.5)) {
 				spawnCactlet();
 				numCactletsSpawned++;
 				lastCactletTime = smh->getGameTime();
@@ -230,7 +229,7 @@ bool DesertBoss::update(float dt) {
 	if (health < 0.0) {
 		health = 0.0;
 		enterState(DESERTBOSS_FRIENDLY);
-		windowManager->openDialogueTextBox(-1, DESERTBOSS_DEFEATTEXT);
+		smh->windowManager->openDialogueTextBox(-1, DESERTBOSS_DEFEATTEXT);
 		smh->soundManager->fadeOutMusic();
 		enemyManager->killEnemies(CACTLET_ENEMYID);
 	}
@@ -239,7 +238,7 @@ bool DesertBoss::update(float dt) {
 	if (state == DESERTBOSS_FRIENDLY) {
 		redness -= 255.0*dt;
 		if (redness < 0.0) redness = 0.0;
-		if (!windowManager->isTextBoxOpen()) {
+		if (!smh->windowManager->isTextBoxOpen()) {
 			enterState(DESERTBOSS_FADING);
 		}
 	}
@@ -297,7 +296,7 @@ void DesertBoss::updateGroundSpikeState(float dt) {
 	//---- state transition stuff --------
 
 	//Show the spike shadows after the player closese the dialog
-	if (groundSpikeState == GSS_TEXT && !windowManager->isTextBoxOpen()) {
+	if (groundSpikeState == GSS_TEXT && !smh->windowManager->isTextBoxOpen()) {
 		groundSpikeState = GSS_SHADOWS;
 		generateRandomGroundSpikes();
 		timeEnteredGSS = smh->getGameTime();
@@ -354,7 +353,7 @@ void DesertBoss::updateGroundSpikeState(float dt) {
 			redness = 0.0;
 			if (firstTimeFinishingGroundSpikes) {
 				firstTimeFinishingGroundSpikes = false;
-				windowManager->openDialogueTextBox(-1, DESERTBOSS_BATTLETEXT_2);
+				smh->windowManager->openDialogueTextBox(-1, DESERTBOSS_BATTLETEXT_2);
 				groundSpikeState = GSS_COOLING_OFF_TEXT;
 			} else {
 				enterState(DESERTBOSS_SPAWNING_CACTLETS);
@@ -365,7 +364,7 @@ void DesertBoss::updateGroundSpikeState(float dt) {
 	}
 
 	//When finishing giving one-time cooling off text, return to launching spikes
-	if (groundSpikeState == GSS_COOLING_OFF_TEXT && !windowManager->isTextBoxOpen()) {
+	if (groundSpikeState == GSS_COOLING_OFF_TEXT && !smh->windowManager->isTextBoxOpen()) {
 		enterState(DESERTBOSS_SPAWNING_CACTLETS);
 		numCactletsSpawned = 0;
 		lastCactletTime = smh->getGameTime();

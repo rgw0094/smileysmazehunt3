@@ -73,7 +73,7 @@ void EvilWall::deactivate() {
 void EvilWall::update(float dt) {
 	switch(state) {
 		case EVIL_WALL_STATE_APPEARING:
-			if (timePassedSince(beginAppearTime) >= EVIL_WALL_APPEAR_TIME) {
+			if (smh->timePassedSince(beginAppearTime) >= EVIL_WALL_APPEAR_TIME) {
 				resources->GetSprite("evilWall")->SetColor(ARGB(255,255,255,255));
 				resources->GetSprite("evilWallSpike")->SetColor(ARGB(255,255,255,255));
 				state = EVIL_WALL_STATE_MOVING;
@@ -84,15 +84,15 @@ void EvilWall::update(float dt) {
 		case EVIL_WALL_STATE_MOVING:
 			resources->GetSprite("evilWall")->SetColor(ARGB(255,255,255,255));
 			resources->GetSprite("evilWallSpike")->SetColor(ARGB(255,255,255,255));
-			if (dir==RIGHT) xPosition = (xBeginWall*64+32)+ speed*timePassedSince(beginWallMoveTime);
-			if (dir==LEFT) xPosition = (xBeginWall*64+32)- speed*timePassedSince(beginWallMoveTime);
-			if (dir==UP) yPosition = (yBeginWall*64+32)- speed*timePassedSince(beginWallMoveTime);
-			if (dir==DOWN) yPosition = (yBeginWall*64+32)+ speed*timePassedSince(beginWallMoveTime);
+			if (dir==RIGHT) xPosition = (xBeginWall*64+32)+ speed*smh->timePassedSince(beginWallMoveTime);
+			if (dir==LEFT) xPosition = (xBeginWall*64+32)- speed*smh->timePassedSince(beginWallMoveTime);
+			if (dir==UP) yPosition = (yBeginWall*64+32)- speed*smh->timePassedSince(beginWallMoveTime);
+			if (dir==DOWN) yPosition = (yBeginWall*64+32)+ speed*smh->timePassedSince(beginWallMoveTime);
 
 			doCollision();
 			break;
 		case EVIL_WALL_STATE_FADING:
-			if (timePassedSince(beginFadeTime) >= EVIL_WALL_APPEAR_TIME) {
+			if (smh->timePassedSince(beginFadeTime) >= EVIL_WALL_APPEAR_TIME) {
 				state = EVIL_WALL_STATE_IDLE;
 			}			
 			break;
@@ -105,7 +105,7 @@ void EvilWall::draw(float dt) {
 
 	switch (state) {
 		case EVIL_WALL_STATE_APPEARING:
-			alpha = timePassedSince(beginAppearTime) / EVIL_WALL_APPEAR_TIME;
+			alpha = smh->timePassedSince(beginAppearTime) / EVIL_WALL_APPEAR_TIME;
 			alpha = min(alpha,1.0); //Cap at 1.0
 			resources->GetSprite("evilWall")->SetColor(ARGB(alpha*255.0,255,255,255));
 			resources->GetSprite("evilWallSpike")->SetColor(ARGB(alpha*255.0,255,255,255));
@@ -115,7 +115,7 @@ void EvilWall::draw(float dt) {
 			drawEvilWall();
 			break;
 		case EVIL_WALL_STATE_FADING:
-			alpha = 1- timePassedSince(beginFadeTime) / EVIL_WALL_APPEAR_TIME;
+			alpha = 1- smh->timePassedSince(beginFadeTime) / EVIL_WALL_APPEAR_TIME;
 			alpha = max(alpha,0.0); //Cap at 0.0
 			resources->GetSprite("evilWall")->SetColor(ARGB(alpha*255.0,255,255,255));
 			resources->GetSprite("evilWallSpike")->SetColor(ARGB(alpha*255.0,255,255,255));

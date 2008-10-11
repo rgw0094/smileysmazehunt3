@@ -5,7 +5,7 @@
 #include "Player.h"
 #include "EnemyManager.h"
 #include "EnemyGroupManager.h"
-#include "WindowManager.h"
+#include "WindowFramework.h"
 #include "Smiley.h"
 #include "Environment.h"
 #include "collisioncircle.h"
@@ -16,7 +16,6 @@ extern HGE *hge;
 extern hgeResourceManager *resources;
 extern EnemyGroupManager *enemyGroupManager;
 extern EnemyManager *enemyManager;
-extern WindowManager *windowManager;
 
 #define CANDY_HEALTH 100
 
@@ -108,7 +107,7 @@ bool CandyBoss::update(float dt) {
 	//When smiley triggers the boss' enemy blocks start his dialogue.
 	if (state == CANDY_STATE_INACTIVE && !startedIntroDialogue) {
 		if (enemyGroupManager->groups[groupID].triggeredYet) {
-			windowManager->openDialogueTextBox(-1, CANDY_INTRO_TEXT);
+			smh->windowManager->openDialogueTextBox(-1, CANDY_INTRO_TEXT);
 			startedIntroDialogue = true;
 		} else {
 			return false;
@@ -116,7 +115,7 @@ bool CandyBoss::update(float dt) {
 	}
 
 	//Activate the boss when the intro dialogue is closed
-	if (state == CANDY_STATE_INACTIVE && startedIntroDialogue && !windowManager->isTextBoxOpen()) {
+	if (state == CANDY_STATE_INACTIVE && startedIntroDialogue && !smh->windowManager->isTextBoxOpen()) {
 		enterState(CANDY_STATE_RUNNING);
 		smh->soundManager->playMusic("bossMusic");
 	}
@@ -128,7 +127,7 @@ bool CandyBoss::update(float dt) {
 
 	if (state == CANDY_STATE_RUNNING) {
 		updateRun(dt);
-		if (timePassedSince(timeEnteredState) > 8.0) {
+		if (smh->timePassedSince(timeEnteredState) > 8.0) {
 			enterState(CANDY_STATE_JUMPING);
 		}
 	}
@@ -204,12 +203,12 @@ void CandyBoss::enterState(int _state) {
 
 void CandyBoss::updateLimbs(float dt) {
 	if (state == CANDY_STATE_RUNNING) {
-		leftLegY = 5.0*sin(timePassedSince(timeEnteredState)*20);
-		rightLegY = -5.0*sin(timePassedSince(timeEnteredState)*20);
+		leftLegY = 5.0*sin(smh->timePassedSince(timeEnteredState)*20);
+		rightLegY = -5.0*sin(smh->timePassedSince(timeEnteredState)*20);
 	}
 	if (state == CANDY_STATE_RUNNING || state == CANDY_STATE_JUMPING || state == CANDY_STATE_MULTI_JUMP) {
-		leftArmRot = -CANDY_ARM_INITIAL_ROT + 15*PI/180*sin(timePassedSince(timeEnteredState)*7);
-		rightArmRot = CANDY_ARM_INITIAL_ROT - 15*PI/180*sin(timePassedSince(timeEnteredState)*7);
+		leftArmRot = -CANDY_ARM_INITIAL_ROT + 15*PI/180*sin(smh->timePassedSince(timeEnteredState)*7);
+		rightArmRot = CANDY_ARM_INITIAL_ROT - 15*PI/180*sin(smh->timePassedSince(timeEnteredState)*7);
 	}
 }
 
@@ -249,7 +248,7 @@ void CandyBoss::updateRun(float dt) {
 void CandyBoss::updateJumping(float dt) {
 
 	//Start jump
-	if (!jumping && timePassedSince(timeStoppedJump) > (state == CANDY_STATE_MULTI_JUMP ? 0.0 : CANDY_JUMP_DELAY)) {
+	if (!jumping && smh->timePassedSince(timeStoppedJump) > (state == CANDY_STATE_MULTI_JUMP ? 0.0 : CANDY_JUMP_DELAY)) {
 
 		jumping = true;
 		numJumps++;
@@ -272,12 +271,12 @@ void CandyBoss::updateJumping(float dt) {
 
 	if (jumping) {
 
-		jumpYOffset = 150.0 * sin((timePassedSince(timeStartedJump)/timeToJump) * PI);
+		jumpYOffset = 150.0 * sin((smh->timePassedSince(timeStartedJump)/timeToJump) * PI);
 		
 		x += jumpSpeed * cos(angle) * dt;
 		y += jumpSpeed * sin(angle) * dt;
 
-		if (timePassedSince(timeStartedJump) > timeToJump) {
+		if (smh->timePassedSince(timeStartedJump) > timeToJump) {
 			jumping = false;
 			timeStoppedJump = smh->getGameTime();
 			jumpYOffset = 0.0;
@@ -332,7 +331,7 @@ void CandyBoss::updateNovas(float dt) {
 			}
 		}
 
-		if (timePassedSince(i->timeSpawned) > i->particle->info.fParticleLifeMax) {
+		if (smh->timePassedSince(i->timeSpawned) > i->particle->info.fParticleLifeMax) {
 			delete i->particle;
 			delete i->collisionCircle;
 			i = novaList.erase(i);

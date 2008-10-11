@@ -11,11 +11,10 @@
 #include "Tongue.h"
 #include "hge.h"
 #include "CollisionCircle.h"
-#include "WindowManager.h"
+#include "WindowFramework.h"
 
 extern SMH *smh;
 extern hgeResourceManager *resources;
-extern WindowManager *windowManager;
 extern EnemyGroupManager *enemyGroupManager;
 extern ProjectileManager *projectileManager;
 extern LootManager *lootManager;
@@ -138,7 +137,7 @@ bool DespairBoss::update(float dt) {
 	//When smiley triggers the boss' enemy block start his dialogue.
 	if (state == DESPAIRBOSS_INACTIVE && !startedIntroDialogue) {
 		if (enemyGroupManager->groups[groupID].triggeredYet) {
-			windowManager->openDialogueTextBox(-1, DESPAIRBOSS_INTROTEXT);
+			smh->windowManager->openDialogueTextBox(-1, DESPAIRBOSS_INTROTEXT);
 			startedIntroDialogue = true;
 		} else {
 			return false;
@@ -146,7 +145,7 @@ bool DespairBoss::update(float dt) {
 	}
 
 	//Activate the boss when the intro dialogue is closed
-	if (state == DESPAIRBOSS_INACTIVE && startedIntroDialogue && !windowManager->isTextBoxOpen()) {
+	if (state == DESPAIRBOSS_INACTIVE && startedIntroDialogue && !smh->windowManager->isTextBoxOpen()) {
 		setState(DESPAIRBOSS_BATTLE);
 		smh->soundManager->playMusic("bossMusic");
 	}
@@ -170,7 +169,7 @@ bool DespairBoss::update(float dt) {
 		}
 
 		//Spawn projectiles periodically
-		if (timePassedSince(lastProjectileTime) > PROJECTILE_DELAY) {
+		if (smh->timePassedSince(lastProjectileTime) > PROJECTILE_DELAY) {
 			int random = hge->Random_Int(0, 1000000);
 			int projectileType, numProjectiles, speed;
 			float angle;
@@ -206,7 +205,7 @@ bool DespairBoss::update(float dt) {
 		}
 
 		//Evil mode
-		if (timePassedSince(lastEvilTime) > EVIL_DELAY) {
+		if (smh->timePassedSince(lastEvilTime) > EVIL_DELAY) {
 			dx = dy = 0.0;
 			darkness = 0.0;
 			setState(DESPAIRBOSS_ENTEREVIL);
@@ -256,7 +255,7 @@ bool DespairBoss::update(float dt) {
 
 		//Take damage from Smiley's tongue
 		if (smh->player->getTongue()->testCollision(damageCollisionBox) &&
-				timePassedSince(lastHitByTongue) > .5) {
+				smh->timePassedSince(lastHitByTongue) > .5) {
 			health -= smh->player->getDamage();
 			lastHitByTongue = smh->getGameTime();
 		}
@@ -275,7 +274,7 @@ bool DespairBoss::update(float dt) {
 		projectileManager->killProjectilesInCircle(x, y, 90, PROJECTILE_FRISBEE);
 
 		//Stun wears off after several seconds
-		if (timePassedSince(timeEnteredState) > STUN_DURATION) {
+		if (smh->timePassedSince(timeEnteredState) > STUN_DURATION) {
 			setState(DESPAIRBOSS_STUNRECOVERY);
 		}
 
@@ -283,7 +282,7 @@ bool DespairBoss::update(float dt) {
 		if (health <= 0.0f && state != DESPAIRBOSS_FRIENDLY) {
 			health = 0.0f;
 			setState(DESPAIRBOSS_FRIENDLY);		
-			windowManager->openDialogueTextBox(-1, DESPAIRBOSS_DEFEATTEXT);	
+			smh->windowManager->openDialogueTextBox(-1, DESPAIRBOSS_DEFEATTEXT);	
 			smh->saveManager->killBoss(DESPAIR_BOSS);
 			enemyGroupManager->notifyOfDeath(groupID);
 			smh->soundManager->fadeOutMusic();
@@ -330,7 +329,7 @@ bool DespairBoss::update(float dt) {
 			dy = EVIL_MAX_CHARGE_SPEED * sin(chargeAngle);
 		}
 
-		if (timePassedSince(timeEnteredState) > timeToCharge) {
+		if (smh->timePassedSince(timeEnteredState) > timeToCharge) {
 			//Calculate time to stop
 			float vi = sqrt(dx*dx + dy*dy);
 			chargeDecel = (vi*vi) / (2.0 * 200.0);
@@ -346,7 +345,7 @@ bool DespairBoss::update(float dt) {
 		dx -= chargeDecel * cos(chargeAngle) * dt;
 		dy -= chargeDecel * sin(chargeAngle) * dt;
 
-		if (timePassedSince(timeEnteredState) > timeToCharge) {
+		if (smh->timePassedSince(timeEnteredState) > timeToCharge) {
 			setState(DESPAIRBOSS_EVIL_CHARGE_COOLDOWN);
 		}
 
@@ -358,7 +357,7 @@ bool DespairBoss::update(float dt) {
 		dx = -100.0 * cos(getAngleBetween(x, y, smh->player->x, smh->player->y));
 		dy = -100.0 * sin(getAngleBetween(x, y, smh->player->x, smh->player->y));
 		
-		if (timePassedSince(timeEnteredState) > 0.5) {
+		if (smh->timePassedSince(timeEnteredState) > 0.5) {
 			if (chargeCounter > EVIL_NUM_CHARGES) {
 				//This was the last charge
 				setState(DESPAIRBOSS_EXITEVIL);
@@ -397,7 +396,7 @@ bool DespairBoss::update(float dt) {
 	
 	//Periodically fire lasers while in evil mode
 	if (state == DESPAIRBOSS_EVIL_CHARGING || state == DESPAIRBOSS_EVIL_STOPPING_CHARGE || state == DESPAIRBOSS_EVIL_CHARGE_COOLDOWN) {
-		if (timePassedSince(lastLaserTime) > LASER_DELAY) {
+		if (smh->timePassedSince(lastLaserTime) > LASER_DELAY) {
 			lastLaserTime = smh->getGameTime();
 			float angle = getAngleBetween(x, y, smh->player->x, smh->player->y) +
 				hge->Random_Float(-(PI/16.0), PI/16.0);
@@ -415,7 +414,7 @@ bool DespairBoss::update(float dt) {
 	///////// Death State stuff ///////////////
 
 	//After being defeated, wait for the text box to be closed
-	if (state == DESPAIRBOSS_FRIENDLY && !windowManager->isTextBoxOpen()) {
+	if (state == DESPAIRBOSS_FRIENDLY && !smh->windowManager->isTextBoxOpen()) {
 		setState(DESPAIRBOSS_FADING);
 	}
 
@@ -576,7 +575,7 @@ void DespairBoss::updateProjectiles(float dt) {
 		if (i->type == PROJECTILE_ICE) {
 			//When the ice orb gets to the position where Smiley was when it was
 			//launched it explodes into a nova.
-			if (!i->hasNovaed && timePassedSince(i->timeCreated) > i->timeUntilNova) {
+			if (!i->hasNovaed && smh->timePassedSince(i->timeCreated) > i->timeUntilNova) {
 				i->hasNovaed = true;
 				delete i->particle;
 				i->particle = new hgeParticleSystem(&resources->GetParticleSystem("calypsoIceNova")->info);

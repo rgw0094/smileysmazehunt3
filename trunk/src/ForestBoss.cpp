@@ -10,12 +10,11 @@
 #include "environment.h"
 #include "Tongue.h"
 #include "WeaponParticle.h"
-#include "WindowManager.h"
+#include "WindowFramework.h"
 #include "CollisionCircle.h"
 
 extern SMH *smh;
 extern HGE *hge;
-extern WindowManager *windowManager;
 extern hgeResourceManager *resources;
 extern EnemyGroupManager *enemyGroupManager;
 extern ProjectileManager *projectileManager;
@@ -65,7 +64,7 @@ bool ForestBoss::update(float dt) {
 	//When smiley triggers the boss' enemy blocks start his dialogue.
 	if (state == FORESTBOSS_INACTIVE && !startedIntroDialogue) {
 		if (enemyGroupManager->groups[groupID].triggeredYet) {
-			windowManager->openDialogueTextBox(-1, FORESTBOSS_INTROTEXT);
+			smh->windowManager->openDialogueTextBox(-1, FORESTBOSS_INTROTEXT);
 			startedIntroDialogue = true;
 		} else {
 			return false;
@@ -73,7 +72,7 @@ bool ForestBoss::update(float dt) {
 	}
 
 	//Activate the boss when the intro dialogue is closed
-	if (state == FORESTBOSS_INACTIVE && startedIntroDialogue && !windowManager->isTextBoxOpen()) {
+	if (state == FORESTBOSS_INACTIVE && startedIntroDialogue && !smh->windowManager->isTextBoxOpen()) {
 		enterState(FORESTBOSS_BATTLE);
 		smh->soundManager->playMusic("bossMusic");
 	}
@@ -81,7 +80,7 @@ bool ForestBoss::update(float dt) {
 	//Show Garmborn's tongue text the first time Smiley licks him.
 	if (smh->player->getTongue()->testCollision(collisionBox) && !lickedYet) {
 		lickedYet = true;
-		windowManager->openDialogueTextBox(-1, FORESTBOSS_TONGUETEXT);
+		smh->windowManager->openDialogueTextBox(-1, FORESTBOSS_TONGUETEXT);
 	}
 
 	//Smiley collision
@@ -99,7 +98,7 @@ bool ForestBoss::update(float dt) {
 	if (state == FORESTBOSS_BATTLE) {
 
 		//Periodically spawn owlets
-		if (timePassedSince(lastOwletTime) > OWLET_DELAY) {
+		if (smh->timePassedSince(lastOwletTime) > OWLET_DELAY) {
 			int numToSpawn = NUM_OWLETS_SPAWNED;
 			if (owletSpawnCounter > 8) {
 				owletSpawnCounter = 0;
@@ -143,7 +142,7 @@ bool ForestBoss::update(float dt) {
 	}
 
 	//Defeat Text showing
-	if (state == FORESTBOSS_DEFEATED && !windowManager->isTextBoxOpen()) {
+	if (state == FORESTBOSS_DEFEATED && !smh->windowManager->isTextBoxOpen()) {
 		enterState(FORESTBOSS_FADING);
 	}
 
@@ -281,7 +280,7 @@ void ForestBoss::enterState(int _state) {
 	if (state == FORESTBOSS_DEFEATED) {
 		treeletsFadingOut = true;
 		smh->soundManager->fadeOutMusic();
-		windowManager->openDialogueTextBox(-1, FORESTBOSS_DEFEATTEXT);
+		smh->windowManager->openDialogueTextBox(-1, FORESTBOSS_DEFEATTEXT);
 		resetOwlets(true);
 	}
 
@@ -451,7 +450,7 @@ void ForestBoss::updateOwlets(float dt) {
 		}
 
 		//After the owlets move away from Garmborn they dive bomb Smiley
-		if (!i->startedDiveBomb && timePassedSince(i->timeSpawned) > 1.5) {
+		if (!i->startedDiveBomb && smh->timePassedSince(i->timeSpawned) > 1.5) {
 			i->angle = getAngleBetween(i->x, i->y, smh->player->x, smh->player->y) +
 				hge->Random_Float(-.1*PI, .1*PI);
 			i->dx = 600.0*cos(i->angle);

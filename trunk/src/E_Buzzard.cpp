@@ -42,7 +42,7 @@ void E_Buzzard::draw(float dt) {
 		resources->GetSprite("buzzardWing")->RenderEx(screenX,screenY,0,-1,1);		
 	} else {
 		double angle;
-		angle=sin(timePassedSince(beginFlapTime)*20)*0.5;
+		angle=sin(smh->timePassedSince(beginFlapTime)*20)*0.5;
 		resources->GetSprite("buzzardWing")->RenderEx(screenX,screenY,angle);
 		resources->GetSprite("buzzardWing")->RenderEx(screenX,screenY,-angle,-1,1);
 	}
