@@ -22,8 +22,6 @@ extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
 extern ProjectileManager *projectileManager;
-extern Environment *theEnvironment;
-extern float gameTime;
 
 E_EvilEye::E_EvilEye(int id, int x, int y, int groupID) {
 
@@ -35,7 +33,7 @@ E_EvilEye::E_EvilEye(int id, int x, int y, int groupID) {
 
 	//Set this square's collision to UNWALKABLE_PROJECTILE so that the eye's 
 	//shots don't immediately die
-	theEnvironment->collision[x][y] = UNWALKABLE_PROJECTILE;
+	smh->environment->collision[x][y] = UNWALKABLE_PROJECTILE;
 
 	facing = DOWN;
 	eyeState = EYE_CLOSED;
@@ -70,7 +68,7 @@ void E_EvilEye::update(float dt) {
 	//Shoot at the player if the eye is open
 	if (eyeState == EYE_OPEN) {
 		if (!smh->player->isInvisible() && timePassedSince(lastAttackTime) > ATTACK_DELAY) {
-			lastAttackTime = gameTime;
+			lastAttackTime = smh->getGameTime();
 			projectileManager->addProjectile(x, y, ATTACK_VELOCITY, 
 				getAngleBetween(x, y, smh->player->x, smh->player->y), ATTACK_DAMAGE, 
 				true, PROJECTILE_1, true);

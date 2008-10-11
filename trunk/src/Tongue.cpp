@@ -11,16 +11,12 @@
 #include "hgeresource.h"
 #include "hgeanim.h"
 
-extern Environment *theEnvironment;
 extern NPCManager *npcManager;
 extern EnemyManager *enemyManager;
 extern hgeResourceManager *resources;
 extern WindowManager *windowManager;
 extern HGE *hge;
 extern SMH *smh;
-
-extern float gameTime;
-extern bool debugMode;
 
 #define ATTACK_RADIUS (PI / 3.0)
 #define NUM_COLLISION_POINTS 8
@@ -59,7 +55,7 @@ void Tongue::startAttack() {
 	}
 
 	hasActivatedSomething = false;
-	timeStartedAttack = gameTime;
+	timeStartedAttack = smh->getGameTime();
 	tongueOffsetAngle = -ATTACK_RADIUS / 2.0;
 	attacking = true;
 	resources->GetAnimation("smileyTongue")->SetFrame(0);
@@ -78,10 +74,10 @@ void Tongue::update(float dt) {
 	
 	//Activate stuff - only one thing can be activated per attack
 	if (!hasActivatedSomething) {
-		if (theEnvironment->toggleSwitches(this) ||
+		if (smh->environment->toggleSwitches(this) ||
 				npcManager->talkToNPCs(this) ||
-				(!windowManager->isOpenWindow() && theEnvironment->hitSaveShrine(this)) ||
-				(!windowManager->isTextBoxOpen() && theEnvironment->hitSigns(this))) {
+				(!windowManager->isOpenWindow() && smh->environment->hitSaveShrine(this)) ||
+				(!windowManager->isTextBoxOpen() && smh->environment->hitSigns(this))) {
 			hasActivatedSomething = true;
 		}
 	}
@@ -130,7 +126,7 @@ void Tongue::draw(float dt) {
 			smh->player->scale, smh->player->scale);
 
 		//Draw tongue collision for debug mode
-		if (debugMode) {
+		if (smh->isDebugOn()) {
 			numPoints = int((float)resources->GetAnimation("smileyTongue")->GetFrame() / (float)resources->GetAnimation("smileyTongue")->GetFrames() * (float)NUM_COLLISION_POINTS) + 1;
 			for (int i = 0; i < numPoints; i++) {
 				testAngle = -(PI / 2.0) + smh->player->angles[smh->player->facing] + (smh->player->facing == LEFT ? -1 : 1) * tongueOffsetAngle;

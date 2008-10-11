@@ -10,11 +10,9 @@
 #include "hgeresource.h"
 
 extern SMH *smh;
-extern Environment *theEnvironment;
 extern WindowManager *windowManager;
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern float gameTime;
 
 /**
  * Constructor
@@ -48,7 +46,7 @@ void LootManager::addLoot(int type, int x, int y, int ability) {
 	newLoot.x = x;
 	newLoot.y = y;
 	newLoot.ability = ability;
-	newLoot.timeCreated = gameTime;
+	newLoot.timeCreated = smh->getGameTime();
 	theLoot.push_back(newLoot);
 }
 
@@ -78,11 +76,11 @@ void LootManager::update(float dt) {
 		//Normal loot fades out eventually
 		if (i->type != LOOT_NEW_ABILITY) {
 			//Fade out in the last second
-			if (gameTime > i->timeCreated + 9.0f) {
+			if (smh->getGameTime() > i->timeCreated + 9.0f) {
 				i->alpha -= 255.0f*dt;
 			}
 			//Destroy old loot
-			if (gameTime - 10.0f > i->timeCreated) {
+			if (smh->getGameTime() - 10.0f > i->timeCreated) {
 				i = theLoot.erase(i);
 				continue;
 			}

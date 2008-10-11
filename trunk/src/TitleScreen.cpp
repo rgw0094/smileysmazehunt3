@@ -1,10 +1,9 @@
 #include "hgefont.h"
-#include "menu.h"
+#include "MainMenu.h"
 #include "Button.h"
 #include "SMH.h"
 
 extern SMH *smh;
-extern Menu *theMenu;
 
 /**
  * Constructor

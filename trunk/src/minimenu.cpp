@@ -1,6 +1,6 @@
 #include "SMH.h"
 #include "minimenu.h"
-#include "menu.h"
+#include "MainMenu.h"
 #include "hgeresource.h"
 #include "smiley.h"
 #include "Button.h"
@@ -11,7 +11,6 @@ extern SMH *smh;
 extern HTEXTURE menuItemTexture;
 extern hgeResourceManager *resources;
 extern WindowManager *windowManager;
-extern float gameTime;
 
 /**
  * Constructor
@@ -101,7 +100,7 @@ bool MiniMenu::update(float dt) {
 					return false;
 				case MINIMENU_QUIT:
 					smh->menu->open(TITLE_SCREEN);
-					smh->saveManager->incrementTimePlayed(smh->saveManager->currentSave, gameTime);
+					smh->saveManager->incrementTimePlayed(smh->saveManager->currentSave, smh->getGameTime());
 					smh->saveManager->saveFileInfo();
 					return false;
 				case MINIMENU_SAVE:

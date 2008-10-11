@@ -7,7 +7,6 @@
 #include "hge.h"
 
 extern SMH *smh;
-extern Environment *theEnvironment;
 extern hgeResourceManager *resources;
 extern EnemyManager *enemyManager;
 extern HGE *hge;
@@ -102,8 +101,8 @@ void EnemyGroupManager::update(float dt) {
 
 
 	//If the player steps on a trigger
-	if (theEnvironment->ids[smh->player->gridX][smh->player->gridY] == ENEMYGROUP_TRIGGER) {
-		triggerGroup(theEnvironment->variable[smh->player->gridX][smh->player->gridY]);
+	if (smh->environment->ids[smh->player->gridX][smh->player->gridY] == ENEMYGROUP_TRIGGER) {
+		triggerGroup(smh->environment->variable[smh->player->gridX][smh->player->gridY]);
 	}
 
 }
@@ -119,14 +118,14 @@ void EnemyGroupManager::triggerGroup(int whichGroup) {
 		groups[whichGroup].triggeredYet = true;
 
 		//Spawn enemies
-		for (int i = 0; i < theEnvironment->areaWidth; i++) {
-			for (int j = 0; j < theEnvironment->areaHeight; j++) {
-				if (theEnvironment->enemyLayer[i][j] != -1 &&
-					theEnvironment->ids[i][j] == ENEMYGROUP_ENEMY_POPUP &&
-					theEnvironment->variable[i][j] == whichGroup) {
-						enemyManager->addEnemy(theEnvironment->enemyLayer[i][j], i, j, 0.25, 0.25, whichGroup);
-						addEnemy(theEnvironment->variable[i][j]);
-						theEnvironment->environmentParticles->SpawnPS(&resources->GetParticleSystem("treeletSpawn")->info, i*64+32, j*64+32);
+		for (int i = 0; i < smh->environment->areaWidth; i++) {
+			for (int j = 0; j < smh->environment->areaHeight; j++) {
+				if (smh->environment->enemyLayer[i][j] != -1 &&
+					smh->environment->ids[i][j] == ENEMYGROUP_ENEMY_POPUP &&
+					smh->environment->variable[i][j] == whichGroup) {
+						enemyManager->addEnemy(smh->environment->enemyLayer[i][j], i, j, 0.25, 0.25, whichGroup);
+						addEnemy(smh->environment->variable[i][j]);
+						smh->environment->environmentParticles->SpawnPS(&resources->GetParticleSystem("treeletSpawn")->info, i*64+32, j*64+32);
 					}
 			}
 		}
@@ -146,17 +145,17 @@ void EnemyGroupManager::enableBlocks(int whichGroup) {
 
 	groups[whichGroup].fadingIn = true;
 
-	for (int i = 0; i < theEnvironment->areaWidth; i++) {
-		for (int j = 0; j < theEnvironment->areaHeight; j++) {
+	for (int i = 0; i < smh->environment->areaWidth; i++) {
+		for (int j = 0; j < smh->environment->areaHeight; j++) {
 
 			//If this square is an enemy block for the triggered group
-			if (theEnvironment->ids[i][j] == ENEMYGROUP_BLOCK && 
-					theEnvironment->variable[i][j] == whichGroup) {
+			if (smh->environment->ids[i][j] == ENEMYGROUP_BLOCK && 
+					smh->environment->variable[i][j] == whichGroup) {
 
 				//Set stuff in the environment to make an enemy block
-				theEnvironment->item[i][j] = ENEMYGROUP_BLOCKGRAPHIC;
-				theEnvironment->collision[i][j] = UNWALKABLE;
-				theEnvironment->environmentParticles->SpawnPS(
+				smh->environment->item[i][j] = ENEMYGROUP_BLOCKGRAPHIC;
+				smh->environment->collision[i][j] = UNWALKABLE;
+				smh->environment->environmentParticles->SpawnPS(
 					&resources->GetParticleSystem("enemyBlockCloud")->info, 
 					i*64.0+32.0, j*64.0+32.0);
 
@@ -169,12 +168,12 @@ void EnemyGroupManager::enableBlocks(int whichGroup) {
  * Disables all blocks for an enemy group.
  */
 void EnemyGroupManager::disableBlocks(int whichGroup) {
-	for (int i = 0; i < theEnvironment->areaWidth; i++) {
-		for (int j = 0; j < theEnvironment->areaHeight; j++) {
-			if (theEnvironment->ids[i][j] == ENEMYGROUP_BLOCK && 
-					theEnvironment->variable[i][j] == whichGroup) {
-				theEnvironment->item[i][j] = 0;
-				theEnvironment->collision[i][j] = WALKABLE;
+	for (int i = 0; i < smh->environment->areaWidth; i++) {
+		for (int j = 0; j < smh->environment->areaHeight; j++) {
+			if (smh->environment->ids[i][j] == ENEMYGROUP_BLOCK && 
+					smh->environment->variable[i][j] == whichGroup) {
+				smh->environment->item[i][j] = 0;
+				smh->environment->collision[i][j] = WALKABLE;
 			}
 		}
 	}

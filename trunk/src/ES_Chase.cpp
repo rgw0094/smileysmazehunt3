@@ -6,7 +6,6 @@
 #include "enemy.h"
 
 extern SMH *smh;
-extern Environment *theEnvironment;
 
 /**
  * Constructor
@@ -29,7 +28,7 @@ void ES_Chase::update(float dt) {
 
 	//If there is an unobstructed straight line to the player just
 	//run straight towards him
-	if (theEnvironment->validPath(owner->x, owner->y, smh->player->x, smh->player->y, 32, owner->canPass)) {
+	if (smh->environment->validPath(owner->x, owner->y, smh->player->x, smh->player->y, 32, owner->canPass)) {
 
 		float angle = getAngleBetween(owner->x, owner->y, smh->player->x, smh->player->y);
 		owner->dx = owner->speed * cos(angle);

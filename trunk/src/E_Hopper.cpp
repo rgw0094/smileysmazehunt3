@@ -8,11 +8,9 @@
 #include "hgeresource.h"
 #include "hgeanim.h"
 
-extern float gameTime;
 extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern Environment *theEnvironment;
 
 /** 
  * Constructor
@@ -27,7 +25,7 @@ E_Hopper::E_Hopper(int id, int x, int y, int groupID) {
 
 	//Set initial state
 	facing = DOWN;
-	timeStoppedHop = gameTime;
+	timeStoppedHop = smh->getGameTime();
 	hopYOffset = 0.0;
 	hopping = false;
 	dx = dy = 0.0;
@@ -47,7 +45,7 @@ void E_Hopper::update(float dt) {
 		
 		//Start next hop
 		hopping = true;
-		timeStartedHop = gameTime;
+		timeStartedHop = smh->getGameTime();
 
 		if (chases) {
 			//Hop towards Smiley
@@ -59,7 +57,7 @@ void E_Hopper::update(float dt) {
 			do {
 				hopDistance = hge->Random_Float(125.0, 300.0);
 				hopAngle = hge->Random_Float(0.0, 2.0*PI);
-			} while(!theEnvironment->validPath(x, y, x + hopDistance * cos(hopAngle), y + hopDistance * sin(hopAngle), 28, canPass));
+			} while(!smh->environment->validPath(x, y, x + hopDistance * cos(hopAngle), y + hopDistance * sin(hopAngle), 28, canPass));
 		}
 
 		timeToHop = hopDistance / float(speed);
@@ -75,7 +73,7 @@ void E_Hopper::update(float dt) {
 		
 		if (timePassedSince(timeStartedHop) > timeToHop) {
 			hopping = false;
-			timeStoppedHop = gameTime;
+			timeStoppedHop = smh->getGameTime();
 			dx = dy = hopYOffset = 0.0;
 		}
 	}
@@ -101,7 +99,7 @@ bool E_Hopper::doTongueCollision(Tongue *tongue, float damage) {
 			
 		//Make sure the enemy wasn't already hit by this attack
 		if (timePassedSince(lastHitByWeapon) > .5) {
-			lastHitByWeapon = gameTime;
+			lastHitByWeapon = smh->getGameTime();
 			//If hopping, stop
 			if (hopping) {
 				dx = dy = 0.0;

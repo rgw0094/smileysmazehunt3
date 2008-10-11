@@ -9,7 +9,6 @@
 #include "environment.h"
 #include "EnemyManager.h"
 #include "lootmanager.h"
-#include "SoundManager.h"
 #include "WindowManager.h"
 #include "weaponparticle.h"
 #include "collisioncircle.h"
@@ -18,15 +17,10 @@ extern SMH *smh;
 extern HGE *hge;
 extern WindowManager *windowManager;
 extern hgeResourceManager *resources;
-extern bool debugMode;
 extern EnemyGroupManager *enemyGroupManager;
 extern ProjectileManager *projectileManager;
-extern Environment *theEnvironment;
-extern bool debugMode;
 extern EnemyManager *enemyManager;
 extern LootManager *lootManager;
-extern SoundManager *soundManager;
-extern float gameTime;
 
 #define MUSHBOOM_HEALTH 14.0
 #define RIGHT_ARM_OFFSET_X -15
@@ -133,7 +127,7 @@ MushroomBoss::MushroomBoss(int _gridX,int _gridY,int _groupID) {
 	rightArmRotate=RIGHT_ARM_DEFAULT;
 	nextArmToRotate=LEFT;
 	leftArmRotating=rightArmRotating=false;
-	lastThrowTime=lastMiniMushroomTime=gameTime;
+	lastThrowTime=lastMiniMushroomTime=smh->getGameTime();
 
 	theta=phi=0.0; //Angles for the spiral
 
@@ -165,8 +159,8 @@ bool MushroomBoss::update(float dt) {
     //Activate the boss when the intro dialogue is closed
 	if (state == MUSHBOOM_INACTIVE && startedIntroDialogue && !windowManager->isTextBoxOpen()) {
 		enterState(MUSHBOOM_SPIRALING);
-		soundManager->playMusic("bossMusic");
-		lastThrowTime=lastMiniMushroomTime=gameTime;
+		smh->soundManager->playMusic("bossMusic");
+		lastThrowTime=lastMiniMushroomTime=smh->getGameTime();
 	}
 
 	if (state == MUSHBOOM_SPIRALING) {
@@ -183,7 +177,7 @@ bool MushroomBoss::update(float dt) {
 		}
 	}
 	explosions->Update(dt);
-	explosions->Transpose(-1*(theEnvironment->xGridOffset*64 + theEnvironment->xOffset), -1*(theEnvironment->yGridOffset*64 + theEnvironment->yOffset));
+	explosions->Transpose(-1*(smh->environment->xGridOffset*64 + smh->environment->xOffset), -1*(smh->environment->yGridOffset*64 + smh->environment->yOffset));
 	
 	if (y < smh->player->y) shouldDrawAfterSmiley = false;
 	else shouldDrawAfterSmiley = true;
@@ -203,7 +197,7 @@ bool MushroomBoss::update(float dt) {
 			droppedLoot = true;
 			smh->saveManager->killBoss(MUSHROOM_BOSS);
 			enemyGroupManager->notifyOfDeath(groupID);
-			soundManager->playMusic("forestMusic");
+			smh->soundManager->playMusic("forestMusic");
 		}
 		if (alpha < 0) {
 			alpha = 0;  
@@ -244,7 +238,7 @@ void MushroomBoss::draw(float dt) {
 	}
 
 	//Collision rects
-	if (debugMode) {
+	if (smh->isDebugOn()) {
 		drawCollisionBox(collisionRects[0], RED);
 		drawCollisionBox(collisionRects[1], RED);
 	}
@@ -260,7 +254,7 @@ void MushroomBoss::draw(float dt) {
 	}
 
 	//Debug mode stuff
-	if (debugMode) {
+	if (smh->isDebugOn()) {
 		
 	}
 }
@@ -279,12 +273,12 @@ void MushroomBoss::drawAfterSmiley(float dt) {
 
 void MushroomBoss::enterState(int _state) {
 	state=_state;
-	timeEnteredState=gameTime;
+	timeEnteredState=smh->getGameTime();
 }
 
 void MushroomBoss::doMiniMushrooms(float dt) {
 	if (timePassedSince(lastMiniMushroomTime) >= MINI_MUSHROOM_INTERVAL) {
-		lastMiniMushroomTime=gameTime;
+		lastMiniMushroomTime=smh->getGameTime();
 		spawnMiniMushroomProjectile();
 	}
 	//Test their collision with mushboom
@@ -337,12 +331,12 @@ void MushroomBoss::doArms(float dt) {
 				leftArmRotating=true;
 				thrownFromLeft=false;
 				leftArmRotateDir=1;
-				lastThrowTime = leftArmThrowTime = gameTime;
+				lastThrowTime = leftArmThrowTime = smh->getGameTime();
 			} else {
 				rightArmRotating=true;
 				thrownFromRight=false;
 				rightArmRotateDir=-1;
-				lastThrowTime = rightArmThrowTime = gameTime;
+				lastThrowTime = rightArmThrowTime = smh->getGameTime();
 			}
 		}
 
@@ -355,13 +349,13 @@ void MushroomBoss::doArms(float dt) {
 				thrownFromLeft=false;
 				leftArmRotateDir=1;
 				nextArmToRotate=RIGHT;
-				lastThrowTime = leftArmThrowTime = gameTime;
+				lastThrowTime = leftArmThrowTime = smh->getGameTime();
 			} else {
 				rightArmRotating=true;
 				thrownFromRight=false;
 				rightArmRotateDir=-1;
 				nextArmToRotate=LEFT;
-				lastThrowTime = rightArmThrowTime = gameTime;
+				lastThrowTime = rightArmThrowTime = smh->getGameTime();
 			}
 		}
 	} //end if throwstate == crazy
@@ -455,7 +449,7 @@ void MushroomBoss::drawBombs() {
 
 void MushroomBoss::addBomb(float _x,float _y) {
 	Bomb newBomb;
-	newBomb.beginThrowTime = gameTime;
+	newBomb.beginThrowTime = smh->getGameTime();
 	newBomb.inParabolaMode=true;
 	newBomb.x0=newBomb.xBomb=_x;
 	newBomb.y0=newBomb.yBomb=_y;
@@ -520,7 +514,7 @@ void MushroomBoss::addExplosion (float _x,float _y) {
 	newExplosion.collisionCircle->x=_x;
 	newExplosion.collisionCircle->y=_y;
 	newExplosion.collisionCircle->radius=0.0;
-	newExplosion.timeBegan=gameTime;
+	newExplosion.timeBegan=smh->getGameTime();
 	newExplosion.stillExpanding=true;
 
 	theExplosions.push_back(newExplosion);
@@ -564,7 +558,7 @@ void MushroomBoss::killExplosions() {
 void MushroomBoss::drawExplosions(float dt) {
 	explosions->Render();
 
-	if (debugMode) {
+	if (smh->isDebugOn()) {
 		std::list<Explosion>::iterator i;
 		for(i = theExplosions.begin(); i != theExplosions.end(); i++) {
 			i->collisionCircle->draw();

@@ -7,7 +7,6 @@
 #include "EnemyGroupManager.h"
 #include "WindowManager.h"
 #include "Smiley.h"
-#include "SoundManager.h"
 #include "Environment.h"
 #include "collisioncircle.h"
 #include "WeaponParticle.h"
@@ -15,13 +14,9 @@
 extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern float gameTime;
-extern bool debugMode;
 extern EnemyGroupManager *enemyGroupManager;
 extern EnemyManager *enemyManager;
 extern WindowManager *windowManager;
-extern SoundManager *soundManager;
-extern Environment *theEnvironment;
 
 #define CANDY_HEALTH 100
 
@@ -67,7 +62,7 @@ CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 	droppedLoot = false;
 	shouldDrawAfterSmiley = false;
 	state = CANDY_STATE_INACTIVE;
-	timeEnteredState = gameTime;
+	timeEnteredState = smh->getGameTime();
 	jumpYOffset = 0.0;
 	timeStoppedJump = 0.0;
 	jumping = false;
@@ -123,7 +118,7 @@ bool CandyBoss::update(float dt) {
 	//Activate the boss when the intro dialogue is closed
 	if (state == CANDY_STATE_INACTIVE && startedIntroDialogue && !windowManager->isTextBoxOpen()) {
 		enterState(CANDY_STATE_RUNNING);
-		soundManager->playMusic("bossMusic");
+		smh->soundManager->playMusic("bossMusic");
 	}
 
 	//Bartli gets faster the longer the battle goes on
@@ -182,7 +177,7 @@ void CandyBoss::drawBartli() {
 	resources->GetSprite("bartliLeg")->Render(getScreenX(x-CANDY_LEG_X_OFFSET),getScreenY(y+CANDY_LEG_Y_OFFSET+rightLegY - jumpYOffset));
 	resources->GetSprite("bartliLeg")->RenderEx(getScreenX(x+CANDY_LEG_X_OFFSET),getScreenY(y+CANDY_LEG_Y_OFFSET+leftLegY - jumpYOffset),0.0,-1.0,1.0);
 	//Debug
-	if (debugMode) drawCollisionBox(collisionBox,RED);
+	if (smh->isDebugOn()) drawCollisionBox(collisionBox,RED);
 }
 
 /**
@@ -190,7 +185,7 @@ void CandyBoss::drawBartli() {
  */
 void CandyBoss::enterState(int _state) {
 	state=_state;
-	timeEnteredState=gameTime;
+	timeEnteredState=smh->getGameTime();
 
 	if (state == CANDY_STATE_RUNNING) {
 		//Start running in a random direction that doesn't result in Bartli immediately charging the player
@@ -228,14 +223,14 @@ void CandyBoss::updateRun(float dt) {
 	setCollisionBox(futureCollisionBox, x + xDist, y + yDist);
 
 	//When bartli hits a wall, bounce off it towards smiley
-	if (theEnvironment->testCollision(futureCollisionBox, canPass)) {
+	if (smh->environment->testCollision(futureCollisionBox, canPass)) {
 		if (distance(x, y, smh->player->x, smh->player->y) < 50.0) {
 			//If Smiley is standing next to a wall bartli can get stuck on him
 			angle += PI/2.0;
 		} else {
 			angle = getAngleBetween(x, y, smh->player->x, smh->player->y) + hge->Random_Float(-PI/6.0, PI/6.0);
 			//Make sure the new angle won't result in running into a wall
-			while (!theEnvironment->validPath(x, y, x + xDist * cos(angle), y + yDist * sin(angle), 28, canPass)) {
+			while (!smh->environment->validPath(x, y, x + xDist * cos(angle), y + yDist * sin(angle), 28, canPass)) {
 				angle += hge->Random_Float(-PI/6.0, PI/6.0);
 			}
 		}
@@ -271,7 +266,7 @@ void CandyBoss::updateJumping(float dt) {
 	
 		timeToJump = 0.5 * (1.0 / speedMultiplier);
 		jumpSpeed = jumpDistance / timeToJump;
-		timeStartedJump = gameTime;
+		timeStartedJump = smh->getGameTime();
 
 	}
 
@@ -284,7 +279,7 @@ void CandyBoss::updateJumping(float dt) {
 
 		if (timePassedSince(timeStartedJump) > timeToJump) {
 			jumping = false;
-			timeStoppedJump = gameTime;
+			timeStoppedJump = smh->getGameTime();
 			jumpYOffset = 0.0;
 			if (state == CANDY_STATE_JUMPING) spawnNova(x, y);
 		}
@@ -312,7 +307,7 @@ void CandyBoss::spawnNova(float _x, float _y) {
 	newNova.x = _x;
 	newNova.y = _y;
 	newNova.radius = 0.0;
-	newNova.timeSpawned = gameTime;
+	newNova.timeSpawned = smh->getGameTime();
 	newNova.particle = new hgeParticleSystem(&resources->GetParticleSystem("shockwave")->info);
 	newNova.particle->info.fParticleLifeMax = newNova.particle->info.fParticleLifeMin = 1.0;
 	newNova.particle->FireAt(getScreenX(_x), getScreenY(_y));
@@ -348,6 +343,6 @@ void CandyBoss::updateNovas(float dt) {
 void CandyBoss::drawNovas(float dt) {
 	for (std::list<Nova>::iterator i = novaList.begin(); i != novaList.end(); i++) {
 		i->particle->Render();
-		if (debugMode) i->collisionCircle->draw();
+		if (smh->isDebugOn()) i->collisionCircle->draw();
 	}
 }

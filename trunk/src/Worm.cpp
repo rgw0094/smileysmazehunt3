@@ -11,8 +11,6 @@ extern HGE *hge;
 extern SMH *smh;
 extern hgeResourceManager *resources;
 
-extern bool debugMode;
-
 #define WORM_LENGTH 500
 
 

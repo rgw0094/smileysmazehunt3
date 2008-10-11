@@ -12,9 +12,7 @@
 
 extern SMH *smh;
 extern hgeResourceManager *resources;
-extern Environment *theEnvironment;
 extern HGE *hge;
-extern float gameTime;
 
 #define NUM_NODES 20
 #define NUM_SINE_WAVES 1
@@ -45,7 +43,7 @@ E_Tentacle::E_Tentacle(int id, int x, int y, int groupID) {
 	angle=angleToSmiley;
 	angleVel=0;
 
-	timeOfLastGrowl=gameTime-TIME_BETWEEN_GROWLS*2;
+	timeOfLastGrowl=smh->getGameTime()-TIME_BETWEEN_GROWLS*2;
 
 	collisionBox = new hgeRect;
 	   
@@ -107,7 +105,7 @@ void E_Tentacle::update(float dt) {
 	for (i=0;i<NUM_NODES;i++) {
 		//make a certain number of sine waves based on how many nodes there are
 
-		tentacleNodes[i].angle= PI/6*sin(gameTime*speed/17+2*PI*i*NUM_SINE_WAVES/NUM_NODES)+angle;
+		tentacleNodes[i].angle= PI/6*sin(smh->getGameTime()*speed/17+2*PI*i*NUM_SINE_WAVES/NUM_NODES)+angle;
 		
 		//Recalculate x and y
 		tentacleNodes[i].position.x = x+i*variable1*cos(tentacleNodes[i].angle);
@@ -122,7 +120,7 @@ void E_Tentacle::update(float dt) {
 
 	//Growl, if variable > 10 (ensuring it's a large and not a small tentacle
 	if (timePassedSince(timeOfLastGrowl) >= TIME_BETWEEN_GROWLS && variable1 >= 10 && distanceFromPlayer() <= GROWL_DISTANCE) {
-		timeOfLastGrowl = gameTime;
+		timeOfLastGrowl = smh->getGameTime();
 		hge->Effect_Play(resources->GetEffect("snd_fireWorm"));
 	}
 
@@ -147,7 +145,7 @@ bool E_Tentacle::doTongueCollision(Tongue *tongue, float damage) {
 			//Make sure the enemy wasn't already hit by this attack
 			if (timePassedSince(lastHitByWeapon) > TENTACLE_IMMUNE_TIME) {
 				
-				lastHitByWeapon = gameTime;
+				lastHitByWeapon = smh->getGameTime();
 				dealDamageAndKnockback(smh->player->getDamage(), 0.0, smh->player->x, smh->player->y);
 				startFlashing();
 				
@@ -166,7 +164,7 @@ bool E_Tentacle::doTongueCollision(Tongue *tongue, float damage) {
 					knockbackDirection=+1;
 				}
 
-				beginKnockbackTime=gameTime;
+				beginKnockbackTime=smh->getGameTime();
 				knockback=true;
 				return true;
 

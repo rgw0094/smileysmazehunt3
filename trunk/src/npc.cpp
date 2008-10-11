@@ -14,10 +14,7 @@ extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
 extern WindowManager *windowManager;
-extern bool debugMode;
-extern Environment *theEnvironment;
 extern NPCManager *npcManager;
-extern float gameTime;
 
 /**
  * Constructor
@@ -50,7 +47,7 @@ NPC::NPC(int _id, int _textID, int _x,int _y) {
 
 	//Set initial stage
 	stage = REST_STAGE;
-	enteredStage = gameTime;
+	enteredStage = smh->getGameTime();
 	speed = 70.0f;
 	stageLength = hge->Random_Float(1.0, 2.0);
 	inConversation = false;
@@ -99,7 +96,7 @@ void NPC::update(float dt) {
 	}
 
 	//Switch stage when the current one is finished
-	if (enteredStage + stageLength < gameTime) {
+	if (enteredStage + stageLength < smh->getGameTime()) {
 		changeStage();
 	}
 
@@ -109,7 +106,7 @@ void NPC::update(float dt) {
 	if (smh->player->collisionCircle->testBox(futureCollisionBox2)) {
 		//If colliding with the player, enter rest mode
 		stage = REST_STAGE;
-	} else if (!theEnvironment->testCollision(futureCollisionBox, canPass) && 
+	} else if (!smh->environment->testCollision(futureCollisionBox, canPass) && 
 			!npcManager->npcCollision(futureCollisionBox, id)) {
 		x += dx*dt;
 		y += dy*dt;
@@ -125,7 +122,7 @@ void NPC::update(float dt) {
 void NPC::draw(float dt) {
 	sprites[facing]->Render(getScreenX(x), getScreenY(y));
 	//Debug mode stuff
-	if (debugMode) {
+	if (smh->isDebugOn()) {
 		drawCollisionBox(collisionBox, RED);
 	}
 }
@@ -141,7 +138,7 @@ void NPC::changeStage() {
 	} else if (stage == WALK_STAGE) {
 		stage = REST_STAGE;
 	}
-	enteredStage = gameTime;
+	enteredStage = smh->getGameTime();
 	stageLength = hge->Random_Float(1.0, 3.0);
 }
 

@@ -4,12 +4,10 @@
 #include "Button.h"
 #include "Slider.h"
 #include "hgeresource.h"
-#include "SoundManager.h"
 
 extern HGE *hge;
 extern SMH *smh;
 extern hgeResourceManager *resources;
-extern SoundManager *soundManager;
 
 #define TOP_LEFT_X 182.0
 #define TOP_LEFT_Y 138.0
@@ -20,9 +18,9 @@ extern SoundManager *soundManager;
 OptionsWindow::OptionsWindow() {
 	inputBox = new hgeRect();
 	soundVolumeSlider = new Slider(TOP_LEFT_X + 367.0, TOP_LEFT_Y + 92.0, 0, 100);
-	soundVolumeSlider->setValue(soundManager->getSoundVolume());
+	soundVolumeSlider->setValue(smh->soundManager->getSoundVolume());
 	musicVolumeSlider = new Slider(TOP_LEFT_X + 507.0, TOP_LEFT_Y + 92.0, 0, 100);
-	musicVolumeSlider->setValue(soundManager->getMusicVolume());
+	musicVolumeSlider->setValue(smh->soundManager->getMusicVolume());
 	doneButton = new Button(TOP_LEFT_X + 360.0, TOP_LEFT_Y + 340.0, "Done");
 }
 
@@ -51,8 +49,8 @@ bool OptionsWindow::update(float dt) {
 	soundVolumeSlider->update(mouseX, mouseY);
 	musicVolumeSlider->update(mouseX, mouseY);
 
-	soundManager->setMusicVolume(musicVolumeSlider->getValue());
-	soundManager->setSoundVolume(soundVolumeSlider->getValue());
+	smh->soundManager->setMusicVolume(musicVolumeSlider->getValue());
+	smh->soundManager->setSoundVolume(soundVolumeSlider->getValue());
 
 	//Update done button
 	doneButton->update(mouseX, mouseY);

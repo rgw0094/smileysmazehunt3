@@ -4,15 +4,13 @@
 #include "hgestrings.h"
 #include "player.h"
 #include "smiley.h"
-#include "menu.h"
+#include "MainMenu.h"
 #include "Environment.h"
 #include "Button.h"
 
 extern HGE *hge;
 extern SMH *smh;
 extern hgeResourceManager *resources;
-extern Menu *theMenu;
-extern Environment *theEnvironment;
 
 /**
  * Constructor

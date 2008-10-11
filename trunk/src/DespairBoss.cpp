@@ -7,7 +7,6 @@
 #include "Environment.h"
 #include "ProjectileManager.h"
 #include "LootManager.h"
-#include "SoundManager.h"
 #include "weaponparticle.h"
 #include "Tongue.h"
 #include "hge.h"
@@ -18,12 +17,8 @@ extern SMH *smh;
 extern hgeResourceManager *resources;
 extern WindowManager *windowManager;
 extern EnemyGroupManager *enemyGroupManager;
-extern float gameTime;
-extern bool debugMode;
 extern ProjectileManager *projectileManager;
-extern Environment *theEnvironment;
 extern LootManager *lootManager;
-extern SoundManager *soundManager;
 extern HGE *hge;
 
 extern float darkness;
@@ -95,7 +90,7 @@ DespairBoss::DespairBoss(int _gridX, int _gridY, int _groupID) {
 	shouldDrawAfterSmiley = false;
 	hoveringTime = 0.0;
 	fadeAlpha = 255.0;
-	lastEvilTime = gameTime;
+	lastEvilTime = smh->getGameTime();
 	evilAlpha = 0.0;
 	chargeCounter = 0;
 
@@ -153,7 +148,7 @@ bool DespairBoss::update(float dt) {
 	//Activate the boss when the intro dialogue is closed
 	if (state == DESPAIRBOSS_INACTIVE && startedIntroDialogue && !windowManager->isTextBoxOpen()) {
 		setState(DESPAIRBOSS_BATTLE);
-		soundManager->playMusic("bossMusic");
+		smh->soundManager->playMusic("bossMusic");
 	}
 
 	//In "battle" stage Calypso hovers back and forth and shoots shit at you.
@@ -207,7 +202,7 @@ bool DespairBoss::update(float dt) {
 				}
 			}
 
-			lastProjectileTime = gameTime;
+			lastProjectileTime = smh->getGameTime();
 		}
 
 		//Evil mode
@@ -263,7 +258,7 @@ bool DespairBoss::update(float dt) {
 		if (smh->player->getTongue()->testCollision(damageCollisionBox) &&
 				timePassedSince(lastHitByTongue) > .5) {
 			health -= smh->player->getDamage();
-			lastHitByTongue = gameTime;
+			lastHitByTongue = smh->getGameTime();
 		}
 
 		//Take damage from the flame breath
@@ -291,7 +286,7 @@ bool DespairBoss::update(float dt) {
 			windowManager->openDialogueTextBox(-1, DESPAIRBOSS_DEFEATTEXT);	
 			smh->saveManager->killBoss(DESPAIR_BOSS);
 			enemyGroupManager->notifyOfDeath(groupID);
-			soundManager->fadeOutMusic();
+			smh->soundManager->fadeOutMusic();
 		}
 
 	}
@@ -394,7 +389,7 @@ bool DespairBoss::update(float dt) {
 			if (x > startX - 50.0 && x < startX + 50.0 && y > startY - 50.0 && y < startY + 50.0) {
 				evilAlpha = 0.0;
 				setState(DESPAIRBOSS_BATTLE);
-				lastEvilTime = gameTime;
+				lastEvilTime = smh->getGameTime();
 			}
 		}
 	}
@@ -403,7 +398,7 @@ bool DespairBoss::update(float dt) {
 	//Periodically fire lasers while in evil mode
 	if (state == DESPAIRBOSS_EVIL_CHARGING || state == DESPAIRBOSS_EVIL_STOPPING_CHARGE || state == DESPAIRBOSS_EVIL_CHARGE_COOLDOWN) {
 		if (timePassedSince(lastLaserTime) > LASER_DELAY) {
-			lastLaserTime = gameTime;
+			lastLaserTime = smh->getGameTime();
 			float angle = getAngleBetween(x, y, smh->player->x, smh->player->y) +
 				hge->Random_Float(-(PI/16.0), PI/16.0);
 			//Left eye
@@ -432,7 +427,7 @@ bool DespairBoss::update(float dt) {
 		if (fadeAlpha < 0.0) {
 			fadeAlpha = 0.0;
 			lootManager->addLoot(LOOT_NEW_ABILITY, x, y, REFLECTION_SHIELD);
-			soundManager->playMusic("realmOfDespairMusic");
+			smh->soundManager->playMusic("realmOfDespairMusic");
 			return true;
 		}
 	}
@@ -493,7 +488,7 @@ void DespairBoss::drawCalypso(float dt) {
 	}
 
 	//Debug mode - draw collision box
-	if (debugMode) {
+	if (smh->isDebugOn()) {
 		drawCollisionBox(collisionBox, RED);
 		drawCollisionBox(damageCollisionBox, RED);
 	}
@@ -520,7 +515,7 @@ void DespairBoss::addProjectile(int type, float x, float y, float angle, float s
 	newProjectile.dy = speed * sin(angle);
 	newProjectile.collisionBox = new hgeRect();
 	newProjectile.collisionBox->SetRadius(newProjectile.x, newProjectile.y,10);
-	newProjectile.timeCreated = gameTime;
+	newProjectile.timeCreated = smh->getGameTime();
 
 	switch (type) {
 		case PROJECTILE_ICE:
@@ -553,7 +548,7 @@ void DespairBoss::drawProjectiles(float dt) {
 		i->particle->Render();
 
 		//Debug mode - draw the collision Circle
-		if (debugMode) drawCollisionBox(i->collisionBox, RED);
+		if (smh->isDebugOn()) drawCollisionBox(i->collisionBox, RED);
 
 	}
 
@@ -588,7 +583,7 @@ void DespairBoss::updateProjectiles(float dt) {
 				i->particle->FireAt(i->x, i->y);
 				i->dx = 0;
 				i->dy = 0;
-				i->deathTime = gameTime + 1.0;
+				i->deathTime = smh->getGameTime() + 1.0;
 			}
 		}
 
@@ -606,12 +601,12 @@ void DespairBoss::updateProjectiles(float dt) {
 		bool deleteProjectile = false;
 
 		//Check for collision with walls
-		if (theEnvironment->collisionAt(i->x, i->y) == UNWALKABLE) {
+		if (smh->environment->collisionAt(i->x, i->y) == UNWALKABLE) {
 			deleteProjectile = true;
 		}
 
 		//Check for end of ice nova
-		if (i->type == PROJECTILE_ICE && i->hasNovaed && gameTime > i->deathTime) {
+		if (i->type == PROJECTILE_ICE && i->hasNovaed && smh->getGameTime() > i->deathTime) {
 			deleteProjectile = true;
 		}
 
@@ -632,7 +627,7 @@ void DespairBoss::updateProjectiles(float dt) {
 						i->particle->FireAt(i->x, i->y);
 						i->dx = 0;
 						i->dy = 0;
-						i->deathTime = gameTime + 1.0;
+						i->deathTime = smh->getGameTime() + 1.0;
 					}
 					break;
 				case PROJECTILE_FIRE:
@@ -669,7 +664,7 @@ void DespairBoss::resetProjectiles() {
 void DespairBoss::setState(int newState) {
 
 	if (newState == DESPAIRBOSS_BATTLE) {
-		lastEvilTime = gameTime;
+		lastEvilTime = smh->getGameTime();
 		chargeCounter = 0;
 	}
 
@@ -683,7 +678,7 @@ void DespairBoss::setState(int newState) {
 	}
 
 	state = newState;
-	timeEnteredState = gameTime;
+	timeEnteredState = smh->getGameTime();
 }
 
 /** 

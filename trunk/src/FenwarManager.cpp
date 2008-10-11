@@ -4,7 +4,6 @@
 #include "SMH.h"
 #include "smiley.h"
 #include "FenwarManager.h"
-#include "SoundManager.h"
 #include "Player.h"
 #include "WindowManager.h"
 
@@ -12,12 +11,8 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern SoundManager *soundManager;
 extern hgeResourceManager *resources;
 extern WindowManager *windowManager;
-
-extern bool debugMode;
-extern float gameTime;
 
 #define TRIGGER_DISTANCE 300
 
@@ -67,8 +62,8 @@ void FenwarManager::update(float dt) {
 			if (distance(i->x, i->y, smh->player->x, smh->player->y) < TRIGGER_DISTANCE) {
 				i->triggered = true;
 				i->state = STATE_WARPING_IN;
-				i->timeEnteredState = gameTime;
-				soundManager->playMusic("fenwarLietmotif");
+				i->timeEnteredState = smh->getGameTime();
+				smh->soundManager->playMusic("fenwarLietmotif");
 				particles->SpawnPS(&resources->GetParticleSystem("fenwarwarp")->info, getScreenX(i->x), getScreenY(i->y));
 			}
 		
@@ -80,20 +75,20 @@ void FenwarManager::update(float dt) {
 				if (timePassedSince(i->timeEnteredState) > 2.0) {
 					windowManager->openDialogueTextBox(255, i->id);
 					i->state = STATE_TALKING;
-					i->timeEnteredState = gameTime;
+					i->timeEnteredState = smh->getGameTime();
 				}
 			}
 
 			if (i->state == STATE_TALKING) {
 				if (!i->textBoxClosed && !windowManager->isTextBoxOpen()) {
 					i->textBoxClosed = true;
-					i->timeTextBoxClosed = gameTime;
+					i->timeTextBoxClosed = smh->getGameTime();
 				}
 				if (i->textBoxClosed) {
 					//Wait a second after the text box closes before starting to warp out
 					if (timePassedSince(i->timeTextBoxClosed) > 1.0) {
 						i->state = STATE_WARPING_OUT;
-						i->timeEnteredState = gameTime;
+						i->timeEnteredState = smh->getGameTime();
 						particles->SpawnPS(&resources->GetParticleSystem("fenwarwarp")->info, getScreenX(i->x), getScreenY(i->y));
 					}
 				}
@@ -105,7 +100,7 @@ void FenwarManager::update(float dt) {
 				}
 				if (timePassedSince(i->timeEnteredState) > 2.0) {
 					//Fenwar encounter is finished
-					soundManager->playPreviousMusic();
+					smh->soundManager->playPreviousMusic();
 					smh->saveManager->change(i->gridX, i->gridY);
 					i = fenwarEncounterList.erase(i);
 				}

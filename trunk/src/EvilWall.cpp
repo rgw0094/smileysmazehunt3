@@ -22,7 +22,6 @@
 #define EVIL_WALL_HALF_SCREEN_HEIGHT 8
 
 extern hgeResourceManager *resources;
-extern float gameTime;
 extern HGE *hge;
 extern SMH *smh;
 
@@ -46,7 +45,7 @@ void EvilWall::activate() {
 	if (state != EVIL_WALL_STATE_IDLE && state != EVIL_WALL_STATE_FADING) return;
 
 	state = EVIL_WALL_STATE_APPEARING;
-	beginAppearTime = gameTime;
+	beginAppearTime = smh->getGameTime();
 	switch (dir) {
 		case UP:
 			yPosition = yBeginWall*64+32;
@@ -68,7 +67,7 @@ void EvilWall::deactivate() {
 	if (state != EVIL_WALL_STATE_MOVING && state != EVIL_WALL_STATE_APPEARING) return;
 
 	state = EVIL_WALL_STATE_FADING;
-	beginFadeTime = gameTime;
+	beginFadeTime = smh->getGameTime();
 }
 
 void EvilWall::update(float dt) {
@@ -78,7 +77,7 @@ void EvilWall::update(float dt) {
 				resources->GetSprite("evilWall")->SetColor(ARGB(255,255,255,255));
 				resources->GetSprite("evilWallSpike")->SetColor(ARGB(255,255,255,255));
 				state = EVIL_WALL_STATE_MOVING;
-				beginWallMoveTime = gameTime;
+				beginWallMoveTime = smh->getGameTime();
 			}
 			doCollision();
 			break;

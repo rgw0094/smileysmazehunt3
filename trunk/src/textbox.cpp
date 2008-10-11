@@ -5,7 +5,6 @@
 #include "npcmanager.h"
 #include "WindowManager.h"
 #include "Shop.h"
-#include "SoundManager.h"
 
 #include "hgedistort.h"
 #include "hgesprite.h"
@@ -17,9 +16,7 @@ extern HGE *hge;
 extern SMH *smh;
 extern hgeResourceManager *resources;
 extern WindowManager *windowManager;
-extern SoundManager *soundManager;
 
-extern float gameTime;
 extern int frameCounter;
 
 //Dialog box types
@@ -60,7 +57,7 @@ void TextBox::init() {
 
 	fadeAlpha = 255.0;
 	lastKeyPressFrame = frameCounter;
-	timeStarted = gameTime;
+	timeStarted = smh->getGameTime();
 	fadingOut = false;
 	distortion = NULL;
 	graphic = NULL;
@@ -102,7 +99,7 @@ void TextBox::setHint() {
 	textBoxType = TYPE_HINT;
 	init();
 
-	soundManager->playMusic("hintMusic");
+	smh->soundManager->playMusic("hintMusic");
 
 	npcID = BILL_CLINTON;
 	textID = getCurrentHint();
@@ -369,7 +366,7 @@ bool TextBox::doFadeOut(float dt) {
 		resources->GetSprite("okIcon")->SetColor(ARGB(255,255,255,255));
 		resources->GetSprite("arrowIcon")->SetColor(ARGB(255,255,255,255));
 		resources->GetSprite("billClinton")->SetColor(ARGB(255,255,255,255));
-		soundManager->playPreviousMusic();
+		smh->soundManager->playPreviousMusic();
 		return false;
 	}
 

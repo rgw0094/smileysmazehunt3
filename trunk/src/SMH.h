@@ -3,28 +3,31 @@
 
 #define STRICT
 #include "smiley.h"
+#include "hge.h"
 #include <string>
 #include <windows.h>
 #include <basetsd.h>
 #include <dinput.h>
 #include "resource.h"
-#include <string>
 #include <list>
 
 class hgeStringTable;
 class HGE;
 class hgeResourceManager;
+class hgeAnimation;
 class hgeFont;
 class ChangeManager;
 class BitManager;
 class Player;
-class Menu;
+class Environment;
+class MainMenu;
 
 //Classes defined here
 class SMH;
 class SmileyInput;
 class GameData;
 class SaveManager;
+class SoundManager;
 
 //--------------------------
 //------SMH
@@ -36,25 +39,38 @@ public:
 	SMH();
 	~SMH();
 
+	//Public methods
 	void init();
+	bool isDebugOn();
+	void toggleDebugMode();
+	void setGameTime(float dt);
+	float getGameTime();
+	float getRealTime();
 
 	//Utility Functions
 	void drawGlobalSprite(const char* sprite, float x, float y);
 	void drawSprite(const char* sprite, float x, float y);
+	void drawSprite(const char* sprite, float x, float y, float width, float height);
 	void log(const char* text);
 
 	//Resource access
+	hgeAnimation *getAnimation(const char* font);
 	hgeFont *getFont(const char* font);
+	HTEXTURE getTexture(const char* texture);
 
 	//Game objects
+	Environment *environment;
 	GameData *gameData;
-	Menu *menu;
+	MainMenu *menu;
 	Player *player;
 	SaveManager *saveManager;
+	SoundManager *soundManager;
 	SmileyInput *input;
 
 private:
 
+	float gameTime;
+	bool debugMode;
 	hgeResourceManager *resources;
 
 };
@@ -273,5 +289,44 @@ private:
 
 };
 
+//----------------------------------------------------------------
+//----------------------------------------------------------------
+//------------------SOUND MANAGER---------------------------------
+//----------------------------------------------------------------
+//----------------------------------------------------------------
+class SoundManager {
+
+public:
+
+	SoundManager();
+	~SoundManager();
+
+	//Methods
+	void playMusic(char *musicName);
+	void stopMusic();
+	void fadeOutMusic();
+	void playPreviousMusic();
+	void setMusicVolume(int newVolume);
+	void setSoundVolume(int soundVolume);
+	void playEnvironmentEffect(char *effect, bool loop);
+	void stopEnvironmentChannel();
+	void playAbilityEffect(char *effect, bool loop);
+	void stopAbilityChannel();
+	int getMusicVolume();
+	int getSoundVolume();
+
+private:
+
+	HCHANNEL musicChannel;
+	HCHANNEL abilityChannel;		//Audio channel for player ability sound effects
+	HCHANNEL environmentChannel;	//Audio channel for environment sound effects
+	
+	std::string currentMusic;
+	std::string previousMusic;
+	int previousMusicPosition;
+	int musicVolume;
+	int soundVolume;
+
+};
 
 #endif

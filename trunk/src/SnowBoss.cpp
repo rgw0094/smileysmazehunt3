@@ -9,7 +9,6 @@
 #include "environment.h"
 #include "EnemyManager.h"
 #include "lootmanager.h"
-#include "SoundManager.h"
 #include "WeaponParticle.h"
 #include "CollisionCircle.h"
 #include "Tongue.h"
@@ -18,16 +17,11 @@
 extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern bool debugMode;
 extern EnemyGroupManager *enemyGroupManager;
 extern ProjectileManager *projectileManager;
 extern WindowManager *windowManager;
-extern Environment *theEnvironment;
-extern bool debugMode;
 extern EnemyManager *enemyManager;
 extern LootManager *lootManager;
-extern SoundManager *soundManager;
-extern float gameTime;
 
 SnowBoss::SnowBoss(int _gridX,int _gridY,int _groupID) {
 	gridX=_gridX;
@@ -59,7 +53,7 @@ SnowBoss::SnowBoss(int _gridX,int _gridY,int _groupID) {
 
 	//init fish
 	numFishLaunched=0;
-	lastFishLaunched = gameTime;
+	lastFishLaunched = smh->getGameTime();
 
 	//init collision
 	for (int i=0;i<256;i++) {
@@ -121,7 +115,7 @@ bool SnowBoss::update(float dt) {
     //Activate the boss when the intro dialogue is closed
 	if (state == SNOWBOSS_INACTIVE && startedIntroDialogue && !windowManager->isTextBoxOpen()) {
 		enterState(SNOWBOSS_WADDLING);
-		soundManager->playMusic("bossMusic");
+		smh->soundManager->playMusic("bossMusic");
 	}
 
 	//Battle stuff
@@ -179,7 +173,7 @@ bool SnowBoss::update(float dt) {
 		}
 	
 		//Stop waddling after 5 seconds
-		if (timeEnteredState + 5.0 < gameTime) {
+		if (timeEnteredState + 5.0 < smh->getGameTime()) {
 			enterState(SNOWBOSS_THROWING_FISH);
 		}
 
@@ -204,7 +198,7 @@ bool SnowBoss::update(float dt) {
 				projectileManager->addProjectile(x,y-51.0,FLYING_FISH_SPEED,angle5,FLYING_FISH_DAMAGE,true,PROJECTILE_PENGUIN_FISH,true);
 			}
 			hge->Effect_Play(resources->GetEffect("snd_sillyPad"));
-			lastFishLaunched=gameTime;
+			lastFishLaunched=smh->getGameTime();
 			numFishLaunched++;
 		}
 		if (numFishLaunched >= NUM_FISH_VOLLEYS) {
@@ -231,12 +225,12 @@ bool SnowBoss::update(float dt) {
 		
 
 		//if Portly slid into a wall, stop sliding!
-		if (theEnvironment->testCollision(collisionBoxes[0],penguinCanPass)) {
+		if (smh->environment->testCollision(collisionBoxes[0],penguinCanPass)) {
 			enterState(SNOWBOSS_WADDLING);
 		}
 
 		//tests to see if Portly slid into water
-		if (theEnvironment->testCollision(collisionBoxes[0],penguinTestWithWater)) {
+		if (smh->environment->testCollision(collisionBoxes[0],penguinTestWithWater)) {
 			
 			//these two lines put the desired x in the center of the water
 			xRightWater=gridX*64+9.0*64;
@@ -334,7 +328,7 @@ bool SnowBoss::update(float dt) {
 			droppedLoot = true;
 			smh->saveManager->killBoss(SNOW_BOSS);
 			enemyGroupManager->notifyOfDeath(groupID);
-			soundManager->playMusic("iceMusic");
+			smh->soundManager->playMusic("iceMusic");
 		}
 		if (alpha < 0) {
 			alpha = 0;
@@ -379,7 +373,7 @@ void SnowBoss::draw(float dt) {
 	}
 
 	//Debug mode stuff
-	if (debugMode) {
+	if (smh->isDebugOn()) {
 		drawCollisionBox(collisionBoxes[0], RED);
 		drawCollisionBox(collisionBoxes[1], RED);
 		drawCollisionBox(collisionBoxes[2], RED);
@@ -388,7 +382,7 @@ void SnowBoss::draw(float dt) {
 
 void SnowBoss::enterState(int _state) {
 	state=_state;
-	timeEnteredState=gameTime;
+	timeEnteredState=smh->getGameTime();
 }
 
 //Ice blocks ///////////////
@@ -450,9 +444,9 @@ void SnowBoss::updateIceBlocks(float dt) {
 
 		//sets the collision in theEnvironment based on the ice blocks
 		if (iceBlocks[i].life > 0) {
-			theEnvironment->collision[iceBlocks[i].xGrid][iceBlocks[i].yGrid]=UNWALKABLE_PROJECTILE;
+			smh->environment->collision[iceBlocks[i].xGrid][iceBlocks[i].yGrid]=UNWALKABLE_PROJECTILE;
 		} else {
-			theEnvironment->collision[iceBlocks[i].xGrid][iceBlocks[i].yGrid]=WALKABLE;
+			smh->environment->collision[iceBlocks[i].xGrid][iceBlocks[i].yGrid]=WALKABLE;
 		}
 
 
@@ -466,7 +460,7 @@ void SnowBoss::updateIceBlocks(float dt) {
 void SnowBoss::finish() {
 	for (int i = 0; i < 24; i++) {
 		if (iceBlocks[i].life > 0.0) {
-			theEnvironment->collision[iceBlocks[i].xGrid][iceBlocks[i].yGrid] = FIRE_DESTROY;
+			smh->environment->collision[iceBlocks[i].xGrid][iceBlocks[i].yGrid] = FIRE_DESTROY;
 		}
 	}
 }

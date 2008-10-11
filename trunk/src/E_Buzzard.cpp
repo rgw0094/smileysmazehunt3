@@ -8,9 +8,7 @@
 
 extern SMH *smh;
 extern hgeResourceManager *resources;
-extern Environment *theEnvironment;
 extern HGE *hge;
-extern float gameTime;
 
 #define BUZZARD_WAITING 0
 #define BUZZARD_FLYING 1
@@ -24,7 +22,7 @@ E_Buzzard::E_Buzzard(int id,int x,int y,int groupID) {
 	initEnemy(id, x, y, groupID);
 
 	buzzardState = BUZZARD_WAITING;
-	beginFlapTime = gameTime;
+	beginFlapTime = smh->getGameTime();
 
 	xVelBuzz=0;
 	yVelBuzz=0;

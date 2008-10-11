@@ -351,7 +351,7 @@
 						RelativePath=".\src\LoadingScreen.cpp">
 					</File>
 					<File
-						RelativePath=".\src\menu.cpp">
+						RelativePath=".\src\MainMenu.cpp">
 					</File>
 					<File
 						RelativePath=".\src\OptionsScreen.cpp">
@@ -531,15 +531,15 @@
 				<File
 					RelativePath=".\src\smiley.h">
 				</File>
-				<File
-					RelativePath=".\src\SoundManager.h">
-				</File>
 			</Filter>
 			<Filter
 				Name="UI"
 				Filter="">
 				<File
 					RelativePath=".\src\Button.h">
+				</File>
+				<File
+					RelativePath=".\src\MainMenu.h">
 				</File>
 				<File
 					RelativePath=".\src\Slider.h">
@@ -570,13 +570,6 @@
 					</File>
 					<File
 						RelativePath=".\src\WindowManager.h">
-					</File>
-				</Filter>
-				<Filter
-					Name="Main Menu"
-					Filter="">
-					<File
-						RelativePath=".\src\menu.h">
 					</File>
 				</Filter>
 			</Filter>

@@ -24,15 +24,10 @@
 
 #define SILLY_PAD_TIME 40		//Number of seconds silly pads stay active
 
-extern Environment *theEnvironment;
 extern ProjectileManager *projectileManager;
 extern hgeResourceManager *resources;
 extern HGE *hge;
 extern SMH *smh;
-
-extern float gameTime;
-extern bool debugMode;
-
 
 SpecialTileManager::SpecialTileManager() {
 	explosions = new hgeParticleManager();	
@@ -79,7 +74,7 @@ void SpecialTileManager::update(float dt) {
 	updateIceBlocks(dt);
 
 	explosions->Update(dt);
-	explosions->Transpose(-1*(theEnvironment->xGridOffset*64 + theEnvironment->xOffset), -1*(theEnvironment->yGridOffset*64 + theEnvironment->yOffset));
+	explosions->Transpose(-1*(smh->environment->xGridOffset*64 + smh->environment->xOffset), -1*(smh->environment->yGridOffset*64 + smh->environment->yOffset));
 
 }
 
@@ -107,10 +102,10 @@ void SpecialTileManager::updateIceBlocks(float dt) {
 		collisionBox->SetRadius(i->gridX*64.0+32.0, i->gridY*64.0+32.0,30.0);
 		if (!i->hasBeenMelted && smh->player->fireBreathParticle->testCollision(collisionBox)) {
 			i->hasBeenMelted = true;
-			i->timeMelted = gameTime;
+			i->timeMelted = smh->getGameTime();
 		}
 		if (i->hasBeenMelted && timePassedSince(i->timeMelted) > 1.0) {
-			theEnvironment->collision[i->gridX][i->gridY] = WALKABLE;
+			smh->environment->collision[i->gridX][i->gridY] = WALKABLE;
 			i = iceBlockList.erase(i);
 		}
 	}
@@ -156,9 +151,9 @@ void SpecialTileManager::addTimedTile(int gridX, int gridY, int tile, float dura
 	newTile.gridX = gridX;
 	newTile.gridY = gridY;
 	newTile.newTile = tile;
-	newTile.oldTile = theEnvironment->collision[gridX][gridY];
+	newTile.oldTile = smh->environment->collision[gridX][gridY];
 	newTile.duration = duration;
-	newTile.timeCreated = gameTime;
+	newTile.timeCreated = smh->getGameTime();
 	newTile.alpha = 0.0;
 
 	timedTileList.push_back(newTile);
@@ -176,13 +171,13 @@ void SpecialTileManager::updateTimedTiles(float dt) {
 			if (i->alpha < 255.0) {
 				i->alpha += 255.0 * dt;
 				if (i->alpha > 255.0) {
-					theEnvironment->collision[i->gridX][i->gridY] = i->newTile;
+					smh->environment->collision[i->gridX][i->gridY] = i->newTile;
 					i->alpha = 255.0;
 				}
 			}
 		} else {
 			//Fading out
-			if (i->alpha == 255.0) theEnvironment->collision[i->gridX][i->gridY] = i->oldTile;
+			if (i->alpha == 255.0) smh->environment->collision[i->gridX][i->gridY] = i->oldTile;
 			i->alpha -= 255.0 * dt;
 			if (i->alpha < 0.0) {
 				i->alpha = 0.0;
@@ -258,7 +253,7 @@ void SpecialTileManager::addSillyPad(int gridX, int gridY) {
 	SillyPad newSillyPad;
 	newSillyPad.gridX = gridX;
 	newSillyPad.gridY = gridY;
-	newSillyPad.timePlaced = gameTime;
+	newSillyPad.timePlaced = smh->getGameTime();
 
 	//Add it to the list
 	sillyPadList.push_back(newSillyPad);
@@ -386,7 +381,7 @@ void SpecialTileManager::updateFlames(float dt) {
 		//Flames are put out by ice breath. The flame isn't deleted yet so that
 		//the flame particle can animate to completion
 		if (i->timeFlamePutOut < 0.0 && smh->player->iceBreathParticle->testCollision(i->collisionBox)) {
-			i->timeFlamePutOut = gameTime;
+			i->timeFlamePutOut = smh->getGameTime();
 			i->particle->Stop();
 		}
 
@@ -444,7 +439,7 @@ void SpecialTileManager::drawMushrooms (float dt) {
 			case MUSHROOM_STATE_IDLING:
 				resources->GetAnimation("walkLayer")->SetFrame(i->graphicsIndex);
 				resources->GetAnimation("walkLayer")->Render(getScreenX(i->x),getScreenY(i->y));
-				if (debugMode) i->mushroomCollisionCircle->draw();
+				if (smh->isDebugOn()) i->mushroomCollisionCircle->draw();
 				break;
 			case MUSHROOM_STATE_EXPLODING:
 				break;
@@ -475,14 +470,14 @@ void SpecialTileManager::updateMushrooms(float dt) {
 			case MUSHROOM_STATE_IDLING:
 				if (i->mushroomCollisionCircle->testCircle(smh->player->collisionCircle) && !smh->player->isFlashing()) {
 					i->state = MUSHROOM_STATE_EXPLODING;
-					i->beginExplodeTime = gameTime;
+					i->beginExplodeTime = smh->getGameTime();
 					explosions->SpawnPS(&resources->GetParticleSystem("explosionLarge")->info,i->x+32,i->y+32);
 					smh->player->dealDamageAndKnockback(MUSHROOM_EXPLOSION_DAMAGE,true,MUSHROOM_EXPLOSION_KNOCKBACK,i->x+32,i->y+32);
                 }
 				break;
 			case MUSHROOM_STATE_EXPLODING:
 				if (timePassedSince(i->beginExplodeTime) > MUSHROOM_EXPLODE_TIME) {
-					i->beginGrowTime = gameTime;
+					i->beginGrowTime = smh->getGameTime();
 					i->state = MUSHROOM_STATE_GROWING;					
 				}
 				break;

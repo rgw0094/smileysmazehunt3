@@ -7,9 +7,7 @@
 
 extern SMH *smh;
 extern hgeResourceManager *resources;
-extern Environment *theEnvironment;
 extern HGE *hge;
-extern float gameTime;
 
 #define BOMB_WALK_SPEED 64.0
 #define BOMB_PROXIMITY_TO_EXPLODE 118.0 //how close smiley must be for the bomb to blow up
@@ -46,7 +44,7 @@ E_BombGenerator::E_BombGenerator(int id, int x, int y, int groupID) {
 	bombSize = 0.1;
 
 	dealsCollisionDamage = false;
-	theEnvironment->collision[gridX][gridY] = UNWALKABLE;
+	smh->environment->collision[gridX][gridY] = UNWALKABLE;
 
 }
 
@@ -111,8 +109,8 @@ void E_BombGenerator::moveFuseParticle() {
 void E_BombGenerator::update(float dt) {
 
 	if (bombState == BOMB_GENERATOR_WAITING) {
-		if (theEnvironment->collision[int(smh->player->x/64)][int(smh->player->y/64)] == BOMB_PAD_UP || theEnvironment->collision[int(smh->player->x/64)][int(smh->player->y/64)] == BOMB_PAD_DOWN) {
-			if (theEnvironment->ids[int(smh->player->x/64)][int(smh->player->y)/64] == theEnvironment->ids[int(x/64)][int(y/64)]) {
+		if (smh->environment->collision[int(smh->player->x/64)][int(smh->player->y/64)] == BOMB_PAD_UP || smh->environment->collision[int(smh->player->x/64)][int(smh->player->y/64)] == BOMB_PAD_DOWN) {
+			if (smh->environment->ids[int(smh->player->x/64)][int(smh->player->y)/64] == smh->environment->ids[int(x/64)][int(y/64)]) {
 
 				bombSpawnAnimation->Play();
 				bombState=BOMB_GENERATOR_OPEN_DOOR;
@@ -169,7 +167,7 @@ void E_BombGenerator::update(float dt) {
 		if (distance(smh->player->x,smh->player->y,bomb.x,bomb.y) <= BOMB_PROXIMITY_TO_EXPLODE) {
 			bombState = BOMB_GENERATOR_BOMB_COUNTING_DOWN;
 			bombEyesGlowAnimation->Play();
-			startCountdownTime = gameTime;
+			startCountdownTime = smh->getGameTime();
 		}
 
 		checkNextTileAndTurn();
@@ -193,7 +191,7 @@ void E_BombGenerator::update(float dt) {
 			int xtile=bomb.x/64, ytile=bomb.y/64;
 			for (int curYTile = ytile-1; curYTile <= ytile+1; curYTile++) {
 				for (int curXTile = xtile-1; curXTile <= xtile+1; curXTile++) {
-                    theEnvironment->bombWall(curXTile,curYTile);
+                    smh->environment->bombWall(curXTile,curYTile);
 				}
 			}
 
@@ -233,8 +231,8 @@ void E_BombGenerator::checkNextTileAndTurn() {
 	};
 
 	if (!inBounds(xTileNext,yTileNext) ||
-		!canPass[theEnvironment->collision[xTileNext][yTileNext]] || 
-		theEnvironment->hasSillyPad(xTileNext, yTileNext)) {
+		!canPass[smh->environment->collision[xTileNext][yTileNext]] || 
+		smh->environment->hasSillyPad(xTileNext, yTileNext)) {
 		//turn left!
 
 		//first check to see if the bomb has walked halfway across the tile

@@ -6,9 +6,8 @@
 #include "environment.h"
 #include "npcmanager.h"
 #include "minimenu.h"
-#include "menu.h"
+#include "MainMenu.h"
 #include "WindowManager.h"
-#include "SoundManager.h"
 #include "collisioncircle.h"
 #include "weaponparticle.h"
 #include "Tongue.h"
@@ -22,24 +21,16 @@
 //Objects
 extern HGE *hge;
 extern SMH *smh;
-extern Environment *theEnvironment;
 extern EnemyManager *enemyManager;
 extern hgeParticleSystem *iceBreathParticle;
 extern ProjectileManager *projectileManager;
 extern TextBox *theTextBox;
 extern NPCManager *npcManager;
 extern WindowManager *windowManager;
-extern Menu *theMenu;
 extern hgeResourceManager *resources;
-extern SoundManager *soundManager;
 extern LoadEffectManager *loadEffectManager;
 
-extern float gameTime;
 extern int frameCounter;
-
-//Variables
-extern bool debugMode;
-extern int gameState;
 
 #define SLIME_ACCEL 500.0			//Player acceleration on slime
 #define PLAYER_ACCEL 5000.0		//Normal player acceleration
@@ -117,7 +108,7 @@ void Player::reset() {
 	hoveringYOffset = springOffset = 0.0;
 	invincible = false;
 	startedIceBreath = lastOrb = lastLavaDamage = -5.0f;
-	stoppedAttacking = gameTime;
+	stoppedAttacking = smh->getGameTime();
 	startedFlashing = -10.0;
 	timeEnteredShrinkTunnel = -10.0;
 
@@ -151,8 +142,8 @@ void Player::update(float dt) {
 	updateLocation();
 
 	//Do level exits
-	if (theEnvironment->collision[gridX][gridY] == PLAYER_END) {
-		loadEffectManager->startEffect(0, 0, theEnvironment->ids[gridX][gridY]);
+	if (smh->environment->collision[gridX][gridY] == PLAYER_END) {
+		loadEffectManager->startEffect(0, 0, smh->environment->ids[gridX][gridY]);
 		return;
 	}	
 
@@ -172,7 +163,7 @@ void Player::update(float dt) {
 		knockback = false;
 		dx = dy = 0.0;
 		//Help slow the player down if they are on ice by using PLAYER_ACCEL for 1 frame
-		if (theEnvironment->collision[gridX][gridY] == ICE) {
+		if (smh->environment->collision[gridX][gridY] == ICE) {
 			if (dx > 0.0) dx -= PLAYER_ACCEL; else if (dx < 0.0) dx += PLAYER_ACCEL;
 			if (dy > 0.0) dy -= PLAYER_ACCEL; else if (dy < 0.0) dy += PLAYER_ACCEL;
 		}
@@ -255,7 +246,7 @@ void Player::doMove(float dt) {
 	//to push them off the diagonal.
 	int nextX = getGridX(x + xDist);
 	int nextY = getGridY(y + yDist);
-	bool useGayFix = (theEnvironment->collision[nextX][nextY] == ICE || theEnvironment->collision[nextX][nextY] == SPRING_PAD);
+	bool useGayFix = (smh->environment->collision[nextX][nextY] == ICE || smh->environment->collision[nextX][nextY] == SPRING_PAD);
 	if (useGayFix && nextX > gridX && nextY > gridY) {
 		//Up Right
 		x -= 2.0;
@@ -281,14 +272,14 @@ void Player::doMove(float dt) {
  
 	//Move left or right
 	if (xDist != 0.0) {
-		if (!theEnvironment->playerCollision(x + xDist, y, dt)) {	
+		if (!smh->environment->playerCollision(x + xDist, y, dt)) {	
 			x += xDist;
 		} else {
 			//Since Smiley just ran into something, maybe its a locked door. Dickens!
 			if (xDist > 0) {
-				theEnvironment->unlockDoor(gridX+1, gridY);
+				smh->environment->unlockDoor(gridX+1, gridY);
 			} else if (xDist < 0) {
-				theEnvironment->unlockDoor(gridX-1, gridY);
+				smh->environment->unlockDoor(gridX-1, gridY);
 			}
 			knockback = false;
 			//If sliding on puzzle ice, bounce back the other direction
@@ -303,14 +294,14 @@ void Player::doMove(float dt) {
 
 	//Move up or down
 	if (yDist != 0.0) {
-		if (!theEnvironment->playerCollision(x, y+yDist, dt)) {	
+		if (!smh->environment->playerCollision(x, y+yDist, dt)) {	
 			y += yDist;
 		} else {
 			//Since Smiley just ran into something, maybe its a locked door. Dickens!
 			if (yDist > 0) {
-				theEnvironment->unlockDoor(gridX, gridY+1);
+				smh->environment->unlockDoor(gridX, gridY+1);
 			} else if (yDist < 0) {
-				theEnvironment->unlockDoor(gridX, gridY-1);
+				smh->environment->unlockDoor(gridX, gridY-1);
 			}
 			knockback = false;
 			//If sliding on puzzle ice, bounce back the other direction
@@ -337,7 +328,7 @@ void Player::draw(float dt) {
 	}
 
 	//Draw Smiley's shadow
-	if ((hoveringYOffset > 0.0f || drowning || springing || (onWater && waterWalk) || (!falling && theEnvironment->collisionAt(x,y+15) != WALK_LAVA))) {
+	if ((hoveringYOffset > 0.0f || drowning || springing || (onWater && waterWalk) || (!falling && smh->environment->collisionAt(x,y+15) != WALK_LAVA))) {
 		if (drowning) resources->GetSprite("playerShadow")->SetColor(ARGB(255,255,255,255));
 		resources->GetSprite("playerShadow")->RenderEx(getScreenX(x),
 			getScreenY(y) + (22.0*shrinkScale),0.0f,scale*shrinkScale,scale*shrinkScale);
@@ -345,7 +336,7 @@ void Player::draw(float dt) {
 	}
 
 	//Draw Smiley
-	if (!drowning && (flashing && int(gameTime * 100) % 20 > 15 || !flashing)) {
+	if (!drowning && (flashing && int(smh->getGameTime() * 100) % 20 > 15 || !flashing)) {
 		//Draw UP, UP_LEFT, UP_RIGHT tongues before smiley
 		if (facing == UP || facing == UP_LEFT || facing == UP_RIGHT) {
 			tongue->draw(dt);
@@ -372,7 +363,7 @@ void Player::draw(float dt) {
 	if (stunned) {
 		float angle;
 		for (int n = 0; n < 5; n++) {
-			angle = ((float(n)+1.0)/5.0) * 2.0*PI + gameTime;
+			angle = ((float(n)+1.0)/5.0) * 2.0*PI + smh->getGameTime();
 			resources->GetSprite("stunStar")->Render(
 				getScreenX(x + cos(angle)*25), 
 				getScreenY(y + sin(angle)*7) - 30.0);
@@ -391,7 +382,7 @@ void Player::draw(float dt) {
 	}
 
 	//Debug mode
-	if (debugMode) {
+	if (smh->isDebugOn()) {
 		collisionCircle->draw();
 		//worm->draw();
 	}
@@ -435,7 +426,7 @@ void Player::drawGUI(float dt) {
 		resources->GetSprite("bossHealthBar")->RenderStretch(
 			512.0 - 30.0, 
 			384.0 - 55.0 - hoveringYOffset, 
-			512.0 - 30.0 + 60.0f*((JESUS_SANDLE_TIME-(gameTime-startedWaterWalk))/JESUS_SANDLE_TIME), 
+			512.0 - 30.0 + 60.0f*((JESUS_SANDLE_TIME-(smh->getGameTime()-startedWaterWalk))/JESUS_SANDLE_TIME), 
 			384.0 - 50.0 - hoveringYOffset);
 	}
 
@@ -444,7 +435,7 @@ void Player::drawGUI(float dt) {
 		resources->GetSprite("bossHealthBar")->RenderStretch(
 			512.0 - 30.0, 
 			384.0 - 55.0 - hoveringYOffset, 
-			512.0 - 30.0 + 60.0f*((HOVER_DURATION-(gameTime-timeStartedHovering))/HOVER_DURATION), 
+			512.0 - 30.0 + 60.0f*((HOVER_DURATION-(smh->getGameTime()-timeStartedHovering))/HOVER_DURATION), 
 			384.0 - 50.0 - hoveringYOffset);
 	}
 
@@ -543,7 +534,7 @@ void Player::doAbility(float dt) {
 
 	/////////////// Hover ////////////////
 	bool wasHovering = isHovering;
-	isHovering = ((isHovering || theEnvironment->collision[gridX][gridY] == HOVER_PAD) &&
+	isHovering = ((isHovering || smh->environment->collision[gridX][gridY] == HOVER_PAD) &&
 			selectedAbility == HOVER &&
 			smh->input->keyDown(INPUT_ABILITY) &&
 			mana >= smh->gameData->getAbilityInfo(HOVER).manaCost*dt);
@@ -553,7 +544,7 @@ void Player::doAbility(float dt) {
 
 	//Start hovering
 	if (!wasHovering && isHovering) {
-		timeStartedHovering = gameTime;
+		timeStartedHovering = smh->getGameTime();
 	}
 
 	//Continue hovering
@@ -591,11 +582,11 @@ void Player::doAbility(float dt) {
 	
 	sprinting = (canUseAbility && smh->input->keyDown(INPUT_ABILITY) &&
 				 selectedAbility == SPRINT_BOOTS && 
-				 theEnvironment->collision[gridX][gridY] != LEFT_ARROW &&
-				 theEnvironment->collision[gridX][gridY] != RIGHT_ARROW &&
-				 theEnvironment->collision[gridX][gridY] != UP_ARROW &&
-				 theEnvironment->collision[gridX][gridY] != DOWN_ARROW &&
-				 theEnvironment->collision[gridX][gridY] != ICE);
+				 smh->environment->collision[gridX][gridY] != LEFT_ARROW &&
+				 smh->environment->collision[gridX][gridY] != RIGHT_ARROW &&
+				 smh->environment->collision[gridX][gridY] != UP_ARROW &&
+				 smh->environment->collision[gridX][gridY] != DOWN_ARROW &&
+				 smh->environment->collision[gridX][gridY] != ICE);
 
 	
 	////////////// Fire Breath //////////////
@@ -609,7 +600,7 @@ void Player::doAbility(float dt) {
 		if (!breathingFire) {
 			breathingFire = true;
 			fireBreathParticle->FireAt(getScreenX(x) + mouthXOffset[facing], getScreenY(y) + mouthYOffset[facing]);
-			soundManager->playAbilityEffect("snd_fireBreath", true);
+			smh->soundManager->playAbilityEffect("snd_fireBreath", true);
 		}
 
 		//Update breath direction and location
@@ -618,7 +609,7 @@ void Player::doAbility(float dt) {
 
 	//Stop breathing fire
 	} else if (breathingFire) {
-		soundManager->stopAbilityChannel();
+		smh->soundManager->stopAbilityChannel();
 		breathingFire = false;
 		fireBreathParticle->Stop(false);
 	}
@@ -630,7 +621,7 @@ void Player::doAbility(float dt) {
 		//Shoot lightning orbs
 		if (selectedAbility == LIGHTNING_ORB && mana >= smh->gameData->getAbilityInfo(LIGHTNING_ORB).manaCost) {
 			mana -= smh->gameData->getAbilityInfo(LIGHTNING_ORB).manaCost;
-			lastOrb = gameTime;
+			lastOrb = smh->getGameTime();
 			projectileManager->addProjectile(x, y, 700.0, angles[facing]-.5*PI, getLightningOrbDamage(), false, PROJECTILE_LIGHTNING_ORB, true);
 		}
 
@@ -638,12 +629,12 @@ void Player::doAbility(float dt) {
 		if (selectedAbility == CANE && !usingCane && mana >= smh->gameData->getAbilityInfo(CANE).manaCost) {
 			usingCane = true;
 			resources->GetParticleSystem("smileysCane")->FireAt(getScreenX(x), getScreenY(y));
-			timeStartedCane = gameTime;
+			timeStartedCane = smh->getGameTime();
 		}
 
 		//Place Silly Pad
 		if (selectedAbility == SILLY_PAD && mana >= smh->gameData->getAbilityInfo(SILLY_PAD).manaCost) {
-			theEnvironment->placeSillyPad(gridX, gridY);
+			smh->environment->placeSillyPad(gridX, gridY);
 			mana -= smh->gameData->getAbilityInfo(SILLY_PAD).manaCost;
 		}
 
@@ -651,7 +642,7 @@ void Player::doAbility(float dt) {
 		if (selectedAbility == ICE_BREATH && timePassedSince(startedIceBreath) > 1.5 && mana >= smh->gameData->getAbilityInfo(ICE_BREATH).manaCost) {
 			mana -= smh->gameData->getAbilityInfo(ICE_BREATH).manaCost;
 			hge->Effect_Play(resources->GetEffect("snd_iceBreath"));
-			startedIceBreath = gameTime;
+			startedIceBreath = smh->getGameTime();
 			iceBreathParticle->Fire();
 			breathingIce = true;
 		}
@@ -710,43 +701,43 @@ void Player::doAbility(float dt) {
 			if (shrinkScale > 1.0f) shrinkScale = 1.0f;
 
 			//While unshrinking push Smiley away from any adjacent walls
-			if (!canPass(theEnvironment->collision[gridX-1][gridY]) && int(x) % 64 < radius) {
+			if (!canPass(smh->environment->collision[gridX-1][gridY]) && int(x) % 64 < radius) {
 				x += radius - (int(x) % 64) + 1;
 			}
-			if (!canPass(theEnvironment->collision[gridX+1][gridY]) && int(x) % 64 > 64 - radius) {
+			if (!canPass(smh->environment->collision[gridX+1][gridY]) && int(x) % 64 > 64 - radius) {
 				x -= radius - (64 - int(x) % 64) + 1;
 			}
-			if (!canPass(theEnvironment->collision[gridX][gridY-1]) && int(y) % 64 < radius) {
+			if (!canPass(smh->environment->collision[gridX][gridY-1]) && int(y) % 64 < radius) {
 				y += radius - (int(y) % 64) + 1;
 			}
-			if (!canPass(theEnvironment->collision[gridX][gridY+1]) && int(y) % 64 > 64 - radius) {
+			if (!canPass(smh->environment->collision[gridX][gridY+1]) && int(y) % 64 > 64 - radius) {
 				y -= radius - (64 - int(y) % 64) + 1;
 			}
 			
 			//Adjacent corners
 			//Up-Left
-			if (!canPass(theEnvironment->collision[gridX-1][gridY-1])) {
+			if (!canPass(smh->environment->collision[gridX-1][gridY-1])) {
 				if (int(x) % 64 < radius && int(y) % 64 < radius) {
 					x += radius - (int(x) % 64) + 1;
 					y += radius - (int(y) % 64) + 1;
 				}
 			}
 			//Up-Right
-			if (!canPass(theEnvironment->collision[gridX+1][gridY-1])) {
+			if (!canPass(smh->environment->collision[gridX+1][gridY-1])) {
 				if (int(x) % 64 > 64 - radius && int(y) % 64 < radius) {
 					x -= radius - (64 - int(x) % 64) + 1;
 					y += radius - (int(y) % 64) + 1;
 				}
 			}
 			//Down-Left
-			if (!canPass(theEnvironment->collision[gridX-1][gridY+1])) {
+			if (!canPass(smh->environment->collision[gridX-1][gridY+1])) {
 				if (int(x) % 64 < radius && int(y) % 64 > 64 - radius) {
 					x += radius - (int(x) % 64) + 1;
 					y -= radius - (64 - int(y) % 64) + 1;
 				}
 			}
 			//Down-Right
-			if (!canPass(theEnvironment->collision[gridX+1][gridY+1])) {
+			if (!canPass(smh->environment->collision[gridX+1][gridY+1])) {
 				if (int(x) % 64 > 64 - radius && int(y) % 64 > 64 - radius) {
 					x -= radius - (64 - int(x) % 64) + 1;
 					y -= radius - (64 - int(y) % 64) + 1;
@@ -787,26 +778,26 @@ void Player::doAbility(float dt) {
  */
 void Player::doWarps() {
 	
-	int c = theEnvironment->collision[gridX][gridY];
-	int id = theEnvironment->ids[gridX][gridY];
+	int c = smh->environment->collision[gridX][gridY];
+	int id = smh->environment->ids[gridX][gridY];
 
 	//If the player is on a warp, move the player to the other warp of the same color
 	if (!springing && hoveringYOffset == 0.0f && !onWarp && (c == RED_WARP || c == GREEN_WARP || c == YELLOW_WARP || c == BLUE_WARP)) {
 		onWarp = true;
 
 		//Play the warp sound effect for non-invisible warps
-		if (theEnvironment->variable[gridX][gridY] != 990) {
+		if (smh->environment->variable[gridX][gridY] != 990) {
 			hge->Effect_Play(resources->GetEffect("snd_warp"));
 		}
 
 		//Find the other warp square
-		for (int i = 0; i < theEnvironment->areaWidth; i++) {
-			for (int j = 0; j < theEnvironment->areaHeight; j++) {
+		for (int i = 0; i < smh->environment->areaWidth; i++) {
+			for (int j = 0; j < smh->environment->areaHeight; j++) {
 				//Once its found, move the player there
-				if (theEnvironment->ids[i][j] == id && (i != gridX || j != gridY) && (theEnvironment->collision[i][j] == RED_WARP || theEnvironment->collision[i][j] == GREEN_WARP || theEnvironment->collision[i][j] == YELLOW_WARP || theEnvironment->collision[i][j] == BLUE_WARP)) {
+				if (smh->environment->ids[i][j] == id && (i != gridX || j != gridY) && (smh->environment->collision[i][j] == RED_WARP || smh->environment->collision[i][j] == GREEN_WARP || smh->environment->collision[i][j] == YELLOW_WARP || smh->environment->collision[i][j] == BLUE_WARP)) {
 					//If this is an invisible warp, use the load effect to move 
 					//Smiley to its destination
-					if (theEnvironment->variable[gridX][gridY] == 990) {
+					if (smh->environment->variable[gridX][gridY] == 990) {
 						int destX = i;
 						int destY = j;
 						if (facing == DOWN || facing == DOWN_LEFT || facing == DOWN_RIGHT) {
@@ -835,7 +826,7 @@ void Player::doWarps() {
  */
 void Player::doSprings(float dt) {
 
-	int collision = theEnvironment->collision[gridX][gridY];
+	int collision = smh->environment->collision[gridX][gridY];
 
 	//Start springing
 	if (hoveringYOffset == 0.0f && !springing && (collision == SPRING_PAD || collision == SUPER_SPRING)) {
@@ -844,10 +835,10 @@ void Player::doSprings(float dt) {
 		
 		hge->Effect_Play(resources->GetEffect("snd_spring"));
 		springing = true;
-		startedSpringing = gameTime;
+		startedSpringing = smh->getGameTime();
 		dx = dy = 0;
 		//Start the spring animation
-		theEnvironment->activated[gridX][gridY] = gameTime;
+		smh->environment->activated[gridX][gridY] = smh->getGameTime();
 		if (superSpring) {
 			resources->GetAnimation("superSpring")->Play();
 		} else {
@@ -872,7 +863,7 @@ void Player::doSprings(float dt) {
 	//Continue springing - don't use dx/dy just adjust positions directly!
 	if (!falling && !sliding && springing && hoveringYOffset == 0.0f) {
 		
-		scale = 1.0f + sin(PI*((gameTime - startedSpringing)/springTime)) * .2f;
+		scale = 1.0f + sin(PI*((smh->getGameTime() - startedSpringing)/springTime)) * .2f;
 		springOffset =  sin(PI*(timePassedSince(startedSpringing)/springTime))* (springVelocity / 4.0);
 		dx = dy = 0;
 
@@ -943,10 +934,10 @@ void Player::doSprings(float dt) {
 void Player::doFalling(float dt) {
 
 	//Start falling
-	if (!springing && hoveringYOffset == 0.0f && !falling && theEnvironment->collisionAt(baseX,baseY) == PIT) {
+	if (!springing && hoveringYOffset == 0.0f && !falling && smh->environment->collisionAt(baseX,baseY) == PIT) {
 		dx = dy = 0;
 		falling = true;
-		startedFalling = gameTime;
+		startedFalling = smh->getGameTime();
 		//Set dx and dy to fall towards the center of the pit
 		float angle = getAngleBetween(x,y,(baseX/64)*64+32,(baseY/64)*64+32);
 		float dist = distance(baseGridX*64+32, baseGridY*64+32, x, y);
@@ -974,7 +965,7 @@ void Player::doFalling(float dt) {
 	}
 
 	//Keep track of where the player was before he fell
-	if (!falling && theEnvironment->collision[gridX][gridY] != PIT) {
+	if (!falling && smh->environment->collision[gridX][gridY] != PIT) {
 		startedFallingX = gridX;
 		startedFallingY = gridY;
 	}
@@ -987,9 +978,9 @@ void Player::doFalling(float dt) {
 void Player::doArrowPads(float dt) {
 
 	//Start sliding
-	int arrowPad = theEnvironment->collision[gridX][gridY];
+	int arrowPad = smh->environment->collision[gridX][gridY];
 	if (!springing && hoveringYOffset == 0.0f && !sliding && (arrowPad == LEFT_ARROW || arrowPad == RIGHT_ARROW || arrowPad == UP_ARROW || arrowPad == DOWN_ARROW)) {
-		startedSliding = gameTime;
+		startedSliding = smh->getGameTime();
 		sliding = true;
 		dx = dy = 0;
 		if (arrowPad == LEFT_ARROW)	{
@@ -1012,13 +1003,13 @@ void Player::doArrowPads(float dt) {
 
 	//Continue sliding - move towards the center of the square
 	if (sliding) {
-		if (theEnvironment->collision[gridX][gridY] == UP_ARROW || theEnvironment->collision[gridX][gridY] == DOWN_ARROW) {
+		if (smh->environment->collision[gridX][gridY] == UP_ARROW || smh->environment->collision[gridX][gridY] == DOWN_ARROW) {
 			if (x < gridX*64+31) {
 				x += 80.0f*dt;
 			} else if (x > gridX*64+33) {
 				x -= 80.0f*dt;
 			}
-		} else if (theEnvironment->collision[gridX][gridY] == LEFT_ARROW || theEnvironment->collision[gridX][gridY] == RIGHT_ARROW) {
+		} else if (smh->environment->collision[gridX][gridY] == LEFT_ARROW || smh->environment->collision[gridX][gridY] == RIGHT_ARROW) {
 			if (y < gridY*64+31) {
 				y += 80.0f*dt;
 			} else if (y > gridY*64+33) {
@@ -1028,7 +1019,7 @@ void Player::doArrowPads(float dt) {
 	}
 
 	//Stop sliding
-	if (springing || (sliding && gameTime - timeToSlide > startedSliding)) sliding = false;
+	if (springing || (sliding && smh->getGameTime() - timeToSlide > startedSliding)) sliding = false;
 }
 
 
@@ -1113,7 +1104,7 @@ void Player::setFacingStraight() {
  */
 void Player::doItems() {
 
-	int item = theEnvironment->gatherItem(gridX, gridY);
+	int item = smh->environment->gatherItem(gridX, gridY);
 
 	//Keys
 	if (item == RED_KEY || item == GREEN_KEY || item == BLUE_KEY || item == YELLOW_KEY) {
@@ -1138,78 +1129,78 @@ void Player::doItems() {
 void Player::doWater() {
 
 	//Start water walk
-	if (!springing && selectedAbility == WATER_BOOTS && hoveringYOffset == 0.0f && !waterWalk && !onWater && theEnvironment->isDeepWaterAt(baseGridX, baseGridY)) {
+	if (!springing && selectedAbility == WATER_BOOTS && hoveringYOffset == 0.0f && !waterWalk && !onWater && smh->environment->isDeepWaterAt(baseGridX, baseGridY)) {
 		waterWalk = true;
-		startedWaterWalk = gameTime;
+		startedWaterWalk = smh->getGameTime();
 	}
 	//Stop water walk
-	if (selectedAbility != WATER_BOOTS || !theEnvironment->isDeepWaterAt(baseGridX, baseGridY) || hoveringYOffset > 0.0f || gameTime - JESUS_SANDLE_TIME > startedWaterWalk) {
+	if (selectedAbility != WATER_BOOTS || !smh->environment->isDeepWaterAt(baseGridX, baseGridY) || hoveringYOffset > 0.0f || smh->getGameTime() - JESUS_SANDLE_TIME > startedWaterWalk) {
 		waterWalk = false;
 	}
 
 	//Do lava
 	if (!springing) {
 		//Enter Lava
-		if (!inLava && hoveringYOffset == 0.0f && theEnvironment->collisionAt(baseX,baseY) == WALK_LAVA) {
+		if (!inLava && hoveringYOffset == 0.0f && smh->environment->collisionAt(baseX,baseY) == WALK_LAVA) {
 			inLava = true;
-			soundManager->playEnvironmentEffect("snd_lava",true);
+			smh->soundManager->playEnvironmentEffect("snd_lava",true);
 		}
 		//In Lava
 		if (inLava) {
 			//Take damage every half second
-			if (gameTime - .5f > lastLavaDamage) {
-				lastLavaDamage = gameTime;
+			if (smh->getGameTime() - .5f > lastLavaDamage) {
+				lastLavaDamage = smh->getGameTime();
 				health -= .25f;
 			}
 		}
 		//Exit Lava
-		if (hoveringYOffset > 0.0f || inLava && theEnvironment->collisionAt(baseX,baseY) != WALK_LAVA) {
+		if (hoveringYOffset > 0.0f || inLava && smh->environment->collisionAt(baseX,baseY) != WALK_LAVA) {
 			inLava = false;
-			soundManager->stopEnvironmentChannel();
+			smh->soundManager->stopEnvironmentChannel();
 		}
 	}
 
 	//Do shallow water
 	if (!springing) {
 		//Enter Shallow Water
-		if (hoveringYOffset == 0.0f && !inShallowWater && theEnvironment->isShallowWaterAt(baseGridX,baseGridY)) {
+		if (hoveringYOffset == 0.0f && !inShallowWater && smh->environment->isShallowWaterAt(baseGridX,baseGridY)) {
 			inShallowWater = true;
-			if (!waterWalk) soundManager->playEnvironmentEffect("snd_shallowWater", true);
+			if (!waterWalk) smh->soundManager->playEnvironmentEffect("snd_shallowWater", true);
 		}
 		//Exit Shallow Water
-		if (hoveringYOffset > 0.0f || inShallowWater && !theEnvironment->isShallowWaterAt(baseGridX,baseGridY)) {
+		if (hoveringYOffset > 0.0f || inShallowWater && !smh->environment->isShallowWaterAt(baseGridX,baseGridY)) {
 			inShallowWater = false;
-			soundManager->stopEnvironmentChannel();
+			smh->soundManager->stopEnvironmentChannel();
 		}
 	}
 
 	//Do drowning
 	if (!springing && hoveringYOffset == 0.0f) {
 		//Start drowning
-		if (!drowning && theEnvironment->isDeepWaterAt(baseGridX,baseGridY) && !waterWalk) {
+		if (!drowning && smh->environment->isDeepWaterAt(baseGridX,baseGridY) && !waterWalk) {
 			drowning = true;
 			hge->Effect_Play(resources->GetEffect("snd_drowning"));
-			startedDrowning = gameTime;
+			startedDrowning = smh->getGameTime();
 		}	
 		//Stop drowning
-		if (drowning && gameTime - 4.0f > startedDrowning) {
+		if (drowning && smh->getGameTime() - 4.0f > startedDrowning) {
 			drowning = false;
 			moveTo(enteredWaterX, enteredWaterY);
 			dealDamage(0.5, true);
 
 			//If smiley was placed onto an up cylinder, toggle its switch
-			if (isCylinderUp(theEnvironment->collision[gridX][gridY])) {
-				theEnvironment->toggleSwitch(theEnvironment->ids[gridX][gridY]);
+			if (isCylinderUp(smh->environment->collision[gridX][gridY])) {
+				smh->environment->toggleSwitch(smh->environment->ids[gridX][gridY]);
 			}
 
 		}
 	}
 
 	//Determine if the player is on water
-	onWater = (hoveringYOffset == 0.0f) && theEnvironment->isDeepWaterAt(baseGridX,baseGridY);
+	onWater = (hoveringYOffset == 0.0f) && smh->environment->isDeepWaterAt(baseGridX,baseGridY);
 
 	//Keep track of where the player was before entering deep water
-	if (!theEnvironment->isDeepWaterAt(gridX, gridY) && !theEnvironment->isArrowAt(gridX,gridY)) {
+	if (!smh->environment->isDeepWaterAt(gridX, gridY) && !smh->environment->isArrowAt(gridX,gridY)) {
 		enteredWaterX = gridX;
 		enteredWaterY = gridY;
 	}
@@ -1230,7 +1221,7 @@ void Player::updateVelocities(float dt) {
 	}
 
 	//Determine acceleration - normal ground or slime
-	float accel = (theEnvironment->collision[gridX][gridY] == SLIME && hoveringYOffset==0.0) ? SLIME_ACCEL : PLAYER_ACCEL; 
+	float accel = (smh->environment->collision[gridX][gridY] == SLIME && hoveringYOffset==0.0) ? SLIME_ACCEL : PLAYER_ACCEL; 
 
 	//Stop drifting when abs(dx) < accel
 	if (!iceSliding && !sliding && !springing) {
@@ -1275,7 +1266,7 @@ void Player::updateVelocities(float dt) {
  */
 void Player::setFacingDirection() {
 	
-	if (!frozen && !drowning && !falling && !iceSliding && !knockback && !springing && theEnvironment->collision[gridX][gridY] != SPRING_PAD) {
+	if (!frozen && !drowning && !falling && !iceSliding && !knockback && !springing && smh->environment->collision[gridX][gridY] != SPRING_PAD) {
 			
 		if (smh->input->keyDown(INPUT_LEFT)) facing = LEFT;
 		else if (smh->input->keyDown(INPUT_RIGHT)) facing = RIGHT;
@@ -1302,7 +1293,7 @@ void Player::setFacingDirection() {
 void Player::doIce(float dt) {
 	
 	//Start Puzzle Ice
-	if (!springing && hoveringYOffset == 0.0f && !iceSliding && theEnvironment->collisionAt(x,y) == ICE) {
+	if (!springing && hoveringYOffset == 0.0f && !iceSliding && smh->environment->collisionAt(x,y) == ICE) {
 		if (lastGridX < gridX) {
 			facing = RIGHT;
 			dx = MOVE_SPEED;
@@ -1335,7 +1326,7 @@ void Player::doIce(float dt) {
 	}
 
 	//Stop puzzle ice
-	int c = theEnvironment->collisionAt(x,y);
+	int c = smh->environment->collisionAt(x,y);
 	if (iceSliding && c != ICE) {
 		
 		//If the player is on a new special tile, stop sliding now. Otherwise only 
@@ -1421,12 +1412,12 @@ void Player::dealDamageAndKnockback(float damage, bool makesFlash, bool alwaysKn
 		dx = knockbackX / KNOCKBACK_DURATION;
 		dy = knockbackY / KNOCKBACK_DURATION;
 		knockback = true;
-		startedKnockBack = gameTime;
+		startedKnockBack = smh->getGameTime();
 	}
 
 	if (makesFlash && !flashing) {
 		flashing = true;
-		startedFlashing = gameTime;
+		startedFlashing = smh->getGameTime();
 	}
 
 }
@@ -1437,7 +1428,7 @@ void Player::dealDamageAndKnockback(float damage, bool makesFlash, bool alwaysKn
 void Player::freeze(float duration) {
 	if (!falling) {
 		frozen = true;
-		timeFrozen = gameTime;
+		timeFrozen = smh->getGameTime();
 		freezeDuration = duration;
 	}
 }
@@ -1445,7 +1436,7 @@ void Player::freeze(float duration) {
 void Player::stun(float duration) {
 	if (!falling) {
 		stunned = true;
-		timeStartedStun = gameTime;
+		timeStartedStun = smh->getGameTime();
 		stunDuration = duration;
 	}
 }
@@ -1455,12 +1446,12 @@ void Player::stun(float duration) {
  */ 
 void Player::doShrinkTunnels(float dt) {
 
-	int c = theEnvironment->collision[gridX][gridY];
+	int c = smh->environment->collision[gridX][gridY];
 
 	//Enter shrink tunnel
 	if (!inShrinkTunnel && !springing && !sliding && (c == SHRINK_TUNNEL_HORIZONTAL || c == SHRINK_TUNNEL_VERTICAL)) {
 		
-		timeEnteredShrinkTunnel = gameTime;
+		timeEnteredShrinkTunnel = smh->getGameTime();
 		inShrinkTunnel = true;
 		dx = dy = 0;
 
@@ -1489,13 +1480,13 @@ void Player::doShrinkTunnels(float dt) {
 
 	//Continue moving through shrink tunnel - move towards the center of the square
 	if (inShrinkTunnel) {
-		if (theEnvironment->collision[gridX][gridY] == SHRINK_TUNNEL_VERTICAL) {
+		if (smh->environment->collision[gridX][gridY] == SHRINK_TUNNEL_VERTICAL) {
 			if (x < gridX*64+31) {
 				x += 80.0f*dt;
 			} else if (x > gridX*64+33) {
 				x -= 80.0f*dt;
 			}
-		} else if (theEnvironment->collision[gridX][gridY] == SHRINK_TUNNEL_HORIZONTAL) {
+		} else if (smh->environment->collision[gridX][gridY] == SHRINK_TUNNEL_HORIZONTAL) {
 			if (y < gridY*64+31) {
 				y += 80.0f*dt;
 			} else if (y > gridY*64+33) {

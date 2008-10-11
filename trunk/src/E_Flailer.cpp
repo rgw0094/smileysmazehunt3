@@ -13,8 +13,6 @@ extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
 extern ProjectileManager *projectileManager;
-extern Environment *theEnvironment;
-extern float gameTime;
 
 #define NUM_CHAIN_LINKS 4.0
 #define FLAIL_RADIUS 14.0
@@ -96,7 +94,7 @@ void E_Flailer::update(float dt) {
 	//If the flail enemy has a straight path to the player, try to maneuver so that
 	//the flail will hit him
 	boolean shouldMove = true;
-	if (theEnvironment->validPath(x, y, smh->player->x, smh->player->y, 26, canPass)) {
+	if (smh->environment->validPath(x, y, smh->player->x, smh->player->y, 26, canPass)) {
 
 		if (distanceFromPlayer() <= MAX_SPIN_LENGTH - 10) {
 			dx = -speed * cos (getAngleBetween(x, y, smh->player->x, smh->player->y));
@@ -130,7 +128,7 @@ void E_Flailer::updateFlail(float dt) {
 	//Periodically use the flail attack if the enemy is in range to attack
 	if (canFlail && !(frozen|| stunned)) {
 		if (timePassedSince(timeStartedFlail) > FLAIL_DURATION + FLAIL_DELAY) {
-			timeStartedFlail = gameTime;
+			timeStartedFlail = smh->getGameTime();
 			flailing = true;
 			flailAngleVel = 0.0;
 			flailAngle = getAngleBetween(flailX, flailY, x, y) + PI; //WTD

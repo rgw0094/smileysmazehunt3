@@ -10,7 +10,6 @@
 
 extern SMH *smh;
 extern hgeResourceManager *resources;
-extern Environment *theEnvironment;
 extern HGE *hge;
 extern ProjectileManager *projectileManager;
 

@@ -1,5 +1,5 @@
 #include "SMH.h"
-#include "menu.h"
+#include "MainMenu.h"
 #include "Smiley.h"
 
 #include "hgeresource.h"
@@ -7,7 +7,6 @@
 extern SMH *smh;
 extern HGE *hge;
 extern hgeResourceManager *resources;
-extern Menu *theMenu;
 
 #define SPEED 150.0
 

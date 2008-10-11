@@ -1,12 +1,10 @@
+#include "SMH.h"
 #include "TapestryManager.h"
 #include "hgedistort.h"
-#include "hgeresource.h"
 #include "smiley.h"
+#include "math.h"
 
-extern HGE *hge;
-extern hgeResourceManager *resources;
-
-extern float gameTime;
+extern SMH *smh;
 
 #define EVIL_TAPESTRY 19
 
@@ -39,7 +37,7 @@ void TapestryManager::addTapestry(int gridX, int gridY, int id) {
 
 		case EVIL_TAPESTRY:
 			newTapestry.distortion = new hgeDistortionMesh(8, 8);
-			newTapestry.distortion->SetTexture(resources->GetTexture("general"));
+			newTapestry.distortion->SetTexture(smh->getTexture("general"));
 			newTapestry.distortion->SetTextureRect(449,129,190,254);
 			newTapestry.granularity = 8;
 			break;
@@ -47,7 +45,7 @@ void TapestryManager::addTapestry(int gridX, int gridY, int id) {
 		default:
 			//By default just use the graphic in the item layer
 			newTapestry.distortion = new hgeDistortionMesh(4, 4);
-			newTapestry.distortion->SetTexture(resources->GetTexture("itemLayer1"));
+			newTapestry.distortion->SetTexture(smh->getTexture("itemLayer1"));
 			newTapestry.distortion->SetTextureRect((id-16)*64 + 1,65,62,62);
 			newTapestry.granularity = 4;
 	}
@@ -81,13 +79,9 @@ void TapestryManager::update(float dt) {
 				i->distortion->SetDisplacement(
 					x, //column
 					y, //row
-					cosf(gameTime*2.0+y*4.0/i->granularity)*0.5*y, //dx
-					sinf(gameTime*3.0+(x+y)/2)*2, //dy					
+					cosf(smh->getGameTime()*2.0+y*4.0/i->granularity)*0.5*y, //dx
+					sinf(smh->getGameTime()*3.0+(x+y)/2)*2, //dy					
 					HGEDISP_NODE); //reference
-
-				//works for 1 square
-				//cosf(gameTime*4.0+(x+y)/2)*0.5, //dx
-				//sinf(gameTime*4.0+(x+y)/2)*0.5, //dy
 			}
 		}
 	}

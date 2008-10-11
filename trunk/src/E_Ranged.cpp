@@ -11,11 +11,8 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern Environment *theEnvironment;
 extern hgeResourceManager *resources;
 extern ProjectileManager *projectileManager;
-
-extern float gameTime;
 
 E_Ranged::E_Ranged(int id, int x, int y, int groupID) {
 
@@ -61,7 +58,7 @@ void E_Ranged::update(float dt) {
 		}
 
 		if (timePassedSince(timeStartedRangedAttack) > 1.2) {
-			lastRangedAttack = gameTime;
+			lastRangedAttack = smh->getGameTime();
 			usingRangedAttack = false;
 			setState(new ES_Wander(this));
 		}
@@ -85,7 +82,7 @@ void E_Ranged::startRangedAttack() {
 	
 	usingRangedAttack = true;
 	shotYet = false;
-	timeStartedRangedAttack = gameTime;
+	timeStartedRangedAttack = smh->getGameTime();
 
 	//Face the player and stand still
 	setFacingPlayer();

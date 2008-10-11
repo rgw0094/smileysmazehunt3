@@ -13,7 +13,6 @@
 #include "ChangeManager.h"
 #include "BitManager.h"
 
-extern Environment *theEnvironment;
 extern SMH *smh;
 extern HGE *hge;
 
@@ -385,7 +384,7 @@ void SaveManager::startNewGame(int fileNumber) {
 	saveFileInfo();
 	resetCurrentData();
 
-	theEnvironment->loadArea(FOUNTAIN_AREA, FOUNTAIN_AREA);
+	smh->environment->loadArea(FOUNTAIN_AREA, FOUNTAIN_AREA);
 	smh->player->setHealth(playerHealth);
 	smh->player->setMana(playerMana);
 

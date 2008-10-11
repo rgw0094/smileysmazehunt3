@@ -14,9 +14,7 @@
 extern SMH *smh;
 extern HGE *hge;
 extern WindowManager *windowManager;
-extern Environment *theEnvironment;
 extern hgeStringTable *stringTable;
-extern float gameTime;
 
 NPCManager::NPCManager() { 
 	collisionCircle = new CollisionCircle();
