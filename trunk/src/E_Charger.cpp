@@ -11,7 +11,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern hgeResourceManager *resources;
 extern ProjectileManager *projectileManager;
 
 //Charge constants

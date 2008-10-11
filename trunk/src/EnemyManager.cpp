@@ -16,7 +16,6 @@ extern SMH *smh;
 extern HGE *hge;
 extern LootManager *lootManager;
 extern ProjectileManager *projectileManager;
-extern hgeResourceManager *resources;
 
 /**
  * Constructor
@@ -116,12 +115,12 @@ void EnemyManager::killEnemies(int type) {
 
 			//Play death sound effect
 			if (i->enemy->frozen) {
-				hge->Effect_Play(resources->GetEffect("snd_iceDie"));
+				hge->Effect_Play(smh->resources->GetEffect("snd_iceDie"));
 			}
 
 			//Death effects
-			deathParticles->SpawnPS(&resources->GetParticleSystem("deathCloud")->info, i->enemy->x, i->enemy->y);
-			hge->Effect_Play(resources->GetEffect("snd_enemyDeath"));
+			deathParticles->SpawnPS(&smh->resources->GetParticleSystem("deathCloud")->info, i->enemy->x, i->enemy->y);
+			hge->Effect_Play(smh->resources->GetEffect("snd_enemyDeath"));
 
 			//Spawn loot
 			randomLoot = hge->Random_Int(0,10000);
@@ -173,12 +172,12 @@ void EnemyManager::update(float dt) {
 
 			//Play death sound effect
 			if (i->enemy->frozen) {
-				hge->Effect_Play(resources->GetEffect("snd_iceDie"));
+				hge->Effect_Play(smh->resources->GetEffect("snd_iceDie"));
 			}
 
 			//Death effects
-			deathParticles->SpawnPS(&resources->GetParticleSystem("deathCloud")->info, i->enemy->x, i->enemy->y);
-			hge->Effect_Play(resources->GetEffect("snd_enemyDeath"));
+			deathParticles->SpawnPS(&smh->resources->GetParticleSystem("deathCloud")->info, i->enemy->x, i->enemy->y);
+			hge->Effect_Play(smh->resources->GetEffect("snd_enemyDeath"));
 
 			//Spawn loot
 			randomLoot = hge->Random_Int(0,10000);
@@ -262,7 +261,7 @@ void EnemyManager::freezeEnemies(int x, int y) {
 		//Check collision
 		if (!smh->gameData->getEnemyInfo(i->enemy->id).immuneToFreeze && i->enemy->collisionBox->TestPoint(x,y)) {
 			//Freeze sound effect is fucked up
-			//if (!dickens) hge->Effect_Play(resources->GetEffect("snd_freeze"));
+			//if (!dickens) hge->Effect_Play(smh->resources->GetEffect("snd_freeze"));
 			dickens = true;
 			i->enemy->frozen = true;
 			i->enemy->timeFrozen = hge->Timer_GetTime();

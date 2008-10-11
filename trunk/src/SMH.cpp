@@ -28,6 +28,9 @@ void SMH::init() {
 
 	log("Creating ResourceManager");
 	resources = new hgeResourceManager("Data/resources.res");
+	hge->Resource_AttachPack("Data/Sounds.zip");
+	hge->Resource_AttachPack("Data/Fonts.zip");
+	hge->Resource_AttachPack("Data/GameData.zip");
 
 	log("Creating SaveManager");
 	saveManager = new SaveManager();
@@ -166,18 +169,4 @@ void SMH::log(const char* text) {
  */
 float SMH::timePassedSince(float time) {
 	return gameTime - time;
-}
-
-///// RESOURCE ACCESS /////
-
-hgeAnimation *SMH::getAnimation(const char* animation) {
-	return resources->GetAnimation(animation);
-}
-
-hgeFont *SMH::getFont(const char* font) {
-	return resources->GetFont(font);
-}
-
-HTEXTURE SMH::getTexture(const char* texture) {
-	return resources->GetTexture(texture);
 }

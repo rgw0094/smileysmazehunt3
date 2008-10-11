@@ -7,7 +7,6 @@
 #include "smiley.h"
 
 extern SMH *smh;
-extern hgeResourceManager *resources;
 extern HGE *hge;
 
 #define BUZZARD_WAITING 0
@@ -38,13 +37,13 @@ E_Buzzard::~E_Buzzard() {
 
 void E_Buzzard::draw(float dt) {
 	if (buzzardState == BUZZARD_WAITING) {
-		resources->GetSprite("buzzardWing")->RenderEx(screenX,screenY,0);
-		resources->GetSprite("buzzardWing")->RenderEx(screenX,screenY,0,-1,1);		
+		smh->resources->GetSprite("buzzardWing")->RenderEx(screenX,screenY,0);
+		smh->resources->GetSprite("buzzardWing")->RenderEx(screenX,screenY,0,-1,1);		
 	} else {
 		double angle;
 		angle=sin(smh->timePassedSince(beginFlapTime)*20)*0.5;
-		resources->GetSprite("buzzardWing")->RenderEx(screenX,screenY,angle);
-		resources->GetSprite("buzzardWing")->RenderEx(screenX,screenY,-angle,-1,1);
+		smh->resources->GetSprite("buzzardWing")->RenderEx(screenX,screenY,angle);
+		smh->resources->GetSprite("buzzardWing")->RenderEx(screenX,screenY,-angle,-1,1);
 	}
 	graphic[LEFT]->Render(screenX,screenY);
 }

@@ -18,7 +18,6 @@
 
 //Global Objects
 HGE *hge=0;
-hgeResourceManager *resources;
 EnemyManager *enemyManager;
 LootManager *lootManager;
 ProjectileManager *projectileManager;
@@ -41,22 +40,15 @@ float lastDebugMoveTime = 0.0;
  */
 void loadResources() {
 
-	//Load resource manager and add resource packs
-	resources = new hgeResourceManager("Data/resources.res");
-	hge->Resource_AttachPack("Data/Sounds.zip");
-	hge->Resource_AttachPack("Data/Fonts.zip");
-	hge->Resource_AttachPack("Data/GameData.zip");
-
-
 	//Load item layer
 	for (int i = 0; i < 16; i++) {
 		for (int j = 0; j < 16; j++) {
-			itemLayer[j*16 + i] = new hgeSprite(resources->GetTexture("itemLayer1"),i*64,j*64,64,64);
+			itemLayer[j*16 + i] = new hgeSprite(smh->resources->GetTexture("itemLayer1"),i*64,j*64,64,64);
 		}
 	}
 	for (int i = 0; i < 16; i++) {
 		for (int j = 0; j < 16; j++) {
-			itemLayer[256+j*16+i] = new hgeSprite(resources->GetTexture("itemLayer2"),i*64,j*64,64,64);
+			itemLayer[256+j*16+i] = new hgeSprite(smh->resources->GetTexture("itemLayer2"),i*64,j*64,64,64);
 		}
 	}	
 
@@ -256,7 +248,7 @@ bool RenderFunc() {
 
 	if (smh->isDebugOn()) {
 		//Grid co-ords and fps
-		resources->GetFont("curlz")->printf(1000,5,HGETEXT_RIGHT,"(%d,%d)  FPS: %d", 
+		smh->resources->GetFont("curlz")->printf(1000,5,HGETEXT_RIGHT,"(%d,%d)  FPS: %d", 
 			smh->player->gridX, smh->player->gridY, hge->Timer_GetFPS());
 	}
 
@@ -305,8 +297,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		try {
 			
-			loadResources();
 			loadGameObjects();
+			loadResources();
 
 			//Open the menu (this should go in menu constructor maybe)
 			smh->menu->open(TITLE_SCREEN);

@@ -7,7 +7,6 @@
 
 extern HGE *hge;
 extern SMH *smh;
-extern hgeResourceManager *resources;
 
 #define TOP_LEFT_X 182.0
 #define TOP_LEFT_Y 138.0
@@ -81,23 +80,23 @@ bool OptionsWindow::update(float dt) {
 void OptionsWindow::draw(float dt) {
 
 	//Draw background
-	resources->GetSprite("optionsBackground")->Render(182.0, 138.0);
+	smh->resources->GetSprite("optionsBackground")->Render(182.0, 138.0);
 
 	//Draw volume sliders
 	musicVolumeSlider->draw(dt);
 	soundVolumeSlider->draw(dt);
 
-	resources->GetFont("inventoryFnt")->printf(670.0, 180.0, HGETEXT_CENTER, "Volume");
-	resources->GetFont("inventoryFnt")->SetScale(0.8);
-	resources->GetFont("inventoryFnt")->printf(
+	smh->resources->GetFont("inventoryFnt")->printf(670.0, 180.0, HGETEXT_CENTER, "Volume");
+	smh->resources->GetFont("inventoryFnt")->SetScale(0.8);
+	smh->resources->GetFont("inventoryFnt")->printf(
 		soundVolumeSlider->getX() + soundVolumeSlider->getWidth()/2, 
 		soundVolumeSlider->getY() + soundVolumeSlider->getHeight() + 3,
 		HGETEXT_CENTER, "Sound");
-	resources->GetFont("inventoryFnt")->printf(
+	smh->resources->GetFont("inventoryFnt")->printf(
 		musicVolumeSlider->getX() + musicVolumeSlider->getWidth()/2, 
 		musicVolumeSlider->getY() + musicVolumeSlider->getHeight() + 3,
 		HGETEXT_CENTER, "Music");
-	resources->GetFont("inventoryFnt")->SetScale(1.0);
+	smh->resources->GetFont("inventoryFnt")->SetScale(1.0);
 
 	doneButton->draw(dt);
 
@@ -110,31 +109,31 @@ void OptionsWindow::draw(float dt) {
 			y = 138.0 + 45 + row*80.0;
 
 			//Input name
-			resources->GetFont("controls")->SetScale(0.8);
-			resources->GetFont("controls")->SetColor(ARGB(255,255,255,255));
-			resources->GetFont("controls")->Render(x + 65.0, y, HGETEXT_CENTER, 
+			smh->resources->GetFont("controls")->SetScale(0.8);
+			smh->resources->GetFont("controls")->SetColor(ARGB(255,255,255,255));
+			smh->resources->GetFont("controls")->Render(x + 65.0, y, HGETEXT_CENTER, 
 				smh->input->getInputName(currentInput));
 
 			//Input box
 			if (smh->input->isEditModeEnabled(currentInput)) {
-				resources->GetSprite("selectedControlsBox")->Render(x,y+35);
+				smh->resources->GetSprite("selectedControlsBox")->Render(x,y+35);
 			} else {
-				resources->GetSprite("controlsBox")->Render(x,y+35);
+				smh->resources->GetSprite("controlsBox")->Render(x,y+35);
 			}
 
 			//Current setting
-			resources->GetFont("controls")->SetColor(ARGB(255,255,255,255));
-			resources->GetFont("controls")->SetScale(0.7);
-			resources->GetFont("controls")->printf(x + 65.0, y + 40.0, HGETEXT_CENTER,
+			smh->resources->GetFont("controls")->SetColor(ARGB(255,255,255,255));
+			smh->resources->GetFont("controls")->SetScale(0.7);
+			smh->resources->GetFont("controls")->printf(x + 65.0, y + 40.0, HGETEXT_CENTER,
 					smh->input->getInputDescription(currentInput).c_str());
-			resources->GetFont("controls")->SetColor(ARGB(255,0,0,0));
+			smh->resources->GetFont("controls")->SetColor(ARGB(255,0,0,0));
 
 		}
 	}
 
 	//Draw the mouse
 	if (hge->Input_IsMouseOver()) {
-		resources->GetSprite("mouseCursor")->Render(mouseX, mouseY);
+		smh->resources->GetSprite("mouseCursor")->Render(mouseX, mouseY);
 	}
 
 }

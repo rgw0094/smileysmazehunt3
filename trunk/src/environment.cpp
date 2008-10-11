@@ -38,7 +38,6 @@ extern ProjectileManager *projectileManager;
 extern TextBox *theTextBox;
 extern hgeStringTable *stringTable;
 extern BossManager *bossManager;
-extern hgeResourceManager *resources;
 extern LoadEffectManager *loadEffectManager;
 extern FenwarManager *fenwarManager;
 
@@ -54,42 +53,42 @@ Environment::Environment() {
 	environmentParticles = new hgeParticleManager();
 
 	//Load animations
-	silverCylinder = new hgeAnimation(resources->GetTexture("animations"),5,20,0,3*64,64,64);
+	silverCylinder = new hgeAnimation(smh->resources->GetTexture("animations"),5,20,0,3*64,64,64);
 	silverCylinder->SetMode(HGEANIM_REV);
 	silverCylinder->Play();
-	brownCylinder = new hgeAnimation(resources->GetTexture("animations"),5,20,0,4*64,64,64);
+	brownCylinder = new hgeAnimation(smh->resources->GetTexture("animations"),5,20,0,4*64,64,64);
 	brownCylinder->SetMode(HGEANIM_REV);
 	brownCylinder->Play();
-	blueCylinder = new hgeAnimation(resources->GetTexture("animations"),5,20,0,5*64,64,64);
+	blueCylinder = new hgeAnimation(smh->resources->GetTexture("animations"),5,20,0,5*64,64,64);
 	blueCylinder->SetMode(HGEANIM_REV);
 	blueCylinder->Play();
-	greenCylinder = new hgeAnimation(resources->GetTexture("animations"),5,20,0,6*64,64,64);
+	greenCylinder = new hgeAnimation(smh->resources->GetTexture("animations"),5,20,0,6*64,64,64);
 	greenCylinder->SetMode(HGEANIM_REV);
 	greenCylinder->Play();
-	yellowCylinder = new hgeAnimation(resources->GetTexture("animations"),5,20,0,7*64,64,64);
+	yellowCylinder = new hgeAnimation(smh->resources->GetTexture("animations"),5,20,0,7*64,64,64);
 	yellowCylinder->SetMode(HGEANIM_REV);
 	yellowCylinder->Play();
-	whiteCylinder = new hgeAnimation(resources->GetTexture("animations"),5,20,0,8*64,64,64);
+	whiteCylinder = new hgeAnimation(smh->resources->GetTexture("animations"),5,20,0,8*64,64,64);
 	whiteCylinder->SetMode(HGEANIM_REV);
 	whiteCylinder->Play();
-	silverCylinderRev = new hgeAnimation(resources->GetTexture("animations"),5,20,0,3*64,64,64);
+	silverCylinderRev = new hgeAnimation(smh->resources->GetTexture("animations"),5,20,0,3*64,64,64);
 	silverCylinderRev->SetMode(HGEANIM_FWD);
-	brownCylinderRev = new hgeAnimation(resources->GetTexture("animations"),5,20,0,4*64,64,64);
+	brownCylinderRev = new hgeAnimation(smh->resources->GetTexture("animations"),5,20,0,4*64,64,64);
 	brownCylinderRev->SetMode(HGEANIM_FWD);
-	blueCylinderRev = new hgeAnimation(resources->GetTexture("animations"),5,20,0,5*64,64,64);
+	blueCylinderRev = new hgeAnimation(smh->resources->GetTexture("animations"),5,20,0,5*64,64,64);
 	blueCylinderRev->SetMode(HGEANIM_FWD);
-	greenCylinderRev = new hgeAnimation(resources->GetTexture("animations"),5,20,0,6*64,64,64);
+	greenCylinderRev = new hgeAnimation(smh->resources->GetTexture("animations"),5,20,0,6*64,64,64);
 	greenCylinderRev->SetMode(HGEANIM_FWD);
-	yellowCylinderRev = new hgeAnimation(resources->GetTexture("animations"),5,20,0,7*64,64,64);
+	yellowCylinderRev = new hgeAnimation(smh->resources->GetTexture("animations"),5,20,0,7*64,64,64);
 	yellowCylinderRev->SetMode(HGEANIM_FWD);
-	whiteCylinderRev = new hgeAnimation(resources->GetTexture("animations"),5,20,0,8*64,64,64);
+	whiteCylinderRev = new hgeAnimation(smh->resources->GetTexture("animations"),5,20,0,8*64,64,64);
 	whiteCylinderRev->SetMode(HGEANIM_FWD);
 
-	resources->GetAnimation("water")->Play();
-	resources->GetAnimation("greenWater")->Play();
-	resources->GetAnimation("lava")->Play();
-	resources->GetAnimation("fountainRipple")->Play();
-	resources->GetAnimation("savePoint")->Play();
+	smh->resources->GetAnimation("water")->Play();
+	smh->resources->GetAnimation("greenWater")->Play();
+	smh->resources->GetAnimation("lava")->Play();
+	smh->resources->GetAnimation("fountainRipple")->Play();
+	smh->resources->GetAnimation("savePoint")->Play();
 
 	hge->System_Log("Creating Environment.SpecialTileManager");
 	specialTileManager = new SpecialTileManager();
@@ -519,10 +518,10 @@ void Environment::draw(float dt) {
 				//Terrain
 				int theTerrain = terrain[i+xGridOffset][j+yGridOffset];
 				if (theTerrain > 0 && theTerrain < 256) {
-					resources->GetAnimation("mainLayer")->SetFrame(theTerrain);
-					resources->GetAnimation("mainLayer")->Render(drawX,drawY);
+					smh->resources->GetAnimation("mainLayer")->SetFrame(theTerrain);
+					smh->resources->GetAnimation("mainLayer")->Render(drawX,drawY);
 				} else {
-					resources->GetSprite("blackScreen")->RenderStretch(drawX, drawY, drawX+64, drawY+64);
+					smh->resources->GetSprite("blackScreen")->RenderStretch(drawX, drawY, drawX+64, drawY+64);
 				}
 
 				//Collision
@@ -540,37 +539,37 @@ void Environment::draw(float dt) {
 					
 					//Water animation
 					if (theCollision == SHALLOW_WATER) {
-						resources->GetAnimation("water")->SetColor(ARGB(125,255,255,255));
-						resources->GetAnimation("water")->Render(drawX,drawY);
+						smh->resources->GetAnimation("water")->SetColor(ARGB(125,255,255,255));
+						smh->resources->GetAnimation("water")->Render(drawX,drawY);
 					} else if (theCollision == DEEP_WATER) {
-						resources->GetAnimation("water")->SetColor(ARGB(255,255,255,255));
-						resources->GetAnimation("water")->Render(drawX,drawY);
+						smh->resources->GetAnimation("water")->SetColor(ARGB(255,255,255,255));
+						smh->resources->GetAnimation("water")->Render(drawX,drawY);
 					} else if (theCollision == WALK_LAVA || theCollision == NO_WALK_LAVA) {
-						resources->GetAnimation("lava")->Render(drawX,drawY);
+						smh->resources->GetAnimation("lava")->Render(drawX,drawY);
 					} else if (theCollision == GREEN_WATER) {
-						resources->GetAnimation("greenWater")->SetColor(ARGB(255,255,255,255));
-						resources->GetAnimation("greenWater")->Render(drawX,drawY);
+						smh->resources->GetAnimation("greenWater")->SetColor(ARGB(255,255,255,255));
+						smh->resources->GetAnimation("greenWater")->Render(drawX,drawY);
 					} else if (theCollision == SHALLOW_GREEN_WATER) {
-						resources->GetAnimation("greenWater")->SetColor(ARGB(125,255,255,255));
-						resources->GetAnimation("greenWater")->Render(drawX,drawY);
+						smh->resources->GetAnimation("greenWater")->SetColor(ARGB(125,255,255,255));
+						smh->resources->GetAnimation("greenWater")->Render(drawX,drawY);
 					} else if (theCollision == SPRING_PAD && smh->getGameTime() - 0.5f < activated[i+xGridOffset][j+yGridOffset]) {
-						resources->GetAnimation("spring")->Render(drawX,drawY);
+						smh->resources->GetAnimation("spring")->Render(drawX,drawY);
 					} else if (theCollision == SUPER_SPRING && smh->getGameTime() - 0.5f < activated[i+xGridOffset][j+yGridOffset]) {
-						resources->GetAnimation("superSpring")->Render(drawX, drawY);
+						smh->resources->GetAnimation("superSpring")->Render(drawX, drawY);
 					
 					//Switch animations
 					} else if ((theCollision == SILVER_SWITCH_LEFT || theCollision == SILVER_SWITCH_RIGHT) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
-						resources->GetAnimation("silverSwitch")->Render(drawX,drawY);
+						smh->resources->GetAnimation("silverSwitch")->Render(drawX,drawY);
 					} else if ((theCollision == BROWN_SWITCH_LEFT || theCollision == BROWN_SWITCH_RIGHT) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
-						resources->GetAnimation("brownSwitch")->Render(drawX,drawY);
+						smh->resources->GetAnimation("brownSwitch")->Render(drawX,drawY);
 					} else if ((theCollision == BLUE_SWITCH_LEFT || theCollision == BLUE_SWITCH_RIGHT) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
-						resources->GetAnimation("blueSwitch")->Render(drawX,drawY);
+						smh->resources->GetAnimation("blueSwitch")->Render(drawX,drawY);
 					} else if ((theCollision == GREEN_SWITCH_LEFT || theCollision == GREEN_SWITCH_RIGHT) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
-						resources->GetAnimation("greenSwitch")->Render(drawX,drawY);
+						smh->resources->GetAnimation("greenSwitch")->Render(drawX,drawY);
 					} else if ((theCollision == YELLOW_SWITCH_LEFT || theCollision == YELLOW_SWITCH_RIGHT) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
-						resources->GetAnimation("yellowSwitch")->Render(drawX,drawY);
+						smh->resources->GetAnimation("yellowSwitch")->Render(drawX,drawY);
 					} else if ((theCollision == WHITE_SWITCH_LEFT || theCollision == WHITE_SWITCH_RIGHT) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
-						resources->GetAnimation("whiteSwitch")->Render(drawX,drawY);
+						smh->resources->GetAnimation("whiteSwitch")->Render(drawX,drawY);
 					
 					//Cylinder animations
 					} else if ((theCollision == SILVER_CYLINDER_DOWN) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
@@ -600,33 +599,33 @@ void Environment::draw(float dt) {
 
 					//Save thing
 					} else if (theCollision == SAVE_SHRINE) {
-						resources->GetAnimation("savePoint")->Update(dt);
-						resources->GetAnimation("savePoint")->Render(drawX, drawY);
+						smh->resources->GetAnimation("savePoint")->Update(dt);
+						smh->resources->GetAnimation("savePoint")->Render(drawX, drawY);
 
 					//Non-animated collision tiles
 					} else {
 
 						//Set to current tile
-						resources->GetAnimation("walkLayer")->SetFrame(theCollision);
+						smh->resources->GetAnimation("walkLayer")->SetFrame(theCollision);
 
 						//Set color values
 						if (theCollision >= UP_ARROW && theCollision <= LEFT_ARROW) {
 							if (ids[i+xGridOffset][j+yGridOffset] == -1 || ids[i+xGridOffset][j+yGridOffset] == 990) {
 								//render normal, red arrow
-								resources->GetAnimation("walkLayer")->SetColor(ARGB(255,255,0,255));							
+								smh->resources->GetAnimation("walkLayer")->SetColor(ARGB(255,255,0,255));							
 							} else { 
 								//it's a rotating arrow, make it green
-								resources->GetAnimation("walkLayer")->SetColor(ARGB(255,0,255,255));					
+								smh->resources->GetAnimation("walkLayer")->SetColor(ARGB(255,0,255,255));					
 							}
 						} else if (theCollision == SHALLOW_WATER) {
-							resources->GetAnimation("walkLayer")->SetColor(ARGB(125,255,255,255));
+							smh->resources->GetAnimation("walkLayer")->SetColor(ARGB(125,255,255,255));
 						} else if (theCollision == SLIME) {
-							resources->GetAnimation("walkLayer")->SetColor(ARGB(200,255,255,255));
+							smh->resources->GetAnimation("walkLayer")->SetColor(ARGB(200,255,255,255));
 						}
 
 						//Draw it and set the color back to normal
-						resources->GetAnimation("walkLayer")->Render(drawX,drawY);
-						resources->GetAnimation("walkLayer")->SetColor(ARGB(255,255,255,255));
+						smh->resources->GetAnimation("walkLayer")->Render(drawX,drawY);
+						smh->resources->GetAnimation("walkLayer")->SetColor(ARGB(255,255,255,255));
 
 					}
 				}
@@ -647,7 +646,7 @@ void Environment::draw(float dt) {
 				}
 			
 			} else {
-				resources->GetSprite("blackScreen")->RenderStretch(drawX, drawY, drawX+64, drawY+64);
+				smh->resources->GetSprite("blackScreen")->RenderStretch(drawX, drawY, drawX+64, drawY+64);
 			}
 		}
 	}
@@ -728,8 +727,8 @@ void Environment::drawAfterSmiley(float dt) {
 				if ((collision[gridX][gridY] == SHRINK_TUNNEL_HORIZONTAL || 
 						collision[gridX][gridY] == SHRINK_TUNNEL_VERTICAL) &&
 						!(smh->player->gridY == gridY+1 && !smh->player->isShrunk())) {
-					resources->GetAnimation("walkLayer")->SetFrame(collision[gridX][gridY]);
-					resources->GetAnimation("walkLayer")->Render(drawX, drawY);
+					smh->resources->GetAnimation("walkLayer")->SetFrame(collision[gridX][gridY]);
+					smh->resources->GetAnimation("walkLayer")->Render(drawX, drawY);
 				}
 
 			}
@@ -749,17 +748,17 @@ void Environment::drawAfterSmiley(float dt) {
 void Environment::update(float dt) {
 
 	//Update animations and shit
-	resources->GetAnimation("water")->Update(dt);
-	resources->GetAnimation("greenWater")->Update(dt);
-	resources->GetAnimation("lava")->Update(dt);
-	resources->GetAnimation("spring")->Update(dt);
-	resources->GetAnimation("superSpring")->Update(dt);
-	resources->GetAnimation("silverSwitch")->Update(dt);
-	resources->GetAnimation("brownSwitch")->Update(dt);
-	resources->GetAnimation("blueSwitch")->Update(dt);
-	resources->GetAnimation("greenSwitch")->Update(dt);
-	resources->GetAnimation("yellowSwitch")->Update(dt);
-	resources->GetAnimation("whiteSwitch")->Update(dt);
+	smh->resources->GetAnimation("water")->Update(dt);
+	smh->resources->GetAnimation("greenWater")->Update(dt);
+	smh->resources->GetAnimation("lava")->Update(dt);
+	smh->resources->GetAnimation("spring")->Update(dt);
+	smh->resources->GetAnimation("superSpring")->Update(dt);
+	smh->resources->GetAnimation("silverSwitch")->Update(dt);
+	smh->resources->GetAnimation("brownSwitch")->Update(dt);
+	smh->resources->GetAnimation("blueSwitch")->Update(dt);
+	smh->resources->GetAnimation("greenSwitch")->Update(dt);
+	smh->resources->GetAnimation("yellowSwitch")->Update(dt);
+	smh->resources->GetAnimation("whiteSwitch")->Update(dt);
 	silverCylinder->Update(dt);
 	brownCylinder->Update(dt);
 	blueCylinder->Update(dt);
@@ -1036,7 +1035,7 @@ bool Environment::toggleSwitchAt(int gridX, int gridY, bool playSoundFarAway) {
 
 	//Play switch sound if the switch is somewhat close to Smiley
 	if (hasSwitch && (playSoundFarAway || distance(gridX, gridY, smh->player->gridX, smh->player->gridY) < 15)) {
-		hge->Effect_Play(resources->GetEffect("snd_switch"));
+		hge->Effect_Play(smh->resources->GetEffect("snd_switch"));
 	}
 
 	return hasSwitch;
@@ -1052,31 +1051,31 @@ void Environment::flipCylinderSwitch(int gridX, int gridY) {
 	//Flip switch in collision layer
 	if (isCylinderSwitchLeft(collision[gridX][gridY])) {
 		collision[gridX][gridY] += 16;
-		resources->GetAnimation("silverSwitch")->SetMode(HGEANIM_FWD);
-		resources->GetAnimation("brownSwitch")->SetMode(HGEANIM_FWD);
-		resources->GetAnimation("blueSwitch")->SetMode(HGEANIM_FWD);
-		resources->GetAnimation("greenSwitch")->SetMode(HGEANIM_FWD);
-		resources->GetAnimation("yellowSwitch")->SetMode(HGEANIM_FWD);
-		resources->GetAnimation("whiteSwitch")->SetMode(HGEANIM_FWD);
+		smh->resources->GetAnimation("silverSwitch")->SetMode(HGEANIM_FWD);
+		smh->resources->GetAnimation("brownSwitch")->SetMode(HGEANIM_FWD);
+		smh->resources->GetAnimation("blueSwitch")->SetMode(HGEANIM_FWD);
+		smh->resources->GetAnimation("greenSwitch")->SetMode(HGEANIM_FWD);
+		smh->resources->GetAnimation("yellowSwitch")->SetMode(HGEANIM_FWD);
+		smh->resources->GetAnimation("whiteSwitch")->SetMode(HGEANIM_FWD);
 		smh->saveManager->change(gridX, gridY);
 	} else if (isCylinderSwitchRight(collision[gridX][gridY])) {
 		collision[gridX][gridY] -= 16;
-		resources->GetAnimation("silverSwitch")->SetMode(HGEANIM_REV);
-		resources->GetAnimation("brownSwitch")->SetMode(HGEANIM_REV);
-		resources->GetAnimation("blueSwitch")->SetMode(HGEANIM_REV);
-		resources->GetAnimation("greenSwitch")->SetMode(HGEANIM_REV);
-		resources->GetAnimation("yellowSwitch")->SetMode(HGEANIM_REV);
-		resources->GetAnimation("whiteSwitch")->SetMode(HGEANIM_REV);
+		smh->resources->GetAnimation("silverSwitch")->SetMode(HGEANIM_REV);
+		smh->resources->GetAnimation("brownSwitch")->SetMode(HGEANIM_REV);
+		smh->resources->GetAnimation("blueSwitch")->SetMode(HGEANIM_REV);
+		smh->resources->GetAnimation("greenSwitch")->SetMode(HGEANIM_REV);
+		smh->resources->GetAnimation("yellowSwitch")->SetMode(HGEANIM_REV);
+		smh->resources->GetAnimation("whiteSwitch")->SetMode(HGEANIM_REV);
 		smh->saveManager->change(gridX, gridY);
 	}
 
 	//Play animation
-	resources->GetAnimation("silverSwitch")->Play();
-	resources->GetAnimation("brownSwitch")->Play();
-	resources->GetAnimation("blueSwitch")->Play();
-	resources->GetAnimation("greenSwitch")->Play();
-	resources->GetAnimation("yellowSwitch")->Play();
-	resources->GetAnimation("whiteSwitch")->Play();
+	smh->resources->GetAnimation("silverSwitch")->Play();
+	smh->resources->GetAnimation("brownSwitch")->Play();
+	smh->resources->GetAnimation("blueSwitch")->Play();
+	smh->resources->GetAnimation("greenSwitch")->Play();
+	smh->resources->GetAnimation("yellowSwitch")->Play();
+	smh->resources->GetAnimation("whiteSwitch")->Play();
 	activated[gridX][gridY] = smh->getGameTime();
 
 	//Switch up and down cylinders if the player isn't on top of any down cylindersw
@@ -1522,7 +1521,7 @@ void Environment::placeSillyPad(int gridX, int gridY) {
 	specialTileManager->addSillyPad(gridX, gridY);
 
 	//Play sound effect
-	hge->Effect_Play(resources->GetEffect("snd_sillyPad"));
+	hge->Effect_Play(smh->resources->GetEffect("snd_sillyPad"));
 }
 
 bool Environment::hasSillyPad(int gridX, int gridY) {

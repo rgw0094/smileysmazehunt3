@@ -12,7 +12,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern hgeResourceManager *resources;
 
 /**
  * Constructor
@@ -32,7 +31,7 @@ NPC::NPC(int _id, int _textID, int _x,int _y) {
 
 	//Load sprites
 	for (int i = 0; i < 4; i++) {
-		sprites[i] = new hgeSprite(resources->GetTexture("npcTx"),i*64,id*64,64,64);
+		sprites[i] = new hgeSprite(smh->resources->GetTexture("npcTx"),i*64,id*64,64,64);
 		sprites[i]->SetHotSpot(32,32);
 	}
 

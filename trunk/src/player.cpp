@@ -25,7 +25,6 @@ extern EnemyManager *enemyManager;
 extern hgeParticleSystem *iceBreathParticle;
 extern ProjectileManager *projectileManager;
 extern TextBox *theTextBox;
-extern hgeResourceManager *resources;
 extern LoadEffectManager *loadEffectManager;
 
 #define SLIME_ACCEL 500.0			//Player acceleration on slime
@@ -51,12 +50,12 @@ Player::Player() {
 	collisionCircle = new CollisionCircle();
 
 	//Load Particles
-	fireBreathParticle = new WeaponParticleSystem("firebreath.psi", resources->GetSprite("particleGraphic1"), PARTICLE_FIRE_BREATH);
-	iceBreathParticle = new WeaponParticleSystem("icebreath.psi", resources->GetSprite("particleGraphic4"), PARTICLE_ICE_BREATH);
+	fireBreathParticle = new WeaponParticleSystem("firebreath.psi", smh->resources->GetSprite("particleGraphic1"), PARTICLE_FIRE_BREATH);
+	iceBreathParticle = new WeaponParticleSystem("icebreath.psi", smh->resources->GetSprite("particleGraphic4"), PARTICLE_ICE_BREATH);
 	
-	resources->GetSprite("iceBlock")->SetColor(ARGB(200,255,255,255));
-	resources->GetSprite("reflectionShield")->SetColor(ARGB(100,255,255,255));
-	resources->GetSprite("playerShadow")->SetColor(ARGB(75,255,255,255));
+	smh->resources->GetSprite("iceBlock")->SetColor(ARGB(200,255,255,255));
+	smh->resources->GetSprite("reflectionShield")->SetColor(ARGB(100,255,255,255));
+	smh->resources->GetSprite("playerShadow")->SetColor(ARGB(75,255,255,255));
 
 	//Set up constants
 	angles[UP] = PI * 0.0;
@@ -329,10 +328,10 @@ void Player::draw(float dt) {
 
 	//Draw Smiley's shadow
 	if ((hoveringYOffset > 0.0f || drowning || springing || (onWater && waterWalk) || (!falling && smh->environment->collisionAt(x,y+15) != WALK_LAVA))) {
-		if (drowning) resources->GetSprite("playerShadow")->SetColor(ARGB(255,255,255,255));
-		resources->GetSprite("playerShadow")->RenderEx(getScreenX(x),
+		if (drowning) smh->resources->GetSprite("playerShadow")->SetColor(ARGB(255,255,255,255));
+		smh->resources->GetSprite("playerShadow")->RenderEx(getScreenX(x),
 			getScreenY(y) + (22.0*shrinkScale),0.0f,scale*shrinkScale,scale*shrinkScale);
-		if (drowning) resources->GetSprite("playerShadow")->SetColor(ARGB(50,255,255,255));
+		if (drowning) smh->resources->GetSprite("playerShadow")->SetColor(ARGB(50,255,255,255));
 	}
 
 	//Draw Smiley
@@ -342,9 +341,9 @@ void Player::draw(float dt) {
 			tongue->draw(dt);
 		}
 		//Draw Smiley sprite
-		resources->GetAnimation("player")->SetFrame(facing);
-		resources->GetAnimation("player")->SetColor(ARGB((cloaked) ? 75.0 : 255.0,255,255,255));
-		resources->GetAnimation("player")->RenderEx(512.0, 384.0 - hoveringYOffset - springOffset, 
+		smh->resources->GetAnimation("player")->SetFrame(facing);
+		smh->resources->GetAnimation("player")->SetColor(ARGB((cloaked) ? 75.0 : 255.0,255,255,255));
+		smh->resources->GetAnimation("player")->RenderEx(512.0, 384.0 - hoveringYOffset - springOffset, 
 			rotation, scale * hoverScale * shrinkScale, scale * hoverScale * shrinkScale);
 		//Draw every other tongue after smiley
 		if (facing != UP && facing != UP_LEFT && facing != UP_RIGHT) {
@@ -353,18 +352,18 @@ void Player::draw(float dt) {
 	}
 	
 	//Cane effects
-	resources->GetParticleSystem("smileysCane")->Render();
+	smh->resources->GetParticleSystem("smileysCane")->Render();
 
 	//Draw an ice block over smiley if he is frozen;
 	if (frozen) {
-		resources->GetSprite("iceBlock")->Render(getScreenX(x),getScreenY(y));
+		smh->resources->GetSprite("iceBlock")->Render(getScreenX(x),getScreenY(y));
 	}
 
 	if (stunned) {
 		float angle;
 		for (int n = 0; n < 5; n++) {
 			angle = ((float(n)+1.0)/5.0) * 2.0*PI + smh->getGameTime();
-			resources->GetSprite("stunStar")->Render(
+			smh->resources->GetSprite("stunStar")->Render(
 				getScreenX(x + cos(angle)*25), 
 				getScreenY(y + sin(angle)*7) - 30.0);
 		}
@@ -378,7 +377,7 @@ void Player::draw(float dt) {
 
 	//Draw reflection shield
 	if (reflectionShieldActive) {
-		resources->GetSprite("reflectionShield")->Render(getScreenX(x), getScreenY(y));
+		smh->resources->GetSprite("reflectionShield")->Render(getScreenX(x), getScreenY(y));
 	}
 
 	//Debug mode
@@ -402,28 +401,28 @@ void Player::drawGUI(float dt) {
 		drawX = (i < 10) ? 110+i*35 : 110+(i-9)*35;
 		drawY = (i < 10) ? 30 : 75;
 		if (health >= i) {
-			resources->GetSprite("fullHealth")->Render(drawX, drawY);
+			smh->resources->GetSprite("fullHealth")->Render(drawX, drawY);
 		} else if (health < i && health >= i-.25) {
-			resources->GetSprite("threeQuartersHealth")->Render(drawX, drawY);
+			smh->resources->GetSprite("threeQuartersHealth")->Render(drawX, drawY);
 		} else if (health < i-.25 && health >= i -.5) {
-			resources->GetSprite("halfHealth")->Render(drawX, drawY);
+			smh->resources->GetSprite("halfHealth")->Render(drawX, drawY);
 		} else if (health < i-.5 && health >= i - .75) {
-			resources->GetSprite("quarterHealth")->Render(drawX, drawY);
+			smh->resources->GetSprite("quarterHealth")->Render(drawX, drawY);
 		} else {
-			resources->GetSprite("emptyHealth")->Render(drawX, drawY);
+			smh->resources->GetSprite("emptyHealth")->Render(drawX, drawY);
 		}
 	}
 
 	//Draw mana bar
 	drawX = 145;
 	drawY = getMaxHealth() < 10 ? 70 : 115;
-	resources->GetSprite("manabarBackground")->RenderEx(drawX, drawY, 0.0, 1.0 + .15 * smh->saveManager->numUpgrades[1], 1.0);
-	resources->GetSprite("manaBar")->SetTextureRect(0, 138, 115*(mana/getMaxMana()), 15, true);
-	resources->GetSprite("manaBar")->RenderEx(drawX + 4, drawY + 3, 0.0, 1.0 + .15 * smh->saveManager->numUpgrades[1], 1.0);
+	smh->resources->GetSprite("manabarBackground")->RenderEx(drawX, drawY, 0.0, 1.0 + .15 * smh->saveManager->numUpgrades[1], 1.0);
+	smh->resources->GetSprite("manaBar")->SetTextureRect(0, 138, 115*(mana/getMaxMana()), 15, true);
+	smh->resources->GetSprite("manaBar")->RenderEx(drawX + 4, drawY + 3, 0.0, 1.0 + .15 * smh->saveManager->numUpgrades[1], 1.0);
 
 	//Jesus bar
 	if (waterWalk) {
-		resources->GetSprite("bossHealthBar")->RenderStretch(
+		smh->resources->GetSprite("bossHealthBar")->RenderStretch(
 			512.0 - 30.0, 
 			384.0 - 55.0 - hoveringYOffset, 
 			512.0 - 30.0 + 60.0f*((JESUS_SANDLE_TIME-(smh->getGameTime()-startedWaterWalk))/JESUS_SANDLE_TIME), 
@@ -432,7 +431,7 @@ void Player::drawGUI(float dt) {
 
 	//Hover bar
 	if (isHovering) {
-		resources->GetSprite("bossHealthBar")->RenderStretch(
+		smh->resources->GetSprite("bossHealthBar")->RenderStretch(
 			512.0 - 30.0, 
 			384.0 - 55.0 - hoveringYOffset, 
 			512.0 - 30.0 + 60.0f*((HOVER_DURATION-(smh->getGameTime()-timeStartedHovering))/HOVER_DURATION), 
@@ -440,10 +439,10 @@ void Player::drawGUI(float dt) {
 	}
 
 	//Draw selected ability
-	resources->GetSprite("abilityBox")->Render(28,28);
+	smh->resources->GetSprite("abilityBox")->Render(28,28);
 	if (selectedAbility != NO_ABILITY) {
-		resources->GetAnimation("abilities")->SetFrame(selectedAbility);
-		resources->GetAnimation("abilities")->Render(39,39);
+		smh->resources->GetAnimation("abilities")->SetFrame(selectedAbility);
+		smh->resources->GetAnimation("abilities")->Render(39,39);
 	}
 
 	//Draw money
@@ -454,9 +453,9 @@ void Player::drawGUI(float dt) {
 	} else {
 		moneyString = intToString(smh->saveManager->money);
 	}
-	resources->GetSprite("moneyIcon")->Render(30, 120);
-	resources->GetFont("curlz")->SetColor(ARGB(255,255,255,255));
-	resources->GetFont("curlz")->printf(85,125,HGETEXT_LEFT, moneyString.c_str());
+	smh->resources->GetSprite("moneyIcon")->Render(30, 120);
+	smh->resources->GetFont("curlz")->SetColor(ARGB(255,255,255,255));
+	smh->resources->GetFont("curlz")->printf(85,125,HGETEXT_LEFT, moneyString.c_str());
 
 	//Draw keys
 	int keyXOffset = 763.0;
@@ -464,17 +463,17 @@ void Player::drawGUI(float dt) {
 	for (int i = 0; i < 4; i++) {
 
 		//Draw key icon
-		resources->GetAnimation("keyIcons")->SetFrame(i);
-		resources->GetAnimation("keyIcons")->Render(keyXOffset + 60.0*i, keyYOffset);
+		smh->resources->GetAnimation("keyIcons")->SetFrame(i);
+		smh->resources->GetAnimation("keyIcons")->Render(keyXOffset + 60.0*i, keyYOffset);
 		
 		//Draw num keys
-		resources->GetFont("numberFnt")->printf(keyXOffset + 60.0*i + 45.0, keyYOffset + 5.0, 
+		smh->resources->GetFont("numberFnt")->printf(keyXOffset + 60.0*i + 45.0, keyYOffset + 5.0, 
 			HGETEXT_LEFT, "%d", smh->saveManager->numKeys[getKeyIndex(smh->saveManager->currentArea)][i]);
 	}		
 
 	//Show whether or not Smiley is invincible
 	if (invincible) {
-		resources->GetFont("curlz")->printf(512.0, 3, HGETEXT_CENTER, "Invincibility On");
+		smh->resources->GetFont("curlz")->printf(512.0, 3, HGETEXT_CENTER, "Invincibility On");
 	}
 
 }
@@ -628,7 +627,7 @@ void Player::doAbility(float dt) {
 		//Start using cane
 		if (selectedAbility == CANE && !usingCane && mana >= smh->gameData->getAbilityInfo(CANE).manaCost) {
 			usingCane = true;
-			resources->GetParticleSystem("smileysCane")->FireAt(getScreenX(x), getScreenY(y));
+			smh->resources->GetParticleSystem("smileysCane")->FireAt(getScreenX(x), getScreenY(y));
 			timeStartedCane = smh->getGameTime();
 		}
 
@@ -641,7 +640,7 @@ void Player::doAbility(float dt) {
 		//Start Ice Breath
 		if (selectedAbility == ICE_BREATH && smh->timePassedSince(startedIceBreath) > 1.5 && mana >= smh->gameData->getAbilityInfo(ICE_BREATH).manaCost) {
 			mana -= smh->gameData->getAbilityInfo(ICE_BREATH).manaCost;
-			hge->Effect_Play(resources->GetEffect("snd_iceBreath"));
+			hge->Effect_Play(smh->resources->GetEffect("snd_iceBreath"));
 			startedIceBreath = smh->getGameTime();
 			iceBreathParticle->Fire();
 			breathingIce = true;
@@ -750,7 +749,7 @@ void Player::doAbility(float dt) {
 
 	////////////// Smiley's Cane //////////////
 
-	resources->GetParticleSystem("smileysCane")->Update(dt);
+	smh->resources->GetParticleSystem("smileysCane")->Update(dt);
 	if (usingCane) {
 		mana -= smh->gameData->getAbilityInfo(CANE).manaCost*dt;
 	}
@@ -761,10 +760,10 @@ void Player::doAbility(float dt) {
 				smh->input->keyDown(INPUT_RIGHT) || smh->input->keyDown(INPUT_UP) || 
 				smh->input->keyDown(INPUT_DOWN)) {
 			usingCane = false;
-			resources->GetParticleSystem("smileysCane")->Stop(false);
+			smh->resources->GetParticleSystem("smileysCane")->Stop(false);
 		}
 		if (smh->timePassedSince(timeStartedCane) > 3.0) {
-			resources->GetParticleSystem("smileysCane")->Stop(false);
+			smh->resources->GetParticleSystem("smileysCane")->Stop(false);
 			usingCane = false;
 			facing = DOWN;
 			smh->windowManager->openHintTextBox();
@@ -787,7 +786,7 @@ void Player::doWarps() {
 
 		//Play the warp sound effect for non-invisible warps
 		if (smh->environment->variable[gridX][gridY] != 990) {
-			hge->Effect_Play(resources->GetEffect("snd_warp"));
+			hge->Effect_Play(smh->resources->GetEffect("snd_warp"));
 		}
 
 		//Find the other warp square
@@ -833,16 +832,16 @@ void Player::doSprings(float dt) {
 		
 		bool superSpring = (collision == SUPER_SPRING);
 		
-		hge->Effect_Play(resources->GetEffect("snd_spring"));
+		hge->Effect_Play(smh->resources->GetEffect("snd_spring"));
 		springing = true;
 		startedSpringing = smh->getGameTime();
 		dx = dy = 0;
 		//Start the spring animation
 		smh->environment->activated[gridX][gridY] = smh->getGameTime();
 		if (superSpring) {
-			resources->GetAnimation("superSpring")->Play();
+			smh->resources->GetAnimation("superSpring")->Play();
 		} else {
-			resources->GetAnimation("spring")->Play();
+			smh->resources->GetAnimation("spring")->Play();
 		}
 		
 		//Set Smiley facing a straight direction(not diagonally)
@@ -1108,11 +1107,11 @@ void Player::doItems() {
 
 	//Keys
 	if (item == RED_KEY || item == GREEN_KEY || item == BLUE_KEY || item == YELLOW_KEY) {
-		hge->Effect_Play(resources->GetEffect("snd_key"));
+		hge->Effect_Play(smh->resources->GetEffect("snd_key"));
 		smh->saveManager->numKeys[getKeyIndex(item)][item-1]++;
 	//Gems
 	} else if (item == SMALL_GEM || item == MEDIUM_GEM || item == LARGE_GEM) {
-		hge->Effect_Play(resources->GetEffect("snd_gem"));
+		hge->Effect_Play(smh->resources->GetEffect("snd_gem"));
 		smh->saveManager->numGems[smh->saveManager->currentArea][item-SMALL_GEM]++;
 		if (item == SMALL_GEM) smh->saveManager->money += 1;
 		else if (item == MEDIUM_GEM) smh->saveManager->money += 3;
@@ -1179,7 +1178,7 @@ void Player::doWater() {
 		//Start drowning
 		if (!drowning && smh->environment->isDeepWaterAt(baseGridX,baseGridY) && !waterWalk) {
 			drowning = true;
-			hge->Effect_Play(resources->GetEffect("snd_drowning"));
+			hge->Effect_Play(smh->resources->GetEffect("snd_drowning"));
 			startedDrowning = smh->getGameTime();
 		}	
 		//Stop drowning

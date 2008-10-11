@@ -9,7 +9,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern hgeResourceManager *resources;
 extern EnemyManager *enemyManager;
 
 #define LASER_LENGTH 20.0
@@ -74,7 +73,7 @@ void ProjectileManager::addProjectile(float x, float y, float speed, float angle
 	}
 
 	if (id == PROJECTILE_FIREBALL) {
-		newProjectile.particle = new hgeParticleSystem(&resources->GetParticleSystem("fireBall")->info);
+		newProjectile.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("fireBall")->info);
 		newProjectile.particle->Fire();
 	}
 
@@ -463,37 +462,37 @@ void ProjectileManager::initProjectiles() {
 
 	//Generic projectile 1
 	projectileTypes[PROJECTILE_1].radius = 10;
-	projectileTypes[PROJECTILE_1].sprite = resources->GetSprite("basicProjectile");
+	projectileTypes[PROJECTILE_1].sprite = smh->resources->GetSprite("basicProjectile");
 
 	//Smiley's Frisbee ability
 	projectileTypes[PROJECTILE_FRISBEE].radius = 25;
-	projectileTypes[PROJECTILE_FRISBEE].sprite = resources->GetSprite("frisbeeProjectile");
+	projectileTypes[PROJECTILE_FRISBEE].sprite = smh->resources->GetSprite("frisbeeProjectile");
 
 	//Smiley's Power Beam ability
 	projectileTypes[PROJECTILE_LIGHTNING_ORB].radius = 15;
-	projectileTypes[PROJECTILE_LIGHTNING_ORB].sprite = resources->GetSprite("lightningOrbProjectile");
+	projectileTypes[PROJECTILE_LIGHTNING_ORB].sprite = smh->resources->GetSprite("lightningOrbProjectile");
 
 	//Cactus spikes
 	projectileTypes[PROJECTILE_CACTUS_SPIKE].radius = 10;
-	projectileTypes[PROJECTILE_CACTUS_SPIKE].sprite = resources->GetSprite("spikeProjectile");
+	projectileTypes[PROJECTILE_CACTUS_SPIKE].sprite = smh->resources->GetSprite("spikeProjectile");
 
 	//Fish
 	projectileTypes[PROJECTILE_PENGUIN_FISH].radius = 16;
-	projectileTypes[PROJECTILE_PENGUIN_FISH].sprite = resources->GetSprite("fishProjectile");
+	projectileTypes[PROJECTILE_PENGUIN_FISH].sprite = smh->resources->GetSprite("fishProjectile");
 
 	//Fireball
 	projectileTypes[PROJECTILE_FIREBALL].radius = 16;
 
 	//Turret cannonball
 	projectileTypes[PROJECTILE_TURRET_CANNONBALL].radius=16;
-	projectileTypes[PROJECTILE_TURRET_CANNONBALL].sprite = resources->GetSprite("cannonballProjectile");
+	projectileTypes[PROJECTILE_TURRET_CANNONBALL].sprite = smh->resources->GetSprite("cannonballProjectile");
 
 	//Mini mushroom
 	projectileTypes[PROJECTILE_MINI_MUSHROOM].radius=32;
-	projectileTypes[PROJECTILE_MINI_MUSHROOM].sprite = resources->GetSprite("mushroomletProjectile");
+	projectileTypes[PROJECTILE_MINI_MUSHROOM].sprite = smh->resources->GetSprite("mushroomletProjectile");
 
 	//Laser
 	projectileTypes[PROJECTILE_LASER].radius=3;
-	projectileTypes[PROJECTILE_LASER].sprite = resources->GetSprite("laserProjectile");
+	projectileTypes[PROJECTILE_LASER].sprite = smh->resources->GetSprite("laserProjectile");
 
 }

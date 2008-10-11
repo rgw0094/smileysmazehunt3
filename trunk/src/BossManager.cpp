@@ -11,6 +11,7 @@
 #include "EnemyGroupManager.h"
 
 extern SMH *smh;
+extern HGE *hge;
 
 BossManager::BossManager() {
 }
@@ -24,7 +25,7 @@ BossManager::~BossManager() {
  */
 void BossManager::spawnBoss(int bossID, int groupID, int gridX, int gridY) {
 
-	smh->log("Spawning Boss %d", bossID);
+	hge->System_Log("Spawning Boss %d", bossID);
 
 	BossStruct newBoss;
 

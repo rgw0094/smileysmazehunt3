@@ -3,6 +3,7 @@
 #include "hgedistort.h"
 #include "smiley.h"
 #include "math.h"
+#include "hgeresource.h"
 
 extern SMH *smh;
 
@@ -37,7 +38,7 @@ void TapestryManager::addTapestry(int gridX, int gridY, int id) {
 
 		case EVIL_TAPESTRY:
 			newTapestry.distortion = new hgeDistortionMesh(8, 8);
-			newTapestry.distortion->SetTexture(smh->getTexture("general"));
+			newTapestry.distortion->SetTexture(smh->resources->GetTexture("general"));
 			newTapestry.distortion->SetTextureRect(449,129,190,254);
 			newTapestry.granularity = 8;
 			break;
@@ -45,7 +46,7 @@ void TapestryManager::addTapestry(int gridX, int gridY, int id) {
 		default:
 			//By default just use the graphic in the item layer
 			newTapestry.distortion = new hgeDistortionMesh(4, 4);
-			newTapestry.distortion->SetTexture(smh->getTexture("itemLayer1"));
+			newTapestry.distortion->SetTexture(smh->resources->GetTexture("itemLayer1"));
 			newTapestry.distortion->SetTextureRect((id-16)*64 + 1,65,62,62);
 			newTapestry.granularity = 4;
 	}

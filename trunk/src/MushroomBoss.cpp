@@ -15,7 +15,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern hgeResourceManager *resources;
 extern ProjectileManager *projectileManager;
 extern EnemyManager *enemyManager;
 extern LootManager *lootManager;
@@ -139,7 +138,7 @@ MushroomBoss::~MushroomBoss() {
 	if (explosions) delete explosions;
 	if (collisionRects[1]) delete collisionRects[1];
 	if (collisionRects[0]) delete collisionRects[0];
-	resources->Purge(RES_MUSHBOOM);
+	smh->resources->Purge(RES_MUSHBOOM);
 }
 
 bool MushroomBoss::update(float dt) {
@@ -223,16 +222,16 @@ void MushroomBoss::updateCollisionRects() {
 void MushroomBoss::draw(float dt) {
 	
 	if (!shouldDrawAfterSmiley) {
-		resources->GetSprite("mushboom")->SetColor(ARGB(int(alpha),255,255,255));
-		resources->GetSprite("mushboomLeftArm")->SetColor(ARGB(int(alpha),255,255,255));
-		resources->GetSprite("mushboomRightArm")->SetColor(ARGB(int(alpha),255,255,255));
+		smh->resources->GetSprite("mushboom")->SetColor(ARGB(int(alpha),255,255,255));
+		smh->resources->GetSprite("mushboomLeftArm")->SetColor(ARGB(int(alpha),255,255,255));
+		smh->resources->GetSprite("mushboomRightArm")->SetColor(ARGB(int(alpha),255,255,255));
 		
-		resources->GetSprite("mushboom")->Render(getScreenX(x),getScreenY(y));
-		if (!rightArmRotating) resources->GetSprite("mushboomRightArm")->RenderEx(getScreenX(x+RIGHT_ARM_OFFSET_X),getScreenY(y+RIGHT_ARM_OFFSET_Y),rightArmRotate);
-		resources->GetSprite("mushboomLeftArm")->RenderEx(getScreenX(x+LEFT_ARM_OFFSET_X),getScreenY(y+LEFT_ARM_OFFSET_Y),leftArmRotate);
+		smh->resources->GetSprite("mushboom")->Render(getScreenX(x),getScreenY(y));
+		if (!rightArmRotating) smh->resources->GetSprite("mushboomRightArm")->RenderEx(getScreenX(x+RIGHT_ARM_OFFSET_X),getScreenY(y+RIGHT_ARM_OFFSET_Y),rightArmRotate);
+		smh->resources->GetSprite("mushboomLeftArm")->RenderEx(getScreenX(x+LEFT_ARM_OFFSET_X),getScreenY(y+LEFT_ARM_OFFSET_Y),leftArmRotate);
 
 	    //draw it after left if it's rotating, so it is drawn on top
-		if (rightArmRotating) resources->GetSprite("mushboomRightArm")->RenderEx(getScreenX(x+RIGHT_ARM_OFFSET_X),getScreenY(y+RIGHT_ARM_OFFSET_Y),rightArmRotate);
+		if (rightArmRotating) smh->resources->GetSprite("mushboomRightArm")->RenderEx(getScreenX(x+RIGHT_ARM_OFFSET_X),getScreenY(y+RIGHT_ARM_OFFSET_Y),rightArmRotate);
 	}
 
 	//Collision rects
@@ -259,13 +258,13 @@ void MushroomBoss::draw(float dt) {
 
 void MushroomBoss::drawAfterSmiley(float dt) {
 	if (shouldDrawAfterSmiley) {
-		resources->GetSprite("mushboom")->SetColor(ARGB((int)alpha,255,255,255));
-		resources->GetSprite("mushboom")->Render(getScreenX(x),getScreenY(y));
-		if (!rightArmRotating) resources->GetSprite("mushboomRightArm")->RenderEx(getScreenX(x+RIGHT_ARM_OFFSET_X),getScreenY(y+RIGHT_ARM_OFFSET_Y),rightArmRotate);
-		resources->GetSprite("mushboomLeftArm")->RenderEx(getScreenX(x+LEFT_ARM_OFFSET_X),getScreenY(y+LEFT_ARM_OFFSET_Y),leftArmRotate);
+		smh->resources->GetSprite("mushboom")->SetColor(ARGB((int)alpha,255,255,255));
+		smh->resources->GetSprite("mushboom")->Render(getScreenX(x),getScreenY(y));
+		if (!rightArmRotating) smh->resources->GetSprite("mushboomRightArm")->RenderEx(getScreenX(x+RIGHT_ARM_OFFSET_X),getScreenY(y+RIGHT_ARM_OFFSET_Y),rightArmRotate);
+		smh->resources->GetSprite("mushboomLeftArm")->RenderEx(getScreenX(x+LEFT_ARM_OFFSET_X),getScreenY(y+LEFT_ARM_OFFSET_Y),leftArmRotate);
 
 	    //draw it after left if it's rotating, so it is drawn on top
-		if (rightArmRotating) resources->GetSprite("mushboomRightArm")->RenderEx(getScreenX(x+RIGHT_ARM_OFFSET_X),getScreenY(y+RIGHT_ARM_OFFSET_Y),rightArmRotate);
+		if (rightArmRotating) smh->resources->GetSprite("mushboomRightArm")->RenderEx(getScreenX(x+RIGHT_ARM_OFFSET_X),getScreenY(y+RIGHT_ARM_OFFSET_Y),rightArmRotate);
 	}
 }
 
@@ -422,7 +421,7 @@ void MushroomBoss::doBombs(float dt) {
 		}
 
 		if (smh->timePassedSince(i->beginThrowTime) >= BOMB_LIFE_TIME) {
-			explosions->SpawnPS(&resources->GetParticleSystem("explosionLarge")->info,i->xBomb,i->yBomb);
+			explosions->SpawnPS(&smh->resources->GetParticleSystem("explosionLarge")->info,i->xBomb,i->yBomb);
 			addExplosion(i->xBomb,i->yBomb);
 			i=theBombs.erase(i);			
 		}
@@ -440,8 +439,8 @@ void MushroomBoss::killBombs() {
 void MushroomBoss::drawBombs() {
 	std::list<Bomb>::iterator i;
 	for(i = theBombs.begin(); i != theBombs.end(); i++) {
-		resources->GetSprite("mushboomBombShadow")->Render(getScreenX(i->xBomb),getScreenY(i->yShadow));
-		resources->GetSprite("mushboomBomb")->Render(getScreenX(i->xBomb),getScreenY(i->yBomb));
+		smh->resources->GetSprite("mushboomBombShadow")->Render(getScreenX(i->xBomb),getScreenY(i->yShadow));
+		smh->resources->GetSprite("mushboomBomb")->Render(getScreenX(i->xBomb),getScreenY(i->yBomb));
 	}
 }
 

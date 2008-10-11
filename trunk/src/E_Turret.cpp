@@ -7,8 +7,6 @@
 #include "smiley.h"
 
 extern SMH *smh;
-extern hgeResourceManager *resources;
-extern HGE *hge;
 extern ProjectileManager *projectileManager;
 
 

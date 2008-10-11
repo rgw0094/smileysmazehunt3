@@ -11,7 +11,6 @@
 #include "CollisionCircle.h"
 
 extern SMH *smh;
-extern hgeResourceManager *resources;
 extern HGE *hge;
 
 #define NUM_NODES 20
@@ -121,7 +120,7 @@ void E_Tentacle::update(float dt) {
 	//Growl, if variable > 10 (ensuring it's a large and not a small tentacle
 	if (smh->timePassedSince(timeOfLastGrowl) >= TIME_BETWEEN_GROWLS && variable1 >= 10 && distanceFromPlayer() <= GROWL_DISTANCE) {
 		timeOfLastGrowl = smh->getGameTime();
-		hge->Effect_Play(resources->GetEffect("snd_fireWorm"));
+		hge->Effect_Play(smh->resources->GetEffect("snd_fireWorm"));
 	}
 
 

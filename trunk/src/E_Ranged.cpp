@@ -1,7 +1,6 @@
 #include "SMH.h"
 #include "environment.h"
 #include "EnemyState.h"
-#include "hge.h"
 #include "Player.h"
 #include "enemy.h"
 #include "hgeanim.h"
@@ -10,8 +9,6 @@
 #include "ProjectileManager.h"
 
 extern SMH *smh;
-extern HGE *hge;
-extern hgeResourceManager *resources;
 extern ProjectileManager *projectileManager;
 
 E_Ranged::E_Ranged(int id, int x, int y, int groupID) {

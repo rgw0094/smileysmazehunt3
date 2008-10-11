@@ -1,8 +1,9 @@
+#include "SMH.h"
 #include "EnemyState.h"
 #include "enemy.h"
 #include "hgeanim.h"
 
-extern HGE *hge;
+extern SMH *smh;
 
 //How close smiley has to get for the fake enemy to come alive.
 #define ENTER_FAKEMODE_RADIUS 200

@@ -6,7 +6,6 @@
 
 extern HGE *hge;
 extern SMH *smh;
-extern hgeResourceManager *resources;
 
 Button::Button(float _x, float _y, char* _text) {
 	width = 250.0f;
@@ -26,13 +25,13 @@ void Button::draw(float dt) {
 	
 	//Draw graphic
 	if (highlighted) {
-		resources->GetSprite("buttonBackgroundHighlighted")->Render(x,y);
+		smh->resources->GetSprite("buttonBackgroundHighlighted")->Render(x,y);
 	} else {
-		resources->GetSprite("buttonBackground")->Render(x,y);
+		smh->resources->GetSprite("buttonBackground")->Render(x,y);
 	}
 
 	//Draw text
-	resources->GetFont("button")->printf(x + width/2.0f, y+5.0, HGETEXT_CENTER, text);
+	smh->resources->GetFont("button")->printf(x + width/2.0f, y+5.0, HGETEXT_CENTER, text);
 
 }
 

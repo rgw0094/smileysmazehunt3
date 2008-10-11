@@ -1,10 +1,9 @@
+#include "SMH.h"
 #include "Slider.h"
-
-#include "hgeresource.h"
 #include "hgesprite.h"
 #include "smiley.h"
 
-extern hgeResourceManager *resources;
+extern SMH *smh;
 extern HGE *hge;
 
 #define NUM_BARS 6
@@ -77,14 +76,12 @@ void Slider::update(float mouseX, float mouseY) {
  * Draws the slider.
  */
 void Slider::draw(float dt) {
-
 	for (int i = 0; i < NUM_BARS; i++) {
 		if (i < barsToDraw) {
-			resources->GetSprite("sliderBar")->Render(x + BAR_SPACING,
+			smh->resources->GetSprite("sliderBar")->Render(x + BAR_SPACING,
 				(y + SLIDER_HEIGHT) - (BAR_HEIGHT + BAR_SPACING) * (i+1)); 
 		}
-	}
-		
+	}	
 }
 
 /**

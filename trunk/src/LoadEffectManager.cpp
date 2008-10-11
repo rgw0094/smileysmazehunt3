@@ -15,7 +15,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern hgeResourceManager *resources;
 extern LootManager *lootManager;
 extern ProjectileManager *projectileManager;
 extern EnemyManager *enemyManager;
@@ -53,7 +52,7 @@ bool LoadEffectManager::isEffectActive() {
  */
 void LoadEffectManager::displayNewAreaName() {
 	timeLevelLoaded = hge->Timer_GetTime();
-	resources->GetFont("newAreaFnt")->SetColor(ARGB(255,255,255,255));
+	smh->resources->GetFont("newAreaFnt")->SetColor(ARGB(255,255,255,255));
 	zoneTextAlpha = 255.0;
 }
 
@@ -83,17 +82,17 @@ void LoadEffectManager::startEffect(int _destinationX, int _destinationY, int _d
 void LoadEffectManager::draw(float dt) {
 	if (isEffectActive()) {
 		//workaround for HGE full screen clipping bug
-		resources->GetSprite("blackScreen")->SetColor(ARGB(255,255,255,255));
+		smh->resources->GetSprite("blackScreen")->SetColor(ARGB(255,255,255,255));
 		//Top
-		resources->GetSprite("blackScreen")->RenderStretch(0,0,1024,384.0-198.0*loadingEffectScale);
+		smh->resources->GetSprite("blackScreen")->RenderStretch(0,0,1024,384.0-198.0*loadingEffectScale);
 		//Left
-		resources->GetSprite("blackScreen")->RenderStretch(0,0,512.0-198.0*loadingEffectScale,768.0);
+		smh->resources->GetSprite("blackScreen")->RenderStretch(0,0,512.0-198.0*loadingEffectScale,768.0);
 		//Right
-		resources->GetSprite("blackScreen")->RenderStretch(512.0+198.0*loadingEffectScale,0,1024,768);
+		smh->resources->GetSprite("blackScreen")->RenderStretch(512.0+198.0*loadingEffectScale,0,1024,768);
 		//Bottom
-		resources->GetSprite("blackScreen")->RenderStretch(0,384.0+198.0*loadingEffectScale,1024,768);			
+		smh->resources->GetSprite("blackScreen")->RenderStretch(0,384.0+198.0*loadingEffectScale,1024,768);			
 		//Circle
-		resources->GetSprite("loading")->RenderEx(512.0, 384.0, 0.0, loadingEffectScale, loadingEffectScale);
+		smh->resources->GetSprite("loading")->RenderEx(512.0, 384.0, 0.0, loadingEffectScale, loadingEffectScale);
 	}
 
 	//After entering a new zone, display the ZONE NAME for 2.5 seconds after entering
@@ -102,9 +101,9 @@ void LoadEffectManager::draw(float dt) {
 		if (hge->Timer_GetTime() > timeLevelLoaded + 1.5) {
 			zoneTextAlpha -= 255.0f*dt;
 			if (zoneTextAlpha < 0.0) zoneTextAlpha = 0.0;
-			resources->GetFont("newAreaFnt")->SetColor(ARGB(zoneTextAlpha,255,255,255));
+			smh->resources->GetFont("newAreaFnt")->SetColor(ARGB(zoneTextAlpha,255,255,255));
 		}
-		resources->GetFont("newAreaFnt")->printf(512,200,HGETEXT_CENTER, 
+		smh->resources->GetFont("newAreaFnt")->printf(512,200,HGETEXT_CENTER, 
 			smh->gameData->getAreaName(smh->saveManager->currentArea));
 	}
 

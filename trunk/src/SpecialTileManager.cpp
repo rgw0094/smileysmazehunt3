@@ -25,7 +25,6 @@
 #define SILLY_PAD_TIME 40		//Number of seconds silly pads stay active
 
 extern ProjectileManager *projectileManager;
-extern hgeResourceManager *resources;
 extern HGE *hge;
 extern SMH *smh;
 
@@ -119,11 +118,11 @@ void SpecialTileManager::drawIceBlocks(float dt) {
 	for(i = iceBlockList.begin(); i != iceBlockList.end(); i++) {
 		float scale = !i->hasBeenMelted ? 1.0 : 1.0 - min(1.0, smh->timePassedSince(i->timeMelted));
 		//Scale the size of the ice block based on its "health"
-		resources->GetAnimation("walkLayer")->SetFrame(FIRE_DESTROY);
-		resources->GetAnimation("walkLayer")->SetHotSpot(32.0,32.0);
-		resources->GetAnimation("walkLayer")->RenderEx(getScreenX(i->gridX*64.0+32.0), 
+		smh->resources->GetAnimation("walkLayer")->SetFrame(FIRE_DESTROY);
+		smh->resources->GetAnimation("walkLayer")->SetHotSpot(32.0,32.0);
+		smh->resources->GetAnimation("walkLayer")->RenderEx(getScreenX(i->gridX*64.0+32.0), 
 			getScreenY(i->gridY*64.0+32.0), 0.0, scale, scale);
-		resources->GetAnimation("walkLayer")->SetHotSpot(0.0,0.0);
+		smh->resources->GetAnimation("walkLayer")->SetHotSpot(0.0,0.0);
 	}
 }
 
@@ -195,14 +194,14 @@ void SpecialTileManager::drawTimedTiles(float dt) {
 	for(i = timedTileList.begin(); i != timedTileList.end(); i++) {
 		if (i->alpha < 255.0) {
 			if (i->newTile == WALK_LAVA || i->newTile == NO_WALK_LAVA) {
-				resources->GetAnimation("lava")->SetColor(ARGB(i->alpha, 255, 255, 255));
-				resources->GetAnimation("lava")->Render(getScreenX(i->gridX*64), getScreenY(i->gridY*64));
-				resources->GetAnimation("lava")->SetColor(ARGB(255, 255, 255, 255));
+				smh->resources->GetAnimation("lava")->SetColor(ARGB(i->alpha, 255, 255, 255));
+				smh->resources->GetAnimation("lava")->Render(getScreenX(i->gridX*64), getScreenY(i->gridY*64));
+				smh->resources->GetAnimation("lava")->SetColor(ARGB(255, 255, 255, 255));
 			} else {
-				resources->GetAnimation("walkLayer")->SetFrame(i->newTile);
-				resources->GetAnimation("walkLayer")->SetColor(ARGB(i->alpha, 255, 255, 255));
-				resources->GetAnimation("walkLayer")->Render(getScreenX(i->gridX*64), getScreenY(i->gridY*64));
-				resources->GetAnimation("walkLayer")->SetColor(ARGB(255, 255, 255, 255));
+				smh->resources->GetAnimation("walkLayer")->SetFrame(i->newTile);
+				smh->resources->GetAnimation("walkLayer")->SetColor(ARGB(i->alpha, 255, 255, 255));
+				smh->resources->GetAnimation("walkLayer")->Render(getScreenX(i->gridX*64), getScreenY(i->gridY*64));
+				smh->resources->GetAnimation("walkLayer")->SetColor(ARGB(255, 255, 255, 255));
 			}
 		}
 	}
@@ -270,10 +269,10 @@ void SpecialTileManager::drawSillyPads(float dt) {
 		//Fade out during the last 2 seconds
 		float timeLeft = (float)SILLY_PAD_TIME - smh->timePassedSince(i->timePlaced);
 		if (timeLeft < 1.0f) {
-			resources->GetSprite("sillyPad")->SetColor(ARGB((timeLeft/1.0f)*255.0f,255,255,255));
+			smh->resources->GetSprite("sillyPad")->SetColor(ARGB((timeLeft/1.0f)*255.0f,255,255,255));
 		}
-		resources->GetSprite("sillyPad")->Render(getScreenX(i->gridX*64.0), getScreenY(i->gridY*64.0));
-		resources->GetSprite("sillyPad")->SetColor(ARGB(255,255,255,255));
+		smh->resources->GetSprite("sillyPad")->Render(getScreenX(i->gridX*64.0), getScreenY(i->gridY*64.0));
+		smh->resources->GetSprite("sillyPad")->SetColor(ARGB(255,255,255,255));
 	}
 }
 
@@ -345,7 +344,7 @@ void SpecialTileManager::addFlame(int gridX, int gridY) {
 	newFlame.x = gridX * 64.0 + 32.0;
 	newFlame.y = gridY * 64.0 + 32.0;
 	newFlame.timeFlamePutOut = -10.0;
-	newFlame.particle = new hgeParticleSystem(&resources->GetParticleSystem("flame")->info);
+	newFlame.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("flame")->info);
 	newFlame.particle->FireAt(getScreenX(newFlame.x), getScreenY(newFlame.y));
 	newFlame.collisionBox = new hgeRect(1,1,1,1);
 
@@ -437,24 +436,24 @@ void SpecialTileManager::drawMushrooms (float dt) {
 	for(i = theMushrooms.begin(); i != theMushrooms.end(); i++) {
 		switch (i->state) {
 			case MUSHROOM_STATE_IDLING:
-				resources->GetAnimation("walkLayer")->SetFrame(i->graphicsIndex);
-				resources->GetAnimation("walkLayer")->Render(getScreenX(i->x),getScreenY(i->y));
+				smh->resources->GetAnimation("walkLayer")->SetFrame(i->graphicsIndex);
+				smh->resources->GetAnimation("walkLayer")->Render(getScreenX(i->x),getScreenY(i->y));
 				if (smh->isDebugOn()) i->mushroomCollisionCircle->draw();
 				break;
 			case MUSHROOM_STATE_EXPLODING:
 				break;
 			case MUSHROOM_STATE_GROWING:
 				//temporarily change the hot spot of the graphic so it grows from the center
-				resources->GetAnimation("walkLayer")->SetFrame(i->graphicsIndex);
-				resources->GetAnimation("walkLayer")->SetHotSpot(32.0,32.0);
+				smh->resources->GetAnimation("walkLayer")->SetFrame(i->graphicsIndex);
+				smh->resources->GetAnimation("walkLayer")->SetHotSpot(32.0,32.0);
 				
 				//Calculate size to draw it, then draw it
 				float percentage = smh->timePassedSince(i->beginGrowTime) / MUSHROOM_GROW_TIME;
 				percentage = min(percentage, 1.0); //Cap the size at 1 to prevent it from "overgrowing"
-				resources->GetAnimation("walkLayer")->RenderEx((int)getScreenX(i->x+32),(int)getScreenY(i->y+32),0.0,percentage,percentage);
+				smh->resources->GetAnimation("walkLayer")->RenderEx((int)getScreenX(i->x+32),(int)getScreenY(i->y+32),0.0,percentage,percentage);
 
 				//change hot spot back
-                resources->GetAnimation("walkLayer")->SetHotSpot(0.0,0.0);
+                smh->resources->GetAnimation("walkLayer")->SetHotSpot(0.0,0.0);
 				break;
 		};
 	}
@@ -471,7 +470,7 @@ void SpecialTileManager::updateMushrooms(float dt) {
 				if (i->mushroomCollisionCircle->testCircle(smh->player->collisionCircle) && !smh->player->isFlashing()) {
 					i->state = MUSHROOM_STATE_EXPLODING;
 					i->beginExplodeTime = smh->getGameTime();
-					explosions->SpawnPS(&resources->GetParticleSystem("explosionLarge")->info,i->x+32,i->y+32);
+					explosions->SpawnPS(&smh->resources->GetParticleSystem("explosionLarge")->info,i->x+32,i->y+32);
 					smh->player->dealDamageAndKnockback(MUSHROOM_EXPLOSION_DAMAGE,true,MUSHROOM_EXPLOSION_KNOCKBACK,i->x+32,i->y+32);
                 }
 				break;

@@ -7,8 +7,6 @@
 #include "Smiley.h"
 
 extern SMH *smh;
-extern hgeResourceManager *resources;
-
 extern float darkness;
 
 /**
@@ -69,9 +67,9 @@ void DeathScreen::draw(float dt) {
 	if (alpha > 255.0f) alpha = 255.0f;
 	shadeScreen(alpha);
 
-	resources->GetFont("textBoxNameFnt")->SetColor(ARGB(alpha,255,255,255));
-	resources->GetFont("textBoxNameFnt")->printf(512,300,HGETEXT_CENTER, "Game Over");
-	resources->GetFont("textBoxNameFnt")->SetColor(ARGB(255,0,0,0));
+	smh->resources->GetFont("textBoxNameFnt")->SetColor(ARGB(alpha,255,255,255));
+	smh->resources->GetFont("textBoxNameFnt")->printf(512,300,HGETEXT_CENTER, "Game Over");
+	smh->resources->GetFont("textBoxNameFnt")->SetColor(ARGB(255,0,0,0));
 
 	//Draw buttons
 	for (int i = 0; i < 2; i++) {

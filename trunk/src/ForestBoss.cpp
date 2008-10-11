@@ -15,7 +15,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern hgeResourceManager *resources;
 extern ProjectileManager *projectileManager;
 extern LootManager *lootManager;
 
@@ -52,7 +51,7 @@ ForestBoss::~ForestBoss() {
 	delete frisbeeReflectBox;
 	delete particles;
 	resetOwlets(false);
-	resources->Purge(RES_GARMBORN);
+	smh->resources->Purge(RES_GARMBORN);
 }
 
 /**
@@ -113,7 +112,7 @@ bool ForestBoss::update(float dt) {
 	
 			//Garmborn takes damage from the frisbees when his shield is down
 			if (projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_FRISBEE) > 0) {
-				hge->Effect_Play(resources->GetEffect("snd_garmbornHit"));
+				hge->Effect_Play(smh->resources->GetEffect("snd_garmbornHit"));
 				health -= HEALTH/(float)NUM_FRISBEES_TO_KILL;
 				numTreeletsToSpawn++;
 				if (numTreeletsToSpawn > 1 + NUM_FRISBEES_TO_KILL) {
@@ -204,7 +203,7 @@ void ForestBoss::updateTreelets(float dt) {
 					if (!treeletLocs[i].stunned) {
 						treeletLocs[i].stunned = true;
 						treeletLocs[i].stunAlpha = 0.0;
-						hge->Effect_Play(resources->GetEffect("snd_treeletHit"));
+						hge->Effect_Play(smh->resources->GetEffect("snd_treeletHit"));
 					}
 				}
 
@@ -227,8 +226,8 @@ void ForestBoss::updateTreelets(float dt) {
 void ForestBoss::draw(float dt) {
 	
 	//Garmborn's body
-	resources->GetSprite("garmbornBody")->SetColor(ARGB(alpha,255,255,255));
-	resources->GetSprite("garmbornBody")->Render(getScreenX(x), getScreenY(y));
+	smh->resources->GetSprite("garmbornBody")->SetColor(ARGB(alpha,255,255,255));
+	smh->resources->GetSprite("garmbornBody")->Render(getScreenX(x), getScreenY(y));
 
 	//Draw the Treelets
 	drawTreelets(dt);
@@ -314,7 +313,7 @@ void ForestBoss::spawnTreelets() {
 
 		treeletLocs[loc].occupied = true;
 		treeletLocs[loc].stunned = false;
-		particles->SpawnPS(&resources->GetParticleSystem("treeletSpawn")->info,
+		particles->SpawnPS(&smh->resources->GetParticleSystem("treeletSpawn")->info,
 			treeletLocs[loc].x, treeletLocs[loc].y);
 
 	}
@@ -329,13 +328,13 @@ void ForestBoss::drawTreelets(float dt) {
 		if (treeletLocs[i].occupied) {
 
 			//Draw treelet
-			resources->GetSprite("treelet")->SetColor(ARGB(treeletAlpha, 255, 255, 255));
-			resources->GetSprite("treelet")->Render(getScreenX(treeletLocs[i].x), getScreenY(treeletLocs[i].y));
+			smh->resources->GetSprite("treelet")->SetColor(ARGB(treeletAlpha, 255, 255, 255));
+			smh->resources->GetSprite("treelet")->Render(getScreenX(treeletLocs[i].x), getScreenY(treeletLocs[i].y));
 		
 			//Stunned treelet
 			if (treeletLocs[i].stunned) {
-				resources->GetSprite("grayTreelet")->SetColor(ARGB(treeletLocs[i].stunAlpha, 255, 255, 255));
-				resources->GetSprite("grayTreelet")->Render(getScreenX(treeletLocs[i].x), getScreenY(treeletLocs[i].y));
+				smh->resources->GetSprite("grayTreelet")->SetColor(ARGB(treeletLocs[i].stunAlpha, 255, 255, 255));
+				smh->resources->GetSprite("grayTreelet")->Render(getScreenX(treeletLocs[i].x), getScreenY(treeletLocs[i].y));
 			}
 
 			//Debug mode - draw collision boxes
@@ -374,7 +373,7 @@ void ForestBoss::spawnOwlet() {
 	newOwlet.x = x;
 	newOwlet.y = y-50.0;
 	newOwlet.collisionCircle = new CollisionCircle();
-	newOwlet.animation = new hgeAnimation(*resources->GetAnimation("owlet"));
+	newOwlet.animation = new hgeAnimation(*smh->resources->GetAnimation("owlet"));
 	newOwlet.animation->Play();
 	newOwlet.timeSpawned = smh->getGameTime();
 	newOwlet.startedDiveBomb = false;
@@ -440,8 +439,8 @@ void ForestBoss::updateOwlets(float dt) {
 		}
 
 		if (collision) {
-			particles->SpawnPS(&resources->GetParticleSystem("bloodSplat")->info, i->x, i->y);
-			hge->Effect_Play(resources->GetEffect("snd_splat"));
+			particles->SpawnPS(&smh->resources->GetParticleSystem("bloodSplat")->info, i->x, i->y);
+			hge->Effect_Play(smh->resources->GetEffect("snd_splat"));
 			delete i->collisionCircle;
 			delete i->animation;
 			i = owlets.erase(i);
@@ -466,7 +465,7 @@ void ForestBoss::updateOwlets(float dt) {
 void ForestBoss::resetOwlets(bool splat) {
 	std::list<Owlet>::iterator i;
 	for (i = owlets.begin(); i != owlets.end(); i++) {
-		if (splat) particles->SpawnPS(&resources->GetParticleSystem("bloodSplat")->info, i->x, i->y);
+		if (splat) particles->SpawnPS(&smh->resources->GetParticleSystem("bloodSplat")->info, i->x, i->y);
 		delete i->animation;
 		delete i->collisionCircle;
 		i = owlets.erase(i);

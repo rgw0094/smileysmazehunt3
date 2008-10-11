@@ -1,7 +1,6 @@
 #include "SMH.h"
 #include "smiley.h"
 #include "enemy.h"
-#include "hge.h"
 #include "hgeresource.h"
 #include "EnemyState.h"
 #include "environment.h"
@@ -9,8 +8,6 @@
 #include "CollisionCircle.h"
 
 extern SMH *smh;
-extern HGE *hge;
-extern hgeResourceManager *resources;
 
 /** 
  * Constructor
@@ -67,9 +64,9 @@ void E_Ghost::draw(float dt) {
 	graphic[facing]->SetColor(ARGB(alpha,255,255,255));
 	graphic[facing]->Render(screenX, screenY - shadowOffset);
 
-	resources->GetSprite("playerShadow")->SetColor(ARGB((alpha/255.0) * 75.0, 255,255,255));
-	resources->GetSprite("playerShadow")->Render(screenX, screenY);
-	resources->GetSprite("playerShadow")->SetColor(ARGB(75.0, 255, 255, 255));
+	smh->resources->GetSprite("playerShadow")->SetColor(ARGB((alpha/255.0) * 75.0, 255,255,255));
+	smh->resources->GetSprite("playerShadow")->Render(screenX, screenY);
+	smh->resources->GetSprite("playerShadow")->SetColor(ARGB(75.0, 255, 255, 255));
 
 	if (smh->isDebugOn()) {
 		drawCollisionBox(collisionBox, RED);
@@ -82,7 +79,7 @@ void E_Ghost::draw(float dt) {
  * The frozen graphic should hover along with the floater.
  */
 void E_Ghost::drawFrozen(float dt) {
-	resources->GetSprite("iceBlock")->Render(screenX, screenY - shadowOffset);
+	smh->resources->GetSprite("iceBlock")->Render(screenX, screenY - shadowOffset);
 }
 
 /**
@@ -92,7 +89,7 @@ void E_Ghost::drawFrozen(float dt) {
 void E_Ghost::drawStunned(float dt) {
 	for (int n = 0; n < NUM_STUN_STARS; n++) {
 		stunStarAngles[n] += 2.0* PI * dt;
-		resources->GetSprite("stunStar")->Render(
+		smh->resources->GetSprite("stunStar")->Render(
 		getScreenX(x + cos(stunStarAngles[n])*25), 
 		getScreenY(y + sin(stunStarAngles[n])*7) - 30.0 - shadowOffset);
 	}
