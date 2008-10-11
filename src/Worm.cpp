@@ -9,7 +9,6 @@ using namespace std;
 
 extern HGE *hge;
 extern SMH *smh;
-extern hgeResourceManager *resources;
 
 #define WORM_LENGTH 500
 
@@ -51,7 +50,7 @@ void Worm::update() {
 void Worm::draw() {
 	std::list<WormNode>::iterator i;
 	for (i = theWorms.begin(); i != theWorms.end(); i++) {
-		resources->GetSprite("clownChainDot")->Render(getScreenX(i->x),getScreenY(i->y));
+		smh->resources->GetSprite("clownChainDot")->Render(getScreenX(i->x),getScreenY(i->y));
 	}
 }
 

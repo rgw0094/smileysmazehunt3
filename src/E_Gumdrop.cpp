@@ -6,7 +6,6 @@
 #include "smiley.h"
 
 extern SMH *smh;
-extern hgeResourceManager *resources;
 extern ProjectileManager *projectileManager;
 
 #define BURROW_RADIUS 200
@@ -28,7 +27,7 @@ E_Gumdrop::E_Gumdrop(int id, int x, int y, int groupID) {
 	//Doesn't use framework states
 	currentState = NULL;
 
-	burrowAnimation = new hgeAnimation(*resources->GetAnimation("gumdrop"));
+	burrowAnimation = new hgeAnimation(*smh->resources->GetAnimation("gumdrop"));
 	burrowState = GUMDROP_UNBURROWED;
 	lastAttackTime = -10.0;
 	facing = DOWN;

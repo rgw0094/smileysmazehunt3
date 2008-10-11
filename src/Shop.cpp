@@ -6,7 +6,6 @@
 
 extern HGE *hge;
 extern SMH *smh;
-extern hgeResourceManager *resources;
 
 #define X_OFFSET 312.0
 #define Y_OFFSET 500.0
@@ -40,21 +39,21 @@ Shop::~Shop() {
 void Shop::draw(float dt) {
 
 	//Uses the text box graphic
-	resources->GetSprite("textBox")->Render(X_OFFSET, Y_OFFSET);
-	resources->GetFont("textBoxNameFnt")->printf(X_OFFSET + 202, Y_OFFSET + 20, HGETEXT_CENTER, "Spierdyke's Shoppe");
+	smh->resources->GetSprite("textBox")->Render(X_OFFSET, Y_OFFSET);
+	smh->resources->GetFont("textBoxNameFnt")->printf(X_OFFSET + 202, Y_OFFSET + 20, HGETEXT_CENTER, "Spierdyke's Shoppe");
 
 	//Draw upgrade selections
 	for (int i = 0; i < 4; i ++) {
 		if (i < 3) {
-			resources->GetAnimation("upgradeIcons")->SetFrame(i);
-			resources->GetAnimation("upgradeIcons")->Render(X_OFFSET + 60.0 + i*80.0, Y_OFFSET + 110.0);
+			smh->resources->GetAnimation("upgradeIcons")->SetFrame(i);
+			smh->resources->GetAnimation("upgradeIcons")->Render(X_OFFSET + 60.0 + i*80.0, Y_OFFSET + 110.0);
 		} else {
-			resources->GetSprite("exitIcon")->Render(X_OFFSET + 60.0 + i*80.0, Y_OFFSET + 110.0);
+			smh->resources->GetSprite("exitIcon")->Render(X_OFFSET + 60.0 + i*80.0, Y_OFFSET + 110.0);
 		}
 	}
 
 	//Draw selection mechanism
-	resources->GetSprite("inventoryCursor")->Render(X_OFFSET + 60.0 + currentSelection*80.0 - 20.0, Y_OFFSET + 110.0 - 20.0);
+	smh->resources->GetSprite("inventoryCursor")->Render(X_OFFSET + 60.0 + currentSelection*80.0 - 20.0, Y_OFFSET + 110.0 - 20.0);
 	
 	std::string descString = "";
 	std::string priceString = "";
@@ -78,9 +77,9 @@ void Shop::draw(float dt) {
 			break;
 	}
 
-	resources->GetFont("textBoxFnt")->printf(X_OFFSET + 200.0, Y_OFFSET + 165.0,
+	smh->resources->GetFont("textBoxFnt")->printf(X_OFFSET + 200.0, Y_OFFSET + 165.0,
 				HGETEXT_CENTER, "%s", descString.c_str());
-	resources->GetFont("textBoxFnt")->printf(X_OFFSET + 200.0, Y_OFFSET + 205.0,
+	smh->resources->GetFont("textBoxFnt")->printf(X_OFFSET + 200.0, Y_OFFSET + 205.0,
 				HGETEXT_CENTER, "%s", priceString.c_str());
 
 }
@@ -129,7 +128,7 @@ void Shop::purchaseItem(int item) {
 
 		smh->saveManager->money -= costs[item];
 		smh->saveManager->numUpgrades[item]++;
-		hge->Effect_Play(resources->GetEffect("snd_purchaseUpgrade"));
+		hge->Effect_Play(smh->resources->GetEffect("snd_purchaseUpgrade"));
 
 		if (currentSelection == HEALTH) {
 			smh->player->setHealth(smh->player->getHealth() + 1.0);

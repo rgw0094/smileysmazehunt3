@@ -13,7 +13,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern hgeResourceManager *resources;
 extern EnemyManager *enemyManager;
 
 #define CANDY_HEALTH 100
@@ -77,7 +76,7 @@ CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 }
 
 CandyBoss::~CandyBoss() {
-	resources->Purge(RES_BARTLI);
+	smh->resources->Purge(RES_BARTLI);
 	delete collisionBox;
 	delete futureCollisionBox;
 }
@@ -164,16 +163,16 @@ bool CandyBoss::update(float dt) {
 
 void CandyBoss::drawBartli() {
 	//Shadow
-	resources->GetSprite("bartliShadow")->Render(getScreenX(x),getScreenY(y+CANDY_HEIGHT/2));
+	smh->resources->GetSprite("bartliShadow")->Render(getScreenX(x),getScreenY(y+CANDY_HEIGHT/2));
 	//Body
-	resources->GetAnimation("bartli")->SetFrame(0);
-	resources->GetAnimation("bartli")->Render(getScreenX(x),getScreenY(y - jumpYOffset));
+	smh->resources->GetAnimation("bartli")->SetFrame(0);
+	smh->resources->GetAnimation("bartli")->Render(getScreenX(x),getScreenY(y - jumpYOffset));
 	//Arms
-	resources->GetSprite("bartliArm")->RenderEx(getScreenX(x-CANDY_ARM_X_OFFSET),getScreenY(y+CANDY_ARM_Y_OFFSET - jumpYOffset),rightArmRot);
-	resources->GetSprite("bartliArm")->RenderEx(getScreenX(x+CANDY_ARM_X_OFFSET),getScreenY(y+CANDY_ARM_Y_OFFSET - jumpYOffset),leftArmRot,-1.0,1.0);
+	smh->resources->GetSprite("bartliArm")->RenderEx(getScreenX(x-CANDY_ARM_X_OFFSET),getScreenY(y+CANDY_ARM_Y_OFFSET - jumpYOffset),rightArmRot);
+	smh->resources->GetSprite("bartliArm")->RenderEx(getScreenX(x+CANDY_ARM_X_OFFSET),getScreenY(y+CANDY_ARM_Y_OFFSET - jumpYOffset),leftArmRot,-1.0,1.0);
 	//Legs
-	resources->GetSprite("bartliLeg")->Render(getScreenX(x-CANDY_LEG_X_OFFSET),getScreenY(y+CANDY_LEG_Y_OFFSET+rightLegY - jumpYOffset));
-	resources->GetSprite("bartliLeg")->RenderEx(getScreenX(x+CANDY_LEG_X_OFFSET),getScreenY(y+CANDY_LEG_Y_OFFSET+leftLegY - jumpYOffset),0.0,-1.0,1.0);
+	smh->resources->GetSprite("bartliLeg")->Render(getScreenX(x-CANDY_LEG_X_OFFSET),getScreenY(y+CANDY_LEG_Y_OFFSET+rightLegY - jumpYOffset));
+	smh->resources->GetSprite("bartliLeg")->RenderEx(getScreenX(x+CANDY_LEG_X_OFFSET),getScreenY(y+CANDY_LEG_Y_OFFSET+leftLegY - jumpYOffset),0.0,-1.0,1.0);
 	//Debug
 	if (smh->isDebugOn()) drawCollisionBox(collisionBox,RED);
 }
@@ -306,7 +305,7 @@ void CandyBoss::spawnNova(float _x, float _y) {
 	newNova.y = _y;
 	newNova.radius = 0.0;
 	newNova.timeSpawned = smh->getGameTime();
-	newNova.particle = new hgeParticleSystem(&resources->GetParticleSystem("shockwave")->info);
+	newNova.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("shockwave")->info);
 	newNova.particle->info.fParticleLifeMax = newNova.particle->info.fParticleLifeMin = 1.0;
 	newNova.particle->FireAt(getScreenX(_x), getScreenY(_y));
 	newNova.collisionCircle = new CollisionCircle();

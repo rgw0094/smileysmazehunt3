@@ -3,6 +3,7 @@
 #include "Environment.h"
 #include "Player.h"
 #include "hgeFont.h"
+#include "hgeresource.h"
 
 extern SMH *smh;
 
@@ -27,7 +28,7 @@ void LoadingScreen::draw(float dt) {
 		shadeScreen(255.0);
 	}
 
-	smh->getFont("titleFnt")->printf(512,150,HGETEXT_CENTER, "Loading...");
+	smh->resources->GetFont("titleFnt")->printf(512,150,HGETEXT_CENTER, "Loading...");
 }
 
 bool LoadingScreen::update(float dt, float mouseX, float mouseY) {

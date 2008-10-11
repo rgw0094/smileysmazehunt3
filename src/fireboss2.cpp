@@ -14,7 +14,6 @@
 extern SMH *smh;
 extern HGE *hge;
 extern LootManager *lootManager;
-extern hgeResourceManager *resources;
 extern ProjectileManager *projectileManager;
 
 #define TEXT_FIREBOSS2_INTRO 160
@@ -65,7 +64,7 @@ FireBossTwo::FireBossTwo(int gridX, int gridY, int _groupID) {
 	droppedLoot = false;
 	saidVitaminDialogYet = false;
 
-	fireNova = new WeaponParticleSystem("firenova.psi", resources->GetSprite("particleGraphic13"), PARTICLE_FIRE_NOVA2);
+	fireNova = new WeaponParticleSystem("firenova.psi", smh->resources->GetSprite("particleGraphic13"), PARTICLE_FIRE_NOVA2);
 
 	//Set up flame launchers
 	//Top left
@@ -106,7 +105,7 @@ FireBossTwo::~FireBossTwo() {
 	resetFlameWalls();
 	resetFireBalls();
 	delete fireNova;
-	resources->Purge(RES_PHYREBOZZ);
+	smh->resources->Purge(RES_PHYREBOZZ);
 }
 
 
@@ -120,19 +119,19 @@ void FireBossTwo::draw(float dt) {
 	drawFireBallsBeforePhyrebozz(dt);
 
 	//Draw the boss' main sprite
-	resources->GetAnimation("phyrebozz")->SetFrame(facing);
-	resources->GetAnimation("phyrebozz")->Render(getScreenX(x),getScreenY(y+floatY));
+	smh->resources->GetAnimation("phyrebozz")->SetFrame(facing);
+	smh->resources->GetAnimation("phyrebozz")->Render(getScreenX(x),getScreenY(y+floatY));
 
 	//Draw the boss' mouth
 	if (facing == DOWN) {
-		resources->GetAnimation("phyrebozzDownMouth")->Update(dt);
-		resources->GetAnimation("phyrebozzDownMouth")->Render(getScreenX(x-(97/2)+34),getScreenY(y-(158/2)+14+floatY));
+		smh->resources->GetAnimation("phyrebozzDownMouth")->Update(dt);
+		smh->resources->GetAnimation("phyrebozzDownMouth")->Render(getScreenX(x-(97/2)+34),getScreenY(y-(158/2)+14+floatY));
 	} else if (facing == LEFT) {
-		resources->GetAnimation("phyrebozzLeftMouth")->Update(dt);
-		resources->GetAnimation("phyrebozzLeftMouth")->Render(getScreenX(x-(97/2)+36),getScreenY(y-(158/2)+12+floatY));
+		smh->resources->GetAnimation("phyrebozzLeftMouth")->Update(dt);
+		smh->resources->GetAnimation("phyrebozzLeftMouth")->Render(getScreenX(x-(97/2)+36),getScreenY(y-(158/2)+12+floatY));
 	} else if (facing == RIGHT) {
-		resources->GetAnimation("phyrebozzRightMouth")->Update(dt);
-		resources->GetAnimation("phyrebozzRightMouth")->Render(getScreenX(x-(97/2)+34),getScreenY(y-(158/2)+12+floatY));
+		smh->resources->GetAnimation("phyrebozzRightMouth")->Update(dt);
+		smh->resources->GetAnimation("phyrebozzRightMouth")->Render(getScreenX(x-(97/2)+34),getScreenY(y-(158/2)+12+floatY));
 	}
 
 	drawFireBallsAfterPhyrebozz(dt);
@@ -188,7 +187,7 @@ bool FireBossTwo::update(float dt) {
 	//Activate the boss when the intro dialogue is closed
 	if (state == FIREBOSS_INACTIVE && startedIntroDialogue && !smh->windowManager->isTextBoxOpen()) {
 		setState(FIREBOSS_FIRST_BATTLE);
-		hge->Effect_Play(resources->GetEffect("snd_fireBossDie"));
+		hge->Effect_Play(smh->resources->GetEffect("snd_fireBossDie"));
 		smh->soundManager->playMusic("bossMusic");
 	}
 
@@ -207,10 +206,10 @@ bool FireBossTwo::update(float dt) {
 				increaseAlpha = true;
 			}
 		}
-		resources->GetAnimation("phyrebozz")->SetColor(ARGB(255,alpha,alpha,alpha));
-		resources->GetAnimation("phyrebozzDownMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
-		resources->GetAnimation("phyrebozzRightMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
-		resources->GetAnimation("phyrebozzLeftMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("phyrebozz")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("phyrebozzDownMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("phyrebozzRightMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("phyrebozzLeftMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
 	}
 
 	updateFlameWalls(dt);
@@ -253,10 +252,10 @@ bool FireBossTwo::update(float dt) {
 	if (flashing && smh->timePassedSince(startedFlashing) > FLASH_DURATION) {
 		alpha = 255;
 		flashing = false;
-		resources->GetAnimation("phyrebozz")->SetColor(ARGB(255,alpha,alpha,alpha));
-		resources->GetAnimation("phyrebozzDownMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
-		resources->GetAnimation("phyrebozzLeftMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
-		resources->GetAnimation("phyrebozzRightMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("phyrebozz")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("phyrebozzDownMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("phyrebozzLeftMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("phyrebozzRightMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
 	}
 
 	//Check collision with Smiley
@@ -284,9 +283,9 @@ bool FireBossTwo::update(float dt) {
 
 		//Stuff fades out
 		alpha -= 155.0f*dt;
-		resources->GetAnimation("phyrebozz")->SetColor(ARGB(alpha,255,255,255));
-		resources->GetAnimation("phyrebozzDownMouth")->SetColor(ARGB(alpha,255,255,255));
-		resources->GetSprite("flameLauncher")->SetColor(ARGB(alpha,255.0,255.0,255.0));
+		smh->resources->GetAnimation("phyrebozz")->SetColor(ARGB(alpha,255,255,255));
+		smh->resources->GetAnimation("phyrebozzDownMouth")->SetColor(ARGB(alpha,255,255,255));
+		smh->resources->GetSprite("flameLauncher")->SetColor(ARGB(alpha,255.0,255.0,255.0));
 		
 
 		//Done running away
@@ -358,7 +357,7 @@ bool FireBossTwo::updateState(float dt) {
 						smh->windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS2_VITAMINS);
 						saidVitaminDialogYet = true;
 					} else {
-						hge->Effect_Play(resources->GetEffect("snd_fireBossDie"));
+						hge->Effect_Play(smh->resources->GetEffect("snd_fireBossDie"));
 						setState(FIREBOSS_BATTLE);
 						//Do big attack to own smiley
 						fireNova->FireAt(getScreenX(x), getScreenY(y));
@@ -482,9 +481,9 @@ void FireBossTwo::doDamage(float damage, bool makeFlash) {
 	
 	if (makeFlash && flashing) return;
 
-	resources->GetAnimation("phyrebozzDownMouth")->Play();
-	resources->GetAnimation("phyrebozzLeftMouth")->Play();
-	resources->GetAnimation("phyrebozzRightMouth")->Play();
+	smh->resources->GetAnimation("phyrebozzDownMouth")->Play();
+	smh->resources->GetAnimation("phyrebozzLeftMouth")->Play();
+	smh->resources->GetAnimation("phyrebozzRightMouth")->Play();
 	health -= damage;
 	
 	if (health < 0.0) {
@@ -497,7 +496,7 @@ void FireBossTwo::doDamage(float damage, bool makeFlash) {
 			alpha = 255;
 			increaseAlpha = false;
 		}
-		hge->Effect_Play(resources->GetEffect("snd_fireBossHit"));
+		hge->Effect_Play(smh->resources->GetEffect("snd_fireBossHit"));
 	}
 
 	//After the initial phase of the battle, when phyrebozz gets hit, launch flames
@@ -511,7 +510,7 @@ void FireBossTwo::doDamage(float damage, bool makeFlash) {
  * Called when Phyrebozz is killed.
  */
 void FireBossTwo::die() {
-	hge->Effect_Play(resources->GetEffect("snd_fireBossDie"));
+	hge->Effect_Play(smh->resources->GetEffect("snd_fireBossDie"));
 	health = 0.0f;
 	setState(FIREBOSS_FRIENDLY);
 	smh->windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS2_VICTORY);	
@@ -586,7 +585,7 @@ void FireBossTwo::addFireBall(float x, float y, float angle, float speed, bool h
 	newFireBall.dx = speed * cos(angle);
 	newFireBall.dy = speed * sin(angle);
 	newFireBall.collisionBox = new hgeRect();
-	newFireBall.particle = new hgeParticleSystem(&resources->GetParticleSystem("fireOrb")->info);
+	newFireBall.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("fireOrb")->info);
 	newFireBall.particle->Fire();
 	newFireBall.timeCreated = smh->getGameTime();
 	newFireBall.angle = angle;
@@ -672,7 +671,7 @@ void FireBossTwo::updateFireBalls(float dt) {
 				if (i->explodes) {
 					i->hasExploded = true;
 					delete i->particle;
-					i->particle = new hgeParticleSystem(&resources->GetParticleSystem("smallExplosion")->info);
+					i->particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("smallExplosion")->info);
 					i->particle->FireAt(getScreenX(i->x), getScreenY(i->y));
 					i->particle->TrackBoundingBox(true);
 					i->radius = 5.0;
@@ -762,7 +761,7 @@ void FireBossTwo::addFlameWall(float x, float y, int direction) {
 	newFlameWall.seperation = 0;
 
 	for (int i = 0; i < FLAME_WALL_NUM_PARTICLES; i++) {
-		newFlameWall.fireBalls[i].particle = new hgeParticleSystem(&resources->GetParticleSystem("fireOrb")->info);
+		newFlameWall.fireBalls[i].particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("fireOrb")->info);
 		newFlameWall.fireBalls[i].particle->FireAt(getScreenX(newFlameWall.x), getScreenY(newFlameWall.y));
 		newFlameWall.fireBalls[i].collisionBox = new hgeRect();
 		newFlameWall.fireBalls[i].collisionBox->SetRadius(newFlameWall.x, newFlameWall.y, 15);
@@ -919,7 +918,7 @@ void FireBossTwo::launchFlames(bool allFlames) {
 
 void FireBossTwo::drawFlameLaunchers(float dt) {
 	for (int i = 0; i < 8; i++) {
-		resources->GetSprite("flameLauncher")->RenderEx(getScreenX(flameLaunchers[i].gridX*64+32), 
+		smh->resources->GetSprite("flameLauncher")->RenderEx(getScreenX(flameLaunchers[i].gridX*64+32), 
 			getScreenY(flameLaunchers[i].gridY*64+32), smh->player->angles[flameLaunchers[i].facing]);
 	}
 }

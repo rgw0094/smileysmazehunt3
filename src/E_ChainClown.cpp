@@ -8,7 +8,6 @@
 #include "CollisionCircle.h"
 
 extern SMH *smh;
-extern hgeResourceManager *resources;
 extern HGE *hge;
 
 #define CLOWN_SPRING_CONSTANT .05
@@ -23,7 +22,7 @@ E_ChainClown::E_ChainClown(int id, int x, int y, int groupID) {
 	//Always wandering
 	setState(new ES_Wander(this));
 
-	crabWalkAnimation = new hgeAnimation(*resources->GetAnimation("crabWalk"));
+	crabWalkAnimation = new hgeAnimation(*smh->resources->GetAnimation("crabWalk"));
 	crabWalkAnimation->SetFrame(0);
 	crabWalkAnimation->Play();
 
@@ -52,19 +51,19 @@ void E_ChainClown::draw(float dt) {
 	//Dot 1, closest to crab
 	xChain = x + 0.25*(xClown-x);
 	yChain = y + 0.25*(yClown-y);
-	resources->GetSprite("clownChainDot")->Render(getScreenX(xChain),getScreenY(yChain));
+	smh->resources->GetSprite("clownChainDot")->Render(getScreenX(xChain),getScreenY(yChain));
 
 	//Dot 2, in middle
 	xChain = x + 0.50*(xClown-x);
 	yChain = y + 0.50*(yClown-y);
-	resources->GetSprite("clownChainDot")->Render(getScreenX(xChain),getScreenY(yChain));
+	smh->resources->GetSprite("clownChainDot")->Render(getScreenX(xChain),getScreenY(yChain));
 
 	//Dot 3, closest to clown
 	xChain = x + 0.75*(xClown-x);
 	yChain = y + 0.75*(yClown-y);
-	resources->GetSprite("clownChainDot")->Render(getScreenX(xChain),getScreenY(yChain));
+	smh->resources->GetSprite("clownChainDot")->Render(getScreenX(xChain),getScreenY(yChain));
 
-	resources->GetSprite("clownHead")->Render(getScreenX(xClown),getScreenY(yClown));
+	smh->resources->GetSprite("clownHead")->Render(getScreenX(xClown),getScreenY(yClown));
 }
 
 

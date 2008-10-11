@@ -13,7 +13,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern hgeResourceManager *resources;
 extern ProjectileManager *projectileManager;
 
 #define ACTIVATION_RADIUS 300
@@ -112,7 +111,7 @@ void E_BatletDist::addBatlet() {
 
 	//Create new batlet
 	Batlet newBatlet;
-	newBatlet.animation = new hgeAnimation(*resources->GetAnimation("batlet"));
+	newBatlet.animation = new hgeAnimation(*smh->resources->GetAnimation("batlet"));
 	newBatlet.animation->Play();
 	newBatlet.x = x+32.0;
 	newBatlet.y = y-32.0;
@@ -176,8 +175,8 @@ void E_BatletDist::updateBatlets(float dt) {
 		}
 		
 		if (collision) {
-			particles->SpawnPS(&resources->GetParticleSystem("bloodSplat")->info, i->x, i->y);
-			hge->Effect_Play(resources->GetEffect("snd_splat"));
+			particles->SpawnPS(&smh->resources->GetParticleSystem("bloodSplat")->info, i->x, i->y);
+			hge->Effect_Play(smh->resources->GetEffect("snd_splat"));
 			delete i->collisionBox;
 			delete i->animation;
 			i = theBatlets.erase(i);

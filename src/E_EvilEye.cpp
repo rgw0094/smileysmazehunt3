@@ -20,7 +20,7 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern hgeResourceManager *resources;
+;
 extern ProjectileManager *projectileManager;
 
 E_EvilEye::E_EvilEye(int id, int x, int y, int groupID) {
@@ -39,7 +39,7 @@ E_EvilEye::E_EvilEye(int id, int x, int y, int groupID) {
 	eyeState = EYE_CLOSED;
 	lastAttackTime = -10.0;
 
-	animation = new hgeAnimation(*resources->GetAnimation("evileye"));
+	animation = new hgeAnimation(*smh->resources->GetAnimation("evileye"));
 	animation->SetFrame(4);	//start closed
 
 }

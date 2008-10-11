@@ -2,7 +2,9 @@
 #define _BOSS_H_
 
 #include "hge.h"
+#include "SMH.h"
 #include "hgeresource.h"
+#include "hgesprite.h"
 #include <list>
 
 #define FIRE_BOSS 240
@@ -14,7 +16,7 @@
 #define FIRE_BOSS2 246
 #define CANDY_BOSS 247
 
-extern hgeResourceManager *resources;
+extern SMH *smh;
 
 /**
  * This is the abstract class defining bosses. All bosses are subclasses of this dickens.
@@ -31,11 +33,11 @@ public:
 	virtual void drawAfterSmiley(float dt) { }
 
 	void drawHealth(char *name) {
-		resources->GetSprite("bossHealthBackground")->Render(745,10);
-		resources->GetSprite("bossHealthBar")->SetTextureRect(0,197,230*(health / maxHealth),32,true);
-		resources->GetSprite("bossHealthBar")->Render(758,15);
-		resources->GetFont("curlz")->SetColor(ARGB(255,255,255,255));
-		resources->GetFont("curlz")->printf(745+128,10,HGETEXT_CENTER,name);
+		smh->resources->GetSprite("bossHealthBackground")->Render(745,10);
+		smh->resources->GetSprite("bossHealthBar")->SetTextureRect(0,197,230*(health / maxHealth),32,true);
+		smh->resources->GetSprite("bossHealthBar")->Render(758,15);
+		smh->resources->GetFont("curlz")->SetColor(ARGB(255,255,255,255));
+		smh->resources->GetFont("curlz")->printf(745+128,10,HGETEXT_CENTER,name);
 	}
 
 	int groupID;

@@ -3,6 +3,7 @@
 
 #define STRICT
 #include "smiley.h"
+#include "hgeresource.h"
 #include "hge.h"
 #include <string>
 #include <windows.h>
@@ -61,11 +62,6 @@ public:
 	void drawSprite(const char* sprite, float x, float y, float width, float height);
 	void log(const char* text);
 	float timePassedSince(float time);
-
-	//Resource access
-	hgeAnimation *getAnimation(const char* font);
-	hgeFont *getFont(const char* font);
-	HTEXTURE getTexture(const char* texture);
 
 	//Game objects
 	EnemyGroupManager *enemyGroupManager;

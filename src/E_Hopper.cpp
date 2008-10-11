@@ -10,7 +10,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern hgeResourceManager *resources;
 
 /** 
  * Constructor
@@ -83,7 +82,7 @@ void E_Hopper::update(float dt) {
 }
 
 void E_Hopper::draw(float dt) {
-	resources->GetSprite("playerShadow")->Render(screenX, screenY + 32.0);
+	smh->resources->GetSprite("playerShadow")->Render(screenX, screenY + 32.0);
 	graphic[facing]->Render(screenX, screenY - hopYOffset);
 }
 

@@ -10,7 +10,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern hgeResourceManager *resources;
 
 /** 
  * Constructor
@@ -92,7 +91,7 @@ void E_Floater::draw(float dt) {
 	
 	graphic[facing]->Update(dt);
 	graphic[facing]->Render(screenX, screenY - shadowOffset);
-	resources->GetSprite("playerShadow")->Render(screenX, screenY);
+	smh->resources->GetSprite("playerShadow")->Render(screenX, screenY);
 
 	if (smh->isDebugOn()) {
 		drawCollisionBox(collisionBox, RED);
@@ -105,7 +104,7 @@ void E_Floater::draw(float dt) {
  * The frozen graphic should hover along with the floater.
  */
 void E_Floater::drawFrozen(float dt) {
-	resources->GetSprite("iceBlock")->Render(screenX, screenY - shadowOffset);
+	smh->resources->GetSprite("iceBlock")->Render(screenX, screenY - shadowOffset);
 }
 
 /**
@@ -115,7 +114,7 @@ void E_Floater::drawFrozen(float dt) {
 void E_Floater::drawStunned(float dt) {
 	for (int n = 0; n < NUM_STUN_STARS; n++) {
 		stunStarAngles[n] += 2.0* PI * dt;
-		resources->GetSprite("stunStar")->Render(
+		smh->resources->GetSprite("stunStar")->Render(
 		getScreenX(x + cos(stunStarAngles[n])*25), 
 		getScreenY(y + sin(stunStarAngles[n])*7) - 30.0 - shadowOffset);
 	}

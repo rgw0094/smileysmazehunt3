@@ -8,8 +8,6 @@
 #include "hgerect.h"
 #include "boss.h"
 
-extern hgeResourceManager *resources;
-
 extern SMH *smh;
 extern HGE *hge;
 
@@ -197,10 +195,10 @@ int getFacingDirection(float dx, float dy) {
  * Shades the screen
  */
 void shadeScreen(int alpha) {
-	resources->GetSprite("blackScreen")->SetColor(ARGB(alpha,255,255,255));
+	smh->resources->GetSprite("blackScreen")->SetColor(ARGB(alpha,255,255,255));
 	for (int i = 0; i < 35; i++) {
 		for (int j = 0; j < 26; j++) {
-			resources->GetSprite("blackScreen")->Render(i*30,j*30);
+			smh->resources->GetSprite("blackScreen")->Render(i*30,j*30);
 		}
 	}
 }

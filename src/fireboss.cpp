@@ -13,7 +13,6 @@
 extern SMH *smh;
 extern HGE *hge;
 extern LootManager *lootManager;
-extern hgeResourceManager *resources;
 
 //States
 #define FIREBOSS_INACTIVE 0
@@ -56,8 +55,8 @@ FireBoss::FireBoss(int gridX, int gridY, int _groupID) {
 	showFenwar = true;
 	droppedLoot = false;
 
-	fireNova = new WeaponParticleSystem("firenova.psi", resources->GetSprite("particleGraphic13"), PARTICLE_FIRE_NOVA);
-	fenwarWarp = new hgeParticleSystem(&resources->GetParticleSystem("fenwarwarp")->info);
+	fireNova = new WeaponParticleSystem("firenova.psi", smh->resources->GetSprite("particleGraphic13"), PARTICLE_FIRE_NOVA);
+	fenwarWarp = new hgeParticleSystem(&smh->resources->GetParticleSystem("fenwarwarp")->info);
 
 	//Set up valid locations
 	//Center
@@ -84,7 +83,7 @@ FireBoss::FireBoss(int gridX, int gridY, int _groupID) {
 FireBoss::~FireBoss() {
 	killOrbs();
 	delete fenwarWarp;
-	resources->Purge(RES_PHYREBOZZ);
+	smh->resources->Purge(RES_PHYREBOZZ);
 }
 
 
@@ -95,7 +94,7 @@ void FireBoss::draw(float dt) {
 
 	//Draw FENWAR talking to the boss
 	if (showFenwar) {
-		resources->GetSprite("fenwarDown")->Render(getScreenX(startX*64-120), getScreenY(startY*64));
+		smh->resources->GetSprite("fenwarDown")->Render(getScreenX(startX*64-120), getScreenY(startY*64));
 	}
 	if (fenwarLeave) {
 		fenwarWarp->MoveTo(getScreenX(startX*64-120), getScreenY(startY*64),true);
@@ -107,19 +106,19 @@ void FireBoss::draw(float dt) {
 	drawOrbs(dt);
 
 	//Draw the boss' main sprite
-	resources->GetAnimation("phyrebozz")->SetFrame(facing);
-	resources->GetAnimation("phyrebozz")->Render(getScreenX(x),getScreenY(y+floatY));
+	smh->resources->GetAnimation("phyrebozz")->SetFrame(facing);
+	smh->resources->GetAnimation("phyrebozz")->Render(getScreenX(x),getScreenY(y+floatY));
 
 	//Draw the boss' mouth
 	if (facing == DOWN) {
-		resources->GetAnimation("phyrebozzDownMouth")->Update(dt);
-		resources->GetAnimation("phyrebozzDownMouth")->Render(getScreenX(x-(97/2)+34),getScreenY(y-(158/2)+14+floatY));
+		smh->resources->GetAnimation("phyrebozzDownMouth")->Update(dt);
+		smh->resources->GetAnimation("phyrebozzDownMouth")->Render(getScreenX(x-(97/2)+34),getScreenY(y-(158/2)+14+floatY));
 	} else if (facing == LEFT) {
-		resources->GetAnimation("phyrebozzLeftMouth")->Update(dt);
-		resources->GetAnimation("phyrebozzLeftMouth")->Render(getScreenX(x-(97/2)+36),getScreenY(y-(158/2)+12+floatY));
+		smh->resources->GetAnimation("phyrebozzLeftMouth")->Update(dt);
+		smh->resources->GetAnimation("phyrebozzLeftMouth")->Render(getScreenX(x-(97/2)+36),getScreenY(y-(158/2)+12+floatY));
 	} else if (facing == RIGHT) {
-		resources->GetAnimation("phyrebozzRightMouth")->Update(dt);
-		resources->GetAnimation("phyrebozzRightMouth")->Render(getScreenX(x-(97/2)+34),getScreenY(y-(158/2)+12+floatY));
+		smh->resources->GetAnimation("phyrebozzRightMouth")->Update(dt);
+		smh->resources->GetAnimation("phyrebozzRightMouth")->Render(getScreenX(x-(97/2)+34),getScreenY(y-(158/2)+12+floatY));
 	}
 	
 	//Draw fire nova attack
@@ -166,7 +165,7 @@ bool FireBoss::update(float dt) {
 	if (state == FIREBOSS_INACTIVE && startedIntroDialogue && !smh->windowManager->isTextBoxOpen()) {
 		state = FIREBOSS_ATTACK;
 		startedAttackMode = smh->getGameTime();
-		hge->Effect_Play(resources->GetEffect("snd_fireBossDie"));
+		hge->Effect_Play(smh->resources->GetEffect("snd_fireBossDie"));
 		//Start fenwar warping out effect
 		fenwarLeave = true;
 		startedFenwarLeave = smh->getGameTime();
@@ -179,7 +178,7 @@ bool FireBoss::update(float dt) {
 	//Update fenwar warping out effect
 	if (fenwarLeave) {
 		fenwarAlpha -= 255.0f*dt;
-		resources->GetSprite("fenwarDown")->SetColor(ARGB(alpha,255,255,255));
+		smh->resources->GetSprite("fenwarDown")->SetColor(ARGB(alpha,255,255,255));
 		if (fenwarAlpha < 0.0f) showFenwar = false;
 		if (smh->getGameTime() > startedFenwarLeave + 2.0f) fenwarLeave = false;
 	}
@@ -202,10 +201,10 @@ bool FireBoss::update(float dt) {
 				increaseAlpha = true;
 			}
 		}
-		resources->GetAnimation("phyrebozz")->SetColor(ARGB(255,alpha,alpha,alpha));
-		resources->GetAnimation("phyrebozzDownMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
-		resources->GetAnimation("phyrebozzRightMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
-		resources->GetAnimation("phyrebozzLeftMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("phyrebozz")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("phyrebozzDownMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("phyrebozzRightMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("phyrebozzLeftMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
 	}
 
 	//Update orbs
@@ -278,13 +277,13 @@ bool FireBoss::update(float dt) {
 	if (state != FIREBOSS_FRIENDLY && !flashing) {
 		for (int i = 0; i < 3; i++) {
 			if (smh->player->getTongue()->testCollision(collisionBoxes[i]) && smh->timePassedSince(lastHitByTongue) >= 0.5) {
-				resources->GetAnimation("phyrebozzDownMouth")->Play();
-				resources->GetAnimation("phyrebozzLeftMouth")->Play();
-				resources->GetAnimation("phyrebozzRightMouth")->Play();
+				smh->resources->GetAnimation("phyrebozzDownMouth")->Play();
+				smh->resources->GetAnimation("phyrebozzLeftMouth")->Play();
+				smh->resources->GetAnimation("phyrebozzRightMouth")->Play();
 				lastHitByTongue = smh->getGameTime();
 				health -= smh->player->getDamage();
 				if (health > 0.0f) {
-					hge->Effect_Play(resources->GetEffect("snd_fireBossHit"));
+					hge->Effect_Play(smh->resources->GetEffect("snd_fireBossHit"));
 				}
 				//Start flashing
 				flashing = true;
@@ -299,10 +298,10 @@ bool FireBoss::update(float dt) {
 	if (flashing && smh->timePassedSince(startedFlashing) > FLASH_DURATION) {
 		alpha = 255;
 		flashing = false;
-		resources->GetAnimation("phyrebozz")->SetColor(ARGB(255,alpha,alpha,alpha));
-		resources->GetAnimation("phyrebozzDownMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
-		resources->GetAnimation("phyrebozzLeftMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
-		resources->GetAnimation("phyrebozzRightMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("phyrebozz")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("phyrebozzDownMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("phyrebozzLeftMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("phyrebozzRightMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
 	}
 
 	//Check collision with Smiley
@@ -317,7 +316,7 @@ bool FireBoss::update(float dt) {
 
 	//Die
 	if (health <= 0.0f && state != FIREBOSS_FRIENDLY) {
-		hge->Effect_Play(resources->GetEffect("snd_fireBossDie"));
+		hge->Effect_Play(smh->resources->GetEffect("snd_fireBossDie"));
 		flashing = false;
 		health = 0.0f;
 		state = FIREBOSS_FRIENDLY;
@@ -341,8 +340,8 @@ bool FireBoss::update(float dt) {
 		y += 200.0f*dt;
 		alpha -= 155.0f*dt;
 		facing = DOWN;
-		resources->GetAnimation("phyrebozz")->SetColor(ARGB(alpha,255,255,255));
-		resources->GetAnimation("phyrebozzDownMouth")->SetColor(ARGB(alpha,255,255,255));
+		smh->resources->GetAnimation("phyrebozz")->SetColor(ARGB(alpha,255,255,255));
+		smh->resources->GetAnimation("phyrebozzDownMouth")->SetColor(ARGB(alpha,255,255,255));
 
 		//Done running away
 		if (alpha < 0.0f) {
@@ -370,7 +369,7 @@ void FireBoss::changeState(int changeTo) {
 	if (state == FIREBOSS_ATTACK) {
 		startedAttackMode = smh->getGameTime();
 		fireNova->FireAt(getScreenX(x),getScreenY(y));
-		hge->Effect_Play(resources->GetEffect("snd_fireBossNova"));
+		hge->Effect_Play(smh->resources->GetEffect("snd_fireBossNova"));
 	
 	//Switch from attack to move
 	} else if (state == FIREBOSS_MOVE) {
@@ -451,7 +450,7 @@ void FireBoss::addOrb(float _x, float _y) {
 	newOrb.x = _x;
 	newOrb.y = _y;
 	newOrb.collisionBox = new hgeRect();
-	newOrb.particle = new hgeParticleSystem("fireorb.psi", resources->GetSprite("particleGraphic2"));
+	newOrb.particle = new hgeParticleSystem("fireorb.psi", smh->resources->GetSprite("particleGraphic2"));
 	newOrb.particle->Fire();
 	newOrb.timeCreated = smh->getGameTime();
 

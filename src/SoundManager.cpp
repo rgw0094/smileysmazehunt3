@@ -2,8 +2,8 @@
 #include "hge.h"
 #include "hgeresource.h"
 
+extern SMH *smh;
 extern HGE *hge;
-extern hgeResourceManager *resources;
 
 /** 
  * Constructor
@@ -34,8 +34,8 @@ void SoundManager::playMusic(char *music) {
 	currentMusic = music;
 
 	hge->Channel_Stop(musicChannel);
-	hge->Music_SetPos(resources->GetMusic(music),0,0);
-	musicChannel = hge->Music_Play(resources->GetMusic(music),true,musicVolume);
+	hge->Music_SetPos(smh->resources->GetMusic(music),0,0);
+	musicChannel = hge->Music_Play(smh->resources->GetMusic(music),true,musicVolume);
 
 }
 
@@ -80,13 +80,13 @@ void SoundManager::setSoundVolume(int newVolume) {
  */
 void SoundManager::playPreviousMusic() {
 	hge->Channel_Stop(musicChannel);
-	musicChannel = hge->Music_Play(resources->GetMusic(previousMusic.c_str()),true,musicVolume);
+	musicChannel = hge->Music_Play(smh->resources->GetMusic(previousMusic.c_str()),true,musicVolume);
 	hge->Channel_SetPos(musicChannel, previousMusicPosition);
 	currentMusic = previousMusic;
 }
 
 void SoundManager::playEnvironmentEffect(char *effect, bool loop) {
-	environmentChannel = hge->Effect_PlayEx(resources->GetEffect(effect),100,0,1.0f,loop);
+	environmentChannel = hge->Effect_PlayEx(smh->resources->GetEffect(effect),100,0,1.0f,loop);
 }
 
 void SoundManager::stopEnvironmentChannel() {
@@ -95,7 +95,7 @@ void SoundManager::stopEnvironmentChannel() {
 	
 
 void SoundManager::playAbilityEffect(char *effect, bool loop) {
-	abilityChannel = hge->Effect_PlayEx(resources->GetEffect(effect),100,0,1.0f,loop);
+	abilityChannel = hge->Effect_PlayEx(smh->resources->GetEffect(effect),100,0,1.0f,loop);
 }
 
 void SoundManager::stopAbilityChannel() {

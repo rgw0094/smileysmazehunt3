@@ -1,7 +1,6 @@
 #include "SMH.h"
 #include "smiley.h"
 #include "enemy.h"
-#include "hge.h"
 #include "hgeresource.h"
 #include "EnemyState.h"
 #include "ProjectileManager.h"
@@ -10,8 +9,6 @@
 #include "CollisionCircle.h"
 
 extern SMH *smh;
-extern HGE *hge;
-extern hgeResourceManager *resources;
 extern ProjectileManager *projectileManager;
 
 #define NUM_CHAIN_LINKS 4.0
@@ -215,13 +212,13 @@ void E_Flailer::draw(float dt) {
 
 	//Draw flail chain
 	for (int i = 0; i < NUM_CHAIN_LINKS; i++) {
-		resources->GetSprite("flailLink")->Render(
+		smh->resources->GetSprite("flailLink")->Render(
 			getScreenX(x + (.2 + double(i+1.0) * (0.8/(NUM_CHAIN_LINKS+1))) * (flailX - x)),
 			getScreenY(y + (.2 + double(i+1.0) * (0.8/(NUM_CHAIN_LINKS+1))) * (flailY - y)));
 	}
 
 	//Draw flail head
-	resources->GetSprite("flailHead")->Render(getScreenX(flailX),getScreenY(flailY));
+	smh->resources->GetSprite("flailHead")->Render(getScreenX(flailX),getScreenY(flailY));
 
 }
 

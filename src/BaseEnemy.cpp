@@ -14,7 +14,6 @@
 #include "EnemyState.h"
 #include "EnemyManager.h"
 
-extern hgeResourceManager *resources;
 extern SMH *smh;
 extern HGE *hge;
 
@@ -101,22 +100,22 @@ void BaseEnemy::initEnemy(int _id, int _gridX, int _gridY, int _groupID) {
 	// for batlet caves because the graphics need to be put next to each other
 	int borderSize = (smh->gameData->getEnemyInfo(id).enemyType == ENEMY_BATLET_DIST ? 0 : 1);
 	int size = (smh->gameData->getEnemyInfo(id).enemyType == ENEMY_BATLET_DIST ? 64 : 62);
-	graphic[LEFT] = new hgeAnimation(resources->GetTexture("enemies"), 
+	graphic[LEFT] = new hgeAnimation(smh->resources->GetTexture("enemies"), 
 		smh->gameData->getEnemyInfo(id).numFrames, 3, 
 		smh->gameData->getEnemyInfo(id).gCol*64+borderSize, 
 		smh->gameData->getEnemyInfo(id).gRow*64+borderSize, size, size);
 	graphic[LEFT]->Play();
-	graphic[RIGHT] = new hgeAnimation(resources->GetTexture("enemies"), 
+	graphic[RIGHT] = new hgeAnimation(smh->resources->GetTexture("enemies"), 
 		smh->gameData->getEnemyInfo(id).numFrames, 3, 
 		smh->gameData->getEnemyInfo(id).gCol*64 + 64 * (smh->gameData->getEnemyInfo(id).hasOneGraphic ? 0 : smh->gameData->getEnemyInfo(id).numFrames)+borderSize, 
 		smh->gameData->getEnemyInfo(id).gRow*64+borderSize, size, size);
 	graphic[RIGHT]->Play();
-	graphic[UP] = new hgeAnimation(resources->GetTexture("enemies"), 
+	graphic[UP] = new hgeAnimation(smh->resources->GetTexture("enemies"), 
 		smh->gameData->getEnemyInfo(id).numFrames, 3, 
 		smh->gameData->getEnemyInfo(id).gCol*64 + 2 * 64 * (smh->gameData->getEnemyInfo(id).hasOneGraphic ? 0 : smh->gameData->getEnemyInfo(id).numFrames)+borderSize, 
 		smh->gameData->getEnemyInfo(id).gRow*64+borderSize, size, size);
 	graphic[UP]->Play();
-	graphic[DOWN] = new hgeAnimation(resources->GetTexture("enemies"), 
+	graphic[DOWN] = new hgeAnimation(smh->resources->GetTexture("enemies"), 
 		smh->gameData->getEnemyInfo(id).numFrames, 3, 
 		smh->gameData->getEnemyInfo(id).gCol*64 + 3 * 64 * (smh->gameData->getEnemyInfo(id).hasOneGraphic ? 0 : smh->gameData->getEnemyInfo(id).numFrames)+borderSize,
 		smh->gameData->getEnemyInfo(id).gRow*64+borderSize, size, size);
@@ -505,7 +504,7 @@ void BaseEnemy::baseDraw(float dt) {
  * functionality then it should overwrite this method.
  */
 void BaseEnemy::drawFrozen(float dt) {
-	resources->GetSprite("iceBlock")->Render(screenX, screenY);
+	smh->resources->GetSprite("iceBlock")->Render(screenX, screenY);
 }
 
 /**
@@ -516,7 +515,7 @@ void BaseEnemy::drawFrozen(float dt) {
 void BaseEnemy::drawStunned(float dt) {
 	for (int n = 0; n < NUM_STUN_STARS; n++) {
 		stunStarAngles[n] += 2.0* PI * dt;
-		resources->GetSprite("stunStar")->Render(
+		smh->resources->GetSprite("stunStar")->Render(
 		getScreenX(x + cos(stunStarAngles[n])*25), 
 		getScreenY(y + sin(stunStarAngles[n])*7) - 30.0);
 	}

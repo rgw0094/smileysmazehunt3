@@ -12,7 +12,6 @@
 #include "hgeanim.h"
 
 extern EnemyManager *enemyManager;
-extern hgeResourceManager *resources;
 extern HGE *hge;
 extern SMH *smh;
 
@@ -31,7 +30,7 @@ extern SMH *smh;
 Tongue::Tongue() {
 	attacking = false;
 	timeStartedAttack = -10.0;
-	resources->GetAnimation("smileyTongue")->Play();
+	smh->resources->GetAnimation("smileyTongue")->Play();
 	collisionBox = new hgeRect();
 }
 
@@ -56,9 +55,9 @@ void Tongue::startAttack() {
 	timeStartedAttack = smh->getGameTime();
 	tongueOffsetAngle = -ATTACK_RADIUS / 2.0;
 	attacking = true;
-	resources->GetAnimation("smileyTongue")->SetFrame(0);
-	resources->GetAnimation("smileyTongue")->SetMode(HGEANIM_FWD);
-	resources->GetAnimation("smileyTongue")->Play();
+	smh->resources->GetAnimation("smileyTongue")->SetFrame(0);
+	smh->resources->GetAnimation("smileyTongue")->SetMode(HGEANIM_FWD);
+	smh->resources->GetAnimation("smileyTongue")->Play();
 	tongueState = STATE_EXTENDING;
 
 }
@@ -81,10 +80,10 @@ void Tongue::update(float dt) {
 	}
 
 	if (tongueState == STATE_EXTENDING) {
-		resources->GetAnimation("smileyTongue")->Update(dt);
+		smh->resources->GetAnimation("smileyTongue")->Update(dt);
 
 		//Once the tongue is fully extended enter swinging state
-		if (resources->GetAnimation("smileyTongue")->GetFrame() >= 10) {
+		if (smh->resources->GetAnimation("smileyTongue")->GetFrame() >= 10) {
 			tongueState = STATE_SWINGING;
 		}
 
@@ -94,17 +93,17 @@ void Tongue::update(float dt) {
 		//When tongue finishes swinging, start retracting it
 		if (tongueOffsetAngle > ATTACK_RADIUS / 2.0) {
 			tongueOffsetAngle = ATTACK_RADIUS / 2.0;
-			resources->GetAnimation("smileyTongue")->SetFrame(10);
-			resources->GetAnimation("smileyTongue")->SetMode(HGEANIM_REV);
-			resources->GetAnimation("smileyTongue")->Play();
+			smh->resources->GetAnimation("smileyTongue")->SetFrame(10);
+			smh->resources->GetAnimation("smileyTongue")->SetMode(HGEANIM_REV);
+			smh->resources->GetAnimation("smileyTongue")->Play();
 			tongueState = STATE_RETRACTING;
 		}
 
 	} else if (tongueState == STATE_RETRACTING) {
-		resources->GetAnimation("smileyTongue")->Update(dt);
+		smh->resources->GetAnimation("smileyTongue")->Update(dt);
 
 		//Once the tongue is fully retracted the attack is done
-		if (resources->GetAnimation("smileyTongue")->GetFrame() < 1) {
+		if (smh->resources->GetAnimation("smileyTongue")->GetFrame() < 1) {
 			attacking = false;
 		}
 
@@ -117,7 +116,7 @@ void Tongue::update(float dt) {
  */
 void Tongue::draw(float dt) {
 	if (attacking) {
-		resources->GetAnimation("smileyTongue")->RenderEx(
+		smh->resources->GetAnimation("smileyTongue")->RenderEx(
 			getScreenX(smh->player->x) + smh->player->mouthXOffset[smh->player->facing],
 			getScreenY(smh->player->y) - smh->player->springOffset + smh->player->mouthYOffset[smh->player->facing] - smh->player->hoveringYOffset,
 			smh->player->angles[smh->player->facing] + (smh->player->facing == LEFT ? -1 : 1) * tongueOffsetAngle, 
@@ -125,7 +124,7 @@ void Tongue::draw(float dt) {
 
 		//Draw tongue collision for debug mode
 		if (smh->isDebugOn()) {
-			numPoints = int((float)resources->GetAnimation("smileyTongue")->GetFrame() / (float)resources->GetAnimation("smileyTongue")->GetFrames() * (float)NUM_COLLISION_POINTS) + 1;
+			numPoints = int((float)smh->resources->GetAnimation("smileyTongue")->GetFrame() / (float)smh->resources->GetAnimation("smileyTongue")->GetFrames() * (float)NUM_COLLISION_POINTS) + 1;
 			for (int i = 0; i < numPoints; i++) {
 				testAngle = -(PI / 2.0) + smh->player->angles[smh->player->facing] + (smh->player->facing == LEFT ? -1 : 1) * tongueOffsetAngle;
 				pointX = smh->player->x + smh->player->mouthXOffset[smh->player->facing] + (i+1)*(TONGUE_LENGTH / (NUM_COLLISION_POINTS-1)) * cos(testAngle);
@@ -153,7 +152,7 @@ bool Tongue::testCollision(hgeRect *collisionBox) {
 	if (!isAttacking()) return false;
 
 	//Determine how many collision points to test based on the current length of the tongue
-	numPoints = int((float)resources->GetAnimation("smileyTongue")->GetFrame() / (float)resources->GetAnimation("smileyTongue")->GetFrames() * (float)NUM_COLLISION_POINTS) + 1;
+	numPoints = int((float)smh->resources->GetAnimation("smileyTongue")->GetFrame() / (float)smh->resources->GetAnimation("smileyTongue")->GetFrames() * (float)NUM_COLLISION_POINTS) + 1;
 	
 	for (int i = 0; i < numPoints; i++) {
 		testAngle = -(PI / 2.0) + smh->player->angles[smh->player->facing] + (smh->player->facing == LEFT ? -1 : 1) * tongueOffsetAngle;
@@ -173,7 +172,7 @@ bool Tongue::testCollision(CollisionCircle *collisionCircle) {
 	if (!isAttacking()) return false;
 
 	//Determine how many collision points to test based on the current length of the tongue
-	numPoints = int((float)resources->GetAnimation("smileyTongue")->GetFrame() / (float)resources->GetAnimation("smileyTongue")->GetFrames() * (float)NUM_COLLISION_POINTS) + 1;
+	numPoints = int((float)smh->resources->GetAnimation("smileyTongue")->GetFrame() / (float)smh->resources->GetAnimation("smileyTongue")->GetFrames() * (float)NUM_COLLISION_POINTS) + 1;
 	
 	for (int i = 0; i < numPoints; i++) {
 		testAngle = -(PI / 2.0) + smh->player->angles[smh->player->facing] + (smh->player->facing == LEFT ? -1 : 1) * tongueOffsetAngle;

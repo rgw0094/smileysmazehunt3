@@ -16,7 +16,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern hgeResourceManager *resources;
 extern ProjectileManager *projectileManager;
 extern EnemyManager *enemyManager;
 extern LootManager *lootManager;
@@ -46,7 +45,7 @@ DesertBoss::DesertBoss(int _gridX, int _gridY, int _groupID) {
 	redness = 0.0;
 	firstTimeLaunchingGroundSpikes = true;
 	firstTimeFinishingGroundSpikes = true;
-	resources->GetSprite("spikeShadow")->SetColor(ARGB(150.0,255,255,255));
+	smh->resources->GetSprite("spikeShadow")->SetColor(ARGB(150.0,255,255,255));
 	sandClouds = new hgeParticleManager();
 	numGroundAttacks = 0;
 	health = maxHealth = HEALTH;
@@ -71,7 +70,7 @@ DesertBoss::DesertBoss(int _gridX, int _gridY, int _groupID) {
 DesertBoss::~DesertBoss() {
 	delete collisionBox;
 	delete sandClouds;
-	resources->Purge(RES_CORNWALLIS);
+	smh->resources->Purge(RES_CORNWALLIS);
 }
 
 /**
@@ -80,10 +79,10 @@ DesertBoss::~DesertBoss() {
 void DesertBoss::draw(float dt) {
 
 	//Draw Cornwallis' body
-	resources->GetSprite("cornwallisBody")->SetColor(ARGB(alpha,255,255,255));
-	resources->GetSprite("cornwallisBody")->Render(getScreenX(x), getScreenY(y));
-	resources->GetSprite("redCornwallisBody")->SetColor(ARGB(redness,255,255,255));
-	resources->GetSprite("redCornwallisBody")->Render(getScreenX(x), getScreenY(y));
+	smh->resources->GetSprite("cornwallisBody")->SetColor(ARGB(alpha,255,255,255));
+	smh->resources->GetSprite("cornwallisBody")->Render(getScreenX(x), getScreenY(y));
+	smh->resources->GetSprite("redCornwallisBody")->SetColor(ARGB(redness,255,255,255));
+	smh->resources->GetSprite("redCornwallisBody")->Render(getScreenX(x), getScreenY(y));
 
 	//Draw ground spikes
 	if (state == DESERTBOSS_GROUND_SPIKES) {
@@ -309,9 +308,9 @@ void DesertBoss::updateGroundSpikeState(float dt) {
 		if (spikeShadowAlpha > 100.0) {
 			spikeShadowAlpha = 100.0;
 			groundSpikeState = GSS_SPIKES_RAISING;
-			resources->GetAnimation("groundSpike")->SetFrame(0);
-			resources->GetAnimation("groundSpike")->SetMode(HGEANIM_FWD |HGEANIM_NOLOOP);
-			resources->GetAnimation("groundSpike")->Play();
+			smh->resources->GetAnimation("groundSpike")->SetFrame(0);
+			smh->resources->GetAnimation("groundSpike")->SetMode(HGEANIM_FWD |HGEANIM_NOLOOP);
+			smh->resources->GetAnimation("groundSpike")->Play();
 			timeEnteredGSS = smh->getGameTime();
 		}
 	}
@@ -319,15 +318,15 @@ void DesertBoss::updateGroundSpikeState(float dt) {
 	//Show the spikes shooting up
 	if (groundSpikeState == GSS_SPIKES_RAISING && timeEnteredGSS + 0.25 < smh->getGameTime()) {
 		groundSpikeState = GSS_SPIKES_UP;
-		resources->GetAnimation("groundSpike")->Stop();
+		smh->resources->GetAnimation("groundSpike")->Stop();
 		timeEnteredGSS = smh->getGameTime();
 	}
 
 	//After the spikes have been up for a couple seconds they start going back down
 	if (groundSpikeState == GSS_SPIKES_UP && timeEnteredGSS + 1.0 < smh->getGameTime()) {
 		groundSpikeState = GSS_SPIKES_LOWERING;
-		resources->GetAnimation("groundSpike")->SetMode(HGEANIM_REV |HGEANIM_NOLOOP);
-		resources->GetAnimation("groundSpike")->Play();
+		smh->resources->GetAnimation("groundSpike")->SetMode(HGEANIM_REV |HGEANIM_NOLOOP);
+		smh->resources->GetAnimation("groundSpike")->Play();
 		timeEnteredGSS = smh->getGameTime();
 	}
 
@@ -372,7 +371,7 @@ void DesertBoss::updateGroundSpikeState(float dt) {
 	// ----end state transition stuff --------
 
 	//Update animation
-	resources->GetAnimation("groundSpike")->Update(dt);
+	smh->resources->GetAnimation("groundSpike")->Update(dt);
 
 	//Do spike collision
 	if (groundSpikeState == GSS_SPIKES_RAISING || groundSpikeState == GSS_SPIKES_UP || groundSpikeState == GSS_SPIKES_LOWERING) {
@@ -392,8 +391,8 @@ void DesertBoss::drawGroundSpikes(float dt) {
 			if (groundSpikes[i][j].showing) {
 				//Spike shadows
 				if (groundSpikeState == GSS_SHADOWS) {	
-					resources->GetSprite("spikeShadow")->SetColor(ARGB(spikeShadowAlpha,255,255,255));
-					resources->GetSprite("spikeShadow")->Render(
+					smh->resources->GetSprite("spikeShadow")->SetColor(ARGB(spikeShadowAlpha,255,255,255));
+					smh->resources->GetSprite("spikeShadow")->Render(
 						getScreenX(groundSpikes[i][j].x), 
 						getScreenY(groundSpikes[i][j].y));
 				}
@@ -401,7 +400,7 @@ void DesertBoss::drawGroundSpikes(float dt) {
 				if (groundSpikeState == GSS_SPIKES_RAISING || 
 						groundSpikeState == GSS_SPIKES_UP ||
 						groundSpikeState == GSS_SPIKES_LOWERING) {
-					resources->GetAnimation("groundSpike")->Render(
+					smh->resources->GetAnimation("groundSpike")->Render(
 						getScreenX(groundSpikes[i][j].x), getScreenY(groundSpikes[i][j].y));
 				}
 				//Debug mode - collision boxes
@@ -441,7 +440,7 @@ void DesertBoss::setGroundSpikeCollisionBox(float centerX, float centerY) {
 		spikeCollisionBox->SetRadius(centerX, centerY, 10.0);
 	} else {
 		spikeCollisionBox->Set(centerX - 6.0,
-							   centerY - resources->GetAnimation("groundSpike")->GetFrame()*10.0,
+							   centerY - smh->resources->GetAnimation("groundSpike")->GetFrame()*10.0,
 							   centerX + 6.0,
 							   centerY + 10.0);
 	}
@@ -468,7 +467,7 @@ void DesertBoss::spawnCactlet() {
 	enemyManager->addEnemy(CACTLET_ENEMYID, cactletGridX,cactletGridY,0.0,0.5, -1);
 
 	//Spawn a sand cloud
-	sandClouds->SpawnPS(&resources->GetParticleSystem("sandCloud")->info,
+	sandClouds->SpawnPS(&smh->resources->GetParticleSystem("sandCloud")->info,
 						 cactletGridX*64 + 32,
 						 cactletGridY*64 + 32);
 

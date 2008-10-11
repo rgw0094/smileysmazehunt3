@@ -10,7 +10,6 @@
 #include "hgeresource.h"
 
 extern SMH *smh;
-extern hgeResourceManager *resources;
 
 //Dialog box types
 #define TYPE_SIGN 0
@@ -68,7 +67,7 @@ void TextBox::setDialogue(int _npcID, int _textID) {
 	npcID = _npcID;
 	textID = _textID;
 
-	graphic = new hgeSprite(resources->GetTexture("npcTx"),0,npcID*64.0, 64,64);
+	graphic = new hgeSprite(smh->resources->GetTexture("npcTx"),0,npcID*64.0, 64,64);
 
 	//After Smiley gets the cane, Bill Clinton needs new dialogue
 	if (npcID == BILL_CLINTON && smh->saveManager->hasAbility[CANE]) {
@@ -106,7 +105,7 @@ void TextBox::setHint() {
 
 	//Set distortion mesh for psychedelic background
 	distortion =new hgeDistortionMesh(PSYCHEDELIC_GRANULARITY, PSYCHEDELIC_GRANULARITY);
-	distortion->SetTexture(resources->GetTexture("psychedelicTx"));
+	distortion->SetTexture(smh->resources->GetTexture("psychedelicTx"));
 	distortion->SetTextureRect(0,0,1054,798);
 	distortion->SetBlendMode(BLEND_COLORADD | BLEND_ALPHABLEND | BLEND_ZWRITE);
 	distortion->Clear(0xFF000000);
@@ -173,68 +172,68 @@ void TextBox::draw(float dt) {
 	if (textBoxType == TYPE_HINT) {
 
 		distortion->Render(-15,-15);
-		resources->GetAnimation("player")->SetFrame(DOWN);
-		resources->GetAnimation("player")->Render(512,384);
-		resources->GetSprite("textBox")->Render(x,y);
+		smh->resources->GetAnimation("player")->SetFrame(DOWN);
+		smh->resources->GetAnimation("player")->Render(512,384);
+		smh->resources->GetSprite("textBox")->Render(x,y);
 
-		resources->GetSprite("billClinton")->Render(x+60, y+50);
-		resources->GetFont("textBoxNameFnt")->printf(x + 220, y+20, HGETEXT_CENTER, "%s", "Bill Clinton");
+		smh->resources->GetSprite("billClinton")->Render(x+60, y+50);
+		smh->resources->GetFont("textBoxNameFnt")->printf(x + 220, y+20, HGETEXT_CENTER, "%s", "Bill Clinton");
 
 		//Print the current page of the hint
 		paramString = "Hint";
 		paramString += intToString(textID);
 		paramString += "-";
 		paramString += intToString(currentPage);
-		resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, smh->gameData->getGameText(paramString.c_str()));
+		smh->resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, smh->gameData->getGameText(paramString.c_str()));
 
 		//Draw next page/OK icon
 		if (currentPage == numPages) {
-			resources->GetSprite("okIcon")->Render(x + 350, y + 220);
+			smh->resources->GetSprite("okIcon")->Render(x + 350, y + 220);
 		} else {
-			resources->GetSprite("arrowIcon")->Render(x + 350, y + 220);
+			smh->resources->GetSprite("arrowIcon")->Render(x + 350, y + 220);
 		}
 
 	//Dialog box
 	} else if (textBoxType == TYPE_DIALOG) {
 		
-		resources->GetSprite("textBox")->Render(x,y);
+		smh->resources->GetSprite("textBox")->Render(x,y);
 
 		//Display the NPC's face and name. npcID -1 means don't draw anything!
 		if (npcID == 255) {
-			resources->GetSprite("fenwarDown")->Render(x+60, y+50);
+			smh->resources->GetSprite("fenwarDown")->Render(x+60, y+50);
 		} else if (npcID != -1) {
 			graphic->Render(x+60-32, y+50-32);
 		}
 		paramString = "NPC";
 		paramString += intToString(textID);
 		paramString += "Name";
-		resources->GetFont("textBoxNameFnt")->printf(x + 220, y+20, HGETEXT_CENTER, "%s", smh->gameData->getGameText(paramString.c_str()));
+		smh->resources->GetFont("textBoxNameFnt")->printf(x + 220, y+20, HGETEXT_CENTER, "%s", smh->gameData->getGameText(paramString.c_str()));
 
 		//Print the current page of the conversation
 		paramString = "NPC";
 		paramString += intToString(textID);
 		paramString += "-";
 		paramString += intToString(currentPage);
-		resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, smh->gameData->getGameText(paramString.c_str()));
+		smh->resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, smh->gameData->getGameText(paramString.c_str()));
 
 		//Draw next page/OK icon
 		if (currentPage == numPages) {
-			resources->GetSprite("okIcon")->Render(x + 350, y + 220);
+			smh->resources->GetSprite("okIcon")->Render(x + 350, y + 220);
 		} else {
-			resources->GetSprite("arrowIcon")->Render(x + 350, y + 220);
+			smh->resources->GetSprite("arrowIcon")->Render(x + 350, y + 220);
 		}
 
 
 	} else if (textBoxType == TYPE_ABILITY) {
-		resources->GetSprite("textBox")->Render(x,y);
-		resources->GetAnimation("abilities")->SetFrame(ability);
-		resources->GetAnimation("abilities")->Render(x+180,y+20);
-		resources->GetFont("textBoxFnt")->printfb(x + 20, y + 25 + 64, 360, 200 - 64, HGETEXT_CENTER, "%s", text);
+		smh->resources->GetSprite("textBox")->Render(x,y);
+		smh->resources->GetAnimation("abilities")->SetFrame(ability);
+		smh->resources->GetAnimation("abilities")->Render(x+180,y+20);
+		smh->resources->GetFont("textBoxFnt")->printfb(x + 20, y + 25 + 64, 360, 200 - 64, HGETEXT_CENTER, "%s", text);
 
 	} else if (textBoxType == TYPE_SIGN) {
 		
-		resources->GetSprite("textBox")->Render(x,y);
-		resources->GetFont("textBoxFnt")->printfb(x + 20, y + 20, 360, 210, HGETEXT_CENTER, "%s", text);
+		smh->resources->GetSprite("textBox")->Render(x,y);
+		smh->resources->GetFont("textBoxFnt")->printfb(x + 20, y + 20, 360, 210, HGETEXT_CENTER, "%s", text);
 	}
 
 }
@@ -263,8 +262,8 @@ bool TextBox::update(float dt) {
 			increaseAlpha = true;
 		}
 	}
-	resources->GetSprite("okIcon")->SetColor(ARGB(255,alpha,alpha,alpha));
-	resources->GetSprite("arrowIcon")->SetColor(ARGB(255,alpha,alpha,alpha));
+	smh->resources->GetSprite("okIcon")->SetColor(ARGB(255,alpha,alpha,alpha));
+	smh->resources->GetSprite("arrowIcon")->SetColor(ARGB(255,alpha,alpha,alpha));
 
 	//Update psychedelic background for hints
 	if (textBoxType == TYPE_HINT && !fadingOut) {
@@ -322,7 +321,7 @@ bool TextBox::update(float dt) {
 	//Keep updating smiley's cane particle while the hint box is up so that it doesn't just
 	//sit there unanimated because it looks gay.
 	if (textBoxType == TYPE_HINT) {
-		resources->GetParticleSystem("smileysCane")->Update(dt);
+		smh->resources->GetParticleSystem("smileysCane")->Update(dt);
 	}
 
 	return true;
@@ -338,12 +337,12 @@ bool TextBox::doFadeOut(float dt) {
 	//Fade stuff out
 	if (fadeAlpha > 0.0) fadeAlpha -= 130.0 * dt;
 	if (fadeAlpha < 0.0) fadeAlpha = 0.0;
-	resources->GetSprite("textBox")->SetColor(ARGB(fadeAlpha,255,255,255));
-	resources->GetFont("textBoxNameFnt")->SetColor(ARGB(fadeAlpha,0,0,0));
-	resources->GetFont("textBoxDialogFnt")->SetColor(ARGB(fadeAlpha,0,0,0));
-	resources->GetSprite("okIcon")->SetColor(ARGB(fadeAlpha,255,255,255));
-	resources->GetSprite("arrowIcon")->SetColor(ARGB(fadeAlpha,255,255,255));
-	resources->GetSprite("billClinton")->SetColor(ARGB(fadeAlpha,255,255,255));
+	smh->resources->GetSprite("textBox")->SetColor(ARGB(fadeAlpha,255,255,255));
+	smh->resources->GetFont("textBoxNameFnt")->SetColor(ARGB(fadeAlpha,0,0,0));
+	smh->resources->GetFont("textBoxDialogFnt")->SetColor(ARGB(fadeAlpha,0,0,0));
+	smh->resources->GetSprite("okIcon")->SetColor(ARGB(fadeAlpha,255,255,255));
+	smh->resources->GetSprite("arrowIcon")->SetColor(ARGB(fadeAlpha,255,255,255));
+	smh->resources->GetSprite("billClinton")->SetColor(ARGB(fadeAlpha,255,255,255));
 	for (int i = 0; i < PSYCHEDELIC_GRANULARITY; i++) {
 		for(int j = 0; j < PSYCHEDELIC_GRANULARITY; j++) {
 			distortion->SetColor(i, j, ARGB(fadeAlpha, 0, 0, 0));
@@ -353,12 +352,12 @@ bool TextBox::doFadeOut(float dt) {
 
 	//Done fading out, set everything back to normal
 	if (fadeAlpha == 0.0) {
-		resources->GetSprite("textBox")->SetColor(ARGB(255,255,255,255));
-		resources->GetFont("textBoxNameFnt")->SetColor(ARGB(255,0,0,0));
-		resources->GetFont("textBoxDialogFnt")->SetColor(ARGB(255,0,0,0));
-		resources->GetSprite("okIcon")->SetColor(ARGB(255,255,255,255));
-		resources->GetSprite("arrowIcon")->SetColor(ARGB(255,255,255,255));
-		resources->GetSprite("billClinton")->SetColor(ARGB(255,255,255,255));
+		smh->resources->GetSprite("textBox")->SetColor(ARGB(255,255,255,255));
+		smh->resources->GetFont("textBoxNameFnt")->SetColor(ARGB(255,0,0,0));
+		smh->resources->GetFont("textBoxDialogFnt")->SetColor(ARGB(255,0,0,0));
+		smh->resources->GetSprite("okIcon")->SetColor(ARGB(255,255,255,255));
+		smh->resources->GetSprite("arrowIcon")->SetColor(ARGB(255,255,255,255));
+		smh->resources->GetSprite("billClinton")->SetColor(ARGB(255,255,255,255));
 		smh->soundManager->playPreviousMusic();
 		return false;
 	}

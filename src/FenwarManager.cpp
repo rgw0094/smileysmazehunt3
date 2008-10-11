@@ -11,7 +11,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern hgeResourceManager *resources;
 
 #define TRIGGER_DISTANCE 300
 
@@ -63,7 +62,7 @@ void FenwarManager::update(float dt) {
 				i->state = STATE_WARPING_IN;
 				i->timeEnteredState = smh->getGameTime();
 				smh->soundManager->playMusic("fenwarLietmotif");
-				particles->SpawnPS(&resources->GetParticleSystem("fenwarwarp")->info, getScreenX(i->x), getScreenY(i->y));
+				particles->SpawnPS(&smh->resources->GetParticleSystem("fenwarwarp")->info, getScreenX(i->x), getScreenY(i->y));
 			}
 		
 		//Has been triggered
@@ -88,7 +87,7 @@ void FenwarManager::update(float dt) {
 					if (smh->timePassedSince(i->timeTextBoxClosed) > 1.0) {
 						i->state = STATE_WARPING_OUT;
 						i->timeEnteredState = smh->getGameTime();
-						particles->SpawnPS(&resources->GetParticleSystem("fenwarwarp")->info, getScreenX(i->x), getScreenY(i->y));
+						particles->SpawnPS(&smh->resources->GetParticleSystem("fenwarwarp")->info, getScreenX(i->x), getScreenY(i->y));
 					}
 				}
 			}
@@ -115,7 +114,7 @@ void FenwarManager::draw(float dt) {
 	for(i = fenwarEncounterList.begin(); i != fenwarEncounterList.end(); i++) {
 
 		if (i->fenwarVisible) {
-			resources->GetSprite("fenwarDown")->Render(getScreenX(i->x), getScreenY(i->y));
+			smh->resources->GetSprite("fenwarDown")->Render(getScreenX(i->x), getScreenY(i->y));
 		}
 
 	}

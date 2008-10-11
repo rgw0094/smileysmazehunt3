@@ -14,7 +14,6 @@ using namespace std;
 
 extern SMH *smh;
 extern HGE *hge;
-extern hgeResourceManager *resources;
 extern EnemyManager *enemyManager;
 extern ProjectileManager *projectileManager;
 
@@ -231,9 +230,9 @@ void SmileletManager::doSmileletRun(std::list<oneSmilelet>::iterator c) {
 }
 
 void SmileletManager::drawSmilelet(std::list<oneSmilelet>::iterator c) {
-	resources->GetAnimation("smileletGfx")->SetFrame(c->dir);
-	resources->GetAnimation("smileletGfx")->SetColor(c->col);
-	resources->GetAnimation("smileletGfx")->Render(getScreenX(c->x),getScreenY(c->y));
+	smh->resources->GetAnimation("smileletGfx")->SetFrame(c->dir);
+	smh->resources->GetAnimation("smileletGfx")->SetColor(c->col);
+	smh->resources->GetAnimation("smileletGfx")->Render(getScreenX(c->x),getScreenY(c->y));
 }
 
 void SmileletManager::checkForNearbyFlower() {

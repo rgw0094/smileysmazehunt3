@@ -3,6 +3,7 @@
 #include "environment.h"
 #include "player.h"
 #include "smiley.h"
+#include "hgeresource.h"
 
 #include "hgeanim.h"
 
@@ -49,8 +50,8 @@ void Map::draw(float dt) {
 				drawY = windowY+(j-gridYOffset)*squareSize - ((int)yOffset%24);
 
 				//Main Layer
-				smh->getAnimation("mainLayer")->SetFrame(smh->environment->terrain[i][j]);
-				smh->getAnimation("mainLayer")->RenderStretch(drawX,drawY,drawX+squareSize,drawY+squareSize);
+				smh->resources->GetAnimation("mainLayer")->SetFrame(smh->environment->terrain[i][j]);
+				smh->resources->GetAnimation("mainLayer")->RenderStretch(drawX,drawY,drawX+squareSize,drawY+squareSize);
 
 				//Walk Layer
 				int c = smh->environment->collision[i][j];
@@ -62,8 +63,8 @@ void Map::draw(float dt) {
 						c != SHRINK_TUNNEL_HORIZONTAL &&
 						c != SHRINK_TUNNEL_VERTICAL &&					
 						!(isWarp(c) && smh->environment->variable[i][j] == 990)) {
-					smh->getAnimation("walkLayer")->SetFrame(smh->environment->collision[i][j]);
-					smh->getAnimation("walkLayer")->RenderStretch(drawX,drawY,drawX+squareSize,drawY+squareSize);
+					smh->resources->GetAnimation("walkLayer")->SetFrame(smh->environment->collision[i][j]);
+					smh->resources->GetAnimation("walkLayer")->RenderStretch(drawX,drawY,drawX+squareSize,drawY+squareSize);
 				}
 				
 				//Item Layer
@@ -110,16 +111,16 @@ void Map::draw(float dt) {
 
 				//Smiley
 				if (smh->player->gridX == i && smh->player->gridY == j) {
-					smh->getAnimation("player")->SetFrame(DOWN);
-					smh->getAnimation("player")->RenderStretch(drawX,drawY-5,drawX+squareSize,drawY+squareSize);	
+					smh->resources->GetAnimation("player")->SetFrame(DOWN);
+					smh->resources->GetAnimation("player")->RenderStretch(drawX,drawY-5,drawX+squareSize,drawY+squareSize);	
 				}
 			} else if (inBounds(i,j) && !smh->saveManager->isExplored(i,j)) {
 				//Calculate the top left corner of the square and its width
 				drawX = windowX+(i-gridXOffset)*squareSize - ((int)xOffset%24);
 				drawY = windowY+(j-gridYOffset)*squareSize - ((int)yOffset%24);
 
-				smh->getAnimation("mainLayer")->SetFrame(0);
-				smh->getAnimation("mainLayer")->RenderStretch(drawX,drawY,drawX+squareSize,drawY+squareSize);
+				smh->resources->GetAnimation("mainLayer")->SetFrame(0);
+				smh->resources->GetAnimation("mainLayer")->RenderStretch(drawX,drawY,drawX+squareSize,drawY+squareSize);
 			}
 		}
 	}

@@ -5,9 +5,7 @@
 #include "collisioncircle.h"
 #include "WindowFramework.h"
 #include "environment.h"
-
 #include "hgesprite.h"
-#include "hgeresource.h"
 
 extern SMH *smh;
 extern HGE *hge;

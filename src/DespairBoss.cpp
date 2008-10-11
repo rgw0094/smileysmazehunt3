@@ -14,7 +14,6 @@
 #include "WindowFramework.h"
 
 extern SMH *smh;
-extern hgeResourceManager *resources;
 extern ProjectileManager *projectileManager;
 extern LootManager *lootManager;
 extern HGE *hge;
@@ -103,7 +102,7 @@ DespairBoss::DespairBoss(int _gridX, int _gridY, int _groupID) {
  * Destructor
  */
 DespairBoss::~DespairBoss() {
-	//resources->Purge(RES_CALYPSO);
+	//smh->resources->Purge(RES_CALYPSO);
 	if (collisionBox) delete collisionBox;
 	if (damageCollisionBox) delete damageCollisionBox;
 	darkness = 0;
@@ -455,21 +454,21 @@ void DespairBoss::drawAfterSmiley(float dt) {
 void DespairBoss::drawCalypso(float dt) {
 
 	//Draw calypso
-	resources->GetSprite("playerShadow")->SetColor(ARGB(75.0 * (fadeAlpha/255.0),255,255,255));
-	resources->GetSprite("playerShadow")->RenderEx(getScreenX(x), getScreenY(y) + 75.0, 0.0, 2.0, 2.0);
-	resources->GetSprite("playerShadow")->SetColor(ARGB(75,255,255,255));
+	smh->resources->GetSprite("playerShadow")->SetColor(ARGB(75.0 * (fadeAlpha/255.0),255,255,255));
+	smh->resources->GetSprite("playerShadow")->RenderEx(getScreenX(x), getScreenY(y) + 75.0, 0.0, 2.0, 2.0);
+	smh->resources->GetSprite("playerShadow")->SetColor(ARGB(75,255,255,255));
 	
-	resources->GetSprite("calypso")->SetColor(ARGB(fadeAlpha,255,255,255));
-	resources->GetSprite("calypso")->Render(getScreenX(x), getScreenY(y) + floatingOffset);
+	smh->resources->GetSprite("calypso")->SetColor(ARGB(fadeAlpha,255,255,255));
+	smh->resources->GetSprite("calypso")->Render(getScreenX(x), getScreenY(y) + floatingOffset);
 
 	//Evil Calypso
 	if (isInEvilMode()) {
-		resources->GetSprite("evilCalypso")->SetColor(ARGB(evilAlpha,255,255,255));
-		resources->GetSprite("evilCalypso")->Render(getScreenX(x), getScreenY(y) + floatingOffset);
+		smh->resources->GetSprite("evilCalypso")->SetColor(ARGB(evilAlpha,255,255,255));
+		smh->resources->GetSprite("evilCalypso")->Render(getScreenX(x), getScreenY(y) + floatingOffset);
 	} else {
 		//Draw his shield
-		resources->GetSprite("calypsoShield")->SetColor(ARGB(shieldAlpha,255,255,255));
-		resources->GetSprite("calypsoShield")->Render(getScreenX(x), getScreenY(y) + floatingOffset);
+		smh->resources->GetSprite("calypsoShield")->SetColor(ARGB(shieldAlpha,255,255,255));
+		smh->resources->GetSprite("calypsoShield")->Render(getScreenX(x), getScreenY(y) + floatingOffset);
 
 	}
 
@@ -479,7 +478,7 @@ void DespairBoss::drawCalypso(float dt) {
 	if (state == DESPAIRBOSS_STUNNED) {
 		for (int n = 0; n < NUM_STUN_STARS; n++) {
 			stunStarAngles[n] += 2.0* PI * dt;
-			resources->GetSprite("stunStar")->Render(
+			smh->resources->GetSprite("stunStar")->Render(
 				getScreenX(x + cos(stunStarAngles[n])*25), 
 				getScreenY(y + sin(stunStarAngles[n])*7) - 75.0 + floatingOffset);
 		}
@@ -517,12 +516,12 @@ void DespairBoss::addProjectile(int type, float x, float y, float angle, float s
 
 	switch (type) {
 		case PROJECTILE_ICE:
-			newProjectile.particle = new hgeParticleSystem(&resources->GetParticleSystem("iceOrb")->info);
+			newProjectile.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("iceOrb")->info);
 			newProjectile.timeUntilNova = distance(x, y, smh->player->x, smh->player->y) / ICE_SPEED;
 			newProjectile.hasNovaed = false;
 			break;
 		case PROJECTILE_FIRE:
-			newProjectile.particle = new hgeParticleSystem(&resources->GetParticleSystem("fireOrb")->info);
+			newProjectile.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("fireOrb")->info);
 	}
 	
 	newProjectile.particle->FireAt(newProjectile.x, newProjectile.y);
@@ -577,7 +576,7 @@ void DespairBoss::updateProjectiles(float dt) {
 			if (!i->hasNovaed && smh->timePassedSince(i->timeCreated) > i->timeUntilNova) {
 				i->hasNovaed = true;
 				delete i->particle;
-				i->particle = new hgeParticleSystem(&resources->GetParticleSystem("calypsoIceNova")->info);
+				i->particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("calypsoIceNova")->info);
 				i->particle->FireAt(i->x, i->y);
 				i->dx = 0;
 				i->dy = 0;
@@ -621,7 +620,7 @@ void DespairBoss::updateProjectiles(float dt) {
 						//If the ice orb hasn't novaed yet it should when it hits Smiley
 						i->hasNovaed = true;
 						delete i->particle;
-						i->particle = new hgeParticleSystem(&resources->GetParticleSystem("calypsoIceNova")->info);
+						i->particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("calypsoIceNova")->info);
 						i->particle->FireAt(i->x, i->y);
 						i->dx = 0;
 						i->dy = 0;

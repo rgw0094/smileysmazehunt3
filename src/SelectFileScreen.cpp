@@ -10,7 +10,6 @@
 
 extern HGE *hge;
 extern SMH *smh;
-extern hgeResourceManager *resources;
 
 /**
  * Constructor
@@ -126,50 +125,50 @@ bool SelectFileScreen::update(float dt, float mouseX, float mouseY) {
 void SelectFileScreen::draw(float dt) {
 
 	//draw background
-	resources->GetSprite("menuBackground")->Render(0,0);
+	smh->resources->GetSprite("menuBackground")->Render(0,0);
 
-	resources->GetFont("curlz")->SetColor(ARGB(255,0,0,0));
-	resources->GetFont("curlz")->SetScale(1.0f);
+	smh->resources->GetFont("curlz")->SetColor(ARGB(255,0,0,0));
+	smh->resources->GetFont("curlz")->SetScale(1.0f);
 
 	//Draw save boxes
 	for (int i = 0; i < 4; i++) {
 		//Box
-		resources->GetSprite("menuSaveBox")->Render(saveBoxes[i].x, saveBoxes[i].y);
+		smh->resources->GetSprite("menuSaveBox")->Render(saveBoxes[i].x, saveBoxes[i].y);
 		//Save file info - don't draw if the delete prompt is up
 		if (!(deletePrompt && selectedFile == i)) {
 			if (smh->saveManager->isFileEmpty(i)) {
-				resources->GetFont("bigLoadFnt")->printf(saveBoxes[i].x + 100, saveBoxes[i].y + 5, 
+				smh->resources->GetFont("bigLoadFnt")->printf(saveBoxes[i].x + 100, saveBoxes[i].y + 5, 
 					HGETEXT_LEFT, "Empty");
 			} else {
-				resources->GetFont("bigLoadFnt")->printf(saveBoxes[i].x + 100, saveBoxes[i].y + 5, 
+				smh->resources->GetFont("bigLoadFnt")->printf(saveBoxes[i].x + 100, saveBoxes[i].y + 5, 
 					HGETEXT_LEFT, "File %d", i+1);
 			}
-			resources->GetFont("curlz")->printf(saveBoxes[i].x + 150, saveBoxes[i].y + 70, 
+			smh->resources->GetFont("curlz")->printf(saveBoxes[i].x + 150, saveBoxes[i].y + 70, 
 				HGETEXT_LEFT, "Time Played: %s", getTimeString(smh->saveManager->getTimePlayed(i)));
-			resources->GetFont("curlz")->printf(saveBoxes[i].x + 630, saveBoxes[i].y + 70, 
+			smh->resources->GetFont("curlz")->printf(saveBoxes[i].x + 630, saveBoxes[i].y + 70, 
 				HGETEXT_RIGHT, "Complete: %d", smh->saveManager->getCompletion(i));
 		}
 	}
 
 	//Draw smiley next to the selected game
-	resources->GetSprite("smileysFace")->Render(x + 51, y + 75 + 145*(selectedFile));
+	smh->resources->GetSprite("smileysFace")->Render(x + 51, y + 75 + 145*(selectedFile));
 
 	//Draw delete prompt if active
 	if (deletePrompt) {
 
 		//Speech bubble
-		resources->GetSprite("menuSpeechBubble")->Render(x + 50, y + 15 + 145*(selectedFile));
-		resources->GetFont("curlz")->SetColor(ARGB(255,0,0,0));
-		resources->GetFont("curlz")->SetScale(1.0f);
-		resources->GetFont("curlz")->printf(x+95,y+22 + 145*(selectedFile), HGETEXT_LEFT, "Are you sure you wish to delete this file?");
+		smh->resources->GetSprite("menuSpeechBubble")->Render(x + 50, y + 15 + 145*(selectedFile));
+		smh->resources->GetFont("curlz")->SetColor(ARGB(255,0,0,0));
+		smh->resources->GetFont("curlz")->SetScale(1.0f);
+		smh->resources->GetFont("curlz")->printf(x+95,y+22 + 145*(selectedFile), HGETEXT_LEFT, "Are you sure you wish to delete this file?");
 		
 		//Buttons
-		if (mouseOn == ON_DELETE_YES) resources->GetFont("curlz")->SetColor(ARGB(255,255,0,0));
-		resources->GetFont("curlz")->printf(x+150, y + 75 + 145*(selectedFile),HGETEXT_LEFT, "Yes");
-		resources->GetFont("curlz")->SetColor(ARGB(255,0,0,0));
-		if (mouseOn == ON_DELETE_NO) resources->GetFont("curlz")->SetColor(ARGB(255,255,0,0));
-		resources->GetFont("curlz")->printf(x+250, y + 75 + 145*(selectedFile),HGETEXT_LEFT, "No");
-		resources->GetFont("curlz")->SetColor(ARGB(255,0,0,0));
+		if (mouseOn == ON_DELETE_YES) smh->resources->GetFont("curlz")->SetColor(ARGB(255,255,0,0));
+		smh->resources->GetFont("curlz")->printf(x+150, y + 75 + 145*(selectedFile),HGETEXT_LEFT, "Yes");
+		smh->resources->GetFont("curlz")->SetColor(ARGB(255,0,0,0));
+		if (mouseOn == ON_DELETE_NO) smh->resources->GetFont("curlz")->SetColor(ARGB(255,255,0,0));
+		smh->resources->GetFont("curlz")->printf(x+250, y + 75 + 145*(selectedFile),HGETEXT_LEFT, "No");
+		smh->resources->GetFont("curlz")->SetColor(ARGB(255,0,0,0));
 
 	}
 
