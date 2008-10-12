@@ -8,8 +8,6 @@
 #include "MainMenu.h"
 #include "collisioncircle.h"
 #include "weaponparticle.h"
-#include "Tongue.h"
-#include "Worm.h"
 #include "SmileletManager.h"
 #include "hgefont.h"
 #include "hgeresource.h"

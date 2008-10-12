@@ -8,7 +8,6 @@
 #include "hgeresource.h"
 #include "WeaponParticle.h"
 #include "CollisionCircle.h"
-#include "Tongue.h"
 
 extern SMH *smh;
 

@@ -5,7 +5,6 @@
 #include "ProjectileManager.h"
 #include "lootmanager.h"
 #include "environment.h"
-#include "Tongue.h"
 #include "WeaponParticle.h"
 #include "WindowFramework.h"
 #include "CollisionCircle.h"

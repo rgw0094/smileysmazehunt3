@@ -3,13 +3,19 @@
 
 #define KNOCKBACK_DURATION 0.2
 
+#include <list>
+
 class CollisionCircle;
 class Tongue;
 class WeaponParticleSystem;
 class hgeRect;
 class Worm;
+class hgeRect;
 struct WormNode;
 
+//----------------------------------------------------------------
+//------------------ PLAYER --------------------------------------
+//----------------------------------------------------------------
 class Player {
 
 public:
@@ -153,6 +159,64 @@ private:
 	bool inShrinkTunnel;
 	bool frozen;
 	bool stunned;
+
+};
+
+//----------------------------------------------------------------
+//------------------ WORM ----------------------------------------
+//----------------------------------------------------------------
+struct WormNode {
+	int x,y;
+	int dir;
+};
+
+class Worm {
+public:
+	Worm(int gridX,int gridY);
+	~Worm();
+
+	void update();
+	void draw();
+	void reset();
+	WormNode getNode(int nodeNumber);
+
+private:
+	//Methods
+	void addWormTrail(); //adds a trail of nodes 1 pixel apart from the first node to smiley's position
+	void addWormNode(int x,int y,int direction);
+
+	//Variables
+	std::list<WormNode> theWorms;
+};
+
+//----------------------------------------------------------------
+//------------------ WORM ----------------------------------------
+//----------------------------------------------------------------
+class Tongue {
+
+public:
+	Tongue();
+	~Tongue();
+
+	//methods
+	void update(float dt);
+	void draw(float dt);
+	void startAttack();
+	bool testCollision(hgeRect *collisionBox);
+	bool testCollision(CollisionCircle *collisionCircle);
+	bool isAttacking();
+
+private:
+
+	int tongueState;
+	bool attacking;
+	bool hasActivatedSomething;
+	float timeStartedAttack;
+	float tongueOffsetAngle;
+	hgeRect *collisionBox;
+
+	//Used for calculating collision
+	float pointX, pointY, seperation, numPoints, testAngle;
 
 };
 

@@ -493,12 +493,6 @@
 					<File
 						RelativePath=".\src\player.h">
 					</File>
-					<File
-						RelativePath=".\src\Tongue.h">
-					</File>
-					<File
-						RelativePath=".\src\Worm.h">
-					</File>
 				</Filter>
 			</Filter>
 			<Filter

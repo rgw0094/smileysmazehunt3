@@ -2,7 +2,6 @@
 #include "EnemyFramework.h"
 #include "environment.h"
 #include "player.h"
-#include "Tongue.h"
 
 #include "hgeresource.h"
 #include "hgeanim.h"

@@ -5,7 +5,6 @@
 #include "player.h"
 #include "environment.h"
 #include "CollisionCircle.h"
-#include "Tongue.h"
 #include "WeaponParticle.h"
 
 extern SMH *smh;

@@ -1,5 +1,4 @@
 #include "SmileyEngine.h"
-#include "Worm.h"
 #include "Player.h"
 #include "hgeresource.h"
 
