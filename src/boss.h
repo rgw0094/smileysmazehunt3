@@ -2,7 +2,7 @@
 #define _BOSS_H_
 
 #include "hge.h"
-#include "SMH.h"
+#include "SmileyEngine.h"
 #include "hgeresource.h"
 #include "hgesprite.h"
 #include <list>

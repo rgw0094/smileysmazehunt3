@@ -1,4 +1,4 @@
-#include "SMH.h"
+#include "SmileyEngine.h"
 #include "TapestryManager.h"
 #include "hgedistort.h"
 #include "smiley.h"

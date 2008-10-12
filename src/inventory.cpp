@@ -1,4 +1,4 @@
-#include "SMH.h"
+#include "SmileyEngine.h"
 #include "WindowFramework.h"
 #include "player.h"
 #include "hgerect.h"

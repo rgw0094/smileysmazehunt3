@@ -435,16 +435,7 @@
 				Name="Enemy Framework"
 				Filter="">
 				<File
-					RelativePath=".\src\enemy.h">
-				</File>
-				<File
-					RelativePath=".\src\EnemyGroupManager.h">
-				</File>
-				<File
-					RelativePath=".\src\EnemyManager.h">
-				</File>
-				<File
-					RelativePath=".\src\EnemyState.h">
+					RelativePath=".\src\EnemyFramework.h">
 				</File>
 			</Filter>
 			<Filter
@@ -526,10 +517,10 @@
 					RelativePath=".\src\LoadEffectManager.h">
 				</File>
 				<File
-					RelativePath=".\src\SMH.h">
+					RelativePath=".\src\smiley.h">
 				</File>
 				<File
-					RelativePath=".\src\smiley.h">
+					RelativePath=".\src\SmileyEngine.h">
 				</File>
 			</Filter>
 			<Filter

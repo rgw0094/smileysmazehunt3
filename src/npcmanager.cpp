@@ -1,4 +1,4 @@
-#include "SMH.h"
+#include "SmileyEngine.h"
 #include "smiley.h"
 #include "npcManager.h"
 #include "collisioncircle.h"
@@ -12,7 +12,6 @@
 #include "hgesprite.h"
 
 extern SMH *smh;
-extern hgeStringTable *stringTable;
 
 NPCManager::NPCManager() { 
 	collisionCircle = new CollisionCircle();

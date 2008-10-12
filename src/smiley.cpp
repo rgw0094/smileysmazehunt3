@@ -1,7 +1,7 @@
 /**
  * Smiley's Maze Hunt 3 global functions
  */
-#include "SMH.h"
+#include "SmileyEngine.h"
 #include "smiley.h"
 #include "environment.h"
 #include "player.h"
@@ -195,6 +195,7 @@ int getFacingDirection(float dx, float dy) {
  * Shades the screen
  */
 void shadeScreen(int alpha) {
+	if (alpha == 0.0) return;
 	smh->resources->GetSprite("blackScreen")->SetColor(ARGB(alpha,255,255,255));
 	for (int i = 0; i < 35; i++) {
 		for (int j = 0; j < 26; j++) {

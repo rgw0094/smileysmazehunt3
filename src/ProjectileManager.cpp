@@ -1,10 +1,10 @@
-#include "SMH.h"
+#include "SmileyEngine.h"
 #include "smiley.h"
 #include "environment.h"
 #include "ProjectileManager.h"
 #include "player.h"
 #include "hgeresource.h"
-#include "EnemyManager.h"
+#include "EnemyFramework.h"
 #include "CollisionCircle.h"
 
 extern SMH *smh;

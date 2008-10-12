@@ -1,4 +1,4 @@
-#include "SMH.h"
+#include "SmileyEngine.h"
 #include "MainMenu.h"
 #include "smiley.h"
 #include "hgeresource.h"

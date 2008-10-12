@@ -1,6 +1,6 @@
 #include "resource1.h"
 #include "smiley.h"
-#include "SMH.h"
+#include "SmileyEngine.h"
 
 #using <mscorlib.dll>
 
@@ -8,43 +8,10 @@
 HGE *hge=0;
 SMH *smh;
 
-//Sprites
-hgeSprite *itemLayer[512];
-
-
-/**
- * Performs an initial load of game resources. Most resources are loaded dynamically
- * later as they are needed.
- */
-void loadResources() {
-
-	//Load item layer
-	for (int i = 0; i < 16; i++) {
-		for (int j = 0; j < 16; j++) {
-			itemLayer[j*16 + i] = new hgeSprite(smh->resources->GetTexture("itemLayer1"),i*64,j*64,64,64);
-		}
-	}
-	for (int i = 0; i < 16; i++) {
-		for (int j = 0; j < 16; j++) {
-			itemLayer[256+j*16+i] = new hgeSprite(smh->resources->GetTexture("itemLayer2"),i*64,j*64,64,64);
-		}
-	}	
-
-}
-
-
-/**
- * Frame function. This is called continously by HGE. Each
- * call of this function corresponds to a frame.
- */
 bool FrameFunc() {
 	return smh->updateGame(hge->Timer_GetDelta());
 }
 
-
-/**
- * Render Function
- */
 bool RenderFunc() {
 	hge->Gfx_BeginScene();
 	smh->drawGame(hge->Timer_GetDelta());
@@ -52,9 +19,6 @@ bool RenderFunc() {
 	return false;
 }
 
-/**
- * Called when the application closes
- */
 bool ExitFunc() {
 
 	//If they manually close the program while the game is active we still
@@ -94,7 +58,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			
 			smh = new SMH();
 			smh->init();
-			loadResources();
 
 			//Start HGE. When this function returns it means the program is exiting.
 			hge->System_Start();

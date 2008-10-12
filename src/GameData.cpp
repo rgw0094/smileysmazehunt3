@@ -3,7 +3,7 @@
  * 
  * Encapsulates all game data.
  */
-#include "SMH.h"
+#include "SmileyEngine.h"
 #include "smiley.h"
 #include "ProjectileManager.h"
 #include "Player.h"

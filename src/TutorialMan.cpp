@@ -1,4 +1,4 @@
-#include "SMH.h"
+#include "SmileyEngine.h"
 #include "TutorialMan.h"
 #include "hgeresource.h"
 #include "Player.h"

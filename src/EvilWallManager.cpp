@@ -2,7 +2,7 @@
 #include "Player.h"
 #include "Environment.h"
 #include "hge.h"
-#include "SMH.h"
+#include "SmileyEngine.h"
 
 extern SMH *smh;
 extern HGE *hge;

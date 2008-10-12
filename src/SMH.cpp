@@ -1,4 +1,4 @@
-#include "SMH.h"
+#include "SmileyEngine.h"
 #include "MainMenu.h"
 #include "hge.h"
 #include "hgeresource.h"
@@ -6,8 +6,7 @@
 #include "NPCManager.h"
 #include "Player.h"
 #include "WindowFramework.h"
-#include "EnemyGroupManager.h"
-#include "EnemyManager.h"
+#include "EnemyFramework.h"
 #include "LootManager.h"
 #include "FenwarManager.h"
 #include "ProjectileManager.h"
@@ -174,7 +173,7 @@ void SMH::drawGame(float dt) {
 		environment->drawAfterSmiley(dt);
 		fenwarManager->draw(dt);
 		projectileManager->draw(dt);
-		if (darkness > 0.0) shadeScreen(darkness);
+		shadeScreen(darkness);
 		loadEffectManager->draw(dt);
 		player->drawGUI(dt);
 		windowManager->draw(dt);

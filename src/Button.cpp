@@ -1,4 +1,4 @@
-#include "SMH.h"
+#include "SmileyEngine.h"
 #include "button.h"
 #include "hge.h"
 #include "hgefont.h"

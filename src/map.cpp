@@ -1,14 +1,12 @@
-#include "SMH.h"
+#include "SmileyEngine.h"
 #include "WindowFramework.h"
 #include "environment.h"
 #include "player.h"
 #include "smiley.h"
 #include "hgeresource.h"
-
 #include "hgeanim.h"
 
 extern SMH *smh;
-extern hgeSprite *itemLayer[512];
 
 /**
  * Constructor
@@ -68,8 +66,8 @@ void Map::draw(float dt) {
 				}
 				
 				//Item Layer
-				if (itemLayer[smh->environment->item[i][j]] != NONE) {
-					itemLayer[smh->environment->item[i][j]]->RenderStretch(drawX,drawY,drawX+squareSize,drawY+squareSize);
+				if (smh->environment->itemLayer[smh->environment->item[i][j]] != NONE) {
+					smh->environment->itemLayer[smh->environment->item[i][j]]->RenderStretch(drawX,drawY,drawX+squareSize,drawY+squareSize);
 				}
 
 				//Fog of war

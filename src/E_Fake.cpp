@@ -1,6 +1,5 @@
-#include "SMH.h"
-#include "EnemyState.h"
-#include "enemy.h"
+#include "SmileyEngine.h"
+#include "EnemyFramework.h"
 #include "hgeanim.h"
 
 extern SMH *smh;

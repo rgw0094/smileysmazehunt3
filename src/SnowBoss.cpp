@@ -1,16 +1,15 @@
-#include "SMH.h"
+#include "SmileyEngine.h"
 #include "smiley.h"
 #include "SnowBoss.h"
-#include "EnemyGroupManager.h"
 #include "Player.h"
 #include "ProjectileManager.h"
 #include "environment.h"
-#include "EnemyManager.h"
 #include "lootmanager.h"
 #include "WeaponParticle.h"
 #include "CollisionCircle.h"
 #include "Tongue.h"
 #include "WindowFramework.h"
+#include "EnemyFramework.h"
 
 extern SMH *smh;
 extern HGE *hge;

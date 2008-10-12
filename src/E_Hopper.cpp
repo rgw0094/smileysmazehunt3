@@ -1,5 +1,5 @@
-#include "SMH.h"
-#include "enemy.h"
+#include "SmileyEngine.h"
+#include "EnemyFramework.h"
 #include "smiley.h"
 #include "environment.h"
 #include "player.h"

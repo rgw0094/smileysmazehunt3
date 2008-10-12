@@ -1,7 +1,7 @@
 #include "hgefont.h"
 #include "MainMenu.h"
 #include "Button.h"
-#include "SMH.h"
+#include "SmileyEngine.h"
 #include "hgeresource.h"
 
 extern SMH *smh;
