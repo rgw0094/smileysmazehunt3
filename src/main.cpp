@@ -11,9 +11,6 @@ SMH *smh;
 //Sprites
 hgeSprite *itemLayer[512];
 
-//Variables
-float darkness = 0.0;
-
 
 /**
  * Performs an initial load of game resources. Most resources are loaded dynamically

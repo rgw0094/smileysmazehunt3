@@ -1,20 +1,13 @@
 #include "SMH.h"
 #include "WindowFramework.h"
 #include "player.h"
-#include "smiley.h"
-
 #include "hgerect.h"
 #include "hgeanim.h"
 #include "hgefont.h"
 #include "hgesprite.h"
 #include "hgeresource.h"
 
-//Objects
-extern HGE *hge;
 extern SMH *smh;
-
-//Sprites
-extern hgeSprite *itemLayer[256];
 
 #define INVENTORY_X_OFFSET ((1024.0-660.0)/2.0)
 #define INVENTORY_Y_OFFSET ((768.0-492.0)/2.0)

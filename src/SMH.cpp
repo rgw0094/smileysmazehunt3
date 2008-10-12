@@ -15,13 +15,13 @@
 #include "Boss.h"
 
 extern HGE *hge;
-extern float darkness;
 
 SMH::SMH() { 
 	debugMode = false;
 	gameTime = 0.0;
 	debugMovePressed = false;
 	lastDebugMoveTime = 0.0;
+	darkness = 0.0;
 }
 
 SMH::~SMH() { }
@@ -260,6 +260,10 @@ void SMH::enterGameState(int newState) {
 	}
 }
 
+/////////////////////////////////////////////
+///////////// ACCESSORS / MUTATORS //////////
+/////////////////////////////////////////////
+
 int SMH::getGameState() {
 	return gameState;
 }
@@ -288,7 +292,17 @@ int SMH::getCurrentFrame() {
 	return frameCounter;
 }
 
+void SMH::setDarkness(float _darkness) {
+	darkness = _darkness;
+}
+
+float SMH::getDarkness() {
+	return darkness;
+}
+
+/////////////////////////////
 ///// UTILITY FUNCTIONS /////
+/////////////////////////////
 
 /**
  * Draws a sprite at a global position.

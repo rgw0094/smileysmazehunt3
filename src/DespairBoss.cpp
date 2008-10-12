@@ -16,8 +16,6 @@
 extern SMH *smh;
 extern HGE *hge;
 
-extern float darkness;
-
 //Attributes
 #define HEALTH 10.0
 #define PROJECTILE_DELAY 1.2
@@ -103,7 +101,7 @@ DespairBoss::~DespairBoss() {
 	//smh->resources->Purge(RES_CALYPSO);
 	if (collisionBox) delete collisionBox;
 	if (damageCollisionBox) delete damageCollisionBox;
-	darkness = 0;
+	smh->setDarkness(0.0);
 	//resetProjectiles();
 }
 
@@ -203,7 +201,7 @@ bool DespairBoss::update(float dt) {
 		//Evil mode
 		if (smh->timePassedSince(lastEvilTime) > EVIL_DELAY) {
 			dx = dy = 0.0;
-			darkness = 0.0;
+			smh->setDarkness(0.0);
 			setState(DESPAIRBOSS_ENTEREVIL);
 		}
 
@@ -301,10 +299,10 @@ bool DespairBoss::update(float dt) {
 	//position to start circling smiley.
 	if (state == DESPAIRBOSS_ENTEREVIL) {
 		evilAlpha += 136.0*dt;
-		darkness += 80.0*dt;
+		smh->setDarkness(smh->getDarkness() + 80.0*dt);
 		shieldAlpha -= 136.0*dt;
 		if (shieldAlpha < 0.0) shieldAlpha = 0.0;
-		if (darkness > 150.0) darkness = 150.0;
+		if (smh->getDarkness() > 150.0) smh->setDarkness(150.0);
 		if (evilAlpha > 255.0) evilAlpha = 255.0;
 
 		//Once the screen has darkened move in position to circle smiley
@@ -370,8 +368,8 @@ bool DespairBoss::update(float dt) {
 	//Exit evil mode - the screen brightens
 	if (state == DESPAIRBOSS_EXITEVIL) {
 		evilAlpha -= 136.0*dt;
-		darkness -= 80.0*dt;
-		if (darkness < 0.0) darkness = 0.0;
+		smh->setDarkness(smh->getDarkness() - 80.0*dt);
+		if (smh->getDarkness() < 0.0) smh->setDarkness(0.0);
 		if (evilAlpha < 0.0) evilAlpha = 0.0;
 
 		//After evil mode is over, return to Calypso's starting point
