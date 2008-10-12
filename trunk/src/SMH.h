@@ -26,6 +26,11 @@ class NPCManager;
 class WindowManager;
 class EnemyGroupManager;
 class EnemyManager;
+class LootManager;
+class FenwarManager;
+class ProjectileManager;
+class BossManager;
+class LoadEffectManager;
 
 //Classes defined here
 class SMH;
@@ -45,7 +50,7 @@ public:
 	~SMH();
 
 	//Public methods
-	void updateGame(float dt);
+	bool updateGame(float dt);
 	void drawGame(float dt);
 	void init();
 	bool isDebugOn();
@@ -65,14 +70,19 @@ public:
 	float timePassedSince(float time);
 
 	//Game objects
+	BossManager *bossManager;
 	EnemyGroupManager *enemyGroupManager;
 	EnemyManager *enemyManager;
 	Environment *environment;
+	FenwarManager *fenwarManager;
 	GameData *gameData;
 	SmileyInput *input;
+	LoadEffectManager *loadEffectManager;
+	LootManager *lootManager;
 	MainMenu *menu;
 	NPCManager *npcManager;
 	Player *player;
+	ProjectileManager *projectileManager;
 	hgeResourceManager *resources;
 	SaveManager *saveManager;
 	SoundManager *soundManager;
@@ -80,6 +90,10 @@ public:
 
 private:
 
+	void doDebugInput(float dt);
+
+	bool debugMovePressed;
+	float lastDebugMoveTime;
 	float gameTime;
 	int gameState;
 	int frameCounter;

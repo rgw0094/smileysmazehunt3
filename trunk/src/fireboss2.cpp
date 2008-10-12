@@ -13,8 +13,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern LootManager *lootManager;
-extern ProjectileManager *projectileManager;
 
 #define TEXT_FIREBOSS2_INTRO 160
 #define TEXT_FIREBOSS2_VITAMINS 161
@@ -242,7 +240,7 @@ bool FireBossTwo::update(float dt) {
 				doDamage(smh->player->getDamage(), true);
 			}
 			//Lightning orbs
-			if (projectileManager->killProjectilesInBox(collisionBoxes[i], PROJECTILE_LIGHTNING_ORB) > 0) {
+			if (smh->projectileManager->killProjectilesInBox(collisionBoxes[i], PROJECTILE_LIGHTNING_ORB) > 0) {
 				doDamage(smh->player->getLightningOrbDamage() * 2.0, true);
 			}
 		}
@@ -273,7 +271,7 @@ bool FireBossTwo::update(float dt) {
 	if (state == FIREBOSS_FRIENDLY && !smh->windowManager->isTextBoxOpen()) {
 		//Drop fire breath
 		if (!droppedLoot) {
-			lootManager->addLoot(LOOT_NEW_ABILITY, startX*64.0+32.0, (startY+5)*64.0+32.0, WATER_BOOTS);
+			smh->lootManager->addLoot(LOOT_NEW_ABILITY, startX*64.0+32.0, (startY+5)*64.0+32.0, WATER_BOOTS);
 			droppedLoot = true;
 		}
 

@@ -7,8 +7,6 @@
 #include "smiley.h"
 
 extern SMH *smh;
-extern ProjectileManager *projectileManager;
-
 
 E_Turret::E_Turret(int id, int x, int y, int groupID) {
 	
@@ -75,7 +73,7 @@ void E_Turret::update(float dt) {
 				yOffset=0;
 				break;
 		}
-		projectileManager->addProjectile(xTurret+xOffset,yTurret+yOffset,projectileSpeed,angle,projectileDamage,true,rangedType,true);
+		smh->projectileManager->addProjectile(xTurret+xOffset,yTurret+yOffset,projectileSpeed,angle,projectileDamage,true,rangedType,true);
 	}
 
 }

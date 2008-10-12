@@ -14,8 +14,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern ProjectileManager *projectileManager;
-extern LootManager *lootManager;
 
 SnowBoss::SnowBoss(int _gridX,int _gridY,int _groupID) {
 	gridX=_gridX;
@@ -184,12 +182,12 @@ bool SnowBoss::update(float dt) {
 			float angle3 = angleToSmiley+0.5;
 			float angle4 = angleToSmiley-1.6;
 			float angle5 = angleToSmiley+1.6;
-			projectileManager->addProjectile(x,y-51.0,FLYING_FISH_SPEED,angleToSmiley,FLYING_FISH_DAMAGE,true,PROJECTILE_PENGUIN_FISH,true);
-			projectileManager->addProjectile(x,y-51.0,FLYING_FISH_SPEED,angle2,FLYING_FISH_DAMAGE,true,PROJECTILE_PENGUIN_FISH,true);
-			projectileManager->addProjectile(x,y-51.0,FLYING_FISH_SPEED,angle3,FLYING_FISH_DAMAGE,true,PROJECTILE_PENGUIN_FISH,true);
+			smh->projectileManager->addProjectile(x,y-51.0,FLYING_FISH_SPEED,angleToSmiley,FLYING_FISH_DAMAGE,true,PROJECTILE_PENGUIN_FISH,true);
+			smh->projectileManager->addProjectile(x,y-51.0,FLYING_FISH_SPEED,angle2,FLYING_FISH_DAMAGE,true,PROJECTILE_PENGUIN_FISH,true);
+			smh->projectileManager->addProjectile(x,y-51.0,FLYING_FISH_SPEED,angle3,FLYING_FISH_DAMAGE,true,PROJECTILE_PENGUIN_FISH,true);
 			if (numFishLaunched >= NUM_FISH_VOLLEYS-1) {
-				projectileManager->addProjectile(x,y-51.0,FLYING_FISH_SPEED,angle4,FLYING_FISH_DAMAGE,true,PROJECTILE_PENGUIN_FISH,true);
-				projectileManager->addProjectile(x,y-51.0,FLYING_FISH_SPEED,angle5,FLYING_FISH_DAMAGE,true,PROJECTILE_PENGUIN_FISH,true);
+				smh->projectileManager->addProjectile(x,y-51.0,FLYING_FISH_SPEED,angle4,FLYING_FISH_DAMAGE,true,PROJECTILE_PENGUIN_FISH,true);
+				smh->projectileManager->addProjectile(x,y-51.0,FLYING_FISH_SPEED,angle5,FLYING_FISH_DAMAGE,true,PROJECTILE_PENGUIN_FISH,true);
 			}
 			hge->Effect_Play(smh->resources->GetEffect("snd_sillyPad"));
 			lastFishLaunched=smh->getGameTime();
@@ -207,7 +205,7 @@ bool SnowBoss::update(float dt) {
 		if (smh->timePassedSince(timeEnteredState) > BEGIN_SLIDE_TIME) {
 			
 			//drop mana loot
-			lootManager->addLoot(LOOT_MANA,x,y,NULL);
+			smh->lootManager->addLoot(LOOT_MANA,x,y,NULL);
 
 			enterState(SNOWBOSS_SLIDING);
 		}
@@ -318,7 +316,7 @@ bool SnowBoss::update(float dt) {
 		alpha -= SNOWBOSS_FADE_SPEED*dt;
 		//Drop frisbee
 		if (!droppedLoot) {
-			lootManager->addLoot(LOOT_NEW_ABILITY, xLoot, yLoot, FRISBEE);
+			smh->lootManager->addLoot(LOOT_NEW_ABILITY, xLoot, yLoot, FRISBEE);
 			droppedLoot = true;
 			smh->saveManager->killBoss(SNOW_BOSS);
 			smh->enemyGroupManager->notifyOfDeath(groupID);

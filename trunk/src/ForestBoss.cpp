@@ -15,8 +15,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern ProjectileManager *projectileManager;
-extern LootManager *lootManager;
 
 ForestBoss::ForestBoss(int _gridX, int _gridY, int _groupID) {
 	gridX = _gridX;
@@ -111,7 +109,7 @@ bool ForestBoss::update(float dt) {
 		if (!anyTreeletsAlive()) {
 	
 			//Garmborn takes damage from the frisbees when his shield is down
-			if (projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_FRISBEE) > 0) {
+			if (smh->projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_FRISBEE) > 0) {
 				hge->Effect_Play(smh->resources->GetEffect("snd_garmbornHit"));
 				health -= HEALTH/(float)NUM_FRISBEES_TO_KILL;
 				numTreeletsToSpawn++;
@@ -126,7 +124,7 @@ bool ForestBoss::update(float dt) {
 
 			//Deflect frisbees that hit Garmborn when the shield is up.
 			frisbeeReflectBox->Set(x - 50, y - 70, x + 50, y + 70);
-			projectileManager->reflectProjectilesInBox(frisbeeReflectBox, PROJECTILE_FRISBEE);
+			smh->projectileManager->reflectProjectilesInBox(frisbeeReflectBox, PROJECTILE_FRISBEE);
 
 		}
 
@@ -148,7 +146,7 @@ bool ForestBoss::update(float dt) {
 		alpha -= 155.0*dt;
 		//When the forest boss is done fading out the boss sequence is finished
 		if (alpha < 0.0) {
-			lootManager->addLoot(LOOT_NEW_ABILITY, x, y, SPRINT_BOOTS);
+			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, SPRINT_BOOTS);
 			smh->soundManager->playMusic("forestMusic");
 			smh->enemyGroupManager->notifyOfDeath(groupID);
 			smh->saveManager->killBoss(FOREST_BOSS);
@@ -199,7 +197,7 @@ void ForestBoss::updateTreelets(float dt) {
 				}
 				
 				//Check for frisbee collision
-				if (projectileManager->killProjectilesInBox(treeletCollisionBox, PROJECTILE_FRISBEE) > 0) {
+				if (smh->projectileManager->killProjectilesInBox(treeletCollisionBox, PROJECTILE_FRISBEE) > 0) {
 					if (!treeletLocs[i].stunned) {
 						treeletLocs[i].stunned = true;
 						treeletLocs[i].stunAlpha = 0.0;

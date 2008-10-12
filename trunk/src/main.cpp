@@ -1,28 +1,11 @@
-#include "EnemyManager.h"
-#include "lootmanager.h"
-#include "ProjectileManager.h"
-#include "MainMenu.h"
-#include "player.h"
-#include "WindowFramework.h"
-#include "npcmanager.h"
-#include "boss.h"
-#include "EnemyGroupManager.h"
 #include "resource1.h"
 #include "smiley.h"
-#include "environment.h"
-#include "LoadEffectManager.h"
-#include "FenwarManager.h"
 #include "SMH.h"
 
 #using <mscorlib.dll>
 
 //Global Objects
 HGE *hge=0;
-LootManager *lootManager;
-ProjectileManager *projectileManager;
-BossManager *bossManager;
-LoadEffectManager *loadEffectManager;
-FenwarManager *fenwarManager;
 SMH *smh;
 
 //Sprites
@@ -30,8 +13,7 @@ hgeSprite *itemLayer[512];
 
 //Variables
 float darkness = 0.0;
-bool debugMovePressed = false;
-float lastDebugMoveTime = 0.0;
+
 
 /**
  * Performs an initial load of game resources. Most resources are loaded dynamically
@@ -53,155 +35,13 @@ void loadResources() {
 
 }
 
-/**
- * Loads the static game objects that persist until the program closes.
- */
-void loadGameObjects() {
-
-	smh = new SMH();
-	smh->init();
-			
-	hge->System_Log("Creating LoadEffectManager");
-	loadEffectManager = new LoadEffectManager();
-		
-	hge->System_Log("Creating Loot Manager");
-	lootManager = new LootManager();
-		
-	hge->System_Log("Creating Projectile Manager");
-	projectileManager = new ProjectileManager();		
-
-	hge->System_Log("Creating Boss Manager");
-	bossManager = new BossManager();
-
-	hge->System_Log("Creating FenwarManager");
-	fenwarManager = new FenwarManager();
-
-}
-
-/**
- * Put all gay debug input here.
- */
-void doDebugInput() {
-
-	//Toggle debug mode
-	if (hge->Input_KeyDown(HGEK_D)) smh->toggleDebugMode();
-
-	if (smh->getGameState() == GAME) {
-
-		//Toggle invincibility
-		if (hge->Input_KeyDown(HGEK_I)) {
-			smh->player->invincible = !smh->player->invincible;
-		}
-		
-		//Gives you life when you press L
-		if (hge->Input_KeyDown(HGEK_L)) {
-			smh->player->setHealth(smh->player->getMaxHealth());
-		}
-
-		//Teleport to warp zone
-		if (hge->Input_KeyDown(HGEK_F1)) {
-			if (!loadEffectManager->isEffectActive()) {
-				loadEffectManager->startEffect(-1, -1, DEBUG_AREA);
-			}
-		}
-
-		//Move smiley with num pad
-		int xMove = 0;
-		int yMove = 0;
-		if (hge->Input_GetKeyState(HGEK_NUMPAD8) || hge->Input_GetKeyState(HGEK_NUMPAD5) || hge->Input_GetKeyState(HGEK_NUMPAD4) || hge->Input_GetKeyState(HGEK_NUMPAD6)) {
-			if (!debugMovePressed) {
-				debugMovePressed = true;
-				lastDebugMoveTime = smh->getGameTime();
-			}
-			if (hge->Input_KeyDown(HGEK_NUMPAD8) || (smh->timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(HGEK_NUMPAD8))) yMove = -1;
-			if (hge->Input_KeyDown(HGEK_NUMPAD5) || (smh->timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(HGEK_NUMPAD5))) yMove = 1;
-			if (hge->Input_KeyDown(HGEK_NUMPAD4) || (smh->timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(HGEK_NUMPAD4))) xMove = -1;
-			if (hge->Input_KeyDown(HGEK_NUMPAD6) || (smh->timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(HGEK_NUMPAD6))) xMove = 1;
-		} else {
-			debugMovePressed = false;
-		}
-		if (abs(xMove) > 0 || abs(yMove) > 0) smh->player->moveTo(smh->player->gridX + xMove, smh->player->gridY + yMove);
-
-	}
-
-}
 
 /**
  * Frame function. This is called continously by HGE. Each
  * call of this function corresponds to a frame.
  */
 bool FrameFunc() {
-
-	float dt = hge->Timer_GetDelta();
-
-	smh->updateGame(dt);
-
-	doDebugInput();
-
-	//Update the input
-	smh->input->UpdateInput();
-	
-	//Input for taking screenshots
-	if (hge->Input_KeyDown(HGEK_F9)) {
-		hge->System_Snapshot();
-	}
-	
-	if (smh->getGameState() == MENU) {
-	
-		if (smh->menu->update(dt)) return true;
-		if (hge->Input_KeyDown(HGEK_ESCAPE)) return true;
-
-	} else if (smh->getGameState() == GAME) {
-
-		//Toggle game menu
-		if (smh->input->keyPressed(INPUT_PAUSE)) {
-			if (smh->windowManager->isGameMenuOpen()) {
-				smh->windowManager->closeWindow();
-			} else if (!smh->windowManager->isOpenWindow()) {
-				smh->windowManager->openGameMenu();
-			}
-		}
-
-		//Toggle options/exit
-		if (hge->Input_KeyDown(HGEK_ESCAPE)) {
-			smh->windowManager->openWindow(new MiniMenu(MINIMENU_EXIT));
-		}
-
-		//Update windows. The load effect and enemy group managers need to be updated at all
-		//times, even if a window is open!
-		smh->windowManager->update(dt);
-		loadEffectManager->update(dt);
-		smh->enemyGroupManager->update(dt);
-
-		//If no windows are open, update the game objects
-		if (!smh->windowManager->isOpenWindow()) {
-			
-			//Keep track of the time that no windows are open.
-			smh->setGameTime(smh->getGameTime() + dt);
-			
-			//If the loading effect isn't active, update the game objects
-			if (!loadEffectManager->isEffectActive()) {
-				
-				fenwarManager->update(dt);
-				smh->environment->updateTutorialMan(dt);
-
-				if (!fenwarManager->isEncounterActive() && !smh->environment->isTutorialManActive()) {
-					smh->player->update(dt);
-					smh->environment->update(dt);
-					bossManager->update(dt);
-					smh->enemyManager->update(dt);
-					lootManager->update(dt);
-					projectileManager->update(dt);
-					smh->npcManager->update(dt);
-				}
-			}
-
-		}
-	
-	}
-
-	// Continue execution
-	return false;
+	return smh->updateGame(hge->Timer_GetDelta());
 }
 
 
@@ -209,41 +49,8 @@ bool FrameFunc() {
  * Render Function
  */
 bool RenderFunc() {
-
-	//Start rendering
-	float dt=hge->Timer_GetDelta();
 	hge->Gfx_BeginScene();
-
-	if (smh->getGameState() == MENU) {
-		smh->menu->draw(dt);
-
-	} else {
-		
-		//Draw objects - order is very important!!!
-		smh->environment->draw(dt);
-		lootManager->draw(dt);
-		smh->enemyManager->draw(dt);
-		smh->npcManager->draw(dt);
-		bossManager->drawBeforeSmiley(dt);
-		smh->player->draw(dt);
-		bossManager->drawAfterSmiley(dt);
-		smh->environment->drawAfterSmiley(dt);
-		fenwarManager->draw(dt);
-		projectileManager->draw(dt);
-		if (darkness > 0.0) shadeScreen(darkness);
-		loadEffectManager->draw(dt);
-		smh->player->drawGUI(dt);
-		smh->windowManager->draw(dt);
-
-	}
-
-	if (smh->isDebugOn()) {
-		//Grid co-ords and fps
-		smh->resources->GetFont("curlz")->printf(1000,5,HGETEXT_RIGHT,"(%d,%d)  FPS: %d", 
-			smh->player->gridX, smh->player->gridY, hge->Timer_GetFPS());
-	}
-
-	//Finish rendering
+	smh->drawGame(hge->Timer_GetDelta());
 	hge->Gfx_EndScene();
 	return false;
 }
@@ -267,9 +74,9 @@ bool ExitFunc() {
  * Application entry point.
  */
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {	
-	// Get HGE interface
+	
+	//Set up the HGE engine
 	hge = hgeCreate(HGE_VERSION);
-
 	hge->System_SetState(HGE_INIFILE, "Data/Smiley.ini");
 	hge->System_SetState(HGE_LOGFILE, "SmileyLog.txt");
 	hge->System_SetState(HGE_FRAMEFUNC, FrameFunc);
@@ -288,11 +95,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		try {
 			
-			loadGameObjects();
+			smh = new SMH();
+			smh->init();
 			loadResources();
-
-			//Open the menu (this should go in menu constructor maybe)
-			smh->menu->open(TITLE_SCREEN);
 
 			//Start HGE. When this function returns it means the program is exiting.
 			hge->System_Start();

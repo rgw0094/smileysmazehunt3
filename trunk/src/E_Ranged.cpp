@@ -9,7 +9,6 @@
 #include "ProjectileManager.h"
 
 extern SMH *smh;
-extern ProjectileManager *projectileManager;
 
 E_Ranged::E_Ranged(int id, int x, int y, int groupID) {
 
@@ -48,7 +47,7 @@ void E_Ranged::update(float dt) {
 			//Fire ranged weapon
 			if (!frozen && !stunned && !smh->player->isInvisible()) {		
 				shotYet = true;
-				projectileManager->addProjectile(x, y, projectileSpeed, 
+				smh->projectileManager->addProjectile(x, y, projectileSpeed, 
 					getAngleBetween(x, y, smh->player->x, smh->player->y), 
 					projectileDamage, true, rangedType, true);
 			}

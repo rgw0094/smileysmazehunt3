@@ -9,7 +9,6 @@
 #include "CollisionCircle.h"
 
 extern SMH *smh;
-extern ProjectileManager *projectileManager;
 
 #define NUM_CHAIN_LINKS 4.0
 #define FLAIL_RADIUS 14.0

@@ -20,8 +20,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-;
-extern ProjectileManager *projectileManager;
 
 E_EvilEye::E_EvilEye(int id, int x, int y, int groupID) {
 
@@ -69,7 +67,7 @@ void E_EvilEye::update(float dt) {
 	if (eyeState == EYE_OPEN) {
 		if (!smh->player->isInvisible() && smh->timePassedSince(lastAttackTime) > ATTACK_DELAY) {
 			lastAttackTime = smh->getGameTime();
-			projectileManager->addProjectile(x, y, ATTACK_VELOCITY, 
+			smh->projectileManager->addProjectile(x, y, ATTACK_VELOCITY, 
 				getAngleBetween(x, y, smh->player->x, smh->player->y), ATTACK_DAMAGE, 
 				true, PROJECTILE_1, true);
 		}

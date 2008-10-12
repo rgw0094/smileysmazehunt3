@@ -15,8 +15,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern ProjectileManager *projectileManager;
-extern LootManager *lootManager;
 
 #define MUSHBOOM_HEALTH 14.0
 #define RIGHT_ARM_OFFSET_X -15
@@ -189,7 +187,7 @@ bool MushroomBoss::update(float dt) {
 		alpha -= MUSHBOOM_FADE_SPEED*dt;
 		//Drop frisbee
 		if (!droppedLoot) {
-			lootManager->addLoot(LOOT_NEW_ABILITY, x, y, SILLY_PAD);
+			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, SILLY_PAD);
 			droppedLoot = true;
 			smh->saveManager->killBoss(MUSHROOM_BOSS);
 			smh->enemyGroupManager->notifyOfDeath(groupID);
@@ -278,8 +276,8 @@ void MushroomBoss::doMiniMushrooms(float dt) {
 		spawnMiniMushroomProjectile();
 	}
 	//Test their collision with mushboom
-	if (projectileManager->killProjectilesInBox(collisionRects[0],PROJECTILE_MINI_MUSHROOM,false,true) > 0
-	||  projectileManager->killProjectilesInBox(collisionRects[1],PROJECTILE_MINI_MUSHROOM,false,true) > 0){
+	if (smh->projectileManager->killProjectilesInBox(collisionRects[0],PROJECTILE_MINI_MUSHROOM,false,true) > 0
+	||  smh->projectileManager->killProjectilesInBox(collisionRects[1],PROJECTILE_MINI_MUSHROOM,false,true) > 0){
 		health -= MINI_MUSHROOM_PROJECTILE_DAMAGE_TO_BRIAN;
 		if (health <= 0) {
 			initiateDeathSequence();
@@ -292,7 +290,7 @@ void MushroomBoss::spawnMiniMushroom() {
 }
 
 void MushroomBoss::spawnMiniMushroomProjectile() {
-	projectileManager->addProjectile(x,y,MINI_MUSHROOM_PROJECTILE_SPEED,
+	smh->projectileManager->addProjectile(x,y,MINI_MUSHROOM_PROJECTILE_SPEED,
 			getAngleBetween(x,y,smh->player->x,smh->player->y)+hge->Random_Float(-PI/32,PI/32),
 			MINI_MUSHROOM_PROJECTILE_DAMAGE,true,MINI_MUSHROOM_PROJECTILE_ID,true);
 }

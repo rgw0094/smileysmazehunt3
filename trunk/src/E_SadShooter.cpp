@@ -9,7 +9,6 @@
 #include "CollisionCircle.h"
 
 extern SMH *smh;
-extern ProjectileManager *projectileManager;
 
 #define ANGULAR_ACC 22.0
 #define SAD_SHOOTER_FRICTION 1.5
@@ -98,8 +97,8 @@ void E_SadShooter::update(float dt) {
 
 		
 		//Reflect different types of projectiles
-		projectileManager->reflectProjectilesInBox(collisionBlocker,PROJECTILE_FRISBEE);
-		projectileManager->reflectProjectilesInBox(collisionBlocker,PROJECTILE_LIGHTNING_ORB);
+		smh->projectileManager->reflectProjectilesInBox(collisionBlocker,PROJECTILE_FRISBEE);
+		smh->projectileManager->reflectProjectilesInBox(collisionBlocker,PROJECTILE_LIGHTNING_ORB);
 
 
 
