@@ -120,7 +120,7 @@ void NPC::draw(float dt) {
 	sprites[facing]->Render(getScreenX(x), getScreenY(y));
 	//Debug mode stuff
 	if (smh->isDebugOn()) {
-		drawCollisionBox(collisionBox, RED);
+		smh->drawCollisionBox(collisionBox, RED);
 	}
 }
 

@@ -33,7 +33,7 @@ CreditsScreen::~CreditsScreen() {
 
 void CreditsScreen::draw(float dt) {
 	
-	shadeScreen(255.0);
+	smh->shadeScreen(255.0);
 
 	//Title and credits
 	smh->resources->GetFont("titleFnt")->printf(512.0,TITLE_START - offset,HGETEXT_CENTER,"Smiley's Maze Hunt");

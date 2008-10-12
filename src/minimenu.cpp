@@ -47,7 +47,7 @@ MiniMenu::~MiniMenu() {
 void MiniMenu::draw(float dt) {
 
 	//Shade the screen behind the menu
-	shadeScreen(100);
+	smh->shadeScreen(100);
 
 	//Draw buttons
 	std::list<ButtonStruct>::iterator i;

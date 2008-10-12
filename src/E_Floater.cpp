@@ -93,7 +93,7 @@ void E_Floater::draw(float dt) {
 	smh->resources->GetSprite("playerShadow")->Render(screenX, screenY);
 
 	if (smh->isDebugOn()) {
-		drawCollisionBox(collisionBox, RED);
+		smh->drawCollisionBox(collisionBox, RED);
 	}
 
 }

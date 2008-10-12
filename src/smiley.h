@@ -106,14 +106,11 @@ struct Point {
 };
 
 //Global functions
-bool inBounds(int gridX, int gridY);
-void drawCollisionBox(hgeRect *box, int color);
 int getScreenX(int x);
 int getScreenY(int y);
 int getGridX(int x);
 int getGridY(int y);
 int distance(int x1, int y1, int x2, int y2);
-const char *getTimeString(int seconds);
 std::string intToString(int dickens);
 std::string intToString(int dickens, int numDigits);
 bool isCylinderSwitchLeft(int id);
@@ -124,10 +121,7 @@ bool isWarp(int id);
 float maxFloat(float num1, float num2);
 float maxFloat(float f1, float f2, float f3, float f4);
 int getFacingDirection(float dx, float dy);
-void shadeScreen(int alpha);
 float getAngleBetween(int x1, int y1, int x2, int y2);
 int getKeyIndex(int area);
-int roundUp(float num);
-int getCurrentHint();
 
 #endif

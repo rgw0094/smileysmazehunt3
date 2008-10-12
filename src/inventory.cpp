@@ -30,7 +30,7 @@ Inventory::~Inventory() { }
 void Inventory::draw(float dt) {
 
 	//Shade the screen behind the inventory
-	shadeScreen(100);
+	smh->shadeScreen(100);
 
 	//Draw the inventory background
 	smh->resources->GetSprite("inventory")->Render(INVENTORY_X_OFFSET, INVENTORY_Y_OFFSET);

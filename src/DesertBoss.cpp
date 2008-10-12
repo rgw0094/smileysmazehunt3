@@ -96,7 +96,7 @@ void DesertBoss::draw(float dt) {
 
 	//Debug mode stuff
 	if (smh->isDebugOn()) {
-		drawCollisionBox(collisionBox, RED);
+		smh->drawCollisionBox(collisionBox, RED);
 	}
 
 }
@@ -402,7 +402,7 @@ void DesertBoss::drawGroundSpikes(float dt) {
 				//Debug mode - collision boxes
 				if (smh->isDebugOn()) {
 					setGroundSpikeCollisionBox(groundSpikes[i][j].x, groundSpikes[i][j].y);
-					drawCollisionBox(spikeCollisionBox, RED);
+					smh->drawCollisionBox(spikeCollisionBox, RED);
 				}
 	
 			}

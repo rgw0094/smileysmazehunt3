@@ -285,7 +285,7 @@ void SmileletManager::checkForNearbyFlower() {
 }
 
 bool SmileletManager::isFlowerAt(int gridX,int gridY) {
-	if (!inBounds(gridX,gridY)) return false;
+	if (!smh->environment->isInBounds(gridX,gridY)) return false;
 	
 	return (smh->environment->isSadSmileletFlowerAt(gridX,gridY));
 }

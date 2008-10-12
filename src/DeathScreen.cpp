@@ -64,7 +64,7 @@ void DeathScreen::draw(float dt) {
 	//Death screen background fades in
 	if (alpha < 255.0f) alpha += 200.0f*dt;
 	if (alpha > 255.0f) alpha = 255.0f;
-	shadeScreen(alpha);
+	smh->shadeScreen(alpha);
 
 	smh->resources->GetFont("textBoxNameFnt")->SetColor(ARGB(alpha,255,255,255));
 	smh->resources->GetFont("textBoxNameFnt")->printf(512,300,HGETEXT_CENTER, "Game Over");

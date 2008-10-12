@@ -97,11 +97,11 @@ class BaseEnemy {
 
 public:
 
-	//Methods that need to be overrode
+	//Methods that need to be overridden
 	virtual void draw(float dt) = 0;
 	virtual void update(float dt) = 0;
 
-	//Methods that can be overrode
+	//Methods that can be overridden
 	virtual void drawFrozen(float dt);
 	virtual void drawStunned(float dt);
 	virtual void drawDebug();
@@ -110,7 +110,7 @@ public:
 	virtual bool doTongueCollision(Tongue* tongue, float damage);
 	virtual void doPlayerCollision();
 
-	//Methods that can't be overrode
+	//Methods that can't be overridden
 	void baseUpdate(float dt);
 	void baseDraw(float dt);
 	void move(float dt);

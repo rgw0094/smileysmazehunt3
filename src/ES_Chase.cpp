@@ -42,7 +42,7 @@ void ES_Chase::update(float dt) {
 		//Find the best square to go to next
 		for (int i = owner->gridX - 1; i <= owner->gridX+1; i++) {
 			for (int j = owner->gridY-1; j <= owner->gridY+1; j++) {
-				if (inBounds(i,j) && owner->mapPath[i][j] >= 0 && owner->mapPath[i][j] < 999) {
+				if (smh->environment->isInBounds(i,j) && owner->mapPath[i][j] >= 0 && owner->mapPath[i][j] < 999) {
 					if (owner->mapPath[i][j] <= lowValue) {
 						lowValue = owner->mapPath[i][j];
 						owner->targetX = i;

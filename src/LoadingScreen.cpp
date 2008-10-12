@@ -25,7 +25,7 @@ void LoadingScreen::draw(float dt) {
 	if (fromLoadScreen) {
 		smh->drawSprite("menuBackground", 0, 0);
 	} else {
-		shadeScreen(255.0);
+		smh->shadeScreen(255.0);
 	}
 
 	smh->resources->GetFont("titleFnt")->printf(512,150,HGETEXT_CENTER, "Loading...");

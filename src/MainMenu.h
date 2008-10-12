@@ -181,6 +181,7 @@ public:
 	bool update(float dt, float mouseX, float mouseY);
 	void enterScreen();
 	void exitScreen();
+	const char *getTimeString(int seconds);
 
 	Button *buttons[SFS_NUM_BUTTONS];
 	SaveBox saveBoxes[4];

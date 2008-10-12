@@ -482,8 +482,8 @@ void DespairBoss::drawCalypso(float dt) {
 
 	//Debug mode - draw collision box
 	if (smh->isDebugOn()) {
-		drawCollisionBox(collisionBox, RED);
-		drawCollisionBox(damageCollisionBox, RED);
+		smh->drawCollisionBox(collisionBox, RED);
+		smh->drawCollisionBox(damageCollisionBox, RED);
 	}
 
 	//Draw the health bar
@@ -541,7 +541,7 @@ void DespairBoss::drawProjectiles(float dt) {
 		i->particle->Render();
 
 		//Debug mode - draw the collision Circle
-		if (smh->isDebugOn()) drawCollisionBox(i->collisionBox, RED);
+		if (smh->isDebugOn()) smh->drawCollisionBox(i->collisionBox, RED);
 
 	}
 
