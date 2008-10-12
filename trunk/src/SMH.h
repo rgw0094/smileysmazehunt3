@@ -61,6 +61,8 @@ public:
 	int getGameState();
 	float getGameTime();
 	float getRealTime();
+	void setDarkness(float darkness);
+	float getDarkness();
 
 	//Utility Functions
 	void drawGlobalSprite(const char* sprite, float x, float y);
@@ -98,6 +100,7 @@ private:
 	int gameState;
 	int frameCounter;
 	bool debugMode;
+	float darkness;
 
 };
 

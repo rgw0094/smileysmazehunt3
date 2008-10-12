@@ -7,7 +7,6 @@
 #include "Smiley.h"
 
 extern SMH *smh;
-extern float darkness;
 
 /**
  * Constructor
@@ -16,7 +15,7 @@ DeathScreen::DeathScreen() {
 	buttons[DS_QUIT_BUTTON] = new Button(250.0, 650.0, "Quit");
 	buttons[DS_CONTINUE_BUTTON] = new Button(1024.0-250.0-250.0, 650.0, "Continue");
 	alpha = 0;
-	darkness = 0.0;
+	smh->setDarkness(0.0);
 }
 
 /**
