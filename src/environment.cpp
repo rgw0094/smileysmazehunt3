@@ -32,13 +32,6 @@
 //Objects
 extern HGE *hge;
 extern SMH *smh;
-extern LootManager *lootManager;
-extern ProjectileManager *projectileManager;
-extern TextBox *theTextBox;
-extern hgeStringTable *stringTable;
-extern BossManager *bossManager;
-extern LoadEffectManager *loadEffectManager;
-extern FenwarManager *fenwarManager;
 
 //Sprites
 extern hgeSprite *itemLayer[512];
@@ -137,17 +130,17 @@ Environment::~Environment() {
  */
 void Environment::reset() {
 
-	bossManager->reset();
+	smh->bossManager->reset();
 	smh->enemyManager->reset();
-	projectileManager->reset();
-	lootManager->reset();
+	smh->projectileManager->reset();
+	smh->lootManager->reset();
 	smh->npcManager->reset();
 	smh->enemyGroupManager->resetGroups();
 	tapestryManager->reset();
 	specialTileManager->reset();
 	evilWallManager->reset();
 	smileletManager->reset();
-	fenwarManager->reset();
+	smh->fenwarManager->reset();
 
 	if (fountain) {
 		delete fountain;
@@ -379,7 +372,7 @@ void Environment::loadArea(int id, int from) {
 			if (enemy == 255) {
 
 				if (!smh->saveManager->isTileChanged(col, row)) {
-					fenwarManager->addFenwarEncounter(col, row, ids[col][row]);
+					smh->fenwarManager->addFenwarEncounter(col, row, ids[col][row]);
 				}
 
 			//240-256 are bosses
@@ -387,7 +380,7 @@ void Environment::loadArea(int id, int from) {
 
 				//Spawn the boss if it has never been killed
 				if (!smh->saveManager->isBossKilled(enemy)) {
-					bossManager->spawnBoss(enemy, variable[col][row], col, row);
+					smh->bossManager->spawnBoss(enemy, variable[col][row], col, row);
 				}
 
 			//1-127 are enemies
@@ -495,7 +488,7 @@ void Environment::loadArea(int id, int from) {
 	smh->enemyManager->update(0.0);
 
 	//Tell the LoadEffectManager to display the new area name
-	loadEffectManager->displayNewAreaName();
+	smh->loadEffectManager->displayNewAreaName();
 
 }
 

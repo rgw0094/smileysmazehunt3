@@ -21,10 +21,7 @@
 //Objects
 extern HGE *hge;
 extern SMH *smh;
-extern hgeParticleSystem *iceBreathParticle;
-extern ProjectileManager *projectileManager;
-extern TextBox *theTextBox;
-extern LoadEffectManager *loadEffectManager;
+
 
 #define SLIME_ACCEL 500.0			//Player acceleration on slime
 #define PLAYER_ACCEL 5000.0		//Normal player acceleration
@@ -141,7 +138,7 @@ void Player::update(float dt) {
 
 	//Do level exits
 	if (smh->environment->collision[gridX][gridY] == PLAYER_END) {
-		loadEffectManager->startEffect(0, 0, smh->environment->ids[gridX][gridY]);
+		smh->loadEffectManager->startEffect(0, 0, smh->environment->ids[gridX][gridY]);
 		return;
 	}	
 
@@ -620,7 +617,7 @@ void Player::doAbility(float dt) {
 		if (selectedAbility == LIGHTNING_ORB && mana >= smh->gameData->getAbilityInfo(LIGHTNING_ORB).manaCost) {
 			mana -= smh->gameData->getAbilityInfo(LIGHTNING_ORB).manaCost;
 			lastOrb = smh->getGameTime();
-			projectileManager->addProjectile(x, y, 700.0, angles[facing]-.5*PI, getLightningOrbDamage(), false, PROJECTILE_LIGHTNING_ORB, true);
+			smh->projectileManager->addProjectile(x, y, 700.0, angles[facing]-.5*PI, getLightningOrbDamage(), false, PROJECTILE_LIGHTNING_ORB, true);
 		}
 
 		//Start using cane
@@ -646,9 +643,9 @@ void Player::doAbility(float dt) {
 		}
 		
 		//Throw frisbee
-		if (selectedAbility == FRISBEE && !projectileManager->frisbeeActive() && mana >= smh->gameData->getAbilityInfo(FRISBEE).manaCost) {
+		if (selectedAbility == FRISBEE && !smh->projectileManager->frisbeeActive() && mana >= smh->gameData->getAbilityInfo(FRISBEE).manaCost) {
 			mana -= smh->gameData->getAbilityInfo(FRISBEE).manaCost;
-			projectileManager->addProjectile(x,y,400.0,angles[facing]-.5*PI,0,false,PROJECTILE_FRISBEE, true);
+			smh->projectileManager->addProjectile(x,y,400.0,angles[facing]-.5*PI,0,false,PROJECTILE_FRISBEE, true);
 		}
 
 		//Toggle shrink mode
@@ -803,7 +800,7 @@ void Player::doWarps() {
 						} else if (facing == UP || facing == UP_LEFT || facing == UP_RIGHT) {
 							destY--;
 						}
-						loadEffectManager->startEffect(destX, destY, smh->saveManager->currentArea);
+						smh->loadEffectManager->startEffect(destX, destY, smh->saveManager->currentArea);
 					} else {
 						x = 64.0 * i + 64.0/2;
 						y = 64.0 * j + 64.0/2;

@@ -12,7 +12,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern LootManager *lootManager;
 
 //States
 #define FIREBOSS_INACTIVE 0
@@ -333,7 +332,7 @@ bool FireBoss::update(float dt) {
 	if (state == FIREBOSS_FRIENDLY && !smh->windowManager->isTextBoxOpen()) {
 		//Drop fire breath
 		if (!droppedLoot) {
-			lootManager->addLoot(LOOT_NEW_ABILITY, startX*64.0+32.0, startY*64.0+32.0, FIRE_BREATH);
+			smh->lootManager->addLoot(LOOT_NEW_ABILITY, startX*64.0+32.0, startY*64.0+32.0, FIRE_BREATH);
 			droppedLoot = true;
 		}
 		x += 200.0f*dt;

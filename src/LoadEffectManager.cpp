@@ -15,8 +15,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern LootManager *lootManager;
-extern ProjectileManager *projectileManager;
 
 #define STATE_IN 0
 #define STATE_OUT 1
@@ -125,8 +123,8 @@ void LoadEffectManager::update(float dt) {
 				smh->player->moveTo(destinationX, destinationY);
 				smh->environment->update(0.0);
 				smh->enemyManager->update(0.0);
-				lootManager->update(0.0);
-				projectileManager->update(0.0);
+				smh->lootManager->update(0.0);
+				smh->projectileManager->update(0.0);
 			} else {
 				smh->environment->loadArea(destinationArea, smh->saveManager->currentArea);
 				zoneTextAlpha = 255.0;

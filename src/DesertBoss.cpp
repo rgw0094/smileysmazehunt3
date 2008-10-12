@@ -16,8 +16,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern ProjectileManager *projectileManager;
-extern LootManager *lootManager;
 
 #define TEXT_DESERTBOSS_INTRO 130
 #define TEXT_DESERTBOSS_VICTORY 131
@@ -174,7 +172,7 @@ bool DesertBoss::update(float dt) {
 			//Launch spikes
 			if (smh->timePassedSince(lastSpikeLaunch) > 0.1) {
 				for (int i = 0; i < NUM_SPIKE_STREAMS; i++) {				
-					projectileManager->addProjectile(x + 63.0*cos(spikeAngles[i]), y - 30.0 + 63.0*sin(spikeAngles[i]), 600, spikeAngles[i], FLYING_SPIKE_DAMAGE, true, PROJECTILE_CACTUS_SPIKE, false);
+					smh->projectileManager->addProjectile(x + 63.0*cos(spikeAngles[i]), y - 30.0 + 63.0*sin(spikeAngles[i]), 600, spikeAngles[i], FLYING_SPIKE_DAMAGE, true, PROJECTILE_CACTUS_SPIKE, false);
 				}
 				lastSpikeLaunch = smh->getGameTime();
 			}
@@ -247,7 +245,7 @@ bool DesertBoss::update(float dt) {
 			alpha = 0.0;
 			smh->soundManager->playMusic("oldeTowneMusic");
 			smh->enemyGroupManager->notifyOfDeath(groupID);
-			lootManager->addLoot(LOOT_NEW_ABILITY, x, y, LIGHTNING_ORB);
+			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, LIGHTNING_ORB);
 			smh->saveManager->killBoss(DESERT_BOSS);
 			return true;
 		}

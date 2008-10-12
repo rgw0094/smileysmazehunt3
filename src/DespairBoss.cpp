@@ -14,8 +14,6 @@
 #include "WindowFramework.h"
 
 extern SMH *smh;
-extern ProjectileManager *projectileManager;
-extern LootManager *lootManager;
 extern HGE *hge;
 
 extern float darkness;
@@ -216,7 +214,7 @@ bool DespairBoss::update(float dt) {
 	if (state != DESPAIRBOSS_STUNNED) {
 
 		//When Calypso is hit by lightning orbs his shield absorbs them.
-		shieldAlpha += projectileManager->killProjectilesInCircle(x, y, 90, 
+		shieldAlpha += smh->projectileManager->killProjectilesInCircle(x, y, 90, 
 			PROJECTILE_LIGHTNING_ORB) * 10.0;
 
 		//The absorbed energy slowly dissipates
@@ -224,7 +222,7 @@ bool DespairBoss::update(float dt) {
 		if (shieldAlpha < 0.0) shieldAlpha = 0.0;
 
 		//The shield reflects frisbees
-		projectileManager->reflectProjectilesInCircle(x, y, 90, PROJECTILE_FRISBEE);
+		smh->projectileManager->reflectProjectilesInCircle(x, y, 90, PROJECTILE_FRISBEE);
 
 		//When his shield absorbs too much it explodes, leaving him vulnerable
 		if (shieldAlpha > 180.0) {
@@ -237,7 +235,7 @@ bool DespairBoss::update(float dt) {
 			//Shoot lightning orbs in all directions
 			for (int i = 0; i < 14; i++) {
 				angle = float(i)*(2.0*PI/14.0);
-				projectileManager->addProjectile(x + 90.0 * cos(angle), y + 90.0 * sin(angle), 
+				smh->projectileManager->addProjectile(x + 90.0 * cos(angle), y + 90.0 * sin(angle), 
 					300, angle, LIGHTNING_DAMAGE, true, PROJECTILE_LIGHTNING_ORB, true);
 			}
 
@@ -264,12 +262,12 @@ bool DespairBoss::update(float dt) {
 		}
 
 		//Take damage from lightning orbs
-		if (projectileManager->killProjectilesInCircle(x, y, 90, PROJECTILE_LIGHTNING_ORB) > 0) {
+		if (smh->projectileManager->killProjectilesInCircle(x, y, 90, PROJECTILE_LIGHTNING_ORB) > 0) {
 			health -= smh->player->getLightningOrbDamage();
 		}
 
 		//Frisbees still have no effect
-		projectileManager->killProjectilesInCircle(x, y, 90, PROJECTILE_FRISBEE);
+		smh->projectileManager->killProjectilesInCircle(x, y, 90, PROJECTILE_FRISBEE);
 
 		//Stun wears off after several seconds
 		if (smh->timePassedSince(timeEnteredState) > STUN_DURATION) {
@@ -399,11 +397,11 @@ bool DespairBoss::update(float dt) {
 			float angle = getAngleBetween(x, y, smh->player->x, smh->player->y) +
 				hge->Random_Float(-(PI/16.0), PI/16.0);
 			//Left eye
-			projectileManager->addProjectile(x - 10 + 50*cos(angle), 
+			smh->projectileManager->addProjectile(x - 10 + 50*cos(angle), 
 				y - 60 + floatingOffset + 50*sin(angle), 
 				LASER_SPEED, angle, LASER_DAMAGE, true, PROJECTILE_LASER, true);
 			//Right eye
-			projectileManager->addProjectile(x + 10 + 50*cos(angle), 
+			smh->projectileManager->addProjectile(x + 10 + 50*cos(angle), 
 				y - 60 + floatingOffset + 50*sin(angle),  
 				LASER_SPEED, angle, LASER_DAMAGE, true, PROJECTILE_LASER, true);
 		}
@@ -423,7 +421,7 @@ bool DespairBoss::update(float dt) {
 		//When done fading away, drop the loot
 		if (fadeAlpha < 0.0) {
 			fadeAlpha = 0.0;
-			lootManager->addLoot(LOOT_NEW_ABILITY, x, y, REFLECTION_SHIELD);
+			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, REFLECTION_SHIELD);
 			smh->soundManager->playMusic("realmOfDespairMusic");
 			return true;
 		}

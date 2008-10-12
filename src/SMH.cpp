@@ -8,12 +8,20 @@
 #include "WindowFramework.h"
 #include "EnemyGroupManager.h"
 #include "EnemyManager.h"
+#include "LootManager.h"
+#include "FenwarManager.h"
+#include "ProjectileManager.h"
+#include "LoadEffectManager.h"
+#include "Boss.h"
 
 extern HGE *hge;
+extern float darkness;
 
 SMH::SMH() { 
 	debugMode = false;
 	gameTime = 0.0;
+	debugMovePressed = false;
+	lastDebugMoveTime = 0.0;
 }
 
 SMH::~SMH() { }
@@ -51,17 +59,32 @@ void SMH::init() {
 	log("Creating NPCManager");
 	npcManager = new NPCManager();
 
-	log("Creating MainMenu");
-	menu = new MainMenu();
-
 	log("Creating SoundManager");
 	soundManager = new SoundManager();
+
+	log("Creating MainMenu");
+	menu = new MainMenu();
 
 	log("Creating WindowManager");
 	windowManager = new WindowManager();
 
 	log("Creating EnemyGroupManager");
 	enemyGroupManager = new EnemyGroupManager();
+
+	log("Creating LoadEffectManager");
+	loadEffectManager = new LoadEffectManager();
+		
+	log("Creating LootManager");
+	lootManager = new LootManager();
+		
+	log("Creating ProjectileManager");
+	projectileManager = new ProjectileManager();		
+
+	log("Creating BossManager");
+	bossManager = new BossManager();
+
+	log("Creating FenwarManager");
+	fenwarManager = new FenwarManager();
 
 	//Create Environment last
 	log("Creating Environment");
@@ -71,18 +94,145 @@ void SMH::init() {
 }
 
 /**
- * This is called each frame to upadte all game objects.
+ * This is called each frame to update the game. Returns true if the
+ * game is finished and the program should exit.
  */
-void SMH::drawGame(float dt) {
+bool SMH::updateGame(float dt) {
+
+	frameCounter++;
+	input->UpdateInput();
+	doDebugInput(dt);
+	
+	//Input for taking screenshots
+	if (hge->Input_KeyDown(HGEK_F9)) {
+		hge->System_Snapshot();
+	}
+	
+	if (gameState == MENU) {
+	
+		if (menu->update(dt) || hge->Input_KeyDown(HGEK_ESCAPE)) return true;
+
+	} else if (gameState == GAME) {
+
+		//Toggle game menu
+		if (input->keyPressed(INPUT_PAUSE)) {
+			if (windowManager->isGameMenuOpen()) {
+				windowManager->closeWindow();
+			} else if (!windowManager->isOpenWindow()) {
+				windowManager->openGameMenu();
+			}
+		}
+
+		//Toggle options/exit
+		if (hge->Input_KeyDown(HGEK_ESCAPE)) {
+			windowManager->openWindow(new MiniMenu(MINIMENU_EXIT));
+		}
+
+		//Update the objects that can interrupt gameplay.
+		windowManager->update(dt);
+		loadEffectManager->update(dt);
+		enemyGroupManager->update(dt);
+		fenwarManager->update(dt);
+		environment->updateTutorialMan(dt);
+
+		//If none of them are active, update the game objects!
+		if (!windowManager->isOpenWindow() && !loadEffectManager->isEffectActive() && 
+				!fenwarManager->isEncounterActive() && !environment->isTutorialManActive()) {
+			player->update(dt);
+			environment->update(dt);
+			bossManager->update(dt);
+			enemyManager->update(dt);
+			lootManager->update(dt);
+			projectileManager->update(dt);
+			npcManager->update(dt);
+		}
+
+		//Keep track of the time that no windows are open.
+		if (!windowManager->isOpenWindow()) gameTime += dt;
+	
+	}
+
+	return false;
 
 }
 
 /**
- * This is called each frame to draw all game objects.
+ * This is called each frame to perform all rendering for the current frame.
  */
-void SMH::updateGame(float dt) {
+void SMH::drawGame(float dt) {
 
-	frameCounter++;
+	if (getGameState() == MENU) {
+		menu->draw(dt);
+	} else {
+		environment->draw(dt);
+		lootManager->draw(dt);
+		enemyManager->draw(dt);
+		npcManager->draw(dt);
+		bossManager->drawBeforeSmiley(dt);
+		player->draw(dt);
+		bossManager->drawAfterSmiley(dt);
+		environment->drawAfterSmiley(dt);
+		fenwarManager->draw(dt);
+		projectileManager->draw(dt);
+		if (darkness > 0.0) shadeScreen(darkness);
+		loadEffectManager->draw(dt);
+		player->drawGUI(dt);
+		windowManager->draw(dt);
+	}
+
+	if (isDebugOn()) {
+		//Grid co-ords and fps
+		resources->GetFont("curlz")->printf(1000,5,HGETEXT_RIGHT,"(%d,%d)  FPS: %d", 
+			player->gridX, player->gridY, hge->Timer_GetFPS());
+	}
+}
+
+
+/**
+ * Put all gay debug input here.
+ */
+void SMH::doDebugInput(float dt) {
+
+	//Toggle debug mode
+	if (hge->Input_KeyDown(HGEK_D)) toggleDebugMode();
+
+	if (getGameState() == GAME) {
+
+		//Toggle invincibility
+		if (hge->Input_KeyDown(HGEK_I)) {
+			player->invincible = !player->invincible;
+		}
+		
+		//Gives you life when you press L
+		if (hge->Input_KeyDown(HGEK_L)) {
+			player->setHealth(player->getMaxHealth());
+		}
+
+		//Teleport to warp zone
+		if (hge->Input_KeyDown(HGEK_F1)) {
+			if (!loadEffectManager->isEffectActive()) {
+				loadEffectManager->startEffect(-1, -1, DEBUG_AREA);
+			}
+		}
+
+		//Move smiley with num pad
+		int xMove = 0;
+		int yMove = 0;
+		if (hge->Input_GetKeyState(HGEK_NUMPAD8) || hge->Input_GetKeyState(HGEK_NUMPAD5) || hge->Input_GetKeyState(HGEK_NUMPAD4) || hge->Input_GetKeyState(HGEK_NUMPAD6)) {
+			if (!debugMovePressed) {
+				debugMovePressed = true;
+				lastDebugMoveTime = getGameTime();
+			}
+			if (hge->Input_KeyDown(HGEK_NUMPAD8) || (timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(HGEK_NUMPAD8))) yMove = -1;
+			if (hge->Input_KeyDown(HGEK_NUMPAD5) || (timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(HGEK_NUMPAD5))) yMove = 1;
+			if (hge->Input_KeyDown(HGEK_NUMPAD4) || (timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(HGEK_NUMPAD4))) xMove = -1;
+			if (hge->Input_KeyDown(HGEK_NUMPAD6) || (timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(HGEK_NUMPAD6))) xMove = 1;
+		} else {
+			debugMovePressed = false;
+		}
+		if (abs(xMove) > 0 || abs(yMove) > 0) player->moveTo(player->gridX + xMove, player->gridY + yMove);
+
+	}
 
 }
 	

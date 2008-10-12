@@ -11,7 +11,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern ProjectileManager *projectileManager;
 
 //Charge constants
 #define CHARGE_RADIUS 350

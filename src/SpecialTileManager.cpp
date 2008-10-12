@@ -24,7 +24,6 @@
 
 #define SILLY_PAD_TIME 40		//Number of seconds silly pads stay active
 
-extern ProjectileManager *projectileManager;
 extern HGE *hge;
 extern SMH *smh;
 
@@ -287,8 +286,8 @@ void SpecialTileManager::updateSillyPads(float dt) {
 
 		//Test collision and silly pad aging
 		if (smh->timePassedSince(i->timePlaced) > SILLY_PAD_TIME ||
-				projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_FRISBEE) > 0 ||
-				projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_LIGHTNING_ORB) > 0 ||
+				smh->projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_FRISBEE) > 0 ||
+				smh->projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_LIGHTNING_ORB) > 0 ||
 				smh->player->iceBreathParticle->testCollision(collisionBox) ||
 				smh->player->fireBreathParticle->testCollision(collisionBox) ||
 				smh->player->getTongue()->testCollision(collisionBox)) {

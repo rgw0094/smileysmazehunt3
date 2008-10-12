@@ -6,7 +6,6 @@
 #include "smiley.h"
 
 extern SMH *smh;
-extern ProjectileManager *projectileManager;
 
 #define BURROW_RADIUS 200
 #define ATTACK_DELAY 2.0
@@ -70,7 +69,7 @@ void E_Gumdrop::update(float dt) {
 			//Shoot at smiley
 			if (!smh->player->isInvisible() && smh->timePassedSince(lastAttackTime) > ATTACK_DELAY) {
 				lastAttackTime = smh->getGameTime();
-				projectileManager->addProjectile(x, y, ATTACK_VELOCITY, 
+				smh->projectileManager->addProjectile(x, y, ATTACK_VELOCITY, 
 					getAngleBetween(x, y, smh->player->x, smh->player->y), damage, 
 					true, PROJECTILE_1, true);
 			}

@@ -11,7 +11,7 @@ extern SMH *smh;
 MainMenu::MainMenu() {
 	menuScreen = NULL;
 	smh->resources->GetFont("controls")->SetColor(ARGB(255,0,0,0));
-	setScreen(TITLE_SCREEN);
+	open(TITLE_SCREEN);
 }
 
 
@@ -95,10 +95,10 @@ void MainMenu::draw(float dt) {
 /**
  * Opens the menu
  */
-void MainMenu::open(int _state) {
+void MainMenu::open(int screen) {
 	smh->soundManager->stopAbilityChannel();
 	smh->soundManager->stopEnvironmentChannel();
 	smh->soundManager->playMusic("menuMusic");
 	smh->enterGameState(MENU);
-	setScreen(_state);
+	setScreen(screen);
 }

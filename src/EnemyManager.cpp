@@ -14,8 +14,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern LootManager *lootManager;
-extern ProjectileManager *projectileManager;
 
 /**
  * Constructor
@@ -125,9 +123,9 @@ void EnemyManager::killEnemies(int type) {
 			//Spawn loot
 			randomLoot = hge->Random_Int(0,10000);
 			if (randomLoot < 10000.0 * i->spawnHealthChance) {
-				lootManager->addLoot(LOOT_HEALTH, i->enemy->x, i->enemy->y, -1);
+				smh->lootManager->addLoot(LOOT_HEALTH, i->enemy->x, i->enemy->y, -1);
 			} else if (randomLoot < 10000.0 * i->spawnHealthChance + 10000.0*i->spawnManaChance) {
-				lootManager->addLoot(LOOT_MANA, i->enemy->x, i->enemy->y, -1);
+				smh->lootManager->addLoot(LOOT_MANA, i->enemy->x, i->enemy->y, -1);
 			}
 
 			delete i->enemy;
@@ -182,9 +180,9 @@ void EnemyManager::update(float dt) {
 			//Spawn loot
 			randomLoot = hge->Random_Int(0,10000);
 			if (randomLoot < 10000.0 * i->spawnHealthChance) {
-				lootManager->addLoot(LOOT_HEALTH, i->enemy->x, i->enemy->y, -1);
+				smh->lootManager->addLoot(LOOT_HEALTH, i->enemy->x, i->enemy->y, -1);
 			} else if (randomLoot < 10000.0 * i->spawnHealthChance + 10000.0*i->spawnManaChance) {
-				lootManager->addLoot(LOOT_MANA, i->enemy->x, i->enemy->y, -1);
+				smh->lootManager->addLoot(LOOT_MANA, i->enemy->x, i->enemy->y, -1);
 			}
 
 			delete i->enemy;

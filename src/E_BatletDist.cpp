@@ -13,7 +13,6 @@
 
 extern SMH *smh;
 extern HGE *hge;
-extern ProjectileManager *projectileManager;
 
 #define ACTIVATION_RADIUS 300
 #define SPAWN_DELAY 2.5
