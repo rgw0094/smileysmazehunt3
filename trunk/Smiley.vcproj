@@ -268,6 +268,9 @@
 				Name="System"
 				Filter="">
 				<File
+					RelativePath=".\src\AreaChanger.cpp">
+				</File>
+				<File
 					RelativePath=".\src\BitManager.cpp">
 				</File>
 				<File
@@ -278,9 +281,6 @@
 				</File>
 				<File
 					RelativePath=".\src\Input.cpp">
-				</File>
-				<File
-					RelativePath=".\src\LoadEffectManager.cpp">
 				</File>
 				<File
 					RelativePath=".\src\main.cpp">
@@ -361,7 +361,7 @@
 					</File>
 				</Filter>
 				<Filter
-					Name="Game Menu"
+					Name="Windows"
 					Filter="">
 					<File
 						RelativePath=".\src\inventory.cpp">
@@ -511,9 +511,6 @@
 					RelativePath=".\src\ChangeManager.h">
 				</File>
 				<File
-					RelativePath=".\src\LoadEffectManager.h">
-				</File>
-				<File
 					RelativePath=".\src\SmileyEngine.h">
 				</File>
 			</Filter>
@@ -524,14 +521,22 @@
 					RelativePath=".\src\Button.h">
 				</File>
 				<File
-					RelativePath=".\src\MainMenu.h">
-				</File>
-				<File
 					RelativePath=".\src\Slider.h">
 				</File>
-				<File
-					RelativePath=".\src\WindowFramework.h">
-				</File>
+				<Filter
+					Name="Main Menu"
+					Filter="">
+					<File
+						RelativePath=".\src\MainMenu.h">
+					</File>
+				</Filter>
+				<Filter
+					Name="Windows"
+					Filter="">
+					<File
+						RelativePath=".\src\WindowFramework.h">
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter

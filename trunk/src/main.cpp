@@ -1,20 +1,15 @@
 #include "resource1.h"
 #include "SmileyEngine.h"
-
 #using <mscorlib.dll>
 
-//Global Objects
-HGE *hge=0;
 SMH *smh;
 
 bool FrameFunc() {
-	return smh->updateGame(hge->Timer_GetDelta());
+	return smh->updateGame();
 }
 
 bool RenderFunc() {
-	hge->Gfx_BeginScene();
-	smh->drawGame(hge->Timer_GetDelta());
-	hge->Gfx_EndScene();
+	smh->drawGame();
 	return false;
 }
 
@@ -36,7 +31,7 @@ bool ExitFunc() {
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {	
 	
 	//Set up the HGE engine
-	hge = hgeCreate(HGE_VERSION);
+	HGE *hge= hgeCreate(HGE_VERSION);
 	hge->System_SetState(HGE_INIFILE, "Data/Smiley.ini");
 	hge->System_SetState(HGE_LOGFILE, "SmileyLog.txt");
 	hge->System_SetState(HGE_FRAMEFUNC, FrameFunc);

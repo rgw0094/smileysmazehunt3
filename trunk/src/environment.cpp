@@ -10,7 +10,6 @@
 #include "Tongue.h"
 #include "SpecialTileManager.h"
 #include "EvilWallManager.h"
-#include "LoadEffectManager.h"
 #include "WeaponParticle.h"
 #include "TapestryManager.h"
 #include "ChangeManager.h"
@@ -491,8 +490,8 @@ void Environment::loadArea(int id, int from) {
 	update(0.0);
 	smh->enemyManager->update(0.0);
 
-	//Tell the LoadEffectManager to display the new area name
-	smh->loadEffectManager->displayNewAreaName();
+	//Tell the AreaChanger to display the new area name
+	smh->areaChanger->displayNewAreaName();
 
 }
 

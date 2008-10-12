@@ -9,7 +9,6 @@
 #include "collisioncircle.h"
 #include "weaponparticle.h"
 #include "Tongue.h"
-#include "LoadEffectManager.h"
 #include "Worm.h"
 #include "SmileletManager.h"
 #include "hgefont.h"
@@ -132,7 +131,7 @@ void Player::update(float dt) {
 
 	//Do level exits
 	if (smh->environment->collision[gridX][gridY] == PLAYER_END) {
-		smh->loadEffectManager->startEffect(0, 0, smh->environment->ids[gridX][gridY]);
+		smh->areaChanger->changeArea(0, 0, smh->environment->ids[gridX][gridY]);
 		return;
 	}	
 
@@ -796,7 +795,7 @@ void Player::doWarps() {
 						} else if (facing == UP || facing == UP_LEFT || facing == UP_RIGHT) {
 							destY--;
 						}
-						smh->loadEffectManager->startEffect(destX, destY, smh->saveManager->currentArea);
+						smh->areaChanger->changeArea(destX, destY, smh->saveManager->currentArea);
 					} else {
 						x = 64.0 * i + 64.0/2;
 						y = 64.0 * j + 64.0/2;

@@ -3,7 +3,6 @@
  * displays the zone name text when Smiley enters a new zone.
  */
 #include "SmileyEngine.h"
-#include "LoadEffectManager.h"
 #include "hgeresource.h"
 #include "Environment.h"
 #include "WindowFramework.h"
@@ -21,7 +20,7 @@ extern SMH *smh;
 /**
  * Constructor
  */
-LoadEffectManager::LoadEffectManager() {
+AreaChanger::AreaChanger() {
 	state = STATE_INACTIVE;
 	timeLevelLoaded = smh->getRealTime() + 2.5;
 }
@@ -29,37 +28,37 @@ LoadEffectManager::LoadEffectManager() {
 /**
  * Destructor
  */
-LoadEffectManager::~LoadEffectManager() {
+AreaChanger::~AreaChanger() {
 
 }
 
 /**
  * Returns whether or not the loading effect is currently active.
  */ 
-bool LoadEffectManager::isEffectActive() {
+bool AreaChanger::isChangingArea() {
 	return state != STATE_INACTIVE;
 }
 
 /**
  * The environment will call this method when it has just finished loading
- * a new area. This tells the LoadEffectManager to display the new area
+ * a new area. This tells the AreaChanger to display the new area
  * name for 2.5 seconds.
  */
-void LoadEffectManager::displayNewAreaName() {
+void AreaChanger::displayNewAreaName() {
 	timeLevelLoaded = smh->getRealTime();
 	smh->resources->GetFont("newAreaFnt")->SetColor(ARGB(255,255,255,255));
 	zoneTextAlpha = 255.0;
 }
 
 /**
- * Starts the loading effect.
+ * Moves Smiley to a new area and starts the loading effect.
  *
  * Arguments:
  *	_destinationX		X position to move Smiley to
  *	_destinationY		Y position to move Smiley to
  *	_destinationArea	Area to move Smiley to
  */
-void LoadEffectManager::startEffect(int _destinationX, int _destinationY, int _destinationArea) {
+void AreaChanger::changeArea(int _destinationX, int _destinationY, int _destinationArea) {
 	
 	doneZoomingIn = false;
 	destinationX = _destinationX;
@@ -74,8 +73,8 @@ void LoadEffectManager::startEffect(int _destinationX, int _destinationY, int _d
 /**
  * Draws the loading effect if it is active
  */ 
-void LoadEffectManager::draw(float dt) {
-	if (isEffectActive()) {
+void AreaChanger::draw(float dt) {
+	if (isChangingArea()) {
 		//workaround for HGE full screen clipping bug
 		smh->resources->GetSprite("blackScreen")->SetColor(ARGB(255,255,255,255));
 		//Top
@@ -107,7 +106,7 @@ void LoadEffectManager::draw(float dt) {
 /**
  * Updates the loading effect.
  */
-void LoadEffectManager::update(float dt) {
+void AreaChanger::update(float dt) {
 
 	//Circle zooming in
 	if (state == STATE_IN) {

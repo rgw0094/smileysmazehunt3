@@ -10,7 +10,6 @@
 #include "LootManager.h"
 #include "FenwarManager.h"
 #include "ProjectileManager.h"
-#include "LoadEffectManager.h"
 #include "Boss.h"
 
 SMH::SMH(HGE *_hge) { 
@@ -69,8 +68,8 @@ void SMH::init() {
 	log("Creating EnemyGroupManager");
 	enemyGroupManager = new EnemyGroupManager();
 
-	log("Creating LoadEffectManager");
-	loadEffectManager = new LoadEffectManager();
+	log("Creating AreaChanger");
+	areaChanger = new AreaChanger();
 		
 	log("Creating LootManager");
 	lootManager = new LootManager();
@@ -95,7 +94,9 @@ void SMH::init() {
  * This is called each frame to update the game. Returns true if the
  * game is finished and the program should exit.
  */
-bool SMH::updateGame(float dt) {
+bool SMH::updateGame() {
+
+	float dt = hge->Timer_GetDelta();
 
 	frameCounter++;
 	input->UpdateInput();
@@ -128,13 +129,13 @@ bool SMH::updateGame(float dt) {
 
 		//Update the objects that can interrupt gameplay.
 		windowManager->update(dt);
-		loadEffectManager->update(dt);
+		areaChanger->update(dt);
 		enemyGroupManager->update(dt);
 		fenwarManager->update(dt);
 		environment->updateTutorialMan(dt);
 
 		//If none of them are active, update the game objects!
-		if (!windowManager->isOpenWindow() && !loadEffectManager->isEffectActive() && 
+		if (!windowManager->isOpenWindow() && !areaChanger->isChangingArea() && 
 				!fenwarManager->isEncounterActive() && !environment->isTutorialManActive()) {
 			player->update(dt);
 			environment->update(dt);
@@ -157,7 +158,11 @@ bool SMH::updateGame(float dt) {
 /**
  * This is called each frame to perform all rendering for the current frame.
  */
-void SMH::drawGame(float dt) {
+void SMH::drawGame() {
+
+	float dt = hge->Timer_GetDelta();
+
+	hge->Gfx_BeginScene();
 
 	if (getGameState() == MENU) {
 		menu->draw(dt);
@@ -173,7 +178,7 @@ void SMH::drawGame(float dt) {
 		fenwarManager->draw(dt);
 		projectileManager->draw(dt);
 		shadeScreen(darkness);
-		loadEffectManager->draw(dt);
+		areaChanger->draw(dt);
 		player->drawGUI(dt);
 		windowManager->draw(dt);
 	}
@@ -183,6 +188,8 @@ void SMH::drawGame(float dt) {
 		resources->GetFont("curlz")->printf(1000,5,HGETEXT_RIGHT,"(%d,%d)  FPS: %d", 
 			player->gridX, player->gridY, hge->Timer_GetFPS());
 	}
+
+	hge->Gfx_EndScene();
 }
 
 
@@ -208,8 +215,8 @@ void SMH::doDebugInput(float dt) {
 
 		//Teleport to warp zone
 		if (hge->Input_KeyDown(HGEK_F1)) {
-			if (!loadEffectManager->isEffectActive()) {
-				loadEffectManager->startEffect(-1, -1, DEBUG_AREA);
+			if (!areaChanger->isChangingArea()) {
+				areaChanger->changeArea(-1, -1, DEBUG_AREA);
 			}
 		}
 
