@@ -29,12 +29,12 @@ class LootManager;
 class FenwarManager;
 class ProjectileManager;
 class BossManager;
-class LoadEffectManager;
 
 //Classes defined here
+class AreaChanger;
+class GameData;
 class SMH;
 class SmileyInput;
-class GameData;
 class SaveManager;
 class SoundManager;
 
@@ -235,8 +235,8 @@ public:
 	~SMH();
 
 	//Public methods
-	bool updateGame(float dt);
-	void drawGame(float dt);
+	bool updateGame();
+	void drawGame();
 	void init();
 	bool isDebugOn();
 	void toggleDebugMode();
@@ -263,6 +263,7 @@ public:
 	float timePassedSince(float time);
 
 	//Game objects
+	AreaChanger *areaChanger;
 	BossManager *bossManager;
 	EnemyGroupManager *enemyGroupManager;
 	EnemyManager *enemyManager;
@@ -271,7 +272,6 @@ public:
 	GameData *gameData;
 	HGE *hge;
 	SmileyInput *input;
-	LoadEffectManager *loadEffectManager;
 	LootManager *lootManager;
 	MainMenu *menu;
 	NPCManager *npcManager;
@@ -549,6 +549,40 @@ private:
 	int previousMusicPosition;
 	int musicVolume;
 	int soundVolume;
+
+};
+
+//----------------------------------------------------------------
+//----------------------------------------------------------------
+//------------------AREA CHANGER----------------------------------
+//----------------------------------------------------------------
+//----------------------------------------------------------------
+
+class AreaChanger {
+
+public:
+
+	AreaChanger();
+	~AreaChanger();
+
+	//methods
+	void draw(float dt);
+	void update(float dt);
+	void changeArea(int destinationX, int destinationY, int destinationArea);
+	bool isChangingArea();
+	void displayNewAreaName();
+
+private:
+
+	int state;
+	int destinationX;
+	int destinationY;
+	int destinationArea;
+
+	bool doneZoomingIn;
+	float timeLevelLoaded;
+	float zoneTextAlpha;
+	float loadingEffectScale;
 
 };
 
