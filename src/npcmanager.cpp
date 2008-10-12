@@ -4,7 +4,6 @@
 #include "player.h"
 #include "environment.h"
 #include "NPC.h"
-#include "Tongue.h"
 #include "WindowFramework.h"
 
 #include "hgestrings.h"

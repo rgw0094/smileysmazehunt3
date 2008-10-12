@@ -2,7 +2,6 @@
 #include "SmileletManager.h"
 #include "CollisionCircle.h"
 #include "Player.h"
-#include "Worm.h"
 #include "hgeresource.h"
 #include "environment.h"
 #include "EnemyFramework.h"

@@ -5,7 +5,6 @@
 #include "hgeresource.h"
 #include "hgevector.h"
 #include "ProjectileManager.h"
-#include "tongue.h"
 #include "CollisionCircle.h"
 
 extern SMH *smh;

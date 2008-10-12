@@ -7,7 +7,6 @@
 #include "npcmanager.h"
 #include "boss.h"
 #include "hgeparticle.h"
-#include "Tongue.h"
 #include "SpecialTileManager.h"
 #include "EvilWallManager.h"
 #include "WeaponParticle.h"

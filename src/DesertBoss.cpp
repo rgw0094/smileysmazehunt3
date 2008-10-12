@@ -7,7 +7,6 @@
 #include "lootmanager.h"
 #include "weaponparticle.h"
 #include "CollisionCircle.h"
-#include "Tongue.h"
 #include "WindowFramework.h"
 #include "EnemyFramework.h"
 

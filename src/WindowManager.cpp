@@ -1,7 +1,6 @@
 #include "SmileyEngine.h"
 #include "WindowFramework.h"
 #include "player.h"
-#include "tongue.h"
 
 extern SMH *smh;
 

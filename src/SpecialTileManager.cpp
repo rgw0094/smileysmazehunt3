@@ -4,7 +4,6 @@
 #include "CollisionCircle.h"
 #include "WeaponParticle.h"
 #include "ProjectileManager.h"
-#include "Tongue.h"
 #include "environment.h"
 #include "hgeparticle.h"
 #include "hgeresource.h"

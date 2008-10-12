@@ -4,7 +4,6 @@
 #include "ProjectileManager.h"
 #include "player.h"
 #include "environment.h"
-#include "tongue.h"
 
 extern SMH *smh;
 

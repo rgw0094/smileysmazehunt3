@@ -1,5 +1,4 @@
 #include "SmileyEngine.h"
-#include "Tongue.h"
 #include "Player.h"
 #include "Environment.h"
 #include "EnemyFramework.h"
