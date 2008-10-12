@@ -1,5 +1,4 @@
 #include "SmileyEngine.h"
-#include "smiley.h"
 #include "EnemyFramework.h"
 #include "player.h"
 #include "environment.h"
@@ -7,7 +6,6 @@
 #include "CollisionCircle.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 #define CLOWN_SPRING_CONSTANT .05
 #define DAMPING_CONSTANT 0.001
@@ -50,19 +48,19 @@ void E_ChainClown::draw(float dt) {
 	//Dot 1, closest to crab
 	xChain = x + 0.25*(xClown-x);
 	yChain = y + 0.25*(yClown-y);
-	smh->resources->GetSprite("clownChainDot")->Render(getScreenX(xChain),getScreenY(yChain));
+	smh->resources->GetSprite("clownChainDot")->Render(smh->getScreenX(xChain),smh->getScreenY(yChain));
 
 	//Dot 2, in middle
 	xChain = x + 0.50*(xClown-x);
 	yChain = y + 0.50*(yClown-y);
-	smh->resources->GetSprite("clownChainDot")->Render(getScreenX(xChain),getScreenY(yChain));
+	smh->resources->GetSprite("clownChainDot")->Render(smh->getScreenX(xChain),smh->getScreenY(yChain));
 
 	//Dot 3, closest to clown
 	xChain = x + 0.75*(xClown-x);
 	yChain = y + 0.75*(yClown-y);
-	smh->resources->GetSprite("clownChainDot")->Render(getScreenX(xChain),getScreenY(yChain));
+	smh->resources->GetSprite("clownChainDot")->Render(smh->getScreenX(xChain),smh->getScreenY(yChain));
 
-	smh->resources->GetSprite("clownHead")->Render(getScreenX(xClown),getScreenY(yClown));
+	smh->resources->GetSprite("clownHead")->Render(smh->getScreenX(xClown),smh->getScreenY(yClown));
 }
 
 
@@ -94,7 +92,7 @@ void E_ChainClown::update(float dt) {
 	xClown += xClownVel*dt;
 	yClown += yClownVel*dt;
 
-	if (distance(xClown, yClown, smh->player->x, smh->player->y) <= CLOWN_RADIUS + smh->player->collisionCircle->radius) {
+	if (Util::distance(xClown, yClown, smh->player->x, smh->player->y) <= CLOWN_RADIUS + smh->player->collisionCircle->radius) {
 		smh->player->dealDamageAndKnockback(damage,true,100,xClown,yClown);
 		xClownVel=-xClownVel;
 		yClownVel=-yClownVel;

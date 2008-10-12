@@ -1,6 +1,5 @@
 #include "SmileyEngine.h"
 #include "Fountain.h"
-#include "smiley.h"
 #include "player.h"
 #include "hgeresource.h"
 
@@ -25,20 +24,20 @@ bool Fountain::isAboveSmiley() {
 void Fountain::draw(float dt) {
 
 	//No need to draw the fountain if Smiley isn't by it!
-	if (distance(x, y, smh->player->x, smh->player->y) < 1000) {
+	if (Util::distance(x, y, smh->player->x, smh->player->y) < 1000) {
 
 		smh->resources->GetAnimation("fountainRipple")->Update(dt);
 
 		//Bottom fountain part and pool
-		smh->resources->GetSprite("fountainBottom")->Render(getScreenX(x), getScreenY(y));
-		smh->resources->GetAnimation("fountainRipple")->Render(getScreenX(x), getScreenY(y - 72.0));
+		smh->resources->GetSprite("fountainBottom")->Render(smh->getScreenX(x), smh->getScreenY(y));
+		smh->resources->GetAnimation("fountainRipple")->Render(smh->getScreenX(x), smh->getScreenY(y - 72.0));
 		
 		//Top fountain part and pool
-		smh->resources->GetSprite("fountainTop")->Render(getScreenX(x), getScreenY(y - 115.0));
-		smh->resources->GetAnimation("fountainRipple")->RenderEx(getScreenX(x), getScreenY(y - 215.0), 0.0, .35, .4);	
+		smh->resources->GetSprite("fountainTop")->Render(smh->getScreenX(x), smh->getScreenY(y - 115.0));
+		smh->resources->GetAnimation("fountainRipple")->RenderEx(smh->getScreenX(x), smh->getScreenY(y - 215.0), 0.0, .35, .4);	
 
 		//Fountain particle
-		smh->resources->GetParticleSystem("fountain")->MoveTo(getScreenX(x), getScreenY(y - 220.0), true);
+		smh->resources->GetParticleSystem("fountain")->MoveTo(smh->getScreenX(x), smh->getScreenY(y - 220.0), true);
 		smh->resources->GetParticleSystem("fountain")->Render();
 	}
 

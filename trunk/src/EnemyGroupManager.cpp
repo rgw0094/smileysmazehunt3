@@ -3,10 +3,8 @@
 #include "Environment.h"
 #include "Player.h"
 #include "hgeresource.h"
-#include "hge.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 EnemyGroupManager::EnemyGroupManager() {
 	//Init enemy groups

@@ -1,5 +1,4 @@
 #include "SmileyEngine.h"
-#include "smiley.h"
 #include "npcManager.h"
 #include "collisioncircle.h"
 #include "player.h"

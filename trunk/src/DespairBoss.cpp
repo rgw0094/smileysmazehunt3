@@ -1,5 +1,4 @@
 #include "SmileyEngine.h"
-#include "smiley.h"
 #include "DespairBoss.h"
 #include "hgeresource.h"
 #include "Player.h"
@@ -8,13 +7,11 @@
 #include "LootManager.h"
 #include "weaponparticle.h"
 #include "Tongue.h"
-#include "hge.h"
 #include "CollisionCircle.h"
 #include "WindowFramework.h"
 #include "EnemyFramework.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 //Attributes
 #define HEALTH 10.0
@@ -164,7 +161,7 @@ bool DespairBoss::update(float dt) {
 
 		//Spawn projectiles periodically
 		if (smh->timePassedSince(lastProjectileTime) > PROJECTILE_DELAY) {
-			int random = hge->Random_Int(0, 1000000);
+			int random = smh->randomInt(0, 1000000);
 			int projectileType, numProjectiles, speed;
 			float angle;
 			if (random < 600000) {
@@ -179,19 +176,19 @@ bool DespairBoss::update(float dt) {
 
 			//Left hand - fire only
 			if (projectileType == PROJECTILE_FIRE) {
-				angle = getAngleBetween(x-65,y-60,smh->player->x, smh->player->y);
+				angle = Util::getAngleBetween(x-65,y-60,smh->player->x, smh->player->y);
 				for (int i = 0; i < numProjectiles; i++) {
 					addProjectile(projectileType, x-65, y-60+floatingOffset, 
-						angle + hge->Random_Float(-PI/12.0, PI/12.0), speed);
+						angle + smh->randomFloat(-PI/12.0, PI/12.0), speed);
 				}
 			}
 			
 			//Right hand - fire and ice
 			if (projectileType == PROJECTILE_FIRE || projectileType == PROJECTILE_ICE) {
-				angle = getAngleBetween(x+65,y-60,smh->player->x, smh->player->y);
+				angle = Util::getAngleBetween(x+65,y-60,smh->player->x, smh->player->y);
 				for (int i = 0; i < numProjectiles; i++) {
 					addProjectile(projectileType, x+65, y-60+floatingOffset, 
-						angle + hge->Random_Float(-PI/12.0, PI/12.0), speed);
+						angle + smh->randomFloat(-PI/12.0, PI/12.0), speed);
 				}
 			}
 
@@ -348,8 +345,8 @@ bool DespairBoss::update(float dt) {
 	//After charging smiley slowly back away from him
 	if (state == DESPAIRBOSS_EVIL_CHARGE_COOLDOWN) {
 
-		dx = -100.0 * cos(getAngleBetween(x, y, smh->player->x, smh->player->y));
-		dy = -100.0 * sin(getAngleBetween(x, y, smh->player->x, smh->player->y));
+		dx = -100.0 * cos(Util::getAngleBetween(x, y, smh->player->x, smh->player->y));
+		dy = -100.0 * sin(Util::getAngleBetween(x, y, smh->player->x, smh->player->y));
 		
 		if (smh->timePassedSince(timeEnteredState) > 0.5) {
 			if (chargeCounter > EVIL_NUM_CHARGES) {
@@ -375,8 +372,8 @@ bool DespairBoss::update(float dt) {
 		//After evil mode is over, return to Calypso's starting point
 		if (evilAlpha == 0.0) {
 
-			dx = 400.0 * cos(getAngleBetween(x, y, startX, startY));
-			dy = 400.0 * sin(getAngleBetween(x, y, startX, startY));
+			dx = 400.0 * cos(Util::getAngleBetween(x, y, startX, startY));
+			dy = 400.0 * sin(Util::getAngleBetween(x, y, startX, startY));
 
 			//Once Calypso is back to his starting location, return to battle mode.
 			if (x > startX - 50.0 && x < startX + 50.0 && y > startY - 50.0 && y < startY + 50.0) {
@@ -392,8 +389,8 @@ bool DespairBoss::update(float dt) {
 	if (state == DESPAIRBOSS_EVIL_CHARGING || state == DESPAIRBOSS_EVIL_STOPPING_CHARGE || state == DESPAIRBOSS_EVIL_CHARGE_COOLDOWN) {
 		if (smh->timePassedSince(lastLaserTime) > LASER_DELAY) {
 			lastLaserTime = smh->getGameTime();
-			float angle = getAngleBetween(x, y, smh->player->x, smh->player->y) +
-				hge->Random_Float(-(PI/16.0), PI/16.0);
+			float angle = Util::getAngleBetween(x, y, smh->player->x, smh->player->y) +
+				smh->randomFloat(-(PI/16.0), PI/16.0);
 			//Left eye
 			smh->projectileManager->addProjectile(x - 10 + 50*cos(angle), 
 				y - 60 + floatingOffset + 50*sin(angle), 
@@ -451,20 +448,20 @@ void DespairBoss::drawCalypso(float dt) {
 
 	//Draw calypso
 	smh->resources->GetSprite("playerShadow")->SetColor(ARGB(75.0 * (fadeAlpha/255.0),255,255,255));
-	smh->resources->GetSprite("playerShadow")->RenderEx(getScreenX(x), getScreenY(y) + 75.0, 0.0, 2.0, 2.0);
+	smh->resources->GetSprite("playerShadow")->RenderEx(smh->getScreenX(x), smh->getScreenY(y) + 75.0, 0.0, 2.0, 2.0);
 	smh->resources->GetSprite("playerShadow")->SetColor(ARGB(75,255,255,255));
 	
 	smh->resources->GetSprite("calypso")->SetColor(ARGB(fadeAlpha,255,255,255));
-	smh->resources->GetSprite("calypso")->Render(getScreenX(x), getScreenY(y) + floatingOffset);
+	smh->resources->GetSprite("calypso")->Render(smh->getScreenX(x), smh->getScreenY(y) + floatingOffset);
 
 	//Evil Calypso
 	if (isInEvilMode()) {
 		smh->resources->GetSprite("evilCalypso")->SetColor(ARGB(evilAlpha,255,255,255));
-		smh->resources->GetSprite("evilCalypso")->Render(getScreenX(x), getScreenY(y) + floatingOffset);
+		smh->resources->GetSprite("evilCalypso")->Render(smh->getScreenX(x), smh->getScreenY(y) + floatingOffset);
 	} else {
 		//Draw his shield
 		smh->resources->GetSprite("calypsoShield")->SetColor(ARGB(shieldAlpha,255,255,255));
-		smh->resources->GetSprite("calypsoShield")->Render(getScreenX(x), getScreenY(y) + floatingOffset);
+		smh->resources->GetSprite("calypsoShield")->Render(smh->getScreenX(x), smh->getScreenY(y) + floatingOffset);
 
 	}
 
@@ -475,8 +472,8 @@ void DespairBoss::drawCalypso(float dt) {
 		for (int n = 0; n < NUM_STUN_STARS; n++) {
 			stunStarAngles[n] += 2.0* PI * dt;
 			smh->resources->GetSprite("stunStar")->Render(
-				getScreenX(x + cos(stunStarAngles[n])*25), 
-				getScreenY(y + sin(stunStarAngles[n])*7) - 75.0 + floatingOffset);
+				smh->getScreenX(x + cos(stunStarAngles[n])*25), 
+				smh->getScreenY(y + sin(stunStarAngles[n])*7) - 75.0 + floatingOffset);
 		}
 	}
 
@@ -513,7 +510,7 @@ void DespairBoss::addProjectile(int type, float x, float y, float angle, float s
 	switch (type) {
 		case PROJECTILE_ICE:
 			newProjectile.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("iceOrb")->info);
-			newProjectile.timeUntilNova = distance(x, y, smh->player->x, smh->player->y) / ICE_SPEED;
+			newProjectile.timeUntilNova = Util::distance(x, y, smh->player->x, smh->player->y) / ICE_SPEED;
 			newProjectile.hasNovaed = false;
 			break;
 		case PROJECTILE_FIRE:
@@ -537,7 +534,7 @@ void DespairBoss::drawProjectiles(float dt) {
 
 		//Draw the projectile
 		i->particle->Update(dt);
-		i->particle->MoveTo(getScreenX(i->x),getScreenY(i->y), true);
+		i->particle->MoveTo(smh->getScreenX(i->x),smh->getScreenY(i->y), true);
 		i->particle->Render();
 
 		//Debug mode - draw the collision Circle
@@ -666,8 +663,8 @@ void DespairBoss::setState(int newState) {
 	}
 
 	if (newState == DESPAIRBOSS_EVIL_CHARGING) {
-		chargeAngle = getAngleBetween(x, y, smh->player->x, smh->player->y);
-		timeToCharge = sqrt(2 * distance(x, y, smh->player->x, smh->player->y) / EVIL_CHARGE_ACCEL);
+		chargeAngle = Util::getAngleBetween(x, y, smh->player->x, smh->player->y);
+		timeToCharge = sqrt(2 * Util::distance(x, y, smh->player->x, smh->player->y) / EVIL_CHARGE_ACCEL);
 	}
 
 	state = newState;

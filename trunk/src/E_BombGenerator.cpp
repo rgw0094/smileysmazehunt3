@@ -3,10 +3,8 @@
 #include "player.h"
 #include "environment.h"
 #include "hgeresource.h"
-#include "smiley.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 #define BOMB_WALK_SPEED 64.0
 #define BOMB_PROXIMITY_TO_EXPLODE 118.0 //how close smiley must be for the bomb to blow up
@@ -21,9 +19,6 @@ extern HGE *hge;
 #define BOMB_GENERATOR_BOMB_WALKING 4
 #define BOMB_GENERATOR_BOMB_COUNTING_DOWN 5
 #define BOMB_GENERATOR_BOMB_EXPLODING 6
-
-
-
 
 E_BombGenerator::E_BombGenerator(int id, int x, int y, int groupID) {
 	
@@ -62,18 +57,18 @@ void E_BombGenerator::draw(float dt) {
 
 	//Render the bomb
 	if (bombState == BOMB_GENERATOR_BOMB_APPEAR) {
-		graphic[facing]->RenderEx(getScreenX(bomb.x),getScreenY(bomb.y),0,bombSize,bombSize);			
+		graphic[facing]->RenderEx(smh->getScreenX(bomb.x),smh->getScreenY(bomb.y),0,bombSize,bombSize);			
 	} else if (bombState >= BOMB_GENERATOR_CLOSE_DOOR && bombState <= BOMB_GENERATOR_BOMB_WALKING) {
-		smh->resources->GetSprite("bombRedCircle")->Render(getScreenX(bomb.x),getScreenY(bomb.y));
-		graphic[facing]->Render(getScreenX(bomb.x),getScreenY(bomb.y));			
+		smh->resources->GetSprite("bombRedCircle")->Render(smh->getScreenX(bomb.x),smh->getScreenY(bomb.y));
+		graphic[facing]->Render(smh->getScreenX(bomb.x),smh->getScreenY(bomb.y));			
 		moveFuseParticle();
 		smh->resources->GetParticleSystem("bombFuse")->Update(dt);
 		smh->resources->GetParticleSystem("bombFuse")->Render();
 	} else if (bombState == BOMB_GENERATOR_BOMB_COUNTING_DOWN) {
-		bombEyesGlowAnimation->Render(getScreenX(bomb.x),getScreenY(bomb.y));
+		bombEyesGlowAnimation->Render(smh->getScreenX(bomb.x),smh->getScreenY(bomb.y));
 		int countdownSeconds=0;
 		countdownSeconds = 3-int(smh->timePassedSince(startCountdownTime));
-		smh->resources->GetFont("curlz")->printf(getScreenX(bomb.x)-1,getScreenY(bomb.y)-18,HGETEXT_CENTER,"%d",countdownSeconds);
+		smh->resources->GetFont("curlz")->printf(smh->getScreenX(bomb.x)-1,smh->getScreenY(bomb.y)-18,HGETEXT_CENTER,"%d",countdownSeconds);
 	} else if (bombState == BOMB_GENERATOR_BOMB_EXPLODING) {
 		smh->resources->GetParticleSystem("explosion")->Render();
 	}
@@ -88,16 +83,16 @@ void E_BombGenerator::draw(float dt) {
 void E_BombGenerator::moveFuseParticle() {
 	switch (facing) {
 		case UP: 	
-			smh->resources->GetParticleSystem("bombFuse")->MoveTo(getScreenX(bomb.x)+5,getScreenY(bomb.y)-28,true);
+			smh->resources->GetParticleSystem("bombFuse")->MoveTo(smh->getScreenX(bomb.x)+5,smh->getScreenY(bomb.y)-28,true);
 			break;
 		case DOWN: 	
-			smh->resources->GetParticleSystem("bombFuse")->MoveTo(getScreenX(bomb.x)-10,getScreenY(bomb.y)-29,true);
+			smh->resources->GetParticleSystem("bombFuse")->MoveTo(smh->getScreenX(bomb.x)-10,smh->getScreenY(bomb.y)-29,true);
 			break;
 		case LEFT: 	
-			smh->resources->GetParticleSystem("bombFuse")->MoveTo(getScreenX(bomb.x)-3,getScreenY(bomb.y)-29,true);
+			smh->resources->GetParticleSystem("bombFuse")->MoveTo(smh->getScreenX(bomb.x)-3,smh->getScreenY(bomb.y)-29,true);
 			break;
 		case RIGHT: 	
-			smh->resources->GetParticleSystem("bombFuse")->MoveTo(getScreenX(bomb.x)+2,getScreenY(bomb.y)-29,true);
+			smh->resources->GetParticleSystem("bombFuse")->MoveTo(smh->getScreenX(bomb.x)+2,smh->getScreenY(bomb.y)-29,true);
 			break;
 	};
 }
@@ -163,7 +158,7 @@ void E_BombGenerator::update(float dt) {
 				break;
 		}; //end switch facing
 
-		if (distance(smh->player->x,smh->player->y,bomb.x,bomb.y) <= BOMB_PROXIMITY_TO_EXPLODE) {
+		if (Util::distance(smh->player->x,smh->player->y,bomb.x,bomb.y) <= BOMB_PROXIMITY_TO_EXPLODE) {
 			bombState = BOMB_GENERATOR_BOMB_COUNTING_DOWN;
 			bombEyesGlowAnimation->Play();
 			startCountdownTime = smh->getGameTime();
@@ -178,12 +173,12 @@ void E_BombGenerator::update(float dt) {
 		bombEyesGlowAnimation->Update(dt);	
 		if (smh->timePassedSince(startCountdownTime) >= 3.0) {
 			bombState=BOMB_GENERATOR_BOMB_EXPLODING;
-			smh->resources->GetParticleSystem("explosion")->FireAt(getScreenX(bomb.x),getScreenY(bomb.y));	
+			smh->resources->GetParticleSystem("explosion")->FireAt(smh->getScreenX(bomb.x),smh->getScreenY(bomb.y));	
 		}
 	}
 
 	if (bombState == BOMB_GENERATOR_BOMB_EXPLODING) {
-		smh->resources->GetParticleSystem("explosion")->MoveTo(getScreenX(bomb.x),getScreenY(bomb.y),true);
+		smh->resources->GetParticleSystem("explosion")->MoveTo(smh->getScreenX(bomb.x),smh->getScreenY(bomb.y),true);
 		smh->resources->GetParticleSystem("explosion")->Update(dt);
 		if (smh->timePassedSince(startCountdownTime) >= 3.3f) {
 			//get rid of walls

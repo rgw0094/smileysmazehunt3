@@ -5,7 +5,6 @@
 #include "Slider.h"
 #include "hgeresource.h"
 
-extern HGE *hge;
 extern SMH *smh;
 
 #define TOP_LEFT_X 182.0
@@ -36,8 +35,9 @@ OptionsWindow::~OptionsWindow() {
 bool OptionsWindow::update(float dt) {
 
 	//Get mouse input
-	hge->Input_GetMousePos(&mouseX, &mouseY);
-	mousePressed = hge->Input_KeyDown(HGEK_LBUTTON);
+	mouseX = smh->input->getMouseX();
+	mouseY = smh->input->getMouseY();
+	mousePressed = smh->hge->Input_KeyDown(HGEK_LBUTTON);
 
 	//Update volume sliders
 	soundVolumeSlider->update(mouseX, mouseY);
@@ -132,7 +132,7 @@ void OptionsWindow::draw(float dt) {
 	}
 
 	//Draw the mouse
-	if (hge->Input_IsMouseOver()) {
+	if (smh->input->isMouseInWindow()) {
 		smh->resources->GetSprite("mouseCursor")->Render(mouseX, mouseY);
 	}
 

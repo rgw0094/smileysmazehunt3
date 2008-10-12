@@ -11,7 +11,6 @@
 #include "hgeresource.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 /**
  * Constructor
@@ -111,15 +110,15 @@ void EnemyManager::killEnemies(int type) {
 
 			//Play death sound effect
 			if (i->enemy->frozen) {
-				hge->Effect_Play(smh->resources->GetEffect("snd_iceDie"));
+				smh->soundManager->playSound("snd_iceDie");
 			}
 
 			//Death effects
 			deathParticles->SpawnPS(&smh->resources->GetParticleSystem("deathCloud")->info, i->enemy->x, i->enemy->y);
-			hge->Effect_Play(smh->resources->GetEffect("snd_enemyDeath"));
+			smh->soundManager->playSound("snd_enemyDeath");
 
 			//Spawn loot
-			randomLoot = hge->Random_Int(0,10000);
+			randomLoot = smh->randomInt(0,10000);
 			if (randomLoot < 10000.0 * i->spawnHealthChance) {
 				smh->lootManager->addLoot(LOOT_HEALTH, i->enemy->x, i->enemy->y, -1);
 			} else if (randomLoot < 10000.0 * i->spawnHealthChance + 10000.0*i->spawnManaChance) {
@@ -168,15 +167,15 @@ void EnemyManager::update(float dt) {
 
 			//Play death sound effect
 			if (i->enemy->frozen) {
-				hge->Effect_Play(smh->resources->GetEffect("snd_iceDie"));
+				smh->soundManager->playSound("snd_iceDie");
 			}
 
 			//Death effects
 			deathParticles->SpawnPS(&smh->resources->GetParticleSystem("deathCloud")->info, i->enemy->x, i->enemy->y);
-			hge->Effect_Play(smh->resources->GetEffect("snd_enemyDeath"));
+			smh->soundManager->playSound("snd_enemyDeath");
 
 			//Spawn loot
-			randomLoot = hge->Random_Int(0,10000);
+			randomLoot = smh->randomInt(0,10000);
 			if (randomLoot < 10000.0 * i->spawnHealthChance) {
 				smh->lootManager->addLoot(LOOT_HEALTH, i->enemy->x, i->enemy->y, -1);
 			} else if (randomLoot < 10000.0 * i->spawnHealthChance + 10000.0*i->spawnManaChance) {
@@ -250,17 +249,13 @@ bool EnemyManager::tongueCollision(Tongue *tongue, float damage) {
  * Freezes any enemies within the box argument
  */
 void EnemyManager::freezeEnemies(int x, int y) {
-	bool dickens = false;
 	//Loop through the enemies
 	std::list<EnemyStruct>::iterator i;
 	for (i = enemyList.begin(); i != enemyList.end(); i++) {
 		//Check collision
 		if (!smh->gameData->getEnemyInfo(i->enemy->id).immuneToFreeze && i->enemy->collisionBox->TestPoint(x,y)) {
-			//Freeze sound effect is fucked up
-			//if (!dickens) hge->Effect_Play(smh->resources->GetEffect("snd_freeze"));
-			dickens = true;
 			i->enemy->frozen = true;
-			i->enemy->timeFrozen = hge->Timer_GetTime();
+			i->enemy->timeFrozen = smh->getGameTime();
 		}
 	}
 }

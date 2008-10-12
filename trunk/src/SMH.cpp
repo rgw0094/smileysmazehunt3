@@ -13,9 +13,8 @@
 #include "LoadEffectManager.h"
 #include "Boss.h"
 
-extern HGE *hge;
-
-SMH::SMH() { 
+SMH::SMH(HGE *_hge) { 
+	hge = _hge;
 	debugMode = false;
 	gameTime = 0.0;
 	debugMovePressed = false;
@@ -313,10 +312,10 @@ void SMH::drawCollisionBox(hgeRect *box, int color) {
 	int g = (color == GREEN) ? 255 : 0;
 	int b = (color == BLUE) ? 255 : 0;
 
-	int x1 = getScreenX(box->x1);
-	int x2 = getScreenX(box->x2);
-	int y1 = getScreenY(box->y1);
-	int y2 = getScreenY(box->y2);
+	int x1 = smh->getScreenX(box->x1);
+	int x2 = smh->getScreenX(box->x2);
+	int y1 = smh->getScreenY(box->y1);
+	int y2 = smh->getScreenY(box->y2);
 
 	hge->Gfx_RenderLine(x1, y1, x2, y1, ARGB(255,r,g,b));
 	hge->Gfx_RenderLine(x2, y1, x2, y2, ARGB(255,r,g,b));
@@ -329,7 +328,7 @@ void SMH::drawCollisionBox(hgeRect *box, int color) {
  * Draws a sprite at a global position.
  */
 void SMH::drawGlobalSprite(const char* sprite, float x, float y) {
-	resources->GetSprite(sprite)->Render(getScreenX(x), getScreenY(y));
+	resources->GetSprite(sprite)->Render(smh->getScreenX(x), smh->getScreenY(y));
 }
 
 /**
@@ -347,10 +346,38 @@ void SMH::drawSprite(const char* sprite, float x, float y, float width, float he
 }
 
 /**
+ * Returns the screen x position given the global x position
+ */
+int SMH::getScreenX(int x) {
+	return x - smh->environment->xGridOffset*64.0 - smh->environment->xOffset;
+}
+
+/**
+ * Returns the screen y position given the global y position
+ */
+int SMH::getScreenY(int y) {
+	return y - smh->environment->yGridOffset*64.0 - smh->environment->yOffset;										  
+}
+
+/**
  * Writes a message to the game log.
  */
 void SMH::log(const char* text) {
 	hge->System_Log(text);
+}
+
+/**
+ * Generates a random integer in the specified range.
+ */
+int SMH::randomInt(int min, int max) {
+	return hge->Random_Int(min, max);
+}
+
+/**
+ * Generates a random float in the specified range.
+ */
+float SMH::randomFloat(float min, float max) {
+	return hge->Random_Float(min, max);
 }
 
 /**

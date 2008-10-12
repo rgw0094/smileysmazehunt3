@@ -1,5 +1,4 @@
 #include "SmileyEngine.h"
-#include "smiley.h"
 #include "WindowFramework.h"
 #include "player.h"
 #include "npcmanager.h"
@@ -75,7 +74,7 @@ void TextBox::setDialogue(int _npcID, int _textID) {
 	}
 
 	paramString = "NPC";
-	paramString += intToString(textID);
+	paramString += Util::intToString(textID);
 	paramString += "Pages";
 	numPages = atoi(smh->gameData->getGameText(paramString.c_str()));
 	currentPage = 1;
@@ -96,7 +95,7 @@ void TextBox::setHint() {
 	npcID = BILL_CLINTON;
 	textID = smh->saveManager->getCurrentHint();
 	paramString = "Hint";
-	paramString += intToString(textID);
+	paramString += Util::intToString(textID);
 	paramString += "Pages";
 	numPages = atoi(smh->gameData->getGameText(paramString.c_str()));
 	currentPage = 1;
@@ -157,7 +156,7 @@ void TextBox::setSign(int signId) {
 
 	std::string paramString;
 	paramString = "Sign";
-	paramString += intToString(signId);
+	paramString += Util::intToString(signId);
 	strcpy(text, smh->gameData->getGameText(paramString.c_str()));
 
 }
@@ -181,9 +180,9 @@ void TextBox::draw(float dt) {
 
 		//Print the current page of the hint
 		paramString = "Hint";
-		paramString += intToString(textID);
+		paramString += Util::intToString(textID);
 		paramString += "-";
-		paramString += intToString(currentPage);
+		paramString += Util::intToString(currentPage);
 		smh->resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, smh->gameData->getGameText(paramString.c_str()));
 
 		//Draw next page/OK icon
@@ -205,15 +204,15 @@ void TextBox::draw(float dt) {
 			graphic->Render(x+60-32, y+50-32);
 		}
 		paramString = "NPC";
-		paramString += intToString(textID);
+		paramString += Util::intToString(textID);
 		paramString += "Name";
 		smh->resources->GetFont("textBoxNameFnt")->printf(x + 220, y+20, HGETEXT_CENTER, "%s", smh->gameData->getGameText(paramString.c_str()));
 
 		//Print the current page of the conversation
 		paramString = "NPC";
-		paramString += intToString(textID);
+		paramString += Util::intToString(textID);
 		paramString += "-";
-		paramString += intToString(currentPage);
+		paramString += Util::intToString(currentPage);
 		smh->resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, smh->gameData->getGameText(paramString.c_str()));
 
 		//Draw next page/OK icon

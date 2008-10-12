@@ -1,8 +1,5 @@
 #include "BitManager.h"
 #include "Math.h"
-#include "hge.h"
-
-extern HGE *hge;
 
 BitManager::BitManager() {
 	counter=0; //Start at position 0

@@ -2,15 +2,12 @@
  * Handles the player's encounters with fenwar.
  */  
 #include "SmileyEngine.h"
-#include "smiley.h"
 #include "FenwarManager.h"
 #include "Player.h"
 #include "WindowFramework.h"
-
 #include "hgeresource.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 #define TRIGGER_DISTANCE 300
 
@@ -57,12 +54,12 @@ void FenwarManager::update(float dt) {
 		if (!i->triggered) {
 			
 			//When the player gets close, trigger the encounter
-			if (distance(i->x, i->y, smh->player->x, smh->player->y) < TRIGGER_DISTANCE) {
+			if (Util::distance(i->x, i->y, smh->player->x, smh->player->y) < TRIGGER_DISTANCE) {
 				i->triggered = true;
 				i->state = STATE_WARPING_IN;
 				i->timeEnteredState = smh->getGameTime();
 				smh->soundManager->playMusic("fenwarLietmotif");
-				particles->SpawnPS(&smh->resources->GetParticleSystem("fenwarwarp")->info, getScreenX(i->x), getScreenY(i->y));
+				particles->SpawnPS(&smh->resources->GetParticleSystem("fenwarwarp")->info, smh->getScreenX(i->x), smh->getScreenY(i->y));
 			}
 		
 		//Has been triggered
@@ -87,7 +84,7 @@ void FenwarManager::update(float dt) {
 					if (smh->timePassedSince(i->timeTextBoxClosed) > 1.0) {
 						i->state = STATE_WARPING_OUT;
 						i->timeEnteredState = smh->getGameTime();
-						particles->SpawnPS(&smh->resources->GetParticleSystem("fenwarwarp")->info, getScreenX(i->x), getScreenY(i->y));
+						particles->SpawnPS(&smh->resources->GetParticleSystem("fenwarwarp")->info, smh->getScreenX(i->x), smh->getScreenY(i->y));
 					}
 				}
 			}
@@ -114,7 +111,7 @@ void FenwarManager::draw(float dt) {
 	for(i = fenwarEncounterList.begin(); i != fenwarEncounterList.end(); i++) {
 
 		if (i->fenwarVisible) {
-			smh->resources->GetSprite("fenwarDown")->Render(getScreenX(i->x), getScreenY(i->y));
+			smh->resources->GetSprite("fenwarDown")->Render(smh->getScreenX(i->x), smh->getScreenY(i->y));
 		}
 
 	}

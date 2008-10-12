@@ -8,14 +8,11 @@
 #include "SmileyEngine.h"
 #include "Player.h"
 #include "Environment.h"
-#include "hge.h"
-#include "smiley.h"
 #include "ChangeManager.h"
 #include "BitManager.h"
 #include "boss.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 /**
  * Constructor
@@ -121,7 +118,7 @@ void SaveManager::resetCurrentData() {
 	playerHealth = 5.0;
 	playerMana = 100.0;
 
-	timeFileLoaded = hge->Timer_GetTime();
+	timeFileLoaded = smh->getRealTime();
 
 }
 
@@ -130,7 +127,7 @@ void SaveManager::resetCurrentData() {
  */
 void SaveManager::load(int fileNumber) {
 
-	hge->System_Log("Loading save file %d", fileNumber);
+	smh->hge->System_Log("Loading save file %d", fileNumber);
 
 	changeManager->reset();
 
@@ -260,7 +257,7 @@ void SaveManager::load(int fileNumber) {
 		}
 	}
 
-	timeFileLoaded = hge->Timer_GetTime();
+	timeFileLoaded = smh->getRealTime();
 
 }
 
@@ -269,7 +266,7 @@ void SaveManager::load(int fileNumber) {
  */
 void SaveManager::save() {
 
-	hge->System_Log("Saving file %d", currentSave);
+	smh->hge->System_Log("Saving file %d", currentSave);
 
 	std::ofstream outputFile;
 	std::string outputString;
@@ -291,48 +288,48 @@ void SaveManager::save() {
 	//Keys
 	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 4; j++) {
-			outputString += intToString(numKeys[i][j]);
+			outputString += Util::intToString(numKeys[i][j]);
 		}
 	}
 
 	//Gems
 	for (int i = 0; i < NUM_AREAS; i++) {
 		for (int j = 0; j < 3; j++) {
-			outputString += intToString(numGems[i][j]);
+			outputString += Util::intToString(numGems[i][j]);
 		}
 	}
 
 	//Money (3 digits)
-	outputString += intToString(money, 3);
+	outputString += Util::intToString(money, 3);
 
 	//Upgrades (2 digits)
 	for (int i = 0; i < 3; i++) {
-		outputString += intToString(numUpgrades[i], 2);
+		outputString += Util::intToString(numUpgrades[i], 2);
 	}
 
 	//Bosses
 	for (int i = 0; i < NUM_BOSSES; i++) outputString += (killedBoss[i] ? "0" : "1");
 
 	//Area and position
-	outputString += intToString(currentArea);
-	outputString += intToString(playerGridX, 3);
-	outputString += intToString(playerGridY, 3);
+	outputString += Util::intToString(currentArea);
+	outputString += Util::intToString(playerGridX, 3);
+	outputString += Util::intToString(playerGridY, 3);
 
 	//Health and mana
-	outputString += intToString(smh->player->getHealth() * 4, 3);
-	outputString += intToString(smh->player->getMana(), 3);
+	outputString += Util::intToString(smh->player->getHealth() * 4, 3);
+	outputString += Util::intToString(smh->player->getMana(), 3);
 
 	//Changed shit
 	outputString += changeManager->toString();
 
 	//Stats
-	outputString += intToString(numTongueLicks, 5);
-	outputString += intToString(numEnemiesKilled, 5);
-	outputString += intToString(damageDealt, 5);
-	outputString += intToString(damageReceived, 5);
+	outputString += Util::intToString(numTongueLicks, 5);
+	outputString += Util::intToString(numEnemiesKilled, 5);
+	outputString += Util::intToString(damageDealt, 5);
+	outputString += Util::intToString(damageReceived, 5);
 
 	//Tutorial Man
-	outputString += intToString(tutorialManCompleted ? 1 : 0);
+	outputString += Util::intToString(tutorialManCompleted ? 1 : 0);
 
 	//Exploration data
 	unsigned char nextCharToWrite;
@@ -374,7 +371,7 @@ void SaveManager::save() {
  */
 void SaveManager::startNewGame(int fileNumber) {
 
-	hge->System_Log("Creating new save in file %d", fileNumber);
+	smh->hge->System_Log("Creating new save in file %d", fileNumber);
 
 	files[fileNumber].empty = false;
 	files[fileNumber].timePlayed = 0;
@@ -402,7 +399,7 @@ void SaveManager::startNewGame(int fileNumber) {
  */
 void SaveManager::deleteFile(int file) {
 
-	hge->System_Log("Deleting file %d", file);
+	smh->hge->System_Log("Deleting file %d", file);
 
 	files[file].empty = true;
 	files[file].timePlayed = 0;
@@ -432,10 +429,10 @@ void SaveManager::saveFileInfo() {
 		infoString += files[i].empty ? "Y" : "N";
 		
 		//Time played (6 digits)
-		infoString += intToString(files[i].timePlayed, 6);
+		infoString += Util::intToString(files[i].timePlayed, 6);
 
 		//Completion percentage
-		infoString += intToString(files[i].completion, 2);
+		infoString += Util::intToString(files[i].completion, 2);
 
 	}
 
@@ -519,7 +516,7 @@ int SaveManager::getCurrentHint() {
  * if they manually close the program while still in game state.
  */
 void SaveManager::saveTimePlayed() {
-	files[currentSave].timePlayed += hge->Timer_GetTime() - timeFileLoaded;
+	files[currentSave].timePlayed += smh->getRealTime() - timeFileLoaded;
 	saveFileInfo();
 }
 

@@ -1,5 +1,4 @@
 #include "SmileyEngine.h"
-#include "smiley.h"
 #include "EnemyFramework.h"
 #include "player.h"
 #include "environment.h"
@@ -10,7 +9,6 @@
 #include "CollisionCircle.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 #define NUM_NODES 20
 #define NUM_SINE_WAVES 1
@@ -30,7 +28,7 @@ E_Tentacle::E_Tentacle(int id, int x, int y, int groupID) {
 	//Call parent's init function
 	initEnemy(id, x, y, groupID);
 
-	double angleToSmiley = getAngleBetween(x*64+32,y*64+32,smh->player->x,smh->player->y);
+	double angleToSmiley = Util::getAngleBetween(x*64+32,y*64+32,smh->player->x,smh->player->y);
 	int i;
 
 	for (i=0;i<NUM_NODES;i++) {
@@ -57,16 +55,16 @@ void E_Tentacle::draw(float dt) {
 	/*
 	for(int i=0;i<NUM_NODES-1;i++) {
 		graphic[3]->Update(dt);
-		graphic[3]->RenderEx(getScreenX((tentacleNodes[i].position.x+tentacleNodes[i+1].position.x)/2),getScreenY((tentacleNodes[i].position.y+tentacleNodes[i+1].position.y)/2),getAngleBetween(tentacleNodes[i].position.x,tentacleNodes[i].position.y,tentacleNodes[i+1].position.x,tentacleNodes[i+1].position.y));
+		graphic[3]->RenderEx(smh->getScreenX((tentacleNodes[i].position.x+tentacleNodes[i+1].position.x)/2),smh->getScreenY((tentacleNodes[i].position.y+tentacleNodes[i+1].position.y)/2),Util::getAngleBetween(tentacleNodes[i].position.x,tentacleNodes[i].position.y,tentacleNodes[i+1].position.x,tentacleNodes[i+1].position.y));
 	}
 	*/
 	
 	graphic[1]->Update(dt);
-	graphic[1]->Render(getScreenX(tentacleNodes[0].position.x),getScreenY(tentacleNodes[0].position.y));
+	graphic[1]->Render(smh->getScreenX(tentacleNodes[0].position.x),smh->getScreenY(tentacleNodes[0].position.y));
 	
 	for (int i=1;i<NUM_NODES;i++) {
 		graphic[2]->Update(dt);
-		graphic[2]->Render(getScreenX(tentacleNodes[i].position.x),getScreenY(tentacleNodes[i].position.y));
+		graphic[2]->Render(smh->getScreenX(tentacleNodes[i].position.x),smh->getScreenY(tentacleNodes[i].position.y));
 	}
 
 }
@@ -82,7 +80,7 @@ void E_Tentacle::update(float dt) {
 		}		
 	}
 
-	double angleToSmiley = getAngleBetween(x,y,smh->player->x,smh->player->y);
+	double angleToSmiley = Util::getAngleBetween(x,y,smh->player->x,smh->player->y);
 	double angleSubtracted = angleToSmiley - angle;
 
 	while (angleSubtracted < 0) angleSubtracted += 2*PI;
@@ -110,7 +108,7 @@ void E_Tentacle::update(float dt) {
 		tentacleNodes[i].position.y = y+i*variable1*sin(tentacleNodes[i].angle);
 
 		//Collision with smiley
-		if (distance(tentacleNodes[i].position.x,tentacleNodes[i].position.y,smh->player->x,smh->player->y) <= radius + smh->player->collisionCircle->radius) {
+		if (Util::distance(tentacleNodes[i].position.x,tentacleNodes[i].position.y,smh->player->x,smh->player->y) <= radius + smh->player->collisionCircle->radius) {
 			smh->player->dealDamageAndKnockback(damage,true,100,tentacleNodes[i].position.x,tentacleNodes[i].position.y);			
 		}		
 
@@ -119,7 +117,7 @@ void E_Tentacle::update(float dt) {
 	//Growl, if variable > 10 (ensuring it's a large and not a small tentacle
 	if (smh->timePassedSince(timeOfLastGrowl) >= TIME_BETWEEN_GROWLS && variable1 >= 10 && distanceFromPlayer() <= GROWL_DISTANCE) {
 		timeOfLastGrowl = smh->getGameTime();
-		hge->Effect_Play(smh->resources->GetEffect("snd_fireWorm"));
+		smh->soundManager->playSound("snd_fireWorm");
 	}
 
 
@@ -148,7 +146,7 @@ bool E_Tentacle::doTongueCollision(Tongue *tongue, float damage) {
 				startFlashing();
 				
 				//Knockback by rotating it away from smiley a bit
-				double angleToSmiley = getAngleBetween(x,y,smh->player->x,smh->player->y);
+				double angleToSmiley = Util::getAngleBetween(x,y,smh->player->x,smh->player->y);
 				double angleSubtracted = angleToSmiley - angle;
 
 				while (angleSubtracted < 0) angleSubtracted += 2*PI;

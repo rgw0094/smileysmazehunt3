@@ -1,5 +1,4 @@
 #include "SmileyEngine.h"
-#include "smiley.h"
 #include "EnemyFramework.h"
 #include "hgeresource.h"
 #include "ProjectileManager.h"
@@ -92,11 +91,11 @@ void E_Flailer::update(float dt) {
 	if (smh->environment->validPath(x, y, smh->player->x, smh->player->y, 26, canPass)) {
 
 		if (distanceFromPlayer() <= MAX_SPIN_LENGTH - 10) {
-			dx = -speed * cos (getAngleBetween(x, y, smh->player->x, smh->player->y));
-			dy = -speed * sin (getAngleBetween(x, y, smh->player->x, smh->player->y));
+			dx = -speed * cos (Util::getAngleBetween(x, y, smh->player->x, smh->player->y));
+			dy = -speed * sin (Util::getAngleBetween(x, y, smh->player->x, smh->player->y));
 		} else  if (distanceFromPlayer() >= MAX_SPIN_LENGTH + 10) {
-			dx = speed * cos (getAngleBetween(x, y, smh->player->x, smh->player->y));
-			dy = speed * sin (getAngleBetween(x, y, smh->player->x, smh->player->y));
+			dx = speed * cos (Util::getAngleBetween(x, y, smh->player->x, smh->player->y));
+			dy = speed * sin (Util::getAngleBetween(x, y, smh->player->x, smh->player->y));
 		} else {
 			shouldMove = false;
 		}
@@ -126,7 +125,7 @@ void E_Flailer::updateFlail(float dt) {
 			timeStartedFlail = smh->getGameTime();
 			flailing = true;
 			flailAngleVel = 0.0;
-			flailAngle = getAngleBetween(flailX, flailY, x, y) + PI; //WTD
+			flailAngle = Util::getAngleBetween(flailX, flailY, x, y) + PI; //WTD
 		}
 	}
 
@@ -168,8 +167,8 @@ void E_Flailer::updateFlail(float dt) {
 	//Dragging flail
 	} else {
 
-		currentFlailLength = distance(flailX, flailY, x, y);
-		flailAngle = getAngleBetween(flailX, flailY, x, y);
+		currentFlailLength = Util::distance(flailX, flailY, x, y);
+		flailAngle = Util::getAngleBetween(flailX, flailY, x, y);
 		float springConstant = 600.0;
 
 		//Drag flail behind the enemy.
@@ -190,7 +189,7 @@ void E_Flailer::updateFlail(float dt) {
 
 	//Check flail collision - it only hurts th player when it is swinging!
 	if (flailing || coolingDown) {
-		if (distance(flailX, flailY, smh->player->x, smh->player->y) <= FLAIL_RADIUS + smh->player->collisionCircle->radius) {	
+		if (Util::distance(flailX, flailY, smh->player->x, smh->player->y) <= FLAIL_RADIUS + smh->player->collisionCircle->radius) {	
 			smh->player->dealDamageAndKnockback(damage,true,100,flailX,flailY);
 			flailDx *= -1;
 			flailDy *= -1;
@@ -211,12 +210,12 @@ void E_Flailer::draw(float dt) {
 	//Draw flail chain
 	for (int i = 0; i < NUM_CHAIN_LINKS; i++) {
 		smh->resources->GetSprite("flailLink")->Render(
-			getScreenX(x + (.2 + double(i+1.0) * (0.8/(NUM_CHAIN_LINKS+1))) * (flailX - x)),
-			getScreenY(y + (.2 + double(i+1.0) * (0.8/(NUM_CHAIN_LINKS+1))) * (flailY - y)));
+			smh->getScreenX(x + (.2 + double(i+1.0) * (0.8/(NUM_CHAIN_LINKS+1))) * (flailX - x)),
+			smh->getScreenY(y + (.2 + double(i+1.0) * (0.8/(NUM_CHAIN_LINKS+1))) * (flailY - y)));
 	}
 
 	//Draw flail head
-	smh->resources->GetSprite("flailHead")->Render(getScreenX(flailX),getScreenY(flailY));
+	smh->resources->GetSprite("flailHead")->Render(smh->getScreenX(flailX),smh->getScreenY(flailY));
 
 }
 

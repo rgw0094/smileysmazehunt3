@@ -1,10 +1,8 @@
 #include "SmileyEngine.h"
 #include "WindowFramework.h"
-#include "hge.h"
 #include "hgeresource.h"
 #include "Player.h"
 
-extern HGE *hge;
 extern SMH *smh;
 
 #define X_OFFSET 312.0
@@ -128,7 +126,7 @@ void Shop::purchaseItem(int item) {
 
 		smh->saveManager->money -= costs[item];
 		smh->saveManager->numUpgrades[item]++;
-		hge->Effect_Play(smh->resources->GetEffect("snd_purchaseUpgrade"));
+		smh->soundManager->playSound("snd_purchaseUpgrade");
 
 		if (currentSelection == HEALTH) {
 			smh->player->setHealth(smh->player->getHealth() + 1.0);

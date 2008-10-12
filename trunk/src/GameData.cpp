@@ -4,14 +4,12 @@
  * Encapsulates all game data.
  */
 #include "SmileyEngine.h"
-#include "smiley.h"
 #include "ProjectileManager.h"
 #include "Player.h"
 #include "hgestrings.h"
 #include <string>
 
 extern SMH *smh;
-extern HGE *hge;
 
 GameData::GameData() {
 	loadEnemyData();
@@ -98,7 +96,7 @@ void GameData::loadAbilityData() {
 	strcpy(abilities[FIRE_BREATH].description, 
 		"Allows you to breath deadly fire breath.\n\nMana Cost: 10/second\n");
 	strcat(abilities[FIRE_BREATH].description, "Damage: ");
-	strcat(abilities[FIRE_BREATH].description, intToString(smh->player->getFireBreathDamage()).c_str());
+	strcat(abilities[FIRE_BREATH].description, Util::intToString(smh->player->getFireBreathDamage()).c_str());
 	strcat(abilities[FIRE_BREATH].description, " per second.");
 	abilities[FIRE_BREATH].type = HOLD;
 	abilities[FIRE_BREATH].manaCost = 10;
@@ -129,7 +127,7 @@ void GameData::loadAbilityData() {
 	strcpy(abilities[LIGHTNING_ORB].description, 
 		"Shoots orbs of lightning. \n\n\nMana Cost: 5\n");
 	strcat(abilities[LIGHTNING_ORB].description, "Damage: ");
-	strcat(abilities[LIGHTNING_ORB].description, intToString(smh->player->getLightningOrbDamage()).c_str());
+	strcat(abilities[LIGHTNING_ORB].description, Util::intToString(smh->player->getLightningOrbDamage()).c_str());
 	abilities[LIGHTNING_ORB].type = ACTIVATED;
 	abilities[LIGHTNING_ORB].manaCost = 5;
 
@@ -178,132 +176,132 @@ void GameData::loadEnemyData() {
 		itoa(i, num, 10);
 
 		//Enemy name
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "Name";
 		if (enemyStringTable->GetString(varName.c_str()) != 0) {
 			addEnemyName(i, enemyStringTable->GetString(varName.c_str()));
 		}
 
 		//Has one graphic?
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "OneGraphic";
 		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].hasOneGraphic = false;
 		else enemyInfo[i].hasOneGraphic = (strcmp(enemyStringTable->GetString(varName.c_str()), "T") == 0);
 		
 		//Graphics column
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "GCol";
 		enemyInfo[i].gCol = atoi(enemyStringTable->GetString(varName.c_str()));
 
 		//Graphics row
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "GRow";
 		enemyInfo[i].gRow = atoi(enemyStringTable->GetString(varName.c_str()));
 
 		//Number animation frames (default 1)
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "NumFrames";
 		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].numFrames = 1;
 		else enemyInfo[i].numFrames = atoi(enemyStringTable->GetString(varName.c_str()));
 
 		//Enemy Type
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "EnemyType";
 		enemyInfo[i].enemyType = atoi(enemyStringTable->GetString(varName.c_str()));
 		
 		//WanderType
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "WanderType";
 		enemyInfo[i].wanderType = atoi(enemyStringTable->GetString(varName.c_str()));
 		
 		//HP
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "HP";
 		enemyInfo[i].hp = atoi(enemyStringTable->GetString(varName.c_str()));
 		
 		//Damage
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "Damage";
 		enemyInfo[i].damage = atoi(enemyStringTable->GetString(varName.c_str()));
 		
 		//Speed
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "Speed";
 		enemyInfo[i].speed = atoi(enemyStringTable->GetString(varName.c_str()));
 		
 		//Radius
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "Radius";
 		enemyInfo[i].radius = atoi(enemyStringTable->GetString(varName.c_str()));
 		
 		//Can walk on Land
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "Land";
 		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].land = false;
 		else enemyInfo[i].land = (strcmp(enemyStringTable->GetString(varName.c_str()), "T") == 0);
 		
 		//Can walk on Lava
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "Lava";
 		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].lava = false;
 		else enemyInfo[i].lava = (strcmp(enemyStringTable->GetString(varName.c_str()), "T") == 0);
 
 		//Can walk on Mushrooms
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "Mushrooms";
 		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].mushrooms = false;
 		else enemyInfo[i].mushrooms = (strcmp(enemyStringTable->GetString(varName.c_str()), "T") == 0);
 		
 		//Can walk on Shallow Water
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "SWater";
 		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].shallowWater = false;
 		else enemyInfo[i].shallowWater = (strcmp(enemyStringTable->GetString(varName.c_str()), "T") == 0);
 		
 		//Can walk on Deep Water
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "DWater";
 		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].deepWater = false;
 		else enemyInfo[i].deepWater = (strcmp(enemyStringTable->GetString(varName.c_str()), "T") == 0);
 		
 		//Can walk on Slime
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "Slime";
 		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].slime = false;
 		else enemyInfo[i].slime = (strcmp(enemyStringTable->GetString(varName.c_str()), "T") == 0);
 	
 		//Immune to smiley's tongue
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "ImmuneTongue";
 		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].immuneToTongue = false;
 		else enemyInfo[i].immuneToTongue = (strcmp(enemyStringTable->GetString(varName.c_str()), "T") == 0);
 
 		//Immune to fire
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "ImmuneFire";
 		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].immuneToFire = false;
 		else enemyInfo[i].immuneToFire = (strcmp(enemyStringTable->GetString(varName.c_str()), "T") == 0);
 
 		//Immune to lightning
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "ImmuneLightning";
 		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].immuneToLightning = false;
 		else enemyInfo[i].immuneToLightning = (strcmp(enemyStringTable->GetString(varName.c_str()), "T") == 0);
 		
 		//Immune to stun
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "ImmuneStun";
 		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].immuneToStun = false;
 		else enemyInfo[i].immuneToStun = (strcmp(enemyStringTable->GetString(varName.c_str()), "T") == 0);
 			
 		//Immune to freeze
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "ImmuneFreeze";
 		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].immuneToFreeze = false;
 		else enemyInfo[i].immuneToFreeze = (strcmp(enemyStringTable->GetString(varName.c_str()), "T") == 0);
 
 		//Invincible
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "Invincible";
 		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].invincible = false;
 		else {
@@ -314,25 +312,25 @@ void GameData::loadEnemyData() {
 		}
 
 		//Variable 1
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "Variable1";
 		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].variable1 = 0;
 		else enemyInfo[i].variable1 = atoi(enemyStringTable->GetString(varName.c_str()));
 
 		//Variable 2
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "Variable2";
 		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].variable2 = 0;
 		else enemyInfo[i].variable2 = atoi(enemyStringTable->GetString(varName.c_str()));
 					
 		//Has a ranged attack
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "HasRanged";
 		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].hasRangedAttack = false;
 		else enemyInfo[i].hasRangedAttack = (strcmp(enemyStringTable->GetString(varName.c_str()), "T") == 0);
 			
 		//Will chase smiley
-		varName = intToString(i);
+		varName = Util::intToString(i);
 		varName += "Chases";
 		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].chases = false;
 		else enemyInfo[i].chases = (strcmp(enemyStringTable->GetString(varName.c_str()), "T") == 0);
@@ -340,7 +338,7 @@ void GameData::loadEnemyData() {
 		//Load ranged info for ranged enemies
 		if (enemyInfo[i].hasRangedAttack) {
 			//Ranged Attack Type
-			varName = intToString(i);
+			varName = Util::intToString(i);
 			varName += "PType";
 			if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].rangedType = PROJECTILE_1;
 			else enemyInfo[i].rangedType = atoi(enemyStringTable->GetString(varName.c_str()));

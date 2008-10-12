@@ -1,11 +1,9 @@
 #include "SmileyEngine.h"
 #include "EnemyFramework.h"
-#include "hge.h"
 #include "hgeresource.h"
 #include "ProjectileManager.h"
 #include "player.h"
 #include "environment.h"
-#include "smiley.h"
 
 #define EYE_CLOSED 0
 #define EYE_OPENING 1
@@ -18,7 +16,6 @@
 #define ATTACK_DAMAGE .25
 
 extern SMH *smh;
-extern HGE *hge;
 
 E_EvilEye::E_EvilEye(int id, int x, int y, int groupID) {
 
@@ -67,7 +64,7 @@ void E_EvilEye::update(float dt) {
 		if (!smh->player->isInvisible() && smh->timePassedSince(lastAttackTime) > ATTACK_DELAY) {
 			lastAttackTime = smh->getGameTime();
 			smh->projectileManager->addProjectile(x, y, ATTACK_VELOCITY, 
-				getAngleBetween(x, y, smh->player->x, smh->player->y), ATTACK_DAMAGE, 
+				Util::getAngleBetween(x, y, smh->player->x, smh->player->y), ATTACK_DAMAGE, 
 				true, PROJECTILE_1, true);
 		}
 	}

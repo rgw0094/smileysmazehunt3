@@ -4,7 +4,6 @@
  */
 #include "SmileyEngine.h"
 #include "LoadEffectManager.h"
-#include "smiley.h"
 #include "hgeresource.h"
 #include "Environment.h"
 #include "WindowFramework.h"
@@ -14,7 +13,6 @@
 #include "Player.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 #define STATE_IN 0
 #define STATE_OUT 1
@@ -25,7 +23,7 @@ extern HGE *hge;
  */
 LoadEffectManager::LoadEffectManager() {
 	state = STATE_INACTIVE;
-	timeLevelLoaded = hge->Timer_GetTime() + 2.5;
+	timeLevelLoaded = smh->getRealTime() + 2.5;
 }
 
 /**
@@ -48,7 +46,7 @@ bool LoadEffectManager::isEffectActive() {
  * name for 2.5 seconds.
  */
 void LoadEffectManager::displayNewAreaName() {
-	timeLevelLoaded = hge->Timer_GetTime();
+	timeLevelLoaded = smh->getRealTime();
 	smh->resources->GetFont("newAreaFnt")->SetColor(ARGB(255,255,255,255));
 	zoneTextAlpha = 255.0;
 }
@@ -93,9 +91,9 @@ void LoadEffectManager::draw(float dt) {
 	}
 
 	//After entering a new zone, display the ZONE NAME for 2.5 seconds after entering
-	if (hge->Timer_GetTime() < timeLevelLoaded + 2.5 && !smh->windowManager->isOpenWindow()) {
+	if (smh->getRealTime() < timeLevelLoaded + 2.5 && !smh->windowManager->isOpenWindow()) {
 		//After 1.5 seconds start fading out the zone name
-		if (hge->Timer_GetTime() > timeLevelLoaded + 1.5) {
+		if (smh->getRealTime() > timeLevelLoaded + 1.5) {
 			zoneTextAlpha -= 255.0f*dt;
 			if (zoneTextAlpha < 0.0) zoneTextAlpha = 0.0;
 			smh->resources->GetFont("newAreaFnt")->SetColor(ARGB(zoneTextAlpha,255,255,255));

@@ -1,10 +1,8 @@
 #include "SmileyEngine.h"
 #include "button.h"
-#include "hge.h"
 #include "hgefont.h"
 #include "hgeresource.h"
 
-extern HGE *hge;
 extern SMH *smh;
 
 Button::Button(float _x, float _y, char* _text) {
@@ -40,5 +38,5 @@ void Button::update(float mouseX, float mouseY) {
 }
 
 bool Button::isClicked() {
-	return (highlighted && (hge->Input_KeyDown(HGEK_LBUTTON)|| smh->input->keyPressed(INPUT_ATTACK)));
+	return (highlighted && (smh->hge->Input_KeyDown(HGEK_LBUTTON)|| smh->input->keyPressed(INPUT_ATTACK)));
 }

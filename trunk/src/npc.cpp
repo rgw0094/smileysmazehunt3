@@ -1,8 +1,7 @@
 #include "SmileyEngine.h"
-#include "smiley.h"
-#include "npc.h"
 #include "player.h"
 #include "environment.h"
+#include "npc.h"
 #include "npcmanager.h"
 #include "CollisionCircle.h"
 #include "WindowFramework.h"
@@ -11,7 +10,6 @@
 #include "hgesprite.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 /**
  * Constructor
@@ -46,7 +44,7 @@ NPC::NPC(int _id, int _textID, int _x,int _y) {
 	stage = REST_STAGE;
 	enteredStage = smh->getGameTime();
 	speed = 70.0f;
-	stageLength = hge->Random_Float(1.0, 2.0);
+	stageLength = smh->randomFloat(1.0, 2.0);
 	inConversation = false;
 }
 
@@ -117,7 +115,7 @@ void NPC::update(float dt) {
  * Draw the NPC
  */
 void NPC::draw(float dt) {
-	sprites[facing]->Render(getScreenX(x), getScreenY(y));
+	sprites[facing]->Render(smh->getScreenX(x), smh->getScreenY(y));
 	//Debug mode stuff
 	if (smh->isDebugOn()) {
 		smh->drawCollisionBox(collisionBox, RED);
@@ -136,7 +134,7 @@ void NPC::changeStage() {
 		stage = REST_STAGE;
 	}
 	enteredStage = smh->getGameTime();
-	stageLength = hge->Random_Float(1.0, 3.0);
+	stageLength = smh->randomFloat(1.0, 3.0);
 }
 
 
@@ -144,6 +142,6 @@ void NPC::changeStage() {
  * Randomly change the NPC's direction
  */ 
 void NPC::changeDirection() {
-	walkDirection = hge->Random_Int(0,3);
+	walkDirection = smh->randomInt(0,3);
 	facing = walkDirection;
 }

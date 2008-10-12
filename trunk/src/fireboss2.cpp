@@ -1,5 +1,4 @@
 #include "SmileyEngine.h"
-#include "smiley.h"
 #include "fireboss2.h"
 #include "environment.h"
 #include "lootmanager.h"
@@ -12,7 +11,6 @@
 #include "EnemyFramework.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 #define TEXT_FIREBOSS2_INTRO 160
 #define TEXT_FIREBOSS2_VITAMINS 161
@@ -118,23 +116,23 @@ void FireBossTwo::draw(float dt) {
 
 	//Draw the boss' main sprite
 	smh->resources->GetAnimation("phyrebozz")->SetFrame(facing);
-	smh->resources->GetAnimation("phyrebozz")->Render(getScreenX(x),getScreenY(y+floatY));
+	smh->resources->GetAnimation("phyrebozz")->Render(smh->getScreenX(x),smh->getScreenY(y+floatY));
 
 	//Draw the boss' mouth
 	if (facing == DOWN) {
 		smh->resources->GetAnimation("phyrebozzDownMouth")->Update(dt);
-		smh->resources->GetAnimation("phyrebozzDownMouth")->Render(getScreenX(x-(97/2)+34),getScreenY(y-(158/2)+14+floatY));
+		smh->resources->GetAnimation("phyrebozzDownMouth")->Render(smh->getScreenX(x-(97/2)+34),smh->getScreenY(y-(158/2)+14+floatY));
 	} else if (facing == LEFT) {
 		smh->resources->GetAnimation("phyrebozzLeftMouth")->Update(dt);
-		smh->resources->GetAnimation("phyrebozzLeftMouth")->Render(getScreenX(x-(97/2)+36),getScreenY(y-(158/2)+12+floatY));
+		smh->resources->GetAnimation("phyrebozzLeftMouth")->Render(smh->getScreenX(x-(97/2)+36),smh->getScreenY(y-(158/2)+12+floatY));
 	} else if (facing == RIGHT) {
 		smh->resources->GetAnimation("phyrebozzRightMouth")->Update(dt);
-		smh->resources->GetAnimation("phyrebozzRightMouth")->Render(getScreenX(x-(97/2)+34),getScreenY(y-(158/2)+12+floatY));
+		smh->resources->GetAnimation("phyrebozzRightMouth")->Render(smh->getScreenX(x-(97/2)+34),smh->getScreenY(y-(158/2)+12+floatY));
 	}
 
 	drawFireBallsAfterPhyrebozz(dt);
 	
-	fireNova->MoveTo(getScreenX(x), getScreenY(y), true);
+	fireNova->MoveTo(smh->getScreenX(x), smh->getScreenY(y), true);
 	fireNova->Update(dt);
 	fireNova->Render();
 
@@ -185,7 +183,7 @@ bool FireBossTwo::update(float dt) {
 	//Activate the boss when the intro dialogue is closed
 	if (state == FIREBOSS_INACTIVE && startedIntroDialogue && !smh->windowManager->isTextBoxOpen()) {
 		setState(FIREBOSS_FIRST_BATTLE);
-		hge->Effect_Play(smh->resources->GetEffect("snd_fireBossDie"));
+		smh->soundManager->playSound("snd_fireBossDie");
 		smh->soundManager->playMusic("bossMusic");
 	}
 
@@ -305,10 +303,10 @@ void FireBossTwo::updateFireNova(float dt) {
 	float timePassed = smh->timePassedSince(lastFireNovaTime);
 	if (timePassed < 1.1) {
 		int radius = int(timePassed * 4.5);
-		for (int gridX = getGridX(x) - radius; gridX <= getGridX(x) + radius; gridX++) {
-			for (int gridY = getGridY(y) - radius; gridY <= getGridY(y) + radius; gridY++) {
+		for (int gridX = Util::getGridX(x) - radius; gridX <= Util::getGridX(x) + radius; gridX++) {
+			for (int gridY = Util::getGridY(y) - radius; gridY <= Util::getGridY(y) + radius; gridY++) {
 				//Make sure distance is less than radius so that the lava is created as a circle
-				if (distance(gridX, gridY, getGridX(x), getGridY(y)) <= radius) {
+				if (Util::distance(gridX, gridY, Util::getGridX(x), Util::getGridY(y)) <= radius) {
 					smh->environment->addTimedTile(gridX, gridY, WALK_LAVA, 99999.0);
 				}
 			}
@@ -335,9 +333,9 @@ bool FireBossTwo::updateState(float dt) {
 
 			//Launch fireballs
 			if (smh->timePassedSince(lastAttackTime) > 2.0) {
-				addFireBall(x, y, getAngleBetween(x, y, smh->player->x, smh->player->y) - PI / 4.0, 500.0, true, true);
-				addFireBall(x, y, getAngleBetween(x, y, smh->player->x, smh->player->y), 500.0, true, true);
-				addFireBall(x, y, getAngleBetween(x, y, smh->player->x, smh->player->y) + PI / 4.0, 500.0, true, true);
+				addFireBall(x, y, Util::getAngleBetween(x, y, smh->player->x, smh->player->y) - PI / 4.0, 500.0, true, true);
+				addFireBall(x, y, Util::getAngleBetween(x, y, smh->player->x, smh->player->y), 500.0, true, true);
+				addFireBall(x, y, Util::getAngleBetween(x, y, smh->player->x, smh->player->y) + PI / 4.0, 500.0, true, true);
 				lastAttackTime = smh->getGameTime();
 			}
 
@@ -355,10 +353,10 @@ bool FireBossTwo::updateState(float dt) {
 						smh->windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS2_VITAMINS);
 						saidVitaminDialogYet = true;
 					} else {
-						hge->Effect_Play(smh->resources->GetEffect("snd_fireBossDie"));
+						smh->soundManager->playSound("snd_fireBossDie");
 						setState(FIREBOSS_BATTLE);
 						//Do big attack to own smiley
-						fireNova->FireAt(getScreenX(x), getScreenY(y));
+						fireNova->FireAt(smh->getScreenX(x), smh->getScreenY(y));
 						lastFireNovaTime = smh->getGameTime();
 						launchFlames(true);
 					}
@@ -378,7 +376,7 @@ bool FireBossTwo::updateState(float dt) {
 		//After a while do a leet attack
 		if (smh->timePassedSince(timeEnteredState) > 13.0) {
 
-			if (hge->Random_Int(0,100000) < 50000) {
+			if (smh->randomInt(0,100000) < 50000) {
 				setState(FIREBOSS_LEET_ATTACK1);
 			} else {
 				setState(FIREBOSS_LEET_ATTACK2);
@@ -386,16 +384,16 @@ bool FireBossTwo::updateState(float dt) {
 		
 		//Default attack
 		} else if (smh->timePassedSince(lastAttackTime) > 3.0) {
-			if (hge->Random_Int(0,100000) < 50000) {
+			if (smh->randomInt(0,100000) < 50000) {
 				//3 homing fireballs
-				addFireBall(x, y, getAngleBetween(x, y, smh->player->x, smh->player->y) - PI / 4.0, 500.0, true, true);
-				addFireBall(x, y, getAngleBetween(x, y, smh->player->x, smh->player->y), 500.0, true, true);
-				addFireBall(x, y, getAngleBetween(x, y, smh->player->x, smh->player->y) + PI / 4.0, 500.0, true, true);
+				addFireBall(x, y, Util::getAngleBetween(x, y, smh->player->x, smh->player->y) - PI / 4.0, 500.0, true, true);
+				addFireBall(x, y, Util::getAngleBetween(x, y, smh->player->x, smh->player->y), 500.0, true, true);
+				addFireBall(x, y, Util::getAngleBetween(x, y, smh->player->x, smh->player->y) + PI / 4.0, 500.0, true, true);
 			} else {
 				//arc of fireballs
-				attackAngle = getAngleBetween(x, y, smh->player->x, smh->player->y);
+				attackAngle = Util::getAngleBetween(x, y, smh->player->x, smh->player->y);
 				for (int i = -3; i <= 3; i++) {
-					addFireBall(x, y, attackAngle + float(i)*(PI/24.0) + hge->Random_Float(0.0, 2.0*PI), 450.0, false, true);
+					addFireBall(x, y, attackAngle + float(i)*(PI/24.0) + smh->randomFloat(0.0, 2.0*PI), 450.0, false, true);
 				}
 			}
 			lastAttackTime = smh->getGameTime();
@@ -432,7 +430,7 @@ bool FireBossTwo::updateState(float dt) {
 		
 		//Launch stream of fireballs
 		if (smh->timePassedSince(lastAttackTime) > 0.05) {
-			addFireBall(x, y-50.0, getAngleBetween(x,y,smh->player->x,smh->player->y), 700.0, false, false);
+			addFireBall(x, y-50.0, Util::getAngleBetween(x,y,smh->player->x,smh->player->y), 700.0, false, false);
 			lastAttackTime = smh->getGameTime();
 		}
 
@@ -494,7 +492,7 @@ void FireBossTwo::doDamage(float damage, bool makeFlash) {
 			alpha = 255;
 			increaseAlpha = false;
 		}
-		hge->Effect_Play(smh->resources->GetEffect("snd_fireBossHit"));
+		smh->soundManager->playSound("snd_fireBossHit");
 	}
 
 	//After the initial phase of the battle, when phyrebozz gets hit, launch flames
@@ -508,7 +506,7 @@ void FireBossTwo::doDamage(float damage, bool makeFlash) {
  * Called when Phyrebozz is killed.
  */
 void FireBossTwo::die() {
-	hge->Effect_Play(smh->resources->GetEffect("snd_fireBossDie"));
+	smh->soundManager->playSound("snd_fireBossDie");
 	health = 0.0f;
 	setState(FIREBOSS_FRIENDLY);
 	smh->windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS2_VICTORY);	
@@ -526,8 +524,8 @@ void FireBossTwo::die() {
 void FireBossTwo::startMoveToPoint(int _x, int _y, float speed) {
 	timeStartedMove = smh->getGameTime();
 	moving = true;
-	timeToMove = distance(x, y, _x, _y) / speed;
-	float angle = getAngleBetween(x, y, _x, _y);
+	timeToMove = Util::distance(x, y, _x, _y) / speed;
+	float angle = Util::getAngleBetween(x, y, _x, _y);
 	dx = speed * cos(angle);
 	dy = speed * sin(angle);
 }
@@ -605,7 +603,7 @@ void FireBossTwo::updateFireBalls(float dt) {
 	for (i = fireBallList.begin(); i != fireBallList.end(); i++) {
 
 		//Update particle
-		i->particle->MoveTo(getScreenX(i->x), getScreenY(i->y), true);
+		i->particle->MoveTo(smh->getScreenX(i->x), smh->getScreenY(i->y), true);
 		i->particle->Update(dt);
 
 		if (!i->hasExploded) {
@@ -670,7 +668,7 @@ void FireBossTwo::updateFireBalls(float dt) {
 					i->hasExploded = true;
 					delete i->particle;
 					i->particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("smallExplosion")->info);
-					i->particle->FireAt(getScreenX(i->x), getScreenY(i->y));
+					i->particle->FireAt(smh->getScreenX(i->x), smh->getScreenY(i->y));
 					i->particle->TrackBoundingBox(true);
 					i->radius = 5.0;
 					i->timeExploded = smh->getGameTime();
@@ -760,7 +758,7 @@ void FireBossTwo::addFlameWall(float x, float y, int direction) {
 
 	for (int i = 0; i < FLAME_WALL_NUM_PARTICLES; i++) {
 		newFlameWall.fireBalls[i].particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("fireOrb")->info);
-		newFlameWall.fireBalls[i].particle->FireAt(getScreenX(newFlameWall.x), getScreenY(newFlameWall.y));
+		newFlameWall.fireBalls[i].particle->FireAt(smh->getScreenX(newFlameWall.x), smh->getScreenY(newFlameWall.y));
 		newFlameWall.fireBalls[i].collisionBox = new hgeRect();
 		newFlameWall.fireBalls[i].collisionBox->SetRadius(newFlameWall.x, newFlameWall.y, 15);
 		newFlameWall.fireBalls[i].alive = true;
@@ -804,7 +802,7 @@ void FireBossTwo::updateFlameWalls(float dt) {
 				}
 
 				i->fireBalls[j].particle->Update(dt);
-				i->fireBalls[j].particle->MoveTo(getScreenX(i->fireBalls[j].x), getScreenY(i->fireBalls[j].y), true);
+				i->fireBalls[j].particle->MoveTo(smh->getScreenX(i->fireBalls[j].x), smh->getScreenY(i->fireBalls[j].y), true);
 				i->fireBalls[j].collisionBox->SetRadius(i->fireBalls[j].x, i->fireBalls[j].y, 15.0);
 
 				bool deleteFireBall = false;
@@ -815,11 +813,11 @@ void FireBossTwo::updateFlameWalls(float dt) {
 				}	
 
 				//Silly pad collision
-				if (!deleteFireBall && smh->environment->hasSillyPad(getGridX(i->fireBalls[j].x), getGridY(i->fireBalls[j].y))) {
+				if (!deleteFireBall && smh->environment->hasSillyPad(Util::getGridX(i->fireBalls[j].x), Util::getGridY(i->fireBalls[j].y))) {
 					deleteFireBall = true;
 					Point sillyPadToDestroy;
-					sillyPadToDestroy.x = getGridX(i->fireBalls[j].x);
-					sillyPadToDestroy.y = getGridY(i->fireBalls[j].y);
+					sillyPadToDestroy.x = Util::getGridX(i->fireBalls[j].x);
+					sillyPadToDestroy.y = Util::getGridY(i->fireBalls[j].y);
 					sillyPadsToDestroy.push_back(sillyPadToDestroy);
 				}
 
@@ -845,7 +843,6 @@ void FireBossTwo::updateFlameWalls(float dt) {
 		std::list<Point>::iterator it;
 		for (it = sillyPadsToDestroy.begin(); it != sillyPadsToDestroy.end(); it++) {
 			smh->environment->destroySillyPad(i->x, i->y);
-			hge->System_Log("%d %d", i->x, i->y);
 			it = sillyPadsToDestroy.erase(it);
 		}
 
@@ -916,7 +913,7 @@ void FireBossTwo::launchFlames(bool allFlames) {
 
 void FireBossTwo::drawFlameLaunchers(float dt) {
 	for (int i = 0; i < 8; i++) {
-		smh->resources->GetSprite("flameLauncher")->RenderEx(getScreenX(flameLaunchers[i].gridX*64+32), 
-			getScreenY(flameLaunchers[i].gridY*64+32), smh->player->angles[flameLaunchers[i].facing]);
+		smh->resources->GetSprite("flameLauncher")->RenderEx(smh->getScreenX(flameLaunchers[i].gridX*64+32), 
+			smh->getScreenY(flameLaunchers[i].gridY*64+32), smh->player->angles[flameLaunchers[i].facing]);
 	}
 }

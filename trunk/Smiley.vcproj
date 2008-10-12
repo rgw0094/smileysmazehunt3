@@ -292,9 +292,6 @@
 					RelativePath=".\src\SMH.cpp">
 				</File>
 				<File
-					RelativePath=".\src\smiley.cpp">
-				</File>
-				<File
 					RelativePath=".\src\SoundManager.cpp">
 				</File>
 			</Filter>
@@ -515,9 +512,6 @@
 				</File>
 				<File
 					RelativePath=".\src\LoadEffectManager.h">
-				</File>
-				<File
-					RelativePath=".\src\smiley.h">
 				</File>
 				<File
 					RelativePath=".\src\SmileyEngine.h">

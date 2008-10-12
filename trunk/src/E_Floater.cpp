@@ -1,14 +1,11 @@
 #include "SmileyEngine.h"
-#include "smiley.h"
 #include "EnemyFramework.h"
-#include "hge.h"
 #include "hgeresource.h"
 #include "environment.h"
 #include "player.h"
 #include "CollisionCircle.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 /** 
  * Constructor
@@ -60,10 +57,10 @@ void E_Floater::update(float dt) {
 	//Change angle coefficient periodically
 	if (smh->timePassedSince(lastDirChange) > dirChangeDelay) {
 
-		angleCoefficient = hge->Random_Float(50.0, 100.0);
-		if (hge->Random_Int(0,1) == 1) angleCoefficient *= -1;
+		angleCoefficient = smh->randomFloat(50.0, 100.0);
+		if (smh->randomInt(0,1) == 1) angleCoefficient *= -1;
 
-		dirChangeDelay = hge->Random_Float(2.0,3.0);
+		dirChangeDelay = smh->randomFloat(2.0,3.0);
 		lastDirChange = smh->getGameTime();
 	}
 
@@ -114,8 +111,8 @@ void E_Floater::drawStunned(float dt) {
 	for (int n = 0; n < NUM_STUN_STARS; n++) {
 		stunStarAngles[n] += 2.0* PI * dt;
 		smh->resources->GetSprite("stunStar")->Render(
-		getScreenX(x + cos(stunStarAngles[n])*25), 
-		getScreenY(y + sin(stunStarAngles[n])*7) - 30.0 - shadowOffset);
+		smh->getScreenX(x + cos(stunStarAngles[n])*25), 
+		smh->getScreenY(y + sin(stunStarAngles[n])*7) - 30.0 - shadowOffset);
 	}
 }
 

@@ -1,11 +1,9 @@
 #include "SmileyEngine.h"
-#include "smiley.h"
 #include "SmileletManager.h"
 #include "CollisionCircle.h"
 #include "Player.h"
 #include "Worm.h"
 #include "hgeresource.h"
-#include "hge.h"
 #include "environment.h"
 #include "EnemyFramework.h"
 #include "ProjectileManager.h"
@@ -13,7 +11,6 @@
 using namespace std;
 
 extern SMH *smh;
-extern HGE *hge;
 
 #define SMILELET_STATE_WAITING 0
 #define SMILELET_STATE_FOLLOWING_SMILEY 1
@@ -165,7 +162,7 @@ void SmileletManager::doSmileletFollow(std::list<oneSmilelet>::iterator c) {
 	
 	node = smh->player->getWormNode((c->wormPosition+1)*DISTANCE_BETWEEN_SMILELETS);
 
-	if (distance(node.x,node.y,c->x,c->y) <= SMILELET_RADIUS + smh->player->radius + 4) {
+	if (Util::distance(node.x,node.y,c->x,c->y) <= SMILELET_RADIUS + smh->player->radius + 4) {
 		c->beginFollow = true;
 	} else { //Bob up and down in excited anticipation
 		c->y = c->initialYPosition - (sin(smh->timePassedSince(c->timeBeganBobbing)*10)*sin(smh->timePassedSince(c->timeBeganBobbing)*10)) * 10.0; 
@@ -216,7 +213,7 @@ void SmileletManager::doSmileletRun(std::list<oneSmilelet>::iterator c) {
 	c->y = (float)c->beginPanicY + smh->timePassedSince(c->timeBeganPanic) * SMILELET_PANIC_SPEED * sin(c->angle);
 
 	//Calculate how long it should take to get to the destination
-	double timeToDestination = distance(c->beginPanicX,c->beginPanicY,c->initialXPosition,c->initialYPosition) / SMILELET_PANIC_SPEED;
+	double timeToDestination = Util::distance(c->beginPanicX,c->beginPanicY,c->initialXPosition,c->initialYPosition) / SMILELET_PANIC_SPEED;
 
 	//If we've been running longer than that, stop running
 	if (smh->timePassedSince(c->timeBeganPanic) >= timeToDestination) {
@@ -230,7 +227,7 @@ void SmileletManager::doSmileletRun(std::list<oneSmilelet>::iterator c) {
 void SmileletManager::drawSmilelet(std::list<oneSmilelet>::iterator c) {
 	smh->resources->GetAnimation("smileletGfx")->SetFrame(c->dir);
 	smh->resources->GetAnimation("smileletGfx")->SetColor(c->col);
-	smh->resources->GetAnimation("smileletGfx")->Render(getScreenX(c->x),getScreenY(c->y));
+	smh->resources->GetAnimation("smileletGfx")->Render(smh->getScreenX(c->x),smh->getScreenY(c->y));
 }
 
 void SmileletManager::checkForNearbyFlower() {
@@ -332,7 +329,7 @@ void SmileletManager::initiatePanic() {
 			i->beginPanicX = i->x;
 			i->beginPanicY = i->y;
 
-			i->angle = getAngleBetween(i->x,i->y,i->initialXPosition,i->initialYPosition);
+			i->angle = Util::getAngleBetween(i->x,i->y,i->initialXPosition,i->initialYPosition);
 
 			i->dir = convertAngleToDir(i->angle);
 		}

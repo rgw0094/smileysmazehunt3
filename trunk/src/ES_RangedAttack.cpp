@@ -2,7 +2,6 @@
 #include "EnemyFramework.h"
 #include "Player.h"
 #include "ProjectileManager.h"
-#include "smiley.h"
 
 extern SMH *smh;
 
@@ -24,7 +23,7 @@ void ES_RangedAttack::update(float dt) {
 		smh->getGameTime() - owner->rangedAttackDelay > owner->lastRangedAttack) {
 			owner->lastRangedAttack = smh->getGameTime();
 			smh->projectileManager->addProjectile(owner->x, owner->y, owner->projectileSpeed, 
-				getAngleBetween(owner->x, owner->y, smh->player->x, smh->player->y), 
+				Util::getAngleBetween(owner->x, owner->y, smh->player->x, smh->player->y), 
 				owner->projectileDamage, true, owner->rangedType, true);
 	}
 

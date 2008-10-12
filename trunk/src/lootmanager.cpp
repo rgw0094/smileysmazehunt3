@@ -1,5 +1,4 @@
 #include "SmileyEngine.h"
-#include "smiley.h"
 #include "lootmanager.h"
 #include "player.h"
 #include "collisioncircle.h"
@@ -8,7 +7,6 @@
 #include "hgesprite.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 /**
  * Constructor
@@ -54,7 +52,7 @@ void LootManager::draw(float dt) {
 	std::list<Loot>::iterator i;
 	for (i = theLoot.begin(); i != theLoot.end(); i++) {
 		sprites[i->type]->SetColor(ARGB(i->alpha,255,255,255));
-		sprites[i->type]->Render(getScreenX(i->x), getScreenY(i->y));
+		sprites[i->type]->Render(smh->getScreenX(i->x), smh->getScreenY(i->y));
 		sprites[i->type]->SetColor(ARGB(255,255,255,255));
 	}
 }

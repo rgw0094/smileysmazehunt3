@@ -1,5 +1,4 @@
 #include "SmileyEngine.h"
-#include "smiley.h"
 #include "EnemyFramework.h"
 #include "hgeresource.h"
 #include "environment.h"
@@ -89,8 +88,8 @@ void E_Ghost::drawStunned(float dt) {
 	for (int n = 0; n < NUM_STUN_STARS; n++) {
 		stunStarAngles[n] += 2.0* PI * dt;
 		smh->resources->GetSprite("stunStar")->Render(
-		getScreenX(x + cos(stunStarAngles[n])*25), 
-		getScreenY(y + sin(stunStarAngles[n])*7) - 30.0 - shadowOffset);
+		smh->getScreenX(x + cos(stunStarAngles[n])*25), 
+		smh->getScreenY(y + sin(stunStarAngles[n])*7) - 30.0 - shadowOffset);
 	}
 }
 

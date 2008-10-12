@@ -1,14 +1,11 @@
 #include "SmileyEngine.h"
 #include "hgeresource.h"
-#include "hge.h"
 #include "hgestrings.h"
 #include "player.h"
-#include "smiley.h"
 #include "MainMenu.h"
 #include "Environment.h"
 #include "Button.h"
 
-extern HGE *hge;
 extern SMH *smh;
 
 /**
@@ -90,7 +87,7 @@ bool SelectFileScreen::update(float dt, float mouseX, float mouseY) {
 	//Update save box selection
 	if (!deletePrompt) {
 		for (int i = 0; i < 4; i++) {
-			if ((hge->Input_KeyDown(HGEK_LBUTTON) || smh->input->keyPressed(INPUT_ATTACK)) && saveBoxes[i].collisionBox->TestPoint(mouseX, mouseY)) {
+			if ((smh->hge->Input_KeyDown(HGEK_LBUTTON) || smh->input->keyPressed(INPUT_ATTACK)) && saveBoxes[i].collisionBox->TestPoint(mouseX, mouseY)) {
 				selectedFile = i;
 			}
 		}
@@ -103,7 +100,7 @@ bool SelectFileScreen::update(float dt, float mouseX, float mouseY) {
 		} else if (mouseY > y + 75 + 145*(selectedFile) && mouseY < y + 125 + 145*(selectedFile) && mouseX > x+245 && mouseX < x+310) {
 			mouseOn = ON_DELETE_NO;
 		} 
-		if (hge->Input_KeyDown(HGEK_LBUTTON) || smh->input->keyPressed(INPUT_ATTACK)) {
+		if (smh->hge->Input_KeyDown(HGEK_LBUTTON) || smh->input->keyPressed(INPUT_ATTACK)) {
 			if (mouseOn == ON_DELETE_YES) {
 				smh->saveManager->deleteFile(selectedFile);
 				deletePrompt = false;

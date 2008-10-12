@@ -1,17 +1,14 @@
 #include "CandyBoss.h"
 #include "SmileyEngine.h"
-#include "hge.h"
 #include "hgeresource.h"
 #include "Player.h"
 #include "EnemyFramework.h"
 #include "WindowFramework.h"
-#include "Smiley.h"
 #include "Environment.h"
 #include "collisioncircle.h"
 #include "WeaponParticle.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 #define CANDY_HEALTH 100
 
@@ -161,16 +158,16 @@ bool CandyBoss::update(float dt) {
 
 void CandyBoss::drawBartli() {
 	//Shadow
-	smh->resources->GetSprite("bartliShadow")->Render(getScreenX(x),getScreenY(y+CANDY_HEIGHT/2));
+	smh->resources->GetSprite("bartliShadow")->Render(smh->getScreenX(x),smh->getScreenY(y+CANDY_HEIGHT/2));
 	//Body
 	smh->resources->GetAnimation("bartli")->SetFrame(0);
-	smh->resources->GetAnimation("bartli")->Render(getScreenX(x),getScreenY(y - jumpYOffset));
+	smh->resources->GetAnimation("bartli")->Render(smh->getScreenX(x),smh->getScreenY(y - jumpYOffset));
 	//Arms
-	smh->resources->GetSprite("bartliArm")->RenderEx(getScreenX(x-CANDY_ARM_X_OFFSET),getScreenY(y+CANDY_ARM_Y_OFFSET - jumpYOffset),rightArmRot);
-	smh->resources->GetSprite("bartliArm")->RenderEx(getScreenX(x+CANDY_ARM_X_OFFSET),getScreenY(y+CANDY_ARM_Y_OFFSET - jumpYOffset),leftArmRot,-1.0,1.0);
+	smh->resources->GetSprite("bartliArm")->RenderEx(smh->getScreenX(x-CANDY_ARM_X_OFFSET),smh->getScreenY(y+CANDY_ARM_Y_OFFSET - jumpYOffset),rightArmRot);
+	smh->resources->GetSprite("bartliArm")->RenderEx(smh->getScreenX(x+CANDY_ARM_X_OFFSET),smh->getScreenY(y+CANDY_ARM_Y_OFFSET - jumpYOffset),leftArmRot,-1.0,1.0);
 	//Legs
-	smh->resources->GetSprite("bartliLeg")->Render(getScreenX(x-CANDY_LEG_X_OFFSET),getScreenY(y+CANDY_LEG_Y_OFFSET+rightLegY - jumpYOffset));
-	smh->resources->GetSprite("bartliLeg")->RenderEx(getScreenX(x+CANDY_LEG_X_OFFSET),getScreenY(y+CANDY_LEG_Y_OFFSET+leftLegY - jumpYOffset),0.0,-1.0,1.0);
+	smh->resources->GetSprite("bartliLeg")->Render(smh->getScreenX(x-CANDY_LEG_X_OFFSET),smh->getScreenY(y+CANDY_LEG_Y_OFFSET+rightLegY - jumpYOffset));
+	smh->resources->GetSprite("bartliLeg")->RenderEx(smh->getScreenX(x+CANDY_LEG_X_OFFSET),smh->getScreenY(y+CANDY_LEG_Y_OFFSET+leftLegY - jumpYOffset),0.0,-1.0,1.0);
 	//Debug
 	if (smh->isDebugOn()) smh->drawCollisionBox(collisionBox,RED);
 }
@@ -185,9 +182,9 @@ void CandyBoss::enterState(int _state) {
 	if (state == CANDY_STATE_RUNNING) {
 		//Start running in a random direction that doesn't result in Bartli immediately charging the player
 		//because there is no way to dodge it and that would be gay.
-		float angleBetween = getAngleBetween(x, y, smh->player->x, smh->player->y);
+		float angleBetween = Util::getAngleBetween(x, y, smh->player->x, smh->player->y);
 		do {
-			angle = hge->Random_Float(0.0, PI);
+			angle = smh->randomFloat(0.0, PI);
 		} while (angle > angleBetween - PI/4.0 && angle < angleBetween + PI/4.0);
 	}
 
@@ -219,14 +216,14 @@ void CandyBoss::updateRun(float dt) {
 
 	//When bartli hits a wall, bounce off it towards smiley
 	if (smh->environment->testCollision(futureCollisionBox, canPass)) {
-		if (distance(x, y, smh->player->x, smh->player->y) < 50.0) {
+		if (Util::distance(x, y, smh->player->x, smh->player->y) < 50.0) {
 			//If Smiley is standing next to a wall bartli can get stuck on him
 			angle += PI/2.0;
 		} else {
-			angle = getAngleBetween(x, y, smh->player->x, smh->player->y) + hge->Random_Float(-PI/6.0, PI/6.0);
+			angle = Util::getAngleBetween(x, y, smh->player->x, smh->player->y) + smh->randomFloat(-PI/6.0, PI/6.0);
 			//Make sure the new angle won't result in running into a wall
 			while (!smh->environment->validPath(x, y, x + xDist * cos(angle), y + yDist * sin(angle), 28, canPass)) {
-				angle += hge->Random_Float(-PI/6.0, PI/6.0);
+				angle += smh->randomFloat(-PI/6.0, PI/6.0);
 			}
 		}
 	} else {
@@ -250,13 +247,13 @@ void CandyBoss::updateJumping(float dt) {
 		numJumps++;
 
 		//Try to jump on smiley. The y offset is so her feet land at smiley's location
-		angle = getAngleBetween(x, y, smh->player->x, smh->player->y - 40.0);
-		jumpDistance = min(400.0, distance(x, y, smh->player->x, smh->player->y - 40));
+		angle = Util::getAngleBetween(x, y, smh->player->x, smh->player->y - 40.0);
+		jumpDistance = min(400.0, Util::distance(x, y, smh->player->x, smh->player->y - 40));
 	
 		//If Bartli is in multi jump state she should jump up and down on the player
 		if (state != CANDY_STATE_MULTI_JUMP) {
-			angle += hge->Random_Float(-PI/8.0, PI/8.0);
-			jumpDistance += hge->Random_Float(-100.0, 100.0);
+			angle += smh->randomFloat(-PI/8.0, PI/8.0);
+			jumpDistance += smh->randomFloat(-100.0, 100.0);
 		}		
 	
 		timeToJump = 0.5 * (1.0 / speedMultiplier);
@@ -305,7 +302,7 @@ void CandyBoss::spawnNova(float _x, float _y) {
 	newNova.timeSpawned = smh->getGameTime();
 	newNova.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("shockwave")->info);
 	newNova.particle->info.fParticleLifeMax = newNova.particle->info.fParticleLifeMin = 1.0;
-	newNova.particle->FireAt(getScreenX(_x), getScreenY(_y));
+	newNova.particle->FireAt(smh->getScreenX(_x), smh->getScreenY(_y));
 	newNova.collisionCircle = new CollisionCircle();
 
 	novaList.push_back(newNova);
@@ -314,7 +311,7 @@ void CandyBoss::spawnNova(float _x, float _y) {
 void CandyBoss::updateNovas(float dt) {
 	for (std::list<Nova>::iterator i = novaList.begin(); i != novaList.end(); i++) {
 
-		i->particle->MoveTo(getScreenX(i->x), getScreenY(i->y), true);
+		i->particle->MoveTo(smh->getScreenX(i->x), smh->getScreenY(i->y), true);
 		i->particle->Update(dt);
 		i->radius += 280.0 * dt;
 		i->collisionCircle->set(i->x, i->y, i->radius);

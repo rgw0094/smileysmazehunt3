@@ -2,7 +2,6 @@
 #include "EnemyFramework.h"
 #include "Player.h"
 #include "Environment.h"
-#include "smiley.h"
 
 extern SMH *smh;
 
@@ -29,7 +28,7 @@ void ES_Chase::update(float dt) {
 	//run straight towards him
 	if (smh->environment->validPath(owner->x, owner->y, smh->player->x, smh->player->y, 32, owner->canPass)) {
 
-		float angle = getAngleBetween(owner->x, owner->y, smh->player->x, smh->player->y);
+		float angle = Util::getAngleBetween(owner->x, owner->y, smh->player->x, smh->player->y);
 		owner->dx = owner->speed * cos(angle);
 		owner->dy = owner->speed * sin(angle);
 

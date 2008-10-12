@@ -1,8 +1,8 @@
-#include "smiley.h"
+#include "SmileyEngine.h"
 #include "collisioncircle.h"
 #include "hgerect.h"
 
-extern HGE *hge;
+extern SMH *smh;
 
 CollisionCircle::CollisionCircle() { }
 
@@ -30,10 +30,10 @@ bool CollisionCircle::testBox(hgeRect *box) {
 	}
 
 	//Test the 4 corners of the box
-	if (distance(box->x1, box->y1, x, y) < radius) return true;
-	if (distance(box->x2, box->y1, x, y) < radius) return true;
-	if (distance(box->x2, box->y2, x, y) < radius) return true;
-	if (distance(box->x1, box->y2, x, y) < radius) return true;
+	if (Util::distance(box->x1, box->y1, x, y) < radius) return true;
+	if (Util::distance(box->x2, box->y1, x, y) < radius) return true;
+	if (Util::distance(box->x2, box->y2, x, y) < radius) return true;
+	if (Util::distance(box->x1, box->y2, x, y) < radius) return true;
 
 	//Test top and bottom of box
 	if (x > box->x1 && x < box->x2) {
@@ -55,14 +55,14 @@ bool CollisionCircle::testBox(hgeRect *box) {
  * Returns whether or not the provided circle collides with this circle.
  */
 bool CollisionCircle::testCircle(CollisionCircle *circle) {
-	return (abs(distance(x, y, circle->x, circle->y)) < radius + circle->radius);
+	return (abs(Util::distance(x, y, circle->x, circle->y)) < radius + circle->radius);
 }
 
 /**
  * Returns whether or not the provided point collides with this circle.
  */ 
 bool CollisionCircle::testPoint(int pointX, int pointY) {
-	return (abs(distance(x, y, pointX, pointY)) < radius);
+	return (abs(Util::distance(x, y, pointX, pointY)) < radius);
 }
 
 /**
@@ -86,6 +86,6 @@ void CollisionCircle::draw() {
 		y1 = y2;
 		x2 = (float)radius * cos(a);
 		y2 = (float)radius * sin(a);
-		hge->Gfx_RenderLine(getScreenX(x1+(float)x), getScreenY(y1+(float)y), getScreenX(x2+(float)x), getScreenY(y2+(float)y), ARGB(255,255,0,0));
+		smh->hge->Gfx_RenderLine(smh->getScreenX(x1+(float)x), smh->getScreenY(y1+(float)y), smh->getScreenX(x2+(float)x), smh->getScreenY(y2+(float)y), ARGB(255,255,0,0));
 	}
 }

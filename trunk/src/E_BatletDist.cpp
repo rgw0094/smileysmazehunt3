@@ -1,7 +1,5 @@
 #include "SmileyEngine.h"
-#include "smiley.h"
 #include "EnemyFramework.h"
-#include "hge.h"
 #include "hgeresource.h"
 #include "ProjectileManager.h"
 #include "player.h"
@@ -11,7 +9,6 @@
 #include "WeaponParticle.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 #define ACTIVATION_RADIUS 300
 #define SPAWN_DELAY 2.5
@@ -120,7 +117,7 @@ void E_BatletDist::addBatlet() {
 	newBatlet.scale = 0.0001;
 
 	//When a batlet first spawns it floats slowly away from the BD
-	newBatlet.angle = hge->Random_Float(0.0, 2.0*PI);
+	newBatlet.angle = smh->randomFloat(0.0, 2.0*PI);
 	newBatlet.dx = 60.0*cos(newBatlet.angle);
 	newBatlet.dy = 60.0*sin(newBatlet.angle);
 
@@ -135,7 +132,7 @@ void E_BatletDist::addBatlet() {
 void E_BatletDist::drawBatlets(float dt) {
 	std::list<Batlet>::iterator i;
 	for (i = theBatlets.begin(); i != theBatlets.end(); i++) {
-		i->animation->RenderEx(getScreenX(i->x), getScreenY(i->y), 0.0, i->scale, i->scale);
+		i->animation->RenderEx(smh->getScreenX(i->x), smh->getScreenY(i->y), 0.0, i->scale, i->scale);
 	}
 }
 
@@ -174,7 +171,7 @@ void E_BatletDist::updateBatlets(float dt) {
 		
 		if (collision) {
 			particles->SpawnPS(&smh->resources->GetParticleSystem("bloodSplat")->info, i->x, i->y);
-			hge->Effect_Play(smh->resources->GetEffect("snd_splat"));
+			smh->soundManager->playSound("snd_splat");
 			delete i->collisionBox;
 			delete i->animation;
 			i = theBatlets.erase(i);
@@ -183,8 +180,8 @@ void E_BatletDist::updateBatlets(float dt) {
 
 		//After the batlets move away from BD they dive bomb Smiley
 		if (!i->startedDiveBomb && smh->timePassedSince(i->timeSpawned) > 1.0) {
-			i->angle = getAngleBetween(i->x, i->y, smh->player->x, smh->player->y) +
-				hge->Random_Float(-.1*PI, .1*PI);
+			i->angle = Util::getAngleBetween(i->x, i->y, smh->player->x, smh->player->y) +
+				smh->randomFloat(-.1*PI, .1*PI);
 			i->dx = 600.0*cos(i->angle);
 			i->dy = 600.0*sin(i->angle);
 			i->startedDiveBomb = true;
@@ -208,8 +205,8 @@ void E_BatletDist::resetBatlets() {
  * Returns whether or not a point is overlapping the Batlet Distributor
  */
 bool E_BatletDist::isOverlappingDist(float x, float y) {
-	return (getGridX(x) == gridX && getGridY(y) == gridY) ||
-		   (getGridX(x) == gridX && getGridY(y) == gridY-1) ||
-		   (getGridX(x) == gridX+1 && getGridY(y) == gridY) ||
-		   (getGridX(x) == gridX+1 && getGridY(y) == gridY-1);
+	return (Util::getGridX(x) == gridX && Util::getGridY(y) == gridY) ||
+		   (Util::getGridX(x) == gridX && Util::getGridY(y) == gridY-1) ||
+		   (Util::getGridX(x) == gridX+1 && Util::getGridY(y) == gridY) ||
+		   (Util::getGridX(x) == gridX+1 && Util::getGridY(y) == gridY-1);
 }

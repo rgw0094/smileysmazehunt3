@@ -3,10 +3,8 @@
 #include "player.h"
 #include "environment.h"
 #include "hgeresource.h"
-#include "smiley.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 #define BUZZARD_WAITING 0
 #define BUZZARD_FLYING 1

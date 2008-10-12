@@ -1,5 +1,4 @@
 #include "SmileyEngine.h"
-#include "smiley.h"
 #include "fireboss.h"
 #include "environment.h"
 #include "lootmanager.h"
@@ -11,8 +10,6 @@
 #include "EnemyFramework.h"
 
 extern SMH *smh;
-extern HGE *hge;
-
 //States
 #define FIREBOSS_INACTIVE 0
 #define FIREBOSS_MOVE 1
@@ -93,10 +90,10 @@ void FireBoss::draw(float dt) {
 
 	//Draw FENWAR talking to the boss
 	if (showFenwar) {
-		smh->resources->GetSprite("fenwarDown")->Render(getScreenX(startX*64-120), getScreenY(startY*64));
+		smh->resources->GetSprite("fenwarDown")->Render(smh->getScreenX(startX*64-120), smh->getScreenY(startY*64));
 	}
 	if (fenwarLeave) {
-		fenwarWarp->MoveTo(getScreenX(startX*64-120), getScreenY(startY*64),true);
+		fenwarWarp->MoveTo(smh->getScreenX(startX*64-120), smh->getScreenY(startY*64),true);
 		fenwarWarp->Update(dt);
 		fenwarWarp->Render();
 	}
@@ -106,18 +103,18 @@ void FireBoss::draw(float dt) {
 
 	//Draw the boss' main sprite
 	smh->resources->GetAnimation("phyrebozz")->SetFrame(facing);
-	smh->resources->GetAnimation("phyrebozz")->Render(getScreenX(x),getScreenY(y+floatY));
+	smh->resources->GetAnimation("phyrebozz")->Render(smh->getScreenX(x),smh->getScreenY(y+floatY));
 
 	//Draw the boss' mouth
 	if (facing == DOWN) {
 		smh->resources->GetAnimation("phyrebozzDownMouth")->Update(dt);
-		smh->resources->GetAnimation("phyrebozzDownMouth")->Render(getScreenX(x-(97/2)+34),getScreenY(y-(158/2)+14+floatY));
+		smh->resources->GetAnimation("phyrebozzDownMouth")->Render(smh->getScreenX(x-(97/2)+34),smh->getScreenY(y-(158/2)+14+floatY));
 	} else if (facing == LEFT) {
 		smh->resources->GetAnimation("phyrebozzLeftMouth")->Update(dt);
-		smh->resources->GetAnimation("phyrebozzLeftMouth")->Render(getScreenX(x-(97/2)+36),getScreenY(y-(158/2)+12+floatY));
+		smh->resources->GetAnimation("phyrebozzLeftMouth")->Render(smh->getScreenX(x-(97/2)+36),smh->getScreenY(y-(158/2)+12+floatY));
 	} else if (facing == RIGHT) {
 		smh->resources->GetAnimation("phyrebozzRightMouth")->Update(dt);
-		smh->resources->GetAnimation("phyrebozzRightMouth")->Render(getScreenX(x-(97/2)+34),getScreenY(y-(158/2)+12+floatY));
+		smh->resources->GetAnimation("phyrebozzRightMouth")->Render(smh->getScreenX(x-(97/2)+34),smh->getScreenY(y-(158/2)+12+floatY));
 	}
 	
 	//Draw fire nova attack
@@ -145,7 +142,7 @@ void FireBoss::draw(float dt) {
 bool FireBoss::update(float dt) {
 
 	//Update floating offset
-	floatY = 15.0f*sin(hge->Timer_GetTime()*3.0f);
+	floatY = 15.0f*sin(smh->getRealTime() * 3.0);
 
 	//When the player enters his chamber shut the doors and start the intro dialogue
 	if (state == FIREBOSS_INACTIVE && !startedIntroDialogue && smh->player->gridY == startY+5  && smh->player->gridX == startX && smh->player->y < (startY+5)*64+33) {
@@ -164,7 +161,7 @@ bool FireBoss::update(float dt) {
 	if (state == FIREBOSS_INACTIVE && startedIntroDialogue && !smh->windowManager->isTextBoxOpen()) {
 		state = FIREBOSS_ATTACK;
 		startedAttackMode = smh->getGameTime();
-		hge->Effect_Play(smh->resources->GetEffect("snd_fireBossDie"));
+		smh->soundManager->playSound("snd_fireBossDie");
 		//Start fenwar warping out effect
 		fenwarLeave = true;
 		startedFenwarLeave = smh->getGameTime();
@@ -237,7 +234,7 @@ bool FireBoss::update(float dt) {
 	//Update for MOVE state
 	if (state == FIREBOSS_MOVE) {
 		//Move towards the current location. If the boss is already there, move to attack state!
-		float angle = getAngleBetween(x,y,locations[currentLocation].x,locations[currentLocation].y);
+		float angle = Util::getAngleBetween(x,y,locations[currentLocation].x,locations[currentLocation].y);
 		dx = speed * cos(angle);
 		dy = speed * sin(angle);
 		x += dx*dt;
@@ -249,7 +246,7 @@ bool FireBoss::update(float dt) {
 
 	//Update for ATTACK state
 	} else if (state == FIREBOSS_ATTACK) {
-		fireNova->MoveTo(getScreenX(x),getScreenY(y+floatY),true);
+		fireNova->MoveTo(smh->getScreenX(x),smh->getScreenY(y+floatY),true);
 		fireNova->Update(dt);
 		if (smh->getGameTime() > startedAttackMode + 2.0f) {
 			changeState(FIREBOSS_MOVE);
@@ -282,7 +279,7 @@ bool FireBoss::update(float dt) {
 				lastHitByTongue = smh->getGameTime();
 				health -= smh->player->getDamage();
 				if (health > 0.0f) {
-					hge->Effect_Play(smh->resources->GetEffect("snd_fireBossHit"));
+					smh->soundManager->playSound("snd_fireBossHit");
 				}
 				//Start flashing
 				flashing = true;
@@ -315,7 +312,7 @@ bool FireBoss::update(float dt) {
 
 	//Die
 	if (health <= 0.0f && state != FIREBOSS_FRIENDLY) {
-		hge->Effect_Play(smh->resources->GetEffect("snd_fireBossDie"));
+		smh->soundManager->playSound("snd_fireBossDie");
 		flashing = false;
 		health = 0.0f;
 		state = FIREBOSS_FRIENDLY;
@@ -367,14 +364,14 @@ void FireBoss::changeState(int changeTo) {
 	//Switch to attack
 	if (state == FIREBOSS_ATTACK) {
 		startedAttackMode = smh->getGameTime();
-		fireNova->FireAt(getScreenX(x),getScreenY(y));
-		hge->Effect_Play(smh->resources->GetEffect("snd_fireBossNova"));
+		fireNova->FireAt(smh->getScreenX(x),smh->getScreenY(y));
+		smh->soundManager->playSound("snd_fireBossNova");
 	
 	//Switch from attack to move
 	} else if (state == FIREBOSS_MOVE) {
 		//Pick a new location to move to
 		int newLoc;
-		while ((newLoc = hge->Random_Int(0,4)) == currentLocation) { }
+		while ((newLoc = smh->randomInt(0,4)) == currentLocation) { }
 		currentLocation = newLoc;
 		//Calculate path time
 		startedPath = smh->getGameTime();
@@ -392,14 +389,14 @@ void FireBoss::updateOrbs(float dt) {
 	for (i = theOrbs.begin(); i != theOrbs.end(); i++) {
 
 		//Update particle
-		i->particle->MoveTo(getScreenX(i->x), getScreenY(i->y), true);
+		i->particle->MoveTo(smh->getScreenX(i->x), smh->getScreenY(i->y), true);
 		i->particle->Update(dt);
 
 		//Update collision box
 		i->collisionBox->SetRadius(i->x, i->y, 15);
 
 		//Move towards player
-		float angle = getAngleBetween(i->x,i->y,smh->player->x,smh->player->y);
+		float angle = Util::getAngleBetween(i->x,i->y,smh->player->x,smh->player->y);
 		i->dx = 130 * cos(angle);
 		i->dy = 130 * sin(angle);
 		i->x += i->dx*dt;

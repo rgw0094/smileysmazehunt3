@@ -11,7 +11,6 @@
 #include "EnemyFramework.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 BossManager::BossManager() {
 }
@@ -24,8 +23,6 @@ BossManager::~BossManager() {
  * Creates an instance of the specified boss.
  */
 void BossManager::spawnBoss(int bossID, int groupID, int gridX, int gridY) {
-
-	hge->System_Log("Spawning Boss %d", bossID);
 
 	BossStruct newBoss;
 

@@ -1,11 +1,8 @@
 #include "SmileyEngine.h"
 #include "MainMenu.h"
-#include "Smiley.h"
-
 #include "hgeresource.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 #define SPEED 150.0
 
@@ -17,7 +14,7 @@ extern HGE *hge;
 CreditsScreen::CreditsScreen() {
 	init();
 	offset = 0.0;
-	timeScreenOpened = hge->Timer_GetTime();
+	timeScreenOpened = smh->getRealTime();
 	resourcesCachedYet = false;
 }
 
@@ -72,17 +69,17 @@ bool CreditsScreen::update(float dt, float mouseX, float mouseY) {
 	}
 
 	//The screen slowly scrolls down
-	if ((hge->Timer_GetTime() - timeScreenOpened > 1.5) && offset + 350 < endY) {
+	if ((smh->getRealTime() - timeScreenOpened > 1.5) && offset + 350 < endY) {
 		offset += SPEED * dt;
 	}
 
 	//Input
-	if (hge->Input_KeyDown(HGEK_ENTER)) {
+	if (smh->hge->Input_KeyDown(HGEK_ENTER)) {
 		smh->menu->setScreen(TITLE_SCREEN);
 		return false;
 	}
-	if (hge->Input_KeyDown(HGEK_DOWN)) offset += 400.0;
-	if (hge->Input_KeyDown(HGEK_UP)) offset -= 400.0;
+	if (smh->hge->Input_KeyDown(HGEK_DOWN)) offset += 400.0;
+	if (smh->hge->Input_KeyDown(HGEK_UP)) offset -= 400.0;
 
 	return false;
 }
