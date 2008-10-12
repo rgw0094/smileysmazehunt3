@@ -4,42 +4,10 @@
 #include "SmileyEngine.h"
 #include "smiley.h"
 #include "environment.h"
-#include "player.h"
 #include "hgerect.h"
-#include "boss.h"
 
 extern SMH *smh;
 extern HGE *hge;
-
-
-/**
- * Draw a collision box. The color options are RED, GREEN, or BLUE. If any other value is
- * is specified it will default to black;
- */
-void drawCollisionBox(hgeRect *box, int color) {
-
-	int r = (color == RED) ? 255 : 0;
-	int g = (color == GREEN) ? 255 : 0;
-	int b = (color == BLUE) ? 255 : 0;
-
-	int x1 = getScreenX(box->x1);
-	int x2 = getScreenX(box->x2);
-	int y1 = getScreenY(box->y1);
-	int y2 = getScreenY(box->y2);
-
-	hge->Gfx_RenderLine(x1, y1, x2, y1, ARGB(255,r,g,b));
-	hge->Gfx_RenderLine(x2, y1, x2, y2, ARGB(255,r,g,b));
-	hge->Gfx_RenderLine(x2, y2, x1, y2, ARGB(255,r,g,b));
-	hge->Gfx_RenderLine(x1, y2, x1, y1, ARGB(255,r,g,b));
-
-}
-
-/**
- * Return whether a grid coordinate is in bounds or not
- */
-bool inBounds(int gridX, int gridY) {
-	return (gridX >= 0 && gridY >= 0 && gridX < smh->environment->areaWidth && gridY < smh->environment->areaHeight);
-}
 
 /**
  * Returns the screen x position given the global x position
@@ -62,46 +30,6 @@ int distance(int x1, int y1, int x2, int y2) {
 	if (x1 == x2) return abs(y1 - y2);
 	if (y1 == y2) return abs(x1 - x2);
 	return sqrt(float((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1)));
-}
-
-/**
- * Sets time to a string in the format HH:MM:SS for the specified number of seconds
- */ 
-const char *getTimeString(int time) {
-
-	std::string timeString;
-
-	char hours[2];
-	char minutes[2];
-	char seconds[2];
-	char temp[2];
-
-	//Get number of hours, minutes, seconds
-	itoa((time - (time % 3600)) / 3600, hours, 10);
-	time -= 3600*atoi(hours);
-	itoa((time - (time % 60)) / 60, minutes, 10);
-	time -= 60*atoi(minutes);
-	itoa(time, seconds, 10);
-
-	if (strlen(minutes) == 1) {
-		strcpy(temp, minutes);
-		strcpy(minutes,"0");
-		strcat(minutes, temp);
-	}
-
-	if (strlen(seconds) == 1) {
-		strcpy(temp, seconds);
-		strcpy(seconds,"0");
-		strcat(seconds, temp);
-	}
-
-	//Build the time string
-	timeString = hours;
-	timeString += ":";
-	timeString += minutes;
-	timeString += ":";
-	timeString += seconds;
-	return timeString.c_str();
 }
 
 /**
@@ -192,19 +120,6 @@ int getFacingDirection(float dx, float dy) {
 }
 
 /**
- * Shades the screen
- */
-void shadeScreen(int alpha) {
-	if (alpha == 0.0) return;
-	smh->resources->GetSprite("blackScreen")->SetColor(ARGB(alpha,255,255,255));
-	for (int i = 0; i < 35; i++) {
-		for (int j = 0; j < 26; j++) {
-			smh->resources->GetSprite("blackScreen")->Render(i*30,j*30);
-		}
-	}
-}
-
-/**
  * Returns the grid x coordinate that x appears in
  */
 int getGridX(int x) {
@@ -216,17 +131,6 @@ int getGridX(int x) {
  */
 int getGridY(int y) {
 	return (y - y%64) / 64;
-}
-
-/**
- * Returns the length of the straight line connecting (x,y) to the
- * player's position.
- */
-int distanceFromPlayer(float x, float y) {
-	int xDist = abs(x - smh->player->x);
-	int yDist = abs(y - smh->player->y);
-
-	return sqrt(float(xDist*xDist) + float(yDist*yDist));
 }
 
 /**
@@ -264,7 +168,7 @@ bool isWarp(int id) {
  * [area] index of SaveManager.numKeys[area][key color] for the parent area.
  */
 int getKeyIndex(int area) {
-	switch (smh->saveManager->currentArea) {
+	switch (area) {
 		case OLDE_TOWNE:
 		case TUTS_TOMB:
 		case SMOLDER_HOLLOW:
@@ -278,36 +182,4 @@ int getKeyIndex(int area) {
 		case CASTLE_OF_EVIL:
 			return 4;
 	}
-}
-
-/**
- * Rounds a float up to the nearest integer.
- */ 
-int roundUp(float num) {
-	if (num > (int)num) return (int)num + 1;
-	else return (int)num;
-}
-
-/**
- * Returns the current hint number based on what boss has been killed.
- */
-int getCurrentHint() {
-	if (smh->saveManager->isBossKilled(FIRE_BOSS2)) {
-		return 7;
-	} else if (smh->saveManager->isBossKilled(MUSHROOM_BOSS)) {
-		return 6;
-	} else if (smh->saveManager->isBossKilled(DESPAIR_BOSS)) {
-		return 5;
-	} else if (smh->saveManager->isBossKilled(DESERT_BOSS)) {
-		return 4;
-	} else if (smh->saveManager->isBossKilled(FOREST_BOSS)) {
-		return 3;
-	} else if (smh->saveManager->isBossKilled(SNOW_BOSS)) {
-		return 2;
-	} else if (smh->saveManager->isBossKilled(FIRE_BOSS)) {
-		return 1;
-	} else {
-		return 0;
-	}
-
 }

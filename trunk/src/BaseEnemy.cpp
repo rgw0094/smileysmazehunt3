@@ -574,6 +574,6 @@ void BaseEnemy::doPlayerCollision() {
  */
 void BaseEnemy::drawDebug() {
 	if (smh->isDebugOn() && dealsCollisionDamage) {
-		drawCollisionBox(collisionBox, RED);
+		smh->drawCollisionBox(collisionBox, RED);
 	}
 }

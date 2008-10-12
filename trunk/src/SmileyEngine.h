@@ -65,10 +65,12 @@ public:
 	float getDarkness();
 
 	//Utility Functions
+	void drawCollisionBox(hgeRect *box, int color);
 	void drawGlobalSprite(const char* sprite, float x, float y);
 	void drawSprite(const char* sprite, float x, float y);
 	void drawSprite(const char* sprite, float x, float y, float width, float height);
 	void log(const char* text);
+	void shadeScreen(int alpha);
 	float timePassedSince(float time);
 
 	//Game objects
@@ -285,6 +287,7 @@ public:
 	bool isBossKilled(int boss);
 	void explore(int gridX, int gridY);
 	bool isExplored(int gridX, int gridY);
+	int getCurrentHint();
 
 	//Stats
 	int numTongueLicks;
@@ -355,6 +358,26 @@ private:
 	int previousMusicPosition;
 	int musicVolume;
 	int soundVolume;
+
+};
+
+//----------------------------------------------------------------
+//----------------------------------------------------------------
+//------------------ UTIL ----------------------------------------
+//----------------------------------------------------------------
+//----------------------------------------------------------------
+/**
+ * This class is for static utility functions outside the scope of the
+ * Smiley world, such as string conversions and shit.
+ */
+class Util {
+
+public:
+
+	static int roundUp(float num) {
+		if (num > (int)num) return (int)num + 1;
+		else return (int)num;
+	}
 
 };
 

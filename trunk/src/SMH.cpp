@@ -304,6 +304,28 @@ float SMH::getDarkness() {
 /////////////////////////////
 
 /**
+ * Draw a collision box. The color options are RED, GREEN, or BLUE. If any other value is
+ * is specified it will default to black;
+ */
+void SMH::drawCollisionBox(hgeRect *box, int color) {
+
+	int r = (color == RED) ? 255 : 0;
+	int g = (color == GREEN) ? 255 : 0;
+	int b = (color == BLUE) ? 255 : 0;
+
+	int x1 = getScreenX(box->x1);
+	int x2 = getScreenX(box->x2);
+	int y1 = getScreenY(box->y1);
+	int y2 = getScreenY(box->y2);
+
+	hge->Gfx_RenderLine(x1, y1, x2, y1, ARGB(255,r,g,b));
+	hge->Gfx_RenderLine(x2, y1, x2, y2, ARGB(255,r,g,b));
+	hge->Gfx_RenderLine(x2, y2, x1, y2, ARGB(255,r,g,b));
+	hge->Gfx_RenderLine(x1, y2, x1, y1, ARGB(255,r,g,b));
+
+}
+
+/**
  * Draws a sprite at a global position.
  */
 void SMH::drawGlobalSprite(const char* sprite, float x, float y) {
@@ -329,6 +351,19 @@ void SMH::drawSprite(const char* sprite, float x, float y, float width, float he
  */
 void SMH::log(const char* text) {
 	hge->System_Log(text);
+}
+
+/**
+ * Shades the entire screen.
+ */
+void SMH::shadeScreen(int alpha) {
+	if (alpha == 0.0) return;
+	resources->GetSprite("blackScreen")->SetColor(ARGB(alpha,255,255,255));
+	for (int i = 0; i < 35; i++) {
+		for (int j = 0; j < 26; j++) {
+			resources->GetSprite("blackScreen")->Render(i*30,j*30);
+		}
+	}
 }
 
 /**

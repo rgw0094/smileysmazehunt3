@@ -12,6 +12,7 @@
 #include "smiley.h"
 #include "ChangeManager.h"
 #include "BitManager.h"
+#include "boss.h"
 
 extern SMH *smh;
 extern HGE *hge;
@@ -62,7 +63,7 @@ bool SaveManager::isExplored(int gridX, int gridY) {
 void SaveManager::explore(int gridX, int gridY) {
 	for (int curGridY = gridY - 6; curGridY <= gridY + 6; curGridY++) {
 		for (int curGridX = gridX - 8; curGridX <= gridX + 8; curGridX++) {
-			if (inBounds(curGridX,curGridY)) {
+			if (smh->environment->isInBounds(curGridX,curGridY)) {
 				explored[currentArea][curGridX][curGridY] = true;
 			}
 		}
@@ -485,6 +486,30 @@ void SaveManager::loadFileInfo() {
 	}
 
 	inFile.close();
+
+}
+
+/**
+ * Returns the current hint number based on what boss has been killed.
+ */
+int SaveManager::getCurrentHint() {
+	if (isBossKilled(FIRE_BOSS2)) {
+		return 7;
+	} else if (isBossKilled(MUSHROOM_BOSS)) {
+		return 6;
+	} else if (isBossKilled(DESPAIR_BOSS)) {
+		return 5;
+	} else if (isBossKilled(DESERT_BOSS)) {
+		return 4;
+	} else if (isBossKilled(FOREST_BOSS)) {
+		return 3;
+	} else if (isBossKilled(SNOW_BOSS)) {
+		return 2;
+	} else if (isBossKilled(FIRE_BOSS)) {
+		return 1;
+	} else {
+		return 0;
+	}
 
 }
 

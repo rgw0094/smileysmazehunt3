@@ -150,6 +150,7 @@ public:
 	void reset();
 	void updateTutorialMan(float dt);
 	bool isTutorialManActive();
+	bool Environment::isInBounds(int gridX, int gridY);
     
 	//variables
 	int areaWidth,areaHeight;		//Width and height of the area in squares

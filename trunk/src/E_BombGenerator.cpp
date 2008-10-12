@@ -229,7 +229,7 @@ void E_BombGenerator::checkNextTileAndTurn() {
 		default: break;
 	};
 
-	if (!inBounds(xTileNext,yTileNext) ||
+	if (!smh->environment->isInBounds(xTileNext,yTileNext) ||
 		!canPass[smh->environment->collision[xTileNext][yTileNext]] || 
 		smh->environment->hasSillyPad(xTileNext, yTileNext)) {
 		//turn left!

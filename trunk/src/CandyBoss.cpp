@@ -172,7 +172,7 @@ void CandyBoss::drawBartli() {
 	smh->resources->GetSprite("bartliLeg")->Render(getScreenX(x-CANDY_LEG_X_OFFSET),getScreenY(y+CANDY_LEG_Y_OFFSET+rightLegY - jumpYOffset));
 	smh->resources->GetSprite("bartliLeg")->RenderEx(getScreenX(x+CANDY_LEG_X_OFFSET),getScreenY(y+CANDY_LEG_Y_OFFSET+leftLegY - jumpYOffset),0.0,-1.0,1.0);
 	//Debug
-	if (smh->isDebugOn()) drawCollisionBox(collisionBox,RED);
+	if (smh->isDebugOn()) smh->drawCollisionBox(collisionBox,RED);
 }
 
 /**

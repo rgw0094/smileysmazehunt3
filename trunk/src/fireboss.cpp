@@ -133,7 +133,7 @@ void FireBoss::draw(float dt) {
 	//Draw collision boxes if in debug mode
 	if (smh->isDebugOn()) {
 		for (int i = 0; i < 3; i++) {
-			drawCollisionBox(collisionBoxes[i], RED);
+			smh->drawCollisionBox(collisionBoxes[i], RED);
 		}
 	}
 
@@ -350,7 +350,7 @@ bool FireBoss::update(float dt) {
 	}
 
 	//Fix gay floating point errors - this probably isn't needed anymore
-	if (!inBounds(x/64,y/64)) {
+	if (!smh->environment->isInBounds(x/64,y/64)) {
 		x = previousX;
 		y = previousY;
 		changeState(FIREBOSS_MOVE);
@@ -434,7 +434,7 @@ void FireBoss::drawOrbs(float dt) {
 	for (i = theOrbs.begin(); i != theOrbs.end(); i++) {
 		i->particle->Render();
 		if (smh->isDebugOn()) {
-			drawCollisionBox(i->collisionBox, RED);
+			smh->drawCollisionBox(i->collisionBox, RED);
 		}
 	}
 }

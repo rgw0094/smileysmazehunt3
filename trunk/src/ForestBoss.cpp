@@ -245,8 +245,8 @@ void ForestBoss::draw(float dt) {
 
 	//Debug shit
 	if (smh->isDebugOn()) {
-		drawCollisionBox(collisionBox, RED);
-		drawCollisionBox(frisbeeReflectBox, RED);
+		smh->drawCollisionBox(collisionBox, RED);
+		smh->drawCollisionBox(frisbeeReflectBox, RED);
 	}
 
 }
@@ -341,7 +341,7 @@ void ForestBoss::drawTreelets(float dt) {
 									 treeletLocs[i].y - 53.0,
 									 treeletLocs[i].x + 48.0,
 									 treeletLocs[i].y + 53.0);
-				drawCollisionBox(treeletCollisionBox, RED);
+				smh->drawCollisionBox(treeletCollisionBox, RED);
 			}
 
 		}

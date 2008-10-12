@@ -312,7 +312,7 @@ void ProjectileManager::draw(float dt) {
 		
 		//Debug stuff
 		if (smh->isDebugOn()) {
-			drawCollisionBox(i->collisionBox, RED);
+			smh->drawCollisionBox(i->collisionBox, RED);
 		}
 	}
 }

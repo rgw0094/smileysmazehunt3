@@ -94,7 +94,7 @@ void TextBox::setHint() {
 	smh->soundManager->playMusic("hintMusic");
 
 	npcID = BILL_CLINTON;
-	textID = getCurrentHint();
+	textID = smh->saveManager->getCurrentHint();
 	paramString = "Hint";
 	paramString += intToString(textID);
 	paramString += "Pages";

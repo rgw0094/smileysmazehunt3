@@ -36,12 +36,12 @@ Map::~Map() { }
 void Map::draw(float dt) {
 
 	//Shade behind the map
-	shadeScreen(100);
+	smh->shadeScreen(100);
 
 	//Draw the map tiles
 	for (int i = gridXOffset; i < gridXOffset + gridWidth+1; i++) {
 		for (int j = gridYOffset; j < gridYOffset + gridHeight+1; j++) {
-			if (inBounds(i,j) && smh->saveManager->isExplored(i,j)) {
+			if (smh->environment->isInBounds(i,j) && smh->saveManager->isExplored(i,j)) {
 
 				//Calculate the top left corner of the square and its width
 				drawX = windowX+(i-gridXOffset)*squareSize - ((int)xOffset%24);
@@ -71,37 +71,37 @@ void Map::draw(float dt) {
 				}
 
 				//Fog of war
-				if (inBounds(i,j) && smh->saveManager->isExplored(i,j)) {
+				if (smh->environment->isInBounds(i,j) && smh->saveManager->isExplored(i,j)) {
 					//up
-					if (inBounds(i,j-1) && !smh->saveManager->isExplored(i,j-1)) {
+					if (smh->environment->isInBounds(i,j-1) && !smh->saveManager->isExplored(i,j-1)) {
 						smh->drawSprite("mapFogOfWarUp", drawX, drawY, squareSize, squareSize);
 					}
 					//down
-					if (inBounds(i,j+1) && !smh->saveManager->isExplored(i,j+1)) {
+					if (smh->environment->isInBounds(i,j+1) && !smh->saveManager->isExplored(i,j+1)) {
 						smh->drawSprite("mapFogOfWarDown", drawX, drawY, squareSize, squareSize);
 					}
 					//left
-					if (inBounds(i-1,j) && !smh->saveManager->isExplored(i-1,j)) {
+					if (smh->environment->isInBounds(i-1,j) && !smh->saveManager->isExplored(i-1,j)) {
 						smh->drawSprite("mapFogOfWarLeft", drawX, drawY, squareSize, squareSize);
 					}
 					//right
-					if (inBounds(i+1,j) && !smh->saveManager->isExplored(i+1,j)) {
+					if (smh->environment->isInBounds(i+1,j) && !smh->saveManager->isExplored(i+1,j)) {
 						smh->drawSprite("mapFogOfWarRight", drawX, drawY, squareSize, squareSize);
 					}
 					//up-right
-					if (inBounds(i,j-1) && inBounds(i+1,j) && smh->saveManager->isExplored(i,j-1) && smh->saveManager->isExplored(i+1,j) && !smh->saveManager->isExplored(i+1,j-1)) {
+					if (smh->environment->isInBounds(i,j-1) && smh->environment->isInBounds(i+1,j) && smh->saveManager->isExplored(i,j-1) && smh->saveManager->isExplored(i+1,j) && !smh->saveManager->isExplored(i+1,j-1)) {
 						smh->drawSprite("mapFogOfWarUpRight", drawX+squareSize/2, drawY, squareSize/2, squareSize/2);
 					}
 					//up-left
-					if (inBounds(i,j-1) && inBounds(i-1,j) && smh->saveManager->isExplored(i,j-1) && smh->saveManager->isExplored(i-1,j) && !smh->saveManager->isExplored(i-1,j-1)) {
+					if (smh->environment->isInBounds(i,j-1) && smh->environment->isInBounds(i-1,j) && smh->saveManager->isExplored(i,j-1) && smh->saveManager->isExplored(i-1,j) && !smh->saveManager->isExplored(i-1,j-1)) {
 						smh->drawSprite("mapFogOfWarUpLeft", drawX, drawY, squareSize/2, squareSize/2);
 					}
 					//down-left
-					if (inBounds(i,j+1) && inBounds(i-1,j) && smh->saveManager->isExplored(i,j+1) && smh->saveManager->isExplored(i-1,j) && !smh->saveManager->isExplored(i-1,j+1)) {
+					if (smh->environment->isInBounds(i,j+1) && smh->environment->isInBounds(i-1,j) && smh->saveManager->isExplored(i,j+1) && smh->saveManager->isExplored(i-1,j) && !smh->saveManager->isExplored(i-1,j+1)) {
 						smh->drawSprite("mapFogOfWarDownLeft", drawX, drawY+squareSize/2, squareSize/2, squareSize/2);
 					}
 					//down-right
-					if (inBounds(i,j+1) && inBounds(i+1,j) && smh->saveManager->isExplored(i,j+1) && smh->saveManager->isExplored(i+1,j) && !smh->saveManager->isExplored(i+1,j+1)) {
+					if (smh->environment->isInBounds(i,j+1) && smh->environment->isInBounds(i+1,j) && smh->saveManager->isExplored(i,j+1) && smh->saveManager->isExplored(i+1,j) && !smh->saveManager->isExplored(i+1,j+1)) {
 						smh->drawSprite("mapFogOfWarDownRight", drawX+squareSize/2, drawY+squareSize/2, squareSize/2, squareSize/2);
 					}
 
@@ -112,7 +112,7 @@ void Map::draw(float dt) {
 					smh->resources->GetAnimation("player")->SetFrame(DOWN);
 					smh->resources->GetAnimation("player")->RenderStretch(drawX,drawY-5,drawX+squareSize,drawY+squareSize);	
 				}
-			} else if (inBounds(i,j) && !smh->saveManager->isExplored(i,j)) {
+			} else if (smh->environment->isInBounds(i,j) && !smh->saveManager->isExplored(i,j)) {
 				//Calculate the top left corner of the square and its width
 				drawX = windowX+(i-gridXOffset)*squareSize - ((int)xOffset%24);
 				drawY = windowY+(j-gridYOffset)*squareSize - ((int)yOffset%24);

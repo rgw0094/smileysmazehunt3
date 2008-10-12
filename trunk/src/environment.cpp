@@ -512,7 +512,7 @@ void Environment::draw(float dt) {
 			drawX = int(float(i)*64.0f - xOffset);
 			drawY = int(float(j)*64.0f - yOffset);
 
-			if (inBounds(i+xGridOffset, j+yGridOffset)) {	
+			if (isInBounds(i+xGridOffset, j+yGridOffset)) {	
 
 				//Terrain
 				int theTerrain = terrain[i+xGridOffset][j+yGridOffset];
@@ -674,14 +674,14 @@ void Environment::draw(float dt) {
 		//Draw Terrain collision boxes
 		for (int i = smh->player->gridX - 2; i <= smh->player->gridX + 2; i++) {
 			for (int j = smh->player->gridY - 2; j <= smh->player->gridY + 2; j++) {
-				if (inBounds(i,j)) {
+				if (isInBounds(i,j)) {
 					//Set collision box depending on collision type
 					if (hasSillyPad(i,j)) {
 						collisionBox->SetRadius(i*64+32,j*64+32,24);
 					} else {
 						setTerrainCollisionBox(collisionBox, collision[i][j], i, j);
 					}
-					if (!smh->player->canPass(collision[i][j]) || hasSillyPad(i,j)) drawCollisionBox(collisionBox, GREEN);
+					if (!smh->player->canPass(collision[i][j]) || hasSillyPad(i,j)) smh->drawCollisionBox(collisionBox, GREEN);
 				}
 			}
 		}
@@ -707,7 +707,7 @@ void Environment::drawAfterSmiley(float dt) {
 	//Loop through each tile to draw shit
 	for (int gridY = yGridOffset-1; gridY <= yGridOffset + screenHeight + 1; gridY++) {
 		for (int gridX = xGridOffset-1; gridX <= xGridOffset + screenWidth + 1; gridX++) {
-			if (inBounds(gridX, gridY)) {
+			if (isInBounds(gridX, gridY)) {
 
 				drawX = getScreenX(gridX * 64);
 				drawY = getScreenY(gridY * 64);
@@ -816,7 +816,7 @@ int Environment::collisionAt(float x, float y) {
 	int gridY = y / (float)64.0;
 
 	//Handle out of bounds input
-	if (!inBounds(gridX,gridY)) {
+	if (!isInBounds(gridX,gridY)) {
 		return UNWALKABLE;
 	}
 
@@ -881,7 +881,7 @@ bool Environment::toggleSwitches(hgeRect *box, bool playSoundFarAway) {
 		for (int gridY = boxGridY - 2; gridY <= boxGridY + 2; gridY++) {
 
 			//Make sure the square is in bounds
-			if (inBounds(gridX,gridY)) {
+			if (isInBounds(gridX,gridY)) {
 
 				//Set collision box for this square
 				setTerrainCollisionBox(collisionBox,collision[gridX][gridY],gridX,gridY);
@@ -910,7 +910,7 @@ bool Environment::toggleSwitches(Tongue *tongue) {
 		for (int gridY = smh->player->gridY - 2; gridY <= smh->player->gridY + 2; gridY++) {
 
 			//Make sure the square is in bounds
-			if (inBounds(gridX,gridY)) {
+			if (isInBounds(gridX,gridY)) {
 
 				//Set collision box for this square
 				setTerrainCollisionBox(collisionBox,collision[gridX][gridY],gridX,gridY);
@@ -1212,7 +1212,7 @@ bool Environment::playerCollision(int x, int y, float dt) {
 			}
 
 			//Ignore squares off the map
-			if (inBounds(i,j) && !canPass) {
+			if (isInBounds(i,j) && !canPass) {
 		
 				//Set collision box depending on collision type
 				setTerrainCollisionBox(collisionBox, collision[i][j], i, j);
@@ -1303,7 +1303,7 @@ bool Environment::playerCollision(int x, int y, float dt) {
  * Bombs any bombable walls at the given coordinates
  */
 void Environment::bombWall(int x,int y) {
-	if (inBounds(x,y) && collision[x][y] == BOMBABLE_WALL) {
+	if (isInBounds(x,y) && collision[x][y] == BOMBABLE_WALL) {
 		collision[x][y]=WALKABLE;
 		smh->saveManager->change( x, y);
 	}
@@ -1323,7 +1323,7 @@ bool Environment::enemyCollision(hgeRect *box, BaseEnemy *enemy, float dt) {
 	for (int i = gridX - 2; i <= gridX + 2; i++) {
 		for (int j = gridY - 2; j <= gridY + 2; j++) {
 			//Ignore squares off the map
-			if (inBounds(i,j) && (!enemy->canPass[collision[i][j]] || hasSillyPad(i,j))) {
+			if (isInBounds(i,j) && (!enemy->canPass[collision[i][j]] || hasSillyPad(i,j))) {
 				//Test collision
 				setTerrainCollisionBox(collisionBox, hasSillyPad(i,j) ? UNWALKABLE : collision[i][j], i, j);
 				if (box->Intersect(collisionBox)) {
@@ -1361,7 +1361,7 @@ bool Environment::enemyCollision(hgeRect *box, BaseEnemy *enemy, float dt) {
 
 					return true;
 				}
-			} else if (!inBounds(i,j)) {
+			} else if (!isInBounds(i,j)) {
 				return true;
 			}
 		}
@@ -1380,7 +1380,7 @@ bool Environment::hitSigns(Tongue *tongue) {
 
 	for (int i = smh->player->gridX - 2; i <= smh->player->gridX + 2; i++) {
 		for (int j = smh->player->gridY - 2; j <= smh->player->gridY + 2; j++) {
-			if (inBounds(i,j) && collision[i][j] == SIGN) {
+			if (isInBounds(i,j) && collision[i][j] == SIGN) {
 				collisionBox->SetRadius(i*64+32,j*64+32,24);
 				if (tongue->testCollision(collisionBox)) {
 					smh->windowManager->openSignTextBox(ids[i][j]);
@@ -1399,7 +1399,7 @@ bool Environment::hitSigns(Tongue *tongue) {
 bool Environment::hitSaveShrine(Tongue *tongue) {
 	for (int i = smh->player->gridX - 2; i <= smh->player->gridX + 2; i++) {
 		for (int j = smh->player->gridY - 2; j <= smh->player->gridY + 2; j++) {
-			if (inBounds(i,j) && collision[i][j] == SAVE_SHRINE) {
+			if (isInBounds(i,j) && collision[i][j] == SAVE_SHRINE) {
 				collisionBox->SetRadius(i*64+32,j*64+32,24);
 				if (tongue->testCollision(collisionBox)) {
 					smh->windowManager->openWindow(new MiniMenu(MINIMENU_SAVEGAME));
@@ -1434,7 +1434,7 @@ bool Environment::testCollision(hgeRect *box, bool canPass[256], bool ignoreSill
 	for (int i = gridX - 2; i <= gridX + 2; i++) {
 		for (int j = gridY - 2; j <= gridY + 2; j++) {
 			//Ignore squares off the map
-			if (inBounds(i,j) && (!canPass[collision[i][j]] || 
+			if (isInBounds(i,j) && (!canPass[collision[i][j]] || 
 					(!ignoreSillyPads && hasSillyPad(i,j)))) {
 				
 				//Test collision
@@ -1549,4 +1549,8 @@ void Environment::updateTutorialMan(float dt) {
 
 bool Environment::isTutorialManActive() {
 	return (tutorialMan && tutorialMan->isActive());
+}
+
+bool Environment::isInBounds(int gridX, int gridY) {
+	return (gridX >= 0 && gridY >= 0 && gridX < areaWidth && gridY < areaHeight);
 }

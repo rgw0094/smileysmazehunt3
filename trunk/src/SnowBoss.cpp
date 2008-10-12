@@ -365,9 +365,9 @@ void SnowBoss::draw(float dt) {
 
 	//Debug mode stuff
 	if (smh->isDebugOn()) {
-		drawCollisionBox(collisionBoxes[0], RED);
-		drawCollisionBox(collisionBoxes[1], RED);
-		drawCollisionBox(collisionBoxes[2], RED);
+		smh->drawCollisionBox(collisionBoxes[0], RED);
+		smh->drawCollisionBox(collisionBoxes[1], RED);
+		smh->drawCollisionBox(collisionBoxes[2], RED);
 	}
 }
 

@@ -39,9 +39,10 @@ Slider::~Slider() {
  * Sets the current value of the slider to the specified value.
  */
 void Slider::setValue(int value) {
+
 	if (value >= minValue && value <= maxValue) {
 		currentValue = value;
-		barsToDraw = roundUp((float(currentValue) / float(maxValue)) * float(NUM_BARS));
+		barsToDraw = Util::roundUp((float(currentValue) / float(maxValue)) * float(NUM_BARS));
 	}
 }
 

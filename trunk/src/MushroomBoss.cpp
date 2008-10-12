@@ -232,8 +232,8 @@ void MushroomBoss::draw(float dt) {
 
 	//Collision rects
 	if (smh->isDebugOn()) {
-		drawCollisionBox(collisionRects[0], RED);
-		drawCollisionBox(collisionRects[1], RED);
+		smh->drawCollisionBox(collisionRects[0], RED);
+		smh->drawCollisionBox(collisionRects[1], RED);
 	}
 	
 	if (state <= MUSHBOOM_SPIRALING) {
