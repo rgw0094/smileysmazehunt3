@@ -36,6 +36,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Refactor like the dickens||10/12/08||RGW||
 ||Tutorial Man||9/28/08||RGW||
 ||Error Handling||8/28/08||RGW||
 ||Credits Screen||8/24/08||RGW||
