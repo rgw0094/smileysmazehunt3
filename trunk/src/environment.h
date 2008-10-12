@@ -7,6 +7,7 @@ class CollisionCircle;
 class hgeParticleManager;
 class hgeRect;
 class hgeFont;
+class hgeSprite;
 class hgeAnimation;
 class BaseEnemy;
 class SpecialTileManager;
@@ -166,6 +167,7 @@ public:
 	int offScreenRange;				//Number of tiles offscreen to draw
 
 	hgeParticleManager *environmentParticles;
+	hgeSprite *itemLayer[512];
 
 private:
 

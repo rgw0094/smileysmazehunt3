@@ -1,14 +1,12 @@
-#include "SMH.h"
+#include "SmileyEngine.h"
 #include "smiley.h"
 #include "environment.h"
-#include "EnemyManager.h"
 #include "lootmanager.h"
 #include "ProjectileManager.h"
 #include "player.h"
 #include "collisioncircle.h"
 #include "npcmanager.h"
 #include "boss.h"
-#include "EnemyGroupManager.h"
 #include "hgeparticle.h"
 #include "Tongue.h"
 #include "SpecialTileManager.h"
@@ -17,7 +15,7 @@
 #include "WeaponParticle.h"
 #include "TapestryManager.h"
 #include "ChangeManager.h"
-#include "enemy.h"
+#include "EnemyFramework.h"
 #include "SmileletManager.h"
 #include "Fountain.h"
 #include "FenwarManager.h"
@@ -33,9 +31,6 @@
 extern HGE *hge;
 extern SMH *smh;
 
-//Sprites
-extern hgeSprite *itemLayer[512];
-
 /**
  * Constructor
  */
@@ -43,6 +38,18 @@ Environment::Environment() {
 	
 	//Load particles
 	environmentParticles = new hgeParticleManager();
+
+	//Load item layer
+	for (int i = 0; i < 16; i++) {
+		for (int j = 0; j < 16; j++) {
+			itemLayer[j*16 + i] = new hgeSprite(smh->resources->GetTexture("itemLayer1"),i*64,j*64,64,64);
+		}
+	}
+	for (int i = 0; i < 16; i++) {
+		for (int j = 0; j < 16; j++) {
+			itemLayer[256+j*16+i] = new hgeSprite(smh->resources->GetTexture("itemLayer2"),i*64,j*64,64,64);
+		}
+	}	
 
 	//Load animations
 	silverCylinder = new hgeAnimation(smh->resources->GetTexture("animations"),5,20,0,3*64,64,64);

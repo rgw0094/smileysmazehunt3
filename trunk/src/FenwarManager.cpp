@@ -1,7 +1,7 @@
 /**
  * Handles the player's encounters with fenwar.
  */  
-#include "SMH.h"
+#include "SmileyEngine.h"
 #include "smiley.h"
 #include "FenwarManager.h"
 #include "Player.h"

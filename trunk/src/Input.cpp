@@ -1,4 +1,4 @@
-#include "SMH.h"
+#include "SmileyEngine.h"
 #include "hge.h"
 #include <windows.h>
 #include <basetsd.h>

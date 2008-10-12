@@ -1,11 +1,9 @@
-#include "SMH.h"
+#include "SmileyEngine.h"
 #include "environment.h"
-#include "EnemyManager.h"
-#include "enemy.h"
+#include "EnemyFramework.h"
 #include "lootmanager.h"
 #include "ProjectileManager.h"
 #include "player.h"
-#include "EnemyGroupManager.h"
 #include "CollisionCircle.h"
 
 #include "hgerect.h"

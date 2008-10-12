@@ -2,13 +2,13 @@
  * Handles the circle zooming in/out effect when Smiley is relocated to a new position and
  * displays the zone name text when Smiley enters a new zone.
  */
-#include "SMH.h"
+#include "SmileyEngine.h"
 #include "LoadEffectManager.h"
 #include "smiley.h"
 #include "hgeresource.h"
 #include "Environment.h"
 #include "WindowFramework.h"
-#include "EnemyManager.h"
+#include "EnemyFramework.h"
 #include "LootManager.h"
 #include "ProjectileManager.h"
 #include "Player.h"

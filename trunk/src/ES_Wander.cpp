@@ -1,9 +1,7 @@
-#include "SMH.h"
-#include "EnemyState.h"
+#include "SmileyEngine.h"
+#include "EnemyFramework.h"
 #include "hge.h"
 #include "environment.h"
-#include "EnemyManager.h"
-#include "enemy.h"
 #include "hgerect.h"
 #include "smiley.h"
 

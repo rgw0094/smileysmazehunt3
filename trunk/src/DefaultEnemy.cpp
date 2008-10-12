@@ -1,9 +1,8 @@
-#include "SMH.h"
+#include "SmileyEngine.h"
 #include "environment.h"
-#include "EnemyState.h"
+#include "EnemyFramework.h"
 #include "hge.h"
 #include "Player.h"
-#include "enemy.h"
 #include "hgeanim.h"
 
 extern SMH *smh;

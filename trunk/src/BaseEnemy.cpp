@@ -1,9 +1,9 @@
 /**
  * Implements concrete methods of the abstract BaseEnemy class.
  */
-#include "SMH.h"
+#include "SmileyEngine.h"
 #include "smiley.h"
-#include "enemy.h"
+#include "EnemyFramework.h"
 #include "Environment.h"
 #include "Player.h"
 #include "hgeresource.h"
@@ -11,8 +11,6 @@
 #include "WeaponParticle.h"
 #include "CollisionCircle.h"
 #include "Tongue.h"
-#include "EnemyState.h"
-#include "EnemyManager.h"
 
 extern SMH *smh;
 extern HGE *hge;

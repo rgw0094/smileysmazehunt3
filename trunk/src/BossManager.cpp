@@ -1,4 +1,4 @@
-#include "SMH.h"
+#include "SmileyEngine.h"
 #include "boss.h"
 #include "fireboss.h"
 #include "DesertBoss.h"
@@ -8,7 +8,7 @@
 #include "DespairBoss.h"
 #include "Fireboss2.h"
 #include "CandyBoss.h"
-#include "EnemyGroupManager.h"
+#include "EnemyFramework.h"
 
 extern SMH *smh;
 extern HGE *hge;

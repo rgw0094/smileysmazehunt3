@@ -1,4 +1,4 @@
-#include "SMH.h"
+#include "SmileyEngine.h"
 #include "Slider.h"
 #include "hgesprite.h"
 #include "smiley.h"

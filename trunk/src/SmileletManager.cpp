@@ -1,4 +1,4 @@
-#include "SMH.h"
+#include "SmileyEngine.h"
 #include "smiley.h"
 #include "SmileletManager.h"
 #include "CollisionCircle.h"
@@ -7,7 +7,7 @@
 #include "hgeresource.h"
 #include "hge.h"
 #include "environment.h"
-#include "EnemyManager.h"
+#include "EnemyFramework.h"
 #include "ProjectileManager.h"
 
 using namespace std;

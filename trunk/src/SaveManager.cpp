@@ -5,7 +5,7 @@
 #include <sstream>
 #include <iostream>
 
-#include "SMH.h"
+#include "SmileyEngine.h"
 #include "Player.h"
 #include "Environment.h"
 #include "hge.h"

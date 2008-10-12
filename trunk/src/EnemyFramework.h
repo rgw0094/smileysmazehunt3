@@ -1,19 +1,20 @@
-/**
- * Defines all concrete enemy types that extend the abstract BaseEnemy class.
- */
-#ifndef _ENEMY_H_
-#define _ENEMY_H_
+#ifndef _ENEMYFRAMEWORK_H_
+#define _ENEMYFRAMEWORK_H_
 
+#include <string>
 #include <list>
 #include "hgevector.h"
 
 class hgeParticleManager;
 class Tongue;
 class hgeRect;
-class BaseEnemyState;
 class hgeAnimation;
-class EnemyState;
 class hgeVector;
+class CollisionCircle;
+class hgeParticleManager;
+class hgeRect;
+
+#define NUM_STUN_STARS 5
 
 //AI types
 #define AI_CHASE 0
@@ -22,10 +23,75 @@ class hgeVector;
 #define AI_UP_DOWN 3
 #define AI_CIRCLE 4
 
-#define NUM_STUN_STARS 5
+//Wander state directions
+#define WANDER_LEFT 0
+#define WANDER_RIGHT 1
+#define WANDER_UP 2
+#define WANDER_DOWN 3
+
+//Wander types defined in enemy.bat
+#define WANDER_NORMAL 0
+#define WANDER_LEFT_RIGHT 1
+#define WANDER_UP_DOWN 2
+#define WANDER_STAND_STILL 3
+
+//Enemy Types
+#define ENEMY_BASIC 0
+#define ENEMY_EVIL_EYE 1
+#define ENEMY_GUMDROP 2
+#define ENEMY_BOMB_GENERATOR 3
+#define ENEMY_CHARGER 4
+#define ENEMY_CLOWNCRAB 5
+#define ENEMY_BATLET_DIST 6
+#define ENEMY_BUZZARD 7
+#define ENEMY_SAD_SHOOTER 8
+#define ENEMY_FLOATER 9
+#define ENEMY_FLAILER 10
+#define ENEMY_TENTACLE 11
+#define ENEMY_TURRET 12
+#define ENEMY_GHOST 13
+#define ENEMY_FAKE 14
+#define ENEMY_RANGED 15
+#define ENEMY_HOPPER 16
+
+//Stuff on ID layer
+#define ENEMYGROUP_TRIGGER 996
+#define ENEMYGROUP_BLOCK 997
+#define ENEMYGROUP_ENEMY 998
+#define ENEMYGROUP_ENEMY_POPUP 999
+
+//Maximum number of enemy groups in a zone
+#define MAX_GROUPS 100
+
+//Location of enemy block graphic on the item layer
+#define ENEMYGROUP_BLOCKGRAPHIC 143
+
+//----------------------------------------------------------------
+//----------------------------------------------------------------
+//------------------ BASE CLASSES --------------------------------
+//----------------------------------------------------------------
+//----------------------------------------------------------------
+
+/**
+ * Abstract base class for all enemy states.
+ */
+class EnemyState {
+
+public:
+
+	//methods
+	virtual void enterState() = 0;
+	virtual void update(float dt) = 0;
+	virtual void exitState() = 0;
+	virtual bool instanceOf(char*) = 0;
+
+	float timeEnteredState;
+
+};
+
 
 /** 
- * Abstract base enemy class that all other classes below extend.
+ * Abstract base enemy class that all enemies extend.
  */
 class BaseEnemy {
 
@@ -72,7 +138,6 @@ public:
 	int mapPath[256][256];
 	int variable1, variable2;
 
-
 	int groupID;
 	bool markMap[256][256];
 	bool canPass[256];
@@ -114,6 +179,162 @@ public:
 	hgeAnimation *graphic[4];
 
 };
+
+//----------------------------------------------------------------
+//----------------------------------------------------------------
+//------------------ ENEMY MANAGER--------------------------------
+//----------------------------------------------------------------
+//----------------------------------------------------------------
+
+//Struct used to hold an enemy in a list by the EnemyManager
+struct EnemyStruct {
+	BaseEnemy *enemy;
+	float spawnHealthChance;
+	float spawnManaChance;
+};
+
+class EnemyManager {
+
+public: 
+	EnemyManager();
+	~EnemyManager();
+
+	//methods
+	void draw(float dt);
+	void update(float dt);
+	void addEnemy(int id, int x, int y, float spawnHealthChance, float spawnManaChance, int groupID);
+	void killEnemies(int type);
+	bool tongueCollision(Tongue *tongue, float damage);
+	void freezeEnemies(int x, int y);
+	void unFreezeEnemies(int x, int y);
+	bool testCollision(hgeRect *collisionBox);
+	bool collidesWithFrozenEnemy(CollisionCircle *circle);
+	void doAStar(BaseEnemy *enemy);
+	void reset();
+	bool hitEnemiesWithProjectile(hgeRect *collisionBox, float damage, int type);
+
+	//Variables
+	std::list<EnemyStruct> enemyList;
+	hgeParticleManager *deathParticles;
+	int randomLoot;
+
+};
+
+//----------------------------------------------------------------
+//----------------------------------------------------------------
+//------------------ ENEMY GROUP MANAGER -------------------------
+//----------------------------------------------------------------
+//----------------------------------------------------------------
+
+struct EnemyGroup {
+	int numEnemies;
+	bool active;
+	bool triggeredYet;
+	bool fadingIn, fadingOut;
+	float blockAlpha;
+};
+
+class EnemyGroupManager {
+
+public:
+	EnemyGroupManager();
+	~EnemyGroupManager();
+
+	//methods
+	void notifyOfDeath(int whichGroup);
+	void addEnemy(int whichGroup);
+	void update(float dt);
+	void resetGroups();
+	void enableBlocks(int whichGroup);
+	void disableBlocks(int whichGroup);
+	void triggerGroup(int whichGroup);
+
+	EnemyGroup groups[MAX_GROUPS];
+
+};
+
+//----------------------------------------------------------------
+//----------------------------------------------------------------
+//------------------ ENEMY STATES --------------------------------
+//----------------------------------------------------------------
+//----------------------------------------------------------------
+
+/**
+ * Wander State
+ */ 
+class ES_Wander : public EnemyState {
+
+public:
+
+	ES_Wander(BaseEnemy *owner);
+	~ES_Wander();
+
+	//Methods
+	void update(float dt);
+	void enterState();
+	void exitState();
+	bool instanceOf(char* type) { return strcmp(type, "ES_Wander") == 0; }
+	int getNewDirection();
+
+	//Pointer to the enemy that owns this state
+	BaseEnemy *owner;
+
+	//Variables
+	int currentAction;
+	float lastDirChangeTime;
+	float nextDirChangeTime;
+
+};
+
+
+/**
+ * Chase state
+ */
+class ES_Chase : public EnemyState {
+
+public:
+
+	ES_Chase(BaseEnemy *owner);
+	~ES_Chase();
+
+	//Methods
+	void update(float dt);
+	void enterState();
+	void exitState();
+	void updateMapPath();
+	bool instanceOf(char* type) { return strcmp(type, "ES_Chase") == 0; }
+
+	//Pointer to the enemy that owns this state
+	BaseEnemy *owner;
+
+};
+
+/**
+ * Ranged Attack State
+ */
+class ES_RangedAttack : public EnemyState {
+
+public:
+
+	ES_RangedAttack(BaseEnemy *owner);
+	~ES_RangedAttack();
+
+	//Methods
+	void update(float dt);
+	void enterState();
+	void exitState();
+	bool instanceOf(char* type) { return strcmp(type, "ES_RangedAttack") == 0; }
+
+	//Pointer to the enemy that owns this state
+	BaseEnemy *owner;
+
+};
+
+//----------------------------------------------------------------
+//----------------------------------------------------------------
+//------------------ ENEMIES -------------------------------------
+//----------------------------------------------------------------
+//----------------------------------------------------------------
 
 /**
  * Default Enemy
