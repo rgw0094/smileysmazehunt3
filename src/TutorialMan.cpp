@@ -3,10 +3,8 @@
 #include "hgeresource.h"
 #include "Player.h"
 #include "WindowFramework.h"
-#include "smiley.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 #define FIRST_TEXT 900
 #define SECOND_TEXT 901
@@ -47,9 +45,9 @@ void TutorialMan::update(float dt) {
 
 void TutorialMan::draw(float dt) {
 	if (state == FIRST_DIALOG || state == RUNNING_UP || state == SECOND_DIALOG) {
-		smh->resources->GetSprite("tutorialManUp")->Render(getScreenX(x), getScreenY(y));
+		smh->resources->GetSprite("tutorialManUp")->Render(smh->getScreenX(x), smh->getScreenY(y));
 	} else if (state == RUNNING_AWAY) {
-		smh->resources->GetSprite("tutorialManDown")->Render(getScreenX(x), getScreenY(y));
+		smh->resources->GetSprite("tutorialManDown")->Render(smh->getScreenX(x), smh->getScreenY(y));
 	}
 }
 

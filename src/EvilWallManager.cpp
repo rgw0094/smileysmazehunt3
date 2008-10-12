@@ -1,11 +1,9 @@
 #include "EvilWallManager.h"
 #include "Player.h"
 #include "Environment.h"
-#include "hge.h"
 #include "SmileyEngine.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 EvilWallManager::EvilWallManager() {
 

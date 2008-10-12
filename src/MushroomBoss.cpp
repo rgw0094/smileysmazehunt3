@@ -1,10 +1,8 @@
 #include "SmileyEngine.h"
-#include "smiley.h"
 #include "hgeresource.h"
 #include "MushroomBoss.h"
 #include "Player.h"
 #include "ProjectileManager.h"
-#include "hge.h"
 #include "environment.h"
 #include "lootmanager.h"
 #include "WindowFramework.h"
@@ -13,7 +11,6 @@
 #include "EnemyFramework.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 #define MUSHBOOM_HEALTH 14.0
 #define RIGHT_ARM_OFFSET_X -15
@@ -222,12 +219,12 @@ void MushroomBoss::draw(float dt) {
 		smh->resources->GetSprite("mushboomLeftArm")->SetColor(ARGB(int(alpha),255,255,255));
 		smh->resources->GetSprite("mushboomRightArm")->SetColor(ARGB(int(alpha),255,255,255));
 		
-		smh->resources->GetSprite("mushboom")->Render(getScreenX(x),getScreenY(y));
-		if (!rightArmRotating) smh->resources->GetSprite("mushboomRightArm")->RenderEx(getScreenX(x+RIGHT_ARM_OFFSET_X),getScreenY(y+RIGHT_ARM_OFFSET_Y),rightArmRotate);
-		smh->resources->GetSprite("mushboomLeftArm")->RenderEx(getScreenX(x+LEFT_ARM_OFFSET_X),getScreenY(y+LEFT_ARM_OFFSET_Y),leftArmRotate);
+		smh->resources->GetSprite("mushboom")->Render(smh->getScreenX(x),smh->getScreenY(y));
+		if (!rightArmRotating) smh->resources->GetSprite("mushboomRightArm")->RenderEx(smh->getScreenX(x+RIGHT_ARM_OFFSET_X),smh->getScreenY(y+RIGHT_ARM_OFFSET_Y),rightArmRotate);
+		smh->resources->GetSprite("mushboomLeftArm")->RenderEx(smh->getScreenX(x+LEFT_ARM_OFFSET_X),smh->getScreenY(y+LEFT_ARM_OFFSET_Y),leftArmRotate);
 
 	    //draw it after left if it's rotating, so it is drawn on top
-		if (rightArmRotating) smh->resources->GetSprite("mushboomRightArm")->RenderEx(getScreenX(x+RIGHT_ARM_OFFSET_X),getScreenY(y+RIGHT_ARM_OFFSET_Y),rightArmRotate);
+		if (rightArmRotating) smh->resources->GetSprite("mushboomRightArm")->RenderEx(smh->getScreenX(x+RIGHT_ARM_OFFSET_X),smh->getScreenY(y+RIGHT_ARM_OFFSET_Y),rightArmRotate);
 	}
 
 	//Collision rects
@@ -255,12 +252,12 @@ void MushroomBoss::draw(float dt) {
 void MushroomBoss::drawAfterSmiley(float dt) {
 	if (shouldDrawAfterSmiley) {
 		smh->resources->GetSprite("mushboom")->SetColor(ARGB((int)alpha,255,255,255));
-		smh->resources->GetSprite("mushboom")->Render(getScreenX(x),getScreenY(y));
-		if (!rightArmRotating) smh->resources->GetSprite("mushboomRightArm")->RenderEx(getScreenX(x+RIGHT_ARM_OFFSET_X),getScreenY(y+RIGHT_ARM_OFFSET_Y),rightArmRotate);
-		smh->resources->GetSprite("mushboomLeftArm")->RenderEx(getScreenX(x+LEFT_ARM_OFFSET_X),getScreenY(y+LEFT_ARM_OFFSET_Y),leftArmRotate);
+		smh->resources->GetSprite("mushboom")->Render(smh->getScreenX(x),smh->getScreenY(y));
+		if (!rightArmRotating) smh->resources->GetSprite("mushboomRightArm")->RenderEx(smh->getScreenX(x+RIGHT_ARM_OFFSET_X),smh->getScreenY(y+RIGHT_ARM_OFFSET_Y),rightArmRotate);
+		smh->resources->GetSprite("mushboomLeftArm")->RenderEx(smh->getScreenX(x+LEFT_ARM_OFFSET_X),smh->getScreenY(y+LEFT_ARM_OFFSET_Y),leftArmRotate);
 
 	    //draw it after left if it's rotating, so it is drawn on top
-		if (rightArmRotating) smh->resources->GetSprite("mushboomRightArm")->RenderEx(getScreenX(x+RIGHT_ARM_OFFSET_X),getScreenY(y+RIGHT_ARM_OFFSET_Y),rightArmRotate);
+		if (rightArmRotating) smh->resources->GetSprite("mushboomRightArm")->RenderEx(smh->getScreenX(x+RIGHT_ARM_OFFSET_X),smh->getScreenY(y+RIGHT_ARM_OFFSET_Y),rightArmRotate);
 	}
 }
 
@@ -285,12 +282,12 @@ void MushroomBoss::doMiniMushrooms(float dt) {
 }
 
 void MushroomBoss::spawnMiniMushroom() {
-	smh->enemyManager->addEnemy(MINI_MUSHROOM_ENEMYID, getGridX(x),getGridY(y),0.1,0.6, -1);
+	smh->enemyManager->addEnemy(MINI_MUSHROOM_ENEMYID, Util::getGridX(x),Util::getGridY(y),0.1,0.6, -1);
 }
 
 void MushroomBoss::spawnMiniMushroomProjectile() {
 	smh->projectileManager->addProjectile(x,y,MINI_MUSHROOM_PROJECTILE_SPEED,
-			getAngleBetween(x,y,smh->player->x,smh->player->y)+hge->Random_Float(-PI/32,PI/32),
+			Util::getAngleBetween(x,y,smh->player->x,smh->player->y)+smh->randomFloat(-PI/32,PI/32),
 			MINI_MUSHROOM_PROJECTILE_DAMAGE,true,MINI_MUSHROOM_PROJECTILE_ID,true);
 }
 
@@ -365,7 +362,7 @@ void MushroomBoss::doArms(float dt) {
 				//throw bomb
 				//The direction will be UP_LEFT, LEFT, or DOWN_LEFT, based on increments of PI/3 (divides the circle into 6 pieces)
 				int dir = LEFT;
-				float angleToSmiley = getAngleBetween(x,y,smh->player->x,smh->player->y);
+				float angleToSmiley = Util::getAngleBetween(x,y,smh->player->x,smh->player->y);
 				if (angleToSmiley < 5*PI/6) dir = DOWN_LEFT;
 				if (angleToSmiley > 7*PI/6 ) dir = UP_LEFT;
 				
@@ -386,7 +383,7 @@ void MushroomBoss::doArms(float dt) {
 				//Throw bomb
 				//The direction will be UP_RIGHT, RIGHT, or DOWN_RIGHT, based on increments of PI/3 (divides the circle into 6 pieces)
 				int dir = RIGHT;
-				float angleToSmiley = getAngleBetween(x,y,smh->player->x,smh->player->y);
+				float angleToSmiley = Util::getAngleBetween(x,y,smh->player->x,smh->player->y);
 				if (angleToSmiley > PI && angleToSmiley < 11*PI/6) dir = UP_RIGHT;
 				if (angleToSmiley <= PI && angleToSmiley > PI/6) dir = DOWN_RIGHT;
 				
@@ -435,8 +432,8 @@ void MushroomBoss::killBombs() {
 void MushroomBoss::drawBombs() {
 	std::list<Bomb>::iterator i;
 	for(i = theBombs.begin(); i != theBombs.end(); i++) {
-		smh->resources->GetSprite("mushboomBombShadow")->Render(getScreenX(i->xBomb),getScreenY(i->yShadow));
-		smh->resources->GetSprite("mushboomBomb")->Render(getScreenX(i->xBomb),getScreenY(i->yBomb));
+		smh->resources->GetSprite("mushboomBombShadow")->Render(smh->getScreenX(i->xBomb),smh->getScreenY(i->yShadow));
+		smh->resources->GetSprite("mushboomBomb")->Render(smh->getScreenX(i->xBomb),smh->getScreenY(i->yBomb));
 	}
 }
 
@@ -447,11 +444,11 @@ void MushroomBoss::addBomb(float _x,float _y) {
 	newBomb.x0=newBomb.xBomb=_x;
 	newBomb.y0=newBomb.yBomb=_y;
 
-	float angleToSmiley = getAngleBetween(_x,_y,smh->player->x,smh->player->y);
-	float distanceToSmiley = distance(_x,_y,smh->player->x,smh->player->y);
+	float angleToSmiley = Util::getAngleBetween(_x,_y,smh->player->x,smh->player->y);
+	float distanceToSmiley = Util::distance(_x,_y,smh->player->x,smh->player->y);
 
-	angleToSmiley += hge->Random_Float(-0.314159,0.314159);
-	distanceToSmiley += hge->Random_Float(-48,48);
+	angleToSmiley += smh->randomFloat(-0.314159,0.314159);
+	distanceToSmiley += smh->randomFloat(-48,48);
 
     newBomb.dx = distanceToSmiley * cos(angleToSmiley);
 	newBomb.dy = distanceToSmiley * sin(angleToSmiley);
@@ -527,7 +524,7 @@ void MushroomBoss::doExplosions(float dt) {
 
 		if (i->collisionCircle->testCircle(smh->player->collisionCircle)) {
 			if (i->stillExpanding) {
-				float angleToSmiley = getAngleBetween(i->collisionCircle->x,i->collisionCircle->y,smh->player->x,smh->player->y);
+				float angleToSmiley = Util::getAngleBetween(i->collisionCircle->x,i->collisionCircle->y,smh->player->x,smh->player->y);
 				smh->player->modifyVelocity(EXPLOSION_KNOCKBACK_POWER * cos(angleToSmiley),EXPLOSION_KNOCKBACK_POWER * sin(angleToSmiley));
 			}
 			smh->player->dealDamage(EXPLOSION_DAMAGE,true);

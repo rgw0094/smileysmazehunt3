@@ -1,17 +1,13 @@
 #include "SmileyEngine.h"
 #include "Worm.h"
-#include "Smiley.h"
 #include "Player.h"
-#include "hge.h"
 #include "hgeresource.h"
 
 using namespace std;
 
-extern HGE *hge;
 extern SMH *smh;
 
 #define WORM_LENGTH 500
-
 
 // Constructor ///////////////////
 
@@ -50,7 +46,7 @@ void Worm::update() {
 void Worm::draw() {
 	std::list<WormNode>::iterator i;
 	for (i = theWorms.begin(); i != theWorms.end(); i++) {
-		smh->resources->GetSprite("clownChainDot")->Render(getScreenX(i->x),getScreenY(i->y));
+		smh->resources->GetSprite("clownChainDot")->Render(smh->getScreenX(i->x),smh->getScreenY(i->y));
 	}
 }
 

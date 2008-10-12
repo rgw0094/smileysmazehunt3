@@ -1,6 +1,5 @@
 #include "SmileyEngine.h"
 #include "MainMenu.h"
-#include "smiley.h"
 #include "hgeresource.h"
 
 extern SMH *smh;

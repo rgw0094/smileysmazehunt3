@@ -3,7 +3,6 @@
 #include "player.h"
 #include "ProjectileManager.h"
 #include "hgeresource.h"
-#include "smiley.h"
 
 extern SMH *smh;
 
@@ -70,7 +69,7 @@ void E_Gumdrop::update(float dt) {
 			if (!smh->player->isInvisible() && smh->timePassedSince(lastAttackTime) > ATTACK_DELAY) {
 				lastAttackTime = smh->getGameTime();
 				smh->projectileManager->addProjectile(x, y, ATTACK_VELOCITY, 
-					getAngleBetween(x, y, smh->player->x, smh->player->y), damage, 
+					Util::getAngleBetween(x, y, smh->player->x, smh->player->y), damage, 
 					true, PROJECTILE_1, true);
 			}
 

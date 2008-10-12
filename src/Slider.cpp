@@ -1,10 +1,8 @@
 #include "SmileyEngine.h"
 #include "Slider.h"
 #include "hgesprite.h"
-#include "smiley.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 #define NUM_BARS 6
 #define BAR_SPACING 3
@@ -59,10 +57,10 @@ int Slider::getValue() {
 void Slider::update(float mouseX, float mouseY) {
 
 	//Mouse was clicked inside slider
-	if (hge->Input_KeyDown(HGEK_LBUTTON) && mouseY < y+SLIDER_HEIGHT && mouseY > y &&
+	if (smh->hge->Input_KeyDown(HGEK_LBUTTON) && mouseY < y+SLIDER_HEIGHT && mouseY > y &&
 			mouseX > x && mouseX < x + SLIDER_WIDTH) {
 		mousePressed = true;
-	} else if (!hge->Input_GetKeyState(HGEK_LBUTTON)) {
+	} else if (!smh->hge->Input_GetKeyState(HGEK_LBUTTON)) {
 		mousePressed = false;
 	}
 

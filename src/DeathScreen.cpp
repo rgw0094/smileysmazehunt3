@@ -4,7 +4,6 @@
 #include "environment.h"
 #include "player.h"
 #include "Button.h"
-#include "Smiley.h"
 
 extern SMH *smh;
 

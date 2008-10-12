@@ -2,7 +2,6 @@
 #include "WindowFramework.h"
 #include "environment.h"
 #include "player.h"
-#include "smiley.h"
 #include "hgeresource.h"
 #include "hgeanim.h"
 
@@ -60,7 +59,7 @@ void Map::draw(float dt) {
 						c != UNWALKABLE_PROJECTILE && 
 						c != SHRINK_TUNNEL_HORIZONTAL &&
 						c != SHRINK_TUNNEL_VERTICAL &&					
-						!(isWarp(c) && smh->environment->variable[i][j] == 990)) {
+						!(Util::isWarp(c) && smh->environment->variable[i][j] == 990)) {
 					smh->resources->GetAnimation("walkLayer")->SetFrame(smh->environment->collision[i][j]);
 					smh->resources->GetAnimation("walkLayer")->RenderStretch(drawX,drawY,drawX+squareSize,drawY+squareSize);
 				}

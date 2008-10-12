@@ -2,18 +2,15 @@
  * Implements concrete methods of the abstract BaseEnemy class.
  */
 #include "SmileyEngine.h"
-#include "smiley.h"
 #include "EnemyFramework.h"
 #include "Environment.h"
 #include "Player.h"
 #include "hgeresource.h"
-#include "hge.h"
 #include "WeaponParticle.h"
 #include "CollisionCircle.h"
 #include "Tongue.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 #define ENEMY_FLASH_DURATION 0.5
 #define ENEMY_FROZEN_DURATION 3.0
@@ -161,7 +158,7 @@ void BaseEnemy::dealDamageAndKnockback(float damage, float knockbackDist,
 									float knockbackerX, float knockbackerY) {
 
 	health -= damage;
-	float knockbackAngle = getAngleBetween(knockbackerX, knockbackerY, x, y);
+	float knockbackAngle = Util::getAngleBetween(knockbackerX, knockbackerY, x, y);
 	
 	knockbackXDist = knockbackDist * cos(knockbackAngle);
 	knockbackYDist = knockbackDist * sin(knockbackAngle);
@@ -416,8 +413,8 @@ void BaseEnemy::baseUpdate(float dt) {
 	collisionBox->SetRadius(x, y, radius);
 	gridX = x / 64;
 	gridY = y / 64;
-	screenX = getScreenX(x);
-	screenY = getScreenY(y);
+	screenX = smh->getScreenX(x);
+	screenY = smh->getScreenY(y);
 
 	//Update statuses
 	if (stunned && smh->timePassedSince(startedStun) > stunLength) {
@@ -514,8 +511,8 @@ void BaseEnemy::drawStunned(float dt) {
 	for (int n = 0; n < NUM_STUN_STARS; n++) {
 		stunStarAngles[n] += 2.0* PI * dt;
 		smh->resources->GetSprite("stunStar")->Render(
-		getScreenX(x + cos(stunStarAngles[n])*25), 
-		getScreenY(y + sin(stunStarAngles[n])*7) - 30.0);
+		smh->getScreenX(x + cos(stunStarAngles[n])*25), 
+		smh->getScreenY(y + sin(stunStarAngles[n])*7) - 30.0);
 	}
 }
 

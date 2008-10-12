@@ -1,5 +1,4 @@
 #include "SmileyEngine.h"
-#include "smiley.h"
 #include "environment.h"
 #include "ProjectileManager.h"
 #include "player.h"
@@ -8,7 +7,6 @@
 #include "CollisionCircle.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 #define LASER_LENGTH 20.0
 
@@ -16,11 +14,11 @@ extern HGE *hge;
 
 ProjectileManager::ProjectileManager() {
 
-	projectileTexture = hge->Texture_Load("Graphics/projectiles.PNG");
+	projectileTexture = smh->hge->Texture_Load("Graphics/projectiles.PNG");
 	initProjectiles();
 
 	//Set up which collision types projectiles can go through
-	for (int i = 0; i < 256; i++) canPass[i] = !isCylinderUp(i);
+	for (int i = 0; i < 256; i++) canPass[i] = !Util::isCylinderUp(i);
 	canPass[UNWALKABLE] = false;
 	canPass[SIGN] = false;
 	canPass[FOUNTAIN] = false;
@@ -97,9 +95,9 @@ void ProjectileManager::update(float dt) {
 		//Update projectile stuff
 		i->x += i->dx * dt;
 		i->y += i->dy * dt;
-		i->changedGridSquare = (getGridX(i->x) != i->gridX || getGridY(i->y) != i->gridY);
-		i->gridX = getGridX(i->x);
-		i->gridY = getGridY(i->y);
+		i->changedGridSquare = (Util::getGridX(i->x) != i->gridX || Util::getGridY(i->y) != i->gridY);
+		i->gridX = Util::getGridX(i->x);
+		i->gridY = Util::getGridY(i->y);
 		i->collisionBox->SetRadius(i->x, i->y, projectileTypes[i->id].radius);
 		
 		//Do collision with Smiley
@@ -292,22 +290,22 @@ void ProjectileManager::draw(float dt) {
 		
 		//Frisbee (spins)
 		if (i->id == PROJECTILE_FRISBEE) {
-			projectileTypes[i->id].sprite->RenderEx(getScreenX(i->x), getScreenY(i->y), i->frisbeeAngle, 1.0f, 1.0f);
+			projectileTypes[i->id].sprite->RenderEx(smh->getScreenX(i->x), smh->getScreenY(i->y), i->frisbeeAngle, 1.0f, 1.0f);
 
 		//Projectiles with particle effects
 		} else if (i->id == PROJECTILE_FIREBALL) {
 			i->particle->Update(dt);
-			i->particle->MoveTo(getScreenX(i->x), getScreenY(i->y), true);
+			i->particle->MoveTo(smh->getScreenX(i->x), smh->getScreenY(i->y), true);
 			i->particle->Render();
 
 		//Laser - draw a line
 		} else if (i->id == PROJECTILE_LASER) {
 
-			projectileTypes[i->id].sprite->RenderEx(getScreenX(i->x), getScreenY(i->y), i->angle + (PI/2.0), 1.0f, 1.0f);
+			projectileTypes[i->id].sprite->RenderEx(smh->getScreenX(i->x), smh->getScreenY(i->y), i->angle + (PI/2.0), 1.0f, 1.0f);
 
 		//Normal projectiles - rotated to face the direction its travelling
 		} else {
-			projectileTypes[i->id].sprite->RenderEx(getScreenX(i->x), getScreenY(i->y), i->angle, 1.0f, 1.0f);
+			projectileTypes[i->id].sprite->RenderEx(smh->getScreenX(i->x), smh->getScreenY(i->y), i->angle, 1.0f, 1.0f);
 		}
 		
 		//Debug stuff
@@ -407,7 +405,7 @@ int ProjectileManager::killProjectilesInCircle(float x, float y, float radius, i
 	int numCollisions = 0;
 	std::list<Projectile>::iterator i;
 	for (i = theProjectiles.begin(); i != theProjectiles.end(); i++) {
-		if (i->id == type && distance(i->x, i->y, x, y) < radius) {
+		if (i->id == type && Util::distance(i->x, i->y, x, y) < radius) {
 			delete i->collisionBox;
 			i = theProjectiles.erase(i);
 			numCollisions++;
@@ -446,7 +444,7 @@ bool ProjectileManager::reflectProjectilesInCircle(float x, float y, float radiu
 	bool retVal = false;
 	std::list<Projectile>::iterator i;
 	for (i = theProjectiles.begin(); i != theProjectiles.end(); i++) {
-		if (i->id == type && distance(i->x, i->y, x, y) < radius && smh->timePassedSince(i->timeReflected) > 1.0) {
+		if (i->id == type && Util::distance(i->x, i->y, x, y) < radius && smh->timePassedSince(i->timeReflected) > 1.0) {
 			reflectProjectile(i);
 		}
 	}

@@ -1,10 +1,8 @@
 #include "SmileyEngine.h"
-#include "smiley.h"
 #include "hgeresource.h"
 #include "DesertBoss.h"
 #include "Player.h"
 #include "ProjectileManager.h"
-#include "hge.h"
 #include "environment.h"
 #include "lootmanager.h"
 #include "weaponparticle.h"
@@ -14,7 +12,6 @@
 #include "EnemyFramework.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 #define TEXT_DESERTBOSS_INTRO 130
 #define TEXT_DESERTBOSS_VICTORY 131
@@ -76,9 +73,9 @@ void DesertBoss::draw(float dt) {
 
 	//Draw Cornwallis' body
 	smh->resources->GetSprite("cornwallisBody")->SetColor(ARGB(alpha,255,255,255));
-	smh->resources->GetSprite("cornwallisBody")->Render(getScreenX(x), getScreenY(y));
+	smh->resources->GetSprite("cornwallisBody")->Render(smh->getScreenX(x), smh->getScreenY(y));
 	smh->resources->GetSprite("redCornwallisBody")->SetColor(ARGB(redness,255,255,255));
-	smh->resources->GetSprite("redCornwallisBody")->Render(getScreenX(x), getScreenY(y));
+	smh->resources->GetSprite("redCornwallisBody")->Render(smh->getScreenX(x), smh->getScreenY(y));
 
 	//Draw ground spikes
 	if (state == DESERTBOSS_GROUND_SPIKES) {
@@ -273,7 +270,7 @@ void DesertBoss::generateRandomGroundSpikes() {
 	for (int i = 0; i < SPIKE_GRID_SIZE; i++) {
 		for (int j = 0; j < SPIKE_GRID_SIZE; j++) {
 			if (isValidSpikeLocation(groundSpikes[i][j].x, groundSpikes[i][j].y)) {
-				groundSpikes[i][j].showing = hge->Random_Int(0,1) == 0;
+				groundSpikes[i][j].showing = smh->randomInt(0,1) == 0;
 			} else {
 				groundSpikes[i][j].showing = false;
 			}
@@ -389,15 +386,15 @@ void DesertBoss::drawGroundSpikes(float dt) {
 				if (groundSpikeState == GSS_SHADOWS) {	
 					smh->resources->GetSprite("spikeShadow")->SetColor(ARGB(spikeShadowAlpha,255,255,255));
 					smh->resources->GetSprite("spikeShadow")->Render(
-						getScreenX(groundSpikes[i][j].x), 
-						getScreenY(groundSpikes[i][j].y));
+						smh->getScreenX(groundSpikes[i][j].x), 
+						smh->getScreenY(groundSpikes[i][j].y));
 				}
 				//Spikes raising/lowering
 				if (groundSpikeState == GSS_SPIKES_RAISING || 
 						groundSpikeState == GSS_SPIKES_UP ||
 						groundSpikeState == GSS_SPIKES_LOWERING) {
 					smh->resources->GetAnimation("groundSpike")->Render(
-						getScreenX(groundSpikes[i][j].x), getScreenY(groundSpikes[i][j].y));
+						smh->getScreenX(groundSpikes[i][j].x), smh->getScreenY(groundSpikes[i][j].y));
 				}
 				//Debug mode - collision boxes
 				if (smh->isDebugOn()) {
@@ -453,12 +450,12 @@ void DesertBoss::spawnCactlet() {
 
 	do {
 
-		angle = hge->Random_Float(0,2*PI);
-		dist = hge->Random_Float(100.0,400.0);
-		cactletGridX = getGridX(x + dist*cos(angle));
-		cactletGridY = getGridY(y + dist*sin(angle));
+		angle = smh->randomFloat(0,2*PI);
+		dist = smh->randomFloat(100.0,400.0);
+		cactletGridX = Util::getGridX(x + dist*cos(angle));
+		cactletGridY = Util::getGridY(y + dist*sin(angle));
 
-	} while (abs(distance(cactletGridX, cactletGridY, smh->player->gridX, smh->player->gridY)) < 3);
+	} while (abs(Util::distance(cactletGridX, cactletGridY, smh->player->gridX, smh->player->gridY)) < 3);
 
 	smh->enemyManager->addEnemy(CACTLET_ENEMYID, cactletGridX,cactletGridY,0.0,0.5, -1);
 

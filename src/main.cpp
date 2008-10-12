@@ -1,5 +1,4 @@
 #include "resource1.h"
-#include "smiley.h"
 #include "SmileyEngine.h"
 
 #using <mscorlib.dll>
@@ -56,7 +55,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		try {
 			
-			smh = new SMH();
+			smh = new SMH(hge);
 			smh->init();
 
 			//Start HGE. When this function returns it means the program is exiting.

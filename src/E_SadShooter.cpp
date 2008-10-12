@@ -1,5 +1,4 @@
 #include "SmileyEngine.h"
-#include "smiley.h"
 #include "EnemyFramework.h"
 #include "player.h"
 #include "environment.h"
@@ -21,7 +20,7 @@ E_SadShooter::E_SadShooter(int id, int x, int y, int groupID) {
 
 	collisionBlocker = new hgeRect;
 
-	double angleToSmiley = getAngleBetween(x,y,smh->player->x,smh->player->y);
+	double angleToSmiley = Util::getAngleBetween(x,y,smh->player->x,smh->player->y);
 	int i;
 	
 	for (i=0;i<NUM_BLOCKERS;i++) {
@@ -45,12 +44,12 @@ E_SadShooter::~E_SadShooter() {
 }
 
 void E_SadShooter::draw(float dt) {
-	float angleToSmiley = getAngleBetween(x,y,smh->player->x,smh->player->y);
+	float angleToSmiley = Util::getAngleBetween(x,y,smh->player->x,smh->player->y);
 	
 	graphic[1]->RenderEx(screenX,screenY,angleToSmiley+PI/2);
 
 	for (int i=0; i< NUM_BLOCKERS; i++) {
-		graphic[2]->RenderEx(getScreenX(sadBlockers[i].x),getScreenY(sadBlockers[i].y),sadBlockers[i].angle+PI/2);
+		graphic[2]->RenderEx(smh->getScreenX(sadBlockers[i].x),smh->getScreenY(sadBlockers[i].y),sadBlockers[i].angle+PI/2);
 	}
 
 }
@@ -58,7 +57,7 @@ void E_SadShooter::draw(float dt) {
 
 void E_SadShooter::update(float dt) {
 
-	float angleToSmiley = getAngleBetween(x,y,smh->player->x,smh->player->y);
+	float angleToSmiley = Util::getAngleBetween(x,y,smh->player->x,smh->player->y);
 
 	for(int i=0;i<NUM_BLOCKERS;i++) {
 		double angleSubtracted = angleToSmiley - (sadBlockers[i].angle+sadBlockers[i].desiredAngleOffset);
@@ -85,7 +84,7 @@ void E_SadShooter::update(float dt) {
 		sadBlockers[i].x = x + sadBlockers[i].distance*cos(sadBlockers[i].angle);
 		sadBlockers[i].y = y + sadBlockers[i].distance*sin(sadBlockers[i].angle);
 
-		if (distance(sadBlockers[i].x,sadBlockers[i].y,smh->player->x,smh->player->y) <= BLOCKER_RADIUS + smh->player->collisionCircle->radius) {
+		if (Util::distance(sadBlockers[i].x,sadBlockers[i].y,smh->player->x,smh->player->y) <= BLOCKER_RADIUS + smh->player->collisionCircle->radius) {
 			smh->player->dealDamageAndKnockback(damage,true,100,sadBlockers[i].x,sadBlockers[i].y);			
 		}
 

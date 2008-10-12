@@ -1,7 +1,6 @@
 #include "SmileyEngine.h"
 #include "TapestryManager.h"
 #include "hgedistort.h"
-#include "smiley.h"
 #include "math.h"
 #include "hgeresource.h"
 
@@ -65,7 +64,7 @@ void TapestryManager::addTapestry(int gridX, int gridY, int id) {
 void TapestryManager::draw(float dt) {
 	std::list<Tapestry>::iterator i;
 	for (i = tapestryList.begin(); i != tapestryList.end(); i++) {
-		i->distortion->Render(getScreenX(i->x), getScreenY(i->y));
+		i->distortion->Render(smh->getScreenX(i->x), smh->getScreenY(i->y));
 	}
 }
 

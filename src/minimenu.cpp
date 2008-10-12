@@ -1,7 +1,6 @@
 #include "SmileyEngine.h"
 #include "WindowFramework.h"
 #include "MainMenu.h"
-#include "smiley.h"
 #include "Button.h"
 
 extern SMH *smh;

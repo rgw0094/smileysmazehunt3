@@ -1,7 +1,5 @@
 #include "SmileyEngine.h"
-#include "smiley.h"
 #include "ForestBoss.h"
-#include "hge.h"
 #include "hgeresource.h"
 #include "Player.h"
 #include "ProjectileManager.h"
@@ -14,7 +12,6 @@
 #include "EnemyFramework.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 ForestBoss::ForestBoss(int _gridX, int _gridY, int _groupID) {
 	gridX = _gridX;
@@ -110,7 +107,7 @@ bool ForestBoss::update(float dt) {
 	
 			//Garmborn takes damage from the frisbees when his shield is down
 			if (smh->projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_FRISBEE) > 0) {
-				hge->Effect_Play(smh->resources->GetEffect("snd_garmbornHit"));
+				smh->soundManager->playSound("snd_garmbornHit");
 				health -= HEALTH/(float)NUM_FRISBEES_TO_KILL;
 				numTreeletsToSpawn++;
 				if (numTreeletsToSpawn > 1 + NUM_FRISBEES_TO_KILL) {
@@ -201,7 +198,7 @@ void ForestBoss::updateTreelets(float dt) {
 					if (!treeletLocs[i].stunned) {
 						treeletLocs[i].stunned = true;
 						treeletLocs[i].stunAlpha = 0.0;
-						hge->Effect_Play(smh->resources->GetEffect("snd_treeletHit"));
+						smh->soundManager->playSound("snd_treeletHit");
 					}
 				}
 
@@ -225,7 +222,7 @@ void ForestBoss::draw(float dt) {
 	
 	//Garmborn's body
 	smh->resources->GetSprite("garmbornBody")->SetColor(ARGB(alpha,255,255,255));
-	smh->resources->GetSprite("garmbornBody")->Render(getScreenX(x), getScreenY(y));
+	smh->resources->GetSprite("garmbornBody")->Render(smh->getScreenX(x), smh->getScreenY(y));
 
 	//Draw the Treelets
 	drawTreelets(dt);
@@ -304,9 +301,9 @@ void ForestBoss::spawnTreelets() {
 		//isn't too close to the player
 		int loc;
 		do {
-			loc = hge->Random_Int(0,NUM_TREELET_LOCS);
+			loc = smh->randomInt(0,NUM_TREELET_LOCS);
 		} while(treeletLocs[loc].occupied || 
-			    (numTreeletsToSpawn <= 8 && abs(distance(treeletLocs[loc].x, treeletLocs[loc].y, smh->player->x, smh->player->y)) < 150));
+			    (numTreeletsToSpawn <= 8 && abs(Util::distance(treeletLocs[loc].x, treeletLocs[loc].y, smh->player->x, smh->player->y)) < 150));
 
 
 		treeletLocs[loc].occupied = true;
@@ -327,12 +324,12 @@ void ForestBoss::drawTreelets(float dt) {
 
 			//Draw treelet
 			smh->resources->GetSprite("treelet")->SetColor(ARGB(treeletAlpha, 255, 255, 255));
-			smh->resources->GetSprite("treelet")->Render(getScreenX(treeletLocs[i].x), getScreenY(treeletLocs[i].y));
+			smh->resources->GetSprite("treelet")->Render(smh->getScreenX(treeletLocs[i].x), smh->getScreenY(treeletLocs[i].y));
 		
 			//Stunned treelet
 			if (treeletLocs[i].stunned) {
 				smh->resources->GetSprite("grayTreelet")->SetColor(ARGB(treeletLocs[i].stunAlpha, 255, 255, 255));
-				smh->resources->GetSprite("grayTreelet")->Render(getScreenX(treeletLocs[i].x), getScreenY(treeletLocs[i].y));
+				smh->resources->GetSprite("grayTreelet")->Render(smh->getScreenX(treeletLocs[i].x), smh->getScreenY(treeletLocs[i].y));
 			}
 
 			//Debug mode - draw collision boxes
@@ -377,7 +374,7 @@ void ForestBoss::spawnOwlet() {
 	newOwlet.startedDiveBomb = false;
 
 	//When an owlet first spawns it floats slowly away from Garmborn
-	newOwlet.angle = hge->Random_Float(0.0, 2.0*PI);
+	newOwlet.angle = smh->randomFloat(0.0, 2.0*PI);
 	newOwlet.dx = 100.0*cos(newOwlet.angle);
 	newOwlet.dy = 100.0*sin(newOwlet.angle);
 
@@ -396,7 +393,7 @@ void ForestBoss::drawOwlets(float dt) {
 
 		//Draw the owlet
 		i->animation->Update(dt);
-		i->animation->Render(getScreenX(i->x),getScreenY(i->y));
+		i->animation->Render(smh->getScreenX(i->x),smh->getScreenY(i->y));
 
 		//Debug mode - draw the collision Circle
 		if (smh->isDebugOn()) i->collisionCircle->draw();
@@ -438,7 +435,7 @@ void ForestBoss::updateOwlets(float dt) {
 
 		if (collision) {
 			particles->SpawnPS(&smh->resources->GetParticleSystem("bloodSplat")->info, i->x, i->y);
-			hge->Effect_Play(smh->resources->GetEffect("snd_splat"));
+			smh->soundManager->playSound("snd_splat");
 			delete i->collisionCircle;
 			delete i->animation;
 			i = owlets.erase(i);
@@ -447,8 +444,8 @@ void ForestBoss::updateOwlets(float dt) {
 
 		//After the owlets move away from Garmborn they dive bomb Smiley
 		if (!i->startedDiveBomb && smh->timePassedSince(i->timeSpawned) > 1.5) {
-			i->angle = getAngleBetween(i->x, i->y, smh->player->x, smh->player->y) +
-				hge->Random_Float(-.1*PI, .1*PI);
+			i->angle = Util::getAngleBetween(i->x, i->y, smh->player->x, smh->player->y) +
+				smh->randomFloat(-.1*PI, .1*PI);
 			i->dx = 600.0*cos(i->angle);
 			i->dy = 600.0*sin(i->angle);
 			i->startedDiveBomb = true;

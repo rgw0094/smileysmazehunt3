@@ -1,12 +1,10 @@
 #include "SmileyEngine.h"
 #include "environment.h"
 #include "EnemyFramework.h"
-#include "hge.h"
 #include "Player.h"
 #include "hgeanim.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 DefaultEnemy::DefaultEnemy(int id, int x, int y, int groupID) {
 

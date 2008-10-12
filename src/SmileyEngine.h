@@ -2,7 +2,6 @@
 #define SMH_H_
 
 #define STRICT
-#include "smiley.h"
 #include "hgeresource.h"
 #include "hge.h"
 #include <string>
@@ -39,6 +38,192 @@ class GameData;
 class SaveManager;
 class SoundManager;
 
+//Constants
+#define PI 3.14159265357989232684
+
+//Gameplay values
+#define SCREEN_WIDTH 1024
+#define SCREEN_HEIGHT 768
+#define NUM_NPCS 99
+#define PLAYER_WIDTH 61
+#define PLAYER_HEIGHT 72
+
+//Resource Groups
+#define RES_MENU 10
+#define RES_CREDITS 11
+#define RES_PHYREBOZZ 100
+#define RES_PORTLYPENGUIN 101
+#define RES_GARMBORN 102
+#define RES_CORNWALLIS 103
+#define RES_MUSHBOOM 104
+#define RES_CALYPSO 105
+#define RES_BARTLI 106
+#define RES_FENWAR 110
+
+#define NUM_BOSSES 12
+
+//Hardcoded IDs
+#define DRAW_AFTER_SMILEY 990
+
+//Abilities
+#define NUM_ABILITIES 12
+#define NO_ABILITY -1
+#define CANE 0
+#define FIRE_BREATH 1
+#define FRISBEE 2
+#define SPRINT_BOOTS 3
+#define LIGHTNING_ORB 4
+#define REFLECTION_SHIELD 5
+#define SILLY_PAD 6
+#define WATER_BOOTS 7
+#define ICE_BREATH 8
+#define SHRINK 9
+#define TUTS_MASK 10
+#define HOVER 11
+
+//Ability types
+#define PASSIVE 0
+#define ACTIVATED 1
+#define HOLD 2
+
+//Level ids
+#define NUM_AREAS 10
+#define FOUNTAIN_AREA 0
+#define OLDE_TOWNE 1
+#define TUTS_TOMB 2
+#define FOREST_OF_FUNGORIA 3
+#define SESSARIA_SNOWPLAINS 4
+#define WORLD_OF_DESPAIR 5
+#define SERPENTINE_PATH 6
+#define CASTLE_OF_EVIL 7
+#define SMOLDER_HOLLOW 8
+#define DEBUG_AREA 9
+
+//State
+#define MENU 10
+#define GAME 20
+
+//Directions
+#define NUM_DIRECTIONS 8
+#define DOWN 0
+#define LEFT 1
+#define RIGHT 2
+#define UP 3
+#define UP_LEFT 4
+#define UP_RIGHT 5
+#define DOWN_LEFT 6
+#define DOWN_RIGHT 7
+
+//Item Layer
+#define NUM_ITEMS 9
+#define NONE 0
+#define RED_KEY 1
+#define YELLOW_KEY 2
+#define GREEN_KEY 3
+#define BLUE_KEY 4
+#define SMALL_GEM 5
+#define MEDIUM_GEM 6
+#define LARGE_GEM 7
+#define HEALTH_ITEM 9
+#define MANA_ITEM 8
+
+//Colors
+#define RED 0
+#define YELLOW 1
+#define GREEN 2
+#define BLUE 3
+
+//Collision Layer
+#define NUM_COLLISION 36
+#define WALKABLE 0
+#define UNWALKABLE 1
+#define RED_KEYHOLE 2
+#define YELLOW_KEYHOLE 3
+#define GREEN_KEYHOLE 4
+#define BLUE_KEYHOLE 5
+#define EVIL_DOOR 6
+#define SHALLOW_WATER 7
+#define DEEP_WATER 8
+#define UP_ARROW 9
+#define RIGHT_ARROW 10
+#define DOWN_ARROW 11
+#define LEFT_ARROW 12
+#define SLIME 13
+#define SPRING_PAD 14
+#define FIRE_DESTROY 15
+#define WALK_LAVA 16
+#define NO_WALK_LAVA 17
+#define UNWALKABLE_PROJECTILE 18
+#define RED_WARP 19
+#define BLUE_WARP 20
+#define YELLOW_WARP 21
+#define GREEN_WARP 22
+#define SPIN_ARROW_SWITCH 23
+#define PIT 24
+#define FOUNTAIN 25
+#define SAVE_SHRINE 26
+#define SIGN 27
+#define ICE 28
+#define MIRROR_UP_LEFT 29
+#define MIRROR_UP_RIGHT 30
+#define MIRROR_DOWN_RIGHT 31
+#define MIRROR_DOWN_LEFT 32
+#define MIRROR_SWITCH 33
+#define ENEMY_NO_WALK 34
+#define GREEN_WATER 35
+#define DIZZY_MUSHROOM_1 36
+#define DIZZY_MUSHROOM_2 37
+#define BOMB_PAD_UP 38
+#define BOMB_PAD_DOWN 39
+#define BOMBABLE_WALL 40
+#define HOVER_PAD 41
+#define WHITE_CYLINDER_DOWN 42
+#define YELLOW_CYLINDER_DOWN 43
+#define GREEN_CYLINDER_DOWN 44
+#define BLUE_CYLINDER_DOWN 45
+#define BROWN_CYLINDER_DOWN 46
+#define SILVER_CYLINDER_DOWN 47
+#define SHRINK_TUNNEL_SWITCH 48
+#define SHRINK_TUNNEL_HORIZONTAL 49
+#define SHRINK_TUNNEL_VERTICAL 50
+#define SHALLOW_GREEN_WATER 51
+#define EVIL_WALL_POSITION 52
+#define EVIL_WALL_TRIGGER 53
+#define EVIL_WALL_DEACTIVATOR 54
+#define EVIL_WALL_RESTART 55
+#define FLAME 56
+#define SUPER_SPRING 57
+#define WHITE_CYLINDER_UP 58
+#define YELLOW_CYLINDER_UP 59
+#define GREEN_CYLINDER_UP 60
+#define BLUE_CYLINDER_UP 61
+#define BROWN_CYLINDER_UP 62
+#define SILVER_CYLINDER_UP 63
+#define SMILELET 64
+#define SMILELET_FLOWER_SAD 65
+#define SMILELET_FLOWER_HAPPY 66
+//...
+#define WHITE_SWITCH_LEFT 74
+#define YELLOW_SWITCH_LEFT 75
+#define GREEN_SWITCH_LEFT 76
+#define BLUE_SWITCH_LEFT 77
+#define BROWN_SWITCH_LEFT 78
+#define SILVER_SWITCH_LEFT 79
+//...
+#define WHITE_SWITCH_RIGHT 90
+#define YELLOW_SWITCH_RIGHT 91
+#define GREEN_SWITCH_RIGHT 92
+#define BLUE_SWITCH_RIGHT 93
+#define BROWN_SWITCH_RIGHT 94
+#define SILVER_SWITCH_RIGHT 95
+//...
+#define PLAYER_START 224
+#define PLAYER_END 225
+
+struct Point {
+	int x, y;
+};
+
 //--------------------------
 //------SMH
 //--------------------------
@@ -46,7 +231,7 @@ class SMH {
 
 public:
 
-	SMH();
+	SMH(HGE *hge);
 	~SMH();
 
 	//Public methods
@@ -69,7 +254,11 @@ public:
 	void drawGlobalSprite(const char* sprite, float x, float y);
 	void drawSprite(const char* sprite, float x, float y);
 	void drawSprite(const char* sprite, float x, float y, float width, float height);
+	int getScreenX(int x);
+	int getScreenY(int y);
 	void log(const char* text);
+	int randomInt(int min, int max);
+	float randomFloat(float min, float max);
 	void shadeScreen(int alpha);
 	float timePassedSince(float time);
 
@@ -80,6 +269,7 @@ public:
 	Environment *environment;
 	FenwarManager *fenwarManager;
 	GameData *gameData;
+	HGE *hge;
 	SmileyInput *input;
 	LoadEffectManager *loadEffectManager;
 	LootManager *lootManager;
@@ -344,6 +534,7 @@ public:
 	void stopEnvironmentChannel();
 	void playAbilityEffect(char *effect, bool loop);
 	void stopAbilityChannel();
+	void playSound(const char* sound);
 	int getMusicVolume();
 	int getSoundVolume();
 
@@ -377,6 +568,137 @@ public:
 	static int roundUp(float num) {
 		if (num > (int)num) return (int)num + 1;
 		else return (int)num;
+	}
+
+	/**
+	 * Returns the distance between 2 points
+	 */
+	static int distance(int x1, int y1, int x2, int y2) {
+		if (x1 == x2) return abs(y1 - y2);
+		if (y1 == y2) return abs(x1 - x2);
+		return sqrt(float((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1)));
+	}
+
+	/**
+	 * Returns the specified integer as a string because the designers of C were too 
+	 * distracted by their beards to write a language that doESNT SUCK ASS FUCK SHIT
+	 */
+	static std::string intToString(int n) {
+		std::string numberString = "";
+		char number[10];
+		itoa(n, number, 10);
+		numberString += number;
+		return numberString;
+	}
+
+	/**
+	 * Returns the int as a string, with the given number of digits
+	 */
+	static std::string intToString(int number, int digits) {
+		std::string returnString;
+		returnString = intToString(number);
+		while (returnString.size() < digits) {
+			returnString.insert(0,"0");			
+		}
+		return returnString;
+	}
+
+	/**
+	 * Returns whether or not id is the id of an on cylinder switch
+	 */
+	static bool isCylinderSwitchLeft(int id) {
+		return (id == WHITE_SWITCH_LEFT || id == YELLOW_SWITCH_LEFT || id == GREEN_SWITCH_LEFT ||
+			id == BLUE_SWITCH_LEFT || id == BROWN_SWITCH_LEFT || id == SILVER_SWITCH_LEFT);
+	}
+
+	/**
+	 * Returns whether or not id is the id of an off cylinder switch
+	 */
+	static bool isCylinderSwitchRight(int id) {
+		return (id == WHITE_SWITCH_RIGHT || id == YELLOW_SWITCH_RIGHT || id == GREEN_SWITCH_RIGHT ||
+				id == BLUE_SWITCH_RIGHT || id == BROWN_SWITCH_RIGHT || id == SILVER_SWITCH_RIGHT);
+	}
+
+	/**
+	 * Returns whether or not id the id of a down cylinder
+	 */
+	static bool isCylinderDown(int id) {
+		return (id == WHITE_CYLINDER_DOWN || id == YELLOW_CYLINDER_DOWN || id == GREEN_CYLINDER_DOWN ||
+				id == BLUE_CYLINDER_DOWN || id == BROWN_CYLINDER_DOWN || id == SILVER_CYLINDER_DOWN);
+	}
+
+	/**
+	 * Returns whether or not id the id of an up cylinder
+	 */
+	static bool isCylinderUp(int id) {
+		return (id == WHITE_CYLINDER_UP || id == YELLOW_CYLINDER_UP || id == GREEN_CYLINDER_UP ||
+				id == BLUE_CYLINDER_UP|| id == BROWN_CYLINDER_UP || id == SILVER_CYLINDER_UP);
+	}
+
+	/**
+	 * Returns the grid x coordinate that x appears in
+	 */
+	static int getGridX(int x) {
+		return (x - x%64) / 64;
+	} 
+
+	/**
+	 * Returns the grid y coordinate that y appears in
+	 */
+	static int getGridY(int y) {
+		return (y - y%64) / 64;
+	}
+
+	/**
+	 * Returns the angle between (x1,y1) and (x2,y2)
+	 */
+	static float getAngleBetween(int x1, int y1, int x2, int y2) {
+
+		float angle;
+
+		if (x1 == x2) {
+			if (y1 > y2) {
+				angle = 3.0*PI/2.0;
+			} else {
+				angle=PI/2.0;
+			}
+		} else {
+			angle = atan(float(y2-y1)/float(x2-x1));
+			if (x1 - x2 > 0) angle += PI;
+		}
+
+		return angle;
+
+	}
+
+	/**
+	 * Returns whether or not a collision layer id is a warp.
+	 */
+	static bool isWarp(int id) {
+		return (id == BLUE_WARP || id == RED_WARP || id == GREEN_WARP || YELLOW_WARP);
+	}
+
+	/**
+	 * Returns the parent area of the given area. Only the 5 parent areas have keys, so this method
+	 * is used to determine which of these 5 areas to save the key to!! The number returned is the
+	 * [area] index of SaveManager.numKeys[area][key color] for the parent area.
+	 */
+	static int getKeyIndex(int area) {
+		switch (area) {
+			case OLDE_TOWNE:
+			case TUTS_TOMB:
+			case SMOLDER_HOLLOW:
+				return 0;
+			case FOREST_OF_FUNGORIA:
+				return 1;
+			case SESSARIA_SNOWPLAINS:
+				return 2;
+			case WORLD_OF_DESPAIR:
+				return 3;
+			case CASTLE_OF_EVIL:
+				return 4;
+		}
+		return -1;
 	}
 
 };

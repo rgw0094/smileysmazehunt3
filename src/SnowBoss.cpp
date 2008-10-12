@@ -1,5 +1,4 @@
 #include "SmileyEngine.h"
-#include "smiley.h"
 #include "SnowBoss.h"
 #include "Player.h"
 #include "ProjectileManager.h"
@@ -12,7 +11,6 @@
 #include "EnemyFramework.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 SnowBoss::SnowBoss(int _gridX,int _gridY,int _groupID) {
 	gridX=_gridX;
@@ -143,11 +141,9 @@ bool SnowBoss::update(float dt) {
 		waddleRotation += WADDLEROTATESPEED * dt * waddleRotateDir;		
 		if (waddleRotation > WADDLEROTATEMAX) {
 			waddleRotateDir = - abs(waddleRotateDir);
-			hge->Effect_Play(smh->resources->GetEffect("snd_penguinStep"));
 		}
 		if (waddleRotation < -WADDLEROTATEMAX) {
 			waddleRotateDir =   abs(waddleRotateDir);
-			hge->Effect_Play(smh->resources->GetEffect("snd_penguinStep"));
 		}
 
 		//chase the player
@@ -175,8 +171,8 @@ bool SnowBoss::update(float dt) {
 		//launch fish
 		if (numFishLaunched == 0 || smh->timePassedSince(lastFishLaunched) > TIME_BETWEEN_FISH) {
 			//subtract 51 from y to get around the penguin's mouth
-			float angleToSmiley = getAngleBetween(x,y-51.0,smh->player->x,smh->player->y);
-			angleToSmiley += hge->Random_Float(-PI/4,PI/4);
+			float angleToSmiley = Util::getAngleBetween(x,y-51.0,smh->player->x,smh->player->y);
+			angleToSmiley += smh->randomFloat(-PI/4,PI/4);
 			float angle2 = angleToSmiley-0.5;
 			float angle3 = angleToSmiley+0.5;
 			float angle4 = angleToSmiley-1.6;
@@ -188,7 +184,7 @@ bool SnowBoss::update(float dt) {
 				smh->projectileManager->addProjectile(x,y-51.0,FLYING_FISH_SPEED,angle4,FLYING_FISH_DAMAGE,true,PROJECTILE_PENGUIN_FISH,true);
 				smh->projectileManager->addProjectile(x,y-51.0,FLYING_FISH_SPEED,angle5,FLYING_FISH_DAMAGE,true,PROJECTILE_PENGUIN_FISH,true);
 			}
-			hge->Effect_Play(smh->resources->GetEffect("snd_sillyPad"));
+			smh->soundManager->playSound("snd_sillyPad");
 			lastFishLaunched=smh->getGameTime();
 			numFishLaunched++;
 		}
@@ -199,7 +195,7 @@ bool SnowBoss::update(float dt) {
 	} //end if throwing fish
 
 	if (state==SNOWBOSS_BEGIN_SLIDING) {
-		slidingAngle=getAngleBetween(x,y,smh->player->x,smh->player->y);
+		slidingAngle=Util::getAngleBetween(x,y,smh->player->x,smh->player->y);
 		
 		if (smh->timePassedSince(timeEnteredState) > BEGIN_SLIDE_TIME) {
 			
@@ -249,10 +245,9 @@ bool SnowBoss::update(float dt) {
 		y+=SLIDE_SPEED*sin(slidingAngle)*dt;
 
 		if (x > xRightWater || x < xLeftWater) {			
-			smh->resources->GetParticleSystem("penguinSplash")->MoveTo(getScreenX(x),getScreenY(y));	
+			smh->resources->GetParticleSystem("penguinSplash")->MoveTo(smh->getScreenX(x),smh->getScreenY(y));	
 			smh->resources->GetParticleSystem("penguinSplash")->Fire();
-			hge->Effect_Play(smh->resources->GetEffect("snd_penguinSplash"));
-		
+			smh->soundManager->playSound("snd_penguinSplash");
 
 			enterState(SNOWBOSS_UNDERWATER);
 			
@@ -297,7 +292,7 @@ bool SnowBoss::update(float dt) {
 		if (smh->timePassedSince(timeEnteredState) > SNOWBOSS_JUMP_TIME) {
 			//launch ice nova
 			xNova=x;yNova=y+64;
-			iceNova->MoveTo(getScreenX(xNova),getScreenY(yNova));
+			iceNova->MoveTo(smh->getScreenX(xNova),smh->getScreenY(yNova));
 			iceNova->Fire();
 			enterState(SNOWBOSS_WADDLING);
 		}
@@ -338,23 +333,23 @@ void SnowBoss::draw(float dt) {
 	drawIceBlocks();
 
 	if (state == SNOWBOSS_WADDLING) {
-		smh->resources->GetSprite("penguinBody")->RenderEx(getScreenX(x),getScreenY(y),waddleRotation);
+		smh->resources->GetSprite("penguinBody")->RenderEx(smh->getScreenX(x),smh->getScreenY(y),waddleRotation);
 	} else if (state == SNOWBOSS_SLIDING || state == SNOWBOSS_SLIDE_TO_X) {
-		smh->resources->GetSprite("penguinSliding")->RenderEx(getScreenX(x),getScreenY(y),slidingAngle);
+		smh->resources->GetSprite("penguinSliding")->RenderEx(smh->getScreenX(x),smh->getScreenY(y),slidingAngle);
 	} else if (state == SNOWBOSS_UNDERWATER || state == SNOWBOSS_PRE_DEATH) {
-		smh->resources->GetSprite("penguinDrowning")->Render(getScreenX(x),getScreenY(y));
+		smh->resources->GetSprite("penguinDrowning")->Render(smh->getScreenX(x),smh->getScreenY(y));
 	} else if (state == SNOWBOSS_FADING) {
 		smh->resources->GetSprite("penguinDrowning")->SetColor(ARGB(alpha,255,255,255));
-		smh->resources->GetSprite("penguinDrowning")->Render(getScreenX(x),getScreenY(y));
+		smh->resources->GetSprite("penguinDrowning")->Render(smh->getScreenX(x),smh->getScreenY(y));
 	}else {
-		smh->resources->GetSprite("penguinBody")->Render(getScreenX(x),getScreenY(y));		
+		smh->resources->GetSprite("penguinBody")->Render(smh->getScreenX(x),smh->getScreenY(y));		
 	}
 
-	smh->resources->GetParticleSystem("penguinSplash")->MoveTo(getScreenX(x),getScreenY(y),true);
+	smh->resources->GetParticleSystem("penguinSplash")->MoveTo(smh->getScreenX(x),smh->getScreenY(y),true);
 	smh->resources->GetParticleSystem("penguinSplash")->Update(dt);
 	smh->resources->GetParticleSystem("penguinSplash")->Render();
 
-	iceNova->MoveTo(getScreenX(xNova),getScreenY(yNova),true);
+	iceNova->MoveTo(smh->getScreenX(xNova),smh->getScreenY(yNova),true);
 	iceNova->Update(dt);
 	iceNova->Render();
 	
@@ -407,7 +402,7 @@ void SnowBoss::setUpIceBlocks() {
 void SnowBoss::drawIceBlocks() {
 	for (int i=0;i<24;i++) {
 		smh->resources->GetSprite("penguinIceBlock")->SetColor(ARGB(iceBlocks[i].alpha,255,255,255));
-		smh->resources->GetSprite("penguinIceBlock")->Render(getScreenX(iceBlocks[i].collisionBox->x1),getScreenY(iceBlocks[i].collisionBox->y1));
+		smh->resources->GetSprite("penguinIceBlock")->Render(smh->getScreenX(iceBlocks[i].collisionBox->x1),smh->getScreenY(iceBlocks[i].collisionBox->y1));
 	}
 }
 

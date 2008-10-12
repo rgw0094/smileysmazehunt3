@@ -1,12 +1,9 @@
 #include "SmileyEngine.h"
 #include "EnemyFramework.h"
-#include "hge.h"
 #include "environment.h"
 #include "hgerect.h"
-#include "smiley.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 /**
  * Constructor
@@ -73,7 +70,7 @@ void ES_Wander::update(float dt) {
 
 	if (changeDir) {
 
-		nextDirChangeTime = smh->getGameTime() + hge->Random_Float(1.2, 2.0);
+		nextDirChangeTime = smh->getGameTime() + smh->randomFloat(1.2, 2.0);
 		currentAction = getNewDirection();
 
 		//Set dx/dy based on new direction
@@ -128,7 +125,7 @@ int ES_Wander::getNewDirection() {
 
 	//Find a new direction that won't result in the enemy facing a wall.
 	while (!newDirFound) {
-		newDir = hge->Random_Int(minDir, maxDir);
+		newDir = smh->randomInt(minDir, maxDir);
 		if (newDir == WANDER_LEFT) {
 			collision = smh->environment->collision[owner->gridX-1][owner->gridY];
 		} else if (newDir == WANDER_RIGHT) {

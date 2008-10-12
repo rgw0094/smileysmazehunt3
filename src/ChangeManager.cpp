@@ -1,10 +1,7 @@
+#include "SmileyEngine.h"
 #include "ChangeManager.h"
-#include "Smiley.h"
-#include "hge.h"
 
 using namespace std;
-
-extern HGE *hge;
 
 /**
  * Constructor
@@ -82,20 +79,20 @@ string ChangeManager::toString() {
 	string returnString = "";
 	
 	//The string starts with the number of changes (3 digits)
-	returnString += intToString(theChanges.size(), 3);
+	returnString += Util::intToString(theChanges.size(), 3);
 
 	//For each change
 	std::list<Change>::iterator i;
 	for (i = theChanges.begin(); i != theChanges.end(); i++) {
 		
 		//2 digits for the area
-		returnString += intToString(i->area, 2);
+		returnString += Util::intToString(i->area, 2);
 
 		//3 digits for x coordinate
-		returnString += intToString(i->x, 3);
+		returnString += Util::intToString(i->x, 3);
 
 		//3 digits for y coordinate
-		returnString += intToString(i->y, 3);
+		returnString += Util::intToString(i->y, 3);
 
 	}
 

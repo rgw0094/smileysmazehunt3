@@ -1,5 +1,4 @@
 #include "SmileyEngine.h"
-#include "smiley.h"
 #include "SpecialTileManager.h"
 #include "player.h"
 #include "CollisionCircle.h"
@@ -7,7 +6,6 @@
 #include "ProjectileManager.h"
 #include "Tongue.h"
 #include "environment.h"
-
 #include "hgeparticle.h"
 #include "hgeresource.h"
 #include "hgeanim.h"
@@ -24,7 +22,6 @@
 
 #define SILLY_PAD_TIME 40		//Number of seconds silly pads stay active
 
-extern HGE *hge;
 extern SMH *smh;
 
 SpecialTileManager::SpecialTileManager() {
@@ -119,8 +116,8 @@ void SpecialTileManager::drawIceBlocks(float dt) {
 		//Scale the size of the ice block based on its "health"
 		smh->resources->GetAnimation("walkLayer")->SetFrame(FIRE_DESTROY);
 		smh->resources->GetAnimation("walkLayer")->SetHotSpot(32.0,32.0);
-		smh->resources->GetAnimation("walkLayer")->RenderEx(getScreenX(i->gridX*64.0+32.0), 
-			getScreenY(i->gridY*64.0+32.0), 0.0, scale, scale);
+		smh->resources->GetAnimation("walkLayer")->RenderEx(smh->getScreenX(i->gridX*64.0+32.0), 
+			smh->getScreenY(i->gridY*64.0+32.0), 0.0, scale, scale);
 		smh->resources->GetAnimation("walkLayer")->SetHotSpot(0.0,0.0);
 	}
 }
@@ -194,12 +191,12 @@ void SpecialTileManager::drawTimedTiles(float dt) {
 		if (i->alpha < 255.0) {
 			if (i->newTile == WALK_LAVA || i->newTile == NO_WALK_LAVA) {
 				smh->resources->GetAnimation("lava")->SetColor(ARGB(i->alpha, 255, 255, 255));
-				smh->resources->GetAnimation("lava")->Render(getScreenX(i->gridX*64), getScreenY(i->gridY*64));
+				smh->resources->GetAnimation("lava")->Render(smh->getScreenX(i->gridX*64), smh->getScreenY(i->gridY*64));
 				smh->resources->GetAnimation("lava")->SetColor(ARGB(255, 255, 255, 255));
 			} else {
 				smh->resources->GetAnimation("walkLayer")->SetFrame(i->newTile);
 				smh->resources->GetAnimation("walkLayer")->SetColor(ARGB(i->alpha, 255, 255, 255));
-				smh->resources->GetAnimation("walkLayer")->Render(getScreenX(i->gridX*64), getScreenY(i->gridY*64));
+				smh->resources->GetAnimation("walkLayer")->Render(smh->getScreenX(i->gridX*64), smh->getScreenY(i->gridY*64));
 				smh->resources->GetAnimation("walkLayer")->SetColor(ARGB(255, 255, 255, 255));
 			}
 		}
@@ -270,7 +267,7 @@ void SpecialTileManager::drawSillyPads(float dt) {
 		if (timeLeft < 1.0f) {
 			smh->resources->GetSprite("sillyPad")->SetColor(ARGB((timeLeft/1.0f)*255.0f,255,255,255));
 		}
-		smh->resources->GetSprite("sillyPad")->Render(getScreenX(i->gridX*64.0), getScreenY(i->gridY*64.0));
+		smh->resources->GetSprite("sillyPad")->Render(smh->getScreenX(i->gridX*64.0), smh->getScreenY(i->gridY*64.0));
 		smh->resources->GetSprite("sillyPad")->SetColor(ARGB(255,255,255,255));
 	}
 }
@@ -344,7 +341,7 @@ void SpecialTileManager::addFlame(int gridX, int gridY) {
 	newFlame.y = gridY * 64.0 + 32.0;
 	newFlame.timeFlamePutOut = -10.0;
 	newFlame.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("flame")->info);
-	newFlame.particle->FireAt(getScreenX(newFlame.x), getScreenY(newFlame.y));
+	newFlame.particle->FireAt(smh->getScreenX(newFlame.x), smh->getScreenY(newFlame.y));
 	newFlame.collisionBox = new hgeRect(1,1,1,1);
 
 	//Add it to the list
@@ -358,7 +355,7 @@ void SpecialTileManager::addFlame(int gridX, int gridY) {
 void SpecialTileManager::drawFlames(float dt) {
 	std::list<Flame>::iterator i;
 	for(i = flameList.begin(); i != flameList.end(); i++) {
-		i->particle->MoveTo(getScreenX(i->x), getScreenY(i->y), true);
+		i->particle->MoveTo(smh->getScreenX(i->x), smh->getScreenY(i->y), true);
 		i->particle->Render();
 	}
 }
@@ -436,7 +433,7 @@ void SpecialTileManager::drawMushrooms (float dt) {
 		switch (i->state) {
 			case MUSHROOM_STATE_IDLING:
 				smh->resources->GetAnimation("walkLayer")->SetFrame(i->graphicsIndex);
-				smh->resources->GetAnimation("walkLayer")->Render(getScreenX(i->x),getScreenY(i->y));
+				smh->resources->GetAnimation("walkLayer")->Render(smh->getScreenX(i->x),smh->getScreenY(i->y));
 				if (smh->isDebugOn()) i->mushroomCollisionCircle->draw();
 				break;
 			case MUSHROOM_STATE_EXPLODING:
@@ -449,7 +446,7 @@ void SpecialTileManager::drawMushrooms (float dt) {
 				//Calculate size to draw it, then draw it
 				float percentage = smh->timePassedSince(i->beginGrowTime) / MUSHROOM_GROW_TIME;
 				percentage = min(percentage, 1.0); //Cap the size at 1 to prevent it from "overgrowing"
-				smh->resources->GetAnimation("walkLayer")->RenderEx((int)getScreenX(i->x+32),(int)getScreenY(i->y+32),0.0,percentage,percentage);
+				smh->resources->GetAnimation("walkLayer")->RenderEx((int)smh->getScreenX(i->x+32),(int)smh->getScreenY(i->y+32),0.0,percentage,percentage);
 
 				//change hot spot back
                 smh->resources->GetAnimation("walkLayer")->SetHotSpot(0.0,0.0);

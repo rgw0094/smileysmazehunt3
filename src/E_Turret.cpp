@@ -4,7 +4,6 @@
 #include "environment.h"
 #include "ProjectileManager.h"
 #include "hgeresource.h"
-#include "smiley.h"
 
 extern SMH *smh;
 

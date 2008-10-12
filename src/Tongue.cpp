@@ -1,17 +1,14 @@
 #include "SmileyEngine.h"
 #include "Tongue.h"
 #include "Player.h"
-#include "smiley.h"
 #include "Environment.h"
 #include "EnemyFramework.h"
 #include "NPCManager.h"
 #include "WindowFramework.h"
 #include "CollisionCircle.h"
-
 #include "hgeresource.h"
 #include "hgeanim.h"
 
-extern HGE *hge;
 extern SMH *smh;
 
 #define ATTACK_RADIUS (PI / 3.0)
@@ -116,8 +113,8 @@ void Tongue::update(float dt) {
 void Tongue::draw(float dt) {
 	if (attacking) {
 		smh->resources->GetAnimation("smileyTongue")->RenderEx(
-			getScreenX(smh->player->x) + smh->player->mouthXOffset[smh->player->facing],
-			getScreenY(smh->player->y) - smh->player->springOffset + smh->player->mouthYOffset[smh->player->facing] - smh->player->hoveringYOffset,
+			smh->getScreenX(smh->player->x) + smh->player->mouthXOffset[smh->player->facing],
+			smh->getScreenY(smh->player->y) - smh->player->springOffset + smh->player->mouthYOffset[smh->player->facing] - smh->player->hoveringYOffset,
 			smh->player->angles[smh->player->facing] + (smh->player->facing == LEFT ? -1 : 1) * tongueOffsetAngle, 
 			smh->player->scale, smh->player->scale);
 

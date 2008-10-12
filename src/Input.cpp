@@ -5,9 +5,6 @@
 #include <dinput.h>
 #include <string>
 #include "resource.h"
-#include "smiley.h"
-
-extern HGE *hge;
 
 // Globals ////////////
 LPDIRECTINPUT8       g_pDI;
@@ -18,6 +15,7 @@ DIDEVCAPS            g_diDevCaps;
 BOOL CALLBACK    EnumAxesCallback( const DIDEVICEOBJECTINSTANCE* pdidoi, VOID* pContext );
 BOOL CALLBACK    EnumJoysticksCallback( const DIDEVICEINSTANCE* pdidInstance, VOID* pContext );
 
+extern SMH *smh;
 
 /**
  * Constructor
@@ -45,7 +43,7 @@ SmileyInput::SmileyInput() {
 	}
 
 	//Get game device
-	InitInput(hge->System_GetState(HGE_HWND));
+	InitInput(smh->hge->System_GetState(HGE_HWND));
 
 }
 
@@ -121,7 +119,7 @@ void SmileyInput::UpdateInput() {
 
 		//Keyboard input
 		if (inputs[i].device == DEVICE_KEYBOARD) {
-			inputs[i].pressed = hge->Input_GetKeyState(inputs[i].code);
+			inputs[i].pressed = smh->hge->Input_GetKeyState(inputs[i].code);
 
 		//Gamepad input
 		} else if (inputs[i].device == DEVICE_GAMEPAD) {
@@ -324,7 +322,7 @@ bool SmileyInput::keyPressed(int key) {
 //-----------------------------------------------------------------------------
 float SmileyInput::getMouseX() {
 	float x, y;
-	hge->Input_GetMousePos(&x, &y);
+	smh->hge->Input_GetMousePos(&x, &y);
 	return x;
 }
 
@@ -334,7 +332,7 @@ float SmileyInput::getMouseX() {
 //-----------------------------------------------------------------------------
 float SmileyInput::getMouseY() {
 	float x, y;
-	hge->Input_GetMousePos(&x, &y);
+	smh->hge->Input_GetMousePos(&x, &y);
 	return y;
 }
 
@@ -343,7 +341,7 @@ float SmileyInput::getMouseY() {
 // Desc: Returns whether or not the mouse is currently in the window.
 //-----------------------------------------------------------------------------
 bool SmileyInput::isMouseInWindow() {
-	return hge->Input_IsMouseOver();
+	return smh->hge->Input_IsMouseOver();
 }
 
 //-----------------------------------------------------------------------------
@@ -351,7 +349,7 @@ bool SmileyInput::isMouseInWindow() {
 // Desc: Sets the mouse position
 //-----------------------------------------------------------------------------
 void SmileyInput::setMousePosition(float x, float y) {
-	hge->Input_SetMousePos(x, y);
+	smh->hge->Input_SetMousePos(x, y);
 }
 
 //-----------------------------------------------------------------------------
@@ -361,28 +359,28 @@ void SmileyInput::setMousePosition(float x, float y) {
 void SmileyInput::saveInputs() {
 
 	//Save code for each input
-	hge->Ini_SetInt("Controls","left",inputs[INPUT_LEFT].code);
-	hge->Ini_SetInt("Controls","right",inputs[INPUT_RIGHT].code);
-	hge->Ini_SetInt("Controls","up",inputs[INPUT_UP].code);
-	hge->Ini_SetInt("Controls","down",inputs[INPUT_DOWN].code);
-	hge->Ini_SetInt("Controls","attack",inputs[INPUT_ATTACK].code);
-	hge->Ini_SetInt("Controls","ability",inputs[INPUT_ABILITY].code);
-	hge->Ini_SetInt("Controls","aim",inputs[INPUT_AIM].code);
-	hge->Ini_SetInt("Controls","next",inputs[INPUT_NEXT_ABILITY].code);
-	hge->Ini_SetInt("Controls","previous",inputs[INPUT_PREVIOUS_ABILITY].code);
-	hge->Ini_SetInt("Controls","exit",inputs[INPUT_PAUSE].code);
+	smh->hge->Ini_SetInt("Controls","left",inputs[INPUT_LEFT].code);
+	smh->hge->Ini_SetInt("Controls","right",inputs[INPUT_RIGHT].code);
+	smh->hge->Ini_SetInt("Controls","up",inputs[INPUT_UP].code);
+	smh->hge->Ini_SetInt("Controls","down",inputs[INPUT_DOWN].code);
+	smh->hge->Ini_SetInt("Controls","attack",inputs[INPUT_ATTACK].code);
+	smh->hge->Ini_SetInt("Controls","ability",inputs[INPUT_ABILITY].code);
+	smh->hge->Ini_SetInt("Controls","aim",inputs[INPUT_AIM].code);
+	smh->hge->Ini_SetInt("Controls","next",inputs[INPUT_NEXT_ABILITY].code);
+	smh->hge->Ini_SetInt("Controls","previous",inputs[INPUT_PREVIOUS_ABILITY].code);
+	smh->hge->Ini_SetInt("Controls","exit",inputs[INPUT_PAUSE].code);
 
 	//Save device for each input
-	hge->Ini_SetInt("Controls","leftDevice",inputs[INPUT_LEFT].device);
-	hge->Ini_SetInt("Controls","rightDevice",inputs[INPUT_RIGHT].device);
-	hge->Ini_SetInt("Controls","upDevice",inputs[INPUT_UP].device);
-	hge->Ini_SetInt("Controls","downDevice",inputs[INPUT_DOWN].device);
-	hge->Ini_SetInt("Controls","attackDevice",inputs[INPUT_ATTACK].device);
-	hge->Ini_SetInt("Controls","abilityDevice",inputs[INPUT_ABILITY].device);
-	hge->Ini_SetInt("Controls","aimDevice",inputs[INPUT_AIM].device);
-	hge->Ini_SetInt("Controls","nextDevice",inputs[INPUT_NEXT_ABILITY].device);
-	hge->Ini_SetInt("Controls","previousDevice",inputs[INPUT_PREVIOUS_ABILITY].device);
-	hge->Ini_SetInt("Controls","exitDevice",inputs[INPUT_PAUSE].device);
+	smh->hge->Ini_SetInt("Controls","leftDevice",inputs[INPUT_LEFT].device);
+	smh->hge->Ini_SetInt("Controls","rightDevice",inputs[INPUT_RIGHT].device);
+	smh->hge->Ini_SetInt("Controls","upDevice",inputs[INPUT_UP].device);
+	smh->hge->Ini_SetInt("Controls","downDevice",inputs[INPUT_DOWN].device);
+	smh->hge->Ini_SetInt("Controls","attackDevice",inputs[INPUT_ATTACK].device);
+	smh->hge->Ini_SetInt("Controls","abilityDevice",inputs[INPUT_ABILITY].device);
+	smh->hge->Ini_SetInt("Controls","aimDevice",inputs[INPUT_AIM].device);
+	smh->hge->Ini_SetInt("Controls","nextDevice",inputs[INPUT_NEXT_ABILITY].device);
+	smh->hge->Ini_SetInt("Controls","previousDevice",inputs[INPUT_PREVIOUS_ABILITY].device);
+	smh->hge->Ini_SetInt("Controls","exitDevice",inputs[INPUT_PAUSE].device);
 
 }
 
@@ -393,28 +391,28 @@ void SmileyInput::saveInputs() {
 void SmileyInput::loadInputs() {
 
 	//Load code for each input
-	inputs[INPUT_LEFT].code = hge->Ini_GetInt("Controls","left",HGEK_LEFT);
-	inputs[INPUT_RIGHT].code = hge->Ini_GetInt("Controls","right",HGEK_RIGHT);
-	inputs[INPUT_UP].code = hge->Ini_GetInt("Controls","up",HGEK_UP);
-	inputs[INPUT_DOWN].code = hge->Ini_GetInt("Controls","down",HGEK_DOWN);
-	inputs[INPUT_ATTACK].code = hge->Ini_GetInt("Controls","attack",HGEK_SHIFT);
-	inputs[INPUT_ABILITY].code = hge->Ini_GetInt("Controls","ability",HGEK_CTRL);
-	inputs[INPUT_AIM].code = hge->Ini_GetInt("Controls","aim",HGEK_ALT);
-	inputs[INPUT_NEXT_ABILITY].code = hge->Ini_GetInt("Controls","next",HGEK_X);
-	inputs[INPUT_PREVIOUS_ABILITY].code = hge->Ini_GetInt("Controls","previous",HGEK_Z);
-	inputs[INPUT_PAUSE].code = hge->Ini_GetInt("Controls","exit",HGEK_ESCAPE);
+	inputs[INPUT_LEFT].code = smh->hge->Ini_GetInt("Controls","left",HGEK_LEFT);
+	inputs[INPUT_RIGHT].code = smh->hge->Ini_GetInt("Controls","right",HGEK_RIGHT);
+	inputs[INPUT_UP].code = smh->hge->Ini_GetInt("Controls","up",HGEK_UP);
+	inputs[INPUT_DOWN].code = smh->hge->Ini_GetInt("Controls","down",HGEK_DOWN);
+	inputs[INPUT_ATTACK].code = smh->hge->Ini_GetInt("Controls","attack",HGEK_SHIFT);
+	inputs[INPUT_ABILITY].code = smh->hge->Ini_GetInt("Controls","ability",HGEK_CTRL);
+	inputs[INPUT_AIM].code = smh->hge->Ini_GetInt("Controls","aim",HGEK_ALT);
+	inputs[INPUT_NEXT_ABILITY].code = smh->hge->Ini_GetInt("Controls","next",HGEK_X);
+	inputs[INPUT_PREVIOUS_ABILITY].code = smh->hge->Ini_GetInt("Controls","previous",HGEK_Z);
+	inputs[INPUT_PAUSE].code = smh->hge->Ini_GetInt("Controls","exit",HGEK_ESCAPE);
 
 	//Load device for each input
-	inputs[INPUT_LEFT].device = hge->Ini_GetInt("Controls","leftDevice", DEVICE_KEYBOARD);
-	inputs[INPUT_RIGHT].device = hge->Ini_GetInt("Controls","rightDevice",DEVICE_KEYBOARD);
-	inputs[INPUT_UP].device = hge->Ini_GetInt("Controls","upDevice",DEVICE_KEYBOARD);
-	inputs[INPUT_DOWN].device = hge->Ini_GetInt("Controls","downDevice",DEVICE_KEYBOARD);
-	inputs[INPUT_ATTACK].device = hge->Ini_GetInt("Controls","attackDevice",DEVICE_KEYBOARD);
-	inputs[INPUT_ABILITY].device = hge->Ini_GetInt("Controls","abilityDevice",DEVICE_KEYBOARD);
-	inputs[INPUT_AIM].device = hge->Ini_GetInt("Controls","aimDevice",DEVICE_KEYBOARD);
-	inputs[INPUT_NEXT_ABILITY].device = hge->Ini_GetInt("Controls","nextDevice",DEVICE_KEYBOARD);
-	inputs[INPUT_PREVIOUS_ABILITY].device = hge->Ini_GetInt("Controls","previousDevice",DEVICE_KEYBOARD);
-	inputs[INPUT_PAUSE].device = hge->Ini_GetInt("Controls","exitDevice",DEVICE_KEYBOARD);
+	inputs[INPUT_LEFT].device = smh->hge->Ini_GetInt("Controls","leftDevice", DEVICE_KEYBOARD);
+	inputs[INPUT_RIGHT].device = smh->hge->Ini_GetInt("Controls","rightDevice",DEVICE_KEYBOARD);
+	inputs[INPUT_UP].device = smh->hge->Ini_GetInt("Controls","upDevice",DEVICE_KEYBOARD);
+	inputs[INPUT_DOWN].device = smh->hge->Ini_GetInt("Controls","downDevice",DEVICE_KEYBOARD);
+	inputs[INPUT_ATTACK].device = smh->hge->Ini_GetInt("Controls","attackDevice",DEVICE_KEYBOARD);
+	inputs[INPUT_ABILITY].device = smh->hge->Ini_GetInt("Controls","abilityDevice",DEVICE_KEYBOARD);
+	inputs[INPUT_AIM].device = smh->hge->Ini_GetInt("Controls","aimDevice",DEVICE_KEYBOARD);
+	inputs[INPUT_NEXT_ABILITY].device = smh->hge->Ini_GetInt("Controls","nextDevice",DEVICE_KEYBOARD);
+	inputs[INPUT_PREVIOUS_ABILITY].device = smh->hge->Ini_GetInt("Controls","previousDevice",DEVICE_KEYBOARD);
+	inputs[INPUT_PAUSE].device = smh->hge->Ini_GetInt("Controls","exitDevice",DEVICE_KEYBOARD);
 
 }
 
@@ -461,14 +459,14 @@ std::string SmileyInput::getInputDescription(int whichInput) {
 
 	//Keyboard - use HGE function
 	} else if (inputs[whichInput].device == DEVICE_KEYBOARD) {
-		description = hge->Input_GetKeyName(inputs[whichInput].code);
+		description = smh->hge->Input_GetKeyName(inputs[whichInput].code);
 		return description;
 
 	//One of the gamepad buttons
 	} else if (inputs[whichInput].code > 0) {
 		
 		description = "GP Button ";
-		description += intToString(inputs[whichInput].code);
+		description += Util::intToString(inputs[whichInput].code);
 		return description;
 
 	//Joypad
@@ -510,7 +508,7 @@ void SmileyInput::listenForNewInput(int whichInput) {
 
 	//Check keyboard buttons
 	for (int i = 0; i < 255; i++) {
-		if (hge->Input_KeyDown(i) && i != HGEK_LBUTTON && i != HGEK_ESCAPE) {
+		if (smh->hge->Input_KeyDown(i) && i != HGEK_LBUTTON && i != HGEK_ESCAPE) {
 			//Save new control
 			inputs[whichInput].code = i;
 			inputs[whichInput].device = DEVICE_KEYBOARD;

@@ -1,5 +1,4 @@
 #include "SmileyEngine.h"
-#include "smiley.h"
 #include "EnemyFramework.h"
 #include "ProjectileManager.h"
 #include "player.h"
@@ -13,14 +12,10 @@
 #include "LoadEffectManager.h"
 #include "Worm.h"
 #include "SmileletManager.h"
-
 #include "hgefont.h"
 #include "hgeresource.h"
 
-//Objects
-extern HGE *hge;
 extern SMH *smh;
-
 
 #define SLIME_ACCEL 500.0			//Player acceleration on slime
 #define PLAYER_ACCEL 5000.0		//Normal player acceleration
@@ -238,8 +233,8 @@ void Player::doMove(float dt) {
 	//Make sure the player isn't going to move perfectly diagonally
 	//from one grid square to another. If they will, move the player a little
 	//to push them off the diagonal.
-	int nextX = getGridX(x + xDist);
-	int nextY = getGridY(y + yDist);
+	int nextX = Util::getGridX(x + xDist);
+	int nextY = Util::getGridY(y + yDist);
 	bool useGayFix = (smh->environment->collision[nextX][nextY] == ICE || smh->environment->collision[nextX][nextY] == SPRING_PAD);
 	if (useGayFix && nextX > gridX && nextY > gridY) {
 		//Up Right
@@ -324,8 +319,8 @@ void Player::draw(float dt) {
 	//Draw Smiley's shadow
 	if ((hoveringYOffset > 0.0f || drowning || springing || (onWater && waterWalk) || (!falling && smh->environment->collisionAt(x,y+15) != WALK_LAVA))) {
 		if (drowning) smh->resources->GetSprite("playerShadow")->SetColor(ARGB(255,255,255,255));
-		smh->resources->GetSprite("playerShadow")->RenderEx(getScreenX(x),
-			getScreenY(y) + (22.0*shrinkScale),0.0f,scale*shrinkScale,scale*shrinkScale);
+		smh->resources->GetSprite("playerShadow")->RenderEx(smh->getScreenX(x),
+			smh->getScreenY(y) + (22.0*shrinkScale),0.0f,scale*shrinkScale,scale*shrinkScale);
 		if (drowning) smh->resources->GetSprite("playerShadow")->SetColor(ARGB(50,255,255,255));
 	}
 
@@ -351,7 +346,7 @@ void Player::draw(float dt) {
 
 	//Draw an ice block over smiley if he is frozen;
 	if (frozen) {
-		smh->resources->GetSprite("iceBlock")->Render(getScreenX(x),getScreenY(y));
+		smh->resources->GetSprite("iceBlock")->Render(smh->getScreenX(x),smh->getScreenY(y));
 	}
 
 	if (stunned) {
@@ -359,8 +354,8 @@ void Player::draw(float dt) {
 		for (int n = 0; n < 5; n++) {
 			angle = ((float(n)+1.0)/5.0) * 2.0*PI + smh->getGameTime();
 			smh->resources->GetSprite("stunStar")->Render(
-				getScreenX(x + cos(angle)*25), 
-				getScreenY(y + sin(angle)*7) - 30.0);
+				smh->getScreenX(x + cos(angle)*25), 
+				smh->getScreenY(y + sin(angle)*7) - 30.0);
 		}
 	}
 
@@ -372,7 +367,7 @@ void Player::draw(float dt) {
 
 	//Draw reflection shield
 	if (reflectionShieldActive) {
-		smh->resources->GetSprite("reflectionShield")->Render(getScreenX(x), getScreenY(y));
+		smh->resources->GetSprite("reflectionShield")->Render(smh->getScreenX(x), smh->getScreenY(y));
 	}
 
 	//Debug mode
@@ -444,27 +439,29 @@ void Player::drawGUI(float dt) {
 	std::string moneyString;
 	if (smh->saveManager->money < 10) { 
 		moneyString = "0";
-		moneyString += intToString(smh->saveManager->money);
+		moneyString += Util::intToString(smh->saveManager->money);
 	} else {
-		moneyString = intToString(smh->saveManager->money);
+		moneyString = Util::intToString(smh->saveManager->money);
 	}
 	smh->resources->GetSprite("moneyIcon")->Render(30, 120);
 	smh->resources->GetFont("curlz")->SetColor(ARGB(255,255,255,255));
 	smh->resources->GetFont("curlz")->printf(85,125,HGETEXT_LEFT, moneyString.c_str());
 
 	//Draw keys
-	int keyXOffset = 763.0;
-	int keyYOffset = 724.0;
-	for (int i = 0; i < 4; i++) {
+	if (Util::getKeyIndex(smh->saveManager->currentArea) > 0) {
+		int keyXOffset = 763.0;
+		int keyYOffset = 724.0;
+		for (int i = 0; i < 4; i++) {
 
-		//Draw key icon
-		smh->resources->GetAnimation("keyIcons")->SetFrame(i);
-		smh->resources->GetAnimation("keyIcons")->Render(keyXOffset + 60.0*i, keyYOffset);
-		
-		//Draw num keys
-		smh->resources->GetFont("numberFnt")->printf(keyXOffset + 60.0*i + 45.0, keyYOffset + 5.0, 
-			HGETEXT_LEFT, "%d", smh->saveManager->numKeys[getKeyIndex(smh->saveManager->currentArea)][i]);
-	}		
+			//Draw key icon
+			smh->resources->GetAnimation("keyIcons")->SetFrame(i);
+			smh->resources->GetAnimation("keyIcons")->Render(keyXOffset + 60.0*i, keyYOffset);
+			
+			//Draw num keys
+			smh->resources->GetFont("numberFnt")->printf(keyXOffset + 60.0*i + 45.0, keyYOffset + 5.0, 
+				HGETEXT_LEFT, "%d", smh->saveManager->numKeys[Util::getKeyIndex(smh->saveManager->currentArea)][i]);
+		}	
+	}
 
 	//Show whether or not Smiley is invincible
 	if (invincible) {
@@ -534,7 +531,7 @@ void Player::doAbility(float dt) {
 			mana >= smh->gameData->getAbilityInfo(HOVER).manaCost*dt);
 	
 	//For debug purposes H will always hover
-	if (hge->Input_GetKeyState(HGEK_H)) isHovering = true;
+	if (smh->hge->Input_GetKeyState(HGEK_H)) isHovering = true;
 
 	//Start hovering
 	if (!wasHovering && isHovering) {
@@ -593,13 +590,13 @@ void Player::doAbility(float dt) {
 		//Start breathing fire
 		if (!breathingFire) {
 			breathingFire = true;
-			fireBreathParticle->FireAt(getScreenX(x) + mouthXOffset[facing], getScreenY(y) + mouthYOffset[facing]);
+			fireBreathParticle->FireAt(smh->getScreenX(x) + mouthXOffset[facing], smh->getScreenY(y) + mouthYOffset[facing]);
 			smh->soundManager->playAbilityEffect("snd_fireBreath", true);
 		}
 
 		//Update breath direction and location
 		fireBreathParticle->info.fDirection = angles[facing];
-		fireBreathParticle->MoveTo(getScreenX(x) + mouthXOffset[facing], getScreenY(y) + mouthYOffset[facing], false);
+		fireBreathParticle->MoveTo(smh->getScreenX(x) + mouthXOffset[facing], smh->getScreenY(y) + mouthYOffset[facing], false);
 
 	//Stop breathing fire
 	} else if (breathingFire) {
@@ -622,7 +619,7 @@ void Player::doAbility(float dt) {
 		//Start using cane
 		if (selectedAbility == CANE && !usingCane && mana >= smh->gameData->getAbilityInfo(CANE).manaCost) {
 			usingCane = true;
-			smh->resources->GetParticleSystem("smileysCane")->FireAt(getScreenX(x), getScreenY(y));
+			smh->resources->GetParticleSystem("smileysCane")->FireAt(smh->getScreenX(x), smh->getScreenY(y));
 			timeStartedCane = smh->getGameTime();
 		}
 
@@ -635,7 +632,7 @@ void Player::doAbility(float dt) {
 		//Start Ice Breath
 		if (selectedAbility == ICE_BREATH && smh->timePassedSince(startedIceBreath) > 1.5 && mana >= smh->gameData->getAbilityInfo(ICE_BREATH).manaCost) {
 			mana -= smh->gameData->getAbilityInfo(ICE_BREATH).manaCost;
-			hge->Effect_Play(smh->resources->GetEffect("snd_iceBreath"));
+			smh->soundManager->playSound("snd_iceBreath");
 			startedIceBreath = smh->getGameTime();
 			iceBreathParticle->Fire();
 			breathingIce = true;
@@ -665,8 +662,8 @@ void Player::doAbility(float dt) {
 	if (breathingIce) {
 
 		iceBreathParticle->info.fDirection = angles[facing];
-		iceBreathParticle->FireAt(getScreenX(x) + mouthXOffset[facing], getScreenY(y) + mouthYOffset[facing]);
-		iceBreathParticle->MoveTo(getScreenX(x) + mouthXOffset[facing], getScreenY(y) + mouthYOffset[facing], false);
+		iceBreathParticle->FireAt(smh->getScreenX(x) + mouthXOffset[facing], smh->getScreenY(y) + mouthYOffset[facing]);
+		iceBreathParticle->MoveTo(smh->getScreenX(x) + mouthXOffset[facing], smh->getScreenY(y) + mouthYOffset[facing], false);
 		iceBreathParticle->Update(dt);
 
 		if (smh->timePassedSince(startedIceBreath) > 0.6) {
@@ -781,7 +778,7 @@ void Player::doWarps() {
 
 		//Play the warp sound effect for non-invisible warps
 		if (smh->environment->variable[gridX][gridY] != 990) {
-			hge->Effect_Play(smh->resources->GetEffect("snd_warp"));
+			smh->soundManager->playSound("snd_warp");
 		}
 
 		//Find the other warp square
@@ -827,7 +824,7 @@ void Player::doSprings(float dt) {
 		
 		bool superSpring = (collision == SUPER_SPRING);
 		
-		hge->Effect_Play(smh->resources->GetEffect("snd_spring"));
+		smh->soundManager->playSound("snd_spring");
 		springing = true;
 		startedSpringing = smh->getGameTime();
 		dx = dy = 0;
@@ -933,8 +930,8 @@ void Player::doFalling(float dt) {
 		falling = true;
 		startedFalling = smh->getGameTime();
 		//Set dx and dy to fall towards the center of the pit
-		float angle = getAngleBetween(x,y,(baseX/64)*64+32,(baseY/64)*64+32);
-		float dist = distance(baseGridX*64+32, baseGridY*64+32, x, y);
+		float angle = Util::getAngleBetween(x,y,(baseX/64)*64+32,(baseY/64)*64+32);
+		float dist = Util::distance(baseGridX*64+32, baseGridY*64+32, x, y);
 		fallingDx = (dist/2.0) * cos(angle);
 		fallingDy = (dist/2.0) * sin(angle);
 	}
@@ -1102,11 +1099,11 @@ void Player::doItems() {
 
 	//Keys
 	if (item == RED_KEY || item == GREEN_KEY || item == BLUE_KEY || item == YELLOW_KEY) {
-		hge->Effect_Play(smh->resources->GetEffect("snd_key"));
-		smh->saveManager->numKeys[getKeyIndex(item)][item-1]++;
+		smh->soundManager->playSound("snd_key");
+		smh->saveManager->numKeys[Util::getKeyIndex(item)][item-1]++;
 	//Gems
 	} else if (item == SMALL_GEM || item == MEDIUM_GEM || item == LARGE_GEM) {
-		hge->Effect_Play(smh->resources->GetEffect("snd_gem"));
+		smh->soundManager->playSound("snd_gem");
 		smh->saveManager->numGems[smh->saveManager->currentArea][item-SMALL_GEM]++;
 		if (item == SMALL_GEM) smh->saveManager->money += 1;
 		else if (item == MEDIUM_GEM) smh->saveManager->money += 3;
@@ -1173,7 +1170,7 @@ void Player::doWater() {
 		//Start drowning
 		if (!drowning && smh->environment->isDeepWaterAt(baseGridX,baseGridY) && !waterWalk) {
 			drowning = true;
-			hge->Effect_Play(smh->resources->GetEffect("snd_drowning"));
+			smh->soundManager->playSound("snd_drowning");
 			startedDrowning = smh->getGameTime();
 		}	
 		//Stop drowning
@@ -1183,7 +1180,7 @@ void Player::doWater() {
 			dealDamage(0.5, true);
 
 			//If smiley was placed onto an up cylinder, toggle its switch
-			if (isCylinderUp(smh->environment->collision[gridX][gridY])) {
+			if (Util::isCylinderUp(smh->environment->collision[gridX][gridY])) {
 				smh->environment->toggleSwitch(smh->environment->ids[gridX][gridY]);
 			}
 
@@ -1397,9 +1394,9 @@ void Player::dealDamageAndKnockback(float damage, bool makesFlash, bool alwaysKn
 		}
 	}
 
-	float knockbackAngle = getAngleBetween(knockbackerX, knockbackerY, x, y);
-	float knockbackX = (knockbackDist - distance(knockbackerX, knockbackerY, x, y)) * cos(knockbackAngle);
-	float knockbackY = (knockbackDist - distance(knockbackerX, knockbackerY, x, y)) * sin(knockbackAngle);
+	float knockbackAngle = Util::getAngleBetween(knockbackerX, knockbackerY, x, y);
+	float knockbackX = (knockbackDist - Util::distance(knockbackerX, knockbackerY, x, y)) * cos(knockbackAngle);
+	float knockbackY = (knockbackDist - Util::distance(knockbackerX, knockbackerY, x, y)) * sin(knockbackAngle);
 
 	//Do knockback if not sliding etc.
 	if (knockbackDist > 0 && (!flashing || alwaysKnockback) && !iceSliding && !sliding && !springing && !falling) {

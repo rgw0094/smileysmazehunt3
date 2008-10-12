@@ -1,5 +1,4 @@
 #include "SmileyEngine.h"
-#include "smiley.h"
 #include "environment.h"
 #include "lootmanager.h"
 #include "ProjectileManager.h"
@@ -27,8 +26,6 @@
 #include <iostream>
 #include <fstream>
 
-//Objects
-extern HGE *hge;
 extern SMH *smh;
 
 /**
@@ -89,13 +86,13 @@ Environment::Environment() {
 	smh->resources->GetAnimation("fountainRipple")->Play();
 	smh->resources->GetAnimation("savePoint")->Play();
 
-	hge->System_Log("Creating Environment.SpecialTileManager");
+	smh->log("Creating Environment.SpecialTileManager");
 	specialTileManager = new SpecialTileManager();
-	hge->System_Log("Creating Environment.EvilWallManager");
+	smh->log("Creating Environment.EvilWallManager");
 	evilWallManager = new EvilWallManager();
-	hge->System_Log("Creating Environment.TapestryManager");
+	smh->log("Creating Environment.TapestryManager");
 	tapestryManager = new TapestryManager();
-	hge->System_Log("Creating Environment.SmileletManager");
+	smh->log("Creating Environment.SmileletManager");
 	smileletManager = new SmileletManager();
 
 	collisionBox = new hgeRect();
@@ -445,7 +442,7 @@ void Environment::loadArea(int id, int from) {
 			}
 
 			//Flip switches that have been marked as changed
-			if (isCylinderSwitchLeft(collision[i][j]) || isCylinderSwitchRight(collision[i][j])) {
+			if (Util::isCylinderSwitchLeft(collision[i][j]) || Util::isCylinderSwitchRight(collision[i][j])) {
 				if (smh->saveManager->isTileChanged( i, j)) {
 					int id = ids[i][j];
 					//Scan the area for cylinders linked to this switch
@@ -454,10 +451,10 @@ void Environment::loadArea(int id, int from) {
 							//If this id matches the switch we flipped
 							if (ids[k][l] == id) {
 								//Switch up cylinders down
-								if (isCylinderUp(collision[k][l])) {
+								if (Util::isCylinderUp(collision[k][l])) {
 									collision[k][l] -= 16;
 								//Switch down cylinders up
-								} else if (isCylinderDown(collision[k][l])) {
+								} else if (Util::isCylinderDown(collision[k][l])) {
 									collision[k][l] += 16;
 								}
 							}
@@ -533,7 +530,7 @@ void Environment::draw(float dt) {
 					theCollision != FLAME &&
 					theCollision != FIRE_DESTROY &&
 					theCollision != FOUNTAIN && 
-					!(isWarp(theCollision) && 
+					!(Util::isWarp(theCollision) && 
 					variable[i + xGridOffset][j + yGridOffset] == 990)) {
 					
 					//Water animation
@@ -665,11 +662,11 @@ void Environment::draw(float dt) {
 
 		//Column lines
 		for (int i = 0; i <= screenWidth; i++) {
-			hge->Gfx_RenderLine(i*64.0 - xOffset,0,i*64.0 - xOffset,SCREEN_HEIGHT);
+			smh->hge->Gfx_RenderLine(i*64.0 - xOffset,0,i*64.0 - xOffset,SCREEN_HEIGHT);
 		}
 		//Row lines
 		for (int i = 0; i <= screenHeight; i++) {
-			hge->Gfx_RenderLine(0,i*64.0 - yOffset,SCREEN_WIDTH,i*64.0 - yOffset);
+			smh->hge->Gfx_RenderLine(0,i*64.0 - yOffset,SCREEN_WIDTH,i*64.0 - yOffset);
 		}
 		//Draw Terrain collision boxes
 		for (int i = smh->player->gridX - 2; i <= smh->player->gridX + 2; i++) {
@@ -709,8 +706,8 @@ void Environment::drawAfterSmiley(float dt) {
 		for (int gridX = xGridOffset-1; gridX <= xGridOffset + screenWidth + 1; gridX++) {
 			if (isInBounds(gridX, gridY)) {
 
-				drawX = getScreenX(gridX * 64);
-				drawY = getScreenY(gridY * 64);
+				drawX = smh->getScreenX(gridX * 64);
+				drawY = smh->getScreenY(gridY * 64);
 
 				//Marked as draw after smiley or the thing above Smiley is marked as draw
 				//above Smiley and Smiley is behind it. That way you can't walk behind a tree
@@ -784,7 +781,7 @@ void Environment::update(float dt) {
 		for (int j = 0; j < areaHeight; j++) {
 
 			//Update timed switches
-			if (isCylinderSwitchLeft(collision[i][j]) || isCylinderSwitchRight(collision[i][j])) {
+			if (Util::isCylinderSwitchLeft(collision[i][j]) || Util::isCylinderSwitchRight(collision[i][j])) {
 				if (variable[i][j] != -1 && activated[i][j] + (float)variable[i][j] < smh->getGameTime() && 
 						smh->saveManager->isTileChanged( i, j)) {
 					
@@ -830,21 +827,21 @@ void Environment::unlockDoor(int gridX, int gridY) {
 	bool doorOpened = false;
 
 	//If this square is a door and the player has the key, unlock it
-	if (collision[gridX][gridY] == RED_KEYHOLE && smh->saveManager->numKeys[getKeyIndex(smh->saveManager->currentArea)][RED_KEY-1] > 0) {
+	if (collision[gridX][gridY] == RED_KEYHOLE && smh->saveManager->numKeys[Util::getKeyIndex(smh->saveManager->currentArea)][RED_KEY-1] > 0) {
 		collision[gridX][gridY] = WALKABLE;
-		smh->saveManager->numKeys[getKeyIndex(smh->saveManager->currentArea)][RED_KEY-1]--;
+		smh->saveManager->numKeys[Util::getKeyIndex(smh->saveManager->currentArea)][RED_KEY-1]--;
 		doorOpened = true;
-	} else  if (collision[gridX][gridY] == BLUE_KEYHOLE && smh->saveManager->numKeys[getKeyIndex(smh->saveManager->currentArea)][BLUE_KEY-1] > 0) {
+	} else  if (collision[gridX][gridY] == BLUE_KEYHOLE && smh->saveManager->numKeys[Util::getKeyIndex(smh->saveManager->currentArea)][BLUE_KEY-1] > 0) {
 		collision[gridX][gridY] = WALKABLE;
-		smh->saveManager->numKeys[getKeyIndex(smh->saveManager->currentArea)][BLUE_KEY-1]--;
+		smh->saveManager->numKeys[Util::getKeyIndex(smh->saveManager->currentArea)][BLUE_KEY-1]--;
 		doorOpened = true;
-	} else if (collision[gridX][gridY] == YELLOW_KEYHOLE && smh->saveManager->numKeys[getKeyIndex(smh->saveManager->currentArea)][YELLOW_KEY-1] > 0) {
+	} else if (collision[gridX][gridY] == YELLOW_KEYHOLE && smh->saveManager->numKeys[Util::getKeyIndex(smh->saveManager->currentArea)][YELLOW_KEY-1] > 0) {
 		collision[gridX][gridY] = WALKABLE;
-		smh->saveManager->numKeys[getKeyIndex(smh->saveManager->currentArea)][YELLOW_KEY-1]--;
+		smh->saveManager->numKeys[Util::getKeyIndex(smh->saveManager->currentArea)][YELLOW_KEY-1]--;
 		doorOpened = true;
-	} else if (collision[gridX][gridY] == GREEN_KEYHOLE && smh->saveManager->numKeys[getKeyIndex(smh->saveManager->currentArea)][GREEN_KEY-1] > 0) {
+	} else if (collision[gridX][gridY] == GREEN_KEYHOLE && smh->saveManager->numKeys[Util::getKeyIndex(smh->saveManager->currentArea)][GREEN_KEY-1] > 0) {
 		collision[gridX][gridY] = WALKABLE;
-		smh->saveManager->numKeys[getKeyIndex(smh->saveManager->currentArea)][GREEN_KEY-1]--;
+		smh->saveManager->numKeys[Util::getKeyIndex(smh->saveManager->currentArea)][GREEN_KEY-1]--;
 		doorOpened = true;
 	}
 
@@ -937,15 +934,10 @@ bool Environment::toggleSwitches(Tongue *tongue) {
  */
 void Environment::toggleSwitch(int id) {
 
-	if (id < 0) {
-		hge->System_Log("ERROR: Environment.toggleSwitch() Attemping to toggle switch %d", id);
-		return;
-	}
-
 	//Scan the area to find the switch then toggle it
 	for (int i = 0; i < areaWidth; i++) {
 		for (int j = 0; j < areaHeight; j++) {
-			if (ids[i][j] == id && (isCylinderSwitchLeft(collision[i][j]) || isCylinderSwitchLeft(collision[i][j]))) {
+			if (ids[i][j] == id && (Util::isCylinderSwitchLeft(collision[i][j]) || Util::isCylinderSwitchLeft(collision[i][j]))) {
 				toggleSwitchAt(i,j,true);
 				return;
 			}
@@ -967,7 +959,7 @@ bool Environment::toggleSwitchAt(int gridX, int gridY, bool playSoundFarAway) {
 	bool hasSwitch = false;
 		
 	//Flip cylinder switch
-	if (isCylinderSwitchLeft(collision[gridX][gridY]) || isCylinderSwitchRight(collision[gridX][gridY])) {
+	if (Util::isCylinderSwitchLeft(collision[gridX][gridY]) || Util::isCylinderSwitchRight(collision[gridX][gridY])) {
 
 		flipCylinderSwitch(gridX, gridY);
 		hasSwitch = true;
@@ -1033,8 +1025,8 @@ bool Environment::toggleSwitchAt(int gridX, int gridY, bool playSoundFarAway) {
 	}
 
 	//Play switch sound if the switch is somewhat close to Smiley
-	if (hasSwitch && (playSoundFarAway || distance(gridX, gridY, smh->player->gridX, smh->player->gridY) < 15)) {
-		hge->Effect_Play(smh->resources->GetEffect("snd_switch"));
+	if (hasSwitch && (playSoundFarAway || Util::distance(gridX, gridY, smh->player->gridX, smh->player->gridY) < 15)) {
+		smh->soundManager->playSound("snd_switch");
 	}
 
 	return hasSwitch;
@@ -1048,7 +1040,7 @@ void Environment::flipCylinderSwitch(int gridX, int gridY) {
 	activated[gridX][gridY] = smh->getGameTime();
 
 	//Flip switch in collision layer
-	if (isCylinderSwitchLeft(collision[gridX][gridY])) {
+	if (Util::isCylinderSwitchLeft(collision[gridX][gridY])) {
 		collision[gridX][gridY] += 16;
 		smh->resources->GetAnimation("silverSwitch")->SetMode(HGEANIM_FWD);
 		smh->resources->GetAnimation("brownSwitch")->SetMode(HGEANIM_FWD);
@@ -1057,7 +1049,7 @@ void Environment::flipCylinderSwitch(int gridX, int gridY) {
 		smh->resources->GetAnimation("yellowSwitch")->SetMode(HGEANIM_FWD);
 		smh->resources->GetAnimation("whiteSwitch")->SetMode(HGEANIM_FWD);
 		smh->saveManager->change(gridX, gridY);
-	} else if (isCylinderSwitchRight(collision[gridX][gridY])) {
+	} else if (Util::isCylinderSwitchRight(collision[gridX][gridY])) {
 		collision[gridX][gridY] -= 16;
 		smh->resources->GetAnimation("silverSwitch")->SetMode(HGEANIM_REV);
 		smh->resources->GetAnimation("brownSwitch")->SetMode(HGEANIM_REV);
@@ -1093,10 +1085,10 @@ void Environment::switchCylinders(int switchID) {
 	for (int i = 0; i < areaWidth; i++) {
 		for (int j = 0; j < areaHeight; j++) {
 			if (ids[i][j] == switchID) {
-				if (isCylinderUp(collision[i][j])) {
+				if (Util::isCylinderUp(collision[i][j])) {
 					collision[i][j] -= 16;
 					activated[i][j] = smh->getGameTime();
-				} else if (isCylinderDown(collision[i][j])) {
+				} else if (Util::isCylinderDown(collision[i][j])) {
 					collision[i][j] += 16;
 					activated[i][j] = smh->getGameTime();
 				}
@@ -1144,7 +1136,7 @@ int Environment::gatherItem(int x, int y) {
 bool Environment::validPath(int x1, int y1, int x2, int y2, int radius, bool canPath[256]) {
 	
 	//First get the velocities of the path
-	float angle = getAngleBetween(x1,y1,x2,y2);
+	float angle = Util::getAngleBetween(x1,y1,x2,y2);
 	float dx = 10.0*cos(angle);
 	float dy = 10.0*sin(angle);
 
@@ -1236,9 +1228,9 @@ bool Environment::playerCollision(int x, int y, float dt) {
 				float angle;
 
 				//Top left corner
-				if (distance(collisionBox->x1, collisionBox->y1, x, y) < smh->player->radius) {
+				if (Util::distance(collisionBox->x1, collisionBox->y1, x, y) < smh->player->radius) {
 					if (smh->player->isOnIce()) return true;
-					angle = getAngleBetween(collisionBox->x1, collisionBox->y1, smh->player->x, smh->player->y);
+					angle = Util::getAngleBetween(collisionBox->x1, collisionBox->y1, smh->player->x, smh->player->y);
 					if (onlyDownPressed && smh->player->facing == DOWN && x < collisionBox->x1 && smh->player->canPass(collision[i-1][j]) && !hasSillyPad(i-1,j) && !onIce) {
 						angle -= 4.0 * PI * dt;
 					} else if (onlyRightPressed && smh->player->facing == RIGHT && y < collisionBox->y1 && smh->player->canPass(collision[i][j-1]) && !hasSillyPad(i,j-1) && !onIce) {
@@ -1250,9 +1242,9 @@ bool Environment::playerCollision(int x, int y, float dt) {
 				}
 
 				//Top right corner
-				if (distance(collisionBox->x2, collisionBox->y1, x, y) < smh->player->radius) {
+				if (Util::distance(collisionBox->x2, collisionBox->y1, x, y) < smh->player->radius) {
 					if (smh->player->isOnIce()) return true;
-					angle = getAngleBetween(collisionBox->x2, collisionBox->y1, smh->player->x, smh->player->y);
+					angle = Util::getAngleBetween(collisionBox->x2, collisionBox->y1, smh->player->x, smh->player->y);
 					if (onlyDownPressed && smh->player->facing == DOWN && x > collisionBox->x2 && smh->player->canPass(collision[i+1][j]) && !hasSillyPad(i+1,j) && !onIce) {
 						angle += 4.0 * PI * dt;
 					} else if (onlyLeftPressed && smh->player->facing == LEFT && y < collisionBox->y1 && smh->player->canPass(collision[i][j-1]) && !hasSillyPad(i,j-1) && !onIce) {
@@ -1264,9 +1256,9 @@ bool Environment::playerCollision(int x, int y, float dt) {
 				}
 
 				//Bottom right corner
-				if (distance(collisionBox->x2, collisionBox->y2, x, y) < smh->player->radius) {
+				if (Util::distance(collisionBox->x2, collisionBox->y2, x, y) < smh->player->radius) {
 					if (smh->player->isOnIce()) return true;
-					angle = getAngleBetween(collisionBox->x2, collisionBox->y2, smh->player->x, smh->player->y);
+					angle = Util::getAngleBetween(collisionBox->x2, collisionBox->y2, smh->player->x, smh->player->y);
 					if (onlyUpPressed && smh->player->facing == UP && x > collisionBox->x2 && smh->player->canPass(collision[i+1][j]) && !hasSillyPad(i+1,j) && !onIce) {
 						angle -= 4.0 * PI * dt;
 					} else if (onlyLeftPressed && smh->player->facing == LEFT && y > collisionBox->y2 && smh->player->canPass(collision[i][j+1]) && !hasSillyPad(i,j+1) && !onIce) {
@@ -1278,9 +1270,9 @@ bool Environment::playerCollision(int x, int y, float dt) {
 				}
 				
 				//Bottom left corner
-				if (distance(collisionBox->x1, collisionBox->y2, x, y) < smh->player->radius) {
+				if (Util::distance(collisionBox->x1, collisionBox->y2, x, y) < smh->player->radius) {
 					if (smh->player->isOnIce()) return true;
-					angle = getAngleBetween(collisionBox->x1, collisionBox->y2, smh->player->x, smh->player->y);
+					angle = Util::getAngleBetween(collisionBox->x1, collisionBox->y2, smh->player->x, smh->player->y);
 					if (onlyUpPressed && smh->player->facing == UP && x < collisionBox->x1 && smh->player->canPass(collision[i-1][j]) && !hasSillyPad(i-1,j) && !onIce) {
 						angle += 4.0 * PI * dt;
 					} else if (onlyRightPressed && smh->player->facing == RIGHT && y > collisionBox->y2 && smh->player->canPass(collision[i][j+1]) && !hasSillyPad(i, j+1) && !onIce) {
@@ -1463,7 +1455,7 @@ bool Environment::playerOnCylinder(int x, int y) {
 	//Make sure the player isn't on top of any of the cylinders that will pop up
 	for (int k = smh->player->gridX-1; k <= smh->player->gridX+1; k++) {
 		for (int l = smh->player->gridY-1; l <= smh->player->gridY+1; l++) {
-			if (ids[k][l] == ids[x][y] && isCylinderDown(collision[k][l])) {
+			if (ids[k][l] == ids[x][y] && Util::isCylinderDown(collision[k][l])) {
 				collisionBox->SetRadius(k*64+32,l*64+32,32);
 				//Player collides with a cylinder
 				if (smh->player->collisionCircle->testBox(collisionBox)) {
@@ -1520,7 +1512,7 @@ void Environment::placeSillyPad(int gridX, int gridY) {
 	specialTileManager->addSillyPad(gridX, gridY);
 
 	//Play sound effect
-	hge->Effect_Play(smh->resources->GetEffect("snd_sillyPad"));
+	smh->soundManager->playSound("snd_sillyPad");
 }
 
 bool Environment::hasSillyPad(int gridX, int gridY) {

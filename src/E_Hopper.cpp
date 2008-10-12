@@ -1,6 +1,5 @@
 #include "SmileyEngine.h"
 #include "EnemyFramework.h"
-#include "smiley.h"
 #include "environment.h"
 #include "player.h"
 #include "Tongue.h"
@@ -9,7 +8,6 @@
 #include "hgeanim.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 /** 
  * Constructor
@@ -48,14 +46,14 @@ void E_Hopper::update(float dt) {
 
 		if (chases) {
 			//Hop towards Smiley
-			hopAngle = getAngleBetween(x, y, smh->player->x, smh->player->y);
+			hopAngle = Util::getAngleBetween(x, y, smh->player->x, smh->player->y);
 			hopDistance = distanceFromPlayer();
 			if (hopDistance > 300.0) hopDistance = 300.0;
 		} else {
 			//Find a random angle and distance to hop that won't result in running into a wall
 			do {
-				hopDistance = hge->Random_Float(125.0, 300.0);
-				hopAngle = hge->Random_Float(0.0, 2.0*PI);
+				hopDistance = smh->randomFloat(125.0, 300.0);
+				hopAngle = smh->randomFloat(0.0, 2.0*PI);
 			} while(!smh->environment->validPath(x, y, x + hopDistance * cos(hopAngle), y + hopDistance * sin(hopAngle), 28, canPass));
 		}
 

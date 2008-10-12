@@ -1,9 +1,7 @@
 #include "SmileyEngine.h"
 #include "EvilWall.h"
 #include "Player.h"
-#include "Smiley.h"
 #include "CollisionCircle.h"
-
 #include "hgeresource.h"
 #include "hgesprite.h"
 
@@ -21,7 +19,6 @@
 #define EVIL_WALL_HALF_SCREEN_WIDTH 10
 #define EVIL_WALL_HALF_SCREEN_HEIGHT 8
 
-extern HGE *hge;
 extern SMH *smh;
 
 EvilWall::EvilWall() {
@@ -182,8 +179,8 @@ void EvilWall::drawEvilWall() {
 					break;
 			};
 			
-			if (!edge) smh->resources->GetSprite("evilWall")->Render(getScreenX(gridX*64+xDraw),getScreenY(gridY*64+yDraw));
-			if (edge) smh->resources->GetSprite("evilWallSpike")->RenderEx(getScreenX(gridX*64+xDraw),getScreenY(gridY*64+yDraw),angle);
+			if (!edge) smh->resources->GetSprite("evilWall")->Render(smh->getScreenX(gridX*64+xDraw),smh->getScreenY(gridY*64+yDraw));
+			if (edge) smh->resources->GetSprite("evilWallSpike")->RenderEx(smh->getScreenX(gridX*64+xDraw),smh->getScreenY(gridY*64+yDraw),angle);
 			
    		}
 	}

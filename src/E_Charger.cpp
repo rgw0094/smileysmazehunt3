@@ -1,15 +1,12 @@
 #include "SmileyEngine.h"
 #include "EnemyFramework.h"
-#include "hge.h"
 #include "hgeresource.h"
 #include "ProjectileManager.h"
 #include "player.h"
 #include "environment.h"
-#include "smiley.h"
 #include "tongue.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 //Charge constants
 #define CHARGE_RADIUS 350
@@ -105,7 +102,7 @@ void E_Charger::update(float dt) {
 		//Start charging after a short pause.
 		if (smh->timePassedSince(timeStartedCharging) > 0.5) {
 			timeStartedCharging = smh->getGameTime();
-			chargeAngle = getAngleBetween(x, y, smh->player->x, smh->player->y);
+			chargeAngle = Util::getAngleBetween(x, y, smh->player->x, smh->player->y);
 
 			//Update state
 			chargeState = CHARGE_STATE_CHARGING;

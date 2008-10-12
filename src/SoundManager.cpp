@@ -1,9 +1,7 @@
 #include "SmileyEngine.h"
-#include "hge.h"
 #include "hgeresource.h"
 
 extern SMH *smh;
-extern HGE *hge;
 
 /** 
  * Constructor
@@ -11,8 +9,8 @@ extern HGE *hge;
 SoundManager::SoundManager() {
 
 	//Music volume starts at what it was when app was closed last
-	setMusicVolume(hge->Ini_GetInt("Options", "musicVolume", 100));
-	setSoundVolume(hge->Ini_GetInt("Options", "soundVolume", 100));
+	setMusicVolume(smh->hge->Ini_GetInt("Options", "musicVolume", 100));
+	setSoundVolume(smh->hge->Ini_GetInt("Options", "soundVolume", 100));
 
 }
 
@@ -30,12 +28,12 @@ SoundManager::~SoundManager() {
 void SoundManager::playMusic(char *music) {
 
 	previousMusic = currentMusic;
-	previousMusicPosition = hge->Channel_GetPos(musicChannel);
+	previousMusicPosition = smh->hge->Channel_GetPos(musicChannel);
 	currentMusic = music;
 
-	hge->Channel_Stop(musicChannel);
-	hge->Music_SetPos(smh->resources->GetMusic(music),0,0);
-	musicChannel = hge->Music_Play(smh->resources->GetMusic(music),true,musicVolume);
+	smh->hge->Channel_Stop(musicChannel);
+	smh->hge->Music_SetPos(smh->resources->GetMusic(music),0,0);
+	musicChannel = smh->hge->Music_Play(smh->resources->GetMusic(music),true,musicVolume);
 
 }
 
@@ -43,14 +41,14 @@ void SoundManager::playMusic(char *music) {
  * Stops the music immediately.
  */
 void SoundManager::stopMusic() {
-	hge->Channel_Stop(musicChannel);
+	smh->hge->Channel_Stop(musicChannel);
 }
 
 /**
  * Stops the music by fading out.
  */
 void SoundManager::fadeOutMusic() {
-	hge->Channel_SlideTo(musicChannel,3.0f,0,-101,-1.0f);
+	smh->hge->Channel_SlideTo(musicChannel,3.0f,0,-101,-1.0f);
 }
 
 /** 
@@ -60,8 +58,8 @@ void SoundManager::setMusicVolume(int newVolume) {
 	musicVolume = newVolume;
 	if (musicVolume < 0) musicVolume = 0;
 	if (musicVolume > 100) musicVolume = 100;
-	hge->System_SetState(HGE_MUSVOLUME, musicVolume);
-	hge->Ini_SetInt("Options", "musicVolume", musicVolume);
+	smh->hge->System_SetState(HGE_MUSVOLUME, musicVolume);
+	smh->hge->Ini_SetInt("Options", "musicVolume", musicVolume);
 }
 
 /**
@@ -71,35 +69,39 @@ void SoundManager::setSoundVolume(int newVolume) {
 	soundVolume = newVolume;
 	if (soundVolume < 0) soundVolume = 0;
 	if (soundVolume > 100) soundVolume = 100;
-	hge->System_SetState(HGE_FXVOLUME, soundVolume);
-	hge->Ini_SetInt("Options", "soundVolume", soundVolume);
+	smh->hge->System_SetState(HGE_FXVOLUME, soundVolume);
+	smh->hge->Ini_SetInt("Options", "soundVolume", soundVolume);
 }
 
 /**
  * Returns to the last song played at the position where it stopped.
  */
 void SoundManager::playPreviousMusic() {
-	hge->Channel_Stop(musicChannel);
-	musicChannel = hge->Music_Play(smh->resources->GetMusic(previousMusic.c_str()),true,musicVolume);
-	hge->Channel_SetPos(musicChannel, previousMusicPosition);
+	smh->hge->Channel_Stop(musicChannel);
+	musicChannel = smh->hge->Music_Play(smh->resources->GetMusic(previousMusic.c_str()),true,musicVolume);
+	smh->hge->Channel_SetPos(musicChannel, previousMusicPosition);
 	currentMusic = previousMusic;
 }
 
 void SoundManager::playEnvironmentEffect(char *effect, bool loop) {
-	environmentChannel = hge->Effect_PlayEx(smh->resources->GetEffect(effect),100,0,1.0f,loop);
+	environmentChannel = smh->hge->Effect_PlayEx(smh->resources->GetEffect(effect),100,0,1.0f,loop);
 }
 
 void SoundManager::stopEnvironmentChannel() {
-	hge->Channel_Stop(environmentChannel);
+	smh->hge->Channel_Stop(environmentChannel);
 }
 	
 
 void SoundManager::playAbilityEffect(char *effect, bool loop) {
-	abilityChannel = hge->Effect_PlayEx(smh->resources->GetEffect(effect),100,0,1.0f,loop);
+	abilityChannel = smh->hge->Effect_PlayEx(smh->resources->GetEffect(effect),100,0,1.0f,loop);
+}
+
+void SoundManager::playSound(const char* sound) {
+	smh->hge->Effect_Play(smh->resources->GetEffect(sound));
 }
 
 void SoundManager::stopAbilityChannel() {
-	hge->Channel_Stop(abilityChannel);
+	smh->hge->Channel_Stop(abilityChannel);
 }
 
 int SoundManager::getMusicVolume() {

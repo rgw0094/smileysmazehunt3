@@ -3,7 +3,6 @@
 #include "Player.h"
 #include "EnemyFramework.h"
 #include "hgeanim.h"
-#include "smiley.h"
 #include "hgeresource.h"
 #include "ProjectileManager.h"
 
@@ -47,7 +46,7 @@ void E_Ranged::update(float dt) {
 			if (!frozen && !stunned && !smh->player->isInvisible()) {		
 				shotYet = true;
 				smh->projectileManager->addProjectile(x, y, projectileSpeed, 
-					getAngleBetween(x, y, smh->player->x, smh->player->y), 
+					Util::getAngleBetween(x, y, smh->player->x, smh->player->y), 
 					projectileDamage, true, rangedType, true);
 			}
 		}
