@@ -357,10 +357,10 @@ void SaveManager::save() {
 	nextCharToWrite = 0;
 	outputString += nextCharToWrite;
 
-	outputString += "\n";
+	outputString += "\n";*/
 
 	//Write the string to the save file
-	outputFile.write(outputString.c_str(), outputString.length());*/
+	outputFile.write(outputString.c_str(), outputString.length());
 
 	//Close the file!
 	outputFile.close();
