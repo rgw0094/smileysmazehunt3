@@ -38,7 +38,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	hge->System_SetState(HGE_RENDERFUNC, RenderFunc);
 	hge->System_SetState(HGE_EXITFUNC, ExitFunc);
 	hge->System_SetState(HGE_TITLE, "Smiley's Maze Hunt");
-	hge->System_SetState(HGE_WINDOWED, true);
+	//hge->System_SetState(HGE_WINDOWED, true);
 	hge->System_SetState(HGE_SCREENWIDTH, SCREEN_WIDTH);
 	hge->System_SetState(HGE_SCREENHEIGHT, SCREEN_HEIGHT);
 	hge->System_SetState(HGE_SCREENBPP, 32);
