@@ -231,7 +231,7 @@ void SaveManager::load(int fileNumber) {
 	//Tutorial Man
 	inFile.read(buffer, 1);
 	tutorialManCompleted = atoi(buffer) == 1;
-
+/**
 	//Load exploration data
 	twoBools nextTwoBools;
 	unsigned char nextChar;
@@ -255,7 +255,7 @@ void SaveManager::load(int fileNumber) {
 				}			
 			}
 		}
-	}
+	}*/
 
 	timeFileLoaded = smh->getRealTime();
 
@@ -332,6 +332,7 @@ void SaveManager::save() {
 	outputString += Util::intToString(tutorialManCompleted ? 1 : 0);
 
 	//Exploration data
+	/**
 	unsigned char nextCharToWrite;
 	outputString += "\n\n";
 	for (int i = 0; i < NUM_AREAS; i++) {
@@ -359,7 +360,7 @@ void SaveManager::save() {
 	outputString += "\n";
 
 	//Write the string to the save file
-	outputFile.write(outputString.c_str(), outputString.length());
+	outputFile.write(outputString.c_str(), outputString.length());*/
 
 	//Close the file!
 	outputFile.close();
