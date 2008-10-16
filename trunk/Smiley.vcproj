@@ -106,11 +106,141 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Source Files"
-			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
+			Name="Resources"
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
+			<File
+				RelativePath=".\src\resource.h">
+			</File>
+			<File
+				RelativePath=".\src\resource1.h">
+			</File>
+			<File
+				RelativePath=".\Smiley.rc">
+			</File>
+		</Filter>
+		<Filter
+			Name="Engine"
+			Filter="">
 			<Filter
-				Name="Enemy Framework"
+				Name="Source"
+				Filter="">
+				<File
+					RelativePath=".\src\AreaChanger.cpp">
+				</File>
+				<File
+					RelativePath=".\src\BitManager.cpp">
+				</File>
+				<File
+					RelativePath=".\src\ChangeManager.cpp">
+				</File>
+				<File
+					RelativePath=".\src\GameData.cpp">
+				</File>
+				<File
+					RelativePath=".\src\Input.cpp">
+				</File>
+				<File
+					RelativePath=".\src\main.cpp">
+				</File>
+				<File
+					RelativePath=".\src\SaveManager.cpp">
+				</File>
+				<File
+					RelativePath=".\src\SMH.cpp">
+				</File>
+				<File
+					RelativePath=".\src\SoundManager.cpp">
+				</File>
+			</Filter>
+			<Filter
+				Name="Header"
+				Filter="">
+				<File
+					RelativePath=".\src\BitManager.h">
+				</File>
+				<File
+					RelativePath=".\src\ChangeManager.h">
+				</File>
+				<File
+					RelativePath=".\src\SmileyEngine.h">
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="Bosses"
+			Filter="">
+			<Filter
+				Name="Source"
+				Filter="">
+				<File
+					RelativePath=".\src\BossManager.cpp">
+				</File>
+				<File
+					RelativePath=".\src\CandyBoss.cpp">
+				</File>
+				<File
+					RelativePath=".\src\DesertBoss.cpp">
+				</File>
+				<File
+					RelativePath=".\src\DespairBoss.cpp">
+				</File>
+				<File
+					RelativePath=".\src\fireboss.cpp">
+				</File>
+				<File
+					RelativePath=".\src\fireboss2.cpp">
+				</File>
+				<File
+					RelativePath=".\src\ForestBoss.cpp">
+				</File>
+				<File
+					RelativePath=".\src\MushroomBoss.cpp">
+				</File>
+				<File
+					RelativePath=".\src\SnowBoss.cpp">
+				</File>
+			</Filter>
+			<Filter
+				Name="Header"
+				Filter="">
+				<File
+					RelativePath=".\src\boss.h">
+				</File>
+				<File
+					RelativePath=".\src\CandyBoss.h">
+				</File>
+				<File
+					RelativePath=".\src\DesertBoss.h">
+				</File>
+				<File
+					RelativePath=".\src\DespairBoss.h">
+				</File>
+				<File
+					RelativePath=".\src\fireboss.h">
+				</File>
+				<File
+					RelativePath=".\src\fireboss2.h">
+				</File>
+				<File
+					RelativePath=".\src\ForestBoss.h">
+				</File>
+				<File
+					RelativePath=".\src\MushroomBoss.h">
+				</File>
+				<File
+					RelativePath=".\src\SnowBoss.h">
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="Enemy Framework"
+			Filter="">
+			<File
+				RelativePath=".\src\EnemyFramework.h">
+			</File>
+			<Filter
+				Name="Source"
 				Filter="">
 				<File
 					RelativePath=".\src\BaseEnemy.cpp">
@@ -186,8 +316,110 @@
 					</File>
 				</Filter>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="Player"
+			Filter="">
+			<File
+				RelativePath=".\src\player.h">
+			</File>
 			<Filter
-				Name="Game Objects"
+				Name="Source"
+				Filter="">
+				<File
+					RelativePath=".\src\player.cpp">
+				</File>
+				<File
+					RelativePath=".\src\Tongue.cpp">
+				</File>
+				<File
+					RelativePath=".\src\Worm.cpp">
+					<FileConfiguration
+						Name="Debug|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+					</FileConfiguration>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="Environment"
+			Filter="">
+			<Filter
+				Name="Source"
+				Filter="">
+				<File
+					RelativePath=".\src\environment.cpp">
+				</File>
+				<File
+					RelativePath=".\src\EvilWall.cpp">
+				</File>
+				<File
+					RelativePath=".\src\EvilWallManager.cpp">
+				</File>
+				<File
+					RelativePath=".\src\FenwarManager.cpp">
+				</File>
+				<File
+					RelativePath=".\src\Fountain.cpp">
+				</File>
+				<File
+					RelativePath=".\src\SmileletManager.cpp">
+				</File>
+				<File
+					RelativePath=".\src\SpecialTileManager.cpp">
+				</File>
+				<File
+					RelativePath=".\src\TapestryManager.cpp">
+				</File>
+				<File
+					RelativePath=".\src\TutorialMan.cpp">
+				</File>
+			</Filter>
+			<Filter
+				Name="Header"
+				Filter="">
+				<File
+					RelativePath=".\src\environment.h">
+				</File>
+				<File
+					RelativePath=".\src\EvilWall.h">
+				</File>
+				<File
+					RelativePath=".\src\EvilWallManager.h">
+				</File>
+				<File
+					RelativePath=".\src\FenwarManager.h">
+				</File>
+				<File
+					RelativePath=".\src\Fountain.h">
+				</File>
+				<File
+					RelativePath=".\src\SmileletManager.h">
+				</File>
+				<File
+					RelativePath=".\src\SpecialTileManager.h">
+				</File>
+				<File
+					RelativePath=".\src\TapestryManager.h">
+				</File>
+				<File
+					RelativePath=".\src\TutorialMan.h">
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="Game Objects"
+			Filter="">
+			<Filter
+				Name="Source"
 				Filter="">
 				<File
 					RelativePath=".\src\collisioncircle.cpp">
@@ -207,236 +439,9 @@
 				<File
 					RelativePath=".\src\weaponparticle.cpp">
 				</File>
-				<Filter
-					Name="Environment"
-					Filter="">
-					<File
-						RelativePath=".\src\environment.cpp">
-					</File>
-					<File
-						RelativePath=".\src\EvilWall.cpp">
-					</File>
-					<File
-						RelativePath=".\src\EvilWallManager.cpp">
-					</File>
-					<File
-						RelativePath=".\src\FenwarManager.cpp">
-					</File>
-					<File
-						RelativePath=".\src\Fountain.cpp">
-					</File>
-					<File
-						RelativePath=".\src\SmileletManager.cpp">
-					</File>
-					<File
-						RelativePath=".\src\SpecialTileManager.cpp">
-					</File>
-					<File
-						RelativePath=".\src\TapestryManager.cpp">
-					</File>
-					<File
-						RelativePath=".\src\TutorialMan.cpp">
-					</File>
-				</Filter>
-				<Filter
-					Name="Player"
-					Filter="">
-					<File
-						RelativePath=".\src\player.cpp">
-					</File>
-					<File
-						RelativePath=".\src\Tongue.cpp">
-					</File>
-					<File
-						RelativePath=".\src\Worm.cpp">
-						<FileConfiguration
-							Name="Debug|Win32">
-							<Tool
-								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32">
-							<Tool
-								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-						</FileConfiguration>
-					</File>
-				</Filter>
 			</Filter>
 			<Filter
-				Name="System"
-				Filter="">
-				<File
-					RelativePath=".\src\AreaChanger.cpp">
-				</File>
-				<File
-					RelativePath=".\src\BitManager.cpp">
-				</File>
-				<File
-					RelativePath=".\src\ChangeManager.cpp">
-				</File>
-				<File
-					RelativePath=".\src\GameData.cpp">
-				</File>
-				<File
-					RelativePath=".\src\Input.cpp">
-				</File>
-				<File
-					RelativePath=".\src\main.cpp">
-				</File>
-				<File
-					RelativePath=".\src\SaveManager.cpp">
-				</File>
-				<File
-					RelativePath=".\src\SMH.cpp">
-				</File>
-				<File
-					RelativePath=".\src\SoundManager.cpp">
-				</File>
-			</Filter>
-			<Filter
-				Name="Bosses"
-				Filter="">
-				<File
-					RelativePath=".\src\BossManager.cpp">
-				</File>
-				<File
-					RelativePath=".\src\CandyBoss.cpp">
-				</File>
-				<File
-					RelativePath=".\src\DesertBoss.cpp">
-				</File>
-				<File
-					RelativePath=".\src\DespairBoss.cpp">
-				</File>
-				<File
-					RelativePath=".\src\fireboss.cpp">
-				</File>
-				<File
-					RelativePath=".\src\fireboss2.cpp">
-				</File>
-				<File
-					RelativePath=".\src\ForestBoss.cpp">
-				</File>
-				<File
-					RelativePath=".\src\MushroomBoss.cpp">
-				</File>
-				<File
-					RelativePath=".\src\SnowBoss.cpp">
-				</File>
-			</Filter>
-			<Filter
-				Name="UI"
-				Filter="">
-				<File
-					RelativePath=".\src\Button.cpp">
-				</File>
-				<File
-					RelativePath=".\src\Slider.cpp">
-				</File>
-				<Filter
-					Name="Main Menu"
-					Filter="">
-					<File
-						RelativePath=".\src\CreditsScreen.cpp">
-					</File>
-					<File
-						RelativePath=".\src\DeathScreen.cpp">
-					</File>
-					<File
-						RelativePath=".\src\LoadingScreen.cpp">
-					</File>
-					<File
-						RelativePath=".\src\MainMenu.cpp">
-					</File>
-					<File
-						RelativePath=".\src\OptionsScreen.cpp">
-					</File>
-					<File
-						RelativePath=".\src\SelectFileScreen.cpp">
-					</File>
-					<File
-						RelativePath=".\src\TitleScreen.cpp">
-					</File>
-				</Filter>
-				<Filter
-					Name="Windows"
-					Filter="">
-					<File
-						RelativePath=".\src\inventory.cpp">
-					</File>
-					<File
-						RelativePath=".\src\map.cpp">
-					</File>
-					<File
-						RelativePath=".\src\minimenu.cpp">
-					</File>
-					<File
-						RelativePath=".\src\OptionsWindow.cpp">
-					</File>
-					<File
-						RelativePath=".\src\Shop.cpp">
-					</File>
-					<File
-						RelativePath=".\src\textbox.cpp">
-					</File>
-					<File
-						RelativePath=".\src\WindowManager.cpp">
-					</File>
-				</Filter>
-			</Filter>
-		</Filter>
-		<Filter
-			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
-			<File
-				RelativePath=".\src\resource.h">
-			</File>
-			<File
-				RelativePath=".\src\resource1.h">
-			</File>
-			<Filter
-				Name="Bosses"
-				Filter="">
-				<File
-					RelativePath=".\src\boss.h">
-				</File>
-				<File
-					RelativePath=".\src\CandyBoss.h">
-				</File>
-				<File
-					RelativePath=".\src\DesertBoss.h">
-				</File>
-				<File
-					RelativePath=".\src\DespairBoss.h">
-				</File>
-				<File
-					RelativePath=".\src\fireboss.h">
-				</File>
-				<File
-					RelativePath=".\src\fireboss2.h">
-				</File>
-				<File
-					RelativePath=".\src\ForestBoss.h">
-				</File>
-				<File
-					RelativePath=".\src\MushroomBoss.h">
-				</File>
-				<File
-					RelativePath=".\src\SnowBoss.h">
-				</File>
-			</Filter>
-			<Filter
-				Name="Enemy Framework"
-				Filter="">
-				<File
-					RelativePath=".\src\EnemyFramework.h">
-				</File>
-			</Filter>
-			<Filter
-				Name="Game Objects"
+				Name="Header"
 				Filter="">
 				<File
 					RelativePath=".\src\collisioncircle.h">
@@ -456,60 +461,87 @@
 				<File
 					RelativePath=".\src\weaponparticle.h">
 				</File>
-				<Filter
-					Name="Environment"
-					Filter="">
-					<File
-						RelativePath=".\src\environment.h">
-					</File>
-					<File
-						RelativePath=".\src\EvilWall.h">
-					</File>
-					<File
-						RelativePath=".\src\EvilWallManager.h">
-					</File>
-					<File
-						RelativePath=".\src\FenwarManager.h">
-					</File>
-					<File
-						RelativePath=".\src\Fountain.h">
-					</File>
-					<File
-						RelativePath=".\src\SmileletManager.h">
-					</File>
-					<File
-						RelativePath=".\src\SpecialTileManager.h">
-					</File>
-					<File
-						RelativePath=".\src\TapestryManager.h">
-					</File>
-					<File
-						RelativePath=".\src\TutorialMan.h">
-					</File>
-				</Filter>
-				<Filter
-					Name="Player"
-					Filter="">
-					<File
-						RelativePath=".\src\player.h">
-					</File>
-				</Filter>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="Main Menu"
+			Filter="">
+			<File
+				RelativePath=".\src\MainMenu.h">
+			</File>
 			<Filter
-				Name="System"
+				Name="Source"
 				Filter="">
 				<File
-					RelativePath=".\src\BitManager.h">
+					RelativePath=".\src\CreditsScreen.cpp">
 				</File>
 				<File
-					RelativePath=".\src\ChangeManager.h">
+					RelativePath=".\src\DeathScreen.cpp">
 				</File>
 				<File
-					RelativePath=".\src\SmileyEngine.h">
+					RelativePath=".\src\LoadingScreen.cpp">
+				</File>
+				<File
+					RelativePath=".\src\MainMenu.cpp">
+				</File>
+				<File
+					RelativePath=".\src\OptionsScreen.cpp">
+				</File>
+				<File
+					RelativePath=".\src\SelectFileScreen.cpp">
+				</File>
+				<File
+					RelativePath=".\src\TitleScreen.cpp">
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="Window Framework"
+			Filter="">
+			<File
+				RelativePath=".\src\WindowFramework.h">
+			</File>
+			<Filter
+				Name="Source"
+				Filter="">
+				<File
+					RelativePath=".\src\inventory.cpp">
+				</File>
+				<File
+					RelativePath=".\src\map.cpp">
+				</File>
+				<File
+					RelativePath=".\src\minimenu.cpp">
+				</File>
+				<File
+					RelativePath=".\src\OptionsWindow.cpp">
+				</File>
+				<File
+					RelativePath=".\src\Shop.cpp">
+				</File>
+				<File
+					RelativePath=".\src\textbox.cpp">
+				</File>
+				<File
+					RelativePath=".\src\WindowManager.cpp">
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="UI Components"
+			Filter="">
+			<Filter
+				Name="Source"
+				Filter="">
+				<File
+					RelativePath=".\src\Button.cpp">
+				</File>
+				<File
+					RelativePath=".\src\Slider.cpp">
 				</File>
 			</Filter>
 			<Filter
-				Name="UI"
+				Name="Header"
 				Filter="">
 				<File
 					RelativePath=".\src\Button.h">
@@ -517,29 +549,7 @@
 				<File
 					RelativePath=".\src\Slider.h">
 				</File>
-				<Filter
-					Name="Main Menu"
-					Filter="">
-					<File
-						RelativePath=".\src\MainMenu.h">
-					</File>
-				</Filter>
-				<Filter
-					Name="Windows"
-					Filter="">
-					<File
-						RelativePath=".\src\WindowFramework.h">
-					</File>
-				</Filter>
 			</Filter>
-		</Filter>
-		<Filter
-			Name="Resource Files"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
-			<File
-				RelativePath=".\Smiley.rc">
-			</File>
 		</Filter>
 	</Files>
 	<Globals>
