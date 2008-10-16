@@ -110,10 +110,19 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
 			<File
+				RelativePath=".\Data\Enemies.dat">
+			</File>
+			<File
+				RelativePath=".\Data\GameText.dat">
+			</File>
+			<File
 				RelativePath=".\src\resource.h">
 			</File>
 			<File
 				RelativePath=".\src\resource1.h">
+			</File>
+			<File
+				RelativePath=".\Data\ResourceScript">
 			</File>
 			<File
 				RelativePath=".\Smiley.rc">
@@ -139,9 +148,6 @@
 				</File>
 				<File
 					RelativePath=".\src\Input.cpp">
-				</File>
-				<File
-					RelativePath=".\src\main.cpp">
 				</File>
 				<File
 					RelativePath=".\src\SaveManager.cpp">
@@ -464,38 +470,6 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="Main Menu"
-			Filter="">
-			<File
-				RelativePath=".\src\MainMenu.h">
-			</File>
-			<Filter
-				Name="Source"
-				Filter="">
-				<File
-					RelativePath=".\src\CreditsScreen.cpp">
-				</File>
-				<File
-					RelativePath=".\src\DeathScreen.cpp">
-				</File>
-				<File
-					RelativePath=".\src\LoadingScreen.cpp">
-				</File>
-				<File
-					RelativePath=".\src\MainMenu.cpp">
-				</File>
-				<File
-					RelativePath=".\src\OptionsScreen.cpp">
-				</File>
-				<File
-					RelativePath=".\src\SelectFileScreen.cpp">
-				</File>
-				<File
-					RelativePath=".\src\TitleScreen.cpp">
-				</File>
-			</Filter>
-		</Filter>
-		<Filter
 			Name="Window Framework"
 			Filter="">
 			<File
@@ -551,6 +525,41 @@
 				</File>
 			</Filter>
 		</Filter>
+		<Filter
+			Name="Main Menu"
+			Filter="">
+			<File
+				RelativePath=".\src\MainMenu.h">
+			</File>
+			<Filter
+				Name="Source"
+				Filter="">
+				<File
+					RelativePath=".\src\CreditsScreen.cpp">
+				</File>
+				<File
+					RelativePath=".\src\DeathScreen.cpp">
+				</File>
+				<File
+					RelativePath=".\src\LoadingScreen.cpp">
+				</File>
+				<File
+					RelativePath=".\src\MainMenu.cpp">
+				</File>
+				<File
+					RelativePath=".\src\OptionsScreen.cpp">
+				</File>
+				<File
+					RelativePath=".\src\SelectFileScreen.cpp">
+				</File>
+				<File
+					RelativePath=".\src\TitleScreen.cpp">
+				</File>
+			</Filter>
+		</Filter>
+		<File
+			RelativePath=".\src\main.cpp">
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
