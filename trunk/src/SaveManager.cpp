@@ -8,7 +8,6 @@
 #include "SmileyEngine.h"
 #include "Player.h"
 #include "Environment.h"
-#include "ChangeManager.h"
 #include "BitManager.h"
 #include "boss.h"
 

@@ -1,5 +1,4 @@
 #include "SmileyEngine.h"
-#include "ChangeManager.h"
 
 using namespace std;
 
