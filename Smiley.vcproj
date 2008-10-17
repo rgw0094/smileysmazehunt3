@@ -166,9 +166,6 @@
 					RelativePath=".\src\BitManager.h">
 				</File>
 				<File
-					RelativePath=".\src\ChangeManager.h">
-				</File>
-				<File
 					RelativePath=".\src\SmileyEngine.h">
 				</File>
 			</Filter>

@@ -11,7 +11,6 @@
 #include "EvilWallManager.h"
 #include "WeaponParticle.h"
 #include "TapestryManager.h"
-#include "ChangeManager.h"
 #include "EnemyFramework.h"
 #include "SmileletManager.h"
 #include "Fountain.h"

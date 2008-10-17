@@ -37,6 +37,7 @@ class SMH;
 class SmileyInput;
 class SaveManager;
 class SoundManager;
+class ChangeManager;
 
 //Constants
 #define PI 3.14159265357989232684
@@ -224,9 +225,16 @@ struct Point {
 	int x, y;
 };
 
-//--------------------------
-//------SMH
-//--------------------------
+//----------------------------------------------------------------
+//------------------SMH-------------------------------------------
+//----------------------------------------------------------------
+// This is the global game manager class. When an object wants to
+// access another object in the Smiley world it can do it through
+// this class. This also manages game state and provides useful
+// utility methods. The update and draw methods are called directly
+// by HGE, and are therefore the highest level of updating/drawing
+// logic.
+//----------------------------------------------------------------
 class SMH {
 
 public:
@@ -297,9 +305,9 @@ private:
 };
 
 //----------------------------------------------------------------
-//----------------------------------------------------------------
 //------------------INPUT-----------------------------------------
 //----------------------------------------------------------------
+// Manages player input and encapsulates shitty DirectInput code.
 //----------------------------------------------------------------
 #define SAFE_DELETE(p)  { if(p) { delete (p);     (p)=NULL; } }
 #define SAFE_RELEASE(p) { if(p) { (p)->Release(); (p)=NULL; } }
@@ -373,11 +381,10 @@ public:
 };
 
 //----------------------------------------------------------------
-//----------------------------------------------------------------
 //------------------DATA------------------------------------------
 //----------------------------------------------------------------
+// Provides a centralized location for retrieving all game data.
 //----------------------------------------------------------------
-
 /**
  * Stores info for each enemy id
  */ 
@@ -439,11 +446,12 @@ private:
 
 
 //----------------------------------------------------------------
-//----------------------------------------------------------------
 //------------------SAVE MANAGER----------------------------------
 //----------------------------------------------------------------
+// Manages saving and loading games. When a file is loaded, all of
+// its information is stored internally which is then retrieved or
+// changed during gameplay.
 //----------------------------------------------------------------
-
 struct SaveFile {
 	bool empty;
 	int timePlayed;
@@ -512,9 +520,10 @@ private:
 };
 
 //----------------------------------------------------------------
-//----------------------------------------------------------------
 //------------------SOUND MANAGER---------------------------------
 //----------------------------------------------------------------
+// Encapsulates all sound logic. This class should be used to 
+// play any sounds or music.
 //----------------------------------------------------------------
 class SoundManager {
 
@@ -553,11 +562,12 @@ private:
 };
 
 //----------------------------------------------------------------
-//----------------------------------------------------------------
 //------------------AREA CHANGER----------------------------------
 //----------------------------------------------------------------
+// This class is used to relocate Smiley to either a new area
+// or a new location within the same area. It will relocate Smiley
+// and display a loading effect.
 //----------------------------------------------------------------
-
 class AreaChanger {
 
 public:
@@ -587,14 +597,42 @@ private:
 };
 
 //----------------------------------------------------------------
+//------------------ CHANGE MANAGER ------------------------------
+//----------------------------------------------------------------
+// Used to manage all changes to the game world. Internally, it is
+// a linked list of objects representing a single square in one area
+// that has been changed from its original state. This only supports
+// boolean states at each square.
+//----------------------------------------------------------------
+struct Change {
+	int x,int y;
+	int area;
+};
+
+class ChangeManager {
+
+public:
+
+	ChangeManager();
+	~ChangeManager();
+
+	void change(int area, int x, int y);
+	bool isChanged(int area, int x, int y);
+	void reset();
+	std::string toString();
+
+private:
+	std::list<Change> theChanges;
+	void addChange(int area, int x, int y);
+	bool removeChange(int area, int x, int y);
+};
+
 //----------------------------------------------------------------
 //------------------ UTIL ----------------------------------------
 //----------------------------------------------------------------
+// This class is for static utility functions outside the scope of the
+// Smiley world, such as string conversions and shit.
 //----------------------------------------------------------------
-/**
- * This class is for static utility functions outside the scope of the
- * Smiley world, such as string conversions and shit.
- */
 class Util {
 
 public:
