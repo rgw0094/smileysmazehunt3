@@ -101,7 +101,7 @@ void Player::reset() {
 
 	//State variables
 	reflectionShieldActive = flashing = knockback = sliding = stunned =
-		onWarp = falling = breathingFire = inLava = inShallowWater = 
+		onWarp = falling = breathingFire = inLava = inShallowWater = healing =
 		waterWalk = onWater = drowning = shrinkActive = sprinting = isHovering = 
 		cloaked = springing = usingCane = iceSliding = frozen = 
 		inShrinkTunnel = false;
