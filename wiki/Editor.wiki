@@ -1,6 +1,7 @@
 = Special IDs to use in the editor =
 
 || *ID* || *Description* ||
+|| 989 || Fake pit (don't also put pit on collision layer)||
 || 990 || Draw item layer after smiley ||
 || 996 || Enemy group trigger ||
 || 997 || Enemy group block ||
