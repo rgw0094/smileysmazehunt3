@@ -17,7 +17,6 @@
 
 === Programming To Do ===
  * Make it so you can't walk diagonally between two arrow blocks. (expand gay fix in Player.move - right now its only for entering ice and springs)
- * Confirmation after saving
  * Lovecraftian Boss
  * King Tut
  * Bartli
@@ -37,6 +36,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Save Confirmation||10/17/08||RGW||
 ||Refactor like the dickens||10/12/08||RGW||
 ||Tutorial Man||9/28/08||RGW||
 ||Error Handling||8/28/08||RGW||
