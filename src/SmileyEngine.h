@@ -63,7 +63,8 @@ class ChangeManager;
 
 #define NUM_BOSSES 12
 
-//Hardcoded IDs
+//Special editor IDs
+#define FAKE_PIT_ID 991
 #define DRAW_AFTER_SMILEY 990
 
 //Abilities

@@ -706,7 +706,6 @@ void Environment::drawPits(float dt) {
 			if (isInBounds(i+xGridOffset, j+yGridOffset)) {	
 				
 				//Only draw if there is a pit in an adjacent square to improve performance.
-				//int theCollision = collision[i+xGridOffset][j+yGridOffset];
 				draw = false;
 				for (int x = i+xGridOffset-1; x <= i+xGridOffset+1; x++) {
 					for (int y = j+yGridOffset-1; y <= j+yGridOffset+1; y++) {
