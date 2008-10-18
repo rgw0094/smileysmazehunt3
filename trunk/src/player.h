@@ -32,6 +32,7 @@ public:
 	void dealDamageAndKnockback(float damage, bool makesFlash, bool alwaysKnockback, float knockbackDist, float knockbackerX, float knockbackerY);
 	void freeze(float duration);
 	void stun(float duration);
+	void heal(float amount);
 	void reset();
 
 	//Accessors/mutators
@@ -97,6 +98,7 @@ private:
 	void updateVelocities(float dt);
 	void doIce(float dt);
 	void doShrinkTunnels(float dt);
+	void updateSmileyColor(float dt);
 
 	Tongue *tongue;
 	Worm *worm;
@@ -134,6 +136,7 @@ private:
 	float freezeDuration;
 	float stunDuration;
 	float timeStartedStun;
+	float timeStartedHeal;
 
 	//State info
 	bool breathingFire;				//If using Fire Breath ability
@@ -159,7 +162,7 @@ private:
 	bool inShrinkTunnel;
 	bool frozen;
 	bool stunned;
-
+	bool healing;
 };
 
 //----------------------------------------------------------------
