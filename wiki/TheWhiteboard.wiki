@@ -24,6 +24,7 @@
  * Make not just switches but moving cylinders/mirrors/arrows make a noise.  That way if a far off switch is activating them they don't move silently.  We still need to have the sounds be dependent on how far Smiley is from them though since otherwise levels would just be constant switch-activation noises due to the turrets.
 
 === Bugs To Consider ===
+ * When increasing the music volume from 0 the music won't play until you go to a new zone (this is an HGE bug)
  * Sometimes after talking to an NPC they will walk away facing the wrong direction.
  * Bouncing spikey enemies that I put to appear in line with each other in game sometimes are not in line when testing, making it a lot harder to get by them than planned.
  * When using fire on the shore of deep water, if you immediately (through the inventory) put on Jesus' Sandals and walk on the water the flame breath will continue to be used long enough to hit ice blocks that should be out of reach.
