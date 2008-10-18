@@ -33,7 +33,7 @@ void SMH::init() {
 	log("-------------------------------------");
 
 	log("Creating ResourceManager");
-	resources = new hgeResourceManager("Data/resources.res");
+	resources = new hgeResourceManager("Data/ResourceScript");
 	hge->Resource_AttachPack("Data/Sounds.zip");
 	hge->Resource_AttachPack("Data/Fonts.zip");
 	hge->Resource_AttachPack("Data/GameData.zip");
@@ -180,6 +180,7 @@ void SMH::drawGame() {
 		shadeScreen(darkness);
 		areaChanger->draw(dt);
 		player->drawGUI(dt);
+		saveManager->drawSaveConfirmation(dt);
 		windowManager->draw(dt);
 	}
 

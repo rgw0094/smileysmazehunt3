@@ -97,7 +97,7 @@ bool MiniMenu::update(float dt) {
 					smh->saveManager->saveFileInfo();
 					return false;
 				case MINIMENU_SAVE:
-					smh->saveManager->save();
+					smh->saveManager->save(true);
 					return false;
 				case MINIMENU_OPTIONS:
 					smh->windowManager->openWindow(new OptionsWindow());
