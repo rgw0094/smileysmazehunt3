@@ -495,9 +495,11 @@ void Environment::loadArea(int id, int from) {
 
 
 /**
- * Draws the environment
+ * Draws the environment. This code isn't too great!
  */
 void Environment::draw(float dt) {
+
+	drawPits(dt);
 
 	//Loop through each tile to draw shit
 	for (int j = -1; j <= screenHeight + 1; j++) {
@@ -508,17 +510,21 @@ void Environment::draw(float dt) {
 
 			if (isInBounds(i+xGridOffset, j+yGridOffset)) {	
 
-				//Terrain
 				int theTerrain = terrain[i+xGridOffset][j+yGridOffset];
+				int theCollision = collision[i+xGridOffset][j+yGridOffset];
+				int theItem = item[i+xGridOffset][j+yGridOffset];
+
+				//Terrain
 				if (theTerrain > 0 && theTerrain < 256) {
 					smh->resources->GetAnimation("mainLayer")->SetFrame(theTerrain);
 					smh->resources->GetAnimation("mainLayer")->Render(drawX,drawY);
-				} else {
+				} else if (theCollision != PIT) {
+					//Draw a black square over blank tiles unless there is a pit here. We don't want
+					//to draw anything over pits because of the parallax layer underneath
 					smh->resources->GetSprite("blackScreen")->RenderStretch(drawX, drawY, drawX+64, drawY+64);
 				}
 
 				//Collision
-				int theCollision = collision[i+xGridOffset][j+yGridOffset];
 				if (theCollision != WALKABLE && theCollision != UNWALKABLE && 
 					theCollision != ENEMY_NO_WALK && theCollision != PLAYER_START && 
 					theCollision != DIZZY_MUSHROOM_1 && theCollision != DIZZY_MUSHROOM_2 &&
@@ -624,7 +630,6 @@ void Environment::draw(float dt) {
 				}
 
 				//Items
-				int theItem = item[i+xGridOffset][j+yGridOffset];
 				if (theItem != NONE && ids[i+xGridOffset][j+yGridOffset] != DRAW_AFTER_SMILEY) {
 					if (theItem == ENEMYGROUP_BLOCKGRAPHIC) {
 						//If this is an enemy block, draw it with the enemy group's
@@ -688,6 +693,33 @@ void Environment::draw(float dt) {
 	smileletManager->drawAfterSmiley();
 	specialTileManager->draw(dt);
 	if (tutorialMan) tutorialMan->draw(dt);
+
+}
+
+void Environment::drawPits(float dt) {
+
+	bool draw;
+
+	//Loop through each tile to draw the parallax layer
+	for (int j = -1; j <= screenHeight + 1; j++) {
+		for (int i = -1; i <= screenWidth + 1; i++) {
+			if (isInBounds(i+xGridOffset, j+yGridOffset)) {	
+				
+				//Only draw if there is a pit in an adjacent square to improve performance.
+				//int theCollision = collision[i+xGridOffset][j+yGridOffset];
+				draw = false;
+				for (int x = i+xGridOffset-1; x <= i+xGridOffset+1; x++) {
+					for (int y = j+yGridOffset-1; y <= j+yGridOffset+1; y++) {
+						if (collision[x][y] == PIT) draw = true;
+					}
+				}
+	
+				if (draw) {
+					smh->resources->GetSprite("parallaxPit")->Render(int(float(i)*64.0f - xOffset*.5), int(float(j)*64.0f - yOffset*.5));
+				}
+			}
+		}
+	}
 
 }
 
