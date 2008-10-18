@@ -156,6 +156,9 @@
 					RelativePath=".\src\SMH.cpp">
 				</File>
 				<File
+					RelativePath=".\src\SmileyFile.cpp">
+				</File>
+				<File
 					RelativePath=".\src\SoundManager.cpp">
 				</File>
 			</Filter>
