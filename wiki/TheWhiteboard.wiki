@@ -21,7 +21,6 @@
  * King Tut
  * Bartli
  * Calypso 2
- * Make the fountain heal you
  * Make not just switches but moving cylinders/mirrors/arrows make a noise.  That way if a far off switch is activating them they don't move silently.  We still need to have the sounds be dependent on how far Smiley is from them though since otherwise levels would just be constant switch-activation noises due to the turrets.
 
 === Bugs To Consider ===
@@ -35,6 +34,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fountain heals you||10/17/08||RGW||
 ||Parallax Pits||10/17/08||RGW||
 ||Save Confirmation||10/17/08||RGW||
 ||Refactor like the dickens||10/12/08||RGW||
