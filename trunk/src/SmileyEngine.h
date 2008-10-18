@@ -468,7 +468,8 @@ public:
 	//Methods
 	void resetCurrentData();
 	void load(int fileNumber);
-	void save();
+	void drawSaveConfirmation(float dt);
+	void save(bool showConfirmation);
 	void deleteFile(int fileNumber);
 	void saveTimePlayed();
 	void startNewGame(int fileNumber);
@@ -495,6 +496,7 @@ public:
 
 	//Save data
 	float timeFileLoaded;	//used to track playing time
+	float timeFileSaved;
 	int currentSave;
 	int currentArea;
 	bool tutorialManCompleted;
