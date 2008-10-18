@@ -18,7 +18,6 @@ class Fountain;
 class FenwarManager;
 class TutorialMan;
 
-
 class Environment {
 
 public:
@@ -29,6 +28,7 @@ public:
 	void draw(float dt);
 	void drawAfterSmiley(float dt);
 	void drawGrid(float dt);
+	void drawPits(float dt);
 	void update(float dt);
 	void loadArea(int id, int from);
 	int gatherItem(int x, int y);
