@@ -6,6 +6,7 @@
 extern SMH *smh;
 
 #define RES_FOUNTAIN 69
+#define FOUNTAIN_HEAL_RADIUS 300.0
 
 Fountain::Fountain(int gridX, int gridY) {
 	x = float(gridX) * 64.0 + 32.0;
@@ -45,4 +46,10 @@ void Fountain::draw(float dt) {
 
 void Fountain::update(float dt) {
 	smh->resources->GetParticleSystem("fountain")->Update(dt);
+
+	//Heal the player when they are close
+	if (Util::distance(x, y, smh->player->x, smh->player->y) < FOUNTAIN_HEAL_RADIUS) {
+		smh->player->heal(0.5);
+	}
+
 }

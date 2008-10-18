@@ -20,6 +20,7 @@ extern SMH *smh;
 
 #define SHRINK_TUNNEL_SPEED 500.0
 #define HOVER_DURATION 5.0
+#define HEAL_FLASH_DURATION 1.0
 #define SPRING_VELOCITY 210.0
 #define JESUS_SANDLE_TIME 1.65
 #define SPEED_BOOTS_MODIFIER 1.75
@@ -143,6 +144,7 @@ void Player::update(float dt) {
 	if (flashing && smh->timePassedSince(startedFlashing) > 1.5) flashing = false;
 	if (frozen && smh->timePassedSince(timeFrozen) > freezeDuration) frozen = false;
 	if (stunned && smh->timePassedSince(timeStartedStun) > stunDuration) stunned = false;
+	if (healing && smh->timePassedSince(timeStartedHeal) > HEAL_FLASH_DURATION) healing = false;
 
 	//Update shit if in Knockback state
 	if (!falling && !sliding && knockback && smh->timePassedSince(startedKnockBack) > KNOCKBACK_DURATION) {
@@ -177,6 +179,7 @@ void Player::update(float dt) {
 	doAbility(dt);
 	doItems();
 	doWater();
+	updateSmileyColor(dt);
 
 	//Die
 	if (health <= 0.0f) {
@@ -323,15 +326,17 @@ void Player::draw(float dt) {
 
 	//Draw Smiley
 	if (!drowning && (flashing && int(smh->getGameTime() * 100) % 20 > 15 || !flashing)) {
+
 		//Draw UP, UP_LEFT, UP_RIGHT tongues before smiley
 		if (facing == UP || facing == UP_LEFT || facing == UP_RIGHT) {
 			tongue->draw(dt);
 		}
+
 		//Draw Smiley sprite
 		smh->resources->GetAnimation("player")->SetFrame(facing);
-		smh->resources->GetAnimation("player")->SetColor(ARGB((cloaked) ? 75.0 : 255.0,255,255,255));
 		smh->resources->GetAnimation("player")->RenderEx(512.0, 384.0 - hoveringYOffset - springOffset, 
 			rotation, scale * hoverScale * shrinkScale, scale * hoverScale * shrinkScale);
+
 		//Draw every other tongue after smiley
 		if (facing != UP && facing != UP_LEFT && facing != UP_RIGHT) {
 			tongue->draw(dt);
@@ -1491,6 +1496,22 @@ void Player::doShrinkTunnels(float dt) {
 
 }
 
+/**
+ * Sets the smiley graphic to the correct color for smiley's current state.
+ */
+void Player::updateSmileyColor(float dt) {
+	float alpha = (cloaked) ? 75.0 : 255.0;
+	float r = 255.0;
+	float g = 255.0;
+	float b = 255.0;
+
+	if (healing) {
+		g = 255.0 - sin((smh->timePassedSince(timeStartedHeal)/HEAL_FLASH_DURATION) * PI) * 65.0;
+	}
+
+	smh->resources->GetAnimation("player")->SetColor(ARGB(alpha, r, g, b));
+}
+
 ///////////////////////////////////////////////////////////////
 /////////////////// MUTATORS AND ACCESSORS ////////////////////								
 ///////////////////////////////////////////////////////////////
@@ -1567,4 +1588,16 @@ void Player::setMana(float amount) {
 
 float Player::getMana() {
 	return mana;
+}
+
+/**
+ * Heals the player the specified amount and starts a "flash" effect to indicate
+ * that the player is getting healed.
+ */
+void Player::heal(float amount) {
+	if (!healing) {
+		setHealth(getHealth() + amount);
+		healing = true;
+		timeStartedHeal = smh->getGameTime();
+	}
 }
