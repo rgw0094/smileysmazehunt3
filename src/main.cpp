@@ -53,6 +53,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			smh = new SMH(hge);
 			smh->init();
 
+			int t = 255;
+			unsigned char test = t;
+
+			std::fstream nigger;
+			nigger.open("dickens", std::ios::binary);
+
+			nigger.write((const char*)test, 1);
+
+
+			nigger.close();
+			hge->System_Log("%d", test);
+
 			//Start HGE. When this function returns it means the program is exiting.
 			hge->System_Start();
 

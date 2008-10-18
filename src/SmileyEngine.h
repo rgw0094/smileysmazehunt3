@@ -7,6 +7,7 @@
 #include <string>
 #include <windows.h>
 #include <basetsd.h>
+#include <fstream>
 #include <dinput.h>
 #include "resource.h"
 #include <list>
@@ -519,6 +520,24 @@ private:
 	SaveFile files[4];
 	bool explored[NUM_AREAS][256][256];
 	bool killedBoss[12];
+
+};
+
+
+class SmileyFile {
+
+public:
+
+	SmileyFile();
+	~SmileyFile();
+
+	void open(std::string fileName);
+	void writeNumber(int number);
+	int readNumber();
+	void close();
+
+private:
+	std::fstream file;
 
 };
 
