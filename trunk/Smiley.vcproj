@@ -138,7 +138,7 @@
 					RelativePath=".\src\AreaChanger.cpp">
 				</File>
 				<File
-					RelativePath=".\src\BitManager.cpp">
+					RelativePath=".\src\BitStream.cpp">
 				</File>
 				<File
 					RelativePath=".\src\ChangeManager.cpp">
@@ -156,18 +156,12 @@
 					RelativePath=".\src\SMH.cpp">
 				</File>
 				<File
-					RelativePath=".\src\SmileyFile.cpp">
-				</File>
-				<File
 					RelativePath=".\src\SoundManager.cpp">
 				</File>
 			</Filter>
 			<Filter
 				Name="Header"
 				Filter="">
-				<File
-					RelativePath=".\src\BitManager.h">
-				</File>
 				<File
 					RelativePath=".\src\SmileyEngine.h">
 				</File>
