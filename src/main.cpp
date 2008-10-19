@@ -52,8 +52,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			smh = new SMH(hge);
 			smh->init();
 
-			BitStream::test();
-
 			//Start HGE. When this function returns it means the program is exiting.
 			hge->System_Start();
 

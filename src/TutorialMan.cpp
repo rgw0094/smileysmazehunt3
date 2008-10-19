@@ -30,7 +30,8 @@ void TutorialMan::update(float dt) {
 	if (state == FINISHED) return;
 
 	//Trigger the tutorial man when the player steps on his trigger square
-	if (state == INACTIVE && smh->player->gridX == triggerGridX && smh->player->gridY == triggerGridY) {
+	if (!smh->saveManager->tutorialManCompleted && state == INACTIVE && smh->player->gridX == triggerGridX 
+			&& smh->player->gridY == triggerGridY) {
 		state = FIRST_DIALOG;
 		smh->windowManager->openDialogueTextBox(-1, FIRST_TEXT);
 	}
