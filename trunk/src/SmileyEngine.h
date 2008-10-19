@@ -660,7 +660,6 @@ public:
 	bool isChanged(int area, int x, int y);
 	void reset();
 	void writeToStream(BitStream *stream);
-	std::string toString();
 
 private:
 	std::list<Change> theChanges;

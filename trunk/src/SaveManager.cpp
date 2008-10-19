@@ -124,31 +124,18 @@ void SaveManager::load(int fileNumber) {
 	currentSave = fileNumber;
 
 	//Select the specified save file
-	std::ifstream inFile;
-	char buffer[1];
-	char twoBuffer[2];
-	char threeBuffer[3];
-	char fiveBuffer[5];
-	if (currentSave == 0) inFile.open("Data/Save/file1.sav");
-	else if (currentSave == 1) inFile.open("Data/Save/file2.sav");
-	else if (currentSave == 2) inFile.open("Data/Save/file3.sav");
-	else if (currentSave == 3) inFile.open("Data/Save/file4.sav");
-
 	BitStream *input = new BitStream();
-	input->open("Data/Save/testsave.sav", FILE_READ);
+	if (currentSave == 0) input->open("Data/Save/save1.sav", FILE_READ);
+	else if (currentSave == 1) input->open("Data/Save/save2.sav", FILE_READ);
+	else if (currentSave == 2) input->open("Data/Save/save3.sav", FILE_READ);
+	else if (currentSave == 3) input->open("Data/Save/save4.sav", FILE_READ);
 	
 	//Load abilties
-	for (int i = 0; i < NUM_ABILITIES; i++) {
-		inFile.read(buffer,1);
-		//hasAbility[i] = (atoi(buffer) == 1);
-		hasAbility[i] = input->readBit();
-	}
+	for (int i = 0; i < NUM_ABILITIES; i++) hasAbility[i] = input->readBit();
 
 	//Load keys
 	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 4; j++) {
-			inFile.read(buffer,1);
-			//numKeys[i][j] = atoi(buffer);
 			numKeys[i][j] = input->readByte();
 		}
 	}
@@ -156,103 +143,55 @@ void SaveManager::load(int fileNumber) {
 	//Load gems
 	for (int i = 0; i < NUM_AREAS; i++) {
 		for (int j = 0; j < 3; j++) {
-			inFile.read(buffer,1);
-			//numGems[i][j] = atoi(buffer);
 			numGems[i][j] = input->readByte();
 		}
 	}
 
 	//Load money
-	inFile.read(threeBuffer,3);
-	//money = atoi(threeBuffer);
 	money = input->readByte();
 
 	//Load upgrades
 	for (int i = 0; i < 3; i++) {
-		inFile.read(twoBuffer,2);
-		//numUpgrades[i] = atoi(twoBuffer);
+		numUpgrades[i] = input->readByte();
 	}
 
 	//Load which bosses have been slain
 	for (int i = 0; i < NUM_BOSSES; i++) {
-		inFile.read(buffer,1);
-		killedBoss[i] = (atoi(buffer) == 0);		
+		killedBoss[i] = input->readBit();
 	}
 
 	//Load player zone and location
-	inFile.read(buffer,1);
-	currentArea = atoi(buffer);
-	inFile.read(threeBuffer,3);
-	playerGridX = atoi(threeBuffer);
-	inFile.read(threeBuffer,3);
-	playerGridY = atoi(threeBuffer);
+	currentArea = input->readByte();
+	playerGridX = input->readByte();
+	playerGridY = input->readByte();
 
 	//Health and mana
-	inFile.read(threeBuffer, 3);
-	playerHealth = float(atoi(threeBuffer)) / 4.0;
-	inFile.read(threeBuffer, 3);
-	playerMana = float(atoi(threeBuffer));
+	playerHealth = float(input->readByte()) / 4.0;
+	playerMana = float(input->readByte());
 
 	//Load changed shit
-	inFile.read(threeBuffer, 3);
-	int numChanges = atoi(threeBuffer);
-	int area, x, y;
-	for (int i = 0; i < numChanges; i++) {
-		
-		//Read area
-		inFile.read(twoBuffer, 2);
-		area = atoi(twoBuffer);
-
-		//Read x coordinate
-		inFile.read(threeBuffer, 3);
-		x = atoi(threeBuffer);
-
-		//Read y coordinate
-		inFile.read(threeBuffer, 3);
-		y = atoi(threeBuffer);
-
-		changeManager->change(area, x, y);
-
+	for (int i = 0; i < input->readByte(); i++) {
+		changeManager->change(input->readByte(), input->readByte(), input->readByte());
 	}
 
 	//Load Stats
-	inFile.read(fiveBuffer, 5);
-	numTongueLicks = atoi(fiveBuffer);
-	inFile.read(fiveBuffer, 5);
-	numEnemiesKilled = atoi(fiveBuffer);
-	inFile.read(fiveBuffer, 5);
-	damageDealt = atoi(fiveBuffer);
-	inFile.read(fiveBuffer, 5);
-	damageReceived = atoi(fiveBuffer);
+	numTongueLicks = input->readByte();
+	numEnemiesKilled = input->readByte();
+	damageDealt = input->readByte();
+	damageReceived = input->readByte();
 
 	//Tutorial Man
-	inFile.read(buffer, 1);
-	tutorialManCompleted = atoi(buffer) == 1;
-/**
-	//Load exploration data
-	twoBools nextTwoBools;
-	unsigned char nextChar;
+	tutorialManCompleted = input->readBit();
+	smh->hge->System_Log("%d", tutorialManCompleted);
 
-	inFile.read(buffer,1); //newline
-	inFile.read(buffer,1); //newline
-
-	inFile.read(buffer,1);
-	nextChar = (unsigned char)buffer[0];
-	BitStream->setChar(nextChar);
-
+	//Exploration data
 	for (int i = 0; i < NUM_AREAS; i++) {
 		for (int j = 0; j < 256; j++) {
 			for (int k = 0; k < 256; k++) {
-				nextTwoBools = BitStream->getNextBit();
-				explored[i][j][k] = nextTwoBools.nextBit;
-				if (nextTwoBools.isCharFullyRead) {
-					inFile.read(buffer,1);
-					nextChar = (unsigned char)buffer[0];
-					BitStream->setChar(nextChar);
-				}			
+				explored[i][j][k] = input->readBit();
 			}
 		}
-	}*/
+	}
 
 	timeFileLoaded = smh->getRealTime();
 
@@ -265,33 +204,24 @@ void SaveManager::save(bool showConfirmation) {
 
 	smh->hge->System_Log("Saving file %d", currentSave);	
 
-	std::ofstream outputFile;
-	std::string outputString;
-
-	BitStream *output = new BitStream();
-	output->open("Data/Save/testsave.sav", FILE_WRITE);
-
 	//Select the specified save file
+	BitStream *output = new BitStream();
 	if (currentSave == 0) {
-		outputFile.open("Data/Save/file1.sav");
+		output->open("Data/Save/save1.sav", FILE_WRITE);
 	} else if (currentSave == 1) {
-		outputFile.open("Data/Save/file2.sav");
+		output->open("Data/Save/save2.sav", FILE_WRITE);
 	} else if (currentSave == 2) {
-		outputFile.open("Data/Save/file3.sav");
+		output->open("Data/Save/save3.sav", FILE_WRITE);
 	} else if (currentSave == 3) {
-		outputFile.open("Data/Save/file4.sav");
+		output->open("Data/Save/save4.sav", FILE_WRITE);
 	}
 
 	//Abilities
-	for (int i = 0; i < NUM_ABILITIES; i++) {
-		outputString += (hasAbility[i] ? "1" : "0");
-		output->writeBit(hasAbility[i]);
-	}
+	for (int i = 0; i < NUM_ABILITIES; i++) output->writeBit(hasAbility[i]);
 
 	//Keys
 	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 4; j++) {
-			outputString += Util::intToString(numKeys[i][j]);
 			output->writeByte(numKeys[i][j]);
 		}
 	}
@@ -299,92 +229,55 @@ void SaveManager::save(bool showConfirmation) {
 	//Gems
 	for (int i = 0; i < NUM_AREAS; i++) {
 		for (int j = 0; j < 3; j++) {
-			outputString += Util::intToString(numGems[i][j]);
 			output->writeByte(numGems[i][j]);
 		}
 	}
 
-	//Money (3 digits)
-	outputString += Util::intToString(money, 3);
+	//Money
 	output->writeByte(money);
 
-	//Upgrades (2 digits)
+	//Upgrades
 	for (int i = 0; i < 3; i++) {
-		outputString += Util::intToString(numUpgrades[i], 2);
 		output->writeByte(numUpgrades[i]);
 	}
 
 	//Bosses
 	for (int i = 0; i < NUM_BOSSES; i++) {
-		outputString += (killedBoss[i] ? "0" : "1");
 		output->writeBit(killedBoss[i]);
 	}
 
 	//Area and position
-	outputString += Util::intToString(currentArea);
-	outputString += Util::intToString(playerGridX, 3);
-	outputString += Util::intToString(playerGridY, 3);
 	output->writeByte(currentArea);
 	output->writeByte(playerGridX);
 	output->writeByte(playerGridY);
 
 	//Health and mana
-	outputString += Util::intToString(smh->player->getHealth() * 4, 3);
-	outputString += Util::intToString(smh->player->getMana(), 3);
 	output->writeByte(smh->player->getHealth() * 4);
 	output->writeByte(smh->player->getMana());
 
 	//Changed shit
-	outputString += changeManager->toString();
 	changeManager->writeToStream(output);
 
-	//Stats **** Need to add write2Bytes ****
-	outputString += Util::intToString(numTongueLicks, 5);
-	outputString += Util::intToString(numEnemiesKilled, 5);
-	outputString += Util::intToString(damageDealt, 5);
-	outputString += Util::intToString(damageReceived, 5);
+	//Stats
 	output->writeByte(numTongueLicks);
 	output->writeByte(numEnemiesKilled);
 	output->writeByte(damageDealt);
 	output->writeByte(damageReceived);
 
 	//Tutorial Man
-	outputString += Util::intToString(tutorialManCompleted ? 1 : 0);
+	smh->hge->System_Log("%d", tutorialManCompleted);
 	output->writeBit(tutorialManCompleted);
 
 	//Exploration data
-	/**
-	unsigned char nextCharToWrite;
-	outputString += "\n\n";
 	for (int i = 0; i < NUM_AREAS; i++) {
 		for (int j = 0; j < 256; j++) {
 			for (int k = 0; k < 256; k++) {
-				if (BitStream->addBit(explored[i][j][k])) { //if true, it means the char is full
-					nextCharToWrite = BitStream->getCurrentChar();
-					outputString += nextCharToWrite;
-				}				
+				output->writeBit(explored[i][j][k]);
 			}
 		}
 	}
 
-	// Now, we write one more char. Even if we didn't fill the char yet,
-	// we still don't want to lose any exploration data.
-	nextCharToWrite = BitStream->getCurrentChar();
-	outputString += nextCharToWrite;
-
-	// Write one more empty char, just to be safe. This is necessary in case we use up
-	// exactly the right amount of chars in loading, since it automatically starts
-	// looking at the next one.
-	nextCharToWrite = 0;
-	outputString += nextCharToWrite;
-
-	outputString += "\n";*/
-
-	//Write the string to the save file
-	outputFile.write(outputString.c_str(), outputString.length());
-
 	//Close the file!
-	outputFile.close();
 	output->close();
 	delete output;
 	
@@ -552,7 +445,7 @@ void SaveManager::drawSaveConfirmation(float dt) {
 		}
 
 		std::string s = "Game File ";
-		s += Util::intToString(currentSave);
+		s += Util::intToString(currentSave + 1);
 		s += " Saved!";
 
 		smh->resources->GetFont("inventoryFnt")->SetColor(ARGB(alpha,255,255,255));

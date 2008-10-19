@@ -84,35 +84,6 @@ void ChangeManager::writeToStream(BitStream *stream) {
 
 }
 
-/**
- * Returns a string representation of the changes stored in the
- * Change Manager.
- */ 
-string ChangeManager::toString() {
-
-	string returnString = "";
-	
-	//The string starts with the number of changes (3 digits)
-	returnString += Util::intToString(theChanges.size(), 3);
-
-	//For each change
-	std::list<Change>::iterator i;
-	for (i = theChanges.begin(); i != theChanges.end(); i++) {
-		
-		//2 digits for the area
-		returnString += Util::intToString(i->area, 2);
-
-		//3 digits for x coordinate
-		returnString += Util::intToString(i->x, 3);
-
-		//3 digits for y coordinate
-		returnString += Util::intToString(i->y, 3);
-
-	}
-
-	return returnString.c_str();
-
-}
 
 /**
  * Clears the change list.
