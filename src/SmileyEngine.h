@@ -1,6 +1,8 @@
 #ifndef SMH_H_
 #define SMH_H_
 
+#using <mscorlib.dll>
+
 #define STRICT
 #include "hgeresource.h"
 #include "hge.h"
@@ -18,7 +20,7 @@ class hgeResourceManager;
 class hgeAnimation;
 class hgeFont;
 class ChangeManager;
-class BitManager;
+class BitStream;
 class Player;
 class Environment;
 class MainMenu;
@@ -39,6 +41,7 @@ class SmileyInput;
 class SaveManager;
 class SoundManager;
 class ChangeManager;
+class BitStream;
 
 //Constants
 #define PI 3.14159265357989232684
@@ -515,7 +518,6 @@ public:
 private:
 	
 	ChangeManager *changeManager;
-	BitManager *bitManager;
 
 	SaveFile files[4];
 	bool explored[NUM_AREAS][256][256];
@@ -524,21 +526,37 @@ private:
 };
 
 
-class SmileyFile {
+//----------------------------------------------------------------
+//------------------BIT STREAM------------------------------------
+//----------------------------------------------------------------
+// This class allows you to easily read/write bits and bytes to
+// a file to make up for the mind boggling shortcomings of C++.
+//----------------------------------------------------------------
+#define FILE_READ 0
+#define FILE_WRITE 1
+
+class BitStream {
 
 public:
+	BitStream();
+	~BitStream();
 
-	SmileyFile();
-	~SmileyFile();
-
-	void open(std::string fileName);
-	void writeNumber(int number);
-	int readNumber();
+	void open(std::string fileName, int mode);
+	void writeByte(int byte);
+	bool writeBit(bool bit);
+	int readByte();
+	bool readBit();
 	void close();
+	static void test();
 
 private:
-	std::fstream file;
-
+	bool isOpen;
+	int mode;
+	std::ifstream inFile;
+	std::ofstream outFile;
+	std::string outString;
+	unsigned char byte;
+	int counter;
 };
 
 //----------------------------------------------------------------
@@ -641,6 +659,7 @@ public:
 	void change(int area, int x, int y);
 	bool isChanged(int area, int x, int y);
 	void reset();
+	void writeToStream(BitStream *stream);
 	std::string toString();
 
 private:

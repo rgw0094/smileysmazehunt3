@@ -39,8 +39,6 @@ bool ChangeManager::isChanged(int area, int x, int y) {
 	return false;
 }
 
-///////////// Private Methods ///////////////////
-
 /**
  * Removes a change from the list.
  */
@@ -67,6 +65,23 @@ void ChangeManager::addChange(int area, int x, int y) {
 	newChange.y = y;
 
 	theChanges.push_back(newChange);
+}
+
+/**
+ * Writes the data in the change manager to the provided BitStream.
+ */
+void ChangeManager::writeToStream(BitStream *stream) {
+	
+	//Write the number of changes so they can be read back later
+	stream->writeByte(theChanges.size());
+
+	//Write the changes
+	for (std::list<Change>::iterator i = theChanges.begin(); i != theChanges.end(); i++) {
+		stream->writeByte(i->area);
+		stream->writeByte(i->x);
+		stream->writeByte(i->y);
+	}
+
 }
 
 /**
