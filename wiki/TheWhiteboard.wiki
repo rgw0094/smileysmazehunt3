@@ -16,6 +16,7 @@
  * Fenwar Encounters
 
 === Programming To Do ===
+ * Save files as bits
  * Make it so you can't walk diagonally between two arrow blocks. (expand gay fix in Player.move - right now its only for entering ice and springs)
  * Lovecraftian Boss
  * King Tut
@@ -35,6 +36,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Leet BitStream class||10/18/08||RGW||
 ||Fountain heals you||10/17/08||RGW||
 ||Parallax Pits||10/17/08||RGW||
 ||Save Confirmation||10/17/08||RGW||
