@@ -1202,8 +1202,6 @@ bool Environment::validPath(int x1, int y1, int x2, int y2, int radius, bool can
 /**
  * Returns whether or not player, when centered at (x,y), collides with any terrain. 
  * Also autoadjusts the player's position to navigate corners.
- * 
- * This should be moved to the Player class.
  *
  * @arg x		x-coord of the player
  * @arg y		y-coord of the player
@@ -1392,7 +1390,7 @@ bool Environment::enemyCollision(hgeRect *box, BaseEnemy *enemy, float dt) {
 }
 
 /**
- * Reads any sign within *box.
+ * Reads any sign hit by the player's tongue.
  */
 bool Environment::hitSigns(Tongue *tongue) {
 	
@@ -1414,7 +1412,7 @@ bool Environment::hitSigns(Tongue *tongue) {
 
 
 /**
- * Opens the save menu if box collides with a save shrine
+ * Opens the save menu if tongue collides with a save shrine
  */
 bool Environment::hitSaveShrine(Tongue *tongue) {
 	for (int i = smh->player->gridX - 2; i <= smh->player->gridX + 2; i++) {
