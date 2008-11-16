@@ -6,19 +6,18 @@
 
 extern SMH *smh;
 
-#define TOP_LEFT_X 182.0
-#define TOP_LEFT_Y 138.0
-
 /**
  * Constructor
  */
 OptionsWindow::OptionsWindow() {
 	inputBox = new hgeRect();
-	soundVolumeSlider = new Slider(TOP_LEFT_X + 367.0, TOP_LEFT_Y + 92.0, 0, 100);
+	soundVolumeSlider = new Slider(0, 0, 0, 100);
 	soundVolumeSlider->setValue(smh->soundManager->getSoundVolume());
-	musicVolumeSlider = new Slider(TOP_LEFT_X + 507.0, TOP_LEFT_Y + 92.0, 0, 100);
+	musicVolumeSlider = new Slider(0, 0, 0, 100);
 	musicVolumeSlider->setValue(smh->soundManager->getMusicVolume());
-	doneButton = new Button(TOP_LEFT_X + 360.0, TOP_LEFT_Y + 340.0, "Done");
+	doneButton = new Button(0, 0, "Done");
+
+	setWindowPosition(182.0, 138.0);
 }
 
 /**
@@ -29,6 +28,34 @@ OptionsWindow::~OptionsWindow() {
 	delete soundVolumeSlider;
 	delete musicVolumeSlider;
 	delete doneButton;
+}
+
+void OptionsWindow::setX(float newX) {
+	setWindowPosition(newX, windowY);
+}
+
+float OptionsWindow::getX() {
+	return windowX;
+}
+
+void OptionsWindow::setY(float newY) {
+	setWindowPosition(windowX, newY);
+}
+
+float OptionsWindow::getY() {
+	return windowY;
+}
+
+void OptionsWindow::setWindowPosition(float _x, float _y) {
+	windowX = _x;
+	windowY = _y;
+
+	soundVolumeSlider->x = windowX + 367.0;
+	soundVolumeSlider->y = windowY + 92.0;
+	musicVolumeSlider->x = windowX + 507.0;
+	musicVolumeSlider->y = windowY + 92.0;
+	doneButton->x = windowX + 360.0;
+	doneButton->y = windowY + 340.0;
 }
 
 bool OptionsWindow::update(float dt) {
@@ -56,8 +83,8 @@ bool OptionsWindow::update(float dt) {
 		for (int row = 0; row < 5; row++) {
 		
 			currentInput = col*5 + row;
-			x = TOP_LEFT_X + 40 + col*140.0;
-			y = TOP_LEFT_Y + 80 + row*80.0;
+			x = windowX + 40 + col*140.0;
+			y = windowY + 80 + row*80.0;
 
 			//Listen for click to enable edit mode
 			inputBox->Set(x, y, x + 130.0, y + 30.0);
@@ -79,13 +106,13 @@ bool OptionsWindow::update(float dt) {
 void OptionsWindow::draw(float dt) {
 
 	//Draw background
-	smh->resources->GetSprite("optionsBackground")->Render(182.0, 138.0);
+	smh->resources->GetSprite("optionsBackground")->Render(windowX, windowY);
 
 	//Draw volume sliders
 	musicVolumeSlider->draw(dt);
 	soundVolumeSlider->draw(dt);
 
-	smh->resources->GetFont("inventoryFnt")->printf(670.0, 180.0, HGETEXT_CENTER, "Volume");
+	smh->resources->GetFont("inventoryFnt")->printf(windowX + 488.0, windowY + 42.0, HGETEXT_CENTER, "Volume");
 	smh->resources->GetFont("inventoryFnt")->SetScale(0.8);
 	smh->resources->GetFont("inventoryFnt")->printf(
 		soundVolumeSlider->x + soundVolumeSlider->getWidth()/2, 
@@ -104,8 +131,8 @@ void OptionsWindow::draw(float dt) {
 		for (int row = 0; row < 5; row++) {
 		
 			currentInput = col*5 + row;
-			x = 182.0 + 40 + col*140.0;
-			y = 138.0 + 45 + row*80.0;
+			x = windowX + 40 + col*140.0;
+			y = windowY + 45 + row*80.0;
 
 			//Input name
 			smh->resources->GetFont("controls")->SetScale(0.8);

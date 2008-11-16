@@ -22,9 +22,7 @@ LoadingScreen::~LoadingScreen() {
 
 void LoadingScreen::draw(float dt) {
 
-	if (fromLoadScreen) {
-		smh->drawSprite("menuBackground", 0, 0);
-	} else {
+	if (!fromLoadScreen) {
 		smh->shadeScreen(255.0);
 	}
 
