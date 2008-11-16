@@ -7,7 +7,7 @@ extern SMH *smh;
  * Constructor
  */
 ControlActionGroup::ControlActionGroup() { 
-	int numControls = 0;
+	numControls = 0;
 }
 
 /**
