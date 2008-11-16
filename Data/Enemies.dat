@@ -48,7 +48,7 @@ numEnemies="52"
 2ImmuneStun="T"
 
 ;Ranged Squirrel
-3Name=      "Squirrel"
+3Name=      "Shifty Squirrel"
 3GCol=      "0"
 3GRow=      "8"
 3EnemyType= "15"
@@ -68,7 +68,7 @@ numEnemies="52"
 3PDamage=   "25"
 
 ;Ice Floater
-4Name=      "Ice Floater"
+4Name=      "Diabolical Diamond"
 4GCol=      "9"
 4GRow=      "0"
 4EnemyType= "9"
@@ -170,7 +170,7 @@ numEnemies="52"
 9Invincible="T"
 
 ;Crab with clown
-10Name=      "Clown Crab"
+10Name=      "Cunning Crab"
 10GCol=      "0"
 10GRow=      "5"
 10NumFrames= "2"
@@ -201,7 +201,7 @@ numEnemies="52"
 11Invincible="T"
 
 ;Buzzard
-12Name=      "Buzzard"
+12Name=      "Boastful Buzzard"
 12GCol=      "3"
 12GRow=      "2"
 12EnemyType= "7"
@@ -229,7 +229,7 @@ numEnemies="52"
 13Slime=     "T"
 
 ;Earth Floater
-14Name=      "Earth Floater"
+14Name=      "Mortimer"
 14GCol=      "8"
 14GRow=      "0"
 14EnemyType= "9"
@@ -290,7 +290,7 @@ numEnemies="52"
 17Variable1= "18"
 
 ;Brown turtle
-18Name=      "Turtle"
+18Name=      "Tyrannical Turtle"
 18GCol=      "0"
 18GRow=      "7"
 18EnemyType= "0"
@@ -318,7 +318,7 @@ numEnemies="52"
 19Chases=    "F"
 
 ;Fire floater
-20Name=      "Fire Floater"
+20Name=      "Furious Flame"
 20GCol=      "0"
 20GRow=      "2"
 20EnemyType= "9"
@@ -493,7 +493,7 @@ numEnemies="52"
 30Chases=    "F"
 
 ;Clockwise Turret, start UP
-31Turret=    "Turret"
+31Turret=    "Evil Turret"
 31GCol=      "8"
 31GRow=      "5"
 31EnemyType= "12"
@@ -878,7 +878,7 @@ numEnemies="52"
 50Chases=    "T"
 
 ;Hopping eye
-51Name=      "Hopping Eye"
+51Name=      "Eerie Eye"
 51GCol=      "8"
 51GRow=      "8"
 51EnemyType= "16"
