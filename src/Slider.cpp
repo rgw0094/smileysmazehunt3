@@ -1,5 +1,5 @@
 #include "SmileyEngine.h"
-#include "Slider.h"
+#include "UIControls.h"
 #include "hgesprite.h"
 
 extern SMH *smh;
@@ -54,18 +54,18 @@ int Slider::getValue() {
 /**
  * Updates the slider when the mouse is at the specified position.
  */
-void Slider::update(float mouseX, float mouseY) {
+void Slider::update(float dt) {
 
 	//Mouse was clicked inside slider
-	if (smh->hge->Input_KeyDown(HGEK_LBUTTON) && mouseY < y+SLIDER_HEIGHT && mouseY > y &&
-			mouseX > x && mouseX < x + SLIDER_WIDTH) {
+	if (smh->hge->Input_KeyDown(HGEK_LBUTTON) && smh->input->getMouseY() < y+SLIDER_HEIGHT && smh->input->getMouseY() > y &&
+			smh->input->getMouseX() > x && smh->input->getMouseX() < x + SLIDER_WIDTH) {
 		mousePressed = true;
 	} else if (!smh->hge->Input_GetKeyState(HGEK_LBUTTON)) {
 		mousePressed = false;
 	}
 
 	if (mousePressed) {
-		barsToDraw = ((y+SLIDER_HEIGHT) - mouseY) / (BAR_SPACING + BAR_HEIGHT);
+		barsToDraw = ((y+SLIDER_HEIGHT) - smh->input->getMouseY()) / (BAR_SPACING + BAR_HEIGHT);
 		currentValue = (float(barsToDraw) / float(NUM_BARS)) * float(maxValue);
 	}
 
@@ -81,20 +81,6 @@ void Slider::draw(float dt) {
 				(y + SLIDER_HEIGHT) - (BAR_HEIGHT + BAR_SPACING) * (i+1)); 
 		}
 	}	
-}
-
-/**
- * Returns the top left x coordinate of the slider.
- */
-float Slider::getX() {
-	return x;
-}
-
-/**
- * Returns the top left y coordinate of the slide.r
- */
-float Slider::getY() {
-	return y;
 }
 
 float Slider::getWidth() {

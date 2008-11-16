@@ -4,7 +4,7 @@
 #include "player.h"
 #include "MainMenu.h"
 #include "Environment.h"
-#include "Button.h"
+#include "UIControls.h"
 
 extern SMH *smh;
 
@@ -62,7 +62,7 @@ bool SelectFileScreen::update(float dt, float mouseX, float mouseY) {
 
 	//Update buttons
 	for (int i = 0; i < SFS_NUM_BUTTONS; i++) {
-		buttons[i]->update(mouseX, mouseY);
+		buttons[i]->update(dt);
 	}
 
 	//Click back button

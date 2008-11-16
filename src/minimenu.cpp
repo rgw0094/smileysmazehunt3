@@ -1,7 +1,7 @@
 #include "SmileyEngine.h"
 #include "WindowFramework.h"
 #include "MainMenu.h"
-#include "Button.h"
+#include "UIControls.h"
 
 extern SMH *smh;
 
@@ -85,7 +85,7 @@ bool MiniMenu::update(float dt) {
 	//Update buttons
 	std::list<ButtonStruct>::iterator i;
 	for (i = buttonList.begin(); i != buttonList.end(); i++) {
-		i->button->update(mouseX, mouseY);
+		i->button->update(dt);
 
 		if (i->button->isClicked()) {
 			switch (i->id) {
