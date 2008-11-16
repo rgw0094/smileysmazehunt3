@@ -146,7 +146,14 @@ public:
 	void draw(float dt);
 	bool update(float dt);
 	
+	void setX(float newX);
+	float getX();
+	void setY(float newY);
+	float getY();
+	
 private:
+
+	void setWindowPosition(float x, float y);
 
 	float mouseX, mouseY;
 	bool mousePressed;
@@ -154,7 +161,7 @@ private:
 	Button *doneButton;
 	Slider *musicVolumeSlider, *soundVolumeSlider;
 	int currentInput;
-	float x, y;
+	float x, y, windowX, windowY;
 
 };
 

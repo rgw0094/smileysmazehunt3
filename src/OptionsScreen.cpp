@@ -6,6 +6,8 @@ extern SMH *smh;
 
 OptionsScreen::OptionsScreen() {
 	optionsWindow = new OptionsWindow();
+	state = ENTERING_SCREEN;
+	optionsWindow->setY(-512.0);
 }
 
 OptionsScreen::~OptionsScreen() {
@@ -13,13 +15,29 @@ OptionsScreen::~OptionsScreen() {
 }
 
 void OptionsScreen::draw(float dt) {
-	smh->drawSprite("menuBackground", 0, 0);
 	optionsWindow->draw(dt);
 }
 
 bool OptionsScreen::update(float dt, float mouseX, float mouseY) {
-	if (!optionsWindow->update(dt)) {
-		smh->menu->setScreen(TITLE_SCREEN);
+
+	if (state == ENTERING_SCREEN) {
+		optionsWindow->setY(optionsWindow->getY() + 1800.0 * dt);
+		if (optionsWindow->getY() >= 138.0) {
+			optionsWindow->setY(138.0);
+			state = IN_SCREEN;
+		}
 	}
+
+	if (state == EXITING_SCREEN) {
+		optionsWindow->setY(optionsWindow->getY() - 1800 * dt);
+		if (optionsWindow->getY() <= -512.0) {
+			smh->menu->setScreen(TITLE_SCREEN);
+		}
+	}
+
+	if (!optionsWindow->update(dt)) {
+		state = EXITING_SCREEN;
+	}
+
 	return false;
 }

@@ -47,13 +47,6 @@ void TitleScreen::enterState(int newState) {
  */
 void TitleScreen::draw(float dt) {
 
-	//Draw background
-	smh->drawSprite("menuBackground", 0,0);
-
-	//Title
-	smh->resources->GetFont("titleFnt")->printf(512,50, HGETEXT_CENTER, "Smiley's Maze");
-	smh->resources->GetFont("titleFnt")->printf(512,150, HGETEXT_CENTER, "Hunt");
-
 	//Draw buttons
 	for (int i = 0; i < TS_NUM_BUTTONS; i++) {
 		buttons[i]->draw(dt);

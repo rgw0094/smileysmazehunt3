@@ -81,6 +81,13 @@ bool MainMenu::update(float dt) {
  */
 void MainMenu::draw(float dt) {
 
+	//Draw background
+	smh->drawSprite("menuBackground", 0,0);
+
+	//Title
+	smh->resources->GetFont("titleFnt")->printf(512,50, HGETEXT_CENTER, "Smiley's Maze");
+	smh->resources->GetFont("titleFnt")->printf(512,150, HGETEXT_CENTER, "Hunt");
+
 	//Draw the current screen
 	menuScreen->draw(dt);
 

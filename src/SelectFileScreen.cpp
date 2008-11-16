@@ -134,9 +134,6 @@ bool SelectFileScreen::update(float dt, float mouseX, float mouseY) {
  */
 void SelectFileScreen::draw(float dt) {
 
-	//draw background
-	smh->resources->GetSprite("menuBackground")->Render(0,0);
-
 	smh->resources->GetFont("curlz")->SetColor(ARGB(255,0,0,0));
 	smh->resources->GetFont("curlz")->SetScale(1.0f);
 
