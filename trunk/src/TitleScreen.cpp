@@ -6,7 +6,7 @@
 
 extern SMH *smh;
 
-#define BUTTON_EFFECT_DURATION 0.2
+#define BUTTON_EFFECT_DURATION 0.15
 
 /**
  * Constructor
@@ -68,35 +68,31 @@ void TitleScreen::draw(float dt) {
  */
 bool TitleScreen::update(float dt, float mouseX, float mouseY) {
 
-	//If the control action group finished and the screen is currently exiting, move to the next screen
-	if (controlActionGroup->update(dt) && state == EXITING_SCREEN) {
-		smh->menu->setScreen(LOAD_SCREEN);
-	}
-
 	//Update buttons
 	for (int i = 0; i < TS_NUM_BUTTONS; i++) {
 		buttons[i]->update(dt);
+		if (buttons[i]->isClicked()) {
+			clickedButton = i;
+			enterState(EXITING_SCREEN);
+			controlActionGroup->beginAction(CASCADING_MOVE, 0.0, 100.0, BUTTON_EFFECT_DURATION);
+		}
 	}
 
-	//Play button clicked
-	if (buttons[TS_PLAY_BUTTON]->isClicked()) {
-		enterState(EXITING_SCREEN);
-		controlActionGroup->beginAction(CASCADING_MOVE, 0.0, 100.0, BUTTON_EFFECT_DURATION);
-	}
-
-	//Controls button clicked
-	if (buttons[TS_OPTIONS_BUTTON]->isClicked()) {
-		smh->menu->setScreen(OPTIONS_SCREEN);
-	}
-
-	//Credits button clicked
-	if (buttons[TS_CREDITS_BUTTON]->isClicked()) {
-		smh->menu->setScreen(CREDITS_SCREEN);
-	}
-
-	//Exit button clicked
-	if (buttons[TS_EXIT_BUTTON]->isClicked()) {
-		return true;
+	if (controlActionGroup->update(dt) && state == EXITING_SCREEN) {
+		switch (clickedButton) {
+			case TS_PLAY_BUTTON:
+				smh->menu->setScreen(LOAD_SCREEN);
+				break;
+			case TS_OPTIONS_BUTTON:
+				smh->menu->setScreen(OPTIONS_SCREEN);
+				break;
+			case TS_CREDITS_BUTTON:
+				smh->menu->setScreen(CREDITS_SCREEN);
+				break;
+			case TS_EXIT_BUTTON:
+				return true;
+				break;
+		}
 	}
 
 	return false;
