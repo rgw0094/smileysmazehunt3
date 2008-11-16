@@ -80,7 +80,7 @@ bool TitleScreen::update(float dt, float mouseX, float mouseY) {
 
 	//Play button clicked
 	if (buttons[TS_PLAY_BUTTON]->isClicked()) {
-		state = EXITING_SCREEN;
+		enterState(EXITING_SCREEN);
 		controlActionGroup->beginAction(CASCADING_MOVE, 0.0, 100.0, BUTTON_EFFECT_DURATION);
 	}
 
