@@ -496,8 +496,11 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="UI Components"
+			Name="UI Controls"
 			Filter="">
+			<File
+				RelativePath=".\src\UIControls.h">
+			</File>
 			<Filter
 				Name="Source"
 				Filter="">
@@ -505,17 +508,10 @@
 					RelativePath=".\src\Button.cpp">
 				</File>
 				<File
+					RelativePath=".\src\ControlActionGroup.cpp">
+				</File>
+				<File
 					RelativePath=".\src\Slider.cpp">
-				</File>
-			</Filter>
-			<Filter
-				Name="Header"
-				Filter="">
-				<File
-					RelativePath=".\src\Button.h">
-				</File>
-				<File
-					RelativePath=".\src\Slider.h">
 				</File>
 			</Filter>
 		</Filter>

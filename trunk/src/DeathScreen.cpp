@@ -3,7 +3,7 @@
 #include "MainMenu.h"
 #include "environment.h"
 #include "player.h"
-#include "Button.h"
+#include "UIControls.h"
 
 extern SMH *smh;
 
@@ -31,7 +31,7 @@ bool DeathScreen::update(float dt, float mouseX, float mouseY) {
 
 	//Update buttons
 	for (int i = 0; i < 2; i++) {
-		buttons[i]->update(mouseX, mouseY);
+		buttons[i]->update(dt);
 	}
 
 	//Click Quit

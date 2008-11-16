@@ -1,21 +1,32 @@
 #include "hgefont.h"
 #include "MainMenu.h"
-#include "Button.h"
+#include "UIControls.h"
 #include "SmileyEngine.h"
 #include "hgeresource.h"
 
 extern SMH *smh;
+
+#define BUTTON_EFFECT_DURATION 0.2
 
 /**
  * Constructor
  */ 
 TitleScreen::TitleScreen() {
 
-	buttons[TS_EXIT_BUTTON] = new Button(125.0, 645.0, "Exit");
-	buttons[TS_PLAY_BUTTON] = new Button(1024.0-125.0-250.0, 645.0, "Play");
+	enterState(IN_SCREEN);
 
-	buttons[TS_OPTIONS_BUTTON] = new Button(512.0-125.0, 680.0, "Options");
-	buttons[TS_CREDITS_BUTTON] = new Button(512.0-125.0, 605.0, "Credits");
+	buttons[TS_EXIT_BUTTON] = new Button(4.8, 785.0, "Exit");
+	buttons[TS_OPTIONS_BUTTON] = new Button(259.6, 785.0, "Options");
+	buttons[TS_CREDITS_BUTTON] = new Button(514.4, 785.0, "Credits");
+	buttons[TS_PLAY_BUTTON] = new Button(769.2, 785.0, "Play");
+
+	controlActionGroup = new ControlActionGroup();
+	for (int i = 0; i < TS_NUM_BUTTONS; i++) {
+		controlActionGroup->addControl(buttons[i]);
+	}
+
+	controlActionGroup->beginAction(CASCADING_MOVE, 0.0, -100.0, BUTTON_EFFECT_DURATION);
+
 }
 
 /**
@@ -23,6 +34,14 @@ TitleScreen::TitleScreen() {
  */
 TitleScreen::~TitleScreen() {
 	for (int i = 0; i < TS_NUM_BUTTONS; i++) delete buttons[i];
+}
+
+/**
+ * Enters a new state.
+ */
+void TitleScreen::enterState(int newState) {
+	state = newState;
+	timeEnteredState = smh->getRealTime();
 }
 
 /**
@@ -49,14 +68,20 @@ void TitleScreen::draw(float dt) {
  */
 bool TitleScreen::update(float dt, float mouseX, float mouseY) {
 
+	//If the control action group finished and the screen is currently exiting, move to the next screen
+	if (controlActionGroup->update(dt) && state == EXITING_SCREEN) {
+		smh->menu->setScreen(LOAD_SCREEN);
+	}
+
 	//Update buttons
 	for (int i = 0; i < TS_NUM_BUTTONS; i++) {
-		buttons[i]->update(mouseX, mouseY);
+		buttons[i]->update(dt);
 	}
 
 	//Play button clicked
 	if (buttons[TS_PLAY_BUTTON]->isClicked()) {
-		smh->menu->setScreen(LOAD_SCREEN);
+		state = EXITING_SCREEN;
+		controlActionGroup->beginAction(CASCADING_MOVE, 0.0, 100.0, BUTTON_EFFECT_DURATION);
 	}
 
 	//Controls button clicked

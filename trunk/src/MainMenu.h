@@ -6,6 +6,7 @@
 class hgeSprite;
 class OptionsWindow;
 class Button;
+class ControlActionGroup;
 
 //Menu States
 #define NUM_MENU_SCREENS 4
@@ -16,6 +17,11 @@ class Button;
 #define LOADING_SCREEN 4
 #define CREDITS_SCREEN 5
 
+//Screen States
+#define ENTERING_SCREEN 0
+#define IN_SCREEN 1
+#define EXITING_SCREEN 2
+
 //------------------------------------------------------
 //------------------MENU SCREEN-------------------------
 //------------------------------------------------------
@@ -25,6 +31,9 @@ public:
 
 	virtual void draw(float dt) { };
 	virtual bool update(float dt, float mouseX, float mouseY) { return false; };
+
+	int state;
+	float timeEnteredState;
 
 };
 
@@ -199,10 +208,10 @@ public:
 //------------------TITLE SCREEN-----------------------
 //-----------------------------------------------------
 #define TS_NUM_BUTTONS 4
-#define TS_PLAY_BUTTON 0
+#define TS_EXIT_BUTTON 0
 #define TS_OPTIONS_BUTTON 1
-#define TS_EXIT_BUTTON 2
-#define TS_CREDITS_BUTTON 3
+#define TS_CREDITS_BUTTON 2
+#define TS_PLAY_BUTTON 3
 
 class TitleScreen : public MenuScreen {
 
@@ -214,9 +223,11 @@ public:
 	//Draw methods
 	void draw(float dt);
 	bool update(float dt, float mouseX, float mouseY);
+	void enterState(int newState);
+	void updateState(float dt);
 
 	Button *buttons[TS_NUM_BUTTONS];
-	
+	ControlActionGroup *controlActionGroup;
 
 };
 

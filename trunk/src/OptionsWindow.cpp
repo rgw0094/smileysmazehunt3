@@ -1,8 +1,7 @@
 #include "SmileyEngine.h"
 #include "WindowFramework.h"
 #include "hgerect.h"
-#include "Button.h"
-#include "Slider.h"
+#include "UIControls.h"
 #include "hgeresource.h"
 
 extern SMH *smh;
@@ -40,14 +39,14 @@ bool OptionsWindow::update(float dt) {
 	mousePressed = smh->hge->Input_KeyDown(HGEK_LBUTTON);
 
 	//Update volume sliders
-	soundVolumeSlider->update(mouseX, mouseY);
-	musicVolumeSlider->update(mouseX, mouseY);
+	soundVolumeSlider->update(dt);
+	musicVolumeSlider->update(dt);
 
 	smh->soundManager->setMusicVolume(musicVolumeSlider->getValue());
 	smh->soundManager->setSoundVolume(soundVolumeSlider->getValue());
 
 	//Update done button
-	doneButton->update(mouseX, mouseY);
+	doneButton->update(dt);
 	if (doneButton->isClicked()) {
 		return false;
 	}
@@ -89,12 +88,12 @@ void OptionsWindow::draw(float dt) {
 	smh->resources->GetFont("inventoryFnt")->printf(670.0, 180.0, HGETEXT_CENTER, "Volume");
 	smh->resources->GetFont("inventoryFnt")->SetScale(0.8);
 	smh->resources->GetFont("inventoryFnt")->printf(
-		soundVolumeSlider->getX() + soundVolumeSlider->getWidth()/2, 
-		soundVolumeSlider->getY() + soundVolumeSlider->getHeight() + 3,
+		soundVolumeSlider->x + soundVolumeSlider->getWidth()/2, 
+		soundVolumeSlider->y + soundVolumeSlider->getHeight() + 3,
 		HGETEXT_CENTER, "Sound");
 	smh->resources->GetFont("inventoryFnt")->printf(
-		musicVolumeSlider->getX() + musicVolumeSlider->getWidth()/2, 
-		musicVolumeSlider->getY() + musicVolumeSlider->getHeight() + 3,
+		musicVolumeSlider->x + musicVolumeSlider->getWidth()/2, 
+		musicVolumeSlider->y + musicVolumeSlider->getHeight() + 3,
 		HGETEXT_CENTER, "Music");
 	smh->resources->GetFont("inventoryFnt")->SetScale(1.0);
 

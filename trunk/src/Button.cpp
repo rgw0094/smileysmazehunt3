@@ -1,5 +1,5 @@
 #include "SmileyEngine.h"
-#include "button.h"
+#include "UIControls.h"
 #include "hgefont.h"
 #include "hgeresource.h"
 
@@ -33,8 +33,9 @@ void Button::draw(float dt) {
 
 }
 
-void Button::update(float mouseX, float mouseY) {
-	highlighted = collisionBox->TestPoint(mouseX, mouseY);
+void Button::update(float dt) {
+	collisionBox->Set(x, y, x+width, y+height);
+	highlighted = collisionBox->TestPoint(smh->input->getMouseX(), smh->input->getMouseY());
 }
 
 bool Button::isClicked() {
