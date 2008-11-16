@@ -22,6 +22,8 @@ class ControlActionGroup;
 #define IN_SCREEN 1
 #define EXITING_SCREEN 2
 
+#define BUTTON_EFFECT_DURATION 0.15
+
 //------------------------------------------------------
 //------------------MENU SCREEN-------------------------
 //------------------------------------------------------
@@ -194,12 +196,15 @@ public:
 
 	Button *buttons[SFS_NUM_BUTTONS];
 	SaveBox saveBoxes[4];
+	void enterState(int newState);
+	ControlActionGroup *controlActionGroup;
 
 	//Variables
 	bool deletePrompt;
 	int selectedFile;
 	int x, y;
 	int mouseOn;
+	int clickedButton;
 	
 
 };

@@ -6,8 +6,6 @@
 
 extern SMH *smh;
 
-#define BUTTON_EFFECT_DURATION 0.15
-
 /**
  * Constructor
  */ 
