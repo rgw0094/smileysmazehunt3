@@ -228,6 +228,7 @@ public:
 
 	Button *buttons[TS_NUM_BUTTONS];
 	ControlActionGroup *controlActionGroup;
+	int clickedButton;
 
 };
 

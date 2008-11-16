@@ -28,7 +28,7 @@ bool ControlActionGroup::update(float dt) {
 		//Cascading move - each control starts moving shortly after the previous
 		if (currentAction == CASCADING_MOVE) {
 
-			if (!i->started && smh->getRealTime() > timeStartedAction + float(controlCount) * 0.15) {
+			if (!i->started && smh->getRealTime() > timeStartedAction + float(controlCount) * 0.1) {
 				i->started = true;
 				i->timeStartedAction = smh->getRealTime();
 			}
