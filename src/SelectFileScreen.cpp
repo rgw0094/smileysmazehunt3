@@ -13,6 +13,8 @@ extern SMH *smh;
  */
 SelectFileScreen::SelectFileScreen() {
 
+	enterState(IN_SCREEN);
+
 	deletePrompt = false;
 	selectedFile = 0;
 	x = (1024 - 650) / 2;
@@ -20,9 +22,9 @@ SelectFileScreen::SelectFileScreen() {
 	mouseOn = -1;
 
 	//Buttons
-	buttons[SFS_BACK_BUTTON] = new Button(100.0, 650.0, "Back");
-	buttons[SFS_DELETE_BUTTON] = new Button(512.0-125.0, 650.0, "Delete");
-	buttons[SFS_START_BUTTON] = new Button(1024.0-100.0-250.0, 650.0, "Start");
+	buttons[SFS_BACK_BUTTON] = new Button(100.0, 785.0, "Back");
+	buttons[SFS_DELETE_BUTTON] = new Button(512.0-125.0, 785.0, "Delete");
+	buttons[SFS_START_BUTTON] = new Button(1024.0-100.0-250.0, 785.0, "Start");
 
 	//Save boxes
 	for (int i = 0; i < 4; i++) {
@@ -31,6 +33,13 @@ SelectFileScreen::SelectFileScreen() {
 		saveBoxes[i].collisionBox = new hgeRect(saveBoxes[i].x, saveBoxes[i].y,
 			saveBoxes[i].x + 650.0, saveBoxes[i].y + 125.0);
 	}
+
+	controlActionGroup = new ControlActionGroup();
+	for (int i = 0; i < SFS_NUM_BUTTONS; i++) {
+		controlActionGroup->addControl(buttons[i]);
+	}
+
+	controlActionGroup->beginAction(CASCADING_MOVE, 0.0, -100.0, BUTTON_EFFECT_DURATION);
 
 }
 
@@ -63,12 +72,22 @@ bool SelectFileScreen::update(float dt, float mouseX, float mouseY) {
 	//Update buttons
 	for (int i = 0; i < SFS_NUM_BUTTONS; i++) {
 		buttons[i]->update(dt);
+		if (buttons[i]->isClicked() && i != SFS_DELETE_BUTTON) {
+			clickedButton = i;
+			enterState(EXITING_SCREEN);
+			controlActionGroup->beginAction(CASCADING_MOVE, 0.0, 100.0, BUTTON_EFFECT_DURATION);
+		}
 	}
 
-	//Click back button
-	if (buttons[SFS_BACK_BUTTON]->isClicked()) {
-		smh->menu->setScreen(TITLE_SCREEN);
-		return false;
+	if (controlActionGroup->update(dt) && state == EXITING_SCREEN) {
+		switch (clickedButton) {
+			case SFS_BACK_BUTTON:
+				smh->menu->setScreen(TITLE_SCREEN);
+				return false;
+			case SFS_START_BUTTON:
+				smh->menu->openLoadScreen(selectedFile, true);
+				return false;
+		}
 	}
 
 	//Click delete button
@@ -76,12 +95,6 @@ bool SelectFileScreen::update(float dt, float mouseX, float mouseY) {
 		if (!smh->saveManager->isFileEmpty(selectedFile)) {
 			deletePrompt = true;
 		}
-	}
-
-	//Click start button - open the loading menu screen to handle loading
-	if (buttons[SFS_START_BUTTON]->isClicked()) {
-		smh->menu->openLoadScreen(selectedFile, true);
-		return false;
 	}
 
 	//Update save box selection
@@ -214,4 +227,12 @@ const char *SelectFileScreen::getTimeString(int time) {
 	timeString += ":";
 	timeString += seconds;
 	return timeString.c_str();
+}
+
+/**
+ * Enters a new state.
+ */
+void SelectFileScreen::enterState(int newState) {
+	state = newState;
+	timeEnteredState = smh->getRealTime();
 }
