@@ -33,6 +33,7 @@ public:
 	void draw(float dt);
 	void update(float dt);
 	bool isClicked();
+	void setText(const char* _text);
 
 	float width, height;
 	char text[50];

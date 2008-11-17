@@ -675,6 +675,14 @@ Sprite sliderBar {
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
+Sprite optionsPatch {
+ texture="Graphics/options.png"
+ rect=30,30,286,246
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+
+
 
 ;*************************
 ;******** MINI MAP *******
