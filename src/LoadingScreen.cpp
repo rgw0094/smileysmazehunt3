@@ -26,7 +26,7 @@ void LoadingScreen::draw(float dt) {
 		smh->shadeScreen(255.0);
 	}
 
-	smh->resources->GetFont("titleFnt")->printf(512,150,HGETEXT_CENTER, "Loading...");
+	smh->resources->GetFont("titleFnt")->printf(512,350,HGETEXT_CENTER, "Loading...");
 }
 
 bool LoadingScreen::update(float dt, float mouseX, float mouseY) {

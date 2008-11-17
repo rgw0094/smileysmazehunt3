@@ -13,34 +13,23 @@ extern SMH *smh;
  */
 SelectFileScreen::SelectFileScreen() {
 
-	enterState(IN_SCREEN);
+	state = ENTERING_SCREEN;
 
 	deletePrompt = false;
 	selectedFile = 0;
-	x = (1024 - 650) / 2;
-	y = (768 - 560) / 2 - 40;
-	mouseOn = -1;
+	yesDeleteBox = new hgeRect();
+	noDeleteBox = new hgeRect();
 
 	//Buttons
-	buttons[SFS_BACK_BUTTON] = new Button(100.0, 785.0, "Back");
-	buttons[SFS_DELETE_BUTTON] = new Button(512.0-125.0, 785.0, "Delete");
-	buttons[SFS_START_BUTTON] = new Button(1024.0-100.0-250.0, 785.0, "Start");
+	buttons[SFS_BACK_BUTTON] = new Button(0, 0, "Back");
+	buttons[SFS_DELETE_BUTTON] = new Button(0, 0, "Delete");
+	buttons[SFS_START_BUTTON] = new Button(0, 0, "Start");
 
-	//Save boxes
 	for (int i = 0; i < 4; i++) {
-		saveBoxes[i].x = (1024 - 650) / 2;
-		saveBoxes[i].y = (768 - 560) / 2 - 40 + 145.0*i;
-		saveBoxes[i].collisionBox = new hgeRect(saveBoxes[i].x, saveBoxes[i].y,
-			saveBoxes[i].x + 650.0, saveBoxes[i].y + 125.0);
+		saveBoxes[i].collisionBox = new hgeRect();
 	}
-
-	controlActionGroup = new ControlActionGroup();
-	for (int i = 0; i < SFS_NUM_BUTTONS; i++) {
-		controlActionGroup->addControl(buttons[i]);
-	}
-
-	controlActionGroup->beginAction(CASCADING_MOVE, 0.0, -100.0, BUTTON_EFFECT_DURATION);
-
+	
+	setWindowPosition(182.0, -512.0);
 }
 
 /**
@@ -48,19 +37,32 @@ SelectFileScreen::SelectFileScreen() {
  */
 SelectFileScreen::~SelectFileScreen() {
 	for (int i = 0; i < 4; i++) delete saveBoxes[i].collisionBox;
+	delete yesDeleteBox;
+	delete noDeleteBox;
 }
 
-/**
- * Called when this screen opens.
- */ 
-void SelectFileScreen::enterScreen() {
+void SelectFileScreen::setWindowPosition(float x, float y) {
+	
+	windowX = x;
+	windowY = y;
 
-}
+	buttons[SFS_BACK_BUTTON]->x = windowX + 360.0;
+	buttons[SFS_BACK_BUTTON]->y = windowY + 340.0;
+	buttons[SFS_START_BUTTON]->x = windowX + 360.0;
+	buttons[SFS_START_BUTTON]->y = windowY + 50.0;
+	buttons[SFS_DELETE_BUTTON]->x = windowX + 360.0;
+	buttons[SFS_DELETE_BUTTON]->y = windowY + 165.0;
 
-/**
- * Called when this screen closes.
- */
-void SelectFileScreen::exitScreen() {
+	//Save boxes
+	for (int i = 0; i < 4; i++) {
+		saveBoxes[i].x = windowX + 30.0;
+		saveBoxes[i].y = windowY + 40.0 + 105.0*i;
+		saveBoxes[i].collisionBox->Set(saveBoxes[i].x, saveBoxes[i].y,
+			saveBoxes[i].x + 285.0, saveBoxes[i].y + 95.0);
+	}
+
+	smileyX = saveBoxes[selectedFile].x + 30.0;
+	smileyY = saveBoxes[selectedFile].y + 45.0;
 
 }
 
@@ -69,24 +71,36 @@ void SelectFileScreen::exitScreen() {
  */
 bool SelectFileScreen::update(float dt, float mouseX, float mouseY) {
 
+	if (state == ENTERING_SCREEN) {
+		setWindowPosition(windowX, windowY + 1800.0 * dt);
+		if (windowY >= 138.0) {
+			state = IN_SCREEN;
+			windowY = 138.0;
+		}
+	} else if (state == EXITING_SCREEN) {
+		setWindowPosition(windowX, windowY - 1800.0 * dt);
+		if (windowY <= -512.0) {
+			//Done exiting screen - perform action based on what button was clicked
+			switch (clickedButton) {
+				case SFS_BACK_BUTTON:
+					smh->menu->setScreen(TITLE_SCREEN);
+					return false;
+				case SFS_START_BUTTON:
+					smh->menu->openLoadScreen(selectedFile, true);
+					return false;
+			}
+		}
+	}
+
+	//Set "start" button text based on whether or not an empty file is selected
+	buttons[SFS_START_BUTTON]->setText(smh->saveManager->isFileEmpty(selectedFile) ? "Start" : "Continue");
+	
 	//Update buttons
 	for (int i = 0; i < SFS_NUM_BUTTONS; i++) {
 		buttons[i]->update(dt);
 		if (buttons[i]->isClicked() && i != SFS_DELETE_BUTTON) {
 			clickedButton = i;
-			enterState(EXITING_SCREEN);
-			controlActionGroup->beginAction(CASCADING_MOVE, 0.0, 100.0, BUTTON_EFFECT_DURATION);
-		}
-	}
-
-	if (controlActionGroup->update(dt) && state == EXITING_SCREEN) {
-		switch (clickedButton) {
-			case SFS_BACK_BUTTON:
-				smh->menu->setScreen(TITLE_SCREEN);
-				return false;
-			case SFS_START_BUTTON:
-				smh->menu->openLoadScreen(selectedFile, true);
-				return false;
+			state = EXITING_SCREEN;
 		}
 	}
 
@@ -106,27 +120,31 @@ bool SelectFileScreen::update(float dt, float mouseX, float mouseY) {
 		}
 	}
 
-	//Listen for response to delete prompt - this is shitty
+	//Listen for response to delete prompt
 	if (deletePrompt) {
-		if (mouseY > y + 75 + 145*(selectedFile) && mouseY < y + 125 + 145*(selectedFile) && mouseX > x+145 && mouseX < x+210) {
-			mouseOn = ON_DELETE_YES;
-		} else if (mouseY > y + 75 + 145*(selectedFile) && mouseY < y + 125 + 145*(selectedFile) && mouseX > x+245 && mouseX < x+310) {
-			mouseOn = ON_DELETE_NO;
-		} 
-		if (smh->hge->Input_KeyDown(HGEK_LBUTTON) || smh->input->keyPressed(INPUT_ATTACK)) {
-			if (mouseOn == ON_DELETE_YES) {
-				smh->saveManager->deleteFile(selectedFile);
+		if (yesDeleteBox->TestPoint(smh->input->getMouseX(), smh->input->getMouseY()) && smh->hge->Input_KeyDown(HGEK_LBUTTON)) {
+			smh->saveManager->deleteFile(selectedFile);
 				deletePrompt = false;
-			} else if (mouseOn == ON_DELETE_NO) {
-				deletePrompt = false;
-			}
 		}
-	} else {
-		mouseOn = -999;
+		if (noDeleteBox->TestPoint(smh->input->getMouseX(), smh->input->getMouseY()) && smh->hge->Input_KeyDown(HGEK_LBUTTON)) {
+			deletePrompt = false;
+		}
 	}
 
+	//Move the Smiley selector towards the selected file
+	if (smileyY > saveBoxes[selectedFile].y + 45.0) {
+		smileyY -= 750.0 * dt;
+		if (smileyY < saveBoxes[selectedFile].y + 45.0) {
+			smileyY = saveBoxes[selectedFile].y + 45.0;
+		}
+	} else if (smileyY < saveBoxes[selectedFile].y + 45.0) {
+		smileyY += 750.0 * dt;
+		if (smileyY > saveBoxes[selectedFile].y + 45.0) {
+			smileyY = saveBoxes[selectedFile].y + 45.0;
+		}
+	}
+	
 	return false;
-
 }
 
 /**
@@ -134,35 +152,31 @@ bool SelectFileScreen::update(float dt, float mouseX, float mouseY) {
  */
 void SelectFileScreen::draw(float dt) {
 
+	smh->resources->GetSprite("optionsBackground")->Render(windowX, windowY);
+	smh->resources->GetSprite("optionsPatch")->Render(windowX + 344.0, windowY + 30.0);
 	smh->resources->GetFont("curlz")->SetColor(ARGB(255,0,0,0));
 	smh->resources->GetFont("curlz")->SetScale(1.0f);
 
 	//Draw save boxes
 	for (int i = 0; i < 4; i++) {
-		//Box
-		smh->resources->GetSprite("menuSaveBox")->Render(saveBoxes[i].x, saveBoxes[i].y);
-		//Save file info - don't draw if the delete prompt is up
-		if (!(deletePrompt && selectedFile == i)) {
-			if (smh->saveManager->isFileEmpty(i)) {
-				smh->resources->GetFont("bigLoadFnt")->printf(saveBoxes[i].x + 100, saveBoxes[i].y + 5, 
-					HGETEXT_LEFT, "Empty");
-			} else {
-				smh->resources->GetFont("bigLoadFnt")->printf(saveBoxes[i].x + 100, saveBoxes[i].y + 5, 
-					HGETEXT_LEFT, "File %d", i+1);
-			}
-			smh->resources->GetFont("curlz")->printf(saveBoxes[i].x + 150, saveBoxes[i].y + 70, 
-				HGETEXT_LEFT, "Time Played: %s", getTimeString(smh->saveManager->getTimePlayed(i)));
-			smh->resources->GetFont("curlz")->printf(saveBoxes[i].x + 630, saveBoxes[i].y + 70, 
-				HGETEXT_RIGHT, "Complete: %d", smh->saveManager->getCompletion(i));
+		if (selectedFile == i && deletePrompt) {
+				smh->resources->GetFont("inventoryFnt")->printf(saveBoxes[i].x + 70.0, saveBoxes[i].y + 5,
+					HGETEXT_LEFT, "Delete?");
+		} else {
+			smh->resources->GetFont("inventoryFnt")->printf(saveBoxes[i].x + 70.0, saveBoxes[i].y + 5, 
+				HGETEXT_LEFT, smh->saveManager->isFileEmpty(i) ? "- Empty -" : "Save File %d", i+1);
+			smh->resources->GetFont("description")->printf(saveBoxes[i].x + 70.0, saveBoxes[i].y + 50.0, 
+				HGETEXT_LEFT, smh->saveManager->isFileEmpty(i) ? "Time Played: 0:00:00" :
+				"Time Played: %s", getTimeString(smh->saveManager->getTimePlayed(i)));
 		}
 	}
 
 	//Draw smiley next to the selected game
-	smh->resources->GetSprite("smileysFace")->Render(x + 51, y + 75 + 145*(selectedFile));
+	smh->resources->GetSprite("smileysFace")->Render(smileyX, smileyY);
 
 	//Draw delete prompt if active
 	if (deletePrompt) {
-
+/**
 		//Speech bubble
 		smh->resources->GetSprite("menuSpeechBubble")->Render(x + 50, y + 15 + 145*(selectedFile));
 		smh->resources->GetFont("curlz")->SetColor(ARGB(255,0,0,0));
@@ -176,7 +190,7 @@ void SelectFileScreen::draw(float dt) {
 		if (mouseOn == ON_DELETE_NO) smh->resources->GetFont("curlz")->SetColor(ARGB(255,255,0,0));
 		smh->resources->GetFont("curlz")->printf(x+250, y + 75 + 145*(selectedFile),HGETEXT_LEFT, "No");
 		smh->resources->GetFont("curlz")->SetColor(ARGB(255,0,0,0));
-
+*/
 	}
 
 	//Draw buttons
@@ -224,12 +238,4 @@ const char *SelectFileScreen::getTimeString(int time) {
 	timeString += ":";
 	timeString += seconds;
 	return timeString.c_str();
-}
-
-/**
- * Enters a new state.
- */
-void SelectFileScreen::enterState(int newState) {
-	state = newState;
-	timeEnteredState = smh->getRealTime();
 }

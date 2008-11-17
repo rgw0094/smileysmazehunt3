@@ -190,23 +190,19 @@ public:
 	//Draw methods
 	void draw(float dt);
 	bool update(float dt, float mouseX, float mouseY);
-	void enterScreen();
-	void exitScreen();
 	const char *getTimeString(int seconds);
+	void setWindowPosition(float x, float y);
 
 	Button *buttons[SFS_NUM_BUTTONS];
 	SaveBox saveBoxes[4];
-	void enterState(int newState);
-	ControlActionGroup *controlActionGroup;
+	hgeRect *yesDeleteBox, *noDeleteBox;
 
 	//Variables
+	float windowX, windowY;
 	bool deletePrompt;
 	int selectedFile;
-	int x, y;
-	int mouseOn;
+	float smileyX, smileyY;
 	int clickedButton;
-	
-
 };
 
 //-----------------------------------------------------

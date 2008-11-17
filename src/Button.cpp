@@ -41,3 +41,7 @@ void Button::update(float dt) {
 bool Button::isClicked() {
 	return (highlighted && (smh->hge->Input_KeyDown(HGEK_LBUTTON)|| smh->input->keyPressed(INPUT_ATTACK)));
 }
+
+void Button::setText(const char* _text) {
+	strcpy(text, _text);
+}
