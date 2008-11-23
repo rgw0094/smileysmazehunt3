@@ -35,6 +35,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||SPICED UP the main menu||11/22/08||RGW||
 ||Save files are saved as bits||10/19/08||RGW||
 ||Leet BitStream class||10/18/08||RGW||
 ||Fountain heals you||10/17/08||RGW||
