@@ -565,22 +565,22 @@ Sprite menuBackground {
  resgroup=10
 }
 Sprite menuSpeechBubble {
- texture=menuItemsTx
- rect=0,200,567,73
+ texture=menuBackgroundTx
+ rect=0,769,245,73
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=10
 }
 Sprite buttonBackground {
- texture=menuItemsTx
- rect=0,0,250,75
+ texture=UserInterfaceTx
+ rect=661,22,246,71
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=10
 }
 Sprite buttonBackgroundHighlighted {
- texture=menuItemsTx
- rect=250,0,250,75
+ texture=UserInterfaceTx
+ rect=661,93,246,71
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=10
@@ -593,15 +593,15 @@ Sprite menuSaveBox {
  resgroup=10
 }
 Sprite controlsBox {
- texture=menuItemsTx
- rect=0,273,130,30
+ texture=menuBackgroundTx
+ rect=248,769,130,30
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=10
 }
 Sprite selectedControlsBox {
- texture=menuItemsTx
- rect=0,303,130,30
+ texture=menuBackgroundTx
+ rect=248,799,130,30
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=10
@@ -664,19 +664,19 @@ Sprite creditsBartli {
 ;******** OPTIONS WINDOW *******
 ;********************************
 Sprite optionsBackground {
- texture="Graphics/options.png"
+ texture=UserInterfaceTx
  rect=0,0,660,492
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 Sprite sliderBar {
- texture="Graphics/options.png"
- rect=0,492,93,21
+ texture=UserInterfaceTx
+ rect=660,0,93,21
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 Sprite optionsPatch {
- texture="Graphics/options.png"
+ texture=UserInterfaceTx
  rect=30,30,286,246
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
@@ -747,68 +747,68 @@ Sprite mapFogOfWarDownLeft {
 ;******** GUI *******
 ;********************
 Sprite abilityBox {
- texture="Graphics/gui.png"
- rect=0,30,85,85
+ texture=UserInterfaceTx
+ rect=661,196,85,85
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 Sprite manabarBackground {
- texture="Graphics/gui.png"
- rect=0,116,123,22
+ texture=UserInterfaceTx
+ rect=661,282,123,22
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 Sprite manaBar {
- texture="Graphics/gui.png"
- rect=0,138,115,16
+ texture=UserInterfaceTx
+ rect=661,304,115,16
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 Sprite moneyIcon {
- texture="Graphics/gui.png"
- rect=85,30,48,48
- hotspot=0,0
- blendmode=COLORMUL,ALPHABLEND,NOZWRITE
-}
-Sprite fullHealth {
- texture="Graphics/gui.png"
- rect=120,0,30,30
- hotspot=0,0
- blendmode=COLORMUL,ALPHABLEND,NOZWRITE
-}
-Sprite threeQuartersHealth {
- texture="Graphics/gui.png"
- rect=90,0,30,30
- hotspot=0,0
- blendmode=COLORMUL,ALPHABLEND,NOZWRITE
-}
-Sprite halfHealth {
- texture="Graphics/gui.png"
- rect=60,0,30,30
- hotspot=0,0
- blendmode=COLORMUL,ALPHABLEND,NOZWRITE
-}
-Sprite quarterHealth {
- texture="Graphics/gui.png"
- rect=30,0,30,30
+ texture=UserInterfaceTx
+ rect=746,196,48,48
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 Sprite emptyHealth {
- texture="Graphics/gui.png"
- rect=0,0,30,30
+ texture=UserInterfaceTx
+ rect=661,166,30,30
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite quarterHealth {
+ texture=UserInterfaceTx
+ rect=691,166,30,30
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite halfHealth {
+ texture=UserInterfaceTx
+ rect=721,166,30,30
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite threeQuartersHealth {
+ texture=UserInterfaceTx
+ rect=751,166,30,30
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite fullHealth {
+ texture=UserInterfaceTx
+ rect=781,166,30,30
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 Sprite bossHealthBackground {
- texture="Graphics/gui.png"
- rect=0,154,256,43
+ texture=UserInterfaceTx
+ rect=661,320,256,43
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 Sprite bossHealthBar {
- texture="Graphics/gui.png"
- rect=0,197,230,32
+ texture=UserInterfaceTx
+ rect=661,363,230,32
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
@@ -850,9 +850,6 @@ Sprite smileysFace {
 ;**************************
 ;******** INVENTORY *******
 ;**************************
-Texture InventoryTx {
- filename="Graphics/inventory.png"
-}
 Sprite inventoryCursor {
  texture=general
  rect=129,65,76,76
@@ -860,14 +857,14 @@ Sprite inventoryCursor {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 Sprite inventory {
- texture=InventoryTx
- rect=0,0,660,492
+ texture=UserInterfaceTx
+ rect=0,492,660,492
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 Animation levelIcons {
- texture=InventoryTx
- rect=0,492,40,40
+ texture=UserInterfaceTx
+ rect=0,984,40,40
  frames=5
  fps=20.0
  mode=LOOP
@@ -875,8 +872,8 @@ Animation levelIcons {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 Animation keyIcons {
- texture=InventoryTx
- rect=200,492,40,40
+ texture=UserInterfaceTx
+ rect=200,984,40,40
  frames=5
  fps=20.0
  mode=LOOP
@@ -884,8 +881,8 @@ Animation keyIcons {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 Animation upgradeIcons {
- texture=InventoryTx
- rect=360,492,40,40
+ texture=UserInterfaceTx
+ rect=360,984,40,40
  frames=5
  fps=20.0
  mode=LOOP
@@ -1343,6 +1340,9 @@ Texture tapestriesTx {
 }
 Texture npcTx {
  filename="Graphics/npcs.png"
+}
+Texture UserInterfaceTx {
+ filename="Graphics/UserInterface.png"
 }
 
 ;*************************

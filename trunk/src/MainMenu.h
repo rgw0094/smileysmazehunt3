@@ -199,7 +199,7 @@ public:
 
 	//Variables
 	float windowX, windowY;
-	bool deletePrompt;
+	bool deletePromptActive, mouseOverYes, mouseOverNo;
 	int selectedFile;
 	float smileyX, smileyY;
 	int clickedButton;

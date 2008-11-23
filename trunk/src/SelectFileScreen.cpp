@@ -15,7 +15,7 @@ SelectFileScreen::SelectFileScreen() {
 
 	state = ENTERING_SCREEN;
 
-	deletePrompt = false;
+	deletePromptActive = false;
 	selectedFile = 0;
 	yesDeleteBox = new hgeRect();
 	noDeleteBox = new hgeRect();
@@ -107,12 +107,12 @@ bool SelectFileScreen::update(float dt, float mouseX, float mouseY) {
 	//Click delete button
 	if (buttons[SFS_DELETE_BUTTON]->isClicked()) {
 		if (!smh->saveManager->isFileEmpty(selectedFile)) {
-			deletePrompt = true;
+			deletePromptActive = true;
 		}
 	}
 
 	//Update save box selection
-	if (!deletePrompt) {
+	if (!deletePromptActive) {
 		for (int i = 0; i < 4; i++) {
 			if ((smh->hge->Input_KeyDown(HGEK_LBUTTON) || smh->input->keyPressed(INPUT_ATTACK)) && saveBoxes[i].collisionBox->TestPoint(mouseX, mouseY)) {
 				selectedFile = i;
@@ -121,13 +121,22 @@ bool SelectFileScreen::update(float dt, float mouseX, float mouseY) {
 	}
 
 	//Listen for response to delete prompt
-	if (deletePrompt) {
-		if (yesDeleteBox->TestPoint(smh->input->getMouseX(), smh->input->getMouseY()) && smh->hge->Input_KeyDown(HGEK_LBUTTON)) {
+	if (deletePromptActive) {
+
+		yesDeleteBox->Set(saveBoxes[selectedFile].x + 100.0,		saveBoxes[selectedFile].y + 60.0, 
+						  saveBoxes[selectedFile].x + 100.0 + 50.0,	saveBoxes[selectedFile].y + 60.0 + 35.0);
+		noDeleteBox->Set( saveBoxes[selectedFile].x + 180.0,		saveBoxes[selectedFile].y + 60.0, 
+						  saveBoxes[selectedFile].x + 180.0 + 50.0,	saveBoxes[selectedFile].y + 60.0 + 35.0);
+
+		mouseOverYes = yesDeleteBox->TestPoint(smh->input->getMouseX(), smh->input->getMouseY());
+		mouseOverNo = noDeleteBox->TestPoint(smh->input->getMouseX(), smh->input->getMouseY());
+
+		if (mouseOverYes && smh->hge->Input_KeyDown(HGEK_LBUTTON)) {
 			smh->saveManager->deleteFile(selectedFile);
-				deletePrompt = false;
+			deletePromptActive = false;
 		}
-		if (noDeleteBox->TestPoint(smh->input->getMouseX(), smh->input->getMouseY()) && smh->hge->Input_KeyDown(HGEK_LBUTTON)) {
-			deletePrompt = false;
+		if (mouseOverNo && smh->hge->Input_KeyDown(HGEK_LBUTTON)) {
+			deletePromptActive = false;
 		}
 	}
 
@@ -157,40 +166,34 @@ void SelectFileScreen::draw(float dt) {
 	smh->resources->GetFont("curlz")->SetColor(ARGB(255,0,0,0));
 	smh->resources->GetFont("curlz")->SetScale(1.0f);
 
+	//Draw smiley next to the selected game
+	smh->resources->GetSprite("smileysFace")->Render(smileyX, smileyY);
+
 	//Draw save boxes
 	for (int i = 0; i < 4; i++) {
-		if (selectedFile == i && deletePrompt) {
-				smh->resources->GetFont("inventoryFnt")->printf(saveBoxes[i].x + 70.0, saveBoxes[i].y + 5,
-					HGETEXT_LEFT, "Delete?");
+		if (selectedFile == i && deletePromptActive) {
+
+			//Draw delete prompt
+			smh->resources->GetSprite("menuSpeechBubble")->Render(saveBoxes[i].x + 30, saveBoxes[i].y - 2.0);
+			smh->resources->GetFont("curlz")->SetColor(ARGB(255,0,0,0));
+			smh->resources->GetFont("curlz")->SetScale(1.0f);
+			smh->resources->GetFont("curlz")->printf(saveBoxes[i].x + 75.0, saveBoxes[i].y + 5.0, HGETEXT_LEFT, 
+				"Delete this file?");
+
+			smh->resources->GetFont("description")->SetColor(mouseOverYes ? ARGB(255,255,0,0) : ARGB(255,255,255,255));
+			smh->resources->GetFont("description")->printf(saveBoxes[i].x + 125.0, saveBoxes[i].y + 65.0, HGETEXT_CENTER, "Yes");
+			smh->resources->GetFont("description")->SetColor(mouseOverNo ? ARGB(255,255,0,0) : ARGB(255,255,255,255));
+			smh->resources->GetFont("description")->printf(saveBoxes[i].x + 205.0, saveBoxes[i].y + 65.0, HGETEXT_CENTER, "No");
+			smh->resources->GetFont("description")->SetColor(ARGB(255,255,255,255));
+
 		} else {
+			//Draw normal file info
 			smh->resources->GetFont("inventoryFnt")->printf(saveBoxes[i].x + 70.0, saveBoxes[i].y + 5, 
 				HGETEXT_LEFT, smh->saveManager->isFileEmpty(i) ? "- Empty -" : "Save File %d", i+1);
 			smh->resources->GetFont("description")->printf(saveBoxes[i].x + 70.0, saveBoxes[i].y + 50.0, 
 				HGETEXT_LEFT, smh->saveManager->isFileEmpty(i) ? "Time Played: 0:00:00" :
 				"Time Played: %s", getTimeString(smh->saveManager->getTimePlayed(i)));
 		}
-	}
-
-	//Draw smiley next to the selected game
-	smh->resources->GetSprite("smileysFace")->Render(smileyX, smileyY);
-
-	//Draw delete prompt if active
-	if (deletePrompt) {
-/**
-		//Speech bubble
-		smh->resources->GetSprite("menuSpeechBubble")->Render(x + 50, y + 15 + 145*(selectedFile));
-		smh->resources->GetFont("curlz")->SetColor(ARGB(255,0,0,0));
-		smh->resources->GetFont("curlz")->SetScale(1.0f);
-		smh->resources->GetFont("curlz")->printf(x+95,y+22 + 145*(selectedFile), HGETEXT_LEFT, "Are you sure you wish to delete this file?");
-		
-		//Buttons
-		if (mouseOn == ON_DELETE_YES) smh->resources->GetFont("curlz")->SetColor(ARGB(255,255,0,0));
-		smh->resources->GetFont("curlz")->printf(x+150, y + 75 + 145*(selectedFile),HGETEXT_LEFT, "Yes");
-		smh->resources->GetFont("curlz")->SetColor(ARGB(255,0,0,0));
-		if (mouseOn == ON_DELETE_NO) smh->resources->GetFont("curlz")->SetColor(ARGB(255,255,0,0));
-		smh->resources->GetFont("curlz")->printf(x+250, y + 75 + 145*(selectedFile),HGETEXT_LEFT, "No");
-		smh->resources->GetFont("curlz")->SetColor(ARGB(255,0,0,0));
-*/
 	}
 
 	//Draw buttons
