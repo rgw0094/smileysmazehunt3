@@ -214,6 +214,10 @@ public:
 #define TS_CREDITS_BUTTON 2
 #define TS_PLAY_BUTTON 3
 
+#define SMILEY_TITLE_COMING_AT_YOU 0
+#define SMILEY_TITLE_GOING_BACK 1
+#define SMILEY_TITLE_STOPPED 2
+
 class TitleScreen : public MenuScreen {
 
 public:
@@ -228,6 +232,11 @@ public:
 	void updateState(float dt);
 
 	Button *buttons[TS_NUM_BUTTONS];
+
+	float smileyTitleX,smileyTitleY; //Where and how large the title is drawn
+	float smileyTitleSize;
+	int smileyTitleState; //whether it's coming at you, going back, or stationary
+
 	ControlActionGroup *controlActionGroup;
 	int clickedButton;
 

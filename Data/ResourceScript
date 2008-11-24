@@ -585,6 +585,13 @@ Sprite buttonBackgroundHighlighted {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=10
 }
+Sprite smileyTitle {
+ texture=menuBackgroundTx
+ rect=380,769,430,214
+ hotspot=215,104
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=10
+}
 Sprite menuSaveBox {
  texture=menuItemsTx
  rect=0,75,650,125
