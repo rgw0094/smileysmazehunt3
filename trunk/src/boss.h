@@ -34,7 +34,7 @@ public:
 
 	void drawHealth(char *name) {
 		smh->resources->GetSprite("bossHealthBackground")->Render(745,10);
-		smh->resources->GetSprite("bossHealthBar")->SetTextureRect(0,197,230*(health / maxHealth),32,true);
+		smh->resources->GetSprite("bossHealthBar")->SetTextureRect(661,363,230*(health / maxHealth),32,true);
 		smh->resources->GetSprite("bossHealthBar")->Render(758,15);
 		smh->resources->GetFont("curlz")->SetColor(ARGB(255,255,255,255));
 		smh->resources->GetFont("curlz")->printf(745+128,10,HGETEXT_CENTER,name);

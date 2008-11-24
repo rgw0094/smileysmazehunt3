@@ -409,9 +409,9 @@ void Player::drawGUI(float dt) {
 	drawX = 145;
 	drawY = getMaxHealth() < 10 ? 70 : 115;
 	smh->resources->GetSprite("manabarBackground")->RenderEx(drawX, drawY, 0.0, 1.0 + .15 * smh->saveManager->numUpgrades[1], 1.0);
-	smh->resources->GetSprite("manaBar")->SetTextureRect(0, 138, 115*(mana/getMaxMana()), 15, true);
-	smh->resources->GetSprite("manaBar")->RenderEx(drawX + 4, drawY + 3, 0.0, 1.0 + .15 * smh->saveManager->numUpgrades[1], 1.0);
-
+	smh->resources->GetSprite("manaBar")->SetTextureRect(661, 304, 115*(mana/getMaxMana()), 15, true);
+	smh->resources->GetSprite("manaBar")->Render(drawX+4,drawY+3);
+	
 	//Jesus bar
 	if (waterWalk) {
 		smh->resources->GetSprite("bossHealthBar")->RenderStretch(
