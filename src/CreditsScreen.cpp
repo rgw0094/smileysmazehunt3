@@ -74,7 +74,7 @@ bool CreditsScreen::update(float dt, float mouseX, float mouseY) {
 	}
 
 	//Input
-	if (smh->hge->Input_KeyDown(HGEK_ENTER)) {
+	if (smh->hge->Input_KeyDown(HGEK_ENTER) || smh->hge->Input_KeyDown(HGEK_ESCAPE) || smh->hge->Input_GetKeyState(HGEK_LBUTTON) || smh->hge->Input_GetKeyState(HGEK_RBUTTON) || smh->hge->Input_GetKeyState(HGEK_SPACE)) {
 		smh->menu->setScreen(TITLE_SCREEN);
 		return false;
 	}
