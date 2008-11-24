@@ -22,6 +22,7 @@ TitleScreen::TitleScreen() {
 	smileyTitleY = 118;
 	smileyTitleSize = 0.0001;
 	smileyTitleState = SMILEY_TITLE_COMING_AT_YOU;
+	smileyTitleExited=false;
 
 	controlActionGroup = new ControlActionGroup();
 	for (int i = 0; i < TS_NUM_BUTTONS; i++) {
@@ -75,6 +76,7 @@ bool TitleScreen::update(float dt, float mouseX, float mouseY) {
 			clickedButton = i;
 			enterState(EXITING_SCREEN);
 			controlActionGroup->beginAction(CASCADING_MOVE, 0.0, 100.0, BUTTON_EFFECT_DURATION);
+			smileyTitleState = SMILEY_TITLE_EXITING;
 		}
 	}
 
@@ -91,8 +93,15 @@ bool TitleScreen::update(float dt, float mouseX, float mouseY) {
 				smileyTitleSize = 1.0;
 			}
 			break;
-		case SMILEY_TITLE_STOPPED: default:
+		case SMILEY_TITLE_STOPPED:
 			smileyTitleSize = 1.0;
+			break;
+		case SMILEY_TITLE_EXITING:
+			smileyTitleSize -= 3.0*dt;
+			if (smileyTitleSize < 0.0001) {
+				smileyTitleSize = 0.0001;
+				smileyTitleExited=true;
+			}
 			break;
 	};
 	
