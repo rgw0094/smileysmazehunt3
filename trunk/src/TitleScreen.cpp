@@ -18,6 +18,11 @@ TitleScreen::TitleScreen() {
 	buttons[TS_CREDITS_BUTTON] = new Button(514.4, 785.0, "Credits");
 	buttons[TS_PLAY_BUTTON] = new Button(769.2, 785.0, "Play");
 
+	smileyTitleX = 528;
+	smileyTitleY = 118;
+	smileyTitleSize = 0.0001;
+	smileyTitleState = SMILEY_TITLE_COMING_AT_YOU;
+
 	controlActionGroup = new ControlActionGroup();
 	for (int i = 0; i < TS_NUM_BUTTONS; i++) {
 		controlActionGroup->addControl(buttons[i]);
@@ -52,6 +57,10 @@ void TitleScreen::draw(float dt) {
 		buttons[i]->draw(dt);
 	}
 
+	//Draw title
+	smh->resources->GetSprite("smileyTitle")->RenderEx(smileyTitleX,smileyTitleY,0.0,smileyTitleSize,smileyTitleSize);
+    
+
 }
 
 /**
@@ -68,6 +77,25 @@ bool TitleScreen::update(float dt, float mouseX, float mouseY) {
 			controlActionGroup->beginAction(CASCADING_MOVE, 0.0, 100.0, BUTTON_EFFECT_DURATION);
 		}
 	}
+
+	//Update title
+	switch (smileyTitleState) {
+		case SMILEY_TITLE_COMING_AT_YOU:
+			smileyTitleSize += 2.3*dt;
+			if (smileyTitleSize > 1.23) smileyTitleState = SMILEY_TITLE_GOING_BACK;
+			break;
+		case SMILEY_TITLE_GOING_BACK:
+			smileyTitleSize -= 3.5*dt;
+			if (smileyTitleSize <= 1.0) {
+				smileyTitleState = SMILEY_TITLE_STOPPED;
+				smileyTitleSize = 1.0;
+			}
+			break;
+		case SMILEY_TITLE_STOPPED: default:
+			smileyTitleSize = 1.0;
+			break;
+	};
+	
 
 	if (controlActionGroup->update(dt) && state == EXITING_SCREEN) {
 		switch (clickedButton) {
