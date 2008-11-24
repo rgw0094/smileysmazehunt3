@@ -217,6 +217,7 @@ public:
 #define SMILEY_TITLE_COMING_AT_YOU 0
 #define SMILEY_TITLE_GOING_BACK 1
 #define SMILEY_TITLE_STOPPED 2
+#define SMILEY_TITLE_EXITING 3
 
 class TitleScreen : public MenuScreen {
 
@@ -236,6 +237,8 @@ public:
 	float smileyTitleX,smileyTitleY; //Where and how large the title is drawn
 	float smileyTitleSize;
 	int smileyTitleState; //whether it's coming at you, going back, or stationary
+	bool smileyTitleExited; //whether it's done exiting or not
+
 
 	ControlActionGroup *controlActionGroup;
 	int clickedButton;
