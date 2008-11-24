@@ -1,6 +1,9 @@
 ;***********************
 ;******** FONTS ********
 ;***********************
+Texture UserInterfaceTx {
+ filename="Graphics/UserInterface.png"
+}
 Font curlz {
  filename="curlz.fnt"
  tracking=1.0
@@ -1348,9 +1351,7 @@ Texture tapestriesTx {
 Texture npcTx {
  filename="Graphics/npcs.png"
 }
-Texture UserInterfaceTx {
- filename="Graphics/UserInterface.png"
-}
+
 
 ;*************************
 ;******** Enemies ********
