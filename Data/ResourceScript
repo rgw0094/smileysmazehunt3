@@ -595,6 +595,13 @@ Sprite smileyTitle {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=10
 }
+Sprite loadingText {
+ texture=menuBackgroundTx
+ rect=1,844,334,88
+ hotspot=168,45
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=10
+}
 Sprite menuSaveBox {
  texture=menuItemsTx
  rect=0,75,650,125
