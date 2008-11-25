@@ -21,12 +21,16 @@ LoadingScreen::~LoadingScreen() {
 }
 
 void LoadingScreen::draw(float dt) {
+	
+	float y;
+
+	y = 10*sin(smh->getRealTime()*7);
 
 	if (!fromLoadScreen) {
 		smh->shadeScreen(255.0);
 	}
 
-	smh->resources->GetFont("titleFnt")->printf(512,350,HGETEXT_CENTER, "Loading...");
+	smh->resources->GetSprite("loadingText")->Render(512,384+y);
 }
 
 bool LoadingScreen::update(float dt, float mouseX, float mouseY) {
