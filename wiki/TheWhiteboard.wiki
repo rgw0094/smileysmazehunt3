@@ -34,6 +34,7 @@
  * The map graphics are glitched on their computer (I'll look into this)
  * If you die to Phyrebawz, and continue, the orb isn't shot
  * Cylinders/Doors/Map weren't saved (I noticed this in Olde Towne, but I'm guessing it's not limited to Olde Towne)
+ * Jump with a spring onto ice -- Smiley stops moving. I think he's still up in the air a little bit (didn't land all the way)
 
 === Graphics To Do ===
  * Mirror switch graphic 	 
