@@ -33,6 +33,7 @@
  * When you get keys in Olde Towne, the green and blue keys appear in the wrong zone
  * The map graphics are glitched on their computer (I'll look into this)
  * If you die to Phyrebawz, and continue, the orb isn't shot
+ * Cylinders/Doors/Map weren't saved (I noticed this in Olde Towne, but I'm guessing it's not limited to Olde Towne)
 
 === Graphics To Do ===
  * Mirror switch graphic 	 
