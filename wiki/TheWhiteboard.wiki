@@ -29,6 +29,11 @@
  * Bouncing spikey enemies that I put to appear in line with each other in game sometimes are not in line when testing, making it a lot harder to get by them than planned.
  * When using fire on the shore of deep water, if you immediately (through the inventory) put on Jesus' Sandals and walk on the water the flame breath will continue to be used long enough to hit ice blocks that should be out of reach.
 
+=== Bugs I noticed while watching Blake play ===
+ * When you get keys in Olde Towne, the green and blue keys appear in the wrong zone
+ * The map graphics are glitched on their computer (I'll look into this)
+ * If you die to Phyrebawz, and continue, the orb isn't shot
+
 === Graphics To Do ===
  * Mirror switch graphic 	 
  * Arrow switch graphic (bunny) 	 
