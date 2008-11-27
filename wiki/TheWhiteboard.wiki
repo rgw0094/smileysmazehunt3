@@ -35,7 +35,8 @@
  * If you die to Phyrebawz, and continue, the orb isn't shot
  * Cylinders/Doors/Map weren't saved (I noticed this in Olde Towne, but I'm guessing it's not limited to Olde Towne)
  * Jump with a spring onto ice -- Smiley stops moving. I think he's still up in the air a little bit (didn't land all the way)
- * BLake died to the penguin and continued. His tongue didn't work for about 10 seconds.
+ * Blake died to the penguin and continued. His tongue didn't work for about 10 seconds.
+ * Controls didn't save.
 
 === Graphics To Do ===
  * Mirror switch graphic 	 
