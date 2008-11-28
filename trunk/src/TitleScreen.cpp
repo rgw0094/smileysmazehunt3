@@ -30,7 +30,6 @@ TitleScreen::TitleScreen() {
 	}
 
 	controlActionGroup->beginAction(CASCADING_MOVE, 0.0, -100.0, BUTTON_EFFECT_DURATION);
-
 }
 
 /**
@@ -38,6 +37,7 @@ TitleScreen::TitleScreen() {
  */
 TitleScreen::~TitleScreen() {
 	for (int i = 0; i < TS_NUM_BUTTONS; i++) delete buttons[i];
+	delete controlActionGroup;
 }
 
 /**
