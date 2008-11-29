@@ -43,6 +43,7 @@
 ||Item||Date||Done By||
 ||Fixed tongue bug||11/28/08||RGW||
 ||Fixed bug with saving||11/28/08||RGW||
+||Fixed bug with keys||11/28/08||ETI||
 ||New title and loading text graphics||11/23/08||ETI||
 ||SPICED UP the main menu||11/22/08||RGW||
 ||Save files are saved as bits||10/19/08||RGW||
