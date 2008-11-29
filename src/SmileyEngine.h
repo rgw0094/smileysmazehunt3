@@ -801,14 +801,19 @@ public:
 			case TUTS_TOMB:
 			case SMOLDER_HOLLOW:
 				return 0;
+				break;
 			case FOREST_OF_FUNGORIA:
 				return 1;
+				break;
 			case SESSARIA_SNOWPLAINS:
 				return 2;
+				break;
 			case WORLD_OF_DESPAIR:
 				return 3;
+				break;
 			case CASTLE_OF_EVIL:
 				return 4;
+				break;
 		}
 		return -1;
 	}

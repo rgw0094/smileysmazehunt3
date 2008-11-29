@@ -1102,7 +1102,7 @@ void Player::doItems() {
 	//Keys
 	if (item == RED_KEY || item == GREEN_KEY || item == BLUE_KEY || item == YELLOW_KEY) {
 		smh->soundManager->playSound("snd_key");
-		smh->saveManager->numKeys[Util::getKeyIndex(item)][item-1]++;
+		smh->saveManager->numKeys[Util::getKeyIndex(smh->saveManager->currentArea)][item-1]++;
 	//Gems
 	} else if (item == SMALL_GEM || item == MEDIUM_GEM || item == LARGE_GEM) {
 		smh->soundManager->playSound("snd_gem");
