@@ -910,6 +910,8 @@ void Player::doSprings(float dt) {
 		x = gridX*64.0 + 32.0;
 		springOffset = 0.0;
 		y = gridY*64.0 + 32.0;
+		
+		startPuzzleIce(); //start puzzle ice -- needed here so if Smiley jumps from spring to ice it actually works
 	}
 
 	//Remember where the player is before touching a spring
@@ -1281,10 +1283,9 @@ void Player::setFacingDirection() {
 }
 
 /**
- * Updates ice related shit.
- */ 
-void Player::doIce(float dt) {
-	
+ * Start puzzle ice
+ */
+void Player::startPuzzleIce() {
 	//Start Puzzle Ice
 	if (!springing && hoveringYOffset == 0.0f && !iceSliding && smh->environment->collisionAt(x,y) == ICE) {
 		if (lastGridX < gridX) {
@@ -1303,12 +1304,40 @@ void Player::doIce(float dt) {
 			facing = UP;
 			dx = 0;
 			dy = -MOVE_SPEED;
+		} else { //there was no lastGridX or lastGridY, so let's go by "facing" (this happens when you jump onto ice)
+			switch (facing) {
+			case RIGHT:
+				dx = MOVE_SPEED;
+				dy = 0;
+				break;
+			case LEFT:
+				dx = -MOVE_SPEED;
+				dy = 0;
+				break;
+			case DOWN:
+				dx = 0;
+				dy = MOVE_SPEED;
+				break;
+			case UP:
+				dx = 0;
+				dy = -MOVE_SPEED;
+				break;
+			};
 		}
 		iceSliding = true;
 	}
+}
+
+/**
+ * Updates ice related shit.
+ */ 
+void Player::doIce(float dt) {
+	
+	startPuzzleIce();
 	
 	//Continue Puzzle Ice - slide towards the center of the square
 	if (iceSliding) {
+		smh->hge->System_SetState(HGE_TITLE, "Smiley's Maze Hunt ICE");
 		if (facing == LEFT || facing == RIGHT) {		
 			if ((int)y % 64 < 31) y += 30.0f*dt;
 			if ((int)y % 64 > 33) y -= 30.0f*dt; 

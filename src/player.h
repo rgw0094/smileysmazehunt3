@@ -97,6 +97,7 @@ private:
 	void setFacingDirection();
 	void updateVelocities(float dt);
 	void doIce(float dt);
+	void startPuzzleIce();
 	void doShrinkTunnels(float dt);
 	void updateSmileyColor(float dt);
 
