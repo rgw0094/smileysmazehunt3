@@ -350,7 +350,8 @@ void SMH::drawSprite(const char* sprite, float x, float y) {
  * Draws a sprite at an absolute position stretched to a height and width.
  */
 void SMH::drawSprite(const char* sprite, float x, float y, float width, float height) {
-	resources->GetSprite(sprite)->Render(x,y);//RenderStretch(x, y, x + width, x + height);
+	//resources->GetSprite(sprite)->Render(x,y);
+	resources->GetSprite(sprite)->RenderStretch(x, y, x + width, y + height);
 }
 
 /**
