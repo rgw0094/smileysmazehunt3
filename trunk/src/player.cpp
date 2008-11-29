@@ -161,7 +161,7 @@ void Player::update(float dt) {
 	if (smh->input->keyPressed(INPUT_ATTACK) && !breathingFire && !frozen && !isHovering &&
 			!falling && !springing && !cloaked && !shrinkActive && !drowning &
 			!reflectionShieldActive &&
-			smh->getCurrentFrame() > smh->windowManager->frameLastWindowClosed) {			
+			smh->getCurrentFrame() != smh->windowManager->frameLastWindowClosed) {			
 		smh->saveManager->numTongueLicks++;
 		tongue->startAttack();
 	}
