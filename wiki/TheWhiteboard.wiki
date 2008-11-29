@@ -26,7 +26,6 @@
  * When increasing the music volume from 0 the music won't play until you go to a new zone (this is an HGE bug)
  * Sometimes after talking to an NPC they will walk away facing the wrong direction.
  * Bouncing spikey enemies that I put to appear in line with each other in game sometimes are not in line when testing, making it a lot harder to get by them than planned.
- * The map graphics are glitched (I'll look into this)
  * If you die to Phyrebawz, and continue, the orb isn't shot
  * Jump with a spring onto ice -- Smiley stops moving. I think he's still up in the air a little bit (didn't land all the way)
  * Controls didn't save.
@@ -41,6 +40,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fixed SMH.cpp renderstretch function||11/29/08||ETI||
 ||Fixed tongue bug||11/28/08||RGW||
 ||Fixed bug with saving||11/28/08||RGW||
 ||Fixed bug with keys||11/28/08||ETI||
