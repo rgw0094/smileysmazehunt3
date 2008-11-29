@@ -29,7 +29,6 @@
  * The map graphics are glitched on their computer (I'll look into this)
  * If you die to Phyrebawz, and continue, the orb isn't shot
  * Jump with a spring onto ice -- Smiley stops moving. I think he's still up in the air a little bit (didn't land all the way)
- * Blake died to the penguin and continued. His tongue didn't work for about 10 seconds.
  * Controls didn't save.
 
 === Design Issues ===
@@ -42,6 +41,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fixed tongue bug||11/28/08||RGW||
 ||Fixed bug with saving||11/28/08||RGW||
 ||SPICED UP the main menu||11/22/08||RGW||
 ||Save files are saved as bits||10/19/08||RGW||
