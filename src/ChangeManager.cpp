@@ -1,5 +1,7 @@
 #include "SmileyEngine.h"
 
+extern SMH *smh;
+
 using namespace std;
 
 /**
@@ -30,7 +32,6 @@ void ChangeManager::change(int area, int x, int y) {
  */
 bool ChangeManager::isChanged(int area, int x, int y) {
 	std::list<Change>::iterator i;
-
 	for (i = theChanges.begin(); i != theChanges.end(); i++) {
 		if (i->area == area && i->x == x && i->y == y) {
 			return true;

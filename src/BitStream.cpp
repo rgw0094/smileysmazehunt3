@@ -22,8 +22,9 @@ void BitStream::open(std::string fileName, int _mode) {
 
 	isOpen = true;
 	mode = _mode;
-	counter=0;
-	byte=0;
+	counter = 0;
+	byte = 0;
+	numRead = numWritten = 0;
 
 	if (mode == FILE_READ) {
 		inFile.open(fileName.c_str(), std::ios::binary);
@@ -64,6 +65,7 @@ bool BitStream::writeBit(bool bit) {
 	} 
 
 	counter++;
+	numWritten++;
 	if (counter > 7) {
 		//End of this bit - add it to the output string and start a new byte
 		outString += byte;
@@ -90,6 +92,7 @@ bool BitStream::readBit() {
 	}
 
 	bool bit = byte & (unsigned char)pow(2,7-counter);
+	numRead++;
 
 	counter++;
 	if (counter > 7) {
@@ -130,6 +133,20 @@ int BitStream::readByte() {
 		}
 	}
 	return byte;
+}
+
+/**
+ * Returns the number of bits that have been written since the stream was opened.
+ */ 
+int BitStream::getNumBitsWritten() {
+	return numWritten;
+}
+
+/**
+ * Returns the number of bits that have been read since the stream was opened.
+ */
+int BitStream::getNumBitsRead() {
+	return numRead;
 }
 
 /**

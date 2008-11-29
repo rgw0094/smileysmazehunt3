@@ -19,8 +19,6 @@ class HGE;
 class hgeResourceManager;
 class hgeAnimation;
 class hgeFont;
-class ChangeManager;
-class BitStream;
 class Player;
 class Environment;
 class MainMenu;
@@ -547,11 +545,13 @@ public:
 	int readByte();
 	bool readBit();
 	void close();
+	int getNumBitsRead();
+	int getNumBitsWritten();
 	static void test();
 
 private:
 	bool isOpen;
-	int mode;
+	int mode, numRead, numWritten;
 	std::ifstream inFile;
 	std::ofstream outFile;
 	std::string outString;

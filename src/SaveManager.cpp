@@ -170,7 +170,8 @@ void SaveManager::load(int fileNumber) {
 	playerMana = float(input->readByte());
 
 	//Load changed shit
-	for (int i = 0; i < input->readByte(); i++) {
+	int numChanges = input->readByte();
+	for (int i = 0; i < numChanges; i++) {
 		changeManager->change(input->readByte(), input->readByte(), input->readByte());
 	}
 
@@ -182,7 +183,6 @@ void SaveManager::load(int fileNumber) {
 
 	//Tutorial Man
 	tutorialManCompleted = input->readBit();
-	smh->hge->System_Log("%d", tutorialManCompleted);
 
 	//Exploration data
 	for (int i = 0; i < NUM_AREAS; i++) {
@@ -192,6 +192,9 @@ void SaveManager::load(int fileNumber) {
 			}
 		}
 	}
+
+	input->close();
+	delete input;
 
 	timeFileLoaded = smh->getRealTime();
 
@@ -265,7 +268,6 @@ void SaveManager::save(bool showConfirmation) {
 	output->writeByte(damageReceived);
 
 	//Tutorial Man
-	smh->hge->System_Log("%d", tutorialManCompleted);
 	output->writeBit(tutorialManCompleted);
 
 	//Exploration data
