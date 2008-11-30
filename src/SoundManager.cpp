@@ -62,7 +62,7 @@ void SoundManager::setMusicVolume(int newVolume) {
 	musicVolume = newVolume;
 	if (musicVolume < 0) musicVolume = 0;
 	if (musicVolume > 100) musicVolume = 100;
-	smh->hge->System_SetState(HGE_MUSVOLUME, musicVolume);
+	smh->hge->Channel_SetVolume(musicChannel, musicVolume);
 	smh->hge->Ini_SetInt("Options", "musicVolume", musicVolume);
 }
 
@@ -104,7 +104,6 @@ void SoundManager::stopEnvironmentChannel() {
  */
 void SoundManager::playSwitchSound(int gridX, int gridY, bool alwaysPlaySound) {
 	if (smh->timePassedSince(lastSwitchSoundTime) > SWITCH_SOUND_DELAY) {
-		//smh->hge->System_Log("Dickens %f %f", lastSwitchSoundTime, smh->getGameTime());
 		bool inRange = abs(gridX - smh->player->gridX) <= 8 && abs(gridY - smh->player->gridY) <= 6;
 		if (alwaysPlaySound || inRange) {
 			lastSwitchSoundTime = smh->getGameTime();
