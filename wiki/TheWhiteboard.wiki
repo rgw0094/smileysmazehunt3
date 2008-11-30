@@ -23,7 +23,6 @@
  * Calypso 2
 
 === Bugs ===
- * When increasing the music volume from 0 the music won't play until you go to a new zone (this is an HGE bug)
  * Sometimes after talking to an NPC they will walk away facing the wrong direction.
  * Bouncing spikey enemies that I put to appear in line with each other in game sometimes are not in line when testing, making it a lot harder to get by them than planned.
 
@@ -36,6 +35,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fixed music volume bug||11/29/08||RGW||
 ||Both switches and cylinders now make sound||11/29/08||RGW||
 ||Fixed Phyrebozz's orbs||11/29/08||RGW||
 ||Fixed saving controls||11/29/08||RGW||
