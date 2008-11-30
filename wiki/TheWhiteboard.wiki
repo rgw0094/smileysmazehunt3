@@ -22,6 +22,7 @@
 === Graphics To Do ===
  * New Keys
  * King Tut
+ * New ability loot graphic (the thing that appears when you kill a boss)
  * Bomb guy graphic
  * Lovecraftian Boss
  * "Exit Shop" icon
