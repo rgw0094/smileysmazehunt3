@@ -21,7 +21,6 @@
  * Calypso 2
 
 === Bugs ===
- * Sometimes after talking to an NPC they will walk away facing the wrong direction.
  * Bouncing spikey enemies that I put to appear in line with each other in game sometimes are not in line when testing, making it a lot harder to get by them than planned.
 
 === Design Issues ===
@@ -33,6 +32,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fixed NPC facing the wrong way bug||11/29/08||RGW||
 ||Fixed music volume bug||11/29/08||RGW||
 ||Both switches and cylinders now make sound||11/29/08||RGW||
 ||Fixed Phyrebozz's orbs||11/29/08||RGW||
