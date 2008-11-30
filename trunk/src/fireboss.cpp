@@ -17,10 +17,10 @@ extern SMH *smh;
 
 //Attributes
 #define HEALTH 4.25
-
 #define ORB_DAMAGE 0.5
 #define COLLISION_DAMAGE 0.25
 #define FLASH_DURATION 2.0
+#define FIREBALL_DELAY 10.0
 
 #define TEXT_FIREBOSS_INTRO 100
 #define TEXT_FIREBOSS_VICTORY 101
@@ -36,12 +36,11 @@ FireBoss::FireBoss(int gridX, int gridY, int _groupID) {
 	y = gridY*64+32;
 	facing = DOWN;
 	for (int i = 0; i < 3; i++) collisionBoxes[i] = new hgeRect();
-	lastHitByTongue = -100.0f;
 	health = maxHealth = HEALTH;
 	state = FIREBOSS_INACTIVE;
 	currentLocation = 0;	//Start at the middle location
-	startedAttackMode = smh->getGameTime();
-	lastFireOrb = smh->getGameTime() - 5.0f;
+	startedAttackMode = lastHitByTongue = 0.0;
+	lastFireOrb = -10.0;
 	speed = 200;
 	startedIntroDialogue = false;
 	flashing = increaseAlpha = false;
@@ -70,6 +69,8 @@ FireBoss::FireBoss(int gridX, int gridY, int _groupID) {
 	locations[4].x = x + 4*64;
 	locations[4].y = y + 3*64+32;
 
+
+	smh->hge->System_Log("dickens");
 }
 
 /**
@@ -263,7 +264,7 @@ bool FireBoss::update(float dt) {
 	}
 
 	//Shoot fire orbs every 10 seconds
-	if (state != FIREBOSS_FRIENDLY && state != FIREBOSS_INACTIVE && smh->getGameTime() > lastFireOrb + 10) {
+	if (state != FIREBOSS_FRIENDLY && state != FIREBOSS_INACTIVE && smh->timePassedSince(lastFireOrb) > FIREBALL_DELAY) {
 		addOrb(x,y-80+floatY);
 		lastFireOrb = smh->getGameTime();
 	}
