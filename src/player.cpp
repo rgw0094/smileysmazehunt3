@@ -445,12 +445,13 @@ void Player::drawGUI(float dt) {
 
 }
 
-
-
 /**
  * Cycles through the available abilities, skipping ones which are PASSIVE
  */
 void Player::changeAbility(int direction) {
+
+	//Don't let smiley switch abilities if he is using Jesus' sandals and is over water
+	if (selectedAbility == WATER_BOOTS && isSmileyTouchingWater()) return;
 
 	//Stop old ability
 	fireBreathParticle->Stop(false);
@@ -1054,6 +1055,28 @@ bool Player::canPass(int collision) {
 	}
 }
 
+/**
+ * Returns true if smiley is overlapping a water tile at all
+ */
+bool Player::isSmileyTouchingWater() {
+	
+	hgeRect *box = new hgeRect();
+
+	for (int i = gridX-1; i <= gridX+1; i++) {
+		for (int j = gridY-1; j <= gridY+1; j++) {
+			if (smh->environment->collision[i][j] == DEEP_WATER || smh->environment->collision[i][j] == GREEN_WATER) {
+				box->SetRadius(i * 64.0 + 32.0, j * 64.0 + 32.0, 32.0);
+				if (collisionCircle->testBox(box)) {
+					delete box;
+					return true;
+				}
+			}
+		}
+	}
+
+	delete box;
+	return false;
+}
 
 void Player::setFacingStraight() {
 

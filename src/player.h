@@ -101,6 +101,7 @@ private:
 	void doShrinkTunnels(float dt);
 	void updateSmileyColor(float dt);
 	bool doGayMovementFix(int xDist, int yDist);
+	bool isSmileyTouchingWater();
 
 	Tongue *tongue;
 	Worm *worm;
