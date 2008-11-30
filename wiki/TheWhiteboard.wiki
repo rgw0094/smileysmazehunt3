@@ -23,6 +23,7 @@
  * King Tut
  * Lovecraftian Boss
  * "Exit Shop" icon
+ * New button graphics maybe
  * Mirror switch graphic 	 
  * Arrow switch graphic (bunny) 
 
