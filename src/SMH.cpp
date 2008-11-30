@@ -15,10 +15,14 @@
 SMH::SMH(HGE *_hge) { 
 	hge = _hge;
 	debugMode = false;
-	gameTime = 0.0;
 	debugMovePressed = false;
 	lastDebugMoveTime = 0.0;
 	darkness = 0.0;
+
+	//Game time and frame counter are only set once and carry over when "re-entering"
+	//game mode. 
+	gameTime = 0.0;
+	frameCounter = 0;
 }
 
 SMH::~SMH() { }
@@ -258,12 +262,6 @@ void SMH::enterGameState(int newState) {
 	}
 
 	gameState = newState;
-
-	//Entering game state
-	if (gameState == GAME) {
-		gameTime = 0.0;
-		frameCounter = 0;
-	}
 }
 
 /////////////////////////////////////////////
