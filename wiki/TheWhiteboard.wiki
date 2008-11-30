@@ -22,6 +22,7 @@
 === Graphics To Do ===
  * King Tut
  * Lovecraftian Boss
+ * "Exit Shop" icon
  * Mirror switch graphic 	 
  * Arrow switch graphic (bunny) 
 
