@@ -68,9 +68,6 @@ FireBoss::FireBoss(int gridX, int gridY, int _groupID) {
 	//Bottom Right
 	locations[4].x = x + 4*64;
 	locations[4].y = y + 3*64+32;
-
-
-	smh->hge->System_Log("dickens");
 }
 
 /**

@@ -1,7 +1,10 @@
 #include "SmileyEngine.h"
-#include "hgeresource.h"
+#include "Player.h"
 
 extern SMH *smh;
+
+//The minimum time that must pass between switch sounds so that it doesn't sound like hell
+#define SWITCH_SOUND_DELAY 0.5
 
 /** 
  * Constructor
@@ -12,6 +15,7 @@ SoundManager::SoundManager() {
 	setMusicVolume(smh->hge->Ini_GetInt("Options", "musicVolume", 100));
 	setSoundVolume(smh->hge->Ini_GetInt("Options", "soundVolume", 100));
 
+	lastSwitchSoundTime = 0.0;
 }
 
 /**
@@ -90,7 +94,24 @@ void SoundManager::playEnvironmentEffect(char *effect, bool loop) {
 void SoundManager::stopEnvironmentChannel() {
 	smh->hge->Channel_Stop(environmentChannel);
 }
-	
+
+/**
+ * Plays the switch sound effect originating from point (gridX, gridY). The sound will only be played if
+ * alwaysPlaySound is true or the sound is originating from a point close to Smiley. 
+ * 
+ * This method can be called as much as you want but it will only play a sound at maximum every SWITCH_SOUND_DELAY
+ * seconds to avoid it sounding like the dickens if a ton of switches are toggled at once.
+ */
+void SoundManager::playSwitchSound(int gridX, int gridY, bool alwaysPlaySound) {
+	if (smh->timePassedSince(lastSwitchSoundTime) > SWITCH_SOUND_DELAY) {
+		//smh->hge->System_Log("Dickens %f %f", lastSwitchSoundTime, smh->getGameTime());
+		bool inRange = abs(gridX - smh->player->gridX) <= 8 && abs(gridY - smh->player->gridY) <= 6;
+		if (alwaysPlaySound || inRange) {
+			lastSwitchSoundTime = smh->getGameTime();
+			playSound("snd_switch");
+		}
+	}
+}
 
 void SoundManager::playAbilityEffect(char *effect, bool loop) {
 	abilityChannel = smh->hge->Effect_PlayEx(smh->resources->GetEffect(effect),100,0,1.0f,loop);

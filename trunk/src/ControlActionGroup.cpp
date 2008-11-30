@@ -36,6 +36,12 @@ bool ControlActionGroup::update(float dt) {
 			if (i->started && !i->finished) {
 				i->control->x += (xDist / duration) * dt;
 				i->control->y += (yDist / duration) * dt;
+
+				//Make sure that when the controls are coming up from off the screen they don't go past their 
+				//intended end point. This can happen sometimes when returning to the menu because the game is 
+				//processing a bunch of shit in one frame
+				if (yDist < 0 && i->control->y < i->startY + yDist) i->control->y = i->startY + yDist;
+
 				if (smh->getRealTime() > i->timeStartedAction + duration) {
 					i->finished = true;
 					i->control->x = i->startX + xDist;
