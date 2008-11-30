@@ -22,6 +22,7 @@
 === Graphics To Do ===
  * New Keys
  * King Tut
+ * Bomb guy graphic
  * Lovecraftian Boss
  * "Exit Shop" icon
  * Hover pad
