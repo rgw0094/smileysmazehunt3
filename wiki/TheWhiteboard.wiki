@@ -20,6 +20,7 @@
  * Calypso 2
 
 === Graphics To Do ===
+ * New Keys
  * King Tut
  * Lovecraftian Boss
  * "Exit Shop" icon
