@@ -34,11 +34,9 @@
 === Bugs ===
  * Bouncing spikey enemies that I put to appear in line with each other in game sometimes are not in line when testing, making it a lot harder to get by them than planned.
 
-=== Design Issues ===
- * When using fire on the shore of deep water, if you immediately (through the inventory) put on Jesus' Sandals and walk on the water the flame breath will continue to be used long enough to hit ice blocks that should be out of reach. More generally, what should happen if you use Jesus' sandals to walk partially over a water square but not enough to be fully over it, then take the sandals off?	 
-
 ===Done===
 ||Item||Date||Done By||
+||You can no longer take of Jesus' sandals when over water||11/30/08||RGW||
 ||You can no longer walk diagonally between arrow pads||11/29/08||RGW||
 ||Fixed NPC facing the wrong way bug||11/29/08||RGW||
 ||Fixed music volume bug||11/29/08||RGW||
