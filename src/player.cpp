@@ -225,39 +225,12 @@ void Player::doMove(float dt) {
 
 	//Check for collision with frozen enemies
 	collisionCircle->set(x + xDist, y + yDist, (PLAYER_WIDTH/2.0-3.0)*shrinkScale);
-	bool dickens = smh->enemyManager->collidesWithFrozenEnemy(collisionCircle);
+	bool hitFrozenEnemy = smh->enemyManager->collidesWithFrozenEnemy(collisionCircle);
 	collisionCircle->set(x,y,(PLAYER_WIDTH/2.0-3.0)*shrinkScale);
-	if (dickens) return;
+	if (hitFrozenEnemy) return;
 
-	//-----This is really gay-----
-	//Make sure the player isn't going to move perfectly diagonally
-	//from one grid square to another. If they will, move the player a little
-	//to push them off the diagonal.
-	int nextX = Util::getGridX(x + xDist);
-	int nextY = Util::getGridY(y + yDist);
-	bool useGayFix = (smh->environment->collision[nextX][nextY] == ICE || smh->environment->collision[nextX][nextY] == SPRING_PAD);
-	if (useGayFix && nextX > gridX && nextY > gridY) {
-		//Up Right
-		x -= 2.0;
-		y -= 1.0;
-		return;
-	} else if (useGayFix && nextX < gridX && nextY > gridY) {
-		//Up Left
-		x += 2.0;
-		y -= 1.0;
-		return;
-	} else if (useGayFix && nextX > gridX && nextY < gridY) {
-		//Down Right
-		x -= 2.0;
-		y += 1.0;
-		return;
-	} else if (useGayFix && nextX < gridX && nextY < gridY) {
-		//Down Left
-		x += 2.0;
-		y += 1.0;
-		return;
-	}
-	//----------end gayness----------
+	//We have to do a gay movement fix here
+	if (doGayMovementFix(xDist, yDist)) return;
  
 	//Move left or right
 	if (xDist != 0.0) {
@@ -1539,6 +1512,60 @@ void Player::updateSmileyColor(float dt) {
 	}
 
 	smh->resources->GetAnimation("player")->SetColor(ARGB(alpha, r, g, b));
+}
+
+/**
+ * Make sure the player isn't going to move perfectly diagonally from one grid square 
+ * to another. If they will, move the player a little to push them off the diagonal.
+ * Returns true if the gay fix was used.
+ *
+ * Currently this fix will be used in the following cases:
+ *
+ * - The player is on or moving to an ice square.
+ * - The player is on or moving to a spring pad.
+ */
+bool Player::doGayMovementFix(int xDist, int yDist) {
+
+	int nextX = Util::getGridX(x + xDist);
+	int nextY = Util::getGridY(y + yDist);
+	
+	bool useGayFix = 
+		smh->environment->collision[nextX][nextY] == ICE || 
+		smh->environment->collision[nextX][nextY] == SPRING_PAD;
+
+	for (int i = nextX-1; i <= nextX+1; i++) {
+		for (int j = nextY-1; j <= nextY+1; j++) {
+			if (Util::isArrowPad(smh->environment->collision[i][j])) {
+				useGayFix = true;
+			}
+		}
+	}
+
+	if (useGayFix) {
+		if (nextX > gridX && nextY > gridY) {
+			//Up Right
+			x -= 2.0;
+			y -= 1.0;
+			return true;
+		} else if (nextX < gridX && nextY > gridY) {
+			//Up Left
+			x += 2.0;
+			y -= 1.0;
+			return true;
+		} else if (nextX > gridX && nextY < gridY) {
+			//Down Right
+			x -= 2.0;
+			y += 1.0;
+			return true;
+		} else if (nextX < gridX && nextY < gridY) {
+			//Down Left
+			x += 2.0;
+			y += 1.0;
+			return true;
+		}
+	} else {
+		return false;
+	}
 }
 
 ///////////////////////////////////////////////////////////////

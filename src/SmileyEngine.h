@@ -734,7 +734,7 @@ public:
 	}
 
 	/**
-	 * Returns whether or not id the id of a down cylinder
+	 * Returns whether or not id is the id of a down cylinder
 	 */
 	static bool isCylinderDown(int id) {
 		return (id == WHITE_CYLINDER_DOWN || id == YELLOW_CYLINDER_DOWN || id == GREEN_CYLINDER_DOWN ||
@@ -742,11 +742,18 @@ public:
 	}
 
 	/**
-	 * Returns whether or not id the id of an up cylinder
+	 * Returns whether or not id is the id of an up cylinder
 	 */
 	static bool isCylinderUp(int id) {
 		return (id == WHITE_CYLINDER_UP || id == YELLOW_CYLINDER_UP || id == GREEN_CYLINDER_UP ||
 				id == BLUE_CYLINDER_UP|| id == BROWN_CYLINDER_UP || id == SILVER_CYLINDER_UP);
+	}
+
+	/**
+	 * Returns whether or not id is the id of an arrow pad
+     */ 
+	static bool isArrowPad(int id) {
+		return (id == UP_ARROW || id == RIGHT_ARROW || id == DOWN_ARROW || id == LEFT_ARROW);
 	}
 
 	/**

@@ -100,6 +100,7 @@ private:
 	void startPuzzleIce();
 	void doShrinkTunnels(float dt);
 	void updateSmileyColor(float dt);
+	bool doGayMovementFix(int xDist, int yDist);
 
 	Tongue *tongue;
 	Worm *worm;
