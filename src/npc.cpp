@@ -55,6 +55,9 @@ NPC::~NPC() {
 	delete collisionBox;
 	delete futureCollisionBox;
 	delete futureCollisionBox2;
+	for (int i = 0; i < 4; i++) {
+		delete sprites[i];
+	}
 }
 
 
@@ -76,6 +79,8 @@ void NPC::update(float dt) {
 		else if (smh->player->y > y+32) facing = DOWN;
 		else if (smh->player->y < y-32) facing = UP;
 		return;
+	} else {
+		facing = walkDirection;
 	}
 
 	//Update stuff if the NPC is in rest stage
