@@ -51,7 +51,6 @@ SmileyInput::SmileyInput() {
  * Destructor
  */ 
 SmileyInput::~SmileyInput() {
-	saveInputs();
 	FreeDirectInput();
 }
 
