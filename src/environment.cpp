@@ -976,10 +976,14 @@ void Environment::toggleSwitch(int id) {
 
 /** 
  * Attempts to toggle a switch at (gridX, gridY). Returns whether or not there is
- * a switch there to toggle.
- * 
- * @param playSoundFarAway  If this is true the switch sound will always play even if Smiley is
- *							really far away
+ * a switch there to toggle. 
+ *
+ * All other switch toggling functions will eventually call this, which either contains the switching
+ * logic or delegates it to another method.
+ *
+ * All switch sound effects also originate from this method. A switch sound will be triggered if either the 
+ * switched switch is close to smiley, or one of the things it switched is close to smiley. If the
+ * playSoundFarAway parameter is true then the sound will be guaranteed to play if a switch is switched.
  */
 bool Environment::toggleSwitchAt(int gridX, int gridY, bool playSoundFarAway) {
 	
@@ -1001,6 +1005,7 @@ bool Environment::toggleSwitchAt(int gridX, int gridY, bool playSoundFarAway) {
 		for (int i = 0; i < areaWidth; i++) {
 			for (int j = 0; j < areaHeight; j++) {
 				if (ids[i][j] == switchID) {
+					smh->soundManager->playSwitchSound(i, j, false);
 					//When found, rotate clockwise.
 					if (collision[i][j] == SHRINK_TUNNEL_HORIZONTAL) 
 						collision[i][j] = SHRINK_TUNNEL_VERTICAL;
@@ -1020,6 +1025,7 @@ bool Environment::toggleSwitchAt(int gridX, int gridY, bool playSoundFarAway) {
 		for (int i = 0; i < areaWidth; i++) {
 			for (int j = 0; j < areaHeight; j++) {
 				if (ids[i][j] == switchID) {
+					smh->soundManager->playSwitchSound(i, j, false);
 					//When found, rotate clockwise.
 					if (collision[i][j] == UP_ARROW) 
 						collision[i][j] = RIGHT_ARROW;
@@ -1043,6 +1049,7 @@ bool Environment::toggleSwitchAt(int gridX, int gridY, bool playSoundFarAway) {
 		for (int i = 0; i < areaWidth; i++) {
 			for (int j = 0; j < areaHeight; j++) {
 				if (ids[i][j] == switchID) {
+					smh->soundManager->playSwitchSound(i, j, false);
 					if (collision[i][j] == MIRROR_UP_LEFT) collision[i][j] = MIRROR_UP_RIGHT;
 					else if (collision[i][j] == MIRROR_UP_RIGHT) collision[i][j] = MIRROR_DOWN_RIGHT;
 					else if (collision[i][j] == MIRROR_DOWN_RIGHT) collision[i][j] = MIRROR_DOWN_LEFT;
@@ -1052,9 +1059,8 @@ bool Environment::toggleSwitchAt(int gridX, int gridY, bool playSoundFarAway) {
 		}
 	}
 
-	//Play switch sound if the switch is somewhat close to Smiley
-	if (hasSwitch && (playSoundFarAway || Util::distance(gridX, gridY, smh->player->gridX, smh->player->gridY) < 15)) {
-		smh->soundManager->playSound("snd_switch");
+	if (hasSwitch) {
+		smh->soundManager->playSwitchSound(gridX, gridY, playSoundFarAway);
 	}
 
 	return hasSwitch;
@@ -1109,10 +1115,13 @@ void Environment::flipCylinderSwitch(int gridX, int gridY) {
  */
 void Environment::switchCylinders(int switchID) {
 
+	if (switchID < 0) return;
+
 	//Switch up and down cylinders if the player isn't on top of any down cylindersw
 	for (int i = 0; i < areaWidth; i++) {
 		for (int j = 0; j < areaHeight; j++) {
 			if (ids[i][j] == switchID) {
+				smh->soundManager->playSwitchSound(i, j, false);
 				if (Util::isCylinderUp(collision[i][j])) {
 					collision[i][j] -= 16;
 					activated[i][j] = smh->getGameTime();
