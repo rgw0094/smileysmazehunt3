@@ -15,7 +15,7 @@ OptionsWindow::OptionsWindow() {
 	soundVolumeSlider->setValue(smh->soundManager->getSoundVolume());
 	musicVolumeSlider = new Slider(0, 0, 0, 100);
 	musicVolumeSlider->setValue(smh->soundManager->getMusicVolume());
-	doneButton = new Button(0, 0, "Done");
+	doneButton = new Button(0, 0, "Save");
 
 	setWindowPosition(182.0, 138.0);
 }
@@ -75,6 +75,7 @@ bool OptionsWindow::update(float dt) {
 	//Update done button
 	doneButton->update(dt);
 	if (doneButton->isClicked()) {
+		smh->input->saveInputs();
 		return false;
 	}
 
