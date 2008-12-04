@@ -404,7 +404,7 @@ numEnemies="52"
 24PDamage=   "25"
 
 ;Blue head wanderer
-25Name=      "Blue Circle Thing"
+25Name=      "Snowfang"
 25GCol=      "4"
 25GRow=      "0"
 25EnemyType= "0"
