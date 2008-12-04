@@ -2,14 +2,6 @@
  * Patric
  * Sarah Palin
 
-=== Crash glitch ===
- * The last revision that works for me was 553.
- * Updating from 556 to 553 changes these files: npc.cpp, player.cpp, SmileyEngine.h, player.h, SmileysMazeHunt.exe
- * Updating from 553 to 556 changes these files: npc.cpp, SmileysMazeHunt.exe
- * Revision 553 was committed on 11/29/08 at 10:58 pm
- * Revision 556 was committed on 11/29/08 at 11:27 pm
- * Getting rid of the NPCs from the fountain level makes it so it doesn't crash on that level.
-
 === Road Map ===
  * Opening Cinematic
  * World Map
@@ -44,6 +36,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fixed crash glitch (you were using npc walkdirection without it having a value)||12/4/08||ETI||
 ||You can no longer take off Jesus' sandals when over water||11/30/08||RGW||
 ||You can no longer walk diagonally between arrow pads||11/29/08||RGW||
 ||Fixed NPC facing the wrong way bug||11/29/08||RGW||
