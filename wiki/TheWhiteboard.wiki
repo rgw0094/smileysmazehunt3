@@ -2,6 +2,13 @@
  * Patric
  * Sarah Palin
 
+=== Crash glitch ===
+ * The last revision that works for me was 553.
+ * Updating from 556 to 553 changes these files: npc.cpp, player.cpp, SmileyEngine.h, player.h, SmileysMazeHunt.exe
+ * Updating from 553 to 556 changes these files: npc.cpp, SmileysMazeHunt.exe
+ * Revision 553 was committed on 11/29/08 at 10:58 pm
+ * Revision 556 was committed on 11/29/08 at 11:27 pm
+
 === Road Map ===
  * Opening Cinematic
  * World Map
