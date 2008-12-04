@@ -21,7 +21,7 @@ NPC::NPC(int _id, int _textID, int _x,int _y) {
 	gridY = _y;
 	x = gridX*64 + 32;
 	y = gridY*64 + 32;
-	facing = DOWN;
+	facing = walkDirection = DOWN;
 	inConversation = false;
 	collisionBox = new hgeRect();
 	futureCollisionBox = new hgeRect();
@@ -55,6 +55,7 @@ NPC::~NPC() {
 	delete collisionBox;
 	delete futureCollisionBox;
 	delete futureCollisionBox2;
+
 	for (int i = 0; i < 4; i++) {
 		delete sprites[i];
 	}
