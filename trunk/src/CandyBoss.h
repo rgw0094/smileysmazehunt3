@@ -52,6 +52,8 @@ private:
 	float jumpSpeed;
 	int numJumps;
 	float speedMultiplier;
+	float size; //starts at 1.0, decreases with each hit as Bartli loses mass
+	int minX,minY,maxX,maxY; //the boundaries of this rectangular battle arena -- so that Bartli doesn't end up stuck in the walls after a jump
 
 	int groupID;
 	bool startedIntroDialogue;
