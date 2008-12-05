@@ -1228,7 +1228,7 @@ Animation bartli {
  frames=2
  fps=20.0
  mode=LOOP,PINGPONG
- hotspot=55,86
+ hotspot=55,132
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=106
 }

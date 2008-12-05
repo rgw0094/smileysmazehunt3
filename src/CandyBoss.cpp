@@ -14,9 +14,10 @@ extern SMH *smh;
 
 //Where to draw limbs
 #define CANDY_ARM_X_OFFSET 45
-#define CANDY_ARM_Y_OFFSET -20
+#define CANDY_ARM_Y_OFFSET -66
 #define CANDY_LEG_X_OFFSET 29
-#define CANDY_LEG_Y_OFFSET 38
+#define CANDY_LEG_Y_OFFSET -8
+#define CANDY_LEG_HEIGHT 26
 #define CANDY_ARM_INITIAL_ROT 10*PI/180
 
 //States
@@ -50,6 +51,13 @@ CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 
 	initCanPass();
 
+	for (int curX = gridX; smh->environment->collision[curX][gridY] == WALKABLE; curX++) maxX = (curX+1)*64;
+	for (int curX = gridX; smh->environment->collision[curX][gridY] == WALKABLE; curX--) minX = (curX-1)*64+64;
+	for (int curY = gridY; smh->environment->collision[gridX][curY] == WALKABLE; curY++) maxY = (curY+1)*64;
+	for (int curY = gridY; smh->environment->collision[gridX][curY] == WALKABLE; curY--) minY = (curY-1)*64+64;
+
+
+
 	startedIntroDialogue = false;
 	droppedLoot = false;
 	shouldDrawAfterSmiley = false;
@@ -59,9 +67,10 @@ CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 	timeStoppedJump = 0.0;
 	jumping = false;
 
+    size = 1.0;
 	collisionBox = new hgeRect();
 	futureCollisionBox = new hgeRect();
-
+	
 	leftArmRot=-CANDY_ARM_INITIAL_ROT;
 	rightArmRot=CANDY_ARM_INITIAL_ROT;
 	leftLegY = rightLegY = 0;
@@ -151,23 +160,28 @@ bool CandyBoss::update(float dt) {
 	updateLimbs(dt);
 	updateNovas(dt);
 	shouldDrawAfterSmiley = (y > smh->player->y);
+	if (smh->hge->Input_KeyDown(HGEK_T)) {
+		size -= dt;
+		if (size < .2) size = 0.2;
+	}
 }
 
 
 // Private ////////////////
 
 void CandyBoss::drawBartli() {
-	//Shadow
-	smh->resources->GetSprite("bartliShadow")->Render(smh->getScreenX(x),smh->getScreenY(y+CANDY_HEIGHT/2));
+
+    //Shadow
+	//smh->resources->GetSprite("bartliShadow")->Render(smh->getScreenX(x),smh->getScreenY((y+CANDY_HEIGHT/2)*size));
 	//Body
 	smh->resources->GetAnimation("bartli")->SetFrame(0);
-	smh->resources->GetAnimation("bartli")->Render(smh->getScreenX(x),smh->getScreenY(y - jumpYOffset));
+	smh->resources->GetAnimation("bartli")->RenderEx(smh->getScreenX(x),smh->getScreenY((y - jumpYOffset)),0.0,size,size);
 	//Arms
-	smh->resources->GetSprite("bartliArm")->RenderEx(smh->getScreenX(x-CANDY_ARM_X_OFFSET),smh->getScreenY(y+CANDY_ARM_Y_OFFSET - jumpYOffset),rightArmRot);
-	smh->resources->GetSprite("bartliArm")->RenderEx(smh->getScreenX(x+CANDY_ARM_X_OFFSET),smh->getScreenY(y+CANDY_ARM_Y_OFFSET - jumpYOffset),leftArmRot,-1.0,1.0);
+	smh->resources->GetSprite("bartliArm")->RenderEx(smh->getScreenX(x-CANDY_ARM_X_OFFSET*size),smh->getScreenY((y+CANDY_ARM_Y_OFFSET*size) - jumpYOffset),rightArmRot,size,size);
+	smh->resources->GetSprite("bartliArm")->RenderEx(smh->getScreenX(x+CANDY_ARM_X_OFFSET*size),smh->getScreenY((y+CANDY_ARM_Y_OFFSET*size) - jumpYOffset),leftArmRot,-1.0*size,1.0*size);
 	//Legs
-	smh->resources->GetSprite("bartliLeg")->Render(smh->getScreenX(x-CANDY_LEG_X_OFFSET),smh->getScreenY(y+CANDY_LEG_Y_OFFSET+rightLegY - jumpYOffset));
-	smh->resources->GetSprite("bartliLeg")->RenderEx(smh->getScreenX(x+CANDY_LEG_X_OFFSET),smh->getScreenY(y+CANDY_LEG_Y_OFFSET+leftLegY - jumpYOffset),0.0,-1.0,1.0);
+	smh->resources->GetSprite("bartliLeg")->RenderEx(smh->getScreenX(x-CANDY_LEG_X_OFFSET*size),smh->getScreenY((y+(CANDY_LEG_Y_OFFSET+rightLegY)*size) - jumpYOffset),0.0,size,size);
+	smh->resources->GetSprite("bartliLeg")->RenderEx(smh->getScreenX(x+CANDY_LEG_X_OFFSET*size),smh->getScreenY((y+(CANDY_LEG_Y_OFFSET+leftLegY )*size) - jumpYOffset),0.0,-1.0*size,1.0*size);
 	//Debug
 	if (smh->isDebugOn()) smh->drawCollisionBox(collisionBox,RED);
 }
@@ -214,6 +228,11 @@ void CandyBoss::updateRun(float dt) {
 	float yDist = CANDY_RUN_SPEED * speedMultiplier * sin(angle) * dt;
 	setCollisionBox(futureCollisionBox, x + xDist, y + yDist);
 
+	if (collisionBox->x1 < minX) {x += CANDY_RUN_SPEED*speedMultiplier*dt; return;}
+	if (collisionBox->x2 > maxX) {x -= CANDY_RUN_SPEED*speedMultiplier*dt; return;}
+	if (collisionBox->y1 < minY) {y += CANDY_RUN_SPEED*speedMultiplier*dt; return;}
+	if (collisionBox->y2 > maxY) {y -= CANDY_RUN_SPEED*speedMultiplier*dt; return;}
+	
 	//When bartli hits a wall, bounce off it towards smiley
 	if (smh->environment->testCollision(futureCollisionBox, canPass)) {
 		if (Util::distance(x, y, smh->player->x, smh->player->y) < 50.0) {
@@ -229,7 +248,10 @@ void CandyBoss::updateRun(float dt) {
 	} else {
 		x += xDist;
 		y += yDist;
-	}	
+	}
+	
+
+	
 
 }
 
@@ -246,9 +268,9 @@ void CandyBoss::updateJumping(float dt) {
 		jumping = true;
 		numJumps++;
 
-		//Try to jump on smiley. The y offset is so her feet land at smiley's location
-		angle = Util::getAngleBetween(x, y, smh->player->x, smh->player->y - 40.0);
-		jumpDistance = min(400.0, Util::distance(x, y, smh->player->x, smh->player->y - 40));
+		//Try to jump on smiley.
+		angle = Util::getAngleBetween(x, y, smh->player->x, smh->player->y);
+		jumpDistance = min(400.0, Util::distance(x, y, smh->player->x, smh->player->y));
 	
 		//If Bartli is in multi jump state she should jump up and down on the player
 		if (state != CANDY_STATE_MULTI_JUMP) {
@@ -281,10 +303,10 @@ void CandyBoss::updateJumping(float dt) {
 }
 
 void CandyBoss::setCollisionBox(hgeRect *box, float x, float y) {
-	box->x1 = x - CANDY_WIDTH/2;
-	box->y1 = y - CANDY_HEIGHT/2;
-	box->x2 = x + CANDY_WIDTH/2;
-	box->y2 = y + CANDY_HEIGHT/2;
+	box->x1 = x - CANDY_WIDTH/2*size;
+	box->y1 = y - CANDY_HEIGHT*size;
+	box->x2 = x + CANDY_WIDTH/2*size;
+	box->y2 = y + (CANDY_LEG_HEIGHT+CANDY_LEG_Y_OFFSET)*size; //add the leg height so that the legs are included in the collision rect
 }
 
 void CandyBoss::initCanPass() {
