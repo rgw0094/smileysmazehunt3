@@ -172,7 +172,7 @@ bool CandyBoss::update(float dt) {
 void CandyBoss::drawBartli() {
 
     //Shadow
-	//smh->resources->GetSprite("bartliShadow")->Render(smh->getScreenX(x),smh->getScreenY((y+CANDY_HEIGHT/2)*size));
+	smh->resources->GetSprite("bartliShadow")->RenderEx(smh->getScreenX(x),smh->getScreenY(y)+(CANDY_LEG_Y_OFFSET+CANDY_LEG_HEIGHT)*size,0.0,size,size);
 	//Body
 	smh->resources->GetAnimation("bartli")->SetFrame(0);
 	smh->resources->GetAnimation("bartli")->RenderEx(smh->getScreenX(x),smh->getScreenY((y - jumpYOffset)),0.0,size,size);
