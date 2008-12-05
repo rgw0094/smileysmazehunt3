@@ -1253,6 +1253,21 @@ Sprite bartliShadow {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=106
 }
+Sprite barletBlue {
+ texture="Graphics/Bartli.png"
+ rect=2,170,64,54
+ hotspot=32,27
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=106
+}
+Sprite bartletRed {
+ texture="Graphics/Bartli.png"
+ rect=67,170,64,54
+ hotspot=32,27
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=106
+}
+ 
 
 ;*****************************
 ;******** PROJECTILES ********
