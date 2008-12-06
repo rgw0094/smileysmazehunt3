@@ -87,6 +87,9 @@ void SMH::init() {
 	log("Creating FenwarManager");
 	fenwarManager = new FenwarManager();
 
+	log("Creating ScreenEffectManager");
+	screenEffectsManager = new ScreenEffectsManager();
+
 	//Create Environment last
 	log("Creating Environment");
 	environment = new Environment();
@@ -148,6 +151,7 @@ bool SMH::updateGame() {
 			lootManager->update(dt);
 			projectileManager->update(dt);
 			npcManager->update(dt);
+			screenEffectsManager->update(dt);
 		}
 
 		//Keep track of the time that no windows are open.
@@ -166,6 +170,7 @@ void SMH::drawGame() {
 
 	float dt = hge->Timer_GetDelta();
 
+	screenEffectsManager->applyEffect();
 	hge->Gfx_BeginScene();
 
 	if (getGameState() == MENU) {
@@ -178,7 +183,7 @@ void SMH::drawGame() {
 		bossManager->drawBeforeSmiley(dt);
 		player->draw(dt);
 		bossManager->drawAfterSmiley(dt);
-		environment->drawAfterSmiley(dt);
+		environment->drawAfterSmiley(dt);		
 		fenwarManager->draw(dt);
 		projectileManager->draw(dt);
 		shadeScreen(darkness);
@@ -251,14 +256,15 @@ void SMH::doDebugInput(float dt) {
  */
 void SMH::enterGameState(int newState) {
 
-	//If leaving the menu, clear all the menu resources
+	//If leaving the menu
 	if (gameState == MENU) {	
 		resources->Purge(RES_MENU);
 	}
 
-	//If leaving game state save the player's playing time
+	//If leaving game state
 	if (gameState == GAME) {
 		saveManager->saveTimePlayed();
+		screenEffectsManager->stopEffect();
 	}
 
 	gameState = newState;

@@ -131,6 +131,9 @@
 		<Filter
 			Name="Engine"
 			Filter="">
+			<File
+				RelativePath=".\src\SmileyEngine.h">
+			</File>
 			<Filter
 				Name="Source"
 				Filter="">
@@ -153,17 +156,13 @@
 					RelativePath=".\src\SaveManager.cpp">
 				</File>
 				<File
+					RelativePath=".\src\ScreenEffectsManager.cpp">
+				</File>
+				<File
 					RelativePath=".\src\SMH.cpp">
 				</File>
 				<File
 					RelativePath=".\src\SoundManager.cpp">
-				</File>
-			</Filter>
-			<Filter
-				Name="Header"
-				Filter="">
-				<File
-					RelativePath=".\src\SmileyEngine.h">
 				</File>
 			</Filter>
 		</Filter>

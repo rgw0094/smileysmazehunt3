@@ -33,10 +33,11 @@ extern SMH *smh;
 #define CANDY_DEFEAT_TEXT 171
 
 //Attributes
+#define FIRST_STATE CANDY_STATE_JUMPING
 #define CANDY_WIDTH 106
 #define CANDY_HEIGHT 128
 #define CANDY_RUN_SPEED 800.0
-#define CANDY_JUMP_DELAY 0.35
+#define CANDY_JUMP_DELAY 1.00
 #define COLLISION_DAMAGE 1.0
 #define SHOCKWAVE_STUN_DURATION 3.0
 #define SHOCKWAVE_DAMAGE 0.25
@@ -55,8 +56,6 @@ CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 	for (int curX = gridX; smh->environment->collision[curX][gridY] == WALKABLE; curX--) minX = (curX-1)*64+64;
 	for (int curY = gridY; smh->environment->collision[gridX][curY] == WALKABLE; curY++) maxY = (curY+1)*64;
 	for (int curY = gridY; smh->environment->collision[gridX][curY] == WALKABLE; curY--) minY = (curY-1)*64+64;
-
-
 
 	startedIntroDialogue = false;
 	droppedLoot = false;
@@ -118,7 +117,7 @@ bool CandyBoss::update(float dt) {
 
 	//Activate the boss when the intro dialogue is closed
 	if (state == CANDY_STATE_INACTIVE && startedIntroDialogue && !smh->windowManager->isTextBoxOpen()) {
-		enterState(CANDY_STATE_RUNNING);
+		enterState(FIRST_STATE);
 		smh->soundManager->playMusic("bossMusic");
 	}
 
@@ -249,10 +248,6 @@ void CandyBoss::updateRun(float dt) {
 		x += xDist;
 		y += yDist;
 	}
-	
-
-	
-
 }
 
 /**
@@ -291,11 +286,17 @@ void CandyBoss::updateJumping(float dt) {
 		x += jumpSpeed * cos(angle) * dt;
 		y += jumpSpeed * sin(angle) * dt;
 
+		//smh->hge->System_Log("%f %f
+
 		if (smh->timePassedSince(timeStartedJump) > timeToJump) {
 			jumping = false;
 			timeStoppedJump = smh->getGameTime();
 			jumpYOffset = 0.0;
-			if (state == CANDY_STATE_JUMPING) spawnNova(x, y);
+			if (state == CANDY_STATE_JUMPING) {
+				//When done jumping, make the screen shake and create a shock wave
+				smh->screenEffectsManager->startShaking(0.75, 2.5);			
+				spawnNova(x, y);
+			}
 		}
 
 	}
