@@ -40,6 +40,7 @@ class SaveManager;
 class SoundManager;
 class ChangeManager;
 class BitStream;
+class ScreenEffectsManager;
 
 //Constants
 #define PI 3.14159265357989232684
@@ -292,6 +293,7 @@ public:
 	SaveManager *saveManager;
 	SoundManager *soundManager;
 	WindowManager *windowManager;
+	ScreenEffectsManager *screenEffectsManager;
 
 private:
 
@@ -667,6 +669,38 @@ private:
 	std::list<Change> theChanges;
 	void addChange(int area, int x, int y);
 	bool removeChange(int area, int x, int y);
+};
+
+//----------------------------------------------------------------
+//-------------- SCREEN EFFECTS MANAGER --------------------------
+//----------------------------------------------------------------
+// Manages and applies screen effects such as shaking.
+//----------------------------------------------------------------
+class ScreenEffectsManager {
+
+public:
+
+	ScreenEffectsManager();
+	~ScreenEffectsManager();
+
+	void update(float dt);
+	void applyEffect();
+	bool isEffectActive();
+	void stopEffect();
+
+	void startShaking(float duration, float amount);
+
+private:
+
+	void startEffect(int effect, float duration, float amount);
+
+	int currentEffect;
+	float effectDuration;
+	float effectValue;
+	float timeEffectStarted;
+
+	float xOffset, yOffset, rotation, hScale, vScale;
+
 };
 
 //----------------------------------------------------------------
