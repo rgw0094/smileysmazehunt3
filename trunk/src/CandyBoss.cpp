@@ -286,7 +286,7 @@ void CandyBoss::updateJumping(float dt) {
 		x += jumpSpeed * cos(angle) * dt;
 		y += jumpSpeed * sin(angle) * dt;
 
-		//smh->hge->System_Log("%f %f
+		smh->hge->System_Log("%f %f %f", timeStartedJump, smh->timePassedSince(timeStartedJump), timeToJump);
 
 		if (smh->timePassedSince(timeStartedJump) > timeToJump) {
 			jumping = false;
