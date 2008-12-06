@@ -46,8 +46,8 @@ void ScreenEffectsManager::update(float dt) {
  */
 void ScreenEffectsManager::applyEffect() {
 
-	if (currentEffect == SHAKING_EFFECT) {
-		smh->hge->Gfx_SetTransform(0, 0, xOffset, yOffset, rotation, hScale, vScale);
+	if (isEffectActive()) {
+		smh->hge->Gfx_SetTransform(0, 0, (int)xOffset, (int)yOffset, rotation, hScale, vScale);
 	}
 
 }
@@ -56,7 +56,7 @@ void ScreenEffectsManager::stopEffect() {
 	currentEffect = NO_EFFECT;
 	xOffset = yOffset = rotation = 0.0;
 	hScale = vScale = 1.0;
-	smh->hge->Gfx_SetTransform();//0, 0, xOffset, yOffset, rotation, hScale, vScale);
+	smh->hge->Gfx_SetTransform();
 }
 
 
