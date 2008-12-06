@@ -30,7 +30,7 @@ void ScreenEffectsManager::startShaking(float duration, float amount) {
 void ScreenEffectsManager::update(float dt) {
 
 	if (smh->timePassedSince(timeEffectStarted) > effectDuration) {
-		currentEffect = NO_EFFECT;
+		stopEffect();
 	} else if (currentEffect == SHAKING_EFFECT) {
 		xOffset = effectValue * sin(35.0 * smh->timePassedSince(timeEffectStarted));
 		yOffset = effectValue * cos(35.0 * smh->timePassedSince(timeEffectStarted));

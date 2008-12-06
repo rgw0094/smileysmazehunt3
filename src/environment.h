@@ -78,7 +78,7 @@ public:
 	int screenWidth, screenHeight;	//Number of squares that fit on the screen
 	int xGridOffset,yGridOffset;	//Number of squares the top left corner is from (0,0)
 	float xOffset,yOffset;			//Number of pixels the player is off alignment with the grid
-	float drawX,drawY;				//Location to draw a tile
+	int drawX,drawY;				//Location to draw a tile
 	int offScreenRange;				//Number of tiles offscreen to draw
 
 	hgeParticleManager *environmentParticles;
