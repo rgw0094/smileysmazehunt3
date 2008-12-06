@@ -136,6 +136,7 @@ bool CandyBoss::update(float dt) {
 	if (state == CANDY_STATE_JUMPING) {
 		updateJumping(dt);
 		if (numJumps >= 10) {
+			jumping = false;
 			enterState(CANDY_STATE_RUNNING);
 		}
 	}
@@ -143,6 +144,7 @@ bool CandyBoss::update(float dt) {
 	if (state == CANDY_STATE_MULTI_JUMP) {
 		updateJumping(dt);
 		if (numJumps >= 5) {
+			jumping = false;
 			enterState(CANDY_STATE_RUNNING);
 		}
 	}
@@ -286,9 +288,10 @@ void CandyBoss::updateJumping(float dt) {
 		x += jumpSpeed * cos(angle) * dt;
 		y += jumpSpeed * sin(angle) * dt;
 
-		smh->hge->System_Log("%f %f %f", timeStartedJump, smh->timePassedSince(timeStartedJump), timeToJump);
-
 		if (smh->timePassedSince(timeStartedJump) > timeToJump) {
+
+smh->hge->System_Log("%f %f %f", timeStartedJump, smh->timePassedSince(timeStartedJump), timeToJump);
+
 			jumping = false;
 			timeStoppedJump = smh->getGameTime();
 			jumpYOffset = 0.0;
