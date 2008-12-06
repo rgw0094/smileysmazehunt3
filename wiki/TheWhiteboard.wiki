@@ -33,6 +33,7 @@
 
 === Bugs ===
  * Bouncing spikey enemies that I put to appear in line with each other in game sometimes are not in line when testing, making it a lot harder to get by them than planned.
+ * You can enter the PhyreBawn arena without talking to him if you walk to the side.
 
 ===Done===
 ||Item||Date||Done By||
