@@ -1253,7 +1253,7 @@ Sprite bartliShadow {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=106
 }
-Sprite barletBlue {
+Sprite bartletBlue {
  texture="Graphics/Bartli.png"
  rect=2,170,64,54
  hotspot=32,27

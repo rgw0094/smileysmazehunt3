@@ -33,6 +33,7 @@ public:
 	void freeze(float duration);
 	void stun(float duration);
 	void heal(float amount);
+	void immobilize(float duration);
 	void reset();
 
 	//Accessors/mutators
@@ -140,6 +141,8 @@ private:
 	float stunDuration;
 	float timeStartedStun;
 	float timeStartedHeal;
+	float timeStartedImmobilize;
+	float immobilizeDuration;
 
 	//State info
 	bool breathingFire;				//If using Fire Breath ability
@@ -166,6 +169,7 @@ private:
 	bool frozen;
 	bool stunned;
 	bool healing;
+	bool immobile;
 };
 
 //----------------------------------------------------------------
