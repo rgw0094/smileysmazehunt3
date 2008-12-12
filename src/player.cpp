@@ -93,18 +93,18 @@ void Player::reset() {
 	radius = DEFAULT_RADIUS;
 	selectedAbility = smh->saveManager->hasAbility[CANE] ? CANE : NO_ABILITY;;
 	hoveringYOffset = springOffset = 0.0;
-	invincible = false;
 	startedIceBreath = lastOrb = lastLavaDamage = -5.0f;
 	stoppedAttacking = smh->getGameTime();
 	startedFlashing = -10.0;
 	timeEnteredShrinkTunnel = -10.0;
+	timeStartedImmobilize = 0.0;
 
 	//State variables
 	reflectionShieldActive = flashing = knockback = sliding = stunned =
 		onWarp = falling = breathingFire = inLava = inShallowWater = healing =
 		waterWalk = onWater = drowning = shrinkActive = sprinting = isHovering = 
 		cloaked = springing = usingCane = iceSliding = frozen = 
-		inShrinkTunnel = false;
+		inShrinkTunnel = immobile = invincible = false;
 }
 
 /**
@@ -145,6 +145,7 @@ void Player::update(float dt) {
 	if (frozen && smh->timePassedSince(timeFrozen) > freezeDuration) frozen = false;
 	if (stunned && smh->timePassedSince(timeStartedStun) > stunDuration) stunned = false;
 	if (healing && smh->timePassedSince(timeStartedHeal) > HEAL_FLASH_DURATION) healing = false;
+	if (immobile && smh->timePassedSince(timeStartedImmobilize) > immobilizeDuration) immobile = false;
 
 	//Update shit if in Knockback state
 	if (!falling && !sliding && knockback && smh->timePassedSince(startedKnockBack) > KNOCKBACK_DURATION) {
@@ -1206,7 +1207,7 @@ void Player::updateVelocities(float dt) {
 	//For the following states, velocities are handled in their respective update methods
 	if (falling || inShrinkTunnel || iceSliding || sliding || springing) return;
 
-	if (frozen || drowning || stunned) {
+	if (frozen || drowning || stunned || immobile) {
 		dx = dy = 0.0;
 		return;
 	}
@@ -1456,6 +1457,17 @@ void Player::stun(float duration) {
 		stunned = true;
 		timeStartedStun = smh->getGameTime();
 		stunDuration = duration;
+	}
+}
+
+/**
+ * Immobilizes the player for the specified duration.
+ */
+void Player::immobilize(float duration) {
+	if (!immobile) {
+		immobile = true;
+		timeStartedImmobilize = smh->getGameTime();
+		immobilizeDuration = duration;
 	}
 }
 

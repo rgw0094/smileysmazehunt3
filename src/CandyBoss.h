@@ -12,6 +12,11 @@ struct Nova {
 	float timeSpawned;
 };
 
+struct Bartlet {
+	float x, y, bounceOffset, alpha;
+	hgeRect *collisionBox;
+};
+
 class CandyBoss : public Boss {
 
 public:
@@ -29,14 +34,20 @@ private:
 
 	//methods
 	void drawBartli();
-	void spawnNova(float x, float y);
-	void updateNovas(float dt);
-	void drawNovas(float dt);
 	void initCanPass();
 	void updateLimbs(float dt);
 	void updateRun(float dt);
 	void updateJumping(float dt);
 	void setCollisionBox(hgeRect *box, float x, float y);
+	void startNextRound();
+
+	void spawnNova(float x, float y);
+	void updateNovas(float dt);
+	void drawNovas(float dt);
+
+	void spawnBartlet(float x, float y);
+	void updateBartlets(float dt);
+	void drawBartlets(float dt);
 
 	//variables specific to Bartli
 	double leftArmRot,rightArmRot;
@@ -49,11 +60,14 @@ private:
 	float timeStartedJump;
 	float timeToJump;
 	float timeStoppedJump;
+	float timeStartedShrink;
 	float jumpSpeed;
 	int numJumps;
 	float speedMultiplier;
 	float size; //starts at 1.0, decreases with each hit as Bartli loses mass
 	int minX,minY,maxX,maxY; //the boundaries of this rectangular battle arena -- so that Bartli doesn't end up stuck in the walls after a jump
+	int numLives;
+	bool shrinking;
 
 	int groupID;
 	bool startedIntroDialogue;
@@ -66,7 +80,9 @@ private:
 	float timeEnteredState;
 	hgeRect *collisionBox;
 	hgeRect *futureCollisionBox;
+	
 	std::list<Nova> novaList;
+	std::list<Bartlet> bartletList;
 
 };
 

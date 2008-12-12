@@ -7,6 +7,8 @@
 #include "Environment.h"
 #include "collisioncircle.h"
 #include "WeaponParticle.h"
+#include "ProjectileManager.h"
+#include "LootManager.h"
 
 extern SMH *smh;
 
@@ -27,13 +29,15 @@ extern SMH *smh;
 #define CANDY_STATE_MULTI_JUMP 3
 #define CANDY_STATE_THROWING_CANDY 4
 #define CANDY_STATE_FIRING_PROJECTILES 5
+#define CANDY_STATE_FRIENDLY 6
+#define CANDY_STATE_RUNNING_AWAY 7
 
 //Text
 #define CANDY_INTRO_TEXT 170
 #define CANDY_DEFEAT_TEXT 171
 
 //Attributes
-#define FIRST_STATE CANDY_STATE_JUMPING
+#define FIRST_STATE CANDY_STATE_RUNNING
 #define CANDY_WIDTH 106
 #define CANDY_HEIGHT 128
 #define CANDY_RUN_SPEED 800.0
@@ -41,6 +45,9 @@ extern SMH *smh;
 #define COLLISION_DAMAGE 1.0
 #define SHOCKWAVE_STUN_DURATION 3.0
 #define SHOCKWAVE_DAMAGE 0.25
+
+#define HEALTH 0.25
+#define NUM_LIVES 7
 
 CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 	initialGridX = gridX = _gridX;
@@ -57,6 +64,7 @@ CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 	for (int curY = gridY; smh->environment->collision[gridX][curY] == WALKABLE; curY++) maxY = (curY+1)*64;
 	for (int curY = gridY; smh->environment->collision[gridX][curY] == WALKABLE; curY--) minY = (curY-1)*64+64;
 
+	health = maxHealth = HEALTH;
 	startedIntroDialogue = false;
 	droppedLoot = false;
 	shouldDrawAfterSmiley = false;
@@ -65,7 +73,9 @@ CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 	jumpYOffset = 0.0;
 	timeStoppedJump = 0.0;
 	jumping = false;
+	shrinking = false;
 
+	numLives = NUM_LIVES;
     size = 1.0;
 	collisionBox = new hgeRect();
 	futureCollisionBox = new hgeRect();
@@ -88,9 +98,20 @@ CandyBoss::~CandyBoss() {
  * This is always called before Smiley is drawn.
  */
 void CandyBoss::draw(float dt) {
+	
 	drawNovas(dt);
+	drawBartlets(dt);
+
 	if (!shouldDrawAfterSmiley) {
 		drawBartli();
+	}
+
+	//Draw the health bar and lives
+	if (state != CANDY_STATE_INACTIVE) {
+		drawHealth("Bartli");
+		for (int i = 0; i < numLives; i++) {
+			smh->resources->GetSprite("bartletBlue")->RenderEx(766.0 + 35.0 * i, 75.0, 0.0, 0.43, 0.43);
+		}
 	}
 }
 
@@ -121,11 +142,6 @@ bool CandyBoss::update(float dt) {
 		smh->soundManager->playMusic("bossMusic");
 	}
 
-	//Bartli gets faster the longer the battle goes on
-	if (state == CANDY_STATE_RUNNING || state == CANDY_STATE_JUMPING) {
-		speedMultiplier += 0.005 * dt;
-	}
-
 	if (state == CANDY_STATE_RUNNING) {
 		updateRun(dt);
 		if (smh->timePassedSince(timeEnteredState) > 8.0) {
@@ -149,6 +165,7 @@ bool CandyBoss::update(float dt) {
 		}
 	}
 
+	//Player collision
 	setCollisionBox(collisionBox, x, y);
 	if (smh->player->collisionCircle->testBox(collisionBox) && jumpYOffset < 65.0) {
 		if (state == CANDY_STATE_MULTI_JUMP) {
@@ -160,11 +177,70 @@ bool CandyBoss::update(float dt) {
 
 	updateLimbs(dt);
 	updateNovas(dt);
+	updateBartlets(dt);
 	shouldDrawAfterSmiley = (y > smh->player->y);
-	if (smh->hge->Input_KeyDown(HGEK_T)) {
-		size -= dt;
-		if (size < .2) size = 0.2;
+
+	smh->projectileManager->reflectProjectilesInBox(collisionBox, PROJECTILE_FRISBEE);
+	smh->projectileManager->reflectProjectilesInBox(collisionBox, PROJECTILE_LIGHTNING_ORB);
+
+	//Take damage from shit
+	if (!shrinking) {
+		if (smh->player->getTongue()->testCollision(collisionBox)) {
+			health -= smh->player->getDamage();
+		}
+		if (smh->player->fireBreathParticle->testCollision(collisionBox)) {
+			health -= smh->player->getFireBreathDamage();
+		}
 	}
+	
+	if (health < 0.0 && state != CANDY_STATE_FRIENDLY && state != CANDY_STATE_MULTI_JUMP) {
+		numLives--;
+		if (numLives == 0) {	
+			health = 0.0;
+			enterState(CANDY_STATE_FRIENDLY);		
+			smh->windowManager->openDialogueTextBox(-1, CANDY_DEFEAT_TEXT);	
+			smh->saveManager->killBoss(CANDY_BOSS);
+			smh->enemyGroupManager->notifyOfDeath(groupID);
+			smh->soundManager->fadeOutMusic();
+		} else {
+			shrinking = true;
+			timeStartedShrink = smh->getGameTime();
+			speedMultiplier += .1;
+			health = maxHealth;
+			spawnBartlet(x, y);	
+		}
+	}
+
+	if (shrinking) {
+		size -= (NUM_LIVES - numLives) * .045 * dt;
+		if (smh->timePassedSince(timeStartedShrink) > 0.5) {
+			shrinking = false;
+		}
+	}
+
+	///////// Death State stuff ///////////////
+
+	//After being defeated, wait for the text box to be closed
+	if (state == CANDY_STATE_FRIENDLY && !smh->windowManager->isTextBoxOpen()) {
+		enterState(CANDY_STATE_RUNNING_AWAY);
+	}
+
+	//After defeat and the text box is closed, bartli runs away
+	if (state == CANDY_STATE_RUNNING_AWAY) {
+		
+		x -= 400.0 * dt;
+		y -= 400.0 * dt;
+		
+		//TODO: make bartli jump away
+
+		//When done running away, drop the loot
+		if (smh->timePassedSince(timeEnteredState) > 1.5) {
+			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, ICE_BREATH);
+			smh->soundManager->playMusic("iceMusic");
+			return true;
+		}
+	}
+
 }
 
 
@@ -288,16 +364,15 @@ void CandyBoss::updateJumping(float dt) {
 		x += jumpSpeed * cos(angle) * dt;
 		y += jumpSpeed * sin(angle) * dt;
 
+		//Done jumping
 		if (smh->timePassedSince(timeStartedJump) > timeToJump) {
-
-smh->hge->System_Log("%f %f %f", timeStartedJump, smh->timePassedSince(timeStartedJump), timeToJump);
-
 			jumping = false;
 			timeStoppedJump = smh->getGameTime();
 			jumpYOffset = 0.0;
 			if (state == CANDY_STATE_JUMPING) {
 				//When done jumping, make the screen shake and create a shock wave
 				smh->screenEffectsManager->startShaking(0.75, 2.5);			
+				smh->player->immobilize(0.5);
 				spawnNova(x, y);
 			}
 		}
@@ -319,6 +394,8 @@ void CandyBoss::initCanPass() {
 	}
 	canPass[WALKABLE] = true;
 }
+
+//////////////////////////////// Novas /////////////////////////////
 
 void CandyBoss::spawnNova(float _x, float _y) {
 	Nova newNova;
@@ -362,5 +439,40 @@ void CandyBoss::drawNovas(float dt) {
 	for (std::list<Nova>::iterator i = novaList.begin(); i != novaList.end(); i++) {
 		i->particle->Render();
 		if (smh->isDebugOn()) i->collisionCircle->draw();
+	}
+}
+
+/////////////////////////// Bartlets //////////////////////////
+
+void CandyBoss::spawnBartlet(float x, float y) {
+	Bartlet newBartlet;
+	newBartlet.x = x;
+	newBartlet.y = y;
+	newBartlet.alpha = 255.0;
+	newBartlet.bounceOffset = 0.0;
+	newBartlet.collisionBox = new hgeRect();
+	bartletList.push_back(newBartlet);
+}
+
+void CandyBoss::updateBartlets(float dt) {
+	for (std::list<Bartlet>::iterator i = bartletList.begin(); i != bartletList.end(); i++) {
+		i->alpha = (sin(smh->getGameTime() * 9.0)+1.0)/2.0 * 255.0;
+		i->bounceOffset =  10.0 * cos(10.0 * smh->getGameTime()) - 2.0;
+		if (i->bounceOffset < 0.0) i->bounceOffset = 0.0;
+		i->collisionBox->SetRadius(i->x, i->y - i->bounceOffset, 25.0);
+	}
+}
+
+void CandyBoss::drawBartlets(float dt) {
+	for (std::list<Bartlet>::iterator i = bartletList.begin(); i != bartletList.end(); i++) {
+		smh->drawGlobalSprite("playerShadow", i->x, i->y + 25.0);
+		smh->resources->GetSprite("bartletRed")->SetColor(ARGB(i->alpha, 255, 255, 255));
+		smh->drawGlobalSprite("bartletBlue", i->x, i->y - i->bounceOffset);
+		smh->drawGlobalSprite("bartletRed", i->x, i->y - i->bounceOffset);
+		smh->resources->GetSprite("bartletRed")->SetColor(ARGB(255, 255, 255, 255));
+
+		if (smh->isDebugOn()) {
+			smh->drawCollisionBox(i->collisionBox, RED);
+		}
 	}
 }
