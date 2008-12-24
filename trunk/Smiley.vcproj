@@ -364,6 +364,9 @@
 					RelativePath=".\src\EvilWallManager.cpp">
 				</File>
 				<File
+					RelativePath=".\src\ExplosionManager.cpp">
+				</File>
+				<File
 					RelativePath=".\src\FenwarManager.cpp">
 				</File>
 				<File
@@ -393,6 +396,9 @@
 				</File>
 				<File
 					RelativePath=".\src\EvilWallManager.h">
+				</File>
+				<File
+					RelativePath=".\src\ExplosionManager.h">
 				</File>
 				<File
 					RelativePath=".\src\FenwarManager.h">
