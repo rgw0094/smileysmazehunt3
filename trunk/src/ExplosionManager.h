@@ -3,16 +3,16 @@
 
 #include <list>
 
+class CollisionCircle;
 class hgeParticleSystem;
-class hgeRect;
 
 struct Explosion {
 	float x, y;
-	float radius, size;
-	float duration, timeCreated;
+	float radius, maxRadius;
+	float duration, timeAlive, expandDuration, expandSpeed;
 	float damage, knockback;
-	hgeRect *collisionBox;
 	hgeParticleSystem *particle;
+	CollisionCircle *collisionCircle;
 };
 
 class ExplosionManager {
