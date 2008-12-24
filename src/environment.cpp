@@ -17,6 +17,7 @@
 #include "FenwarManager.h"
 #include "TutorialMan.h"
 #include "WindowFramework.h"
+#include "ExplosionManager.h"
 
 #include <string>
 #include <sstream>
@@ -91,40 +92,14 @@ Environment::Environment() {
 	tapestryManager = new TapestryManager();
 	smh->log("Creating Environment.SmileletManager");
 	smileletManager = new SmileletManager();
+	smh->log("Creating Environment.ExplosionManager");
+	explosionManager = new ExplosionManager();
 
 	collisionBox = new hgeRect();
 
 }
 
-
-/**
- * Destructor
- */
-Environment::~Environment() {
-
-	delete environmentParticles;
-	delete evilWallManager;
-	delete specialTileManager;
-	delete tapestryManager;
-	delete smileletManager;
-	if (tutorialMan) delete tutorialMan;
-	if (fountain) delete fountain;
-
-	delete collisionBox;
-	delete silverCylinder;
-	delete brownCylinder;
-	delete blueCylinder;
-	delete greenCylinder;
-	delete yellowCylinder;
-	delete whiteCylinder;
-	delete silverCylinderRev;
-	delete brownCylinderRev;
-	delete blueCylinderRev;
-	delete greenCylinderRev;
-	delete yellowCylinderRev;
-	delete whiteCylinderRev;
-
-}
+Environment::~Environment() { }
 
 /**
  * Resets all information about the current area.
@@ -693,6 +668,7 @@ void Environment::draw(float dt) {
 	smileletManager->drawAfterSmiley();
 	specialTileManager->draw(dt);
 	if (tutorialMan) tutorialMan->draw(dt);
+	explosionManager->draw(dt);
 
 }
 
@@ -827,6 +803,7 @@ void Environment::update(float dt) {
 	evilWallManager->update(dt);
 	tapestryManager->update(dt);
 	smileletManager->update();
+	explosionManager->update(dt);
 	if (fountain) fountain->update(dt);
 
 }
@@ -1538,6 +1515,13 @@ void Environment::setTerrainCollisionBox(hgeRect *box, int whatFor, int gridX, i
 	} else {
 		box->SetRadius(gridX*64+32,gridY*64+31,31);
 	}
+}
+
+/**
+ * Adds a new explosion;
+ */
+void Environment::addExplosion(float x, float y, float size, float damage, float knockback) {
+	explosionManager->addExplosion(x, y, size, damage, knockback);
 }
 
 /**

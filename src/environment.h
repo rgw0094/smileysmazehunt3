@@ -17,6 +17,7 @@ class SmileletManager;
 class Fountain;
 class FenwarManager;
 class TutorialMan;
+class ExplosionManager;
 
 class Environment {
 
@@ -64,8 +65,9 @@ public:
 	void reset();
 	void updateTutorialMan(float dt);
 	bool isTutorialManActive();
-	bool Environment::isInBounds(int gridX, int gridY);
-    
+	bool isInBounds(int gridX, int gridY);
+    void addExplosion(float x, float y, float size, float damage, float knockback);
+
 	//variables
 	int areaWidth,areaHeight;		//Width and height of the area in squares
 	int ids[256][256];				//ID Layer	
@@ -92,6 +94,7 @@ private:
 	Fountain *fountain;
 	SmileletManager *smileletManager;
 	TutorialMan *tutorialMan;
+	ExplosionManager *explosionManager;
 	hgeRect *collisionBox;
 
 	hgeAnimation *silverCylinder, *brownCylinder, *blueCylinder, *greenCylinder, *yellowCylinder, *whiteCylinder;
