@@ -18,7 +18,7 @@ struct Bomb {
 	double dx,dy;
 };
 
-struct Explosion {
+struct MushroomExplosion {
 	CollisionCircle* collisionCircle;
 	float timeBegan;
 	bool stillExpanding;
@@ -79,7 +79,7 @@ public:
 	//bombs that are thrown
 	std::list<Bomb> theBombs;
 	hgeParticleManager *explosions; //This contains the particle graphics for the exposions
-	std::list<Explosion> theExplosions; //This contains the expanding collision circles
+	std::list<MushroomExplosion> theExplosions; //This contains the expanding collision circles
 	
 };
 
