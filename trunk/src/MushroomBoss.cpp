@@ -499,7 +499,7 @@ void MushroomBoss::addBomb(float _x,float _y) {
 }
 
 void MushroomBoss::addExplosion (float _x,float _y) {
-	Explosion newExplosion;
+	MushroomExplosion newExplosion;
 	newExplosion.collisionCircle = new CollisionCircle;
 	newExplosion.collisionCircle->x=_x;
 	newExplosion.collisionCircle->y=_y;
@@ -514,7 +514,7 @@ void MushroomBoss::addExplosion (float _x,float _y) {
 
 void MushroomBoss::doExplosions(float dt) {
 	
-	std::list<Explosion>::iterator i;
+	std::list<MushroomExplosion>::iterator i;
 	for(i = theExplosions.begin(); i != theExplosions.end(); i++) {
 		i->collisionCircle->radius = EXPLOSION_COLLISION_ENLARGE_COEFFICIENT * smh->timePassedSince(i->timeBegan);
 		if (i->collisionCircle->radius >= EXPLOSION_MAX_RADIUS) {
@@ -538,7 +538,7 @@ void MushroomBoss::doExplosions(float dt) {
 }
 
 void MushroomBoss::killExplosions() {
-	std::list<Explosion>::iterator i;
+	std::list<MushroomExplosion>::iterator i;
 	for(i = theExplosions.begin(); i != theExplosions.end(); i++) {
 		delete i->collisionCircle;
 		i=theExplosions.erase(i);
@@ -549,7 +549,7 @@ void MushroomBoss::drawExplosions(float dt) {
 	explosions->Render();
 
 	if (smh->isDebugOn()) {
-		std::list<Explosion>::iterator i;
+		std::list<MushroomExplosion>::iterator i;
 		for(i = theExplosions.begin(); i != theExplosions.end(); i++) {
 			i->collisionCircle->draw();
 		}
