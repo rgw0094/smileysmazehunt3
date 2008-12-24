@@ -199,6 +199,9 @@
 				<File
 					RelativePath=".\src\SnowBoss.cpp">
 				</File>
+				<File
+					RelativePath=".\src\TutBoss.cpp">
+				</File>
 			</Filter>
 			<Filter
 				Name="Header"
@@ -229,6 +232,9 @@
 				</File>
 				<File
 					RelativePath=".\src\SnowBoss.h">
+				</File>
+				<File
+					RelativePath=".\src\TutBoss.h">
 				</File>
 			</Filter>
 		</Filter>
@@ -364,9 +370,6 @@
 					RelativePath=".\src\EvilWallManager.cpp">
 				</File>
 				<File
-					RelativePath=".\src\ExplosionManager.cpp">
-				</File>
-				<File
 					RelativePath=".\src\FenwarManager.cpp">
 				</File>
 				<File
@@ -396,9 +399,6 @@
 				</File>
 				<File
 					RelativePath=".\src\EvilWallManager.h">
-				</File>
-				<File
-					RelativePath=".\src\ExplosionManager.h">
 				</File>
 				<File
 					RelativePath=".\src\FenwarManager.h">
