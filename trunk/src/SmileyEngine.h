@@ -4,6 +4,8 @@
 #using <mscorlib.dll>
 
 #define STRICT
+#define DIRECTINPUT_VERSION 0x0800
+
 #include "hgeresource.h"
 #include "hge.h"
 #include <string>
