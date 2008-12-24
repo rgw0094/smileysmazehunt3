@@ -195,6 +195,10 @@ Particle shockwave {
  filename=shockwave.psi
  sprite=shockwaveGraphic
 }
+Particle tutLightning {
+ filename=lightningpart.psi
+ sprite=particleGraphic7
+}
 
 ;********************************************
 ;******** FENWAR (Resource Group 110) *******
@@ -1279,8 +1283,14 @@ Sprite KingTut {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=107
 }
+Sprite KingTutShadow {
+ texture="Graphics/Tut.png"
+ rect=69,0,68,227
+ hotspot=34,113
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=107
+}
  
-
 ;*****************************
 ;******** PROJECTILES ********
 ;*****************************
@@ -1333,6 +1343,12 @@ Sprite laserProjectile {
  texture="Graphics/projectiles.png"
  rect=64,0,5,130
  hotspot=2,65
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite tutProjectile {
+ texture=projectileTx
+ rect=0,130,64,20
+ hotspot=32,10
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 

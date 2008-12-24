@@ -74,6 +74,11 @@ void ProjectileManager::addProjectile(float x, float y, float speed, float angle
 		newProjectile.particle->Fire();
 	}
 
+	if (id == PROJECTILE_TUT_LIGHTNING) {
+		newProjectile.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("tutLightning")->info);
+		newProjectile.particle->Fire();
+	}
+
 	//Add it to the list
 	theProjectiles.push_back(newProjectile);
 
@@ -302,7 +307,12 @@ void ProjectileManager::draw(float dt) {
 		} else if (i->id == PROJECTILE_LASER) {
 
 			projectileTypes[i->id].sprite->RenderEx(smh->getScreenX(i->x), smh->getScreenY(i->y), i->angle + (PI/2.0), 1.0f, 1.0f);
-
+		
+		} else if (i->id == PROJECTILE_TUT_LIGHTNING) {
+			i->particle->Update(dt);
+			i->particle->MoveTo(smh->getScreenX(i->x), smh->getScreenY(i->y), true);
+			i->particle->Render();
+			projectileTypes[i->id].sprite->RenderEx(smh->getScreenX(i->x), smh->getScreenY(i->y), i->angle, 1.0f, 1.0f);			
 		//Normal projectiles - rotated to face the direction its travelling
 		} else {
 			projectileTypes[i->id].sprite->RenderEx(smh->getScreenX(i->x), smh->getScreenY(i->y), i->angle, 1.0f, 1.0f);
@@ -491,5 +501,8 @@ void ProjectileManager::initProjectiles() {
 	//Laser
 	projectileTypes[PROJECTILE_LASER].radius=3;
 	projectileTypes[PROJECTILE_LASER].sprite = smh->resources->GetSprite("laserProjectile");
+
+	projectileTypes[PROJECTILE_TUT_LIGHTNING].radius=10;
+	projectileTypes[PROJECTILE_TUT_LIGHTNING].sprite = smh->resources->GetSprite("tutProjectile");
 
 }
