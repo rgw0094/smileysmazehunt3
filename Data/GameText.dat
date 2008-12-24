@@ -359,6 +359,25 @@ NPC171Name = "Bartli"
 NPC171Pages = "1"
 NPC171-1 = "Oh, my, goodness gracious me. And you thought Pennsylvania was a perfect rectangle?"
 
+;King Tut
+NPC180Name = "King Tut"
+NPC180Pages = "4"
+NPC180-1 = "So I see you have come much further than anticipated."
+NPC180-2 = "Unfortunately, worthy adversary, your adventure and fun must end here."
+NPC180-3 = "I'd continue to trash talk you, but it seems kind of hollow..."
+NPC180-4 = "...considering the save point that is located right outside my lair grants you infinite tries until I am defeated."
+NPC181Name = "King Tut"
+NPC181Page = "9"
+NPC181-1 = "As expected, you have defeated me. That nearby lollipop assured no other outcome."
+NPC181-2 = "I still have one last weapon, however."
+NPC181-3 = "I can continue talking much longer than is possible for someone who has just been slain."
+NPC181-4 = "By doing so, I will annoy you into pressing the Action button repeatedly."
+NPC181-5 = "This is the only satisfaction I can manage out of this miserable defeat."
+NPC181-6 = "I do applaud you though, Smiley. You were remarkable."
+NPC181-7 = "Especially remarkable if you defeated me on the first or second attempt."
+NPC181-8 = "Well, I'd best be moving on now to the after-afterlife."
+NPC181-9 = "I do hope my slaves remembered to paint food on the walls so I don't starve to death this time."
+
 
 ;==============================================FENWAR ENCOUNTERS=====================================
 NPC240Name = "Fenwar"

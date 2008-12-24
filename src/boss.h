@@ -15,6 +15,8 @@
 #define DESPAIR_BOSS 245
 #define FIRE_BOSS2 246
 #define CANDY_BOSS 247
+#define SWAMP_BOSS 248
+#define TUT_BOSS 249
 
 extern SMH *smh;
 

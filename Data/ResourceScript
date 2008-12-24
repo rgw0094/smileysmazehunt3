@@ -1267,6 +1267,18 @@ Sprite bartletRed {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=106
 }
+
+;****************************
+;******** KING TUT **********
+;****** Resource group 107 **
+;****************************
+Sprite KingTut {
+ texture="Graphics/Tut.png"
+ rect=0,0,68,227
+ hotspot=34,113
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=107
+}
  
 
 ;*****************************
