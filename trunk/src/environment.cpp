@@ -668,7 +668,6 @@ void Environment::draw(float dt) {
 	smileletManager->drawAfterSmiley();
 	specialTileManager->draw(dt);
 	if (tutorialMan) tutorialMan->draw(dt);
-	explosionManager->draw(dt);
 
 }
 
@@ -698,10 +697,9 @@ void Environment::drawPits(float dt) {
 
 }
 
-
 /**
  * Draws stuff on the item layer that was marked to be drawn after
- * Smiley (indicated by ID 990) as well as shrink tunnels.
+ * Smiley (indicated by ID 990) as well as shrink tunnels, explosions and other SHIT.
  */
 void Environment::drawAfterSmiley(float dt) {
 
@@ -739,6 +737,8 @@ void Environment::drawAfterSmiley(float dt) {
 	if (fountain && fountain->isAboveSmiley()) {
 		fountain->draw(dt);
 	}
+
+	explosionManager->draw(dt);
 
 }
 

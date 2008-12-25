@@ -38,6 +38,7 @@ private:
 	void updateLimbs(float dt);
 	void updateRun(float dt);
 	void updateJumping(float dt);
+	void updateThrowingCandy(float dt);
 	void setCollisionBox(hgeRect *box, float x, float y);
 	void startNextRound();
 
@@ -68,6 +69,9 @@ private:
 	int minX,minY,maxX,maxY; //the boundaries of this rectangular battle arena -- so that Bartli doesn't end up stuck in the walls after a jump
 	int numLives;
 	bool shrinking;
+	bool isFirstTimeResting;
+	float lastCandyThrowTime;
+	float candyThrowDelay;
 
 	int groupID;
 	bool startedIntroDialogue;
@@ -77,7 +81,7 @@ private:
 	int initialGridX,initialGridY;
 	double x,y;
 	int state;
-	float timeEnteredState;
+	float timeInState;
 	hgeRect *collisionBox;
 	hgeRect *futureCollisionBox;
 	

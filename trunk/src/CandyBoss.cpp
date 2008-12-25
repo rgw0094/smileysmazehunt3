@@ -26,25 +26,28 @@ extern SMH *smh;
 #define CANDY_STATE_JUMPING 2
 #define CANDY_STATE_MULTI_JUMP 3
 #define CANDY_STATE_THROWING_CANDY 4
-#define CANDY_STATE_FIRING_PROJECTILES 5
+#define CANDY_STATE_RESTING 5
 #define CANDY_STATE_FRIENDLY 6
 #define CANDY_STATE_RUNNING_AWAY 7
 
 //Text
 #define CANDY_INTRO_TEXT 170
-#define CANDY_DEFEAT_TEXT 171
+#define CANDY_REST_TEXT 171
+#define CANDY_DEFEAT_TEXT 172
 
 //Attributes
-#define FIRST_STATE CANDY_STATE_RUNNING
-#define CANDY_WIDTH 106
-#define CANDY_HEIGHT 128
+#define FIRST_STATE CANDY_STATE_THROWING_CANDY
+#define CANDY_WIDTH 106.0
+#define CANDY_HEIGHT 128.0
 #define CANDY_RUN_SPEED 800.0
 #define CANDY_JUMP_DELAY 1.00
 #define COLLISION_DAMAGE 1.0
-#define SHOCKWAVE_STUN_DURATION 3.0
+#define SHOCKWAVE_STUN_DURATION 1.5
 #define SHOCKWAVE_DAMAGE 0.25
-#define BARTLET_DAMAGE .5
-#define BARTLET_KNOCKBACK 50.0
+#define BARTLET_DAMAGE 0.5
+#define BARTLET_KNOCKBACK 120.0
+#define CANDY_STATE_DURATION 10.0
+#define THROWN_CANDY_DAMAGE 0.75
 
 #define HEALTH 0.25
 #define NUM_LIVES 7
@@ -69,11 +72,12 @@ CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 	droppedLoot = false;
 	shouldDrawAfterSmiley = false;
 	state = CANDY_STATE_INACTIVE;
-	timeEnteredState = smh->getGameTime();
+	timeInState = 0.0;
 	jumpYOffset = 0.0;
 	timeStoppedJump = 0.0;
 	jumping = false;
 	shrinking = false;
+	isFirstTimeResting = true;
 
 	numLives = NUM_LIVES;
     size = 1.0;
@@ -92,6 +96,11 @@ CandyBoss::~CandyBoss() {
 	smh->resources->Purge(RES_BARTLI);
 	delete collisionBox;
 	delete futureCollisionBox;
+
+	for (std::list<Bartlet>::iterator i = bartletList.begin(); i != bartletList.end(); i++) {
+		delete i->collisionBox;
+		i = bartletList.erase(i);
+	}
 }
 
 /**
@@ -142,56 +151,89 @@ bool CandyBoss::update(float dt) {
 		smh->soundManager->playMusic("bossMusic");
 	}
 
-	if (state == CANDY_STATE_RUNNING) {
-		updateRun(dt);
-		if (smh->timePassedSince(timeEnteredState) > 8.0) {
-			enterState(CANDY_STATE_JUMPING);
-		}
-	}
+	if (shrinking) {
 
-	if (state == CANDY_STATE_JUMPING) {
-		updateJumping(dt);
-		if (numJumps >= 10) {
-			jumping = false;
-			enterState(CANDY_STATE_RUNNING);
+		size -= (NUM_LIVES - numLives) * .0225 * dt;
+		if (smh->timePassedSince(timeStartedShrink) > 1.0) {
+			shrinking = false;
+			spawnBartlet(x, y);
 		}
-	}
 
-	if (state == CANDY_STATE_MULTI_JUMP) {
-		updateJumping(dt);
-		if (numJumps >= 5) {
-			jumping = false;
-			enterState(CANDY_STATE_RUNNING);
+	} else {
+
+		timeInState += dt;
+
+		//Stage 1 - running
+		if (state == CANDY_STATE_RUNNING) {
+			updateRun(dt);
+			if (timeInState > 8.0) {
+				enterState(CANDY_STATE_THROWING_CANDY);
+			}
 		}
-	}
 
-	//Player collision
-	setCollisionBox(collisionBox, x, y);
-	if (smh->player->collisionCircle->testBox(collisionBox) && jumpYOffset < 65.0) {
+		//Stage 2 - throwing candy
+		if (state == CANDY_STATE_THROWING_CANDY) {
+			updateThrowingCandy(dt);
+			if (timeInState > CANDY_STATE_DURATION) {
+				enterState(CANDY_STATE_JUMPING);
+			}
+		}
+
+		//Stage 3a - jumping
+		if (state == CANDY_STATE_JUMPING) {
+			updateJumping(dt);
+			if (numJumps >= 10) {
+				jumping = false;
+				enterState(CANDY_STATE_RESTING);
+			}
+		}
+
+		//Stage 3b - multi jump (only if you get hit by the shockwave)
 		if (state == CANDY_STATE_MULTI_JUMP) {
-			smh->player->dealDamage(0.25, false);
-		} else {
-			smh->player->dealDamageAndKnockback(COLLISION_DAMAGE, true, 150.0, x, y);
+			updateJumping(dt);
+			if (numJumps >= 5) {
+				jumping = false;
+				//Go back to stage one if they got hit by the shockwave!
+				enterState(CANDY_STATE_RUNNING);
+			}
 		}
-	}
 
-	updateLimbs(dt);
-	updateNovas(dt);
-	updateBartlets(dt);
-	shouldDrawAfterSmiley = (y > smh->player->y);
+		//Stage 4 - resting
+		if (state == CANDY_STATE_RESTING) {
+			//updateResting(dt);
+			if (timeInState > 3.0) {
+				enterState(CANDY_STATE_RUNNING);
+			}
+		}
 
-	smh->projectileManager->reflectProjectilesInBox(collisionBox, PROJECTILE_FRISBEE);
-	smh->projectileManager->reflectProjectilesInBox(collisionBox, PROJECTILE_LIGHTNING_ORB);
+		//Player collision
+		setCollisionBox(collisionBox, x, y);
+		if (smh->player->collisionCircle->testBox(collisionBox) && jumpYOffset < 65.0) {
+			if (state == CANDY_STATE_MULTI_JUMP) {
+				smh->player->dealDamage(0.25, false);
+			} else {
+				smh->player->dealDamageAndKnockback(COLLISION_DAMAGE, true, 150.0, x, y);
+			}
+		}
 
-	//Take damage from shit
-	if (!shrinking) {
+		updateLimbs(dt);
+			
+		//Take damage from stuff
 		if (smh->player->getTongue()->testCollision(collisionBox)) {
 			health -= smh->player->getDamage();
 		}
 		if (smh->player->fireBreathParticle->testCollision(collisionBox)) {
 			health -= smh->player->getFireBreathDamage();
 		}
+
+		smh->projectileManager->reflectProjectilesInBox(collisionBox, PROJECTILE_FRISBEE);
+		smh->projectileManager->reflectProjectilesInBox(collisionBox, PROJECTILE_LIGHTNING_ORB);
+
 	}
+
+	updateNovas(dt);
+	updateBartlets(dt);
+	shouldDrawAfterSmiley = (y > smh->player->y);
 	
 	if (health < 0.0 && state != CANDY_STATE_FRIENDLY && state != CANDY_STATE_MULTI_JUMP) {
 		numLives--;
@@ -207,14 +249,6 @@ bool CandyBoss::update(float dt) {
 			timeStartedShrink = smh->getGameTime();
 			speedMultiplier += .1;
 			health = maxHealth;
-			spawnBartlet(x, y);	
-		}
-	}
-
-	if (shrinking) {
-		size -= (NUM_LIVES - numLives) * .045 * dt;
-		if (smh->timePassedSince(timeStartedShrink) > 0.5) {
-			shrinking = false;
 		}
 	}
 
@@ -234,7 +268,7 @@ bool CandyBoss::update(float dt) {
 		//TODO: make bartli jump away
 
 		//When done running away, drop the loot
-		if (smh->timePassedSince(timeEnteredState) > 1.5) {
+		if (timeInState > 1.5) {
 			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, ICE_BREATH);
 			smh->soundManager->playMusic("iceMusic");
 			return true;
@@ -267,8 +301,8 @@ void CandyBoss::drawBartli() {
  * Handles state transition logic
  */
 void CandyBoss::enterState(int _state) {
-	state=_state;
-	timeEnteredState=smh->getGameTime();
+	state = _state;
+	timeInState = 0.0;
 
 	if (state == CANDY_STATE_RUNNING) {
 		//Start running in a random direction that doesn't result in Bartli immediately charging the player
@@ -279,6 +313,18 @@ void CandyBoss::enterState(int _state) {
 		} while (angle > angleBetween - PI/4.0 && angle < angleBetween + PI/4.0);
 	}
 
+	if (state == CANDY_STATE_RESTING) {
+		if (isFirstTimeResting) {
+			smh->windowManager->openDialogueTextBox(-1, CANDY_REST_TEXT);
+			isFirstTimeResting = false;
+		}
+	}
+
+	if (state == CANDY_STATE_THROWING_CANDY) {
+		lastCandyThrowTime = smh->getGameTime();
+		candyThrowDelay = 0.5;
+	}
+
 	if (state == CANDY_STATE_JUMPING || state == CANDY_STATE_MULTI_JUMP) {
 		numJumps = 0;	
 	}
@@ -287,12 +333,12 @@ void CandyBoss::enterState(int _state) {
 
 void CandyBoss::updateLimbs(float dt) {
 	if (state == CANDY_STATE_RUNNING) {
-		leftLegY = 5.0*sin(smh->timePassedSince(timeEnteredState)*20);
-		rightLegY = -5.0*sin(smh->timePassedSince(timeEnteredState)*20);
+		leftLegY = 5.0*sin(timeInState*20.0);
+		rightLegY = -5.0*sin(timeInState*20.0);
 	}
 	if (state == CANDY_STATE_RUNNING || state == CANDY_STATE_JUMPING || state == CANDY_STATE_MULTI_JUMP) {
-		leftArmRot = -CANDY_ARM_INITIAL_ROT + 15*PI/180*sin(smh->timePassedSince(timeEnteredState)*7);
-		rightArmRot = CANDY_ARM_INITIAL_ROT - 15*PI/180*sin(smh->timePassedSince(timeEnteredState)*7);
+		leftArmRot = -CANDY_ARM_INITIAL_ROT + 15*PI/180*sin(timeInState*7.0);
+		rightArmRot = CANDY_ARM_INITIAL_ROT - 15*PI/180*sin(timeInState*7.0);
 	}
 }
 
@@ -353,6 +399,7 @@ void CandyBoss::updateJumping(float dt) {
 	
 		timeToJump = 0.5 * (1.0 / speedMultiplier);
 		jumpSpeed = jumpDistance / timeToJump;
+		//TODO: convert timeStartedJump to timeJumping
 		timeStartedJump = smh->getGameTime();
 
 	}
@@ -377,6 +424,28 @@ void CandyBoss::updateJumping(float dt) {
 			}
 		}
 
+	}
+
+}
+
+/**
+ * Throwing candy state. This is pretty self explanatory.
+ */
+void CandyBoss::updateThrowingCandy(float dt) {
+
+	if (smh->timePassedSince(lastCandyThrowTime) > candyThrowDelay) {
+
+		float centerAngle = Util::getAngleBetween(x, y, smh->player->x, smh->player->y)
+			+ smh->hge->Random_Float(PI / 12.0, PI / 8.0);
+		float angleDiff = smh->hge->Random_Float(PI / 8.0, PI / 4.0);
+		float speed = smh->hge->Random_Float(450.0, 600.0);
+
+		for (float angle = centerAngle - 1.0 * angleDiff; angle <= centerAngle + 1.0 * angleDiff; angle += angleDiff) {
+			smh->projectileManager->addProjectile(x, y, speed, angle, THROWN_CANDY_DAMAGE, true, PROJECTILE_PENGUIN_FISH, true);
+		}
+
+		lastCandyThrowTime = smh->getGameTime();
+		candyThrowDelay = smh->hge->Random_Float(0.5, 1.0);
 	}
 
 }

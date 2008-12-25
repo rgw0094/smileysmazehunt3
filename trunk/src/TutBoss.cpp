@@ -182,10 +182,10 @@ void TutBoss::fireLightning() {
 	float angleToSmiley = Util::getAngleBetween(x,y,smh->player->x,smh->player->y);
 	angleToSmiley += smh->hge->Random_Float(-TUTBOSS_DOUBLE_SHOT_SPREAD,TUTBOSS_DOUBLE_SHOT_SPREAD);
 	
-	if (smh->player->dx != 0 || smh->player->dy != 0) {
-		float smileyFacing = smh->player->angles[smh->player->facing] - PI/2;
+	//if (smh->player->dx != 0 || smh->player->dy != 0) {
+	//	float smileyFacing = smh->player->angles[smh->player->facing] - PI/2;
 		//somehow compensate the angle of the shot based on the angle smiley is moving and the angle the shot is currently going
-	}
+	//}
 
 	smh->projectileManager->addProjectile(x,y,TUTBOSS_SHOT_SPEED,angleToSmiley,TUTBOSS_SHOT_DAMAGE,true,PROJECTILE_TUT_LIGHTNING,true);
 	timeOfLastShot = smh->getGameTime();

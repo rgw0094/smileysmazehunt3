@@ -26,11 +26,12 @@ void ExplosionManager::addExplosion(float x, float y, float size, float damage, 
 	Explosion explosion;
 	explosion.x = x;
 	explosion.y = y;
-	explosion.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("smallExplosion")->info);
+	explosion.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("explosionLarge")->info);
 	explosion.particle->FireAt(x, y);
 	explosion.timeAlive = 0.0;
 	explosion.damage = damage;
 	explosion.knockback = knockback;
+	explosion.hitPlayerYet = false;
 	explosion.collisionCircle = new CollisionCircle();
 
 	explosion.radius = 3.0 + explosion.particle->info.fSizeEnd + explosion.particle->info.fSizeVar;
@@ -66,9 +67,13 @@ void ExplosionManager::update(float dt) {
 		if (i->timeAlive < i->expandDuration) {
 			i->radius += i->expandSpeed * dt;
 		}
-		
 		i->collisionCircle->set(i->x, i->y, i->radius);
 
+		if (!i->hitPlayerYet && smh->player->collisionCircle->testCircle(i->collisionCircle)) {
+			i->hitPlayerYet = true;
+			smh->player->dealDamageAndKnockback(i->damage, true, true, i->knockback, i->x, i->y);
+		}
+		
 		if (i->timeAlive > i->duration) {
 			i = explosionList.erase(i);
 		}
