@@ -297,9 +297,9 @@ Music castleOfEvilMusic {
  amplify=50
 }
 
-;*********************************************
-;******** FOUNTAIN (Resource group 69 ********
-;*********************************************
+;**********************************************
+;******** FOUNTAIN (Resource group 69) ********
+;**********************************************
 Animation fountainRipple {
  texture="Graphics/fountain.png"
  rect=0,0,338,95
