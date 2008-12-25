@@ -235,15 +235,25 @@ void SMH::doDebugInput(float dt) {
 		//Move smiley with num pad
 		int xMove = 0;
 		int yMove = 0;
-		if (hge->Input_GetKeyState(HGEK_NUMPAD8) || hge->Input_GetKeyState(HGEK_NUMPAD5) || hge->Input_GetKeyState(HGEK_NUMPAD4) || hge->Input_GetKeyState(HGEK_NUMPAD6)) {
+
+		//int upKey = HGEK_UP;
+		//int downKey = HGEK_DOWN;
+		//int leftKey = HGEK_LEFT;
+		//int rightKey = HGEK_RIGHT;
+		int upKey = HGEK_NUMPAD8;
+		int downKey = HGEK_NUMPAD5;
+		int leftKey = HGEK_NUMPAD4;
+		int rightKey = HGEK_NUMPAD6;
+
+		if (hge->Input_GetKeyState(upKey) || hge->Input_GetKeyState(downKey) || hge->Input_GetKeyState(leftKey) || hge->Input_GetKeyState(rightKey)) {
 			if (!debugMovePressed) {
 				debugMovePressed = true;
 				lastDebugMoveTime = getGameTime();
 			}
-			if (hge->Input_KeyDown(HGEK_NUMPAD8) || (timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(HGEK_NUMPAD8))) yMove = -1;
-			if (hge->Input_KeyDown(HGEK_NUMPAD5) || (timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(HGEK_NUMPAD5))) yMove = 1;
-			if (hge->Input_KeyDown(HGEK_NUMPAD4) || (timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(HGEK_NUMPAD4))) xMove = -1;
-			if (hge->Input_KeyDown(HGEK_NUMPAD6) || (timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(HGEK_NUMPAD6))) xMove = 1;
+			if (hge->Input_KeyDown(upKey) || (timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(upKey))) yMove = -1;
+			if (hge->Input_KeyDown(downKey) || (timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(downKey))) yMove = 1;
+			if (hge->Input_KeyDown(leftKey) || (timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(leftKey))) xMove = -1;
+			if (hge->Input_KeyDown(rightKey) || (timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(rightKey))) xMove = 1;
 		} else {
 			debugMovePressed = false;
 		}
