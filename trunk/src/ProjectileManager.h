@@ -34,6 +34,7 @@ struct Projectile {
 	bool changedGridSquare;
 	int id;					//ID used to choose graphic and shit
 	bool hostile;			//If this is an enemy bullet
+	bool homing;			//Whether this projectile homes or not
 	hgeRect *collisionBox;
 	hgeRect *terrainCollisionBox;
 	hgeParticleSystem *particle;
@@ -75,6 +76,7 @@ public:
 	int killProjectilesInBox(hgeRect *collisionBox, int type);
 	int killProjectilesInBox(hgeRect *collisionBox, int type, bool killHostile, bool killNonhostile);
 	int killProjectilesInCircle(float x, float y, float radius, int type);
+	int rotateLeftOrRightForMinimumRotation(float projectileAngle, float angleToTarget);
 
 	ProjectileType projectileTypes[NUM_PROJECTILES];
 	std::list<Projectile> theProjectiles;

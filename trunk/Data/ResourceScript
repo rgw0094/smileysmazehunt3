@@ -95,6 +95,12 @@ Sprite particleGraphic5 {
  hotspot=16,16
  blendmode=COLORMUL,ALPHAADD,NOZWRITE
 }
+Sprite particleGraphic8 {
+ texture=particlesTx
+ rect=96,32,32,32
+ hotspot=16,16
+ blendmode=COLORMUL,ALPHAADD,NOZWRITE
+}
 Sprite particleGraphic11 {
  texture=particlesTx
  rect=64,64,32,32
@@ -197,7 +203,7 @@ Particle shockwave {
 }
 Particle tutLightning {
  filename=lightningpart.psi
- sprite=particleGraphic7
+ sprite=particleGraphic8
 }
 
 ;********************************************

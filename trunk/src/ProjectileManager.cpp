@@ -63,6 +63,7 @@ void ProjectileManager::addProjectile(float x, float y, float speed, float angle
 	newProjectile.dy = speed * sin(angle);
 	newProjectile.makesSmileyFlash = makesSmileyFlash;
 	newProjectile.timeReflected = -10.0;
+	newProjectile.homing = false;
 	
 	if (id == PROJECTILE_LIGHTNING_ORB) {
 		newProjectile.waitingToReflect = false;
@@ -77,6 +78,7 @@ void ProjectileManager::addProjectile(float x, float y, float speed, float angle
 	if (id == PROJECTILE_TUT_LIGHTNING) {
 		newProjectile.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("tutLightning")->info);
 		newProjectile.particle->Fire();
+		newProjectile.homing = true;
 	}
 
 	//Add it to the list
@@ -84,12 +86,22 @@ void ProjectileManager::addProjectile(float x, float y, float speed, float angle
 
 }
 
+/**
+ * Figures out if a projectile should rotate CW or CCW to point to the target
+ */
+int ProjectileManager::rotateLeftOrRightForMinimumRotation(float projectileAngle, float angleToTarget) {
+	float angleDifference = projectileAngle - angleToTarget;
+	while (angleDifference < 0) angleDifference += 2*PI;
+	while (angleDifference > 2*PI) angleDifference -= 2*PI;
+	if (angleDifference > PI) return 1;
+	return -1;
+}
+
 
 /**
  * Update all the projectiles
  */
 void ProjectileManager::update(float dt) {
-
 	//Loop through the projectiles
 	bool deleteProjectile;
 	std::list<Projectile>::iterator i;
@@ -137,6 +149,15 @@ void ProjectileManager::update(float dt) {
 			if (abs(i->x - smh->player->x) > 1080 || abs(i->y - smh->player->y) > 810) {
 				deleteProjectile = true;
 			}
+		}
+
+		//Update homing projectiles
+		if (!deleteProjectile && i->homing) {
+			float angleToSmiley = Util::getAngleBetween(i->x,i->y,smh->player->x,smh->player->y);
+			int rotateDir = rotateLeftOrRightForMinimumRotation(i->angle,angleToSmiley);
+			i->angle += rotateDir*1.7*dt;
+			i->dx = i->speed * cos(i->angle);
+			i->dy = i->speed * sin(i->angle);
 		}
 
 		//Lightning orb shit
@@ -289,6 +310,7 @@ void ProjectileManager::update(float dt) {
  * Draw all the projectiles
  */
 void ProjectileManager::draw(float dt) {
+	
 	//Loop through the projectiles
 	std::list<Projectile>::iterator i;
 	for (i = theProjectiles.begin(); i != theProjectiles.end(); i++) {
