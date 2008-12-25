@@ -8,7 +8,7 @@ class hgeParticleSystem;
 
 struct Explosion {
 	float x, y;
-	float radius, maxRadius;
+	float radius;
 	float duration, timeAlive, expandDuration, expandSpeed;
 	float damage, knockback;
 	hgeParticleSystem *particle;

@@ -1,11 +1,9 @@
 #include "ExplosionManager.h"
 #include "SmileyEngine.h"
 #include "CollisionCircle.h"
+#include "Player.h"
 
 extern SMH *smh;
-
-//The radius of the explosion at its peak
-#define MAX_EXPLOSION_RADIUS 7.0
 
 ExplosionManager::ExplosionManager() {
 
@@ -30,19 +28,17 @@ void ExplosionManager::addExplosion(float x, float y, float size, float damage, 
 	explosion.y = y;
 	explosion.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("smallExplosion")->info);
 	explosion.particle->FireAt(x, y);
-	explosion.radius = 0.0;
 	explosion.timeAlive = 0.0;
-	explosion.maxRadius = MAX_EXPLOSION_RADIUS * size;
-	explosion.duration = explosion.particle->info.fLifetime + explosion.particle->info.fParticleLifeMax;
-	explosion.expandDuration = explosion.particle->info.fParticleLifeMax;
-	explosion.expandSpeed = (explosion.particle->info.fSpeedMax + explosion.particle->info.fSpeedMin) / 2.0;
 	explosion.damage = damage;
 	explosion.knockback = knockback;
 	explosion.collisionCircle = new CollisionCircle();
+
+	explosion.radius = 3.0 + explosion.particle->info.fSizeEnd + explosion.particle->info.fSizeVar;
+	explosion.duration = explosion.particle->info.fLifetime + explosion.particle->info.fParticleLifeMax;
+	explosion.expandDuration = explosion.particle->info.fParticleLifeMax;
+	explosion.expandSpeed = (explosion.particle->info.fSpeedMax + explosion.particle->info.fSpeedMin) / 2.0;
+
 	explosionList.push_back(explosion);
-
-	smh->hge->System_Log("duration %f speed %f", explosion.expandDuration, explosion.expandSpeed);
-
 }
 
 /**
@@ -68,7 +64,7 @@ void ExplosionManager::update(float dt) {
 		i->timeAlive += dt;
 
 		if (i->timeAlive < i->expandDuration) {
-			i->radius += (i->maxRadius / i->expandSpeed) * dt;
+			i->radius += i->expandSpeed * dt;
 		}
 		
 		i->collisionCircle->set(i->x, i->y, i->radius);

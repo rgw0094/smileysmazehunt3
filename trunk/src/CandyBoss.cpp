@@ -12,8 +12,6 @@
 
 extern SMH *smh;
 
-#define CANDY_HEALTH 100
-
 //Where to draw limbs
 #define CANDY_ARM_X_OFFSET 45
 #define CANDY_ARM_Y_OFFSET -66
@@ -45,6 +43,8 @@ extern SMH *smh;
 #define COLLISION_DAMAGE 1.0
 #define SHOCKWAVE_STUN_DURATION 3.0
 #define SHOCKWAVE_DAMAGE 0.25
+#define BARTLET_DAMAGE .5
+#define BARTLET_KNOCKBACK 50.0
 
 #define HEALTH 0.25
 #define NUM_LIVES 7
@@ -454,15 +454,27 @@ void CandyBoss::spawnBartlet(float x, float y) {
 	bartletList.push_back(newBartlet);
 }
 
+/**
+ * Updates all of the bartlets.
+ */
 void CandyBoss::updateBartlets(float dt) {
 	for (std::list<Bartlet>::iterator i = bartletList.begin(); i != bartletList.end(); i++) {
 		i->alpha = (sin(smh->getGameTime() * 9.0)+1.0)/2.0 * 255.0;
 		i->bounceOffset =  10.0 * cos(10.0 * smh->getGameTime()) - 2.0;
 		if (i->bounceOffset < 0.0) i->bounceOffset = 0.0;
 		i->collisionBox->SetRadius(i->x, i->y - i->bounceOffset, 25.0);
+
+		//Explode when the player touches a bartlet
+		if (smh->player->collisionCircle->testBox(i->collisionBox)) {
+			smh->environment->addExplosion(i->x, i->y, 1.0, BARTLET_DAMAGE, BARTLET_KNOCKBACK);
+			i = bartletList.erase(i);
+		}
 	}
 }
 
+/**
+ * Draws all of the bartlets.
+ */
 void CandyBoss::drawBartlets(float dt) {
 	for (std::list<Bartlet>::iterator i = bartletList.begin(); i != bartletList.end(); i++) {
 		smh->drawGlobalSprite("playerShadow", i->x, i->y + 25.0);
