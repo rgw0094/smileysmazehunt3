@@ -14,7 +14,6 @@ extern SMH *smh;
 
 ProjectileManager::ProjectileManager() {
 
-	projectileTexture = smh->hge->Texture_Load("Graphics/projectiles.PNG");
 	initProjectiles();
 
 	//Set up which collision types projectiles can go through

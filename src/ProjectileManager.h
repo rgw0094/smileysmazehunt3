@@ -2,7 +2,6 @@
 #define _PROJECTILES_H_
 
 #include <list>
-#include "hge.h" //For HTEXTURE
 
 class CollisionCircle;
 class hgeParticleSystem;
@@ -81,7 +80,6 @@ public:
 	ProjectileType projectileTypes[NUM_PROJECTILES];
 	std::list<Projectile> theProjectiles;
 	bool canPass[256];
-	HTEXTURE projectileTexture;
 
 };
 

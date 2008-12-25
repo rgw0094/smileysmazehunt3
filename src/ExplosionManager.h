@@ -11,6 +11,7 @@ struct Explosion {
 	float radius;
 	float duration, timeAlive, expandDuration, expandSpeed;
 	float damage, knockback;
+	bool hitPlayerYet;
 	hgeParticleSystem *particle;
 	CollisionCircle *collisionCircle;
 };
