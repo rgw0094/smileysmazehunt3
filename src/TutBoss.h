@@ -17,6 +17,7 @@ public:
 	bool update(float dt);
 	void enterState(int _state);
 	void placeCollisionBox();
+	void fireLightning();
 
 	//State-specific methods
 	void doOnGround(float dt);
@@ -44,6 +45,9 @@ public:
 	float floatingHeight;
 	float a[10],b[10]; //used for the parametric motion of Tut while he's hovering around
 	int swoop; //which a and which b to use (gives him different patterns)
+	float timeOfLastShot;
+	int whichShotInterval; //either long interval or short (creates double shot effect)
+	float nextLongInterval; //this tells it how long to wait until shooting the next double shot
 
 };
 

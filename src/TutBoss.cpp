@@ -34,8 +34,16 @@ extern SMH *smh;
 #define TIME_TO_BE_ON_GROUND 2.0
 
 #define TIME_TO_RISE 0.5
+
 #define TUTBOSS_FLOWER_RADIUS 300
 #define NUM_SWOOPS 3 //how many sets of constants for the parametric equation ther are
+#define TUTBOSS_DOUBLE_SHOT_LONG_INTERVAL 0.7
+#define TUTBOSS_DOUBLE_SHOT_SHORT_INTERVAL 0.3
+#define TUTBOSS_DOUBLE_SHOT_SPREAD 0.2
+#define TUTBOSS_SHORT_INTERVAL 0
+#define TUTBOSS_LONG_INTERVAL 1
+#define TUTBOSS_SHOT_DAMAGE 3.0
+#define TUTBOSS_SHOT_SPEED 600.0
 
 //Fading define
 #define TUTBOSS_FADE_SPEED 100.0
@@ -64,6 +72,9 @@ TutBoss::TutBoss(int _gridX,int _gridY,int _groupID) {
 	floatingHeight=INITIAL_FLOATING_HEIGHT;
 
 	swoop = 0;
+	whichShotInterval = TUTBOSS_SHORT_INTERVAL;
+	nextLongInterval = TUTBOSS_DOUBLE_SHOT_LONG_INTERVAL;
+	timeOfLastShot = 0.0;
 
 	a[0]=0.120;
 	b[0]=0.532;
@@ -161,8 +172,23 @@ void TutBoss::doRising(float dt) {
 	if (smh->timePassedSince(timeEnteredState) > TIME_TO_RISE) {
 		floatingHeight = MAX_FLOATING_HEIGHT;
 		enterState(TUTBOSS_HOVERING_AROUND);
+		timeOfLastShot = smh->getGameTime();
 	}
 	
+}
+
+void TutBoss::fireLightning() {
+	//float extraAngle; //this one looks at what angle smiley is facing, and tries to lead the shot to hit him
+	float angleToSmiley = Util::getAngleBetween(x,y,smh->player->x,smh->player->y);
+	angleToSmiley += smh->hge->Random_Float(-TUTBOSS_DOUBLE_SHOT_SPREAD,TUTBOSS_DOUBLE_SHOT_SPREAD);
+	
+	if (smh->player->dx != 0 || smh->player->dy != 0) {
+		float smileyFacing = smh->player->angles[smh->player->facing] - PI/2;
+		//somehow compensate the angle of the shot based on the angle smiley is moving and the angle the shot is currently going
+	}
+
+	smh->projectileManager->addProjectile(x,y,TUTBOSS_SHOT_SPEED,angleToSmiley,TUTBOSS_SHOT_DAMAGE,true,PROJECTILE_TUT_LIGHTNING,true);
+	timeOfLastShot = smh->getGameTime();
 }
 
 void TutBoss::doHoveringAround(float dt) {
@@ -170,6 +196,25 @@ void TutBoss::doHoveringAround(float dt) {
 	floatingHeight = MAX_FLOATING_HEIGHT + 4.0*sin(smh->timePassedSince(timeEnteredState)*4);
     x = xInitial+TUTBOSS_FLOWER_RADIUS*sin(a[swoop]*t)*cos(b[swoop]*t);
 	y = yInitial+TUTBOSS_FLOWER_RADIUS*sin(a[swoop]*t)*sin(b[swoop]*t);
+
+	switch (whichShotInterval) {
+		case TUTBOSS_SHORT_INTERVAL:
+			if (smh->timePassedSince(timeOfLastShot) > TUTBOSS_DOUBLE_SHOT_SHORT_INTERVAL) {
+				//fire!
+				fireLightning();
+				whichShotInterval = TUTBOSS_LONG_INTERVAL;
+				nextLongInterval = smh->hge->Random_Float(TUTBOSS_DOUBLE_SHOT_LONG_INTERVAL*0.5,TUTBOSS_DOUBLE_SHOT_LONG_INTERVAL*1.3);
+			}
+			break;
+		case TUTBOSS_LONG_INTERVAL:
+			if (smh->timePassedSince(timeOfLastShot) > nextLongInterval) {
+				//fire!
+				fireLightning();
+				whichShotInterval = TUTBOSS_SHORT_INTERVAL;
+			}
+			break;
+	};
+	
 
 }
 
