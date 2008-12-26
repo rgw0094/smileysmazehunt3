@@ -39,6 +39,14 @@ struct Projectile {
 	hgeParticleSystem *particle;
 	bool makesSmileyFlash;
 	float timeReflected;
+	float timeAlive;
+
+	//Parabola shit
+	bool hasParabola;
+	float parabolaDistance;
+	float parabolaYOffset;
+	float parabolaDuration;
+	float parabolaHeight;
 
 	//Frisbee shit
 	float frisbeeAngle;
@@ -65,7 +73,6 @@ public:
 	//methods
 	void draw(float dt);
 	void update(float dt);
-	void addProjectile(float x, float y, float speed, float angle, float damage, bool hostile, int id, bool makesSmileyFlash);
 	void reset();
 	void initProjectiles();
 	void reflectProjectile(std::list<Projectile>::iterator projectile);
@@ -76,6 +83,12 @@ public:
 	int killProjectilesInBox(hgeRect *collisionBox, int type, bool killHostile, bool killNonhostile);
 	int killProjectilesInCircle(float x, float y, float radius, int type);
 	int rotateLeftOrRightForMinimumRotation(float projectileAngle, float angleToTarget);
+
+	void addProjectile(float x, float y, float speed, float angle, float damage, bool hostile, 
+		int id, bool makesSmileyFlash);
+	void addProjectile(float x, float y, float speed, float angle, float damage, bool hostile, 
+		int id, bool makesSmileyFlash, bool hasParabola, float parabolaLength, 
+		float parabolaDuration, float parabolaHeight);
 
 	ProjectileType projectileTypes[NUM_PROJECTILES];
 	std::list<Projectile> theProjectiles;
