@@ -9,7 +9,6 @@
 extern SMH *smh;
 
 #define LASER_LENGTH 20.0
-
 #define MINI_MUSHROOM_ENEMYID 43
 
 ProjectileManager::ProjectileManager() {
@@ -43,6 +42,15 @@ ProjectileManager::~ProjectileManager() {
  * Add a projectile to the manager
  */
 void ProjectileManager::addProjectile(float x, float y, float speed, float angle, float damage, bool hostile, int id, bool makesSmileyFlash) {
+	addProjectile(x, y, speed, angle, damage, hostile, id, makesSmileyFlash, false, 0.0, 0.0, 0.0);
+}
+
+/**
+ * Add a projectile to the manager
+ */
+void ProjectileManager::addProjectile(float x, float y, float speed, float angle, float damage, bool hostile, 
+									  int id, bool makesSmileyFlash, bool hasParabola, float parabolaLength, 
+									  float parabolaDuration, float parabolaHeight) {
 
 	//Create new projectile struct
 	Projectile newProjectile;
@@ -58,12 +66,19 @@ void ProjectileManager::addProjectile(float x, float y, float speed, float angle
 	newProjectile.collisionBox->SetRadius(x,y,projectileTypes[id].radius);
 	newProjectile.terrainCollisionBox = new hgeRect();
 	newProjectile.terrainCollisionBox->SetRadius(x,y,projectileTypes[id].radius/2.0);
-	newProjectile.dx = speed * cos(angle);
-	newProjectile.dy = speed * sin(angle);
 	newProjectile.makesSmileyFlash = makesSmileyFlash;
 	newProjectile.timeReflected = -10.0;
 	newProjectile.homing = false;
-	
+	newProjectile.hasParabola = hasParabola;
+	newProjectile.timeAlive = 0.0;
+	newProjectile.parabolaDistance = parabolaLength;
+	newProjectile.parabolaYOffset = 0.0;
+	newProjectile.parabolaDuration = parabolaDuration;
+	newProjectile.parabolaHeight = parabolaHeight;
+	if (hasParabola) newProjectile.speed = parabolaLength / parabolaDuration;
+	newProjectile.dx = newProjectile.speed * cos(angle);
+	newProjectile.dy = newProjectile.speed * sin(angle);
+
 	if (id == PROJECTILE_LIGHTNING_ORB) {
 		newProjectile.waitingToReflect = false;
 		newProjectile.facing = smh->player->facing;
@@ -111,13 +126,32 @@ void ProjectileManager::update(float dt) {
 		//Update projectile stuff
 		i->x += i->dx * dt;
 		i->y += i->dy * dt;
+
 		i->changedGridSquare = (Util::getGridX(i->x) != i->gridX || Util::getGridY(i->y) != i->gridY);
 		i->gridX = Util::getGridX(i->x);
 		i->gridY = Util::getGridY(i->y);
-		i->collisionBox->SetRadius(i->x, i->y, projectileTypes[i->id].radius);
+		i->timeAlive += dt;
 		
+		//Parabola stuff.
+		if (i->hasParabola) {
+			i->parabolaYOffset = i->parabolaHeight * sin((i->timeAlive/i->parabolaDuration) * PI);
+			
+			if (i->parabolaYOffset > projectileTypes[i->id].radius * 2) {
+				//The projectile can't hit smiley when it is up in the air
+				i->collisionBox->SetRadius(-1.0,-1.0,0.0);
+			} else {
+				i->collisionBox->SetRadius(i->x, i->y-i->parabolaYOffset, projectileTypes[i->id].radius);
+			}
+
+			if (i->timeAlive > i->parabolaDuration) {
+				deleteProjectile = true;
+			}
+		} else {
+			i->collisionBox->SetRadius(i->x, i->y, projectileTypes[i->id].radius);
+		}
+
 		//Do collision with Smiley
-		if (i->hostile && smh->player->collisionCircle->testBox(i->collisionBox)) {
+		if (!deleteProjectile && i->hostile && smh->player->collisionCircle->testBox(i->collisionBox)) {
 			if (smh->player->isReflectingProjectiles()) {
 				reflectProjectile(i);
 			} else {
@@ -324,21 +358,27 @@ void ProjectileManager::draw(float dt) {
 			i->particle->MoveTo(smh->getScreenX(i->x), smh->getScreenY(i->y), true);
 			i->particle->Render();
 
-		//Laser - draw a line
+		//Laser - sprite is rotated 90 degrees (this is gay, change the graphic so theres not a special case)
 		} else if (i->id == PROJECTILE_LASER) {
-
 			projectileTypes[i->id].sprite->RenderEx(smh->getScreenX(i->x), smh->getScreenY(i->y), i->angle + (PI/2.0), 1.0f, 1.0f);
 		
+		//Tut laser
 		} else if (i->id == PROJECTILE_TUT_LIGHTNING) {
 			i->particle->Update(dt);
 			i->particle->MoveTo(smh->getScreenX(i->x), smh->getScreenY(i->y), true);
 			i->particle->Render();
 			projectileTypes[i->id].sprite->RenderEx(smh->getScreenX(i->x), smh->getScreenY(i->y), i->angle, 1.0f, 1.0f);			
+		
 		//Normal projectiles - rotated to face the direction its travelling
 		} else {
-			projectileTypes[i->id].sprite->RenderEx(smh->getScreenX(i->x), smh->getScreenY(i->y), i->angle, 1.0f, 1.0f);
+			projectileTypes[i->id].sprite->RenderEx(smh->getScreenX(i->x), smh->getScreenY(i->y - i->parabolaYOffset), i->angle, 1.0f, 1.0f);
 		}
 		
+		//If this is a parabola projectile, draw its shadow
+		if (i->hasParabola) {
+			smh->resources->GetSprite("mushboomBombShadow")->Render(smh->getScreenX(i->x), smh->getScreenY(i->y));
+		}
+
 		//Debug stuff
 		if (smh->isDebugOn()) {
 			smh->drawCollisionBox(i->collisionBox, RED);

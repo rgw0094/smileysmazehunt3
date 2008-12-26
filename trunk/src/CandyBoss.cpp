@@ -46,7 +46,7 @@ extern SMH *smh;
 #define SHOCKWAVE_DAMAGE 0.25
 #define BARTLET_DAMAGE 0.5
 #define BARTLET_KNOCKBACK 120.0
-#define CANDY_STATE_DURATION 10.0
+#define THROWING_CANDY_STATE_DURATION 10.0
 #define THROWN_CANDY_DAMAGE 0.75
 
 #define HEALTH 0.25
@@ -174,7 +174,7 @@ bool CandyBoss::update(float dt) {
 		//Stage 2 - throwing candy
 		if (state == CANDY_STATE_THROWING_CANDY) {
 			updateThrowingCandy(dt);
-			if (timeInState > CANDY_STATE_DURATION) {
+			if (timeInState > THROWING_CANDY_STATE_DURATION) {
 				enterState(CANDY_STATE_JUMPING);
 			}
 		}
@@ -431,21 +431,33 @@ void CandyBoss::updateJumping(float dt) {
 /**
  * Throwing candy state. This is pretty self explanatory.
  */
-void CandyBoss::updateThrowingCandy(float dt) {
+void CandyBoss::updateThrowingCandy(float dt) 
+{
+	if (smh->timePassedSince(lastCandyThrowTime) > candyThrowDelay) 
+	{
+		float targetX, targetY, angle, distance, duration, radius;
 
-	if (smh->timePassedSince(lastCandyThrowTime) > candyThrowDelay) {
+		for (int i = 0; i < smh->hge->Random_Int(2,3); i++) 
+		{
+			//Calculate a random target nearby the player
+			angle = smh->hge->Random_Float(0.0, PI);
+			radius = smh->hge->Random_Float(150.0, 300.0);
+			targetX = smh->player->x + radius * cos(angle);
+			targetY = smh->player->y + radius * sin(angle);
 
-		float centerAngle = Util::getAngleBetween(x, y, smh->player->x, smh->player->y)
-			+ smh->hge->Random_Float(PI / 12.0, PI / 8.0);
-		float angleDiff = smh->hge->Random_Float(PI / 8.0, PI / 4.0);
-		float speed = smh->hge->Random_Float(450.0, 600.0);
+			//Calculate distance, angle, and time to get to that target
+			distance = Util::distance(x, y, targetX, targetY);
+			duration = distance / smh->hge->Random_Float(375.0, 475.0);
+			angle = Util::getAngleBetween(x, y, targetX, targetY);
 
-		for (float angle = centerAngle - 1.0 * angleDiff; angle <= centerAngle + 1.0 * angleDiff; angle += angleDiff) {
-			smh->projectileManager->addProjectile(x, y, speed, angle, THROWN_CANDY_DAMAGE, true, PROJECTILE_PENGUIN_FISH, true);
+			//TODO: add a new projectile type instead of using fish
+			//Spawn the projectile
+			smh->projectileManager->addProjectile(x, y - 75.0, 0.0, angle, THROWN_CANDY_DAMAGE, true, 
+				PROJECTILE_PENGUIN_FISH, true, true, distance, duration, distance / 1.5);
 		}
 
 		lastCandyThrowTime = smh->getGameTime();
-		candyThrowDelay = smh->hge->Random_Float(0.5, 1.0);
+		candyThrowDelay = 0.25;
 	}
 
 }
