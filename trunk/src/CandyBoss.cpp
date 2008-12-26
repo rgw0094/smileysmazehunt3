@@ -48,8 +48,10 @@ extern SMH *smh;
 #define BARTLET_KNOCKBACK 120.0
 #define THROWING_CANDY_STATE_DURATION 10.0
 #define THROWN_CANDY_DAMAGE 0.75
+#define BARTLET_DAMAGE 1.0
+#define FLASHING_DURATION 1.0
 
-#define HEALTH 0.25
+#define HEALTH 2.0
 #define NUM_LIVES 7
 
 CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
@@ -78,6 +80,7 @@ CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 	jumping = false;
 	shrinking = false;
 	isFirstTimeResting = true;
+	lastTimeHit = 0.0;
 
 	numLives = NUM_LIVES;
     size = 1.0;
@@ -219,11 +222,17 @@ bool CandyBoss::update(float dt) {
 		updateLimbs(dt);
 			
 		//Take damage from stuff
-		if (smh->player->getTongue()->testCollision(collisionBox)) {
+		bool hitThisFrame = false;
+		if (smh->player->getTongue()->testCollision(collisionBox) && smh->timePassedSince(lastTimeHit) > FLASHING_DURATION) {
 			health -= smh->player->getDamage();
+			hitThisFrame = true;
 		}
 		if (smh->player->fireBreathParticle->testCollision(collisionBox)) {
 			health -= smh->player->getFireBreathDamage();
+			hitThisFrame = true;
+		}
+		if (hitThisFrame && smh->timePassedSince(lastTimeHit) > FLASHING_DURATION) {
+			lastTimeHit = smh->getGameTime();
 		}
 
 		smh->projectileManager->reflectProjectilesInBox(collisionBox, PROJECTILE_FRISBEE);
@@ -235,6 +244,22 @@ bool CandyBoss::update(float dt) {
 	updateBartlets(dt);
 	shouldDrawAfterSmiley = (y > smh->player->y);
 	
+	//Do flashing
+	if (smh->timePassedSince(lastTimeHit) < FLASHING_DURATION) {
+		float alpha = 0.0;
+		float n = FLASHING_DURATION / 4.0;
+		float x = smh->timePassedSince(lastTimeHit);
+		while (x > n) x -= n;
+		if (x < n/2.0) {
+			alpha = 100.0 + (310.0 * x) / n;
+		} else {
+			alpha = 255.0 - 155.0 * (x - n/2.0);
+		}
+		smh->resources->GetAnimation("bartli")->SetColor(ARGB(255.0,255.0,alpha,alpha));
+	} else {
+		smh->resources->GetAnimation("bartli")->SetColor(ARGB(255.0,255.0,255.0,255.0));
+	}
+
 	if (health < 0.0 && state != CANDY_STATE_FRIENDLY && state != CANDY_STATE_MULTI_JUMP) {
 		numLives--;
 		if (numLives == 0) {	
@@ -545,10 +570,9 @@ void CandyBoss::updateBartlets(float dt) {
 		if (i->bounceOffset < 0.0) i->bounceOffset = 0.0;
 		i->collisionBox->SetRadius(i->x, i->y - i->bounceOffset, 25.0);
 
-		//Explode when the player touches a bartlet
+		//Damage the player when they touch a bartlet
 		if (smh->player->collisionCircle->testBox(i->collisionBox)) {
-			smh->environment->addExplosion(i->x, i->y, 1.0, BARTLET_DAMAGE, BARTLET_KNOCKBACK);
-			i = bartletList.erase(i);
+			smh->player->dealDamageAndKnockback(BARTLET_DAMAGE, true, false, 130.0, i->x, i->y);
 		}
 	}
 }

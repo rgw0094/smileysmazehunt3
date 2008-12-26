@@ -72,6 +72,7 @@ private:
 	bool isFirstTimeResting;
 	float lastCandyThrowTime;
 	float candyThrowDelay;
+	float lastTimeHit;
 
 	int groupID;
 	bool startedIntroDialogue;

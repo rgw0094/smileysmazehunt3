@@ -208,8 +208,6 @@ void SMH::drawGame() {
  */
 void SMH::doDebugInput(float dt) {
 
-	if (hge->Input_KeyDown(HGEK_E)) environment->addExplosion(player->x + 40.0, player->y + 40.0, 1.0, 1.0, 30.0);
-
 	//Toggle debug mode
 	if (hge->Input_KeyDown(HGEK_D)) toggleDebugMode();
 
