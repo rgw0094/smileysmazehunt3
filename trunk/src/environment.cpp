@@ -490,13 +490,13 @@ void Environment::draw(float dt) {
 				int theItem = item[i+xGridOffset][j+yGridOffset];
 
 				//Terrain
-				if (theTerrain > 0 && theTerrain < 256) {
-					smh->resources->GetAnimation("mainLayer")->SetFrame(theTerrain);
-					smh->resources->GetAnimation("mainLayer")->Render(drawX,drawY);
-				} else if (theCollision != PIT) {
-					//Draw a black square over blank tiles unless there is a pit here. We don't want
-					//to draw anything over pits because of the parallax layer underneath
-					smh->resources->GetSprite("blackScreen")->RenderStretch(drawX, drawY, drawX+64, drawY+64);
+				if (theCollision != PIT) {
+					if (theTerrain > 0 && theTerrain < 256) {
+						smh->resources->GetAnimation("mainLayer")->SetFrame(theTerrain);
+						smh->resources->GetAnimation("mainLayer")->Render(drawX,drawY);
+					} else {
+						smh->resources->GetSprite("blackScreen")->RenderStretch(drawX, drawY, drawX+64, drawY+64);
+					}
 				}
 
 				//Collision
@@ -619,6 +619,7 @@ void Environment::draw(float dt) {
 				}
 			
 			} else {
+				//Out of bounds
 				smh->resources->GetSprite("blackScreen")->RenderStretch(drawX, drawY, drawX+64, drawY+64);
 			}
 		}

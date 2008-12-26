@@ -36,7 +36,7 @@ extern SMH *smh;
 #define CANDY_DEFEAT_TEXT 172
 
 //Attributes
-#define FIRST_STATE CANDY_STATE_THROWING_CANDY
+#define FIRST_STATE CANDY_STATE_RUNNING
 #define CANDY_WIDTH 106.0
 #define CANDY_HEIGHT 128.0
 #define CANDY_RUN_SPEED 800.0
@@ -45,11 +45,12 @@ extern SMH *smh;
 #define SHOCKWAVE_STUN_DURATION 1.5
 #define SHOCKWAVE_DAMAGE 0.25
 #define BARTLET_DAMAGE 0.5
-#define BARTLET_KNOCKBACK 120.0
-#define THROWING_CANDY_STATE_DURATION 10.0
 #define THROWN_CANDY_DAMAGE 0.75
 #define BARTLET_DAMAGE 1.0
 #define FLASHING_DURATION 1.0
+
+#define THROWING_CANDY_STATE_DURATION 10.0
+#define RUN_STATE_DURATION 8.0
 
 #define HEALTH 2.0
 #define NUM_LIVES 7
@@ -64,10 +65,10 @@ CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 
 	initCanPass();
 
-	for (int curX = gridX; smh->environment->collision[curX][gridY] == WALKABLE; curX++) maxX = (curX+1)*64;
-	for (int curX = gridX; smh->environment->collision[curX][gridY] == WALKABLE; curX--) minX = (curX-1)*64+64;
-	for (int curY = gridY; smh->environment->collision[gridX][curY] == WALKABLE; curY++) maxY = (curY+1)*64;
-	for (int curY = gridY; smh->environment->collision[gridX][curY] == WALKABLE; curY--) minY = (curY-1)*64+64;
+	for (int curX = gridX; canPass[smh->environment->collision[curX][gridY]]; curX++) maxX = curX*64;
+	for (int curX = gridX; canPass[smh->environment->collision[curX][gridY]]; curX--) minX = curX*64 + 64;
+	for (int curY = gridY; canPass[smh->environment->collision[gridX][curY]]; curY++) maxY = curY*64;
+	for (int curY = gridY; canPass[smh->environment->collision[gridX][curY]]; curY--) minY = curY*64 + 64;
 
 	health = maxHealth = HEALTH;
 	startedIntroDialogue = false;
@@ -156,7 +157,7 @@ bool CandyBoss::update(float dt) {
 
 	if (shrinking) {
 
-		size -= (NUM_LIVES - numLives) * .0225 * dt;
+		size -= (NUM_LIVES - numLives + 1) * .0225 * dt;
 		if (smh->timePassedSince(timeStartedShrink) > 1.0) {
 			shrinking = false;
 			spawnBartlet(x, y);
@@ -169,7 +170,7 @@ bool CandyBoss::update(float dt) {
 		//Stage 1 - running
 		if (state == CANDY_STATE_RUNNING) {
 			updateRun(dt);
-			if (timeInState > 8.0) {
+			if (timeInState > RUN_STATE_DURATION) {
 				enterState(CANDY_STATE_THROWING_CANDY);
 			}
 		}
@@ -210,12 +211,17 @@ bool CandyBoss::update(float dt) {
 		}
 
 		//Player collision
-		setCollisionBox(collisionBox, x, y);
-		if (smh->player->collisionCircle->testBox(collisionBox) && jumpYOffset < 65.0) {
+		if (jumpYOffset < 65.0) {
+			setCollisionBox(collisionBox, x, y - jumpYOffset);
+		} else {
+			//Bartli can't collide with the player when she is in the air
+			setCollisionBox(collisionBox, -1.0, -1.0);
+		}
+		if (smh->player->collisionCircle->testBox(collisionBox)) {
 			if (state == CANDY_STATE_MULTI_JUMP) {
 				smh->player->dealDamage(0.25, false);
 			} else {
-				smh->player->dealDamageAndKnockback(COLLISION_DAMAGE, true, 150.0, x, y);
+				smh->player->dealDamageAndKnockback(COLLISION_DAMAGE, true, 225.0, x, y);
 			}
 		}
 
@@ -372,14 +378,21 @@ void CandyBoss::updateLimbs(float dt) {
  */
 void CandyBoss::updateRun(float dt) {
 
+	//If bartli is stuck (this can happen if she jumps on the player right by the wall) then
+	//move her off the wall
+	if (smh->environment->testCollision(collisionBox, canPass)) 
+	{
+		smh->hge->System_Log("stuck (%f, %f) (%f, %f) (%f, %f)", x, y, minX, minY, maxX, maxY);
+		if (x - CANDY_WIDTH/2.0 < minX) x += CANDY_RUN_SPEED * speedMultiplier * dt;
+		if (x + CANDY_WIDTH/2.0> maxX) x -= CANDY_RUN_SPEED * speedMultiplier * dt;
+		if (y - CANDY_HEIGHT/2.0< minY) y += CANDY_RUN_SPEED * speedMultiplier * dt;
+		if (y + CANDY_HEIGHT/2.0> maxY) y -= CANDY_RUN_SPEED * speedMultiplier * dt;
+		return;
+	}
+
 	float xDist = CANDY_RUN_SPEED * speedMultiplier * cos(angle) * dt;
 	float yDist = CANDY_RUN_SPEED * speedMultiplier * sin(angle) * dt;
 	setCollisionBox(futureCollisionBox, x + xDist, y + yDist);
-
-	if (collisionBox->x1 < minX) {x += CANDY_RUN_SPEED*speedMultiplier*dt; return;}
-	if (collisionBox->x2 > maxX) {x -= CANDY_RUN_SPEED*speedMultiplier*dt; return;}
-	if (collisionBox->y1 < minY) {y += CANDY_RUN_SPEED*speedMultiplier*dt; return;}
-	if (collisionBox->y2 > maxY) {y -= CANDY_RUN_SPEED*speedMultiplier*dt; return;}
 	
 	//When bartli hits a wall, bounce off it towards smiley
 	if (smh->environment->testCollision(futureCollisionBox, canPass)) {
@@ -488,9 +501,9 @@ void CandyBoss::updateThrowingCandy(float dt)
 }
 
 void CandyBoss::setCollisionBox(hgeRect *box, float x, float y) {
-	box->x1 = x - CANDY_WIDTH/2*size;
+	box->x1 = x - CANDY_WIDTH/2.0*size;
 	box->y1 = y - CANDY_HEIGHT*size;
-	box->x2 = x + CANDY_WIDTH/2*size;
+	box->x2 = x + CANDY_WIDTH/2.0*size;
 	box->y2 = y + (CANDY_LEG_HEIGHT+CANDY_LEG_Y_OFFSET)*size; //add the leg height so that the legs are included in the collision rect
 }
 
