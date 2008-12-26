@@ -38,6 +38,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||ProjectileManager now supports parabola projectiles||12/25/08||RGW||
 ||ExplosionManager||12/26/08||RGW||
 ||King Tut graphics||12/24/08||ETI||
 ||ScreenEffectsManager||12/6/08||RGW||
