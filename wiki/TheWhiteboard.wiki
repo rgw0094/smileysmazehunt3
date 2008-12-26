@@ -14,14 +14,14 @@
  * Fenwar Encounters
 
 === Programming To Do ===
+ * Leverage the ExplosionManager
  * Lovecraftian Boss
  * King Tut
  * Bartli
  * Calypso 2
 
 === Graphics To Do ===
- * New Keys
- * King Tut
+ * New Keys (I think all keys can be the same but just a different hue)
  * New ability loot graphic (the thing that appears when you kill a boss)
  * Bomb guy graphic
  * Lovecraftian Boss
@@ -38,6 +38,8 @@
 
 ===Done===
 ||Item||Date||Done By||
+||ExplosionManager||12/26/08||RGW||
+||King Tut graphics||12/24/08||ETI||
 ||ScreenEffectsManager||12/6/08||RGW||
 ||Fixed crash glitch (you were using npc walkdirection without it having a value)||12/4/08||ETI||
 ||You can no longer take off Jesus' sandals when over water||11/30/08||RGW||
