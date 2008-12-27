@@ -16,6 +16,7 @@
 === Programming To Do ===
  * Leverage the ExplosionManager
  * Lovecraftian Boss
+ * Put finishing touches on Calypso - sound effects, finish destructor, make him not look gay in stun mode, balancing
  * King Tut
  * Bartli
  * Calypso 2
