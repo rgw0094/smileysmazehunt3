@@ -65,6 +65,7 @@ private:
 	float timeStoppedJump;
 	float timeStartedShrink;
 	float jumpSpeed;
+	float arenaCenterX, arenaCenterY;
 	int numJumps;
 	float speedMultiplier;
 	float size; //starts at 1.0, decreases with each hit as Bartli loses mass
@@ -80,6 +81,7 @@ private:
 	float mouthOpenDuration;
 	float timeMouthOpened;
 	float flashingAlpha;
+	float timeToGetToCenter;
 
 	int groupID;
 	bool startedIntroDialogue;

@@ -1,6 +1,5 @@
 #include "CandyBoss.h"
 #include "SmileyEngine.h"
-#include "hgeresource.h"
 #include "Player.h"
 #include "EnemyFramework.h"
 #include "WindowFramework.h"
@@ -21,15 +20,16 @@ extern SMH *smh;
 #define CANDY_ARM_INITIAL_ROT 10*PI/180
 
 //States
-#define FIRST_STATE CANDY_STATE_RUNNING
+#define FIRST_STATE CANDY_STATE_THROWING_CANDY
 #define CANDY_STATE_INACTIVE 0
 #define CANDY_STATE_RUNNING 1
 #define CANDY_STATE_JUMPING 2
 #define CANDY_STATE_MULTI_JUMP 3
-#define CANDY_STATE_THROWING_CANDY 4
-#define CANDY_STATE_RESTING 5
-#define CANDY_STATE_FRIENDLY 6
-#define CANDY_STATE_RUNNING_AWAY 7
+#define CANDY_STATE_MOVING_TO_CENTER 4
+#define CANDY_STATE_THROWING_CANDY 5
+#define CANDY_STATE_RESTING 6
+#define CANDY_STATE_FRIENDLY 7
+#define CANDY_STATE_RUNNING_AWAY 8
 
 //Text
 #define CANDY_INTRO_TEXT 170
@@ -47,7 +47,7 @@ extern SMH *smh;
 #define BARTLET_DAMAGE 0.5
 #define THROWN_CANDY_DAMAGE 0.75
 #define BARTLET_DAMAGE 1.0
-#define FLASHING_DURATION 1.0
+#define FLASHING_DURATION 0.75
 
 #define THROWING_CANDY_STATE_DURATION 10.0
 #define RUN_STATE_DURATION 8.0
@@ -61,8 +61,8 @@ CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 	initialGridY = gridY = _gridY;
 	groupID = _groupID;
 
-	x = gridX * 64 + 32;
-	y = gridY * 64 + 32;
+	arenaCenterX = x = gridX * 64.0 + 32.0;
+	arenaCenterY = y = gridY * 64.0 + 32.0;
 
 	initCanPass();
 
@@ -85,6 +85,7 @@ CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 	lastTimeHit = 0.0;
 	fadeOutAlpha = 255.0;
 	flashingAlpha = 255.0;
+	restYOffset = 0.0;
 
 	numLives = NUM_LIVES;
     size = 1.0;
@@ -174,11 +175,19 @@ bool CandyBoss::update(float dt) {
 		if (state == CANDY_STATE_RUNNING) {
 			updateRun(dt);
 			if (timeInState > RUN_STATE_DURATION) {
+				enterState(CANDY_STATE_MOVING_TO_CENTER);
+			}
+		}
+
+		//Stage 2a - move back to the middle of the arena before throwing candy
+		if (state == CANDY_STATE_MOVING_TO_CENTER) {
+			updateRun(dt);
+			if (timeInState >= timeToGetToCenter) {
 				enterState(CANDY_STATE_THROWING_CANDY);
 			}
 		}
 
-		//Stage 2 - throwing candy
+		//Stage 2b - throwing candy
 		if (state == CANDY_STATE_THROWING_CANDY) {
 			updateThrowingCandy(dt);
 			if (timeInState > THROWING_CANDY_STATE_DURATION) {
@@ -314,26 +323,21 @@ bool CandyBoss::update(float dt) {
 
 }
 
-
 // Private ////////////////
 
-void CandyBoss::drawBartli() {
-
+void CandyBoss::drawBartli() 
+{
 	smh->resources->GetAnimation("bartli")->SetColor(ARGB(fadeOutAlpha, 255.0, flashingAlpha, flashingAlpha));
 	smh->resources->GetSprite("bartliArm")->SetColor(ARGB(fadeOutAlpha, 255.0, flashingAlpha, flashingAlpha));
 	smh->resources->GetSprite("bartliLeg")->SetColor(ARGB(fadeOutAlpha, 255.0, flashingAlpha, flashingAlpha));
 
-    //Shadow
 	smh->resources->GetSprite("bartliShadow")->RenderEx(smh->getScreenX(x),smh->getScreenY(y)+(CANDY_LEG_Y_OFFSET+CANDY_LEG_HEIGHT)*size,0.0,size,size);
-	//Body
 	smh->resources->GetAnimation("bartli")->RenderEx(smh->getScreenX(x),smh->getScreenY((y - jumpYOffset - restYOffset)),0.0,size,size);
-	//Arms
 	smh->resources->GetSprite("bartliArm")->RenderEx(smh->getScreenX(x-CANDY_ARM_X_OFFSET*size),smh->getScreenY((y+CANDY_ARM_Y_OFFSET*size) - jumpYOffset - restYOffset),rightArmRot,size,size);
 	smh->resources->GetSprite("bartliArm")->RenderEx(smh->getScreenX(x+CANDY_ARM_X_OFFSET*size),smh->getScreenY((y+CANDY_ARM_Y_OFFSET*size) - jumpYOffset - restYOffset),leftArmRot,-1.0*size,1.0*size);
-	//Legs
 	smh->resources->GetSprite("bartliLeg")->RenderEx(smh->getScreenX(x-CANDY_LEG_X_OFFSET*size),smh->getScreenY((y+(CANDY_LEG_Y_OFFSET+rightLegY)*size) - jumpYOffset),0.0,size,size);
 	smh->resources->GetSprite("bartliLeg")->RenderEx(smh->getScreenX(x+CANDY_LEG_X_OFFSET*size),smh->getScreenY((y+(CANDY_LEG_Y_OFFSET+leftLegY )*size) - jumpYOffset),0.0,-1.0*size,1.0*size);
-	//Debug
+
 	if (smh->isDebugOn()) smh->drawCollisionBox(collisionBox,RED);
 }
 
@@ -346,6 +350,11 @@ void CandyBoss::enterState(int _state) {
 		restYOffset = 0.0;
 	}
 
+	if (state == CANDY_STATE_MOVING_TO_CENTER) {
+		x = arenaCenterX;
+		y = arenaCenterY;
+	}
+
 	state = _state;
 	timeInState = 0.0;
 
@@ -356,6 +365,11 @@ void CandyBoss::enterState(int _state) {
 		do {
 			angle = smh->randomFloat(0.0, PI);
 		} while (angle > angleBetween - PI/4.0 && angle < angleBetween + PI/4.0);
+	}
+
+	if (state == CANDY_STATE_MOVING_TO_CENTER) {
+		timeToGetToCenter = Util::distance(x, y, arenaCenterX, arenaCenterY) / (CANDY_RUN_SPEED * speedMultiplier);
+		angle = Util::getAngleBetween(x, y, arenaCenterX, arenaCenterY);
 	}
 
 	if (state == CANDY_STATE_RESTING) {
@@ -380,11 +394,12 @@ void CandyBoss::enterState(int _state) {
 void CandyBoss::updateLimbs(float dt) 
 {
 	//Legs
-	if (state == CANDY_STATE_RUNNING) 
+	if (state == CANDY_STATE_RUNNING || state == CANDY_STATE_MOVING_TO_CENTER || state == CANDY_STATE_THROWING_CANDY) 
 	{
 		leftLegY = 5.0*sin(timeInState*20.0);
 		rightLegY = -5.0*sin(timeInState*20.0);
 	}
+
 	//Arms
 	if (state == CANDY_STATE_RUNNING || state == CANDY_STATE_JUMPING || state == CANDY_STATE_MULTI_JUMP ||
 		state == CANDY_STATE_THROWING_CANDY) 
@@ -492,6 +507,14 @@ void CandyBoss::updateJumping(float dt) {
  */
 void CandyBoss::updateThrowingCandy(float dt) 
 {
+	//Move around
+	float t = timeInState * 2.5;
+	float a = 0.120;
+	float b = 0.532;
+    x = arenaCenterX + 500.0 * sin(a * t) * cos(b * t);
+	y = arenaCenterY + 350.0 * sin(a * t) * sin(b * t);
+
+	//Throw candy periodically
 	if (smh->timePassedSince(lastCandyThrowTime) > candyThrowDelay) 
 	{
 		float targetX, targetY, angle, distance, duration, radius;
@@ -518,7 +541,6 @@ void CandyBoss::updateThrowingCandy(float dt)
 		lastCandyThrowTime = smh->getGameTime();
 		candyThrowDelay = 0.25;
 	}
-
 }
 
 /**
