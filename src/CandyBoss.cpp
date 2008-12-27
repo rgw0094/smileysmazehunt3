@@ -53,7 +53,7 @@ extern SMH *smh;
 #define RUN_STATE_DURATION 8.0
 
 #define HEALTH 2.0
-#define NUM_LIVES 7
+#define NUM_LIVES 1
 
 CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 	initialGridX = gridX = _gridX;
@@ -82,6 +82,7 @@ CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 	shrinking = false;
 	isFirstTimeResting = true;
 	lastTimeHit = 0.0;
+	fadeOutAlpha = 255.0;
 
 	numLives = NUM_LIVES;
     size = 1.0;
@@ -288,20 +289,22 @@ bool CandyBoss::update(float dt) {
 	//After being defeated, wait for the text box to be closed
 	if (state == CANDY_STATE_FRIENDLY && !smh->windowManager->isTextBoxOpen()) {
 		enterState(CANDY_STATE_RUNNING_AWAY);
+		fadeOutAlpha = 255.0;
+		setBartliColor(255.0, 255.0, 255.0, 255.0);
 	}
 
-	//After defeat and the text box is closed, bartli runs away
+	//After defeat and the text box is closed, bartli fades away
 	if (state == CANDY_STATE_RUNNING_AWAY) {
 		
-		x -= 400.0 * dt;
-		y -= 400.0 * dt;
+		fadeOutAlpha -= 255.0 * dt;
+		setBartliColor(fadeOutAlpha, 255.0, 255.0, 255.0);
+		setBartletColor(fadeOutAlpha, 255.0, 255.0, 255.0);
 		
-		//TODO: make bartli jump away
-
-		//When done running away, drop the loot
-		if (timeInState > 1.5) {
-			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, ICE_BREATH);
+		//When done fading away, drop the loot and return true so this boss is disposed of
+		if (fadeOutAlpha <= 0.0) {
+			fadeOutAlpha = 0.0;
 			smh->soundManager->playMusic("iceMusic");
+			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, ICE_BREATH);
 			return true;
 		}
 	}
@@ -326,6 +329,21 @@ void CandyBoss::drawBartli() {
 	smh->resources->GetSprite("bartliLeg")->RenderEx(smh->getScreenX(x+CANDY_LEG_X_OFFSET*size),smh->getScreenY((y+(CANDY_LEG_Y_OFFSET+leftLegY )*size) - jumpYOffset),0.0,-1.0*size,1.0*size);
 	//Debug
 	if (smh->isDebugOn()) smh->drawCollisionBox(collisionBox,RED);
+}
+
+/**
+ * Sets the alpha of all bartli and bartlet graphics
+ */
+void CandyBoss::setBartliColor(float a, float r, float g, float b) {
+	smh->resources->GetSprite("bartliShadow")->SetColor(ARGB(a, r, g, b));
+	smh->resources->GetAnimation("bartli")->SetColor(ARGB(a, r, g, b));
+	smh->resources->GetSprite("bartliArm")->SetColor(ARGB(a, r, g, b));
+	smh->resources->GetSprite("bartliLeg")->SetColor(ARGB(a, r, g, b));
+}
+
+void CandyBoss::setBartletColor(float a, float r, float g, float b) {
+	smh->resources->GetSprite("bartletBlue")->SetColor(ARGB(a, r, g, b));
+	smh->resources->GetSprite("bartletRed")->SetColor(ARGB(a, r, g, b));
 }
 
 /**
@@ -437,20 +455,20 @@ void CandyBoss::updateJumping(float dt) {
 	
 		timeToJump = 0.5 * (1.0 / speedMultiplier);
 		jumpSpeed = jumpDistance / timeToJump;
-		//TODO: convert timeStartedJump to timeJumping
-		timeStartedJump = smh->getGameTime();
+		timeJumping = 0.0;
 
 	}
 
 	if (jumping) {
 
-		jumpYOffset = 150.0 * sin((smh->timePassedSince(timeStartedJump)/timeToJump) * PI);
+		if (!shrinking) timeJumping += dt;
+		jumpYOffset = 150.0 * sin(timeJumping/timeToJump * PI);
 		
 		x += jumpSpeed * cos(angle) * dt;
 		y += jumpSpeed * sin(angle) * dt;
 
 		//Done jumping
-		if (smh->timePassedSince(timeStartedJump) > timeToJump) {
+		if (timeJumping > timeToJump) {
 			jumping = false;
 			timeStoppedJump = smh->getGameTime();
 			jumpYOffset = 0.0;
