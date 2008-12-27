@@ -39,10 +39,10 @@ private:
 	void updateRun(float dt);
 	void updateJumping(float dt);
 	void updateThrowingCandy(float dt);
+	void updateResting(float dt);
 	void setCollisionBox(hgeRect *box, float x, float y);
 	void startNextRound();
-	void setBartliColor(float a, float r, float g, float b);
-	void setBartletColor(float a, float r, float g, float b);
+	void openMouth(float duration);
 
 	void spawnNova(float x, float y);
 	void updateNovas(float dt);
@@ -76,6 +76,10 @@ private:
 	float candyThrowDelay;
 	float lastTimeHit;
 	float fadeOutAlpha;
+	float restYOffset;
+	float mouthOpenDuration;
+	float timeMouthOpened;
+	float flashingAlpha;
 
 	int groupID;
 	bool startedIntroDialogue;
