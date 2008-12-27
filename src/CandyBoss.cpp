@@ -21,6 +21,7 @@ extern SMH *smh;
 #define CANDY_ARM_INITIAL_ROT 10*PI/180
 
 //States
+#define FIRST_STATE CANDY_STATE_RUNNING
 #define CANDY_STATE_INACTIVE 0
 #define CANDY_STATE_RUNNING 1
 #define CANDY_STATE_JUMPING 2
@@ -36,7 +37,6 @@ extern SMH *smh;
 #define CANDY_DEFEAT_TEXT 172
 
 //Attributes
-#define FIRST_STATE CANDY_STATE_RUNNING
 #define CANDY_WIDTH 106.0
 #define CANDY_HEIGHT 128.0
 #define CANDY_RUN_SPEED 800.0
@@ -51,9 +51,10 @@ extern SMH *smh;
 
 #define THROWING_CANDY_STATE_DURATION 10.0
 #define RUN_STATE_DURATION 8.0
+#define REST_STATE_DURATION 5.0
 
-#define HEALTH 2.0
-#define NUM_LIVES 1
+#define HEALTH 1.89
+#define NUM_LIVES 7 //7
 
 CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 	initialGridX = gridX = _gridX;
@@ -83,6 +84,7 @@ CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 	isFirstTimeResting = true;
 	lastTimeHit = 0.0;
 	fadeOutAlpha = 255.0;
+	flashingAlpha = 255.0;
 
 	numLives = NUM_LIVES;
     size = 1.0;
@@ -205,8 +207,8 @@ bool CandyBoss::update(float dt) {
 
 		//Stage 4 - resting
 		if (state == CANDY_STATE_RESTING) {
-			//updateResting(dt);
-			if (timeInState > 3.0) {
+			updateResting(dt);
+			if (timeInState > REST_STATE_DURATION) {
 				enterState(CANDY_STATE_RUNNING);
 			}
 		}
@@ -240,6 +242,7 @@ bool CandyBoss::update(float dt) {
 		}
 		if (hitThisFrame && smh->timePassedSince(lastTimeHit) > FLASHING_DURATION) {
 			lastTimeHit = smh->getGameTime();
+			openMouth(0.15);
 		}
 
 		smh->projectileManager->reflectProjectilesInBox(collisionBox, PROJECTILE_FRISBEE);
@@ -253,18 +256,21 @@ bool CandyBoss::update(float dt) {
 	
 	//Do flashing
 	if (smh->timePassedSince(lastTimeHit) < FLASHING_DURATION) {
-		float alpha = 0.0;
 		float n = FLASHING_DURATION / 4.0;
 		float x = smh->timePassedSince(lastTimeHit);
 		while (x > n) x -= n;
 		if (x < n/2.0) {
-			alpha = 100.0 + (310.0 * x) / n;
+			flashingAlpha = 100.0 + (310.0 * x) / n;
 		} else {
-			alpha = 255.0 - 155.0 * (x - n/2.0);
+			flashingAlpha = 255.0 - 155.0 * (x - n/2.0);
 		}
-		smh->resources->GetAnimation("bartli")->SetColor(ARGB(255.0,255.0,alpha,alpha));
 	} else {
-		smh->resources->GetAnimation("bartli")->SetColor(ARGB(255.0,255.0,255.0,255.0));
+		flashingAlpha = 255.0;
+	}
+
+	//Update mouth
+	if (smh->timePassedSince(timeMouthOpened) > mouthOpenDuration) {
+		smh->resources->GetAnimation("bartli")->SetFrame(0);
 	}
 
 	if (health < 0.0 && state != CANDY_STATE_FRIENDLY && state != CANDY_STATE_MULTI_JUMP) {
@@ -290,15 +296,12 @@ bool CandyBoss::update(float dt) {
 	if (state == CANDY_STATE_FRIENDLY && !smh->windowManager->isTextBoxOpen()) {
 		enterState(CANDY_STATE_RUNNING_AWAY);
 		fadeOutAlpha = 255.0;
-		setBartliColor(255.0, 255.0, 255.0, 255.0);
 	}
 
 	//After defeat and the text box is closed, bartli fades away
 	if (state == CANDY_STATE_RUNNING_AWAY) {
 		
 		fadeOutAlpha -= 255.0 * dt;
-		setBartliColor(fadeOutAlpha, 255.0, 255.0, 255.0);
-		setBartletColor(fadeOutAlpha, 255.0, 255.0, 255.0);
 		
 		//When done fading away, drop the loot and return true so this boss is disposed of
 		if (fadeOutAlpha <= 0.0) {
@@ -316,14 +319,17 @@ bool CandyBoss::update(float dt) {
 
 void CandyBoss::drawBartli() {
 
+	smh->resources->GetAnimation("bartli")->SetColor(ARGB(fadeOutAlpha, 255.0, flashingAlpha, flashingAlpha));
+	smh->resources->GetSprite("bartliArm")->SetColor(ARGB(fadeOutAlpha, 255.0, flashingAlpha, flashingAlpha));
+	smh->resources->GetSprite("bartliLeg")->SetColor(ARGB(fadeOutAlpha, 255.0, flashingAlpha, flashingAlpha));
+
     //Shadow
 	smh->resources->GetSprite("bartliShadow")->RenderEx(smh->getScreenX(x),smh->getScreenY(y)+(CANDY_LEG_Y_OFFSET+CANDY_LEG_HEIGHT)*size,0.0,size,size);
 	//Body
-	smh->resources->GetAnimation("bartli")->SetFrame(0);
-	smh->resources->GetAnimation("bartli")->RenderEx(smh->getScreenX(x),smh->getScreenY((y - jumpYOffset)),0.0,size,size);
+	smh->resources->GetAnimation("bartli")->RenderEx(smh->getScreenX(x),smh->getScreenY((y - jumpYOffset - restYOffset)),0.0,size,size);
 	//Arms
-	smh->resources->GetSprite("bartliArm")->RenderEx(smh->getScreenX(x-CANDY_ARM_X_OFFSET*size),smh->getScreenY((y+CANDY_ARM_Y_OFFSET*size) - jumpYOffset),rightArmRot,size,size);
-	smh->resources->GetSprite("bartliArm")->RenderEx(smh->getScreenX(x+CANDY_ARM_X_OFFSET*size),smh->getScreenY((y+CANDY_ARM_Y_OFFSET*size) - jumpYOffset),leftArmRot,-1.0*size,1.0*size);
+	smh->resources->GetSprite("bartliArm")->RenderEx(smh->getScreenX(x-CANDY_ARM_X_OFFSET*size),smh->getScreenY((y+CANDY_ARM_Y_OFFSET*size) - jumpYOffset - restYOffset),rightArmRot,size,size);
+	smh->resources->GetSprite("bartliArm")->RenderEx(smh->getScreenX(x+CANDY_ARM_X_OFFSET*size),smh->getScreenY((y+CANDY_ARM_Y_OFFSET*size) - jumpYOffset - restYOffset),leftArmRot,-1.0*size,1.0*size);
 	//Legs
 	smh->resources->GetSprite("bartliLeg")->RenderEx(smh->getScreenX(x-CANDY_LEG_X_OFFSET*size),smh->getScreenY((y+(CANDY_LEG_Y_OFFSET+rightLegY)*size) - jumpYOffset),0.0,size,size);
 	smh->resources->GetSprite("bartliLeg")->RenderEx(smh->getScreenX(x+CANDY_LEG_X_OFFSET*size),smh->getScreenY((y+(CANDY_LEG_Y_OFFSET+leftLegY )*size) - jumpYOffset),0.0,-1.0*size,1.0*size);
@@ -332,24 +338,14 @@ void CandyBoss::drawBartli() {
 }
 
 /**
- * Sets the alpha of all bartli and bartlet graphics
- */
-void CandyBoss::setBartliColor(float a, float r, float g, float b) {
-	smh->resources->GetSprite("bartliShadow")->SetColor(ARGB(a, r, g, b));
-	smh->resources->GetAnimation("bartli")->SetColor(ARGB(a, r, g, b));
-	smh->resources->GetSprite("bartliArm")->SetColor(ARGB(a, r, g, b));
-	smh->resources->GetSprite("bartliLeg")->SetColor(ARGB(a, r, g, b));
-}
-
-void CandyBoss::setBartletColor(float a, float r, float g, float b) {
-	smh->resources->GetSprite("bartletBlue")->SetColor(ARGB(a, r, g, b));
-	smh->resources->GetSprite("bartletRed")->SetColor(ARGB(a, r, g, b));
-}
-
-/**
  * Handles state transition logic
  */
 void CandyBoss::enterState(int _state) {
+
+	if (state == CANDY_STATE_RESTING) {
+		restYOffset = 0.0;
+	}
+
 	state = _state;
 	timeInState = 0.0;
 
@@ -363,6 +359,7 @@ void CandyBoss::enterState(int _state) {
 	}
 
 	if (state == CANDY_STATE_RESTING) {
+		restYOffset = 0.0;
 		if (isFirstTimeResting) {
 			smh->windowManager->openDialogueTextBox(-1, CANDY_REST_TEXT);
 			isFirstTimeResting = false;
@@ -380,12 +377,18 @@ void CandyBoss::enterState(int _state) {
 
 }
 
-void CandyBoss::updateLimbs(float dt) {
-	if (state == CANDY_STATE_RUNNING) {
+void CandyBoss::updateLimbs(float dt) 
+{
+	//Legs
+	if (state == CANDY_STATE_RUNNING) 
+	{
 		leftLegY = 5.0*sin(timeInState*20.0);
 		rightLegY = -5.0*sin(timeInState*20.0);
 	}
-	if (state == CANDY_STATE_RUNNING || state == CANDY_STATE_JUMPING || state == CANDY_STATE_MULTI_JUMP) {
+	//Arms
+	if (state == CANDY_STATE_RUNNING || state == CANDY_STATE_JUMPING || state == CANDY_STATE_MULTI_JUMP ||
+		state == CANDY_STATE_THROWING_CANDY) 
+	{
 		leftArmRot = -CANDY_ARM_INITIAL_ROT + 15*PI/180*sin(timeInState*7.0);
 		rightArmRot = CANDY_ARM_INITIAL_ROT - 15*PI/180*sin(timeInState*7.0);
 	}
@@ -394,8 +397,8 @@ void CandyBoss::updateLimbs(float dt) {
 /**
  * Run state - Bartli runs around bouncing off the walls.
  */
-void CandyBoss::updateRun(float dt) {
-
+void CandyBoss::updateRun(float dt) 
+{
 	//If bartli is stuck (this can happen if she jumps on the player right by the wall) then
 	//move her off the wall
 	if (smh->environment->testCollision(collisionBox, canPass)) 
@@ -485,7 +488,7 @@ void CandyBoss::updateJumping(float dt) {
 }
 
 /**
- * Throwing candy state. This is pretty self explanatory.
+ * Throwing candy state.
  */
 void CandyBoss::updateThrowingCandy(float dt) 
 {
@@ -493,11 +496,11 @@ void CandyBoss::updateThrowingCandy(float dt)
 	{
 		float targetX, targetY, angle, distance, duration, radius;
 
-		for (int i = 0; i < smh->hge->Random_Int(2,3); i++) 
+		for (int i = 0; i < smh->hge->Random_Int(3,4); i++) 
 		{
 			//Calculate a random target nearby the player
 			angle = smh->hge->Random_Float(0.0, PI);
-			radius = smh->hge->Random_Float(150.0, 300.0);
+			radius = smh->hge->Random_Float(0.0, 300.0);
 			targetX = smh->player->x + radius * cos(angle);
 			targetY = smh->player->y + radius * sin(angle);
 
@@ -516,6 +519,22 @@ void CandyBoss::updateThrowingCandy(float dt)
 		candyThrowDelay = 0.25;
 	}
 
+}
+
+/**
+ * Updates rest state.
+ */
+void CandyBoss::updateResting(float dt) {
+	restYOffset = 4.0 * sin(timeInState * 3.0);
+}
+
+/**
+ * Opens Bartli's mouth for the specified duration.
+ */
+void CandyBoss::openMouth(float duration) {
+	timeMouthOpened = smh->getGameTime();
+	mouthOpenDuration = duration;
+	smh->resources->GetAnimation("bartli")->SetFrame(1);
 }
 
 void CandyBoss::setCollisionBox(hgeRect *box, float x, float y) {
@@ -601,8 +620,8 @@ void CandyBoss::updateBartlets(float dt) {
 		if (i->bounceOffset < 0.0) i->bounceOffset = 0.0;
 		i->collisionBox->SetRadius(i->x, i->y - i->bounceOffset, 25.0);
 
-		//Damage the player when they touch a bartlet
-		if (smh->player->collisionCircle->testBox(i->collisionBox)) {
+		//Damage the player when they touch or lick a bartlet
+		if (smh->player->collisionCircle->testBox(i->collisionBox) || smh->player->getTongue()->testCollision(i->collisionBox)) {
 			smh->player->dealDamageAndKnockback(BARTLET_DAMAGE, true, false, 130.0, i->x, i->y);
 		}
 	}
@@ -614,10 +633,14 @@ void CandyBoss::updateBartlets(float dt) {
 void CandyBoss::drawBartlets(float dt) {
 	for (std::list<Bartlet>::iterator i = bartletList.begin(); i != bartletList.end(); i++) {
 		smh->drawGlobalSprite("playerShadow", i->x, i->y + 25.0);
-		smh->resources->GetSprite("bartletRed")->SetColor(ARGB(i->alpha, 255, 255, 255));
+
+		smh->resources->GetSprite("bartletRed")->SetColor(ARGB(fadeOutAlpha < 255.0 ? fadeOutAlpha : i->alpha, 255, 255, 255));
+		smh->resources->GetSprite("bartletBlue")->SetColor(ARGB(fadeOutAlpha, 255, 255, 255));
+		
 		smh->drawGlobalSprite("bartletBlue", i->x, i->y - i->bounceOffset);
 		smh->drawGlobalSprite("bartletRed", i->x, i->y - i->bounceOffset);
-		smh->resources->GetSprite("bartletRed")->SetColor(ARGB(255, 255, 255, 255));
+
+		smh->resources->GetSprite("bartletRed")->SetColor(ARGB(fadeOutAlpha, 255, 255, 255));
 
 		if (smh->isDebugOn()) {
 			smh->drawCollisionBox(i->collisionBox, RED);
