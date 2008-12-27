@@ -294,7 +294,7 @@ NPC120-3 = "You may have solved my evil puzzles, but it was all for naught as yo
 ;Lord Garmborn licked text
 NPC121Name = "Lord Garmborn"
 NPC121Pages = "1"
-NPC121-1 = "Woah, woah, WOAH!!! Watch what you are doing with that thing! Why are you licking me anyway, I'm a tree, come on."
+NPC121-1 = "Woah, woah, WOAH!!! Watch what you are doing with that thing! Why are you licking me anyway, I'm a tree, come on man."
 ;Lord Garmborn Defeated
 NPC122Name = "Lord Garmborn"
 NPC122Pages = "1"
@@ -352,16 +352,17 @@ NPC162-1 = "Gwwaaarrghhh (Dickens)."
 
 ;Bartli
 NPC170Name = "Bartli"
-NPC170Pages = "2"
+NPC170Pages = "1"
 NPC170-1 = "Let's participate in a yuge battle! Be afraid, Smiley, as I have consumed larger tubs of lard than you."
-NPC170-2 = "Put your name on the defeat and pass it in."
 NPC171Name = "Bartli"
 NPC171Pages = "2"
 NPC171-1 = "Whew ... I shouldn't have ... eaten so much ... candy. I need ... a moment ... to rest."
 NPC171-2 = "Please don't attack me though because I am quite vulnerable at the moment and that wouldn't be fair!"
 NPC172Name = "Bartli"
-NPC172Pages = "1"
-NPC172-1 = "Oh, my, goodness gracious me. And you thought Pennsylvania was a perfect rectangle?"
+NPC172Pages = "3"
+NPC172-1 = "Oh my, goodness gracious me, what have you done to me!? I no longer possess my earth shattering girth!"
+NPC172-2 = "I will now stay here with my bartlets and consume vast and shockingly diverse quantities of food."
+NPC172-3 = "Please. Leave me with my dignity."
 
 ;King Tut
 NPC180Name = "King Tut"
