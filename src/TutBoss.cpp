@@ -30,6 +30,9 @@ extern SMH *smh;
 #define INITIAL_FLOATING_HEIGHT 3.0
 #define MAX_FLOATING_HEIGHT 25.0
 
+#define TUTBOSS_DAMAGE 2.0
+#define TUTBOSS_KNOCKBACK_DISTANCE 300.0
+
 //State-specific attributes
 #define TIME_TO_BE_ON_GROUND 2.0
 
@@ -101,9 +104,16 @@ void TutBoss::placeCollisionBox() {
 								y+TUTBOSS_HEIGHT/2-floatingHeight);
 }
 
+void TutBoss::checkSmileyCollision() {
+	if (smh->player->collisionCircle->testBox(collisionBox)) {
+		smh->player->dealDamageAndKnockback(TUTBOSS_DAMAGE,true,TUTBOSS_KNOCKBACK_DISTANCE,x,y);
+	}
+}
+
 bool TutBoss::update(float dt) {
 	
 	placeCollisionBox();
+	checkSmileyCollision();
 
 	//When smiley triggers the boss' enemy blocks start his dialogue.
 	if (state == TUTBOSS_INACTIVE && !startedIntroDialogue) {
@@ -151,9 +161,20 @@ bool TutBoss::update(float dt) {
 }
 
 void TutBoss::draw(float dt) {
-	smh->resources->GetSprite("KingTutShadow")->Render(smh->getScreenX(x),smh->getScreenY(y));
-	smh->resources->GetSprite("KingTut")->Render((int)(smh->getScreenX(x)-floatingHeight),(int)(smh->getScreenY(y)-floatingHeight));
-	if (collisionBox && smh->isDebugOn()) smh->drawCollisionBox(collisionBox,RED);
+
+	if (state == TUTBOSS_OPENING || state == TUTBOSS_WAITING_WHILE_OPEN || TUTBOSS_CLOSING) {
+		//Render king tut in his sarcophagus
+		smh->resources->GetSprite("KingTutShadow")->Render(smh->getScreenX(x),smh->getScreenY(y));
+		smh->resources->GetSprite("KingTutInsideSarcophagus")->Render((int)(smh->getScreenX(x)-floatingHeight),(int)(smh->getScreenY(y)-floatingHeight));
+
+		//Render the lid
+		smh->resources->GetSprite("KingTutShadow")->Render(smh->getScreenX(x)+lidXOffset,smh->getScreenY(y));
+		smh->resources->GetSprite("KingTut")->RenderEx(smh->getScreenX(x)+lidXOffset,smh->getScreenY(y),0,lidSize,lidSize);
+	} else {
+		smh->resources->GetSprite("KingTutShadow")->Render(smh->getScreenX(x),smh->getScreenY(y));
+		smh->resources->GetSprite("KingTut")->Render((int)(smh->getScreenX(x)-floatingHeight),(int)(smh->getScreenY(y)-floatingHeight));
+		if (collisionBox && smh->isDebugOn()) smh->drawCollisionBox(collisionBox,RED);
+	}
 }
 
 void TutBoss::enterState(int _state) {
