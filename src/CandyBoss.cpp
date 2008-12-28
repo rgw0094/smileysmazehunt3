@@ -346,10 +346,6 @@ void CandyBoss::drawBartli()
  */
 void CandyBoss::enterState(int _state) {
 
-	if (state == CANDY_STATE_RESTING) {
-		restYOffset = 0.0;
-	}
-
 	if (state == CANDY_STATE_MOVING_TO_CENTER) {
 		x = arenaCenterX;
 		y = arenaCenterY;
@@ -357,6 +353,7 @@ void CandyBoss::enterState(int _state) {
 
 	state = _state;
 	timeInState = 0.0;
+	restYOffset = jumpYOffset = 0.0;
 
 	if (state == CANDY_STATE_RUNNING) {
 		//Start running in a random direction that doesn't result in Bartli immediately charging the player
@@ -416,8 +413,10 @@ void CandyBoss::updateRun(float dt)
 {
 	//If bartli is stuck (this can happen if she jumps on the player right by the wall) then
 	//move her off the wall
+	setCollisionBox(collisionBox, x, y);
 	if (smh->environment->testCollision(collisionBox, canPass)) 
 	{
+		smh->log("stuck");
 		smh->hge->System_Log("stuck (%f, %f) (%f, %f) (%f, %f)", x, y, minX, minY, maxX, maxY);
 		if (x - CANDY_WIDTH/2.0 < minX) x += CANDY_RUN_SPEED * speedMultiplier * dt;
 		if (x + CANDY_WIDTH/2.0> maxX) x -= CANDY_RUN_SPEED * speedMultiplier * dt;
