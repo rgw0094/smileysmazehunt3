@@ -38,20 +38,20 @@
  * If you use the cane while on ice, when Bill Clinton stops talking you will be facing down for the rest of the slide. This could allow you to shoot projectiles in the wrong direction!
 
 == Progress ==
-||*Item*||*Level found*||*Boss*||*Level % Complete*||Boss Done||
+||*Item Goal*||*Level found*||*Boss*||*Level Completion*||Boss Completion||
 ||Smiley's Cane||Fountain|| ||90%||N/A||
-||Fire Breath||Smolder Hollow||Lord Phyrebawz||100%||Yes||
-||Frisbee||Sessaria Snowplains||Portly Penguin||100%||
-||Sprint boots||Forest of Fundoria||Garmborn||80%||
-||Orbs||Dunes of Salabia||Cornwallis||90%||
-||Reflection Shield||Realm of Despair||Calypso||100%||
-||Silly Pads||Mushroom Kingdom||Brian Fungus||100%||
-||Jesus' Sandals||Pools of the Dead||Lord Phyrebawz||50%||
-||Ice Breath||Candy Mountain||Bartley||100%||
-||Shrink||Swamp||Lovecraft||100%||
-||Tut's Mask||Tut's Tomb||King Tut||0%||
-||Hover||Castle of Evil||Calypso||0%||
-|| ||Serpentine Path|| ||0%||
+||Fire Breath||Smolder Hollow||Lord Phyrebawz||100%||100%||
+||Frisbee||Sessaria Snowplains||Portly Penguin||100%||100%||
+||Sprint boots||Forest of Fundoria||Garmborn||80%||100%||
+||Orbs||Dunes of Salabia||Cornwallis||90%||100%||
+||Reflection Shield||Realm of Despair||Calypso||90%||
+||Silly Pads||Mushroom Kingdom||Brian Fungus||100%||100%||
+||Jesus' Sandals||Pools of the Dead||Lord Phyrebawz||100%||90%||
+||Ice Breath||Candy Mountain||Bartley||100%||90%||
+||Shrink||Swamp||Lovecraft||100%||0%||
+||Tut's Mask||Tut's Tomb||King Tut||100%||15%||
+||Hover||Castle of Evil||Calypso||2%||0%||
+|| ||Serpentine Path|| ||90%||N/A||
 
 ===Done===
 ||Item||Date||Done By||
