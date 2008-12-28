@@ -663,12 +663,12 @@ void Environment::draw(float dt) {
 	}
 
 	//Draw other shit
-	evilWallManager->draw(dt);
 	tapestryManager->draw(dt);
 	smileletManager->drawBeforeSmiley();
 	smileletManager->drawAfterSmiley();
 	specialTileManager->draw(dt);
 	if (tutorialMan) tutorialMan->draw(dt);
+	evilWallManager->draw(dt);
 
 }
 

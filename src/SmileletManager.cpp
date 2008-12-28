@@ -125,6 +125,12 @@ void SmileletManager::addSmilelet(int xGrid,int yGrid,int color) {
 	theSmilelets.push_back(newSmilelet);
 }
 
+void SmileletManager::clearQueue() {
+	nextWormPosition = 0;
+	numFollowing = 0;
+	needsToPanic = false;
+}
+
 void SmileletManager::reset() {
 	std::list<oneSmilelet>::iterator i;
 	for (i = theSmilelets.begin(); i != theSmilelets.end(); i++) {
@@ -132,6 +138,7 @@ void SmileletManager::reset() {
 		i = theSmilelets.erase(i);
 	}
 	theSmilelets.clear();
+	clearQueue();
 }
 
 // Private //////////////////////////
@@ -143,6 +150,8 @@ void SmileletManager::doSmileletWait(std::list<oneSmilelet>::iterator c) {
 }
 
 void SmileletManager::queueSmilelet(std::list<oneSmilelet>::iterator c) {
+	if (numFollowing >= 5) return;
+
 	c->state = SMILELET_STATE_FOLLOWING_SMILEY;
 	c->wormPosition = nextWormPosition;
 	c->smileyHitX = smh->player->x;
@@ -192,7 +201,7 @@ void SmileletManager::doSmileletMoveToFlower(std::list<oneSmilelet>::iterator c)
 	c->y = c->beginMoveToFlowerY+smh->timePassedSince(timeEnteredState)/MOVE_TO_FLOWER_TIME*(c->endMoveToFlowerY - c->beginMoveToFlowerY);
 	if (smh->timePassedSince(timeEnteredState) > MOVE_TO_FLOWER_TIME) {
 		c->x = c->endMoveToFlowerX;
-		c->y = c->endMoveToFlowerY;
+		c->y = c->endMoveToFlowerY;		
 	}
 }
 
@@ -202,8 +211,8 @@ void SmileletManager::doSmileletCircleFlower(std::list<oneSmilelet>::iterator c)
 	
 	while (c->angle >= 2*PI) c->angle -= 2*PI;
 
-	c->x = flowerGridX*64+32+FLOWER_RADIUS*cos(c->angle);
-	c->y = flowerGridY*64+32+FLOWER_RADIUS*sin(c->angle);
+	c->x = c->flowerGridX*64+32+FLOWER_RADIUS*cos(c->angle);
+	c->y = c->flowerGridY*64+32+FLOWER_RADIUS*sin(c->angle);
 	c->dir = convertAngleToDir(c->angle+PI/2);
 }
 
@@ -218,6 +227,7 @@ void SmileletManager::doSmileletRun(std::list<oneSmilelet>::iterator c) {
 	if (smh->timePassedSince(c->timeBeganPanic) >= timeToDestination) {
 		c->x = c->initialXPosition;
 		c->y = c->initialYPosition;
+		c->dir = DOWN;
 		c->state = SMILELET_STATE_WAITING;
 	}
 
@@ -259,8 +269,7 @@ void SmileletManager::checkForNearbyFlower() {
 		dir = DOWN;
 	}
 
-	if (foundFlower && numFollowing == 5) {
-		
+	if (foundFlower && numFollowing == 5) {		
 		timeEnteredState = smh->getGameTime();
 		std::list<oneSmilelet>::iterator i;
 		double curAngle = 0;
@@ -276,9 +285,13 @@ void SmileletManager::checkForNearbyFlower() {
 				i->endMoveToFlowerX = flowerGridX*64+32+FLOWER_RADIUS*cos(i->angleOffset);
 				i->endMoveToFlowerY = flowerGridY*64+32+FLOWER_RADIUS*sin(i->angleOffset);
 
+				i->flowerGridX = flowerGridX;
+				i->flowerGridY = flowerGridY;
+
 				i->dir = dir;
 			}
 		}
+		clearQueue();
 	}
 }
 
@@ -292,7 +305,7 @@ void SmileletManager::switchToCircleFlower() {
 	std::list<oneSmilelet>::iterator i;
 
 	for (i=theSmilelets.begin(); i != theSmilelets.end(); i++) {
-		i->state = SMILELET_STATE_CIRCLE_FLOWER;
+		if (i->state == SMILELET_STATE_MOVE_TO_FLOWER) i->state = SMILELET_STATE_CIRCLE_FLOWER;
 	}
 
 	timeEnteredState = smh->getGameTime();

@@ -28,6 +28,8 @@ struct oneSmilelet {
 	
 	double angleOffset;
 	double angle;
+	int flowerGridX,flowerGridY;
+	float timeStartedCircle;
 
 	CollisionCircle *collisionCircle;
 };
@@ -42,6 +44,7 @@ public:
 	void drawAfterSmiley();
 	void addSmilelet(int xGrid,int yGrid,int color);
 	void reset();
+	void clearQueue();
 
 private:
 	std::list<oneSmilelet> theSmilelets;
