@@ -13,8 +13,9 @@ struct Nova {
 };
 
 struct Bartlet {
-	float x, y, bounceOffset, alpha;
+	float x, y, bounceOffset, alpha, dx, dy, size, timeAlive;
 	hgeRect *collisionBox;
+	bool active;
 };
 
 class CandyBoss : public Boss {
@@ -50,7 +51,9 @@ private:
 
 	void spawnBartlet(float x, float y);
 	void updateBartlets(float dt);
-	void drawBartlets(float dt);
+	void drawBartletsBeforeBartli();
+	void drawBartletsAfterBartli();
+	void drawBartlet(std::list<Bartlet>::iterator bartlet);
 
 	//variables specific to Bartli
 	double leftArmRot,rightArmRot;
@@ -74,6 +77,7 @@ private:
 	bool shrinking;
 	bool isFirstTimeResting;
 	float lastCandyThrowTime;
+	bool spawnedBartletYet;
 	float candyThrowDelay;
 	float lastTimeHit;
 	float fadeOutAlpha;

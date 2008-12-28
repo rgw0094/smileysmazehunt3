@@ -52,8 +52,9 @@ extern SMH *smh;
 #define THROWING_CANDY_STATE_DURATION 10.0
 #define RUN_STATE_DURATION 8.0
 #define REST_STATE_DURATION 5.0
+#define SHRINKING_DURATION 1.0
 
-#define HEALTH 1.89
+#define HEALTH 0.1
 #define NUM_LIVES 7 //7
 
 CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
@@ -117,7 +118,6 @@ CandyBoss::~CandyBoss() {
 void CandyBoss::draw(float dt) {
 	
 	drawNovas(dt);
-	drawBartlets(dt);
 
 	if (!shouldDrawAfterSmiley) {
 		drawBartli();
@@ -162,9 +162,11 @@ bool CandyBoss::update(float dt) {
 	if (shrinking) {
 
 		size -= (NUM_LIVES - numLives + 1) * .0225 * dt;
-		if (smh->timePassedSince(timeStartedShrink) > 1.0) {
+		if (smh->timePassedSince(timeStartedShrink) > SHRINKING_DURATION) {
 			shrinking = false;
+		} else if (!spawnedBartletYet && smh->timePassedSince(timeStartedShrink) > SHRINKING_DURATION / 2.0) {
 			spawnBartlet(x, y);
+			spawnedBartletYet = true;
 		}
 
 	} else {
@@ -293,6 +295,7 @@ bool CandyBoss::update(float dt) {
 			smh->soundManager->fadeOutMusic();
 		} else {
 			shrinking = true;
+			spawnedBartletYet = false;
 			timeStartedShrink = smh->getGameTime();
 			speedMultiplier += .1;
 			health = maxHealth;
@@ -327,6 +330,8 @@ bool CandyBoss::update(float dt) {
 
 void CandyBoss::drawBartli() 
 {
+	drawBartletsBeforeBartli();
+
 	smh->resources->GetAnimation("bartli")->SetColor(ARGB(fadeOutAlpha, 255.0, flashingAlpha, flashingAlpha));
 	smh->resources->GetSprite("bartliArm")->SetColor(ARGB(fadeOutAlpha, 255.0, flashingAlpha, flashingAlpha));
 	smh->resources->GetSprite("bartliLeg")->SetColor(ARGB(fadeOutAlpha, 255.0, flashingAlpha, flashingAlpha));
@@ -337,6 +342,8 @@ void CandyBoss::drawBartli()
 	smh->resources->GetSprite("bartliArm")->RenderEx(smh->getScreenX(x+CANDY_ARM_X_OFFSET*size),smh->getScreenY((y+CANDY_ARM_Y_OFFSET*size) - jumpYOffset - restYOffset),leftArmRot,-1.0*size,1.0*size);
 	smh->resources->GetSprite("bartliLeg")->RenderEx(smh->getScreenX(x-CANDY_LEG_X_OFFSET*size),smh->getScreenY((y+(CANDY_LEG_Y_OFFSET+rightLegY)*size) - jumpYOffset),0.0,size,size);
 	smh->resources->GetSprite("bartliLeg")->RenderEx(smh->getScreenX(x+CANDY_LEG_X_OFFSET*size),smh->getScreenY((y+(CANDY_LEG_Y_OFFSET+leftLegY )*size) - jumpYOffset),0.0,-1.0*size,1.0*size);
+
+	drawBartletsAfterBartli();
 
 	if (smh->isDebugOn()) smh->drawCollisionBox(collisionBox,RED);
 }
@@ -628,6 +635,14 @@ void CandyBoss::spawnBartlet(float x, float y) {
 	newBartlet.alpha = 255.0;
 	newBartlet.bounceOffset = 0.0;
 	newBartlet.collisionBox = new hgeRect();
+	newBartlet.active = false;
+	newBartlet.timeAlive = 0.0;
+
+	float angle = Util::getAngleBetween(newBartlet.x, newBartlet.y, arenaCenterX, arenaCenterY);
+	newBartlet.dx = 80.0 * cos(angle);
+	newBartlet.dy = 80.0 * sin(angle);
+	newBartlet.size = 0.1;
+
 	bartletList.push_back(newBartlet);
 }
 
@@ -636,10 +651,25 @@ void CandyBoss::spawnBartlet(float x, float y) {
  */
 void CandyBoss::updateBartlets(float dt) {
 	for (std::list<Bartlet>::iterator i = bartletList.begin(); i != bartletList.end(); i++) {
-		i->alpha = (sin(smh->getGameTime() * 9.0)+1.0)/2.0 * 255.0;
-		i->bounceOffset =  10.0 * cos(10.0 * smh->getGameTime()) - 2.0;
-		if (i->bounceOffset < 0.0) i->bounceOffset = 0.0;
-		i->collisionBox->SetRadius(i->x, i->y - i->bounceOffset, 25.0);
+		i->timeAlive += dt;
+
+		if (i->active) {
+			i->alpha = (sin(smh->getGameTime() * 9.0)+1.0)/2.0 * 255.0;
+			i->bounceOffset =  10.0 * cos(10.0 * i->timeAlive) - 2.0;
+			if (i->bounceOffset < 0.0) i->bounceOffset = 0.0;
+			i->collisionBox->SetRadius(i->x, i->y - i->bounceOffset, 25.0);
+		} else {
+			i->x += i->dx * dt;
+			i->y += i->dy * dt;
+			i->size += 2.0 * dt;
+			if (i->size > 1.0) i->size = 1.0;
+			i->bounceOffset = 30.0 * sin(i->timeAlive * (PI/2.0) * 4.0);
+			if (i->timeAlive >= 1.0/2.0) {
+				i->active = true;
+				i->bounceOffset = 0.0;
+				i->dx = i->dy = 0.0;
+			}
+		}
 
 		//Damage the player when they touch or lick a bartlet
 		if (smh->player->collisionCircle->testBox(i->collisionBox) || smh->player->getTongue()->testCollision(i->collisionBox)) {
@@ -649,22 +679,43 @@ void CandyBoss::updateBartlets(float dt) {
 }
 
 /**
- * Draws all of the bartlets.
+ * Draws all of the bartlets that should appear behind bartli.
  */
-void CandyBoss::drawBartlets(float dt) {
+void CandyBoss::drawBartletsBeforeBartli() {
 	for (std::list<Bartlet>::iterator i = bartletList.begin(); i != bartletList.end(); i++) {
-		smh->drawGlobalSprite("playerShadow", i->x, i->y + 25.0);
-
-		smh->resources->GetSprite("bartletRed")->SetColor(ARGB(fadeOutAlpha < 255.0 ? fadeOutAlpha : i->alpha, 255, 255, 255));
-		smh->resources->GetSprite("bartletBlue")->SetColor(ARGB(fadeOutAlpha, 255, 255, 255));
-		
-		smh->drawGlobalSprite("bartletBlue", i->x, i->y - i->bounceOffset);
-		smh->drawGlobalSprite("bartletRed", i->x, i->y - i->bounceOffset);
-
-		smh->resources->GetSprite("bartletRed")->SetColor(ARGB(fadeOutAlpha, 255, 255, 255));
-
-		if (smh->isDebugOn()) {
-			smh->drawCollisionBox(i->collisionBox, RED);
+		if (i->y < y) {
+			drawBartlet(i);
 		}
+	}
+}
+
+/**
+ * Draws all of the bartlets that should appear after bartli.
+ */
+void CandyBoss::drawBartletsAfterBartli() {
+	for (std::list<Bartlet>::iterator i = bartletList.begin(); i != bartletList.end(); i++) {
+		if (i->y >= y || !i->active) {
+			drawBartlet(i);
+		}
+	}
+}
+
+/**
+ * Draws one bartlet.
+ */
+void CandyBoss::drawBartlet(std::list<Bartlet>::iterator i)
+{
+	smh->drawGlobalSprite("playerShadow", i->x, i->y + 25.0);
+
+	smh->resources->GetSprite("bartletRed")->SetColor(ARGB(fadeOutAlpha < 255.0 ? fadeOutAlpha : i->alpha, 255, 255, 255));
+	smh->resources->GetSprite("bartletBlue")->SetColor(ARGB(fadeOutAlpha, 255, 255, 255));
+
+	smh->resources->GetSprite("bartletBlue")->RenderEx(smh->getScreenX(i->x), smh->getScreenY(i->y - i->bounceOffset), 0.0, i->size, i->size);
+	smh->resources->GetSprite("bartletRed")->RenderEx(smh->getScreenX(i->x), smh->getScreenY(i->y - i->bounceOffset), 0.0, i->size, i->size);
+
+	smh->resources->GetSprite("bartletRed")->SetColor(ARGB(fadeOutAlpha, 255, 255, 255));
+
+	if (smh->isDebugOn()) {
+		smh->drawCollisionBox(i->collisionBox, RED);
 	}
 }
