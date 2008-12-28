@@ -50,8 +50,8 @@
 ||Ice Breath||Candy Mountain||Bartley||Done||90%||
 ||Shrink||Swamp||Lovecraft||Done||0%||
 ||Tut's Mask||Tut's Tomb||King Tut||Done||15%||
-||Hover||Castle of Evil||Calypso||2%||0%||
 || ||Serpentine Path|| ||90%||N/A||
+||Hover||Castle of Evil||Calypso||2%||0%||
 
 ===Done===
 ||Item||Date||Done By||
