@@ -44,7 +44,7 @@
 ||Frisbee||Sessaria Snowplains||Portly Penguin||100%||100%||
 ||Sprint boots||Forest of Fundoria||Garmborn||80%||100%||
 ||Orbs||Dunes of Salabia||Cornwallis||90%||100%||
-||Reflection Shield||Realm of Despair||Calypso||90%||
+||Reflection Shield||Realm of Despair||Calypso||100%||90%||
 ||Silly Pads||Mushroom Kingdom||Brian Fungus||100%||100%||
 ||Jesus' Sandals||Pools of the Dead||Lord Phyrebawz||100%||90%||
 ||Ice Breath||Candy Mountain||Bartley||100%||90%||
