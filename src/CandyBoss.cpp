@@ -54,7 +54,7 @@ extern SMH *smh;
 #define REST_STATE_DURATION 5.0
 #define SHRINKING_DURATION 1.0
 
-#define HEALTH 0.1
+#define HEALTH 1.8
 #define NUM_LIVES 7 //7
 
 CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
@@ -248,7 +248,7 @@ bool CandyBoss::update(float dt) {
 			hitThisFrame = true;
 		}
 		if (smh->player->fireBreathParticle->testCollision(collisionBox)) {
-			health -= smh->player->getFireBreathDamage();
+			health -= smh->player->getFireBreathDamage() * dt;
 			hitThisFrame = true;
 		}
 		if (hitThisFrame && smh->timePassedSince(lastTimeHit) > FLASHING_DURATION) {
