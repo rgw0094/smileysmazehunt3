@@ -16,14 +16,16 @@ extern SMH *smh;
 #define TUTBOSS_ON_GROUND 1
 #define TUTBOSS_RISING 2
 #define TUTBOSS_HOVERING_AROUND 3
-#define TUTBOSS_LOWERING 4
-#define TUTBOSS_OPENING 5
-#define TUTBOSS_WAITING_WHILE_OPEN 6
-#define TUTBOSS_CLOSING 7
+#define TUTBOSS_MOVING_TO_CENTER 4
+#define TUTBOSS_LOWERING 5
+#define TUTBOSS_OPENING 6
+#define TUTBOSS_WAITING_WHILE_OPEN 7
+#define TUTBOSS_CLOSING 8
 
 //Attributes
 #define TUTBOSS_HEALTH 100.0
-#define TUTBOSS_SPEED 20.0
+#define TUTBOSS_SPEED 20.0 //used for hovering parabolic motion
+#define TUTBOSS_QUICK_SPEED 100.0 //used when moving to center
 #define TUTBOSS_WIDTH 54.0
 #define TUTBOSS_HEIGHT 215.0
 
@@ -33,11 +35,14 @@ extern SMH *smh;
 #define TUTBOSS_DAMAGE 2.0
 #define TUTBOSS_KNOCKBACK_DISTANCE 300.0
 
-//State-specific attributes
+//Time to spend in each state
 #define TIME_TO_BE_ON_GROUND 2.0
-
 #define TIME_TO_RISE 0.5
+#define TIME_TO_HOVER 13.0
+#define TIME_TO_LOWER 0.5
+#define TIME_TO_OPEN 1.0
 
+//Hovering around constants
 #define TUTBOSS_FLOWER_RADIUS 300
 #define NUM_SWOOPS 3 //how many sets of constants for the parametric equation ther are
 #define TUTBOSS_DOUBLE_SHOT_LONG_INTERVAL 0.7
@@ -47,6 +52,9 @@ extern SMH *smh;
 #define TUTBOSS_LONG_INTERVAL 1
 #define TUTBOSS_SHOT_DAMAGE 3.0
 #define TUTBOSS_SHOT_SPEED 600.0
+
+//Open casket constants
+#define OPEN_CASKET_SPEED 40.0
 
 //Fading define
 #define TUTBOSS_FADE_SPEED 100.0
@@ -141,6 +149,9 @@ bool TutBoss::update(float dt) {
 		case TUTBOSS_HOVERING_AROUND:
 			doHoveringAround(dt);
 			break;
+		case TUTBOSS_MOVING_TO_CENTER:
+			doMovingToCenter(dt);
+			break;
 		case TUTBOSS_LOWERING:
 			doLowering(dt);
 			break;
@@ -162,14 +173,14 @@ bool TutBoss::update(float dt) {
 
 void TutBoss::draw(float dt) {
 
-	if (state == TUTBOSS_OPENING || state == TUTBOSS_WAITING_WHILE_OPEN || TUTBOSS_CLOSING) {
+	if (state == TUTBOSS_OPENING || state == TUTBOSS_WAITING_WHILE_OPEN || state == TUTBOSS_CLOSING) {
 		//Render king tut in his sarcophagus
 		smh->resources->GetSprite("KingTutShadow")->Render(smh->getScreenX(x),smh->getScreenY(y));
 		smh->resources->GetSprite("KingTutInsideSarcophagus")->Render((int)(smh->getScreenX(x)-floatingHeight),(int)(smh->getScreenY(y)-floatingHeight));
 
 		//Render the lid
 		smh->resources->GetSprite("KingTutShadow")->Render(smh->getScreenX(x)+lidXOffset,smh->getScreenY(y));
-		smh->resources->GetSprite("KingTut")->RenderEx(smh->getScreenX(x)+lidXOffset,smh->getScreenY(y),0,lidSize,lidSize);
+		smh->resources->GetSprite("KingTut")->RenderEx(smh->getScreenX(x)+lidXOffset-floatingHeight,smh->getScreenY(y)-floatingHeight,0,lidSize,lidSize);
 	} else {
 		smh->resources->GetSprite("KingTutShadow")->Render(smh->getScreenX(x),smh->getScreenY(y));
 		smh->resources->GetSprite("KingTut")->Render((int)(smh->getScreenX(x)-floatingHeight),(int)(smh->getScreenY(y)-floatingHeight));
@@ -230,14 +241,50 @@ void TutBoss::doHoveringAround(float dt) {
 			}
 			break;
 	};
+
+	//Enter the next state, if appropriate
+	if (smh->timePassedSince(timeEnteredState) >= TIME_TO_HOVER) {
+        enterState(TUTBOSS_MOVING_TO_CENTER);
+		timeToMoveToCenter = Util::distance(x,y,xInitial,yInitial)/TUTBOSS_QUICK_SPEED;
+	}
 	
 
 }
 
+void TutBoss::doMovingToCenter(float dt) {
+	if (x >= xInitial) x -= TUTBOSS_QUICK_SPEED*dt;
+	if (x <= xInitial) x += TUTBOSS_QUICK_SPEED*dt;
+	if (y >= yInitial) y -= TUTBOSS_QUICK_SPEED*dt;
+	if (y <= yInitial) y += TUTBOSS_QUICK_SPEED*dt;
+
+	if (smh->timePassedSince(timeEnteredState) >= timeToMoveToCenter) {
+		x = xInitial;
+		y = yInitial;
+		enterState(TUTBOSS_LOWERING);
+	}
+	
+}
+
 void TutBoss::doLowering(float dt) {
+	floatingHeight = MAX_FLOATING_HEIGHT + (INITIAL_FLOATING_HEIGHT-MAX_FLOATING_HEIGHT)*smh->timePassedSince(timeEnteredState)/TIME_TO_LOWER;
+	if (smh->timePassedSince(timeEnteredState) > TIME_TO_LOWER) {
+		floatingHeight = INITIAL_FLOATING_HEIGHT;
+		enterState(TUTBOSS_OPENING);
+		lidXOffset = 0;
+		lidSize = 1.0;
+	}
 }
 
 void TutBoss::doOpening(float dt) {
+	lidXOffset = smh->timePassedSince(timeEnteredState)*OPEN_CASKET_SPEED;
+	lidSize = sin(smh->timePassedSince(timeEnteredState)*2);
+	lidSize *= 0.3/2;
+	lidSize += 1;
+
+	if (smh->timePassedSince(timeEnteredState) >= PI/2) {
+		lidSize = 1;
+		enterState(TUTBOSS_WAITING_WHILE_OPEN);
+	}
 }
 
 void TutBoss::doWaitingWhileOpen(float dt) {
