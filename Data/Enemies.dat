@@ -1,6 +1,6 @@
 [HGESTRINGTABLE]
 
-numEnemies="64"
+numEnemies="65"
 
 ;Croc
 0Name=      "Crazy Croc"
@@ -1156,3 +1156,16 @@ numEnemies="64"
 63PDamage=   "50"
 63PSpeed=    "350"
 63PType=     "6"
+
+;Mummy Normal
+64GCol=      "4"
+64Row=       "7"
+64EnemyType= "0"
+64WanderType="0"
+64HP=        "300"
+64Damage=    "75"
+64Radius=    "28"
+64Speed=     "100"
+64Land=      "T"
+64SWater=    "T"
+64Chases=    "F"

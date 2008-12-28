@@ -177,7 +177,7 @@ void SmileletManager::doSmileletFollow(std::list<oneSmilelet>::iterator c) {
 		collisionRect.y1 = c->y - SMILELET_RADIUS;
 		collisionRect.y2 = c->y + SMILELET_RADIUS;
 		
-		if (smh->enemyManager->testCollision(&collisionRect)) {
+		if (smh->enemyManager->testCollisionExcludingTurrets(&collisionRect)) {
 			needsToPanic = true;
 		}
 
