@@ -142,7 +142,8 @@ bool FireBoss::update(float dt) {
 	floatY = 15.0f*sin(smh->getRealTime() * 3.0);
 
 	//When the player enters his chamber shut the doors and start the intro dialogue
-	if (state == FIREBOSS_INACTIVE && !startedIntroDialogue && smh->player->gridY == startY+5  && smh->player->gridX == startX && smh->player->y < (startY+5)*64+33) {
+	if (state == FIREBOSS_INACTIVE && !startedIntroDialogue && smh->player->y < (startY+5)*64+33) 
+	{	
 		smh->windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS_INTRO);
 		startedIntroDialogue = true;
 		smh->soundManager->fadeOutMusic();
