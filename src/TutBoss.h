@@ -24,6 +24,7 @@ public:
 	void doOnGround(float dt);
 	void doRising(float dt);
 	void doHoveringAround(float dt);
+	void doMovingToCenter(float dt);
 	void doLowering(float dt);
 	void doOpening(float dt);
 	void doWaitingWhileOpen(float dt);
@@ -49,6 +50,7 @@ public:
 	float timeOfLastShot;
 	int whichShotInterval; //either long interval or short (creates double shot effect)
 	float nextLongInterval; //this tells it how long to wait until shooting the next double shot
+	float timeToMoveToCenter;
 
 	//sarcophagus opening variables
 	float lidSize;
