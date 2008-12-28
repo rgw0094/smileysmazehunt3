@@ -56,6 +56,8 @@ public:
 	float lidSize;
 	float lidXOffset;
 
+	int numMummiesShot;
+
 };
 
 #endif
