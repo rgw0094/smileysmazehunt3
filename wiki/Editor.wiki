@@ -23,6 +23,18 @@
 || 800-899 || 8 || Smolder Hollow ||
 
 ----
+||*ID*||*Area Name*||*Map File*||
+||0||Smiley Town||fountain.smh||
+||1||Dunes of Salabia||oldetowne.smh||
+||2||Tut's Tomb||tutstomb.smh||
+||3||Forest of Fundoria||forest.smh||
+||4||Sessaria Snowplains||snow.smh||
+||5||Realm Of Despair||despair.smh||
+||6||Serpentine Path||path.smh||
+||7||Castle of Evil||castle.smh||
+||8||Smolder Hollow||smhollow.smh||
+
+----
 = Directions =
 ||Direction||Code||
 ||UP||3||
