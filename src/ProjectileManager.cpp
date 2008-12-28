@@ -95,7 +95,6 @@ void ProjectileManager::addProjectile(float x, float y, float speed, float angle
 		newProjectile.particle->Fire();
 		newProjectile.homing = true;
 	}
-
 	//Add it to the list
 	theProjectiles.push_back(newProjectile);
 

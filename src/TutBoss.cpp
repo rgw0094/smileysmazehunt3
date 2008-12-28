@@ -40,7 +40,7 @@ extern SMH *smh;
 #define TIME_TO_RISE 0.5
 #define TIME_TO_HOVER 13.0
 #define TIME_TO_LOWER 0.5
-#define TIME_TO_OPEN 1.0
+#define TIME_TO_WAIT 25.0
 
 //Hovering around constants
 #define TUTBOSS_FLOWER_RADIUS 300
@@ -55,6 +55,8 @@ extern SMH *smh;
 
 //Open casket constants
 #define OPEN_CASKET_SPEED 40.0
+#define MUMMY_PROJECTILE_SPEED 300
+#define MUMMY_PROJECTILE_DAMAGE 1.0
 
 //Fading define
 #define TUTBOSS_FADE_SPEED 100.0
@@ -86,6 +88,8 @@ TutBoss::TutBoss(int _gridX,int _gridY,int _groupID) {
 	whichShotInterval = TUTBOSS_SHORT_INTERVAL;
 	nextLongInterval = TUTBOSS_DOUBLE_SHOT_LONG_INTERVAL;
 	timeOfLastShot = 0.0;
+
+	numMummiesShot=0;
 
 	a[0]=0.120;
 	b[0]=0.532;
@@ -186,6 +190,11 @@ void TutBoss::draw(float dt) {
 		smh->resources->GetSprite("KingTut")->Render((int)(smh->getScreenX(x)-floatingHeight),(int)(smh->getScreenY(y)-floatingHeight));
 		if (collisionBox && smh->isDebugOn()) smh->drawCollisionBox(collisionBox,RED);
 	}
+
+	//Draw the health bar and lives
+	if (state != TUTBOSS_INACTIVE) {
+		drawHealth("King Tut");
+	}
 }
 
 void TutBoss::enterState(int _state) {
@@ -284,12 +293,51 @@ void TutBoss::doOpening(float dt) {
 	if (smh->timePassedSince(timeEnteredState) >= PI/2) {
 		lidSize = 1;
 		enterState(TUTBOSS_WAITING_WHILE_OPEN);
+		numMummiesShot=0;
 	}
 }
 
 void TutBoss::doWaitingWhileOpen(float dt) {
+	//"waiting while open" is not a good name for this state, cause Tut is shooting Mummies!!!
+
+	if (smh->timePassedSince(timeEnteredState) >= 1.0 && numMummiesShot==0) {
+		smh->projectileManager->addProjectile(x,y,MUMMY_PROJECTILE_SPEED,0.0,MUMMY_PROJECTILE_DAMAGE,true,PROJECTILE_TUT_MUMMY,true);
+		numMummiesShot=1;
+	}
+
+	if (smh->timePassedSince(timeEnteredState) >= 2.0 && numMummiesShot==1) {
+		smh->projectileManager->addProjectile(x,y,MUMMY_PROJECTILE_SPEED,PI/2,MUMMY_PROJECTILE_DAMAGE,true,PROJECTILE_TUT_MUMMY,true);
+		numMummiesShot=2;
+	}
+
+	if (smh->timePassedSince(timeEnteredState) >= 3.0 && numMummiesShot==2) {
+		smh->projectileManager->addProjectile(x,y,MUMMY_PROJECTILE_SPEED,PI,MUMMY_PROJECTILE_DAMAGE,true,PROJECTILE_TUT_MUMMY,true);
+		numMummiesShot=3;
+	}
+
+	if (smh->timePassedSince(timeEnteredState) >= 4.0 && numMummiesShot==3) {
+		smh->projectileManager->addProjectile(x,y,MUMMY_PROJECTILE_SPEED,3*PI/2,MUMMY_PROJECTILE_DAMAGE,true,PROJECTILE_TUT_MUMMY,true);
+		numMummiesShot=4;
+	}
+
+	if (smh->timePassedSince(timeEnteredState) >= TIME_TO_WAIT) {
+		enterState(TUTBOSS_CLOSING);
+	}	
 }
 
 void TutBoss::doClosing(float dt) {
+	lidXOffset -= OPEN_CASKET_SPEED*dt;
+	lidSize = sin(smh->timePassedSince(timeEnteredState)*2);
+	lidSize *= 0.3/2;
+	lidSize += 1;
+
+	if (smh->timePassedSince(timeEnteredState) >= PI/2) {
+		lidSize = 1;
+		lidXOffset=0;
+		enterState(TUTBOSS_RISING);
+		
+		swoop++;
+		if (swoop > NUM_SWOOPS-1) swoop=0;	
+	}
 }
 
