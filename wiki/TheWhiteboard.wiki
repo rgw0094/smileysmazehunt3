@@ -40,16 +40,16 @@
 == Progress ==
 ||*Item Goal*||*Level found*||*Boss*||*Level Completion*||Boss Completion||
 ||Smiley's Cane||Fountain|| ||90%||N/A||
-||Fire Breath||Smolder Hollow||Lord Phyrebawz||100%||100%||
-||Frisbee||Sessaria Snowplains||Portly Penguin||100%||100%||
-||Sprint boots||Forest of Fundoria||Garmborn||80%||100%||
-||Orbs||Dunes of Salabia||Cornwallis||90%||100%||
-||Reflection Shield||Realm of Despair||Calypso||100%||90%||
-||Silly Pads||Mushroom Kingdom||Brian Fungus||100%||100%||
-||Jesus' Sandals||Pools of the Dead||Lord Phyrebawz||100%||90%||
-||Ice Breath||Candy Mountain||Bartley||100%||90%||
-||Shrink||Swamp||Lovecraft||100%||0%||
-||Tut's Mask||Tut's Tomb||King Tut||100%||15%||
+||Fire Breath||Smolder Hollow||Lord Phyrebawz||Done||Done||
+||Frisbee||Sessaria Snowplains||Portly Penguin||Done||Done||
+||Sprint boots||Forest of Fundoria||Garmborn||80%||Done||
+||Orbs||Dunes of Salabia||Cornwallis||90%||Done||
+||Reflection Shield||Realm of Despair||Calypso||Done||90%||
+||Silly Pads||Mushroom Kingdom||Brian Fungus||Done||Done||
+||Jesus' Sandals||Pools of the Dead||Lord Phyrebawz||Done||90%||
+||Ice Breath||Candy Mountain||Bartley||Done||90%||
+||Shrink||Swamp||Lovecraft||Done||0%||
+||Tut's Mask||Tut's Tomb||King Tut||Done||15%||
 ||Hover||Castle of Evil||Calypso||2%||0%||
 || ||Serpentine Path|| ||90%||N/A||
 
