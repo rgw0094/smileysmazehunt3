@@ -23,7 +23,7 @@ extern SMH *smh;
 #define TUTBOSS_CLOSING 8
 
 //Attributes
-#define TUTBOSS_HEALTH 100.0
+#define TUTBOSS_HEALTH 50.0
 #define TUTBOSS_SPEED 20.0 //used for hovering parabolic motion
 #define TUTBOSS_QUICK_SPEED 100.0 //used when moving to center
 #define TUTBOSS_WIDTH 54.0
@@ -57,6 +57,7 @@ extern SMH *smh;
 #define OPEN_CASKET_SPEED 40.0
 #define MUMMY_PROJECTILE_SPEED 300
 #define MUMMY_PROJECTILE_DAMAGE 1.0
+#define TUTBOSS_FLASH_TIME 1.0
 
 //Fading define
 #define TUTBOSS_FADE_SPEED 100.0
@@ -90,6 +91,7 @@ TutBoss::TutBoss(int _gridX,int _gridY,int _groupID) {
 	timeOfLastShot = 0.0;
 
 	numMummiesShot=0;
+	lastTimeHit = smh->getGameTime();
 
 	a[0]=0.120;
 	b[0]=0.532;
@@ -322,7 +324,17 @@ void TutBoss::doWaitingWhileOpen(float dt) {
 
 	if (smh->timePassedSince(timeEnteredState) >= TIME_TO_WAIT) {
 		enterState(TUTBOSS_CLOSING);
-	}	
+	}
+
+	if (smh->timePassedSince(lastTimeHit) >= TUTBOSS_FLASH_TIME && smh->player->getTongue()->testCollision(collisionBox)) {
+		health -= smh->player->getDamage();
+		lastTimeHit = smh->getGameTime();
+	}
+
+	if (smh->player->fireBreathParticle->testCollision(collisionBox)) {
+		health -= smh->player->getFireBreathDamage()*dt;
+	}
+
 }
 
 void TutBoss::doClosing(float dt) {

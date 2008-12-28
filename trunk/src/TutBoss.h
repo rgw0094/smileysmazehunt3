@@ -58,6 +58,8 @@ public:
 
 	int numMummiesShot;
 
+	float lastTimeHit;
+
 };
 
 #endif

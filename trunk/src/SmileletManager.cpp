@@ -265,17 +265,19 @@ void SmileletManager::checkForNearbyFlower() {
 		std::list<oneSmilelet>::iterator i;
 		double curAngle = 0;
 		for (i = theSmilelets.begin(); i != theSmilelets.end(); i++) {
-			i->state = SMILELET_STATE_MOVE_TO_FLOWER;
-			i->beginMoveToFlowerX = i->x;
-			i->beginMoveToFlowerY = i->y;
-			
-			i->angleOffset = curAngle;
-			curAngle += 2*PI/5;
+			if (i->state == SMILELET_STATE_FOLLOWING_SMILEY) {
+				i->state = SMILELET_STATE_MOVE_TO_FLOWER;
+				i->beginMoveToFlowerX = i->x;
+				i->beginMoveToFlowerY = i->y;
+				
+				i->angleOffset = curAngle;
+				curAngle += 2*PI/5;
 
-			i->endMoveToFlowerX = flowerGridX*64+32+FLOWER_RADIUS*cos(i->angleOffset);
-			i->endMoveToFlowerY = flowerGridY*64+32+FLOWER_RADIUS*sin(i->angleOffset);
+				i->endMoveToFlowerX = flowerGridX*64+32+FLOWER_RADIUS*cos(i->angleOffset);
+				i->endMoveToFlowerY = flowerGridY*64+32+FLOWER_RADIUS*sin(i->angleOffset);
 
-			i->dir = dir;
+				i->dir = dir;
+			}
 		}
 	}
 }
