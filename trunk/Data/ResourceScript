@@ -1364,6 +1364,12 @@ Sprite tutProjectile {
  hotspot=32,10
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
+Sprite tutProjectileMummy {
+ texture=projectileTx
+ rect=0,148,64,64
+ hotspot=32,32
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
 
 ;**************************
 ;******** Tiles ********

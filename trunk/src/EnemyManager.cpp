@@ -209,6 +209,23 @@ bool EnemyManager::testCollision(hgeRect *collisionBox) {
 }
 
 /**
+ * Returns whether or not the provided collision box collides with
+ * any enemies, excluding turrets.
+ */
+bool EnemyManager::testCollisionExcludingTurrets(hgeRect *collisionBox) {
+	std::list<EnemyStruct>::iterator i;
+	for (i = enemyList.begin(); i != enemyList.end(); i++) {
+		if ((i->enemy->enemyType >= 31 && i->enemy->enemyType <= 31+12) || (i->enemy->enemyType >= 52 && i->enemy->enemyType <= 52+12)) {
+			//is a turret
+		} else { //not a turret
+			if (collisionBox->Intersect(i->enemy->collisionBox)) {
+				return true;
+			}
+		}
+	}
+}
+
+/**
  * Returns true if the collision circle collides with a frozen enemy
  */
 bool EnemyManager::collidesWithFrozenEnemy(CollisionCircle *circle) {

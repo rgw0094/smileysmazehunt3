@@ -10,6 +10,7 @@ extern SMH *smh;
 
 #define LASER_LENGTH 20.0
 #define MINI_MUSHROOM_ENEMYID 43
+#define MUMMY_ENEMYID 64
 
 ProjectileManager::ProjectileManager() {
 
@@ -330,6 +331,10 @@ void ProjectileManager::update(float dt) {
 			if (i->id == PROJECTILE_MINI_MUSHROOM && i->hostile) {
 				smh->enemyManager->addEnemy(MINI_MUSHROOM_ENEMYID,i->x/64,i->y/64,0.25,0.75,-1);
 			}
+			//if it was a mummy, spawn an enemy mummy
+			if (i->id == PROJECTILE_TUT_MUMMY) {
+				smh->enemyManager->addEnemy(MUMMY_ENEMYID,i->x/64,i->y/64,0.25,0.75,-1);
+			}
 			delete i->collisionBox;
 			delete i->terrainCollisionBox;
 			i = theProjectiles.erase(i);
@@ -565,5 +570,8 @@ void ProjectileManager::initProjectiles() {
 
 	projectileTypes[PROJECTILE_TUT_LIGHTNING].radius=10;
 	projectileTypes[PROJECTILE_TUT_LIGHTNING].sprite = smh->resources->GetSprite("tutProjectile");
+
+	projectileTypes[PROJECTILE_TUT_MUMMY].radius = 32;
+	projectileTypes[PROJECTILE_TUT_MUMMY].sprite = smh->resources->GetSprite("tutProjectileMummy");
 
 }
