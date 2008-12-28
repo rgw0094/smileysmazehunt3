@@ -33,6 +33,7 @@
  * Arrow switch graphic (bunny) 
 
 === Bugs ===
+ * Turrets don't turn
  * Bouncing spikey enemies that I put to appear in line with each other in game sometimes are not in line when testing, making it a lot harder to get by them than planned.
  * You can enter the PhyreBawz arena without talking to him if you walk to the side.
  * If you use the cane while on ice, when Bill Clinton stops talking you will be facing down for the rest of the slide. This could allow you to shoot projectiles in the wrong direction!
