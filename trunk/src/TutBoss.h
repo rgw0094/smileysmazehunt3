@@ -18,6 +18,7 @@ public:
 	void enterState(int _state);
 	void placeCollisionBox();
 	void fireLightning();
+	void checkSmileyCollision();
 
 	//State-specific methods
 	void doOnGround(float dt);
@@ -48,6 +49,10 @@ public:
 	float timeOfLastShot;
 	int whichShotInterval; //either long interval or short (creates double shot effect)
 	float nextLongInterval; //this tells it how long to wait until shooting the next double shot
+
+	//sarcophagus opening variables
+	float lidSize;
+	float lidXOffset;
 
 };
 

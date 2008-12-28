@@ -1291,7 +1291,14 @@ Sprite KingTut {
 }
 Sprite KingTutShadow {
  texture="Graphics/Tut.png"
- rect=69,0,68,227
+ rect=68,0,68,227
+ hotspot=34,113
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=107
+}
+Sprite KingTutInsideSarcophagus {
+ texture="Graphics/Tut.png"
+ rect=136,0,68,227
  hotspot=34,113
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=107
