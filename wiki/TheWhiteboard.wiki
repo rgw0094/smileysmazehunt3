@@ -35,7 +35,7 @@
 
 == Progress ==
 ||*Item Goal*||*Level found*||*Boss*||*Level Completion*||Boss Completion||
-||Smiley's Cane||Fountain|| ||Done|| ||
+||Smiley's Cane||Fountain||---||Done||---||
 ||Fire Breath||Smolder Hollow||Lord Phyrebawz||Done||Done||
 ||Frisbee||Sessaria Snowplains||Portly Penguin||Done||Done||
 ||Sprint boots||Forest of Fundoria||Garmborn||80%||Done||
