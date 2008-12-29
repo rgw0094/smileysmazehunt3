@@ -13,6 +13,7 @@ LoadingScreen::LoadingScreen(int _fileNumber, bool _fromLoadScreen) {
 	timeEnteredScreen = smh->getRealTime();
 	startedLoadYet = false;
 	fromLoadScreen = _fromLoadScreen;
+	isNewGame = smh->saveManager->isFileEmpty(fileNumber);
 
 }
 
@@ -33,7 +34,7 @@ bool LoadingScreen::update(float dt, float mouseX, float mouseY) {
 	
 	//Perform the load
 	if (!startedLoadYet) {
-		if (smh->saveManager->isFileEmpty(fileNumber)) {
+		if (isNewGame) {
 			smh->saveManager->startNewGame(fileNumber);
 		} else {
 			smh->saveManager->load(fileNumber);
@@ -53,7 +54,11 @@ bool LoadingScreen::update(float dt, float mouseX, float mouseY) {
 		smh->player->setHealth(smh->saveManager->playerHealth);
 		smh->player->setMana(smh->saveManager->playerMana);
 
-		smh->enterGameState(GAME);
+		if (isNewGame) {
+			smh->menu->setScreen(CINEMATIC_SCREEN);
+		} else {
+			smh->enterGameState(GAME);
+		}
 	}
 	
 	return false;
