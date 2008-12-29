@@ -8,6 +8,7 @@
 #include "ProjectileManager.h"
 #include "WindowFramework.h"
 #include "EnemyFramework.h"
+#include "ExplosionManager.h"
 
 extern SMH *smh;
 
@@ -584,7 +585,6 @@ void FireBossTwo::addFireBall(float x, float y, float angle, float speed, bool h
 	newFireBall.particle->Fire();
 	newFireBall.timeCreated = smh->getGameTime();
 	newFireBall.angle = angle;
-	newFireBall.hasExploded = false;
 	newFireBall.homing = homing;
 	newFireBall.explodes = explodes;
 
@@ -604,98 +604,55 @@ void FireBossTwo::updateFireBalls(float dt) {
 		//Update particle
 		i->particle->MoveTo(smh->getScreenX(i->x), smh->getScreenY(i->y), true);
 		i->particle->Update(dt);
-
-		if (!i->hasExploded) {
-
-			bool explode = false;
-
-			//Update collision box
-			i->collisionBox->SetRadius(i->x, i->y, 15);
 			
-			//Homing fireball movement
-			if (i->homing) {
-
-				//Find angle to seek target
-				float xDist = i->x - smh->player->x;
-				float targetAngle = atan((i->y - smh->player->y) / xDist);
-
-				//----------Do a bunch of SHIT----------
-				while (i->angle < 0.0) i->angle += 2.0*PI;
-				while (i->angle > 2.0*PI ) i->angle -= 2.0*PI;
-				while (targetAngle < 0.0) targetAngle += 2.0*PI;
-				while (targetAngle > 2.0*PI ) targetAngle -= 2.0*PI;
-				float temp = i->angle - targetAngle;
-				while (temp < 0) temp += 2.0*PI;
-				while (temp > 2.0*PI) temp -= 2.0*PI;
-				if (xDist > 0) {
-					if (temp <= PI) {
-						i->angle += (PI / 2.0) * dt;
-					} else if (temp > PI) {
-						i->angle -= (PI / 2.0) * dt;
-					}
-				} else {
-					if (temp <= PI) {
-						i->angle -= (PI / 2.0) * dt;
-					} else if (temp > PI) {
-						i->angle += (PI / 2.0) * dt;
-					}
+		if (i->homing) {
+			//Find angle to seek target
+			float xDist = i->x - smh->player->x;
+			float targetAngle = atan((i->y - smh->player->y) / xDist);
+			//----------Do a bunch of SHIT----------
+			while (i->angle < 0.0) i->angle += 2.0*PI;
+			while (i->angle > 2.0*PI ) i->angle -= 2.0*PI;
+			while (targetAngle < 0.0) targetAngle += 2.0*PI;
+			while (targetAngle > 2.0*PI ) targetAngle -= 2.0*PI;
+			float temp = i->angle - targetAngle;
+			while (temp < 0) temp += 2.0*PI;
+			while (temp > 2.0*PI) temp -= 2.0*PI;
+			if (xDist > 0) {
+				if (temp <= PI) {
+					i->angle += (PI / 2.0) * dt;
+				} else if (temp > PI) {
+					i->angle -= (PI / 2.0) * dt;
 				}
-				//----------------------------------------
-
-				i->x += i->speed * cos(i->angle) * dt;
-				i->y += i->speed * sin(i->angle) * dt;
-			
-			//Non-homing fireball movement
 			} else {
-				i->x += i->dx * dt;
-				i->y += i->dy * dt;
-			}
-
-			//Environment collision
-			if (smh->environment->collisionAt(i->x, i->y) == UNWALKABLE) {
-				explode = true;
-			}	
-
-			//Player collision
-			if (!explode && smh->player->collisionCircle->testBox(i->collisionBox)) {
-				smh->player->dealDamage(ORB_DAMAGE, true);
-				explode = true;
-			}
-
-			if (explode) {
-				if (i->explodes) {
-					i->hasExploded = true;
-					delete i->particle;
-					i->particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("smallExplosion")->info);
-					i->particle->FireAt(smh->getScreenX(i->x), smh->getScreenY(i->y));
-					i->particle->TrackBoundingBox(true);
-					i->radius = 5.0;
-					i->timeExploded = smh->getGameTime();
-				} else {
-					//If the fireball isn't one that explodes then just delete it now
-					delete i->particle;
-					delete i->collisionBox;
-					i = fireBallList.erase(i);
+				if (temp <= PI) {
+					i->angle -= (PI / 2.0) * dt;
+				} else if (temp > PI) {
+					i->angle += (PI / 2.0) * dt;
 				}
 			}
+			//----------------------------------------
 
+			i->x += i->speed * cos(i->angle) * dt;
+			i->y += i->speed * sin(i->angle) * dt;
+			
 		} else {
-
-			if (i->radius < 50.0) i->radius += 60.0 * dt;
-
-			i->collisionBox->SetRadius(i->x, i->y, i->radius);
-			if (smh->player->collisionCircle->testBox(i->collisionBox)) {
-				smh->player->dealDamage(ORB_DAMAGE, true);
-			}
-
-			if (smh->timePassedSince(i->timeExploded) > 0.96) {
-				delete i->particle;
-				delete i->collisionBox;
-				i = fireBallList.erase(i);
-			}
-
+			//Non-homing fireball movement
+			i->x += i->dx * dt;
+			i->y += i->dy * dt;
 		}
 
+		//Environment and player collision
+		i->collisionBox->SetRadius(i->x, i->y, 15);
+		if (smh->player->collisionCircle->testBox(i->collisionBox) ||
+			smh->environment->collisionAt(i->x, i->y) == UNWALKABLE) 
+		{
+			if (i->explodes) {
+				smh->explosionManager->addExplosion(i->x, i->y, 0.55, ORB_DAMAGE, 0.0);
+			}
+			delete i->particle;
+			delete i->collisionBox;
+			i = fireBallList.erase(i);
+		}	
 	}
 }
 

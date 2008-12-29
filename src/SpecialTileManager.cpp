@@ -6,8 +6,8 @@
 #include "ProjectileManager.h"
 #include "environment.h"
 #include "hgeparticle.h"
-#include "hgeresource.h"
 #include "hgeanim.h"
+#include "ExplosionManager.h"
 
 #define MUSHROOM_EXPLODE_TIME 5.0
 #define MUSHROOM_GROW_TIME 2.0
@@ -24,14 +24,12 @@
 extern SMH *smh;
 
 SpecialTileManager::SpecialTileManager() {
-	explosions = new hgeParticleManager();	
 	collisionBox = new hgeRect();
 }
 
 SpecialTileManager::~SpecialTileManager() {
 	reset();
 	delete collisionBox;
-	delete explosions;
 }
 
 /**
@@ -60,16 +58,11 @@ void SpecialTileManager::draw(float dt) {
  * Updates all special tiles
  */
 void SpecialTileManager::update(float dt) {
-	
 	updateTimedTiles(dt);
 	updateMushrooms(dt);
 	updateSillyPads(dt);
 	updateFlames(dt);
 	updateIceBlocks(dt);
-
-	explosions->Update(dt);
-	explosions->Transpose(-1*(smh->environment->xGridOffset*64 + smh->environment->xOffset), -1*(smh->environment->yGridOffset*64 + smh->environment->yOffset));
-
 }
 
 //////////// Ice Block Functions /////////////////
@@ -452,8 +445,6 @@ void SpecialTileManager::drawMushrooms (float dt) {
 				break;
 		};
 	}
-
-	explosions->Render();	
 }
 
 void SpecialTileManager::updateMushrooms(float dt) {
@@ -465,8 +456,7 @@ void SpecialTileManager::updateMushrooms(float dt) {
 				if (i->mushroomCollisionCircle->testCircle(smh->player->collisionCircle) && !smh->player->isFlashing()) {
 					i->state = MUSHROOM_STATE_EXPLODING;
 					i->beginExplodeTime = smh->getGameTime();
-					explosions->SpawnPS(&smh->resources->GetParticleSystem("explosionLarge")->info,i->x+32,i->y+32);
-					smh->player->dealDamageAndKnockback(MUSHROOM_EXPLOSION_DAMAGE,true,MUSHROOM_EXPLOSION_KNOCKBACK,i->x+32,i->y+32);
+					smh->explosionManager->addExplosion(i->x+32.0, i->y+32.0, 0.75, MUSHROOM_EXPLOSION_DAMAGE, MUSHROOM_EXPLOSION_KNOCKBACK);
                 }
 				break;
 			case MUSHROOM_STATE_EXPLODING:

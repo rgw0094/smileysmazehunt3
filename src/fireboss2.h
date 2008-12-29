@@ -20,8 +20,6 @@ struct FireBall {
 	bool alive;
 	float radius;
 	float x,y,angle,speed,timeCreated,dx,dy;
-	bool hasExploded;
-	float timeExploded;
 	bool homing, explodes;
 };
 

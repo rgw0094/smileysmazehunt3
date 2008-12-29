@@ -9,6 +9,7 @@
 #include "weaponparticle.h"
 #include "collisioncircle.h"
 #include "EnemyFramework.h"
+#include "ExplosionManager.h"
 
 extern SMH *smh;
 
@@ -60,7 +61,7 @@ extern SMH *smh;
 #define EXPLOSION_LIFE_TIME 1.0
 #define EXPLOSION_COLLISION_ENLARGE_COEFFICIENT 340.0
 #define EXPLOSION_MAX_RADIUS 90.0
-#define EXPLOSION_KNOCKBACK_POWER 340.0
+#define EXPLOSION_KNOCKBACK_POWER 250.0
 #define EXPLOSION_DAMAGE 1.0
 
 //Mushroomlet projectile stuff
@@ -121,14 +122,10 @@ MushroomBoss::MushroomBoss(int _gridX,int _gridY,int _groupID) {
 
 	theta=phi=0.0; //Angles for the spiral
 
-	//Initialize explosion particle effects
-	explosions = new hgeParticleManager();
-
 	shouldDrawAfterSmiley=false;
 }
 
 MushroomBoss::~MushroomBoss() {
-	if (explosions) delete explosions;
 	if (collisionRects[1]) delete collisionRects[1];
 	if (collisionRects[0]) delete collisionRects[0];
 	smh->resources->Purge(RES_MUSHBOOM);
@@ -159,16 +156,13 @@ bool MushroomBoss::update(float dt) {
 		doArms(dt);
 		doMiniMushrooms(dt);
 		doBombs(dt);	
-		doExplosions(dt);
 
 		//collision
 		if (smh->player->collisionCircle->testBox(collisionRects[0]) || smh->player->collisionCircle->testBox(collisionRects[1])) {
 			smh->player->dealDamageAndKnockback(MUSHBOOM_DAMAGE,true,MUSHBOOM_KNOCKBACK_DISTANCE,x,y);
 		}
 	}
-	explosions->Update(dt);
-	explosions->Transpose(-1*(smh->environment->xGridOffset*64 + smh->environment->xOffset), -1*(smh->environment->yGridOffset*64 + smh->environment->yOffset));
-	
+
 	if (y < smh->player->y) shouldDrawAfterSmiley = false;
 	else shouldDrawAfterSmiley = true;
 
@@ -235,7 +229,6 @@ void MushroomBoss::draw(float dt) {
 	
 	if (state <= MUSHBOOM_SPIRALING) {
 		drawBombs();
-		drawExplosions(dt);
 	}
 	
 	//Draw health
@@ -414,8 +407,7 @@ void MushroomBoss::doBombs(float dt) {
 		}
 
 		if (smh->timePassedSince(i->beginThrowTime) >= BOMB_LIFE_TIME) {
-			explosions->SpawnPS(&smh->resources->GetParticleSystem("explosionLarge")->info,i->xBomb,i->yBomb);
-			addExplosion(i->xBomb,i->yBomb);
+			smh->explosionManager->addExplosion(i->xBomb, i->yBomb, 0.5, EXPLOSION_DAMAGE, EXPLOSION_KNOCKBACK_POWER);
 			i=theBombs.erase(i);			
 		}
 	}
@@ -498,68 +490,9 @@ void MushroomBoss::addBomb(float _x,float _y) {
 	theBombs.push_back(newBomb);
 }
 
-void MushroomBoss::addExplosion (float _x,float _y) {
-	MushroomExplosion newExplosion;
-	newExplosion.collisionCircle = new CollisionCircle;
-	newExplosion.collisionCircle->x=_x;
-	newExplosion.collisionCircle->y=_y;
-	newExplosion.collisionCircle->radius=0.0;
-	newExplosion.timeBegan=smh->getGameTime();
-	newExplosion.stillExpanding=true;
-
-	theExplosions.push_back(newExplosion);
-
-
-}
-
-void MushroomBoss::doExplosions(float dt) {
-	
-	std::list<MushroomExplosion>::iterator i;
-	for(i = theExplosions.begin(); i != theExplosions.end(); i++) {
-		i->collisionCircle->radius = EXPLOSION_COLLISION_ENLARGE_COEFFICIENT * smh->timePassedSince(i->timeBegan);
-		if (i->collisionCircle->radius >= EXPLOSION_MAX_RADIUS) {
-			i->collisionCircle->radius=EXPLOSION_MAX_RADIUS;
-			i->stillExpanding=false;
-		}
-
-		if (i->collisionCircle->testCircle(smh->player->collisionCircle)) {
-			if (i->stillExpanding) {
-				float angleToSmiley = Util::getAngleBetween(i->collisionCircle->x,i->collisionCircle->y,smh->player->x,smh->player->y);
-				smh->player->modifyVelocity(EXPLOSION_KNOCKBACK_POWER * cos(angleToSmiley),EXPLOSION_KNOCKBACK_POWER * sin(angleToSmiley));
-			}
-			smh->player->dealDamage(EXPLOSION_DAMAGE,true);
-		}
-		
-		if (smh->timePassedSince(i->timeBegan) >= EXPLOSION_LIFE_TIME) {
-			delete i->collisionCircle;
-			i=theExplosions.erase(i);
-		}		
-	}
-}
-
-void MushroomBoss::killExplosions() {
-	std::list<MushroomExplosion>::iterator i;
-	for(i = theExplosions.begin(); i != theExplosions.end(); i++) {
-		delete i->collisionCircle;
-		i=theExplosions.erase(i);
-	}
-}
-
-void MushroomBoss::drawExplosions(float dt) {
-	explosions->Render();
-
-	if (smh->isDebugOn()) {
-		std::list<MushroomExplosion>::iterator i;
-		for(i = theExplosions.begin(); i != theExplosions.end(); i++) {
-			i->collisionCircle->draw();
-		}
-	}
-}
-
 void MushroomBoss::initiateDeathSequence() {
 	
 	killBombs();
-	killExplosions();
 	//Call func to get rid of mushroomlets
 	smh->enemyManager->killEnemies(MINI_MUSHROOM_ENEMYID);
 	

@@ -1668,11 +1668,6 @@ bool Player::isInShrinkTunnel() {
 	return inShrinkTunnel;
 }
 
-void Player::modifyVelocity(double xVel,double yVel) {
-	dx += xVel;
-	dy += yVel;
-}
-
 void Player::setMana(float amount) {
 	mana = amount;
 }

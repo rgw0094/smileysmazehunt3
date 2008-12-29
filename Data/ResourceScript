@@ -157,16 +157,8 @@ Particle bombFuse {
  filename=bombfuse.psi
  sprite=particleGraphic2
 }
-Particle smallExplosion {
- filename=smallexplosion.psi
- sprite=particleGraphic13
-}
 Particle explosion {
  filename=explosion.psi
- sprite=particleGraphic11
-}
-Particle explosionLarge {
- filename=explosionLarge.psi
  sprite=particleGraphic11
 }
 Particle deathCloud {

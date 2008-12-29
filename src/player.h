@@ -52,7 +52,7 @@ public:
 	float getDamage();
 	float getFireBreathDamage();
 	float getLightningOrbDamage();
-	void modifyVelocity(double xVel,double yVel);
+
 	WormNode getWormNode(int num);
 	Tongue *getTongue();
 
