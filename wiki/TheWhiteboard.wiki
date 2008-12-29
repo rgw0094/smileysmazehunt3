@@ -2,11 +2,6 @@
  * Patric
  * Sarah Palin
 
-=== Road Map ===
- * Opening Cinematic
- * World Map
- * Balance stuff
-
 === Data To Do ===
  * Bill Clinton hints
  * Enemy names
@@ -14,7 +9,8 @@
  * Fenwar Encounters
 
 === Programming To Do ===
- * Leverage the ExplosionManager
+ * Leverage the ExplosionManager (brian fungus could use it)
+ * Opening Cinematic
  * Lovecraftian Boss
  * Put finishing touches on Calypso - sound effects, finish destructor, make him not look gay in stun mode, balancing
  * King Tut
