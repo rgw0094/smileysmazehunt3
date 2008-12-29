@@ -43,7 +43,7 @@
 ||Reflection Shield||Realm of Despair||Calypso||Done||90%||
 ||Silly Pads||Mushroom Kingdom||Brian Fungus||Done||Done||
 ||Jesus' Sandals||Pools of the Dead||Lord Phyrebawz||Done||90%||
-||Ice Breath||Candy Mountain||Bartley||Done||90%||
+||Ice Breath||Candy Mountain||Bartli||Done||90%||
 ||Shrink||Swamp||Lovecraft||Done||0%||
 ||Tut's Mask||Tut's Tomb||King Tut||Done||15%||
 ||---||Serpentine Path|| ||90%||---||
@@ -52,7 +52,7 @@
 ===Done===
 ||Item||Date||Done By||
 ||ProjectileManager now supports parabola projectiles||12/25/08||RGW||
-||ExplosionManager||12/26/08||RGW||
+||ExplosionManager||12/24/08||RGW||
 ||King Tut graphics||12/24/08||ETI||
 ||ScreenEffectsManager||12/6/08||RGW||
 ||Fixed crash glitch (you were using npc walkdirection without it having a value)||12/4/08||ETI||
