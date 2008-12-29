@@ -370,9 +370,6 @@
 					RelativePath=".\src\EvilWallManager.cpp">
 				</File>
 				<File
-					RelativePath=".\src\ExplosionManager.cpp">
-				</File>
-				<File
 					RelativePath=".\src\FenwarManager.cpp">
 				</File>
 				<File
@@ -404,9 +401,6 @@
 					RelativePath=".\src\EvilWallManager.h">
 				</File>
 				<File
-					RelativePath=".\src\ExplosionManager.h">
-				</File>
-				<File
 					RelativePath=".\src\FenwarManager.h">
 				</File>
 				<File
@@ -436,6 +430,9 @@
 					RelativePath=".\src\collisioncircle.cpp">
 				</File>
 				<File
+					RelativePath=".\src\ExplosionManager.cpp">
+				</File>
+				<File
 					RelativePath=".\src\lootmanager.cpp">
 				</File>
 				<File
@@ -456,6 +453,9 @@
 				Filter="">
 				<File
 					RelativePath=".\src\collisioncircle.h">
+				</File>
+				<File
+					RelativePath=".\src\ExplosionManager.h">
 				</File>
 				<File
 					RelativePath=".\src\lootmanager.h">

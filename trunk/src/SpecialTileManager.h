@@ -91,8 +91,7 @@ public:
 	std::list<Mushroom> theMushrooms; //Linked list containing the mushrooms
 	std::list<IceBlock> iceBlockList;
 	std::list<TimedTile> timedTileList;
-
-	hgeParticleManager *explosions; //This contains the particle effects (graphics) of the explosions	
+	
 	hgeRect *collisionBox;	//general purpose collision box
 
 };

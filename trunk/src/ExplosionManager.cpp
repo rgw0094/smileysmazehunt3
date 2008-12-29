@@ -14,8 +14,7 @@ ExplosionManager::~ExplosionManager() { }
 /**
  * Spawns a new managed explosion.
  * 
- * Size must be a float between 0.0 and 1.0. The radius of the explosion at its peak will be 
- * size * MAX_EXPLOSION_RADIUS
+ * Size must be a float between 0.0 and 1.0.
  */
 void ExplosionManager::addExplosion(float x, float y, float size, float damage, float knockback) {
 	
@@ -26,7 +25,7 @@ void ExplosionManager::addExplosion(float x, float y, float size, float damage, 
 	Explosion explosion;
 	explosion.x = x;
 	explosion.y = y;
-	explosion.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("explosionLarge")->info);
+	explosion.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("explosion")->info);
 	explosion.particle->FireAt(x, y);
 	explosion.timeAlive = 0.0;
 	explosion.damage = damage;
@@ -34,7 +33,12 @@ void ExplosionManager::addExplosion(float x, float y, float size, float damage, 
 	explosion.hitPlayerYet = false;
 	explosion.collisionCircle = new CollisionCircle();
 
-	explosion.radius = 3.0 + explosion.particle->info.fSizeEnd + explosion.particle->info.fSizeVar;
+	//Scale 
+	explosion.particle->info.fParticleLifeMax *= size;
+	explosion.particle->info.fParticleLifeMin *= size;
+	explosion.particle->info.fLifetime *= size;
+
+	explosion.radius = explosion.particle->info.fSizeEnd + explosion.particle->info.fSizeVar;
 	explosion.duration = explosion.particle->info.fLifetime + explosion.particle->info.fParticleLifeMax;
 	explosion.expandDuration = explosion.particle->info.fParticleLifeMax;
 	explosion.expandSpeed = (explosion.particle->info.fSpeedMax + explosion.particle->info.fSpeedMin) / 2.0;

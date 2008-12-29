@@ -2,7 +2,7 @@
 #include "EnemyFramework.h"
 #include "player.h"
 #include "environment.h"
-#include "hgeresource.h"
+#include "ExplosionManager.h"
 
 extern SMH *smh;
 
@@ -69,11 +69,7 @@ void E_BombGenerator::draw(float dt) {
 		int countdownSeconds=0;
 		countdownSeconds = 3-int(smh->timePassedSince(startCountdownTime));
 		smh->resources->GetFont("curlz")->printf(smh->getScreenX(bomb.x)-1,smh->getScreenY(bomb.y)-18,HGETEXT_CENTER,"%d",countdownSeconds);
-	} else if (bombState == BOMB_GENERATOR_BOMB_EXPLODING) {
-		smh->resources->GetParticleSystem("explosion")->Render();
 	}
-	
-
 }
 
 /**
@@ -139,7 +135,6 @@ void E_BombGenerator::update(float dt) {
 			bombState = BOMB_GENERATOR_BOMB_WALKING;	
 			bombSpawnAnimation->SetMode(HGEANIM_FWD);
 		}
-
 	}
 
 	if (bombState == BOMB_GENERATOR_BOMB_WALKING) {
@@ -165,42 +160,30 @@ void E_BombGenerator::update(float dt) {
 		}
 
 		checkNextTileAndTurn();
-
-
 	}
 
 	if (bombState == BOMB_GENERATOR_BOMB_COUNTING_DOWN) {
 		bombEyesGlowAnimation->Update(dt);	
 		if (smh->timePassedSince(startCountdownTime) >= 3.0) {
 			bombState=BOMB_GENERATOR_BOMB_EXPLODING;
-			smh->resources->GetParticleSystem("explosion")->FireAt(smh->getScreenX(bomb.x),smh->getScreenY(bomb.y));	
+			smh->explosionManager->addExplosion(bomb.x, bomb.y, 0.5, 0.0, 0.0);
 		}
 	}
 
 	if (bombState == BOMB_GENERATOR_BOMB_EXPLODING) {
-		smh->resources->GetParticleSystem("explosion")->MoveTo(smh->getScreenX(bomb.x),smh->getScreenY(bomb.y),true);
-		smh->resources->GetParticleSystem("explosion")->Update(dt);
-		if (smh->timePassedSince(startCountdownTime) >= 3.3f) {
+		if (smh->timePassedSince(startCountdownTime) >= 3.3) {
 			//get rid of walls
-			int xtile=bomb.x/64, ytile=bomb.y/64;
+			int xtile=bomb.x/64.0, ytile=bomb.y/64.0;
 			for (int curYTile = ytile-1; curYTile <= ytile+1; curYTile++) {
 				for (int curXTile = xtile-1; curXTile <= xtile+1; curXTile++) {
                     smh->environment->bombWall(curXTile,curYTile);
 				}
 			}
-
-			
-
 		}
-		if (smh->resources->GetParticleSystem("explosion")->GetParticlesAlive() == 0 && smh->timePassedSince(startCountdownTime) >= 4.0) {
+		if (smh->timePassedSince(startCountdownTime) >= 4.0) {
 			bombState = BOMB_GENERATOR_WAITING;			
 		}
-		
 	}
-
-
-	
-
 }
 
 /*

@@ -11,6 +11,7 @@
 #include "FenwarManager.h"
 #include "ProjectileManager.h"
 #include "Boss.h"
+#include "ExplosionManager.h"
 
 SMH::SMH(HGE *_hge) { 
 	hge = _hge;
@@ -90,6 +91,9 @@ void SMH::init() {
 	log("Creating ScreenEffectManager");
 	screenEffectsManager = new ScreenEffectsManager();
 
+	log("Creating ExplosionManager");
+	explosionManager = new ExplosionManager();
+
 	//Create Environment last
 	log("Creating Environment");
 	environment = new Environment();
@@ -145,6 +149,7 @@ bool SMH::updateGame() {
 		if (!windowManager->isOpenWindow() && !areaChanger->isChangingArea() && 
 				!fenwarManager->isEncounterActive() && !environment->isTutorialManActive()) {
 			player->update(dt);
+			explosionManager->update(dt);
 			environment->update(dt);
 			bossManager->update(dt);
 			enemyManager->update(dt);
@@ -183,7 +188,8 @@ void SMH::drawGame() {
 		bossManager->drawBeforeSmiley(dt);
 		player->draw(dt);
 		bossManager->drawAfterSmiley(dt);
-		environment->drawAfterSmiley(dt);		
+		environment->drawAfterSmiley(dt);
+		explosionManager->draw(dt);
 		fenwarManager->draw(dt);
 		projectileManager->draw(dt);
 		shadeScreen(darkness);

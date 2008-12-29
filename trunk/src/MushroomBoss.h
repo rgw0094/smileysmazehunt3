@@ -18,12 +18,6 @@ struct Bomb {
 	double dx,dy;
 };
 
-struct MushroomExplosion {
-	CollisionCircle* collisionCircle;
-	float timeBegan;
-	bool stillExpanding;
-};
-
 class MushroomBoss : public Boss {
 public:
 	MushroomBoss(int _gridX, int _gridY, int _groupID);
@@ -45,11 +39,6 @@ public:
 	void drawBombs();
 	void killBombs();
 
-	void addExplosion (float _x,float _y);
-	void doExplosions(float dt);
-	void drawExplosions(float dt);
-	void killExplosions();
-	
 	void doMiniMushrooms(float dt);
 	void spawnMiniMushroom();
 	void spawnMiniMushroomProjectile();	
@@ -78,8 +67,6 @@ public:
 
 	//bombs that are thrown
 	std::list<Bomb> theBombs;
-	hgeParticleManager *explosions; //This contains the particle graphics for the exposions
-	std::list<MushroomExplosion> theExplosions; //This contains the expanding collision circles
 	
 };
 

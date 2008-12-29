@@ -32,6 +32,7 @@ class LootManager;
 class FenwarManager;
 class ProjectileManager;
 class BossManager;
+class ExplosionManager;
 
 //Classes defined here
 class AreaChanger;
@@ -296,6 +297,7 @@ public:
 	SoundManager *soundManager;
 	WindowManager *windowManager;
 	ScreenEffectsManager *screenEffectsManager;
+	ExplosionManager *explosionManager;
 
 private:
 
