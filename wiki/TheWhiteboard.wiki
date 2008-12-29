@@ -35,7 +35,7 @@
 
 == Progress ==
 ||*Item Goal*||*Level found*||*Boss*||*Level Completion*||Boss Completion||
-||Smiley's Cane||Fountain|| ||90%||N/A||
+||Smiley's Cane||Fountain|| ||Done|| ||
 ||Fire Breath||Smolder Hollow||Lord Phyrebawz||Done||Done||
 ||Frisbee||Sessaria Snowplains||Portly Penguin||Done||Done||
 ||Sprint boots||Forest of Fundoria||Garmborn||80%||Done||
@@ -46,7 +46,7 @@
 ||Ice Breath||Candy Mountain||Bartley||Done||90%||
 ||Shrink||Swamp||Lovecraft||Done||0%||
 ||Tut's Mask||Tut's Tomb||King Tut||Done||15%||
-|| ||Serpentine Path|| ||90%||N/A||
+|| ||Serpentine Path|| ||90%|| ||
 ||Hover||Castle of Evil||Calypso||2%||0%||
 
 ===Done===
