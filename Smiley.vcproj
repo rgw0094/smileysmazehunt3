@@ -536,6 +536,9 @@
 				Name="Source"
 				Filter="">
 				<File
+					RelativePath=".\src\CinematicScreen.cpp">
+				</File>
+				<File
 					RelativePath=".\src\CreditsScreen.cpp">
 				</File>
 				<File

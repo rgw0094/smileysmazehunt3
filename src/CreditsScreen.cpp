@@ -14,6 +14,7 @@ extern SMH *smh;
 CreditsScreen::CreditsScreen() {
 	init();
 	offset = 0.0;
+	backgroundAlpha = 0.0;
 	timeScreenOpened = smh->getRealTime();
 	resourcesCachedYet = false;
 }
@@ -30,7 +31,9 @@ CreditsScreen::~CreditsScreen() {
 
 void CreditsScreen::draw(float dt) {
 	
-	smh->shadeScreen(255.0);
+	smh->shadeScreen(backgroundAlpha);
+	smh->resources->GetFont("titleFnt")->SetColor(ARGB(backgroundAlpha, 255.0, 255.0, 255.0));
+	smh->resources->GetFont("curlz")->SetColor(ARGB(backgroundAlpha, 255.0, 255.0, 255.0));
 
 	//Title and credits
 	smh->resources->GetFont("titleFnt")->printf(512.0,TITLE_START - offset,HGETEXT_CENTER,"Smiley's Maze Hunt");
@@ -62,6 +65,12 @@ void CreditsScreen::draw(float dt) {
 
 bool CreditsScreen::update(float dt, float mouseX, float mouseY) {
 	
+	//Fade in and don't do anything else until done fading in
+	if (backgroundAlpha < 255.0) {
+		backgroundAlpha = min(255.0, backgroundAlpha + 255.0 * dt);
+		return false;
+	}
+
 	//Cache all the graphics while the title and authors are stationary
 	if (!resourcesCachedYet) {
 		smh->resources->Precache(RES_CREDITS);

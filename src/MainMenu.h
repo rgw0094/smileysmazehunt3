@@ -16,6 +16,7 @@ class ControlActionGroup;
 #define DEATH_SCREEN 3
 #define LOADING_SCREEN 4
 #define CREDITS_SCREEN 5
+#define CINEMATIC_SCREEN 6
 
 //Screen States
 #define ENTERING_SCREEN 0
@@ -62,6 +63,30 @@ public:
 };
 
 //-------------------------------------------------------
+//------------------CINEMATICS SCREEN--------------------
+//-------------------------------------------------------
+class CinematicScreen : public MenuScreen {
+
+public:
+
+	CinematicScreen();
+	~CinematicScreen();
+
+	//Draw methods
+	void draw(float dt);
+	bool update(float dt, float mouseX, float mouseY);
+
+private:
+
+	void enterState(int newState);
+
+	float backgroundAlpha;
+	int state;
+	float timeInState;
+
+};
+
+//-------------------------------------------------------
 //------------------CREDITS SCREEN-----------------------
 //-------------------------------------------------------
 struct CreditsItem {
@@ -88,6 +113,7 @@ private:
 	std::list<CreditsItem> enemyList;
 	std::list<CreditsItem> bossList;
 	std::list<CreditsItem> npcList;
+	float backgroundAlpha;
 	float offset;
 	float bossStart;
 	float npcStart;
@@ -141,6 +167,7 @@ public:
 	int fileNumber;
 	bool startedLoadYet;
 	bool fromLoadScreen;
+	bool isNewGame;
 
 };
 
