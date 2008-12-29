@@ -9,11 +9,6 @@
  * Fenwar Encounters
 
 === Programming To Do ===
- * Leverage the ExplosionManager
- # Brian Fungus (Done)
- # Phyrebozz 2
- # Bomb Generator
- # SpecialTileManager (Done)
  * Opening Cinematic
  * Lovecraftian Boss
  * Put finishing touches on Calypso - sound effects, finish destructor, make him not look gay in stun mode, balancing
@@ -46,7 +41,7 @@
 ||Orbs||Dunes of Salabia||Cornwallis||90%||Done||
 ||Reflection Shield||Realm of Despair||Calypso||Done||90%||
 ||Silly Pads||Mushroom Kingdom||Brian Fungus||Done||Done||
-||Jesus' Sandals||Pools of the Dead||Lord Phyrebawz||Done||90%||
+||Jesus' Sandals||Pools of the Dead||Lord Phyrebawz 2||Done||Done||
 ||Ice Breath||Candy Mountain||Bartli||Done||90%||
 ||Shrink||Swamp||Lovecraft||Done||0%||
 ||Tut's Mask||Tut's Tomb||King Tut||Done||15%||
@@ -55,6 +50,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||All explosions in the game are now handled by ExplosionManager||12/29/08||RGW||
 ||ProjectileManager now supports parabola projectiles||12/25/08||RGW||
 ||ExplosionManager||12/24/08||RGW||
 ||King Tut graphics||12/24/08||ETI||
