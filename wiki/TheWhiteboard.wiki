@@ -13,7 +13,7 @@
  # Brian Fungus (Done)
  # Phyrebozz 2
  # Bomb Generator
- # SpecialTileManager
+ # SpecialTileManager (Done)
  * Opening Cinematic
  * Lovecraftian Boss
  * Put finishing touches on Calypso - sound effects, finish destructor, make him not look gay in stun mode, balancing
