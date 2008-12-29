@@ -12,10 +12,10 @@
  * Opening Cinematic
  * Lovecraftian Boss
  * King Tut
- * Bartli
  * Calypso 2
 
 === Graphics To Do ===
+ * Bartli's candy graphic
  * New Keys (I think all keys can be the same but just a different hue)
  * New ability loot graphic (the thing that appears when you kill a boss)
  * Bomb guy graphic
@@ -41,7 +41,7 @@
 ||Reflection Shield||Realm of Despair||Calypso||Done||90%||
 ||Silly Pads||Mushroom Kingdom||Brian Fungus||Done||Done||
 ||Jesus' Sandals||Pools of the Dead||Lord Phyrebawz 2||Done||Done||
-||Ice Breath||Candy Mountain||Bartli||Done||90%||
+||Ice Breath||Candy Mountain||Bartli||Done||Done||
 ||Shrink||Swamp||Lovecraft||Done||0%||
 ||Tut's Mask||Tut's Tomb||King Tut||Done||15%||
 ||---||Serpentine Path|| ||90%||---||
@@ -49,6 +49,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Bartli||12/29/08||RGW||
 ||All explosions in the game are now handled by ExplosionManager||12/29/08||RGW||
 ||ProjectileManager now supports parabola projectiles||12/25/08||RGW||
 ||ExplosionManager||12/24/08||RGW||
