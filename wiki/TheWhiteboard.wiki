@@ -46,7 +46,7 @@
 ||Ice Breath||Candy Mountain||Bartley||Done||90%||
 ||Shrink||Swamp||Lovecraft||Done||0%||
 ||Tut's Mask||Tut's Tomb||King Tut||Done||15%||
-|| ||Serpentine Path|| ||90%|| ||
+||---||Serpentine Path|| ||90%||---||
 ||Hover||Castle of Evil||Calypso||2%||0%||
 
 ===Done===
