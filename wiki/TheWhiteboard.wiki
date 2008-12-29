@@ -9,7 +9,10 @@
  * Fenwar Encounters
 
 === Programming To Do ===
- * Leverage the ExplosionManager (brian fungus could use it)
+ * Leverage the ExplosionManager
+ ** Brian Fungus (Done)
+ ** Phyrebozz 2
+ ** Bomb Generator
  * Opening Cinematic
  * Lovecraftian Boss
  * Put finishing touches on Calypso - sound effects, finish destructor, make him not look gay in stun mode, balancing
