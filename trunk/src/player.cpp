@@ -25,6 +25,7 @@ extern SMH *smh;
 #define JESUS_SANDLE_TIME 1.65
 #define SPEED_BOOTS_MODIFIER 1.75
 #define MOVE_SPEED 300.0
+#define CANE_TIME 1.5
 
 /**
  * Constructor
@@ -395,6 +396,15 @@ void Player::drawGUI(float dt) {
 			384.0 - 50.0 - hoveringYOffset);
 	}
 
+	//Cane bar
+	if (usingCane) {
+		smh->resources->GetSprite("bossHealthBar")->RenderStretch(
+			512.0 - 30.0, 
+			384.0 - 55.0 - hoveringYOffset, 
+			512.0 - 30.0 + 60.0 * (smh->timePassedSince(timeStartedCane) / CANE_TIME), 
+			384.0 - 50.0 - hoveringYOffset);
+	}
+
 	//Hover bar
 	if (isHovering) {
 		smh->resources->GetSprite("bossHealthBar")->RenderStretch(
@@ -721,17 +731,16 @@ void Player::doAbility(float dt) {
 	smh->resources->GetParticleSystem("smileysCane")->Update(dt);
 	if (usingCane) {
 		mana -= smh->gameData->getAbilityInfo(CANE).manaCost*dt;
-	}
 
-	//Stop using cane
-	if (usingCane) {
+		//The cane usage gets interrupted if Smiley moves
 		if (!smh->input->keyDown(INPUT_ABILITY) || smh->input->keyDown(INPUT_LEFT) || 
 				smh->input->keyDown(INPUT_RIGHT) || smh->input->keyDown(INPUT_UP) || 
-				smh->input->keyDown(INPUT_DOWN)) {
+				smh->input->keyDown(INPUT_DOWN) || dx > 0.0 || dy > 0.0) {
 			usingCane = false;
 			smh->resources->GetParticleSystem("smileysCane")->Stop(false);
 		}
-		if (smh->timePassedSince(timeStartedCane) > 3.0) {
+		//Summon Bill Clinton after using the cane for the required amount of time
+		if (smh->timePassedSince(timeStartedCane) > CANE_TIME) {
 			smh->resources->GetParticleSystem("smileysCane")->Stop(false);
 			usingCane = false;
 			facing = DOWN;
