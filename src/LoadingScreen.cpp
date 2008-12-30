@@ -44,7 +44,7 @@ bool LoadingScreen::update(float dt, float mouseX, float mouseY) {
 
 	//Make sure the load screen is up for at least a little bit so that it doesn't just flash up
 	//if the person's computer is too fast.
-	if (smh->getRealTime() - timeEnteredScreen > 1.1) {
+	if (smh->getRealTime() - timeEnteredScreen > 0.1) { //Minimum time changed temporarily for game programming purposes
 		int x = smh->saveManager->playerGridX;
 		int y = smh->saveManager->playerGridY;
 		smh->environment->loadArea(smh->saveManager->currentArea, smh->saveManager->currentArea);
