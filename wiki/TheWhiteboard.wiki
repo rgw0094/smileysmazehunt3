@@ -14,7 +14,6 @@
  * King Tut
  * Calypso 2
  * Make pits have a hue change variable in the var layer.  Then we can match pits to the level colors.  Also, we need to make no-walk pits (for the bridge area in REALMOFDESPAIR) and walkable pits (for the entrance to the REALM).  Then we can make the walkable pits a slightly different hue or something and perhaps use them elsewhere.
- * In the swamp by Yau Yau it's still possible to get stuck on top of an up cylinder after respawning when you drown.  I thought this was fixed and the cylinders would go down?
 
 === Graphics To Do ===
  * Bartli's candy graphic
