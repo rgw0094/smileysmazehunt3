@@ -38,6 +38,8 @@ Player::Player() {
 	worm = new Worm(0,0);
 	collisionCircle = new CollisionCircle();
 
+	usingManaItem = false;
+
 	//Load Particles
 	fireBreathParticle = new WeaponParticleSystem("firebreath.psi", smh->resources->GetSprite("particleGraphic1"), PARTICLE_FIRE_BREATH);
 	iceBreathParticle = new WeaponParticleSystem("icebreath.psi", smh->resources->GetSprite("particleGraphic4"), PARTICLE_ICE_BREATH);
@@ -172,11 +174,13 @@ void Player::update(float dt) {
 	worm->update();
 
 	//Update health and mana
-	mana += (getMaxMana() / 2.0) * dt;
+	if (!usingManaItem) mana += (getMaxMana() * MANA_REGENERATE_RATE/100) * dt;
 	if (mana < 0.0f) mana = 0.0f;
 	if (mana > getMaxMana()) mana = getMaxMana();
 	if (health > getMaxHealth()) health = getMaxHealth();
 
+	usingManaItem = false;
+	
 	doWarps();
 	doAbility(dt);
 	doItems();
@@ -452,6 +456,8 @@ void Player::drawGUI(float dt) {
 	//Show whether or not Smiley is invincible
 	if (invincible) {
 		smh->resources->GetFont("curlz")->printf(512.0, 3, HGETEXT_CENTER, "Invincibility On");
+		//also give full mana if invincible
+		setMana(getMaxMana());
 	}
 
 }
@@ -530,6 +536,9 @@ void Player::doAbility(float dt) {
 		if (smh->timePassedSince(timeStartedHovering) > HOVER_DURATION) {
 			isHovering = false;
 		}
+		mana -= smh->gameData->getAbilityInfo(HOVER).manaCost*dt;
+		usingManaItem = true;
+
 		if (hoverScale < 1.2f) hoverScale += 0.4*dt;
 		if (hoverScale > 1.2f) hoverScale = 1.2f;
 		if (hoveringYOffset < 20.0f) hoveringYOffset += 40.0*dt;
@@ -547,14 +556,20 @@ void Player::doAbility(float dt) {
 							 smh->input->keyDown(INPUT_ABILITY) &&
 							 selectedAbility == REFLECTION_SHIELD && 
 							 mana >= smh->gameData->getAbilityInfo(REFLECTION_SHIELD).manaCost*dt);
-	if (reflectionShieldActive) mana -= smh->gameData->getAbilityInfo(REFLECTION_SHIELD).manaCost*dt;
+	if (reflectionShieldActive) {
+		mana -= smh->gameData->getAbilityInfo(REFLECTION_SHIELD).manaCost*dt;
+		usingManaItem = true;
+	}
 
 	////////////// Tut's Mask //////////////
 
 	cloaked = (!frozen && smh->input->keyDown(INPUT_ABILITY) &&
 			   selectedAbility == TUTS_MASK && 
 			   mana >= smh->gameData->getAbilityInfo(TUTS_MASK).manaCost*dt);
-	if (cloaked) mana -= smh->gameData->getAbilityInfo(TUTS_MASK).manaCost*dt;
+	if (cloaked) {
+		mana -= smh->gameData->getAbilityInfo(TUTS_MASK).manaCost*dt;
+		usingManaItem = true;
+	}
 	
 	////////////// Sprint Boots //////////////
 	
@@ -573,6 +588,7 @@ void Player::doAbility(float dt) {
 			&& mana >= smh->gameData->getAbilityInfo(FIRE_BREATH).manaCost*(breathingFire ? dt : .25f)) {
 
 		mana -= smh->gameData->getAbilityInfo(FIRE_BREATH).manaCost*dt;
+		usingManaItem = true;
 
 		//Start breathing fire
 		if (!breathingFire) {
@@ -607,7 +623,7 @@ void Player::doAbility(float dt) {
 		if (selectedAbility == CANE && !usingCane && mana >= smh->gameData->getAbilityInfo(CANE).manaCost) {
 			usingCane = true;
 			smh->resources->GetParticleSystem("smileysCane")->FireAt(smh->getScreenX(x), smh->getScreenY(y));
-			timeStartedCane = smh->getGameTime();
+			timeStartedCane = smh->getGameTime();			
 		}
 
 		//Place Silly Pad
@@ -730,8 +746,6 @@ void Player::doAbility(float dt) {
 
 	smh->resources->GetParticleSystem("smileysCane")->Update(dt);
 	if (usingCane) {
-		mana -= smh->gameData->getAbilityInfo(CANE).manaCost*dt;
-
 		//The cane usage gets interrupted if Smiley moves
 		if (!smh->input->keyDown(INPUT_ABILITY) || smh->input->keyDown(INPUT_LEFT) || 
 				smh->input->keyDown(INPUT_RIGHT) || smh->input->keyDown(INPUT_UP) || 
@@ -744,6 +758,8 @@ void Player::doAbility(float dt) {
 			smh->resources->GetParticleSystem("smileysCane")->Stop(false);
 			usingCane = false;
 			facing = DOWN;
+			mana -= smh->gameData->getAbilityInfo(CANE).manaCost;
+			if (mana < 0) mana = 0;
 			smh->windowManager->openHintTextBox();
 		}
 	}
@@ -1121,7 +1137,7 @@ void Player::doItems() {
 	} else if (item == HEALTH_ITEM) {
 		setHealth(getHealth() + 1.0);
 	} else if (item == MANA_ITEM) {
-		mana += 10.0;
+		mana += MANA_PER_ITEM;
 	}
 
 }
@@ -1670,7 +1686,7 @@ float Player::getMaxHealth() {
 }
 
 float Player::getMaxMana() {
-	return 100.0 + smh->saveManager->numUpgrades[1] * 10.0;
+	return INITIAL_MANA + smh->saveManager->numUpgrades[1] * MANA_PER_UPGRADE;
 }
 
 bool Player::isInShrinkTunnel() {

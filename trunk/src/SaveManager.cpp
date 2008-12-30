@@ -108,7 +108,7 @@ void SaveManager::resetCurrentData() {
 	playerGridX = 0;
 	playerGridY = 0;
 	playerHealth = 5.0;
-	playerMana = 100.0;
+	playerMana = INITIAL_MANA;
 
 	timeFileLoaded = smh->getRealTime();
 

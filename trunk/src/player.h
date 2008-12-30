@@ -2,6 +2,10 @@
 #define PLAYER_H_
 
 #define KNOCKBACK_DURATION 0.2
+#define INITIAL_MANA 50.0
+#define MANA_PER_UPGRADE 20.0
+#define MANA_REGENERATE_RATE 5.0
+#define MANA_PER_ITEM 25.0
 
 #include <list>
 
@@ -113,6 +117,8 @@ private:
 	int startedFallingY;					//Y position where the player started falling
 	int enteredWaterX, enteredWaterY;		//Grid position the player was on before entering water
 	int enteredSpringX, enteredSpringY;
+
+	bool usingManaItem;
 	
 	float fallingDx, fallingDy;
 	float dx, dy;

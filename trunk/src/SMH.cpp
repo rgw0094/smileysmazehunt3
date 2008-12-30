@@ -224,9 +224,10 @@ void SMH::doDebugInput(float dt) {
 			player->invincible = !player->invincible;
 		}
 		
-		//Gives you life when you press L
+		//Gives you life (& mana) when you press L
 		if (hge->Input_KeyDown(HGEK_L)) {
 			player->setHealth(player->getMaxHealth());
+			player->setMana(player->getMaxMana());
 		}
 
 		//Teleport to warp zone
