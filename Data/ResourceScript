@@ -1362,6 +1362,13 @@ Sprite tutProjectileMummy {
  hotspot=32,32
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
+Sprite CandyProjectile {
+ texture=general
+ rect=196,144,58,45
+ hotspot=29,22
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=106
+}
 
 ;**************************
 ;******** Tiles ********
