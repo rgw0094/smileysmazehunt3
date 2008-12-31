@@ -45,7 +45,7 @@
 ||Shrink||Swamp||Lovecraft||Done||0%||
 ||Tut's Mask||Tut's Tomb||King Tut||Done||15%||
 ||---||Serpentine Path||---||Done||---||
-||Hover||Castle of Evil (first part)||Calypso 2||2%||0%||
+||Hover||Castle of Evil (first part)||Calypso 2||60%||0%||
 ||---||Castle of Evil (second part)||Fenwar||0%||0%||
 
 ===Done===
