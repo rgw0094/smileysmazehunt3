@@ -138,7 +138,7 @@ bool DesertBoss::update(float dt) {
 		if (state == DESERTBOSS_LAUNCHING_SPIKES || state == DESERTBOSS_IDLE) {
 			if (smh->player->fireBreathParticle->testCollision(collisionBox)) {
 				redness += (255/5.0)*dt;
-				health -= 20 * dt;
+				health -= 9 * dt * smh->player->getFireBreathDamage();
 				if (redness > 255.0) {
 					redness = 255.0;
 					//Enter the ground spike state and randomly choose which spikes

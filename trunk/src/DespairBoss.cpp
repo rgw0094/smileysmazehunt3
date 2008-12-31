@@ -14,7 +14,7 @@ extern SMH *smh;
 
 //Attributes
 #define HEALTH 10.0
-#define PROJECTILE_DELAY 1.2
+#define PROJECTILE_DELAY 1.5
 #define FREEZE_DURATION 1.0
 #define STUN_DURATION 5.0
 
@@ -209,7 +209,7 @@ bool DespairBoss::update(float dt) {
 
 		//When Calypso is hit by lightning orbs his shield absorbs them.
 		shieldAlpha += smh->projectileManager->killProjectilesInCircle(x, y, 90, 
-			PROJECTILE_LIGHTNING_ORB) * 10.0;
+			PROJECTILE_LIGHTNING_ORB) * 20.0;
 
 		//The absorbed energy slowly dissipates
 		shieldAlpha -= 2.5 * dt;
