@@ -31,7 +31,8 @@ public:
 	void drawPits(float dt);
 	void update(float dt);
 	void loadArea(int id, int from);
-	int gatherItem(int x, int y);
+	int checkItem(int x, int y);
+	int removeItem(int x, int y);
 	int collisionAt(float x, float y);
 	bool playerCollision(int x, int y,float dt);
 	bool enemyCollision(hgeRect *box, BaseEnemy *enemy, float dt);

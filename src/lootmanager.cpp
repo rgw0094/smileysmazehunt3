@@ -36,11 +36,9 @@ LootManager::~LootManager() {
 void LootManager::addLoot(int type, int x, int y, int ability) {
 	Loot newLoot;
     newLoot.type = type;
-	newLoot.alpha = 255;
 	newLoot.x = x;
 	newLoot.y = y;
 	newLoot.ability = ability;
-	newLoot.timeCreated = smh->getGameTime();
 	theLoot.push_back(newLoot);
 }
 
@@ -51,9 +49,7 @@ void LootManager::addLoot(int type, int x, int y, int ability) {
 void LootManager::draw(float dt) {
 	std::list<Loot>::iterator i;
 	for (i = theLoot.begin(); i != theLoot.end(); i++) {
-		sprites[i->type]->SetColor(ARGB(i->alpha,255,255,255));
 		sprites[i->type]->Render(smh->getScreenX(i->x), smh->getScreenY(i->y));
-		sprites[i->type]->SetColor(ARGB(255,255,255,255));
 	}
 }
 
@@ -67,38 +63,32 @@ void LootManager::update(float dt) {
 	std::list<Loot>::iterator i;
 	for (i = theLoot.begin(); i != theLoot.end(); i++) {
 
-		//Normal loot fades out eventually
-		if (i->type != LOOT_NEW_ABILITY) {
-			//Fade out in the last second
-			if (smh->getGameTime() > i->timeCreated + 9.0f) {
-				i->alpha -= 255.0f*dt;
-			}
-			//Destroy old loot
-			if (smh->getGameTime() - 10.0f > i->timeCreated) {
-				i = theLoot.erase(i);
-				continue;
-			}
-		}
-
 		//Update the loot collision box
 		collisionBox->SetRadius(i->x, i->y, radius[i->type]);
 
 		//Test for collision
 		if (smh->player->collisionCircle->testBox(collisionBox)) {
 
+			bool collected = false;
+
 			//Give the player the loot
-			if (i->type == LOOT_HEALTH) {
+			if (i->type == LOOT_HEALTH && smh->player->getHealth() != smh->player->getMaxHealth()) {
 				smh->player->setHealth(smh->player->getHealth() + 1.0);
-			} else if (i->type == LOOT_MANA) {
+				collected = true;
+			} else if (i->type == LOOT_MANA && smh->player->getMana() != smh->player->getMaxMana()) {
 				smh->player->setMana(smh->player->getMana() + 20.0);
 				if (smh->player->getMana() > smh->player->getMaxMana()) smh->player->setMana(smh->player->getMaxMana());
+				collected = true;
 			} else if (i->type == LOOT_NEW_ABILITY) {
 				smh->saveManager->hasAbility[i->ability] = true;
 				smh->player->selectedAbility = i->ability;
 				smh->windowManager->openNewAbilityTextBox(i->ability);
+				collected = true;
 			}
-			//Delete the loot
-			i = theLoot.erase(i);
+
+			if (collected) {
+				i = theLoot.erase(i);
+			}
 		}
 
 	}

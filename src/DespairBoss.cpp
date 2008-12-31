@@ -32,6 +32,7 @@ extern SMH *smh;
 #define EVIL_MAX_CHARGE_SPEED 1300.0
 #define LASER_DELAY 1.0
 #define LASER_SPEED 2500.0
+#define FLASHING_DURATION 0.5
 
 //States
 #define DESPAIRBOSS_INACTIVE 0
@@ -82,6 +83,7 @@ DespairBoss::DespairBoss(int _gridX, int _gridY, int _groupID) {
 	lastEvilTime = smh->getGameTime();
 	evilAlpha = 0.0;
 	chargeCounter = 0;
+	flashingAlpha = 255.0;
 
 	//Initialize stun star angles
 	for (int i = 0; i < NUM_STUN_STARS; i++) {
@@ -122,7 +124,21 @@ bool DespairBoss::update(float dt) {
 	//Smiley collision
 	if (smh->player->collisionCircle->testBox(isInEvilMode() ? damageCollisionBox : collisionBox)) {
 		smh->player->dealDamageAndKnockback(COLLISION_DAMAGE, true, isInEvilMode() ? 0 : 165, x, y);
-	}	
+	}
+
+	//Do flashing
+	if (smh->timePassedSince(lastHitByTongue) < FLASHING_DURATION) {
+		float n = FLASHING_DURATION / 4.0;
+		float x = smh->timePassedSince(lastHitByTongue);
+		while (x > n) x -= n;
+		if (x < n/2.0) {
+			flashingAlpha = 100.0 + (310.0 * x) / n;
+		} else {
+			flashingAlpha = 255.0 - 155.0 * (x - n/2.0);
+		}
+	} else {
+		flashingAlpha = 255.0;
+	}
 
 	//When smiley triggers the boss' enemy block start his dialogue.
 	if (state == DESPAIRBOSS_INACTIVE && !startedIntroDialogue) {
@@ -244,8 +260,7 @@ bool DespairBoss::update(float dt) {
 		if (floatingOffset > 10.0) floatingOffset = 10.0;
 
 		//Take damage from Smiley's tongue
-		if (smh->player->getTongue()->testCollision(damageCollisionBox) &&
-				smh->timePassedSince(lastHitByTongue) > .5) {
+		if (smh->player->getTongue()->testCollision(damageCollisionBox) && smh->timePassedSince(lastHitByTongue) > FLASHING_DURATION) {
 			health -= smh->player->getDamage();
 			lastHitByTongue = smh->getGameTime();
 		}
@@ -450,7 +465,7 @@ void DespairBoss::drawCalypso(float dt) {
 	smh->resources->GetSprite("playerShadow")->RenderEx(smh->getScreenX(x), smh->getScreenY(y) + 75.0, 0.0, 2.0, 2.0);
 	smh->resources->GetSprite("playerShadow")->SetColor(ARGB(75,255,255,255));
 	
-	smh->resources->GetSprite("calypso")->SetColor(ARGB(fadeAlpha,255,255,255));
+	smh->resources->GetSprite("calypso")->SetColor(ARGB(fadeAlpha, 255.0, flashingAlpha, flashingAlpha));
 	smh->resources->GetSprite("calypso")->Render(smh->getScreenX(x), smh->getScreenY(y) + floatingOffset);
 
 	//Evil Calypso
