@@ -514,7 +514,7 @@ void Player::doAbility(float dt) {
 
 	//Base requirements for being allowed to use an ability
 	bool canUseAbility = !waterWalk && !falling && !springing && !frozen 
-		&& !drowning && !springing;
+		&& !drowning && !springing && hoveringYOffset == 0.0;
 
 	/////////////// Hover ////////////////
 	bool wasHovering = isHovering;

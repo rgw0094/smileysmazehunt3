@@ -538,10 +538,9 @@ void CandyBoss::updateThrowingCandy(float dt)
 			duration = distance / smh->hge->Random_Float(375.0, 475.0);
 			angle = Util::getAngleBetween(x, y, targetX, targetY);
 
-			//TODO: add a new projectile type instead of using fish
 			//Spawn the projectile
 			smh->projectileManager->addProjectile(x, y - 75.0, 0.0, angle, THROWN_CANDY_DAMAGE, true, 
-				PROJECTILE_PENGUIN_FISH, true, true, distance, duration, distance / 1.5);
+				PROJECTILE_CANDY, true, true, distance, duration, distance / 1.5);
 		}
 
 		lastCandyThrowTime = smh->getGameTime();
