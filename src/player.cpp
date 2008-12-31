@@ -520,8 +520,7 @@ void Player::doAbility(float dt) {
 	bool wasHovering = isHovering;
 	isHovering = ((isHovering || smh->environment->collision[gridX][gridY] == HOVER_PAD) &&
 			selectedAbility == HOVER &&
-			smh->input->keyDown(INPUT_ABILITY) &&
-			mana >= smh->gameData->getAbilityInfo(HOVER).manaCost*dt);
+			smh->input->keyDown(INPUT_ABILITY));
 	
 	//For debug purposes H will always hover
 	if (smh->hge->Input_GetKeyState(HGEK_H)) isHovering = true;
@@ -536,9 +535,7 @@ void Player::doAbility(float dt) {
 		if (smh->timePassedSince(timeStartedHovering) > HOVER_DURATION) {
 			isHovering = false;
 		}
-		mana -= smh->gameData->getAbilityInfo(HOVER).manaCost*dt;
-		usingManaItem = true;
-
+		
 		if (hoverScale < 1.2f) hoverScale += 0.4*dt;
 		if (hoverScale > 1.2f) hoverScale = 1.2f;
 		if (hoveringYOffset < 20.0f) hoveringYOffset += 40.0*dt;

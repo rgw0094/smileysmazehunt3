@@ -111,16 +111,16 @@ void GameData::loadAbilityData() {
 	//Reflection Shield
 	strcpy(abilities[REFLECTION_SHIELD].name, "Reflection Shield");
 	strcpy(abilities[REFLECTION_SHIELD].description, 
-		"Activate to deflect certain projectiles.\n\n\nMana Cost: 10");
+		"Activate to deflect certain projectiles.\n\n\nMana Cost: 35/second");
 	abilities[REFLECTION_SHIELD].type = HOLD;
-	abilities[REFLECTION_SHIELD].manaCost = 10;
+	abilities[REFLECTION_SHIELD].manaCost = 35;
 
 	//Hover
 	strcpy(abilities[HOVER].name, "Hover");
 	strcpy(abilities[HOVER].description, 
-		"Grants you the power to use hover pads\n\n\nMana Cost: 15/second");
+		"Grants you the power to use hover pads.");
 	abilities[HOVER].type = HOLD;
-	abilities[HOVER].manaCost = 15;
+	abilities[HOVER].manaCost = 0;
 
 	//Lightning Orbs
 	strcpy(abilities[LIGHTNING_ORB].name, "Lightning Orbs");
@@ -153,9 +153,9 @@ void GameData::loadAbilityData() {
 
 	//Frisbee
 	strcpy(abilities[FRISBEE].name, "Frisbee!?!?! K");
-	strcpy(abilities[FRISBEE].description, "Throws a frisbee that can stun enemies.");
+	strcpy(abilities[FRISBEE].description, "Throws a frisbee that can stun enemies.\n\nMana Cost: 10");
 	abilities[FRISBEE].type = ACTIVATED;
-	abilities[FRISBEE].manaCost = 0;
+	abilities[FRISBEE].manaCost = 10;
 
 
 }
