@@ -150,6 +150,22 @@ void ProjectileManager::update(float dt) {
 			i->collisionBox->SetRadius(i->x, i->y, projectileTypes[i->id].radius);
 		}
 
+		//Delete projectiles that hit walls and shit
+		i->terrainCollisionBox->SetRadius(i->x, i->y, projectileTypes[i->id].radius/2.0);
+		if ((i->id == PROJECTILE_FRISBEE || i->id == PROJECTILE_LIGHTNING_ORB) && !i->hostile) {
+			//For friendly frisbees and lightning orbs, ignore silly pads when testing
+			//collision. They will be taken care of in the environment class when it
+			//tests collision with silly pads.
+			if (!deleteProjectile && smh->environment->testCollision(i->terrainCollisionBox, canPass, true)) {
+				deleteProjectile = true;
+			}
+		} else {
+			//For all other projectiles test collision normally
+			if (!deleteProjectile && smh->environment->testCollision(i->terrainCollisionBox, canPass)) {
+				deleteProjectile = true;
+			}
+		}
+
 		//Do collision with Smiley
 		if (!deleteProjectile && i->hostile && smh->player->collisionCircle->testBox(i->collisionBox)) {
 			if (smh->player->isReflectingProjectiles()) {
@@ -307,22 +323,6 @@ void ProjectileManager::update(float dt) {
 
 			}
 		} // end update lightning orb	
-
-		//Delete projectiles that hit walls and shit
-		i->terrainCollisionBox->SetRadius(i->x, i->y, projectileTypes[i->id].radius/2.0);
-		if ((i->id == PROJECTILE_FRISBEE || i->id == PROJECTILE_LIGHTNING_ORB) && !i->hostile) {
-			//For friendly frisbees and lightning orbs, ignore silly pads when testing
-			//collision. They will be taken care of in the environment class when it
-			//tests collision with silly pads.
-			if (!deleteProjectile && smh->environment->testCollision(i->terrainCollisionBox, canPass, true)) {
-				deleteProjectile = true;
-			}
-		} else {
-			//For all other projectiles test collision normally
-			if (!deleteProjectile && smh->environment->testCollision(i->terrainCollisionBox, canPass)) {
-				deleteProjectile = true;
-			}
-		}
 
 		//If the projectile was marked for deletion, delete it now
 		if (deleteProjectile) {
