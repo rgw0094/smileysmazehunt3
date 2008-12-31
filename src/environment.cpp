@@ -487,7 +487,7 @@ void Environment::draw(float dt) {
 				int theItem = item[i+xGridOffset][j+yGridOffset];
 
 				//Terrain
-				if (theCollision != PIT) {
+				if (theCollision != PIT && theCollision != FAKE_PIT && theCollision != NO_WALK_PIT) {
 					if (theTerrain > 0 && theTerrain < 256) {
 						smh->resources->GetAnimation("mainLayer")->SetFrame(theTerrain);
 						smh->resources->GetAnimation("mainLayer")->Render(drawX,drawY);
@@ -501,8 +501,8 @@ void Environment::draw(float dt) {
 					theCollision != ENEMY_NO_WALK && theCollision != PLAYER_START && 
 					theCollision != DIZZY_MUSHROOM_1 && theCollision != DIZZY_MUSHROOM_2 &&
 					theCollision != PLAYER_END && theCollision != PIT && 
-					theCollision != UNWALKABLE_PROJECTILE && 		
-					theCollision != FLAME &&
+					theCollision != UNWALKABLE_PROJECTILE && theCollision != FAKE_PIT &&
+					theCollision != FLAME && theCollision != NO_WALK_PIT &&
 					theCollision != FIRE_DESTROY &&
 					theCollision != FOUNTAIN && 
 					!(Util::isWarp(theCollision) && 
@@ -682,7 +682,7 @@ void Environment::drawPits(float dt) {
 				draw = false;
 				for (int x = i+xGridOffset-1; x <= i+xGridOffset+1; x++) {
 					for (int y = j+yGridOffset-1; y <= j+yGridOffset+1; y++) {
-						if (collision[x][y] == PIT) draw = true;
+						if (collision[x][y] == PIT || collision[x][y] == FAKE_PIT || collision[x][y] == NO_WALK_PIT) draw = true;
 					}
 				}
 	
