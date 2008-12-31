@@ -296,7 +296,10 @@ void Player::draw(float dt) {
 	}
 
 	//Draw Smiley's shadow
-	if ((hoveringYOffset > 0.0f || drowning || springing || (onWater && waterWalk) || (!falling && smh->environment->collisionAt(x,y+15) != WALK_LAVA))) {
+	if ((smh->environment->collisionAt(gridX, gridY) != FAKE_PIT && smh->environment->collisionAt(gridX, gridY) != PIT && 
+		smh->environment->collisionAt(gridX, gridY) != NO_WALK_PIT) || hoveringYOffset > 0.0 || drowning || springing || 
+		(onWater && waterWalk) || (!falling && smh->environment->collisionAt(x,y+15) != WALK_LAVA)) 
+	{
 		if (drowning) smh->resources->GetSprite("playerShadow")->SetColor(ARGB(255,255,255,255));
 		smh->resources->GetSprite("playerShadow")->RenderEx(smh->getScreenX(x),
 			smh->getScreenY(y) + (22.0*shrinkScale),0.0f,scale*shrinkScale,scale*shrinkScale);
@@ -1038,6 +1041,7 @@ bool Player::canPass(int collision) {
 		case PLAYER_END: return true;
 		case WALKABLE: return true;
 		case PIT: return true;
+		case FAKE_PIT: return true;
 		case ENEMY_NO_WALK: return true;
 		case WHITE_CYLINDER_DOWN: return true;
 		case YELLOW_CYLINDER_DOWN: return true;

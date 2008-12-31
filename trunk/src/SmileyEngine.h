@@ -70,7 +70,6 @@ class ScreenEffectsManager;
 #define NUM_BOSSES 12
 
 //Special editor IDs
-#define FAKE_PIT_ID 991
 #define DRAW_AFTER_SMILEY 990
 
 //Abilities
@@ -210,6 +209,8 @@ class ScreenEffectsManager;
 #define SMILELET 64
 #define SMILELET_FLOWER_SAD 65
 #define SMILELET_FLOWER_HAPPY 66
+#define NO_WALK_PIT 67
+#define FAKE_PIT 68
 //...
 #define WHITE_SWITCH_LEFT 74
 #define YELLOW_SWITCH_LEFT 75
