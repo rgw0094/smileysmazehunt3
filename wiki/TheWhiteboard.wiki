@@ -50,6 +50,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fake and NoWalk pits||12/31/08||RGW||
 ||Clinton's Cane progress bar||12/29/08||RGW||
 ||Bartli||12/29/08||RGW||
 ||All explosions in the game are now handled by ExplosionManager||12/29/08||RGW||
