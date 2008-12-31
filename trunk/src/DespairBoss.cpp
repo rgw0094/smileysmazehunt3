@@ -9,6 +9,7 @@
 #include "CollisionCircle.h"
 #include "WindowFramework.h"
 #include "EnemyFramework.h"
+#include "ExplosionManager.h"
 
 extern SMH *smh;
 
@@ -85,6 +86,10 @@ DespairBoss::DespairBoss(int _gridX, int _gridY, int _groupID) {
 	chargeCounter = 0;
 	flashingAlpha = 255.0;
 
+	leftHandParticle = new hgeParticleSystem(&smh->resources->GetParticleSystem("fireOrb")->info);
+	leftHandParticle->info.fGravityMax = leftHandParticle->info.fGravityMin = -50.0;
+	rightHandParticle = new hgeParticleSystem(&smh->resources->GetParticleSystem("iceOrb")->info);
+
 	//Initialize stun star angles
 	for (int i = 0; i < NUM_STUN_STARS; i++) {
 		stunStarAngles[i] = (float)i * ((2.0*PI) / (float)NUM_STUN_STARS);
@@ -96,11 +101,11 @@ DespairBoss::DespairBoss(int _gridX, int _gridY, int _groupID) {
  * Destructor
  */
 DespairBoss::~DespairBoss() {
-	//smh->resources->Purge(RES_CALYPSO);
+	smh->resources->Purge(RES_CALYPSO);
 	if (collisionBox) delete collisionBox;
 	if (damageCollisionBox) delete damageCollisionBox;
 	smh->setDarkness(0.0);
-	//resetProjectiles();
+	resetProjectiles();
 }
 
 /**
@@ -176,12 +181,11 @@ bool DespairBoss::update(float dt) {
 
 		//Spawn projectiles periodically
 		if (smh->timePassedSince(lastProjectileTime) > PROJECTILE_DELAY) {
-			int random = smh->randomInt(0, 1000000);
-			int projectileType, numProjectiles, speed;
-			float angle;
-			if (random < 600000) {
+			int projectileType, numProjectiles;
+			float speed, angle;
+			if (smh->hge->Random_Int(0, 100000) < 60000) {
 				projectileType = PROJECTILE_FIRE;
-				numProjectiles = 1;
+				numProjectiles = smh->hge->Random_Int(1,2);
 				speed = 600.0;
 			} else {
 				projectileType = PROJECTILE_ICE;
@@ -198,8 +202,8 @@ bool DespairBoss::update(float dt) {
 				}
 			}
 			
-			//Right hand - fire and ice
-			if (projectileType == PROJECTILE_FIRE || projectileType == PROJECTILE_ICE) {
+			//Right hand - ice
+			if (projectileType == PROJECTILE_ICE) {
 				angle = Util::getAngleBetween(x+65,y-60,smh->player->x, smh->player->y);
 				for (int i = 0; i < numProjectiles; i++) {
 					addProjectile(projectileType, x+65, y-60+floatingOffset, 
@@ -212,8 +216,6 @@ bool DespairBoss::update(float dt) {
 
 		//Evil mode
 		if (smh->timePassedSince(lastEvilTime) > EVIL_DELAY) {
-			dx = dy = 0.0;
-			smh->setDarkness(0.0);
 			setState(DESPAIRBOSS_ENTEREVIL);
 		}
 
@@ -479,6 +481,13 @@ void DespairBoss::drawCalypso(float dt) {
 
 	}
 
+	leftHandParticle->MoveTo(smh->getScreenX(x - 70.0), smh->getScreenY(y - 65.0 + floatingOffset), true);
+	leftHandParticle->Update(dt);
+	leftHandParticle->Render();
+	rightHandParticle->MoveTo(smh->getScreenX(x + 70.0), smh->getScreenY(y - 65.0 + floatingOffset), true);
+	rightHandParticle->Update(dt);
+	rightHandParticle->Render();
+
 	drawProjectiles(dt);
 
 	//Stun effect
@@ -605,8 +614,9 @@ void DespairBoss::updateProjectiles(float dt) {
 		bool deleteProjectile = false;
 
 		//Check for collision with walls
-		if (smh->environment->collisionAt(i->x, i->y) == UNWALKABLE) {
+		if (smh->environment->collisionAt(i->x, i->y) == NO_WALK_PIT) {
 			deleteProjectile = true;
+			smh->explosionManager->addExplosion(i->x, i->y, 0.75, FIRE_DAMAGE, 0.0);
 		}
 
 		//Check for end of ice nova
@@ -635,7 +645,7 @@ void DespairBoss::updateProjectiles(float dt) {
 					}
 					break;
 				case PROJECTILE_FIRE:
-					smh->player->dealDamage(FIRE_DAMAGE, false);
+					smh->explosionManager->addExplosion(i->x, i->y, 0.75, FIRE_DAMAGE, 0.0);
 					break;
 			}
 		}
@@ -667,16 +677,25 @@ void DespairBoss::resetProjectiles() {
  */ 
 void DespairBoss::setState(int newState) {
 
+	//Leaving state stuff
+	if (state == DESPAIRBOSS_BATTLE) {
+		leftHandParticle->Stop();
+		rightHandParticle->Stop();
+	}
+
+	//Entering state stuff
 	if (newState == DESPAIRBOSS_BATTLE) {
 		lastEvilTime = smh->getGameTime();
+		leftHandParticle->Fire();
+		rightHandParticle->Fire();
 		chargeCounter = 0;
-	}
-
-	if (newState == DESPAIRBOSS_STUNNED) {
+	} else if (newState == DESPAIRBOSS_STUNNED) {
 		oldFloatingOffset = floatingOffset;
-	}
-
-	if (newState == DESPAIRBOSS_EVIL_CHARGING) {
+	} else if (newState == DESPAIRBOSS_ENTEREVIL) {
+		dx = dy = 0.0;
+		smh->setDarkness(0.0);
+		smh->soundManager->playSound("snd_CalypsoEvil");
+	} else if (newState == DESPAIRBOSS_EVIL_CHARGING) {
 		chargeAngle = Util::getAngleBetween(x, y, smh->player->x, smh->player->y);
 		timeToCharge = sqrt(2 * Util::distance(x, y, smh->player->x, smh->player->y) / EVIL_CHARGE_ACCEL);
 	}

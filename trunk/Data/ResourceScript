@@ -1220,6 +1220,9 @@ Sprite calypsoShield {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=105
 }
+Sound snd_CalypsoEvil {
+ filename="calypsoEvil.wav"
+}
 
 ;**************************************************
 ;******** BARTLI (Resource group 106) *************
