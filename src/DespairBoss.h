@@ -74,7 +74,7 @@ public:
 	std::list<CalypsoProjectile> projectiles;
 	hgeRect *collisionBox;
 	hgeRect *damageCollisionBox;
-	hgeParticleManager *particles;
+	hgeParticleSystem *leftHandParticle, *rightHandParticle;
 
 private:
 

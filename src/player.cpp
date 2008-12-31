@@ -296,8 +296,8 @@ void Player::draw(float dt) {
 	}
 
 	//Draw Smiley's shadow
-	if ((smh->environment->collisionAt(gridX, gridY) != FAKE_PIT && smh->environment->collisionAt(gridX, gridY) != PIT && 
-		smh->environment->collisionAt(gridX, gridY) != NO_WALK_PIT) || hoveringYOffset > 0.0 || drowning || springing || 
+	if ((smh->environment->collision[gridX][gridY] != FAKE_PIT && smh->environment->collision[gridX][gridY] != PIT && 
+		smh->environment->collision[gridX][gridY] != NO_WALK_PIT) || hoveringYOffset > 0.0 || drowning || springing || 
 		(onWater && waterWalk) || (!falling && smh->environment->collisionAt(x,y+15) != WALK_LAVA)) 
 	{
 		if (drowning) smh->resources->GetSprite("playerShadow")->SetColor(ARGB(255,255,255,255));
