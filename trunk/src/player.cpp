@@ -1122,25 +1122,35 @@ void Player::setFacingStraight() {
  */
 void Player::doItems() {
 
-	int item = smh->environment->gatherItem(gridX, gridY);
+	int item = smh->environment->checkItem(gridX, gridY);
+	bool gatheredItem = false;
 
-	//Keys
 	if (item == RED_KEY || item == GREEN_KEY || item == BLUE_KEY || item == YELLOW_KEY) {
 		smh->soundManager->playSound("snd_key");
 		smh->saveManager->numKeys[Util::getKeyIndex(smh->saveManager->currentArea)][item-1]++;
-	//Gems
+		gatheredItem = true;
 	} else if (item == SMALL_GEM || item == MEDIUM_GEM || item == LARGE_GEM) {
 		smh->soundManager->playSound("snd_gem");
 		smh->saveManager->numGems[smh->saveManager->currentArea][item-SMALL_GEM]++;
 		if (item == SMALL_GEM) smh->saveManager->money += 1;
 		else if (item == MEDIUM_GEM) smh->saveManager->money += 3;
 		else if (item == LARGE_GEM) smh->saveManager->money += 8;
+		gatheredItem = true;
 	} else if (item == HEALTH_ITEM) {
-		setHealth(getHealth() + 1.0);
+		if (getHealth() != getMaxHealth()) {
+			setHealth(getHealth() + 1.0);
+			gatheredItem = true;
+		}
 	} else if (item == MANA_ITEM) {
-		mana += MANA_PER_ITEM;
+		if (getMana() != getMaxMana()) {
+			setMana(getMana() + MANA_PER_ITEM);
+			gatheredItem = true;
+		}
 	}
-
+	
+	if (gatheredItem) {
+		smh->environment->removeItem(gridX, gridY);
+	}
 }
 
 

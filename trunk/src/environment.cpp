@@ -1120,17 +1120,20 @@ void Environment::switchCylinders(int switchID) {
 
 
 /**
- * Returns the item in a square if any and removes it.
+ * Returns the item in a square (x,y) but does not removes it.
  */
-int Environment::gatherItem(int x, int y) {
+int Environment::checkItem(int x, int y) {
+	return item[x][y];
+}
+
+/**
+ * Returns the item in square (x,y) and removes it.
+ */
+int Environment::removeItem(int x, int y) {
 	int retVal = item[x][y];
-	if (retVal > 0 && retVal < 16) {
-		item[x][y] = NONE;
-		smh->saveManager->change( x, y);
-		return retVal;
-	} else {
-		return NONE;
-	}
+	item[x][y] = NONE;
+	smh->saveManager->change(x, y);	
+	return retVal;
 }
 
 /**

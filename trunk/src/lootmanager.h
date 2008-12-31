@@ -14,8 +14,6 @@ class hgeRect;
 struct Loot {
 	int type, x, y;
 	int ability;
-	float timeCreated;
-	float alpha;
 };
 
 class LootManager {

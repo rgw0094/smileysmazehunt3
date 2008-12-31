@@ -60,7 +60,7 @@ public:
 	float shieldAlpha;
 	float stunStarAngles[NUM_STUN_STARS];
 	float lastHitByTongue;
-	
+	float flashingAlpha;
 
 	//Evil mode stuff
 	float lastEvilTime;

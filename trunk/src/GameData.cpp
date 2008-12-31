@@ -147,9 +147,9 @@ void GameData::loadAbilityData() {
 	//King Tut's Mask
 	strcpy(abilities[TUTS_MASK].name, "Tut's Mask");
 	strcpy(abilities[TUTS_MASK].description, 
-		"Grants the wearer the power of invisibility.\n\n\nMana Cost: 25/second");
+		"Grants the wearer the power of invisibility.\n\n\nMana Cost: 5/second");
 	abilities[TUTS_MASK].type = HOLD;
-	abilities[TUTS_MASK].manaCost = 25;
+	abilities[TUTS_MASK].manaCost = 5;
 
 	//Frisbee
 	strcpy(abilities[FRISBEE].name, "Frisbee!?!?! K");
