@@ -38,7 +38,7 @@
 ||Frisbee||Sessaria Snowplains||Portly Penguin||Done||Done||
 ||Sprint boots||Forest of Fundoria||Garmborn||80%||Done||
 ||Orbs||Dunes of Salabia||Cornwallis||90%||Done||
-||Reflection Shield||Realm of Despair||Calypso||Done||90%||
+||Reflection Shield||Realm of Despair||Calypso||Done||Done||
 ||Silly Pads||Mushroom Kingdom||Brian Fungus||Done||Done||
 ||Jesus' Sandals||Pools of the Dead||Lord Phyrebawz 2||Done||Done||
 ||Ice Breath||Candy Mountain||Bartli||Done||Done||
