@@ -66,6 +66,7 @@ public:
 	void updateTutorialMan(float dt);
 	bool isTutorialManActive();
 	bool isInBounds(int gridX, int gridY);
+	float getSwitchDelay();
 
 	//variables
 	int areaWidth,areaHeight;		//Width and height of the area in squares

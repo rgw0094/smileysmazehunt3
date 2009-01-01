@@ -25,6 +25,9 @@
 
 extern SMH *smh;
 
+#define SWITCH_DELAY 0.15
+#define TONGUE_SWITCH_DELAY 0.40
+
 /**
  * Constructor
  */
@@ -46,36 +49,46 @@ Environment::Environment() {
 	}	
 
 	//Load animations
-	silverCylinder = new hgeAnimation(smh->resources->GetTexture("animations"),5,20,0,3*64,64,64);
+	int numFrames = 5;
+	int fps = (int)((float)numFrames / SWITCH_DELAY);
+
+	silverCylinder = new hgeAnimation(smh->resources->GetTexture("animations"),numFrames,fps,0,3*64,64,64);
 	silverCylinder->SetMode(HGEANIM_REV);
 	silverCylinder->Play();
-	brownCylinder = new hgeAnimation(smh->resources->GetTexture("animations"),5,20,0,4*64,64,64);
+	brownCylinder = new hgeAnimation(smh->resources->GetTexture("animations"),numFrames,fps,0,4*64,64,64);
 	brownCylinder->SetMode(HGEANIM_REV);
 	brownCylinder->Play();
-	blueCylinder = new hgeAnimation(smh->resources->GetTexture("animations"),5,20,0,5*64,64,64);
+	blueCylinder = new hgeAnimation(smh->resources->GetTexture("animations"),numFrames,fps,0,5*64,64,64);
 	blueCylinder->SetMode(HGEANIM_REV);
 	blueCylinder->Play();
-	greenCylinder = new hgeAnimation(smh->resources->GetTexture("animations"),5,20,0,6*64,64,64);
+	greenCylinder = new hgeAnimation(smh->resources->GetTexture("animations"),numFrames,fps,0,6*64,64,64);
 	greenCylinder->SetMode(HGEANIM_REV);
 	greenCylinder->Play();
-	yellowCylinder = new hgeAnimation(smh->resources->GetTexture("animations"),5,20,0,7*64,64,64);
+	yellowCylinder = new hgeAnimation(smh->resources->GetTexture("animations"),numFrames,fps,0,7*64,64,64);
 	yellowCylinder->SetMode(HGEANIM_REV);
 	yellowCylinder->Play();
-	whiteCylinder = new hgeAnimation(smh->resources->GetTexture("animations"),5,20,0,8*64,64,64);
+	whiteCylinder = new hgeAnimation(smh->resources->GetTexture("animations"),numFrames,fps,0,8*64,64,64);
 	whiteCylinder->SetMode(HGEANIM_REV);
 	whiteCylinder->Play();
-	silverCylinderRev = new hgeAnimation(smh->resources->GetTexture("animations"),5,20,0,3*64,64,64);
+	silverCylinderRev = new hgeAnimation(smh->resources->GetTexture("animations"),numFrames,fps,0,3*64,64,64);
 	silverCylinderRev->SetMode(HGEANIM_FWD);
-	brownCylinderRev = new hgeAnimation(smh->resources->GetTexture("animations"),5,20,0,4*64,64,64);
+	brownCylinderRev = new hgeAnimation(smh->resources->GetTexture("animations"),numFrames,fps,0,4*64,64,64);
 	brownCylinderRev->SetMode(HGEANIM_FWD);
-	blueCylinderRev = new hgeAnimation(smh->resources->GetTexture("animations"),5,20,0,5*64,64,64);
+	blueCylinderRev = new hgeAnimation(smh->resources->GetTexture("animations"),numFrames,fps,0,5*64,64,64);
 	blueCylinderRev->SetMode(HGEANIM_FWD);
-	greenCylinderRev = new hgeAnimation(smh->resources->GetTexture("animations"),5,20,0,6*64,64,64);
+	greenCylinderRev = new hgeAnimation(smh->resources->GetTexture("animations"),numFrames,fps,0,6*64,64,64);
 	greenCylinderRev->SetMode(HGEANIM_FWD);
-	yellowCylinderRev = new hgeAnimation(smh->resources->GetTexture("animations"),5,20,0,7*64,64,64);
+	yellowCylinderRev = new hgeAnimation(smh->resources->GetTexture("animations"),numFrames,fps,0,7*64,64,64);
 	yellowCylinderRev->SetMode(HGEANIM_FWD);
-	whiteCylinderRev = new hgeAnimation(smh->resources->GetTexture("animations"),5,20,0,8*64,64,64);
+	whiteCylinderRev = new hgeAnimation(smh->resources->GetTexture("animations"),numFrames,fps,0,8*64,64,64);
 	whiteCylinderRev->SetMode(HGEANIM_FWD);
+
+	smh->resources->GetAnimation("silverSwitch")->SetSpeed(fps);
+	smh->resources->GetAnimation("brownSwitch")->SetSpeed(fps);
+	smh->resources->GetAnimation("blueSwitch")->SetSpeed(fps);
+	smh->resources->GetAnimation("greenSwitch")->SetSpeed(fps);
+	smh->resources->GetAnimation("yellowSwitch")->SetSpeed(fps);
+	smh->resources->GetAnimation("whiteSwitch")->SetSpeed(fps);
 
 	smh->resources->GetAnimation("water")->Play();
 	smh->resources->GetAnimation("greenWater")->Play();
@@ -485,6 +498,7 @@ void Environment::draw(float dt) {
 				int theTerrain = terrain[i+xGridOffset][j+yGridOffset];
 				int theCollision = collision[i+xGridOffset][j+yGridOffset];
 				int theItem = item[i+xGridOffset][j+yGridOffset];
+				float timeSinceSquareActivated = smh->timePassedSince(activated[i+xGridOffset][j+yGridOffset]);
 
 				//Terrain
 				if (theCollision != PIT && theCollision != FAKE_PIT && theCollision != NO_WALK_PIT) {
@@ -529,43 +543,43 @@ void Environment::draw(float dt) {
 						smh->resources->GetAnimation("superSpring")->Render(drawX, drawY);
 					
 					//Switch animations
-					} else if ((theCollision == SILVER_SWITCH_LEFT || theCollision == SILVER_SWITCH_RIGHT) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == SILVER_SWITCH_LEFT || theCollision == SILVER_SWITCH_RIGHT) && timeSinceSquareActivated < SWITCH_DELAY) {
 						smh->resources->GetAnimation("silverSwitch")->Render(drawX,drawY);
-					} else if ((theCollision == BROWN_SWITCH_LEFT || theCollision == BROWN_SWITCH_RIGHT) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == BROWN_SWITCH_LEFT || theCollision == BROWN_SWITCH_RIGHT) && timeSinceSquareActivated < SWITCH_DELAY) {
 						smh->resources->GetAnimation("brownSwitch")->Render(drawX,drawY);
-					} else if ((theCollision == BLUE_SWITCH_LEFT || theCollision == BLUE_SWITCH_RIGHT) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == BLUE_SWITCH_LEFT || theCollision == BLUE_SWITCH_RIGHT) && timeSinceSquareActivated < SWITCH_DELAY) {
 						smh->resources->GetAnimation("blueSwitch")->Render(drawX,drawY);
-					} else if ((theCollision == GREEN_SWITCH_LEFT || theCollision == GREEN_SWITCH_RIGHT) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == GREEN_SWITCH_LEFT || theCollision == GREEN_SWITCH_RIGHT) && timeSinceSquareActivated < SWITCH_DELAY) {
 						smh->resources->GetAnimation("greenSwitch")->Render(drawX,drawY);
-					} else if ((theCollision == YELLOW_SWITCH_LEFT || theCollision == YELLOW_SWITCH_RIGHT) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == YELLOW_SWITCH_LEFT || theCollision == YELLOW_SWITCH_RIGHT) && timeSinceSquareActivated < SWITCH_DELAY) {
 						smh->resources->GetAnimation("yellowSwitch")->Render(drawX,drawY);
-					} else if ((theCollision == WHITE_SWITCH_LEFT || theCollision == WHITE_SWITCH_RIGHT) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == WHITE_SWITCH_LEFT || theCollision == WHITE_SWITCH_RIGHT) && timeSinceSquareActivated < SWITCH_DELAY) {
 						smh->resources->GetAnimation("whiteSwitch")->Render(drawX,drawY);
 					
 					//Cylinder animations
-					} else if ((theCollision == SILVER_CYLINDER_DOWN) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == SILVER_CYLINDER_DOWN) && timeSinceSquareActivated < SWITCH_DELAY) {
 						silverCylinder->Render(drawX,drawY);
-					} else if ((theCollision == SILVER_CYLINDER_UP) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == SILVER_CYLINDER_UP) && timeSinceSquareActivated < SWITCH_DELAY) {
 						silverCylinderRev->Render(drawX,drawY);
-					} else if ((theCollision == BROWN_CYLINDER_DOWN) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == BROWN_CYLINDER_DOWN) && timeSinceSquareActivated < SWITCH_DELAY) {
 						brownCylinder->Render(drawX,drawY);
-					} else if ((theCollision == BROWN_CYLINDER_UP) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == BROWN_CYLINDER_UP) && timeSinceSquareActivated < SWITCH_DELAY) {
 						brownCylinderRev->Render(drawX,drawY);
-					} else if ((theCollision == BLUE_CYLINDER_DOWN) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == BLUE_CYLINDER_DOWN) && timeSinceSquareActivated < SWITCH_DELAY) {
 						blueCylinder->Render(drawX,drawY);
-					} else if ((theCollision == BLUE_CYLINDER_UP) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == BLUE_CYLINDER_UP) && timeSinceSquareActivated < SWITCH_DELAY) {
 						blueCylinderRev->Render(drawX,drawY);
-					} else if ((theCollision == GREEN_CYLINDER_DOWN) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == GREEN_CYLINDER_DOWN) && timeSinceSquareActivated < SWITCH_DELAY) {
 						greenCylinder->Render(drawX,drawY);
-					} else if ((theCollision == GREEN_CYLINDER_UP) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == GREEN_CYLINDER_UP) && timeSinceSquareActivated < SWITCH_DELAY) {
 						greenCylinderRev->Render(drawX,drawY);
-					} else if ((theCollision == YELLOW_CYLINDER_DOWN) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == YELLOW_CYLINDER_DOWN) && timeSinceSquareActivated < SWITCH_DELAY) {
 						yellowCylinder->Render(drawX,drawY);
-					} else if ((theCollision == YELLOW_CYLINDER_UP) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == YELLOW_CYLINDER_UP) && timeSinceSquareActivated < SWITCH_DELAY) {
 						yellowCylinderRev->Render(drawX,drawY);
-					} else if ((theCollision == WHITE_CYLINDER_DOWN) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == WHITE_CYLINDER_DOWN) && timeSinceSquareActivated < SWITCH_DELAY) {
 						whiteCylinder->Render(drawX,drawY);
-					} else if ((theCollision == WHITE_CYLINDER_UP) && smh->getGameTime() - .25f < activated[i+xGridOffset][j+yGridOffset]) {
+					} else if ((theCollision == WHITE_CYLINDER_UP) && timeSinceSquareActivated < SWITCH_DELAY) {
 						whiteCylinderRev->Render(drawX,drawY);
 
 					//Save thing
@@ -884,7 +898,7 @@ bool Environment::toggleSwitches(hgeRect *box, bool playSoundFarAway) {
 				setTerrainCollisionBox(collisionBox,collision[gridX][gridY],gridX,gridY);
 				
 				//Check collision with any switches
-				if (smh->timePassedSince(activated[gridX][gridY]) > .5 && collisionBox->Intersect(box)) {
+				if (smh->timePassedSince(activated[gridX][gridY]) > SWITCH_DELAY && collisionBox->Intersect(box)) {
 					if (toggleSwitchAt(gridX, gridY, playSoundFarAway)) return true;
 				}
 			}
@@ -913,7 +927,7 @@ bool Environment::toggleSwitches(Tongue *tongue) {
 				setTerrainCollisionBox(collisionBox,collision[gridX][gridY],gridX,gridY);
 				
 				//Check collision with any switches
-				if (smh->timePassedSince(activated[gridX][gridY]) > .5 && tongue->testCollision(collisionBox)) {			
+				if (smh->timePassedSince(activated[gridX][gridY]) > TONGUE_SWITCH_DELAY && tongue->testCollision(collisionBox)) {			
 					if (toggleSwitchAt(gridX, gridY, true)) {
 						return true;
 					}
@@ -1555,4 +1569,8 @@ bool Environment::isTutorialManActive() {
 
 bool Environment::isInBounds(int gridX, int gridY) {
 	return (gridX >= 0 && gridY >= 0 && gridX < areaWidth && gridY < areaHeight);
+}
+
+float Environment::getSwitchDelay() {
+	return SWITCH_DELAY;
 }

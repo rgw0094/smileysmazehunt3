@@ -613,7 +613,9 @@ void Player::doAbility(float dt) {
 	if (smh->input->keyPressed(INPUT_ABILITY) && canUseAbility) {
 
 		//Shoot lightning orbs
-		if (selectedAbility == LIGHTNING_ORB && mana >= smh->gameData->getAbilityInfo(LIGHTNING_ORB).manaCost) {
+		if (selectedAbility == LIGHTNING_ORB && mana >= smh->gameData->getAbilityInfo(LIGHTNING_ORB).manaCost &&
+			smh->timePassedSince(lastOrb) > smh->environment->getSwitchDelay()) 
+		{
 			mana -= smh->gameData->getAbilityInfo(LIGHTNING_ORB).manaCost;
 			lastOrb = smh->getGameTime();
 			smh->projectileManager->addProjectile(x, y, 700.0, angles[facing]-.5*PI, getLightningOrbDamage(), false, PROJECTILE_LIGHTNING_ORB, true);
