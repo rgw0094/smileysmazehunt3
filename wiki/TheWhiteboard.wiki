@@ -14,7 +14,6 @@
  * King Tut
  * Calypso 2
  * Make pits have a hue change variable in the var layer.  Then we can match pits to the level colors.
- * New ability selection SHIT
 
 === Graphics To Do ===
  * New Keys (I think all keys can be the same but just a different hue)
@@ -50,6 +49,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||New ability selection system||1/1/09||RGW||
 ||Fake and NoWalk pits||12/31/08||RGW||
 ||Clinton's Cane progress bar||12/29/08||RGW||
 ||Bartli||12/29/08||RGW||
