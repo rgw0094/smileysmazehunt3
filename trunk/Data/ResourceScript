@@ -410,7 +410,6 @@ Animation silverSwitch {
  texture=animations
  rect=320,192,64,64
  frames=5
- fps=20.0
  mode=FORWARD,LOOP
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
@@ -419,7 +418,6 @@ Animation brownSwitch {
  texture=animations
  rect=320,256,64,64
  frames=5
- fps=20.0
  mode=FORWARD,LOOP
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
@@ -428,7 +426,6 @@ Animation blueSwitch {
  texture=animations
  rect=320,320,64,64
  frames=5
- fps=20.0
  mode=FORWARD,LOOP
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
@@ -437,7 +434,6 @@ Animation greenSwitch {
  texture=animations
  rect=320,384,64,64
  frames=5
- fps=20.0
  mode=FORWARD,LOOP
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
@@ -446,7 +442,6 @@ Animation yellowSwitch {
  texture=animations
  rect=320,448,64,64
  frames=5
- fps=20.0
  mode=FORWARD,LOOP
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
@@ -455,7 +450,6 @@ Animation whiteSwitch {
  texture=animations
  rect=320,512,64,64
  frames=5
- fps=20.0
  mode=FORWARD,LOOP
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
