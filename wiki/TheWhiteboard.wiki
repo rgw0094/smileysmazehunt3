@@ -14,6 +14,7 @@
  * King Tut
  * Calypso 2
  * Make pits have a hue change variable in the var layer.  Then we can match pits to the level colors.
+ * New ability selection SHIT
 
 === Graphics To Do ===
  * New Keys (I think all keys can be the same but just a different hue)
