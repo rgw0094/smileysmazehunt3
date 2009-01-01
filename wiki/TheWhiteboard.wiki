@@ -16,7 +16,6 @@
  * Make pits have a hue change variable in the var layer.  Then we can match pits to the level colors.
 
 === Graphics To Do ===
- * Bartli's candy graphic
  * New Keys (I think all keys can be the same but just a different hue)
  I like the keys -RYAN
  * New ability loot graphic (the thing that appears when you kill a boss)
