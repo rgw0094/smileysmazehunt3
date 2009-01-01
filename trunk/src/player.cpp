@@ -36,6 +36,7 @@ Player::Player() {
 
 	tongue = new Tongue();
 	worm = new Worm(0,0);
+	gui = new GUI();
 	collisionCircle = new CollisionCircle();
 
 	usingManaItem = false;
@@ -86,6 +87,7 @@ Player::~Player() {
 	delete collisionCircle;
 	delete tongue;
 	delete worm;
+	delete gui;
 }
 
 void Player::reset() {
@@ -94,7 +96,6 @@ void Player::reset() {
 	rotation = 0.0;
 	facing = DOWN;
 	radius = DEFAULT_RADIUS;
-	selectedAbility = smh->saveManager->hasAbility[CANE] ? CANE : NO_ABILITY;;
 	hoveringYOffset = springOffset = 0.0;
 	startedIceBreath = lastOrb = lastLavaDamage = -5.0f;
 	stoppedAttacking = smh->getGameTime();
@@ -172,12 +173,14 @@ void Player::update(float dt) {
 
 	tongue->update(dt);
 	worm->update();
+	gui->update(dt);
 
 	//Update health and mana
 	if (!usingManaItem) mana += (getMaxMana() * MANA_REGENERATE_RATE/100) * dt;
 	if (mana < 0.0f) mana = 0.0f;
 	if (mana > getMaxMana()) mana = getMaxMana();
 	if (health > getMaxHealth()) health = getMaxHealth();
+	if (invincible) setMana(getMaxMana());
 
 	usingManaItem = false;
 	
@@ -216,7 +219,7 @@ void Player::doMove(float dt) {
 	float xDist = dx * dt;
 	float yDist = dy * dt;
 
-	if ((inShallowWater || inLava) && !springing && selectedAbility != WATER_BOOTS) {
+	if ((inShallowWater || inLava) && !springing && gui->getSelectedAbility() != WATER_BOOTS) {
 		xDist *= 0.5;
 		yDist *= 0.5;
 	}
@@ -362,37 +365,12 @@ void Player::draw(float dt) {
 
 }
 
-
 /**
- * Draws the GUI
+ * Draws the GUI and other UI stuff that will be drawn over all game objects.
  */
 void Player::drawGUI(float dt) {
 
-	int drawX, drawY;
-
-	//Draw health
-	for (int i = 1; i <= getMaxHealth(); i++) {
-		drawX = (i < 10) ? 110+i*35 : 110+(i-9)*35;
-		drawY = (i < 10) ? 30 : 75;
-		if (health >= i) {
-			smh->resources->GetSprite("fullHealth")->Render(drawX, drawY);
-		} else if (health < i && health >= i-.25) {
-			smh->resources->GetSprite("threeQuartersHealth")->Render(drawX, drawY);
-		} else if (health < i-.25 && health >= i -.5) {
-			smh->resources->GetSprite("halfHealth")->Render(drawX, drawY);
-		} else if (health < i-.5 && health >= i - .75) {
-			smh->resources->GetSprite("quarterHealth")->Render(drawX, drawY);
-		} else {
-			smh->resources->GetSprite("emptyHealth")->Render(drawX, drawY);
-		}
-	}
-
-	//Draw mana bar
-	drawX = 145;
-	drawY = getMaxHealth() < 10 ? 70 : 115;
-	smh->resources->GetSprite("manabarBackground")->RenderEx(drawX, drawY, 0.0, 1.0 + .15 * smh->saveManager->numUpgrades[1], 1.0);
-	smh->resources->GetSprite("manaBar")->SetTextureRect(661, 304, 115*(mana/getMaxMana()), 15, true);
-	smh->resources->GetSprite("manaBar")->Render(drawX+4,drawY+3);
+	gui->draw();
 	
 	//Jesus bar
 	if (waterWalk) {
@@ -420,100 +398,15 @@ void Player::drawGUI(float dt) {
 			512.0 - 30.0 + 60.0f*((HOVER_DURATION-(smh->getGameTime()-timeStartedHovering))/HOVER_DURATION), 
 			384.0 - 50.0 - hoveringYOffset);
 	}
-
-	//Draw selected ability
-	smh->resources->GetSprite("abilityBox")->Render(28,28);
-	if (selectedAbility != NO_ABILITY) {
-		smh->resources->GetAnimation("abilities")->SetFrame(selectedAbility);
-		smh->resources->GetAnimation("abilities")->Render(39,39);
-	}
-
-	//Draw money
-	std::string moneyString;
-	if (smh->saveManager->money < 10) { 
-		moneyString = "0";
-		moneyString += Util::intToString(smh->saveManager->money);
-	} else {
-		moneyString = Util::intToString(smh->saveManager->money);
-	}
-	smh->resources->GetSprite("moneyIcon")->Render(30, 120);
-	smh->resources->GetFont("curlz")->SetColor(ARGB(255,255,255,255));
-	smh->resources->GetFont("curlz")->printf(85,125,HGETEXT_LEFT, moneyString.c_str());
-
-	//Draw keys
-	if (Util::getKeyIndex(smh->saveManager->currentArea) > 0) {
-		int keyXOffset = 763.0;
-		int keyYOffset = 724.0;
-		for (int i = 0; i < 4; i++) {
-
-			//Draw key icon
-			smh->resources->GetAnimation("keyIcons")->SetFrame(i);
-			smh->resources->GetAnimation("keyIcons")->Render(keyXOffset + 60.0*i, keyYOffset);
-			
-			//Draw num keys
-			smh->resources->GetFont("numberFnt")->printf(keyXOffset + 60.0*i + 45.0, keyYOffset + 5.0, 
-				HGETEXT_LEFT, "%d", smh->saveManager->numKeys[Util::getKeyIndex(smh->saveManager->currentArea)][i]);
-		}	
-	}
-
-	//Show whether or not Smiley is invincible
-	if (invincible) {
-		smh->resources->GetFont("curlz")->printf(512.0, 3, HGETEXT_CENTER, "Invincibility On");
-		//also give full mana if invincible
-		setMana(getMaxMana());
-	}
-
 }
 
-/**
- * Cycles through the available abilities, skipping ones which are PASSIVE
- */
-void Player::changeAbility(int direction) {
 
-	//Don't let smiley switch abilities if he is using Jesus' sandals and is over water
-	if (selectedAbility == WATER_BOOTS && isSmileyTouchingWater()) return;
-
-	//Stop old ability
-	fireBreathParticle->Stop(false);
-	iceBreathParticle->Stop(false);
-	shrinkActive = false;
- 
-	//Cycle to previous ability
-	if (direction == LEFT) {
-		selectedAbility--;
-		if (selectedAbility < 0) selectedAbility = NUM_ABILITIES - 1;
-		while (smh->gameData->getAbilityInfo(selectedAbility).type == PASSIVE || !smh->saveManager->hasAbility[selectedAbility]) {
-			selectedAbility--;
-			if (selectedAbility < 0) selectedAbility = NUM_ABILITIES - 1;
-		}
-	} 
-
-	//Cycle to next ability
-	if (direction == RIGHT) {
-		selectedAbility++;
-		if (selectedAbility > NUM_ABILITIES - 1) selectedAbility = 0;
-		while (smh->gameData->getAbilityInfo(selectedAbility).type == PASSIVE || !smh->saveManager->hasAbility[selectedAbility]) {
-			selectedAbility++;
-			if (selectedAbility > NUM_ABILITIES - 1) selectedAbility = 0;
-		}
-	}
-
-}
 
 /**
  * Some day there might be a leet framework, but for now there is just this
  * shitty method.
  */
 void Player::doAbility(float dt) {
-
-	//Input for scrolling through selected abilities
-	if (smh->saveManager->hasAbility[CANE]) {
-		if (smh->input->keyPressed(INPUT_PREVIOUS_ABILITY)) {
-			changeAbility(LEFT);
-		} else if  (smh->input->keyPressed(INPUT_NEXT_ABILITY)) {
-			changeAbility(RIGHT);
-		}
-	}
 
 	//Base requirements for being allowed to use an ability
 	bool canUseAbility = !waterWalk && !falling && !springing && !frozen 
@@ -522,7 +415,7 @@ void Player::doAbility(float dt) {
 	/////////////// Hover ////////////////
 	bool wasHovering = isHovering;
 	isHovering = ((isHovering || smh->environment->collision[gridX][gridY] == HOVER_PAD) &&
-			selectedAbility == HOVER &&
+			gui->getSelectedAbility() == HOVER &&
 			smh->input->keyDown(INPUT_ABILITY));
 	
 	//For debug purposes H will always hover
@@ -554,7 +447,7 @@ void Player::doAbility(float dt) {
 
 	reflectionShieldActive = (canUseAbility &&
 							 smh->input->keyDown(INPUT_ABILITY) &&
-							 selectedAbility == REFLECTION_SHIELD && 
+							 gui->getSelectedAbility() == REFLECTION_SHIELD && 
 							 mana >= smh->gameData->getAbilityInfo(REFLECTION_SHIELD).manaCost*dt);
 	if (reflectionShieldActive) {
 		mana -= smh->gameData->getAbilityInfo(REFLECTION_SHIELD).manaCost*dt;
@@ -564,7 +457,7 @@ void Player::doAbility(float dt) {
 	////////////// Tut's Mask //////////////
 
 	cloaked = (!frozen && smh->input->keyDown(INPUT_ABILITY) &&
-			   selectedAbility == TUTS_MASK && 
+			   gui->getSelectedAbility() == TUTS_MASK && 
 			   mana >= smh->gameData->getAbilityInfo(TUTS_MASK).manaCost*dt);
 	if (cloaked) {
 		mana -= smh->gameData->getAbilityInfo(TUTS_MASK).manaCost*dt;
@@ -574,7 +467,7 @@ void Player::doAbility(float dt) {
 	////////////// Sprint Boots //////////////
 	
 	sprinting = (canUseAbility && smh->input->keyDown(INPUT_ABILITY) &&
-				 selectedAbility == SPRINT_BOOTS && 
+				 gui->getSelectedAbility() == SPRINT_BOOTS && 
 				 smh->environment->collision[gridX][gridY] != LEFT_ARROW &&
 				 smh->environment->collision[gridX][gridY] != RIGHT_ARROW &&
 				 smh->environment->collision[gridX][gridY] != UP_ARROW &&
@@ -584,7 +477,7 @@ void Player::doAbility(float dt) {
 	
 	////////////// Fire Breath //////////////
 
-	if (canUseAbility && selectedAbility == FIRE_BREATH && smh->input->keyDown(INPUT_ABILITY) 
+	if (canUseAbility && gui->getSelectedAbility() == FIRE_BREATH && smh->input->keyDown(INPUT_ABILITY) 
 			&& mana >= smh->gameData->getAbilityInfo(FIRE_BREATH).manaCost*(breathingFire ? dt : .25f)) {
 
 		mana -= smh->gameData->getAbilityInfo(FIRE_BREATH).manaCost*dt;
@@ -613,7 +506,7 @@ void Player::doAbility(float dt) {
 	if (smh->input->keyPressed(INPUT_ABILITY) && canUseAbility) {
 
 		//Shoot lightning orbs
-		if (selectedAbility == LIGHTNING_ORB && mana >= smh->gameData->getAbilityInfo(LIGHTNING_ORB).manaCost &&
+		if (gui->getSelectedAbility() == LIGHTNING_ORB && mana >= smh->gameData->getAbilityInfo(LIGHTNING_ORB).manaCost &&
 			smh->timePassedSince(lastOrb) > smh->environment->getSwitchDelay()) 
 		{
 			mana -= smh->gameData->getAbilityInfo(LIGHTNING_ORB).manaCost;
@@ -622,20 +515,20 @@ void Player::doAbility(float dt) {
 		}
 
 		//Start using cane
-		if (selectedAbility == CANE && !usingCane && mana >= smh->gameData->getAbilityInfo(CANE).manaCost) {
+		if (gui->getSelectedAbility() == CANE && !usingCane && mana >= smh->gameData->getAbilityInfo(CANE).manaCost) {
 			usingCane = true;
 			smh->resources->GetParticleSystem("smileysCane")->FireAt(smh->getScreenX(x), smh->getScreenY(y));
 			timeStartedCane = smh->getGameTime();			
 		}
 
 		//Place Silly Pad
-		if (selectedAbility == SILLY_PAD && mana >= smh->gameData->getAbilityInfo(SILLY_PAD).manaCost) {
+		if (gui->getSelectedAbility() == SILLY_PAD && mana >= smh->gameData->getAbilityInfo(SILLY_PAD).manaCost) {
 			smh->environment->placeSillyPad(gridX, gridY);
 			mana -= smh->gameData->getAbilityInfo(SILLY_PAD).manaCost;
 		}
 
 		//Start Ice Breath
-		if (selectedAbility == ICE_BREATH && smh->timePassedSince(startedIceBreath) > 1.5 && mana >= smh->gameData->getAbilityInfo(ICE_BREATH).manaCost) {
+		if (gui->getSelectedAbility() == ICE_BREATH && smh->timePassedSince(startedIceBreath) > 1.5 && mana >= smh->gameData->getAbilityInfo(ICE_BREATH).manaCost) {
 			mana -= smh->gameData->getAbilityInfo(ICE_BREATH).manaCost;
 			smh->soundManager->playSound("snd_iceBreath");
 			startedIceBreath = smh->getGameTime();
@@ -644,13 +537,13 @@ void Player::doAbility(float dt) {
 		}
 		
 		//Throw frisbee
-		if (selectedAbility == FRISBEE && !smh->projectileManager->frisbeeActive() && mana >= smh->gameData->getAbilityInfo(FRISBEE).manaCost) {
+		if (gui->getSelectedAbility() == FRISBEE && !smh->projectileManager->frisbeeActive() && mana >= smh->gameData->getAbilityInfo(FRISBEE).manaCost) {
 			mana -= smh->gameData->getAbilityInfo(FRISBEE).manaCost;
 			smh->projectileManager->addProjectile(x,y,400.0,angles[facing]-.5*PI,0,false,PROJECTILE_FRISBEE, true);
 		}
 
 		//Toggle shrink mode
-		if (selectedAbility == SHRINK) {
+		if (gui->getSelectedAbility() == SHRINK) {
 			shrinkActive = !shrinkActive;
 		}
 
@@ -685,7 +578,7 @@ void Player::doAbility(float dt) {
 	if (canUseAbility) {
 
 		//If you change abilities while shrunk you lose shrink
-		if (shrinkActive) shrinkActive = (selectedAbility == SHRINK);
+		if (shrinkActive) shrinkActive = (gui->getSelectedAbility() == SHRINK);
 
 		//Shrinking
 		if (shrinkActive && shrinkScale > .5f) {
@@ -1059,8 +952,8 @@ bool Player::canPass(int collision) {
 		case EVIL_WALL_TRIGGER: return true;
 		case EVIL_WALL_DEACTIVATOR: return true;
 		case EVIL_WALL_RESTART: return true;
-		case DEEP_WATER: return ((selectedAbility == WATER_BOOTS) && !drowning) || springing || isHovering;
-		case GREEN_WATER: return ((selectedAbility == WATER_BOOTS) && !drowning) || springing || isHovering;
+		case DEEP_WATER: return ((gui->getSelectedAbility() == WATER_BOOTS) && !drowning) || springing || isHovering;
+		case GREEN_WATER: return ((gui->getSelectedAbility() == WATER_BOOTS) && !drowning) || springing || isHovering;
 		case SMILELET_FLOWER_HAPPY: return true;
 		case WHITE_SWITCH_LEFT: return false || springing;
 		case YELLOW_SWITCH_LEFT: return false || springing;
@@ -1159,12 +1052,12 @@ void Player::doItems() {
 void Player::doWater() {
 
 	//Start water walk
-	if (!springing && selectedAbility == WATER_BOOTS && hoveringYOffset == 0.0f && !waterWalk && !onWater && smh->environment->isDeepWaterAt(baseGridX, baseGridY)) {
+	if (!springing && gui->getSelectedAbility() == WATER_BOOTS && hoveringYOffset == 0.0f && !waterWalk && !onWater && smh->environment->isDeepWaterAt(baseGridX, baseGridY)) {
 		waterWalk = true;
 		startedWaterWalk = smh->getGameTime();
 	}
 	//Stop water walk
-	if (selectedAbility != WATER_BOOTS || !smh->environment->isDeepWaterAt(baseGridX, baseGridY) || hoveringYOffset > 0.0f || smh->getGameTime() - JESUS_SANDLE_TIME > startedWaterWalk) {
+	if (gui->getSelectedAbility() != WATER_BOOTS || !smh->environment->isDeepWaterAt(baseGridX, baseGridY) || hoveringYOffset > 0.0f || smh->getGameTime() - JESUS_SANDLE_TIME > startedWaterWalk) {
 		waterWalk = false;
 	}
 

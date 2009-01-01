@@ -81,7 +81,6 @@ void LootManager::update(float dt) {
 				collected = true;
 			} else if (i->type == LOOT_NEW_ABILITY) {
 				smh->saveManager->hasAbility[i->ability] = true;
-				smh->player->selectedAbility = i->ability;
 				smh->windowManager->openNewAbilityTextBox(i->ability);
 				collected = true;
 			}

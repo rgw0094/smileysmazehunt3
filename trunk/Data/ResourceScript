@@ -219,8 +219,6 @@ Particle fenwarwarp {
  resgroup=1
 }
 
-
-
 ;*********************
 ;******** LOOT *******
 ;*********************
@@ -874,6 +872,12 @@ Sprite inventory {
  rect=0,492,660,492
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite selectedAbilityCheck {
+ texture=general
+ rect=209,106,20,20
+ hotspot=10,10
+ blendmode=COLORMUL,ALPHAADD,NOZWRITE
 }
 Animation levelIcons {
  texture=UserInterfaceTx

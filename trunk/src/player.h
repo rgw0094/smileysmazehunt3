@@ -15,6 +15,7 @@ class WeaponParticleSystem;
 class hgeRect;
 class Worm;
 class hgeRect;
+class GUI;
 struct WormNode;
 
 //----------------------------------------------------------------
@@ -56,6 +57,7 @@ public:
 	float getDamage();
 	float getFireBreathDamage();
 	float getLightningOrbDamage();
+	bool isSmileyTouchingWater();
 
 	WormNode getWormNode(int num);
 	Tongue *getTongue();
@@ -70,9 +72,9 @@ public:
 	int baseGridX, baseGridY;				//The grid coordinate of the center of smiley's shadow
 	int gridX,gridY;						//Global grid coordinates
 	int lastGridX, lastGridY;
-	int selectedAbility;
 	float springOffset;
 	float hoveringYOffset;
+	bool shrinkActive;
 
 	//Constants
 	float angles[8];
@@ -84,13 +86,13 @@ public:
 	CollisionCircle *collisionCircle;
 	WeaponParticleSystem *fireBreathParticle;
 	WeaponParticleSystem *iceBreathParticle;
+	GUI *gui;
 
 private:
 
 	//Private methods
 	void updateLocation();
 	void doMove(float dt);
-	void changeAbility(int direction);
 	void doAbility(float dt);
 	void doWarps();
 	void doFalling(float dt);
@@ -106,7 +108,6 @@ private:
 	void doShrinkTunnels(float dt);
 	void updateSmileyColor(float dt);
 	bool doGayMovementFix(int xDist, int yDist);
-	bool isSmileyTouchingWater();
 
 	Tongue *tongue;
 	Worm *worm;
@@ -117,9 +118,7 @@ private:
 	int startedFallingY;					//Y position where the player started falling
 	int enteredWaterX, enteredWaterY;		//Grid position the player was on before entering water
 	int enteredSpringX, enteredSpringY;
-
 	bool usingManaItem;
-	
 	float fallingDx, fallingDy;
 	float dx, dy;
 
@@ -166,7 +165,6 @@ private:
 	bool waterWalk;					//If the player is in water walk mode	
 	bool onWater;					//If the player is on a water tile
 	bool drowning;
-	bool shrinkActive;
 	bool sprinting;					//If sprint boots are being used
 	bool isHovering;
 	bool cloaked;
@@ -176,6 +174,30 @@ private:
 	bool stunned;
 	bool healing;
 	bool immobile;
+};
+
+//----------------------------------------------------------------
+//------------------ GUI -----------------------------------------
+//----------------------------------------------------------------
+class GUI {
+
+public:
+
+	GUI();
+	~GUI();
+
+	void update(float dt);
+	void draw();
+	void addAvailableAbility(int ability);
+	bool isAbilityAvailable(int ability);
+	int getSelectedAbility();
+
+private:
+
+	void changeAbility(int direction);
+
+	int availableAbilities[3];
+
 };
 
 //----------------------------------------------------------------
