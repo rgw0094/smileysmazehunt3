@@ -539,7 +539,7 @@ Animation abilities {
  frames=16
  fps=0.0
  mode=LOOP
- hotspot=0,0
+ hotspot=32,32
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 
@@ -757,9 +757,9 @@ Sprite mapFogOfWarDownLeft {
 ;********************
 ;******** GUI *******
 ;********************
-Sprite abilityBox {
+Sprite abilityBackground {
  texture=UserInterfaceTx
- rect=661,196,85,85
+ rect=661,427,146,131
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
@@ -877,7 +877,7 @@ Sprite selectedAbilityCheck {
  texture=general
  rect=209,106,20,20
  hotspot=10,10
- blendmode=COLORMUL,ALPHAADD,NOZWRITE
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 Animation levelIcons {
  texture=UserInterfaceTx
