@@ -179,6 +179,15 @@ private:
 //----------------------------------------------------------------
 //------------------ GUI -----------------------------------------
 //----------------------------------------------------------------
+struct AbilityStruct {
+	int ability, slot;
+	float x, y, scale;
+};
+
+struct AbilityPoint {
+	float x, y;
+};
+
 class GUI {
 
 public:
@@ -188,15 +197,17 @@ public:
 
 	void update(float dt);
 	void draw();
-	void addAvailableAbility(int ability);
+	void toggleAvailableAbility(int ability);
 	bool isAbilityAvailable(int ability);
 	int getSelectedAbility();
+	int numAvailableAbilities();
 
 private:
 
 	void changeAbility(int direction);
 
-	int availableAbilities[3];
+	AbilityStruct availableAbilities[3];
+	AbilityPoint abilityPoints[3];
 
 };
 

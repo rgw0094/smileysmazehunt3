@@ -35,12 +35,25 @@ void Inventory::draw(float dt) {
 	//Draw the inventory background
 	smh->resources->GetSprite("inventory")->Render(INVENTORY_X_OFFSET, INVENTORY_Y_OFFSET);
 
+	float flashingAlpha = 255.0;
+	float n = 0.6;
+	float x = smh->getRealTime();
+	while (x > n) x -= n;
+	if (x < n/2.0) {
+		flashingAlpha = 255 * (x/(n/2.0));
+	} else {
+		flashingAlpha = 255.0 - 255.0 * ((x - n/2.0)/(n/2.0));
+	}
+
 	//Ability grid
+	int drawX, drawY;
 	for (int i = 0; i < WIDTH; i++) {
 		for (int j = 0; j < HEIGHT; j++) {
 			if (smh->saveManager->hasAbility[j*4 + i]) {
+				drawX = INVENTORY_X_OFFSET + 40 + i*SQUARE_SIZE + 32;
+				drawY = INVENTORY_Y_OFFSET + 40 + j*SQUARE_SIZE + 32;
 				smh->resources->GetAnimation("abilities")->SetFrame(j*4+i);
-				smh->resources->GetAnimation("abilities")->Render(INVENTORY_X_OFFSET + 40 + i*SQUARE_SIZE, INVENTORY_Y_OFFSET + 40 + j*SQUARE_SIZE);
+				smh->resources->GetAnimation("abilities")->Render(drawX, drawY);
 				//Draw the ability name and info if it is highlighted
 				if (cursorX == i && cursorY == j) {
 					smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET+170,INVENTORY_Y_OFFSET+275,HGETEXT_CENTER,"%s", smh->gameData->getAbilityInfo(j*4 + i).name);
@@ -50,7 +63,11 @@ void Inventory::draw(float dt) {
 						275.0, 200.0,			//width and height of box
 						HGETEXT_LEFT | HGETEXT_TOP, //Alignment
 						"%s", smh->gameData->getAbilityInfo(j*4 + i).description);
-
+				}
+				//Draw a check if the ability is one of the ones selected to be available in the GUI
+				if (smh->player->gui->isAbilityAvailable(j*4 + i)) {
+					smh->resources->GetSprite("selectedAbilityCheck")->SetColor(ARGB(flashingAlpha, 255.0, 255.0, 255.0));
+					smh->resources->GetSprite("selectedAbilityCheck")->Render(drawX - 27.0, drawY + 23.0);
 				}
 			}
 		}
@@ -140,12 +157,9 @@ bool Inventory::update(float dt) {
 		if (cursorY < HEIGHT-1) cursorY++;
 	}
 
-	int selectedSlot = cursorY*4 + cursorX;
-
-	//Update selected ability
-	//if (smh->gameData->getAbilityInfo(selectedSlot).type != PASSIVE && smh->saveManager->hasAbility[selectedSlot]) {
-	//	smh->player->gui->setSelectedAbility(selectedSlot);
-	//}
+	if (smh->input->keyPressed(INPUT_ATTACK)) {
+		smh->player->gui->toggleAvailableAbility(cursorY*4 + cursorX);
+	}
 
 	return true;
 }
