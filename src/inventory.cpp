@@ -125,12 +125,6 @@ void Inventory::draw(float dt) {
  * Update the inventory.
  */
 bool Inventory::update(float dt) {
-	
-	//Highlight currently active item
-	if (smh->gameData->getAbilityInfo(cursorY*4 + cursorX).type != PASSIVE && smh->saveManager->hasAbility[cursorY*4 + cursorX]) {
-		cursorY = (smh->player->selectedAbility - (smh->player->selectedAbility % 4)) / 4;
-		cursorX = smh->player->selectedAbility % 4;
-	}
 
 	//Process Input to move cursor
 	if (smh->input->keyPressed(INPUT_LEFT)) {
@@ -146,12 +140,13 @@ bool Inventory::update(float dt) {
 		if (cursorY < HEIGHT-1) cursorY++;
 	}
 
+	int selectedSlot = cursorY*4 + cursorX;
+
 	//Update selected ability
-	if (smh->gameData->getAbilityInfo(cursorY*4 + cursorX).type != PASSIVE && smh->saveManager->hasAbility[cursorY*4 + cursorX]) {
-		smh->player->selectedAbility = cursorY*4 + cursorX;
-	}
+	//if (smh->gameData->getAbilityInfo(selectedSlot).type != PASSIVE && smh->saveManager->hasAbility[selectedSlot]) {
+	//	smh->player->gui->setSelectedAbility(selectedSlot);
+	//}
 
 	return true;
-
 }
 

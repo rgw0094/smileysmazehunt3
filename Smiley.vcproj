@@ -332,6 +332,9 @@
 				Name="Source"
 				Filter="">
 				<File
+					RelativePath=".\src\GUI.cpp">
+				</File>
+				<File
 					RelativePath=".\src\player.cpp">
 				</File>
 				<File

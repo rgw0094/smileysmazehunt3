@@ -304,7 +304,6 @@ bool TextBox::update(float dt) {
 			//Give smiley the cane the first time he talks to Bill Clinton
 			} else if (textBoxType == TYPE_DIALOG && npcID == BILL_CLINTON && !smh->saveManager->hasAbility[CANE]) {
 				smh->saveManager->hasAbility[CANE] = true;
-				smh->player->selectedAbility = CANE;
 				setNewAbility(CANE);
 				return true;
 			
