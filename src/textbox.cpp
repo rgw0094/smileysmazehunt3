@@ -140,6 +140,8 @@ void TextBox::setNewAbility(int _ability) {
 		strcpy(text, smh->gameData->getGameText("GotLightningOrb"));
 	} else if (ability == REFLECTION_SHIELD) {
 		strcpy(text, smh->gameData->getGameText("GotReflectionShield"));
+	} else if (ability == SILLY_PAD) {
+		strcpy(text, smh->gameData->getGameText("GotSillyPad"));
 	} else if (ability == ICE_BREATH) {
 		strcpy(text, smh->gameData->getGameText("GotIceBreath"));
 	} else if (ability == SHRINK) {

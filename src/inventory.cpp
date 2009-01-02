@@ -106,14 +106,14 @@ void Inventory::draw(float dt) {
 	smh->resources->GetFont("inventoryFnt")->SetScale(0.55);
 	//Maximum mana
 	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 345, 
-		HGETEXT_LEFT, "Maximum Mana: ");
+		HGETEXT_LEFT, "Mana Multiplier: ");
 	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 345, 
-		HGETEXT_RIGHT, "%d", int(smh->player->getMaxMana()));
+		HGETEXT_RIGHT, "%1.2f", int(smh->saveManager->getManaModifier()));
 	//Damage multiplier
 	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 369, 
 		HGETEXT_LEFT, "Damage Multiplier:");
 	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 369, 
-		HGETEXT_RIGHT, "%1.3f", smh->saveManager->getDamageModifier());
+		HGETEXT_RIGHT, "%1.2f", smh->saveManager->getDamageModifier());
 	//Number of licks
 	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 393,
 		HGETEXT_LEFT, "Number Of Licks:");

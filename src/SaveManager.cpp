@@ -508,7 +508,11 @@ void SaveManager::incrementTimePlayed(int file, int amount) {
 }
 
 float SaveManager::getDamageModifier() {
-	return 1.0 + float(numUpgrades[2]) * 0.05;
+	return 1.0 + float(numUpgrades[2]) * 0.2;
+}
+
+float SaveManager::getManaModifier() {
+	return 1.0 + float(numUpgrades[1]) * 0.25;
 }
 
 void SaveManager::killBoss(int boss) {

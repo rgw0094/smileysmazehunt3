@@ -1583,11 +1583,11 @@ float Player::getDamage() {
 }
 
 float Player::getFireBreathDamage() {
-	return 1.0 + (1.5 * 0.05) * smh->saveManager->numUpgrades[2];
+	return 1.0 * smh->saveManager->getDamageModifier();
 }
 
 float Player::getLightningOrbDamage() {
-	return 0.15 + (0.15 * 0.05) * smh->saveManager->numUpgrades[2];
+	return 0.15 * smh->saveManager->getDamageModifier();
 }
 
 float Player::getMaxHealth() {
@@ -1595,7 +1595,7 @@ float Player::getMaxHealth() {
 }
 
 float Player::getMaxMana() {
-	return INITIAL_MANA + smh->saveManager->numUpgrades[1] * MANA_PER_UPGRADE;
+	return INITIAL_MANA * smh->saveManager->getManaModifier();
 }
 
 bool Player::isInShrinkTunnel() {

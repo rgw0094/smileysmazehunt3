@@ -104,7 +104,7 @@ void SpecialTileManager::updateIceBlocks(float dt) {
 void SpecialTileManager::drawIceBlocks(float dt) {
 	std::list<IceBlock>::iterator i;
 	for(i = iceBlockList.begin(); i != iceBlockList.end(); i++) {
-		float scale = !i->hasBeenMelted ? 0.5 : 0.5 - min(0.5, smh->timePassedSince(i->timeMelted));
+		float scale = !i->hasBeenMelted ? 1.0 : 1.0 - min(1.0, smh->timePassedSince(i->timeMelted) * 2.0);
 		//Scale the size of the ice block based on its "health"
 		smh->resources->GetAnimation("walkLayer")->SetFrame(FIRE_DESTROY);
 		smh->resources->GetAnimation("walkLayer")->SetHotSpot(32.0,32.0);

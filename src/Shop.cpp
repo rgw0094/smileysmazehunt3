@@ -59,14 +59,14 @@ void Shop::draw(float dt) {
 	switch (currentSelection) {
 		case HEALTH:
 			descString = "Purchase Health Upgrade";
-			priceString = "Price: 5 Gems";
+			priceString = "Price: 4 Gems";
 			break;
 		case MANA:
-			descString = "Purchase 10% Mana Upgrade";
+			descString = "Purchase 15% Mana Upgrade";
 			priceString = "Price: 3 Gems";
 			break;
 		case DAMAGE:
-			descString = "Purchase 5% Damage Upgrade";
+			descString = "Purchase 10% Damage Upgrade";
 			priceString = "Price: 3 Gems";
 			break;
 		case EXIT:

@@ -16,14 +16,14 @@ extern SMH *smh;
 //Attributes
 #define HEALTH 10.0
 #define PROJECTILE_DELAY 1.5
-#define FREEZE_DURATION 1.0
+#define FREEZE_DURATION 0.8
 #define STUN_DURATION 5.0
 
 #define ICE_DAMAGE 0.25
-#define FIRE_DAMAGE 0.5
+#define FIRE_DAMAGE 0.4
 #define LIGHTNING_DAMAGE 0.25
-#define COLLISION_DAMAGE 0.5
-#define LASER_DAMAGE 0.5
+#define COLLISION_DAMAGE 0.3
+#define LASER_DAMAGE 0.3
 
 #define ICE_SPEED 800.0
 
@@ -32,7 +32,7 @@ extern SMH *smh;
 #define EVIL_CHARGE_ACCEL 2000.0
 #define EVIL_MAX_CHARGE_SPEED 1300.0
 #define LASER_DELAY 1.0
-#define LASER_SPEED 2500.0
+#define LASER_SPEED 2100.0
 #define FLASHING_DURATION 0.5
 
 //States
