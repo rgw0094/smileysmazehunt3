@@ -101,30 +101,14 @@ void EnemyManager::addEnemy(int id, int x, int y, float spawnHealthChance, float
 
 }
 
+/**
+ * Kills all enemies of the specified type.
+ */
 void EnemyManager::killEnemies(int type) {
 	std::list<EnemyStruct>::iterator i;
 	for (i = enemyList.begin(); i != enemyList.end(); i++) {
 		if (i->enemy->id == type) {
-			//Notify enemy group
-			smh->enemyGroupManager->notifyOfDeath(i->enemy->groupID);
-
-			//Play death sound effect
-			if (i->enemy->frozen) {
-				smh->soundManager->playSound("snd_iceDie");
-			}
-
-			//Death effects
-			deathParticles->SpawnPS(&smh->resources->GetParticleSystem("deathCloud")->info, i->enemy->x, i->enemy->y);
-			smh->soundManager->playSound("snd_enemyDeath");
-
-			//Spawn loot
-			randomLoot = smh->randomInt(0,10000);
-			if (randomLoot < 10000.0 * i->spawnHealthChance) {
-				smh->lootManager->addLoot(LOOT_HEALTH, i->enemy->x, i->enemy->y, -1);
-			} else if (randomLoot < 10000.0 * i->spawnHealthChance + 10000.0*i->spawnManaChance) {
-				smh->lootManager->addLoot(LOOT_MANA, i->enemy->x, i->enemy->y, -1);
-			}
-
+			killEnemy(i);
 			delete i->enemy;
 			i = enemyList.erase(i);
 		}
@@ -161,38 +145,38 @@ void EnemyManager::update(float dt) {
 
 		//If the enemy is dead
 		if (i->enemy->health <= 0.0f) {
-
-			//Notify enemy group
-			smh->enemyGroupManager->notifyOfDeath(i->enemy->groupID);
-
-			//Play death sound effect
-			if (i->enemy->frozen) {
-				smh->soundManager->playSound("snd_iceDie");
-			}
-
-			//Death effects
-			deathParticles->SpawnPS(&smh->resources->GetParticleSystem("deathCloud")->info, i->enemy->x, i->enemy->y);
-			smh->soundManager->playSound("snd_enemyDeath");
-
-			//Spawn loot
-			randomLoot = smh->randomInt(0,10000);
-			if (randomLoot < 10000.0 * i->spawnHealthChance) {
-				smh->lootManager->addLoot(LOOT_HEALTH, i->enemy->x, i->enemy->y, -1);
-			} else if (randomLoot < 10000.0 * i->spawnHealthChance + 10000.0*i->spawnManaChance) {
-				smh->lootManager->addLoot(LOOT_MANA, i->enemy->x, i->enemy->y, -1);
-			}
-
+			killEnemy(i);
 			delete i->enemy;
 			i = enemyList.erase(i);
-
-			smh->saveManager->numEnemiesKilled++;
-
 		}
 	}
 
 	//Sort enemies so that the rearmost overlapping enemies will be drawn last!!!
 	enemyList.sort(SortEnemiesPredicate);
 
+}
+
+void EnemyManager::killEnemy(std::list<EnemyStruct>::iterator i) {
+
+	//Notify enemy group
+	smh->enemyGroupManager->notifyOfDeath(i->enemy->groupID);
+
+	if (i->enemy->frozen) {
+		smh->soundManager->playSound("snd_iceDie");
+	} else {
+		deathParticles->SpawnPS(&smh->resources->GetParticleSystem("deathCloud")->info, i->enemy->x, i->enemy->y);
+		smh->soundManager->playSound("snd_enemyDeath");
+	}
+
+	//Spawn loot
+	randomLoot = smh->randomInt(0,10000);
+	if (randomLoot < 10000.0 * i->spawnHealthChance) {
+		smh->lootManager->addLoot(LOOT_HEALTH, i->enemy->x, i->enemy->y, -1);
+	} else if (randomLoot < 10000.0 * i->spawnHealthChance + 10000.0*i->spawnManaChance) {
+		smh->lootManager->addLoot(LOOT_MANA, i->enemy->x, i->enemy->y, -1);
+	}
+
+	smh->saveManager->numEnemiesKilled++;
 }
 
 /**

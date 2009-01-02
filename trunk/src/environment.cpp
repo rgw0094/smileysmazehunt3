@@ -200,6 +200,9 @@ void Environment::loadArea(int id, int from) {
 	} else if (id == CASTLE_OF_EVIL) {
 		smh->soundManager->playMusic("castleOfEvilMusic");
 		areaFile.open("Data/Maps/castle.smh");
+	} else if (id == CONSERVATORY) {
+		//smh->soundManager->playMusic("dfsfds");
+		areaFile.open("Data/Maps/conserve.smh");
 	} else if (id == DEBUG_AREA) {
 		smh->soundManager->stopMusic();
 		areaFile.open("Data/Maps/debug.smh");
