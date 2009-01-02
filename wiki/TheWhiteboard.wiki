@@ -12,7 +12,7 @@
 === Programming To Do ===
  * Lovecraftian Boss
  * King Tut
- * Calypso 2
+ * Barvinoid
  * Make pits have a hue change variable in the var layer.  Then we can match pits to the level colors.
 
 === Graphics To Do ===
@@ -45,8 +45,8 @@
 ||Shrink||Swamp||Lovecraft||Done||0%||
 ||Tut's Mask||Tut's Tomb||King Tut||Done||15%||
 ||---||Serpentine Path||---||Done||---||
-||Hover||Castle of Evil (first part)||Calypso 2||60%||0%||
-||---||Castle of Evil (second part)||Fenwar||0%||0%||
+||Hover||Calypso's Conservatory||Barvinoid||10%||0%||
+||---||Castle of Evil||Fenwar||80%||0%||
 
 ===Done===
 ||Item||Date||Done By||
