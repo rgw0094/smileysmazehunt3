@@ -30,6 +30,7 @@ public:
 	void draw(float dt);
 	void drawGUI(float dt);
 	void update(float dt);
+	void updateGUI(float dt);
 	void moveTo(int gridX, int gridY);
 	bool canPass(int collision);
 	void dealDamage(float damage, bool makesFlash);
@@ -201,6 +202,9 @@ public:
 	bool isAbilityAvailable(int ability);
 	int getSelectedAbility();
 	int numAvailableAbilities();
+	int getAbilityInSlot(int slot);
+	void setAbilityInSlot(int ability, int slot);
+	void resetAbilities();
 
 private:
 

@@ -144,6 +144,7 @@ bool SMH::updateGame() {
 		enemyGroupManager->update(dt);
 		fenwarManager->update(dt);
 		environment->updateTutorialMan(dt);
+		player->updateGUI(dt);
 
 		//If none of them are active, update the game objects!
 		if (!windowManager->isOpenWindow() && !areaChanger->isChangingArea() && 

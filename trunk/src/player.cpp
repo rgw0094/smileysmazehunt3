@@ -172,7 +172,6 @@ void Player::update(float dt) {
 
 	tongue->update(dt);
 	worm->update();
-	gui->update(dt);
 
 	//Update health and mana
 	if (!usingManaItem) mana += (getMaxMana() * MANA_REGENERATE_RATE/100) * dt;
@@ -195,6 +194,10 @@ void Player::update(float dt) {
 		smh->menu->open(DEATH_SCREEN);
 	}
 
+}
+
+void Player::updateGUI(float dt) {
+	gui->update(dt);
 }
 
 void Player::updateLocation() {

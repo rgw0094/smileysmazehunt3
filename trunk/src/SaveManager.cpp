@@ -114,6 +114,8 @@ void SaveManager::resetCurrentData() {
 	numEnemiesKilled = 0;
 	pixelsTravelled = 0;
 
+	if (smh->player) smh->player->gui->resetAbilities();
+
 	timeFileLoaded = smh->getRealTime();
 
 }
@@ -186,6 +188,10 @@ void SaveManager::load(int fileNumber) {
 
 	//Tutorial Man
 	tutorialManCompleted = input->readBit();
+
+	for (int i = 0; i < 3; i++) {
+		smh->player->gui->setAbilityInSlot(input->readBits(5), i);
+	}
 
 	//Exploration data
 	for (int i = 0; i < NUM_AREAS; i++) {
@@ -271,6 +277,11 @@ void SaveManager::save(bool showConfirmation) {
 
 	//Tutorial Man
 	output->writeBit(tutorialManCompleted);
+
+	//Selected abilities
+	for (int i = 0; i < 3; i++) {
+		output->writeBits(smh->player->gui->getAbilityInSlot(i), 5);
+	}
 
 	//Exploration data
 	for (int i = 0; i < NUM_AREAS; i++) {

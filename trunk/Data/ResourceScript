@@ -671,6 +671,35 @@ Sprite creditsBartli {
  resgroup=11
 }
 
+;*****************************************
+;***** CINEMATIC (Resource Group 12) *****
+;*****************************************
+Texture cinematicTx {
+ filename="Graphics/Cinematic.png"
+ resgroup=12
+}
+Sprite sceneOne {
+ texture=cinematicTx
+ rect=0,0,470,340
+ hotspot=235,170
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=12
+}
+Sprite sceneTwo {
+ texture=cinematicTx
+ rect=470,0,470,340
+ hotspot=235,170
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=12
+}
+Sprite sceneThree {
+ texture=cinematicTx
+ rect=0,340,448,430
+ hotspot=224,215
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=12
+}
+
 ;*******************************
 ;******** OPTIONS WINDOW *******
 ;********************************

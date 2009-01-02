@@ -15,21 +15,11 @@ GUI::GUI() {
 	abilityPoints[2].x = 122.0;
 	abilityPoints[2].y = 115.0;
 
-	for (int i = 0; i < 3; i++) {
-		availableAbilities[i].ability = NO_ABILITY;
-		availableAbilities[i].slot = i;
-		availableAbilities[i].x = abilityPoints[i].x;
-		availableAbilities[i].y = abilityPoints[i].y;
-	}
+	resetAbilities();
 
 	availableAbilities[0].scale = SMALL_SCALE;
 	availableAbilities[1].scale = 1.0;
 	availableAbilities[2].scale = SMALL_SCALE;
-
-	//temp
-	availableAbilities[0].ability = FIRE_BREATH;
-	availableAbilities[1].ability = ICE_BREATH;
-	availableAbilities[2].ability = SILLY_PAD;
 
 }
 
@@ -39,10 +29,23 @@ GUI::~GUI() { }
  * Returns the selected ability. The selected ability is the one in the middle.
  */
 int GUI::getSelectedAbility() {
+	return getAbilityInSlot(1);
+}
+
+int GUI::getAbilityInSlot(int slot) {
 	for (int i = 0; i < 3; i++) {
-		if (availableAbilities[i].slot == 1) return availableAbilities[i].ability;
+		if (availableAbilities[i].slot == slot) return availableAbilities[i].ability;
 	}
-	return -1;
+	return NO_ABILITY;
+}
+
+void GUI::setAbilityInSlot(int ability, int slot) {
+	for (int i = 0; i < 3; i++) {
+		if (availableAbilities[i].slot == slot) {
+			availableAbilities[i].ability = ability;
+			return;
+		}
+	}
 }
 
 /**
@@ -64,6 +67,15 @@ int GUI::numAvailableAbilities() {
 		if (availableAbilities[i].ability != NO_ABILITY) n++;
 	}
 	return n;
+}
+
+void GUI::resetAbilities() {
+	for (int i = 0; i < 3; i++) {
+		availableAbilities[i].ability = NO_ABILITY;
+		availableAbilities[i].slot = i;
+		availableAbilities[i].x = abilityPoints[i].x;
+		availableAbilities[i].y = abilityPoints[i].y;
+	}
 }
 
 /**
@@ -211,20 +223,20 @@ void GUI::changeAbility(int direction) {
 	smh->player->iceBreathParticle->Stop(false);
 	smh->player->shrinkActive = false;
  
-	//Cycle to previous ability
-	if (direction == LEFT) {
-		int temp = availableAbilities[0].slot;
-		availableAbilities[0].slot = availableAbilities[1].slot;
-		availableAbilities[1].slot = availableAbilities[2].slot;
-		availableAbilities[2].slot = temp;
-	} 
+	int a, b;
 
-	//Cycle to next ability
-	if (direction == RIGHT) {
-		int temp = availableAbilities[2].slot;
-		availableAbilities[2].slot = availableAbilities[1].slot;
-		availableAbilities[1].slot = availableAbilities[0].slot;
-		availableAbilities[0].slot = temp;
+	for (int i = 0; i < 3; i++) {
+		if (direction == LEFT) {
+			if (availableAbilities[i].slot == 0) a = i;
+			if (availableAbilities[i].slot == 1) b = i;
+		} else if (direction == RIGHT) {
+			if (availableAbilities[i].slot == 1) a = i;
+			if (availableAbilities[i].slot == 2) b = i;
+		}
 	}
+
+	int temp = availableAbilities[a].slot;
+	availableAbilities[a].slot = availableAbilities[b].slot;
+	availableAbilities[b].slot = temp;
 
 }

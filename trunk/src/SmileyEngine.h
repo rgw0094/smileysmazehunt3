@@ -58,6 +58,7 @@ class ScreenEffectsManager;
 //Resource Groups
 #define RES_MENU 10
 #define RES_CREDITS 11
+#define RES_CINEMATIC 12
 #define RES_PHYREBOZZ 100
 #define RES_PORTLYPENGUIN 101
 #define RES_GARMBORN 102
@@ -74,7 +75,7 @@ class ScreenEffectsManager;
 
 //Abilities
 #define NUM_ABILITIES 12
-#define NO_ABILITY -1
+#define NO_ABILITY 12
 #define CANE 0
 #define FIRE_BREATH 1
 #define FRISBEE 2
@@ -108,6 +109,7 @@ class ScreenEffectsManager;
 
 //State
 #define MENU 10
+#define INTRO_SCENE 15
 #define GAME 20
 
 //Directions
