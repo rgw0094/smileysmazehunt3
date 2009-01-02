@@ -50,7 +50,7 @@
 
 ===Done===
 ||Item||Date||Done By||
-||Opening cinematic||1/1/09||RGW||
+||Opening cinematic programming||1/1/09||RGW||
 ||Moved money to inventory and replaced damage dealt/received with pixels travelled||1/1/09||RGW||
 ||New ability selection system||1/1/09||RGW||
 ||Fake and NoWalk pits||12/31/08||RGW||
