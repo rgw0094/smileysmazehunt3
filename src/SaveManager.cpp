@@ -109,6 +109,7 @@ void SaveManager::resetCurrentData() {
 	playerGridY = 0;
 	playerHealth = 5.0;
 	playerMana = INITIAL_MANA;
+	currentArea = FOUNTAIN_AREA;
 
 	numTongueLicks = 0;
 	numEnemiesKilled = 0;
@@ -316,16 +317,9 @@ void SaveManager::startNewGame(int fileNumber) {
 	saveFileInfo();
 	resetCurrentData();
 
-	smh->environment->loadArea(FOUNTAIN_AREA, FOUNTAIN_AREA);
 	smh->player->setHealth(playerHealth);
 	smh->player->setMana(playerMana);
 	smh->player->gui->resetAbilities();
-
-	playerGridX = smh->player->gridX;
-	playerGridY = smh->player->gridY;	
-	
-	save(false);
-
 }
 
 /**

@@ -14,6 +14,7 @@ LoadingScreen::LoadingScreen(int _fileNumber, bool _fromLoadScreen) {
 	startedLoadYet = false;
 	fromLoadScreen = _fromLoadScreen;
 	isNewGame = smh->saveManager->isFileEmpty(fileNumber);
+	smh->soundManager->fadeOutMusic();
 
 }
 
@@ -45,21 +46,26 @@ bool LoadingScreen::update(float dt, float mouseX, float mouseY) {
 	//Make sure the load screen is up for at least a little bit so that it doesn't just flash up
 	//if the person's computer is too fast.
 	if (smh->getRealTime() - timeEnteredScreen > 1.0) {
-		int x = smh->saveManager->playerGridX;
-		int y = smh->saveManager->playerGridY;
-		smh->environment->loadArea(smh->saveManager->currentArea, smh->saveManager->currentArea);
-		smh->player->moveTo(x, y);
-		smh->environment->update(0.0); //update for screen offsets
-		smh->player->reset();
-		smh->player->setHealth(smh->saveManager->playerHealth);
-		smh->player->setMana(smh->saveManager->playerMana);
-
+		
 		if (isNewGame) {
+			smh->environment->loadArea(smh->saveManager->currentArea, smh->saveManager->currentArea, false);
+			smh->saveManager->save(false);
 			smh->resources->Precache(RES_CINEMATIC);
 			smh->menu->setScreen(CINEMATIC_SCREEN);
 		} else {
+			//The loadArea method places smiley at the start point of the level. So we need to remember the coordinates
+			//that Smiley was saved at and then move him there after the area loads
+			int x = smh->saveManager->playerGridX;
+			int y = smh->saveManager->playerGridY;
+			smh->environment->loadArea(smh->saveManager->currentArea, smh->saveManager->currentArea, true);
+			smh->player->moveTo(x, y);
+			smh->environment->update(0.0); //update for screen offsets
 			smh->enterGameState(GAME);
 		}
+
+		smh->player->reset();
+		smh->player->setHealth(smh->saveManager->playerHealth);
+		smh->player->setMana(smh->saveManager->playerMana);
 	}
 	
 	return false;

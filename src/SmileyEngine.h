@@ -586,6 +586,7 @@ public:
 
 	//Methods
 	void playMusic(char *musicName);
+	void playAreaMusic(int area);
 	void stopMusic();
 	void fadeOutMusic();
 	void playPreviousMusic();

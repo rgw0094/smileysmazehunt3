@@ -703,6 +703,11 @@ Sprite sceneThree {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=12
 }
+Music SceneOneSong {
+ filename="SceneOneMusic.xm"
+ amplify=50
+ resgroup=1
+}
 
 ;*******************************
 ;******** OPTIONS WINDOW *******

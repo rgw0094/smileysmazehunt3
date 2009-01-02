@@ -90,6 +90,8 @@ private:
 	float timeInSceneState;
 	float pictureOffset;
 	float textAlpha;
+	float timeCinematicStarted;
+	bool musicTransitionedYet;
 	std::string text;
 
 };

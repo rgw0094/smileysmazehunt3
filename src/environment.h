@@ -30,7 +30,7 @@ public:
 	void drawGrid(float dt);
 	void drawPits(float dt);
 	void update(float dt);
-	void loadArea(int id, int from);
+	void loadArea(int id, int from, bool playMusic);
 	int checkItem(int x, int y);
 	int removeItem(int x, int y);
 	int collisionAt(float x, float y);

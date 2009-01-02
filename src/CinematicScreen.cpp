@@ -12,11 +12,15 @@ extern SMH *smh;
 #define SCENE_FADE_TEXT 3
 #define SCENE_FADE_PICTURE 4
 
+#define SCENE_ONE_MUSIC_LENGTH 26.7
+
 CinematicScreen::CinematicScreen() {
 	backgroundAlpha = 0.0;
 	sceneState = -1;
 	pictureOffset = MAX_PICTURE_OFFSET;
 	textAlpha = 0.0;
+	smh->soundManager->stopMusic();
+	musicTransitionedYet = false;
 }
 
 CinematicScreen::~CinematicScreen() { 
@@ -36,6 +40,8 @@ void CinematicScreen::draw(float dt) {
 		smh->resources->GetSprite("sceneTwo")->Render(512.0, 284.0 + pictureOffset);
 	} else if (scene == 3) {
 		smh->resources->GetSprite("sceneThree")->Render(512.0, 284.0 + pictureOffset);
+	} else if (scene == 4) {
+		smh->resources->GetSprite("sceneThree")->Render(512.0, 284.0 + pictureOffset);
 	}
 
 	//Text
@@ -53,19 +59,26 @@ bool CinematicScreen::update(float dt, float mouseX, float mouseY) {
 		backgroundAlpha = min(255.0, backgroundAlpha + 255.0 * dt);
 		if (backgroundAlpha == 255.0) {
 			enterScene(1);
+			timeCinematicStarted = smh->getRealTime();
 		} else {
 			return false;
 		}
 	}
 
+	if (smh->getRealTime() - timeCinematicStarted > 26.55 && !musicTransitionedYet) {
+		//Music transition
+		smh->soundManager->stopMusic();
+		musicTransitionedYet = true;
+	}
+
 	if (sceneState == SCENE_SHOW_PICTURE) {
-		pictureOffset += 200.0 * dt;
+		pictureOffset += 300.0 * dt;
 		if (pictureOffset >= 0) {
 			pictureOffset = 0.0;
 			enterSceneState(SCENE_SHOW_TEXT);
 		}
 	} else if (sceneState == SCENE_SHOW_TEXT) {
-		textAlpha += 350.0 * dt;
+		textAlpha += 320 * dt;
 		if (textAlpha >= 255.0) {
 			textAlpha = 255.0;
 			enterSceneState(SCENE_WAIT);
@@ -75,13 +88,13 @@ bool CinematicScreen::update(float dt, float mouseX, float mouseY) {
 			enterSceneState(SCENE_FADE_TEXT);
 		}
 	} else if (sceneState == SCENE_FADE_TEXT) {
-		textAlpha -= 350.0 * dt;
+		textAlpha -= 320 * dt;
 		if (textAlpha <= 0.0) {
 			textAlpha = 0.0;
 			enterSceneState(SCENE_FADE_PICTURE);
 		}
 	} else if (sceneState == SCENE_FADE_PICTURE) {
-		pictureOffset -= 200.0 * dt;
+		pictureOffset -= 300.0 * dt;
 		if (pictureOffset <= MAX_PICTURE_OFFSET) {
 			pictureOffset = MAX_PICTURE_OFFSET;
 			enterScene(scene + 1);
@@ -100,14 +113,19 @@ void CinematicScreen::enterScene(int newScene) {
 
 	if (scene == 1) {
 		text = "scene one text - smiley and his gay lover are living \ngayly in smiley town";
-		sceneDuration = 3.5;
+		sceneDuration = 3.4;
+		smh->soundManager->playMusic("SceneOneSong");
 	} else if (scene == 2) {
 		text = "scene two text - the lover is off doing something gay \nand gets kidnapped";
-		sceneDuration = 3.5;
+		sceneDuration = 3.4;
 	} else if (scene == 3) {
+		text = "scene three text";;
+		sceneDuration = 3.4;
+	} else if (scene == 4){ 
 		text = "scene three text - show fenwar in his evil lair with \nthe gay lover";
-		sceneDuration = 3.5;
-	} else if (scene > 3) {
+		sceneDuration = 3.4;
+		smh->soundManager->playMusic("fenwarLietmotif");
+	} else if (scene > 4) {
 		finish();
 	}
 

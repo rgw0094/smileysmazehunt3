@@ -158,10 +158,9 @@ void Environment::reset() {
  *
  *	id			id of the zone to load
  *	from		id of the zone Smiley is coming from
- *	playerX		x location to put Smiley, or 0 for default
- *  playerY		y location to put Smiley, or 0 for default
+ *	playMusic	Whether or not to start playing the area's music
  */
-void Environment::loadArea(int id, int from) {
+void Environment::loadArea(int id, int from, bool playMusic) {
 
 	std::ifstream areaFile;
 	char threeBuffer[3];
@@ -171,40 +170,29 @@ void Environment::loadArea(int id, int from) {
 	//Delete all objects from the previous area.
 	reset();
 
-	//Set zone specific info
+	//Open the area file
 	if (areaFile.is_open()) areaFile.close();
 	if (id == FOUNTAIN_AREA) {
-		smh->soundManager->playMusic("townMusic");
 		areaFile.open("Data/Maps/fountain.smh");
 	} else if (id == OLDE_TOWNE) {
-		smh->soundManager->playMusic("oldeTowneMusic");
 		areaFile.open("Data/Maps/oldetowne.smh");
 	} else if (id == SMOLDER_HOLLOW) {
-		smh->soundManager->playMusic("smolderHollowMusic");
 		areaFile.open("Data/Maps/smhollow.smh");
 	} else if (id == FOREST_OF_FUNGORIA) {
-		smh->soundManager->playMusic("forestMusic");
 		areaFile.open("Data/Maps/forest.smh");
 	} else if (id == SESSARIA_SNOWPLAINS) {
-		smh->soundManager->playMusic("iceMusic");
 		areaFile.open("Data/Maps/snow.smh");
 	} else if (id == TUTS_TOMB) {
-		smh->soundManager->playMusic("kingTutMusic");
 		areaFile.open("Data/Maps/tutstomb.smh");
 	} else if (id == WORLD_OF_DESPAIR) {
-		smh->soundManager->playMusic("realmOfDespairMusic");
 		areaFile.open("Data/Maps/despair.smh");
 	} else if (id == SERPENTINE_PATH) {
-		smh->soundManager->playMusic("serpentinePathMusic");
 		areaFile.open("Data/Maps/path.smh");
 	} else if (id == CASTLE_OF_EVIL) {
-		smh->soundManager->playMusic("castleOfEvilMusic");
 		areaFile.open("Data/Maps/castle.smh");
 	} else if (id == CONSERVATORY) {
-		//smh->soundManager->playMusic("dfsfds");
 		areaFile.open("Data/Maps/conserve.smh");
 	} else if (id == DEBUG_AREA) {
-		smh->soundManager->stopMusic();
 		areaFile.open("Data/Maps/debug.smh");
 	}
 
@@ -476,8 +464,11 @@ void Environment::loadArea(int id, int from) {
 	update(0.0);
 	smh->enemyManager->update(0.0);
 
-	//Tell the AreaChanger to display the new area name
 	smh->areaChanger->displayNewAreaName();
+	
+	if (playMusic) {
+		smh->soundManager->playAreaMusic(id);
+	}
 
 }
 
