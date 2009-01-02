@@ -114,7 +114,7 @@ void SaveManager::resetCurrentData() {
 	numEnemiesKilled = 0;
 	pixelsTravelled = 0;
 
-	if (smh->player) smh->player->gui->resetAbilities();
+	//if (smh->player) smh->player->gui->resetAbilities();
 
 	timeFileLoaded = smh->getRealTime();
 
