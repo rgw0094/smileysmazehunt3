@@ -12,7 +12,6 @@ extern SMH *smh;
 #define NUM_UNIQUE_NPCS 12
 
 CreditsScreen::CreditsScreen() {
-	init();
 	offset = 0.0;
 	backgroundAlpha = 0.0;
 	timeScreenOpened = smh->getRealTime();
@@ -38,6 +37,8 @@ void CreditsScreen::draw(float dt) {
 	//Title and credits
 	smh->resources->GetFont("titleFnt")->printf(512.0,TITLE_START - offset,HGETEXT_CENTER,"Smiley's Maze Hunt");
 	smh->resources->GetFont("curlz")->printf(512.0,TITLE_START + 100.0 - offset,HGETEXT_CENTER,"Created By:\nRob Walsh\nErik Interval\n Ryan Manion");
+
+	if (!resourcesCachedYet) return;
 
 	//Enemies
 	smh->resources->GetFont("titleFnt")->printf(512.0,ENEMY_START-offset,HGETEXT_CENTER,"Enemies");
@@ -74,6 +75,7 @@ bool CreditsScreen::update(float dt, float mouseX, float mouseY) {
 	//Cache all the graphics while the title and authors are stationary
 	if (!resourcesCachedYet) {
 		smh->resources->Precache(RES_CREDITS);
+		init();
 		resourcesCachedYet = true;
 	}
 

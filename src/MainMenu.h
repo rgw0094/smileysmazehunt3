@@ -2,6 +2,7 @@
 #define _MENU_H_
 
 #include <list>
+#include <string>
 
 class hgeSprite;
 class OptionsWindow;
@@ -78,11 +79,18 @@ public:
 
 private:
 
-	void enterState(int newState);
+	void enterSceneState(int newState);
+	void enterScene(int scene);
+	void finish();
 
 	float backgroundAlpha;
-	int state;
-	float timeInState;
+	int scene;
+	int sceneState;
+	float sceneDuration;
+	float timeInSceneState;
+	float pictureOffset;
+	float textAlpha;
+	std::string text;
 
 };
 
