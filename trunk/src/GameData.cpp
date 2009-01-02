@@ -153,11 +153,9 @@ void GameData::loadAbilityData() {
 
 	//Frisbee
 	strcpy(abilities[FRISBEE].name, "Frisbee!?!?! K");
-	strcpy(abilities[FRISBEE].description, "Throws a frisbee that can stun enemies.\n\nMana Cost: 10");
+	strcpy(abilities[FRISBEE].description, "Throws a frisbee that can stun enemies.");
 	abilities[FRISBEE].type = ACTIVATED;
-	abilities[FRISBEE].manaCost = 10;
-
-
+	abilities[FRISBEE].manaCost = 0;
 }
 
 /**

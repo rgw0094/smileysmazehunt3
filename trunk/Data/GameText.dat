@@ -11,6 +11,7 @@ GotLightningOrb = "You can now shoot lightning orbs!  These projectiles reflect 
 GotJesusSandals = "You found Jesus' Sandals. You can now walk on Water!"
 GotReflectionShield = "You got the Reflection Shield!  You can now reflect projectiles back towards enemies!"
 GotIceBreath = "You got Ice Breath! Your breath is now so cold it can freeze enemies in their tracks!"
+GotSillyPad = "You got the Silly Pads! They are so silly that enemies cannot even cross them."
 GotShrink = "shrink text"
 GotTutsMask = "tuts mask text"
 GotHover = "hover text"
@@ -54,6 +55,27 @@ Hint5-1 = "Dickens, Smiley, do you always need my help?"
 Hint5-2 = "If I tell you where to go for every item, you'll never figure it out on your own!"
 Hint5-3 = "Alright, alright, stop your sobbing. Inside the Forest of Fundoria is a land of mushrooms!!"
 Hint5-4 = "I'm so excited for you I can hardly breathe!"
+
+Hint6Pages = "1"
+Hint6-1 = "Go back to the realm of despair you faggot."
+
+Hint7Pages = "1"
+Hint7-1 = "Dickens, Dickens, Dickens, Bartli, Dickens"
+
+Hint8Pages = "1"
+Hint8-1 = "Go to the swamp"
+
+Hint9Pages = "1"
+Hint9-1 = "Tut's Tomb"
+
+Hint10Pages = "1"
+Hint10-1 = "Serpentine Path"
+
+Hint11Pages = "1"
+Hint11-1 = "Calypso 2"
+
+Hint12Pages = "1"
+Hint12-1 = "Fenwar"
 
 ;=============================================SIGNS======================================
 ;FOUNTAIN.SMH

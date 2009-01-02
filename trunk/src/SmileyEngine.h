@@ -105,7 +105,8 @@ class ScreenEffectsManager;
 #define SERPENTINE_PATH 6
 #define CASTLE_OF_EVIL 7
 #define SMOLDER_HOLLOW 8
-#define DEBUG_AREA 9
+#define CONSERVATORY 9
+#define DEBUG_AREA 10
 
 //State
 #define MENU 10
@@ -494,6 +495,7 @@ public:
 	void change(int gridX, int gridY);
 	bool isTileChanged(int gridX, int gridY);
 	float getDamageModifier();
+	float getManaModifier();
 	void killBoss(int boss);
 	bool isBossKilled(int boss);
 	void explore(int gridX, int gridY);
