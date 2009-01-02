@@ -92,44 +92,43 @@ void Inventory::draw(float dt) {
 	}	
 
 	//Upgrades
+	smh->resources->GetFont("inventoryFnt")->SetScale(0.9);
+	smh->resources->GetSprite("moneyIcon")->Render(INVENTORY_X_OFFSET+348,INVENTORY_Y_OFFSET + 295);
+	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET+398,INVENTORY_Y_OFFSET + 302,HGETEXT_LEFT,"%d",smh->saveManager->money);
 	for (int i = 0; i < 3; i++) {
 		smh->resources->GetAnimation("upgradeIcons")->SetFrame(i);
-		smh->resources->GetAnimation("upgradeIcons")->Render(INVENTORY_X_OFFSET+355+i*90,INVENTORY_Y_OFFSET + 297);
-		smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET+400+i*90,INVENTORY_Y_OFFSET+302,HGETEXT_LEFT,"x%d",smh->saveManager->numUpgrades[i]);
+		smh->resources->GetAnimation("upgradeIcons")->Render(INVENTORY_X_OFFSET+423+i*68,INVENTORY_Y_OFFSET + 297);
+		smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET+466+i*68,INVENTORY_Y_OFFSET+302,HGETEXT_LEFT,"%d",smh->saveManager->numUpgrades[i]);
 	}
+	smh->resources->GetFont("inventoryFnt")->SetScale(1.0);
 
 	////////////Stats///////////////
 	smh->resources->GetFont("inventoryFnt")->SetScale(0.55);
 	//Maximum mana
-	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 335, 
+	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 345, 
 		HGETEXT_LEFT, "Maximum Mana: ");
-	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 335, 
+	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 345, 
 		HGETEXT_RIGHT, "%d", int(smh->player->getMaxMana()));
 	//Damage multiplier
-	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 355, 
+	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 369, 
 		HGETEXT_LEFT, "Damage Multiplier:");
-	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 355, 
+	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 369, 
 		HGETEXT_RIGHT, "%1.3f", smh->saveManager->getDamageModifier());
 	//Number of licks
-	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 375,
+	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 393,
 		HGETEXT_LEFT, "Number Of Licks:");
-	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 375,
+	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 393,
 		HGETEXT_RIGHT, "%d", smh->saveManager->numTongueLicks);
 	//Enemies killed
-	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 395,
+	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 417,
 		HGETEXT_LEFT, "Enemies Killed:");
-	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 395,
+	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 417,
 		HGETEXT_RIGHT, "%d", smh->saveManager->numEnemiesKilled);
-	//Damage dealt
-	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 415,
-		HGETEXT_LEFT, "Damage Dealt:");
-	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 415,
-		HGETEXT_RIGHT, "%d", int(smh->saveManager->damageDealt));
-	//Damage received
-	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 435,
-		HGETEXT_LEFT, "Damage Taken:");
-	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 435,
-		HGETEXT_RIGHT, "%d", int(smh->saveManager->damageReceived));
+	//Pixels travelled
+	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 441,
+		HGETEXT_LEFT, "Pixels Travelled:");
+	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 441,
+		HGETEXT_RIGHT, "%d", int(smh->saveManager->pixelsTravelled));
 	smh->resources->GetFont("inventoryFnt")->SetScale(1.0);
 	//////////End Stats////////////////
 	

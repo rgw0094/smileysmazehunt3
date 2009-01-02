@@ -167,7 +167,6 @@ void Player::update(float dt) {
 			!falling && !springing && !cloaked && !shrinkActive && !drowning &
 			!reflectionShieldActive && !stunned && 
 			smh->getCurrentFrame() != smh->windowManager->frameLastWindowClosed) {			
-		smh->saveManager->numTongueLicks++;
 		tongue->startAttack();
 	}
 
@@ -245,6 +244,7 @@ void Player::doMove(float dt) {
 	if (xDist != 0.0) {
 		if (!smh->environment->playerCollision(x + xDist, y, dt)) {	
 			x += xDist;
+			smh->saveManager->pixelsTravelled += abs(xDist);
 		} else {
 			//Since Smiley just ran into something, maybe its a locked door. Dickens!
 			if (xDist > 0) {
@@ -267,6 +267,7 @@ void Player::doMove(float dt) {
 	if (yDist != 0.0) {
 		if (!smh->environment->playerCollision(x, y+yDist, dt)) {	
 			y += yDist;
+			smh->saveManager->pixelsTravelled += abs(yDist);
 		} else {
 			//Since Smiley just ran into something, maybe its a locked door. Dickens!
 			if (yDist > 0) {
@@ -1349,7 +1350,6 @@ void Player::dealDamageAndKnockback(float damage, bool makesFlash, bool alwaysKn
 	if (!makesFlash || (makesFlash && !flashing)) {
 		if (!invincible) {
 			health -= damage;
-			smh->saveManager->damageReceived += damage;
 		}
 	}
 

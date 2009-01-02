@@ -110,6 +110,10 @@ void SaveManager::resetCurrentData() {
 	playerHealth = 5.0;
 	playerMana = INITIAL_MANA;
 
+	numTongueLicks = 0;
+	numEnemiesKilled = 0;
+	pixelsTravelled = 0;
+
 	timeFileLoaded = smh->getRealTime();
 
 }
@@ -178,8 +182,7 @@ void SaveManager::load(int fileNumber) {
 	//Load Stats
 	numTongueLicks = input->readByte();
 	numEnemiesKilled = input->readByte();
-	damageDealt = input->readByte();
-	damageReceived = input->readByte();
+	pixelsTravelled = input->readBits(24);
 
 	//Tutorial Man
 	tutorialManCompleted = input->readBit();
@@ -264,8 +267,7 @@ void SaveManager::save(bool showConfirmation) {
 	//Stats
 	output->writeByte(numTongueLicks);
 	output->writeByte(numEnemiesKilled);
-	output->writeByte(damageDealt);
-	output->writeByte(damageReceived);
+	output->writeBits(pixelsTravelled, 24);
 
 	//Tutorial Man
 	output->writeBit(tutorialManCompleted);
@@ -450,8 +452,9 @@ void SaveManager::drawSaveConfirmation(float dt) {
 		s += Util::intToString(currentSave + 1);
 		s += " Saved!";
 
-		smh->resources->GetFont("inventoryFnt")->SetColor(ARGB(alpha,255,255,255));
+		smh->resources->GetFont("inventoryFnt")->SetColor(ARGB(alpha,255.0,255.0,255.0));
 		smh->resources->GetFont("inventoryFnt")->printf(512,710,HGETEXT_CENTER, s.c_str());
+		smh->resources->GetFont("inventoryFnt")->SetColor(ARGB(255.0,255.0,255.0,255.0));
 	}
 }
 
