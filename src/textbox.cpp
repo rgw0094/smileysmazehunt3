@@ -233,7 +233,7 @@ void TextBox::draw(float dt) {
 	} else if (textBoxType == TYPE_ABILITY) {
 		smh->resources->GetSprite("textBox")->Render(x,y);
 		smh->resources->GetAnimation("abilities")->SetFrame(ability);
-		smh->resources->GetAnimation("abilities")->Render(x+180,y+20);
+		smh->resources->GetAnimation("abilities")->Render(x+212,y+52);
 		smh->resources->GetFont("textBoxFnt")->printfb(x + 20, y + 25 + 64, 360, 200 - 64, HGETEXT_CENTER, "%s", text);
 
 	} else if (textBoxType == TYPE_SIGN) {
