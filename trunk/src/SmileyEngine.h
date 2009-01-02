@@ -95,7 +95,7 @@ class ScreenEffectsManager;
 #define HOLD 2
 
 //Level ids
-#define NUM_AREAS 10
+#define NUM_AREAS 11
 #define FOUNTAIN_AREA 0
 #define OLDE_TOWNE 1
 #define TUTS_TOMB 2

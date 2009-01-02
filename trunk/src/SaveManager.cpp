@@ -114,8 +114,6 @@ void SaveManager::resetCurrentData() {
 	numEnemiesKilled = 0;
 	pixelsTravelled = 0;
 
-	//if (smh->player) smh->player->gui->resetAbilities();
-
 	timeFileLoaded = smh->getRealTime();
 
 }
@@ -321,6 +319,7 @@ void SaveManager::startNewGame(int fileNumber) {
 	smh->environment->loadArea(FOUNTAIN_AREA, FOUNTAIN_AREA);
 	smh->player->setHealth(playerHealth);
 	smh->player->setMana(playerMana);
+	smh->player->gui->resetAbilities();
 
 	playerGridX = smh->player->gridX;
 	playerGridY = smh->player->gridY;	
