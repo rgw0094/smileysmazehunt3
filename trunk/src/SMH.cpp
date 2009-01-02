@@ -286,6 +286,11 @@ void SMH::enterGameState(int newState) {
 	}
 
 	gameState = newState;
+
+	//If entering game state
+	if (gameState == GAME) {
+		soundManager->playAreaMusic(saveManager->currentArea);
+	}
 }
 
 /////////////////////////////////////////////

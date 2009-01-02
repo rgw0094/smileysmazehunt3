@@ -123,7 +123,7 @@ void AreaChanger::update(float dt) {
 				smh->lootManager->update(0.0);
 				smh->projectileManager->update(0.0);
 			} else {
-				smh->environment->loadArea(destinationArea, smh->saveManager->currentArea);
+				smh->environment->loadArea(destinationArea, smh->saveManager->currentArea, true);
 				zoneTextAlpha = 255.0;
 			}
 			

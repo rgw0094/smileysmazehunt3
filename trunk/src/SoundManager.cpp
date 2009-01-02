@@ -42,6 +42,35 @@ void SoundManager::playMusic(char *music) {
 }
 
 /**
+ * Plays the music for the specified area.
+ */
+void SoundManager::playAreaMusic(int id) {
+	if (id == FOUNTAIN_AREA) {
+		playMusic("townMusic");
+	} else if (id == OLDE_TOWNE) {
+		playMusic("oldeTowneMusic");
+	} else if (id == SMOLDER_HOLLOW) {
+		playMusic("smolderHollowMusic");
+	} else if (id == FOREST_OF_FUNGORIA) {
+		playMusic("forestMusic");
+	} else if (id == SESSARIA_SNOWPLAINS) {
+		playMusic("iceMusic");
+	} else if (id == TUTS_TOMB) {
+		playMusic("kingTutMusic");
+	} else if (id == WORLD_OF_DESPAIR) {
+		playMusic("realmOfDespairMusic");
+	} else if (id == SERPENTINE_PATH) {
+		playMusic("serpentinePathMusic");
+	} else if (id == CASTLE_OF_EVIL) {
+		playMusic("castleOfEvilMusic");
+	} else if (id == CONSERVATORY) {
+		//playMusic("dfsfds");
+	} else if (id == DEBUG_AREA) {
+		smh->soundManager->stopMusic();
+	}
+}
+
+/**
  * Stops the music immediately.
  */
 void SoundManager::stopMusic() {
