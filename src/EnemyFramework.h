@@ -219,6 +219,10 @@ public:
 	hgeParticleManager *deathParticles;
 	int randomLoot;
 
+private:
+
+	void killEnemy(std::list<EnemyStruct>::iterator i);
+
 };
 
 //----------------------------------------------------------------
