@@ -106,13 +106,27 @@ bool BitStream::readBit() {
  * Writes a byte to the output stream. The byte should be passed in as an integer from 0-255.
  */
 void BitStream::writeByte(int byte) {
+	writeBits(byte, 8);
+}
+
+/** 
+ * Reads a byte from the input stream.
+ */
+int BitStream::readByte() {
+	return readBits(8);
+}
+
+/**
+ * Writes bits to the output stream.
+ */
+void BitStream::writeBits(int data, int numBits) {
 
 	if (mode != FILE_WRITE) throw new System::Exception("Error: attempting to write to a file that is opened in read mode!");
 	
-	for (int i = 7; i >= 0; i--) {
-		if (byte >= pow(2, i)) {
+	for (int i = numBits-1; i >= 0; i--) {
+		if (data >= pow(2, i)) {
 			writeBit(true);
-			byte -= pow(2, i);
+			data -= pow(2, i);
 		} else {
 			writeBit(false);
 		}
@@ -120,19 +134,19 @@ void BitStream::writeByte(int byte) {
 }
 
 /** 
- * Reads a byte from the input stream. The byte will be returned as an integer from 0-255.
+ * Reads a byte from the input stream.
  */
-int BitStream::readByte() {
+int BitStream::readBits(int numBits) {
 
 	if (mode != FILE_READ) throw new System::Exception("Error: Attemping to read from a stream that is opened in write mode!");
 
-	int byte = 0;
-	for (int i = 7; i >= 0; i--) {
+	int data = 0;
+	for (int i = numBits-1; i >= 0; i--) {
 		if (readBit()) {
-			byte += pow(2, i);
+			data += pow(2, i);
 		}
 	}
-	return byte;
+	return data;
 }
 
 /**
@@ -153,7 +167,7 @@ int BitStream::getNumBitsRead() {
  * Static test method.
  */
 void BitStream::test() {
-		
+
 	BitStream *b = new BitStream();
 
 	//Bits test
@@ -193,33 +207,6 @@ void BitStream::test() {
 	smh->hge->System_Log("%d", b->readBit());
 	b->close();
 
-	//Bytes test
-	smh->hge->System_Log("---Testing bytes---");
-	b->open("test.txt", FILE_WRITE);
-	b->writeByte(248);
-	b->close();
-	//---
-	b->open("test.txt", FILE_READ);
-	smh->hge->System_Log("%d", b->readBit());
-	smh->hge->System_Log("%d", b->readBit());
-	smh->hge->System_Log("%d", b->readBit());
-	smh->hge->System_Log("%d", b->readBit());
-	smh->hge->System_Log("%d", b->readBit());
-	smh->hge->System_Log("%d", b->readBit());
-	smh->hge->System_Log("%d", b->readBit());
-	smh->hge->System_Log("%d", b->readBit());
-	b->close();
-	//---
-	b->open("test.txt", FILE_WRITE);
-	b->writeByte(128);
-	b->writeByte(230);
-	b->close();
-	//---
-	b->open("test.txt", FILE_READ);
-	smh->hge->System_Log("%d", b->readByte());
-	smh->hge->System_Log("%d", b->readByte());
-	b->close();
-
 	//Bits and bytes test
 	smh->hge->System_Log("---Testing bits and bytes---");
 	b->open("test.txt", FILE_WRITE);
@@ -238,6 +225,15 @@ void BitStream::test() {
 	smh->hge->System_Log("true: %d", b->readBit());
 	smh->hge->System_Log("82: %d", b->readByte());
 	b->close();
-	
+
+	//24 bit test
+	smh->hge->System_Log("---Testing 24 bits---");
+	b->open("test.txt", FILE_WRITE);
+	b->writeBits(4321, 24);
+	b->close();
+	b->open("test.txt", FILE_READ);
+	smh->hge->System_Log("4321: %d", b->readBits(24));
+	b->close();
+
 	delete b;
 }

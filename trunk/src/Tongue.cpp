@@ -46,6 +46,7 @@ void Tongue::startAttack() {
 		return;
 	}
 
+	smh->saveManager->numTongueLicks++;
 	hasActivatedSomething = false;
 	timeStartedAttack = smh->getGameTime();
 	tongueOffsetAngle = -ATTACK_RADIUS / 2.0;

@@ -19,8 +19,7 @@ bool ExitFunc() {
 	if (smh->getGameState() == GAME) {
 		smh->saveManager->saveTimePlayed();
 	}
-
-	//Exit normally 
+ 
 	return true;
 }
 

@@ -501,8 +501,7 @@ public:
 	//Stats
 	int numTongueLicks;
 	int numEnemiesKilled;
-	float damageDealt;
-	float damageReceived;
+	int pixelsTravelled;
 
 	//Save data
 	float timeFileLoaded;	//used to track playing time
@@ -549,8 +548,10 @@ public:
 	void open(std::string fileName, int mode);
 	void writeByte(int byte);
 	bool writeBit(bool bit);
+	void writeBits(int data, int numBits);
 	int readByte();
 	bool readBit();
+	int readBits(int numBits);
 	void close();
 	int getNumBitsRead();
 	int getNumBitsWritten();
