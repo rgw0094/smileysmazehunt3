@@ -96,16 +96,15 @@ public:
 	int x,y;
 	int npcID, textID, numPages, currentPage;	
 	hgeSprite *graphic;
-	float timeStarted;
 	char text[200];
 	int alpha;
 	int ability;
 	bool increaseAlpha;
-	int lastKeyPressFrame;
 	std::string paramString;
 	hgeDistortionMesh *distortion;
 	float fadeAlpha;
 	bool fadingOut;
+	float timePageOpened;
 
 };
 

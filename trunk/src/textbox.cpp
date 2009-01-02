@@ -47,8 +47,7 @@ TextBox::~TextBox() {
 void TextBox::init() {
 
 	fadeAlpha = 255.0;
-	lastKeyPressFrame = smh->getCurrentFrame();
-	timeStarted = smh->getGameTime();
+	timePageOpened = smh->getRealTime();
 	fadingOut = false;
 	distortion = NULL;
 	graphic = NULL;
@@ -287,8 +286,8 @@ bool TextBox::update(float dt) {
 	}
 
 	//Input to close the box or go to the next dialog page
-	if (smh->input->keyPressed(INPUT_ATTACK) && lastKeyPressFrame != smh->getCurrentFrame()) {
-		lastKeyPressFrame = smh->getCurrentFrame();
+	if (smh->input->keyPressed(INPUT_ATTACK) && smh->getRealTime() - timePageOpened > 0.3) {
+		timePageOpened = smh->getRealTime();
 
 		//Last page - close the box
 		if (numPages == currentPage) {
