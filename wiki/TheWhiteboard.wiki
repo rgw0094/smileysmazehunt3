@@ -7,15 +7,16 @@
  * Enemy names
  * Sound effects
  * Fenwar Encounters
+ * Opening Cinematic text
 
 === Programming To Do ===
- * Opening Cinematic
  * Lovecraftian Boss
  * King Tut
  * Calypso 2
  * Make pits have a hue change variable in the var layer.  Then we can match pits to the level colors.
 
 === Graphics To Do ===
+ * Opening Cinematic
  * New Keys (I think all keys can be the same but just a different hue)
  I like the keys -RYAN
  * New ability loot graphic (the thing that appears when you kill a boss)
@@ -49,6 +50,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Opening cinematic||1/1/09||RGW||
 ||New ability selection system||1/1/09||RGW||
 ||Fake and NoWalk pits||12/31/08||RGW||
 ||Clinton's Cane progress bar||12/29/08||RGW||
