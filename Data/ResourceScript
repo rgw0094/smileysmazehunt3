@@ -292,6 +292,10 @@ Music castleOfEvilMusic {
  filename="castleOfEvil.mod"
  amplify=50
 }
+Music creditsMusic {
+ filename="credits.mod"
+ amplify=50
+}
 
 ;**********************************************
 ;******** FOUNTAIN (Resource group 69) ********
