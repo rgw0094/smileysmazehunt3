@@ -237,88 +237,88 @@
 					RelativePath=".\src\TutBoss.h">
 				</File>
 			</Filter>
-		</Filter>
-		<Filter
-			Name="Enemy Framework"
-			Filter="">
-			<File
-				RelativePath=".\src\EnemyFramework.h">
-			</File>
 			<Filter
-				Name="Source"
+				Name="Enemy Framework"
 				Filter="">
 				<File
-					RelativePath=".\src\BaseEnemy.cpp">
-				</File>
-				<File
-					RelativePath=".\src\DefaultEnemy.cpp">
-				</File>
-				<File
-					RelativePath=".\src\EnemyGroupManager.cpp">
-				</File>
-				<File
-					RelativePath=".\src\EnemyManager.cpp">
-				</File>
-				<File
-					RelativePath=".\src\ES_Chase.cpp">
-				</File>
-				<File
-					RelativePath=".\src\ES_RangedAttack.cpp">
-				</File>
-				<File
-					RelativePath=".\src\ES_Wander.cpp">
+					RelativePath=".\src\EnemyFramework.h">
 				</File>
 				<Filter
-					Name="Enemies"
+					Name="Source"
 					Filter="">
 					<File
-						RelativePath=".\src\E_BatletDist.cpp">
+						RelativePath=".\src\BaseEnemy.cpp">
 					</File>
 					<File
-						RelativePath=".\src\E_BombGenerator.cpp">
+						RelativePath=".\src\DefaultEnemy.cpp">
 					</File>
 					<File
-						RelativePath=".\src\E_Buzzard.cpp">
+						RelativePath=".\src\EnemyGroupManager.cpp">
 					</File>
 					<File
-						RelativePath=".\src\E_ChainClown.cpp">
+						RelativePath=".\src\EnemyManager.cpp">
 					</File>
 					<File
-						RelativePath=".\src\E_Charger.cpp">
+						RelativePath=".\src\ES_Chase.cpp">
 					</File>
 					<File
-						RelativePath=".\src\E_EvilEye.cpp">
+						RelativePath=".\src\ES_RangedAttack.cpp">
 					</File>
 					<File
-						RelativePath=".\src\E_Fake.cpp">
+						RelativePath=".\src\ES_Wander.cpp">
 					</File>
-					<File
-						RelativePath=".\src\E_Flailer.cpp">
-					</File>
-					<File
-						RelativePath=".\src\E_Floater.cpp">
-					</File>
-					<File
-						RelativePath=".\src\E_Ghost.cpp">
-					</File>
-					<File
-						RelativePath=".\src\E_Gumdrop.cpp">
-					</File>
-					<File
-						RelativePath=".\src\E_Hopper.cpp">
-					</File>
-					<File
-						RelativePath=".\src\E_Ranged.cpp">
-					</File>
-					<File
-						RelativePath=".\src\E_SadShooter.cpp">
-					</File>
-					<File
-						RelativePath=".\src\E_Tentacle.cpp">
-					</File>
-					<File
-						RelativePath=".\src\E_Turret.cpp">
-					</File>
+					<Filter
+						Name="Enemies"
+						Filter="">
+						<File
+							RelativePath=".\src\E_BatletDist.cpp">
+						</File>
+						<File
+							RelativePath=".\src\E_BombGenerator.cpp">
+						</File>
+						<File
+							RelativePath=".\src\E_Buzzard.cpp">
+						</File>
+						<File
+							RelativePath=".\src\E_ChainClown.cpp">
+						</File>
+						<File
+							RelativePath=".\src\E_Charger.cpp">
+						</File>
+						<File
+							RelativePath=".\src\E_EvilEye.cpp">
+						</File>
+						<File
+							RelativePath=".\src\E_Fake.cpp">
+						</File>
+						<File
+							RelativePath=".\src\E_Flailer.cpp">
+						</File>
+						<File
+							RelativePath=".\src\E_Floater.cpp">
+						</File>
+						<File
+							RelativePath=".\src\E_Ghost.cpp">
+						</File>
+						<File
+							RelativePath=".\src\E_Gumdrop.cpp">
+						</File>
+						<File
+							RelativePath=".\src\E_Hopper.cpp">
+						</File>
+						<File
+							RelativePath=".\src\E_Ranged.cpp">
+						</File>
+						<File
+							RelativePath=".\src\E_SadShooter.cpp">
+						</File>
+						<File
+							RelativePath=".\src\E_Tentacle.cpp">
+						</File>
+						<File
+							RelativePath=".\src\E_Turret.cpp">
+						</File>
+					</Filter>
 				</Filter>
 			</Filter>
 		</Filter>
