@@ -14,8 +14,9 @@ extern SMH *smh;
 CreditsScreen::CreditsScreen() {
 	offset = 0.0;
 	backgroundAlpha = 0.0;
-	timeScreenOpened = smh->getRealTime();
 	resourcesCachedYet = false;
+	smh->soundManager->playMusic("creditsMusic");
+	timeActive = 0.0;
 }
 
 CreditsScreen::~CreditsScreen() {
@@ -72,6 +73,8 @@ bool CreditsScreen::update(float dt, float mouseX, float mouseY) {
 		return false;
 	}
 
+	timeActive += dt;
+
 	//Cache all the graphics while the title and authors are stationary
 	if (!resourcesCachedYet) {
 		smh->resources->Precache(RES_CREDITS);
@@ -80,13 +83,14 @@ bool CreditsScreen::update(float dt, float mouseX, float mouseY) {
 	}
 
 	//The screen slowly scrolls down
-	if ((smh->getRealTime() - timeScreenOpened > 1.5) && offset + 350 < endY) {
+	if (timeActive > 2.0 && offset + 350 < endY) {
 		offset += SPEED * dt;
 	}
 
 	//Input
 	if (smh->hge->Input_KeyDown(HGEK_ENTER) || smh->hge->Input_KeyDown(HGEK_ESCAPE) || smh->hge->Input_GetKeyState(HGEK_LBUTTON) || smh->hge->Input_GetKeyState(HGEK_RBUTTON) || smh->hge->Input_GetKeyState(HGEK_SPACE)) {
 		smh->menu->setScreen(TITLE_SCREEN);
+		smh->soundManager->playMusic("menuMusic");
 		return false;
 	}
 	if (smh->hge->Input_KeyDown(HGEK_DOWN)) offset += 400.0;

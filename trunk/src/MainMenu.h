@@ -125,7 +125,7 @@ private:
 	float offset;
 	float bossStart;
 	float npcStart;
-	float timeScreenOpened;
+	float timeActive;
 	float endY;
 	bool resourcesCachedYet;
 
