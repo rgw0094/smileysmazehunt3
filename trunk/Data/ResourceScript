@@ -292,9 +292,91 @@ Music castleOfEvilMusic {
  filename="castleOfEvil.mod"
  amplify=50
 }
+Music conservatoryMusic {
+ filename="Conservatory.xm"
+ amplify=50
+}
 Music creditsMusic {
  filename="credits.mod"
  amplify=50
+}
+
+
+;**********************************************
+;******** WORLD MAP (Resource group 13) *******
+;**********************************************
+Texture WorldMapTx {
+ filename="Graphics/WorldMap.png"
+}
+Sprite SessariaMap {
+ texture=WorldMapTx
+ rect=0,0,243,121
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=13
+}
+Sprite SalabiaMap {
+ texture=WorldMapTx
+ rect=245,0,153,123
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=13
+}
+Sprite FundoriaMap {
+ texture=WorldMapTx
+ rect=0,123,168,198
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=13
+}
+Sprite DespairMap {
+ texture=WorldMapTx
+ rect=169,124,148,147
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=13
+}
+Sprite PathMap {
+ texture=WorldMapTx
+ rect=320,125,108,96
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=13
+}
+Sprite CastleMap {
+ texture=WorldMapTx
+ rect=320,223,107,81
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=13
+}
+Sprite FountainMap {
+ texture=WorldMapTx
+ rect=170,273,128,70
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=13
+}
+Sprite TutMap {
+ texture=WorldMapTx
+ rect=1,322,99,74
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=13
+}
+Sprite ConservatoryMap {
+ texture=WorldMapTx
+ rect=112,333,49,52
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=13
+}
+Sprite SmolderMap {
+ texture=WorldMapTx
+ rect=1,397,120,112
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=13
 }
 
 ;**********************************************
@@ -324,7 +406,6 @@ Sprite fountainTop {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=69
 }
-
 
 ;********************************
 ;******** TEXTBOX / SHOP ********

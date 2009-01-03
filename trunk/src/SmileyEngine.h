@@ -59,6 +59,7 @@ class ScreenEffectsManager;
 #define RES_MENU 10
 #define RES_CREDITS 11
 #define RES_CINEMATIC 12
+#define RES_WORLDMAP 13
 #define RES_PHYREBOZZ 100
 #define RES_PORTLYPENGUIN 101
 #define RES_GARMBORN 102
