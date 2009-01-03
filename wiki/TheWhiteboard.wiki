@@ -7,7 +7,6 @@
  * Enemy names
  * Sound effects
  * Fenwar Encounters
- * Opening Cinematic text
 
 === Programming To Do ===
  * World Map
