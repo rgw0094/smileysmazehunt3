@@ -43,7 +43,7 @@ void CinematicScreen::draw(float dt) {
 	} else if (scene == 4) {
 		smh->resources->GetSprite("sceneFour")->Render(512.0, 284.0 + pictureOffset);
 	} else if (scene == 5) {
-		smh->resources->GetSprite("sceneFour")->Render(512.0, 284.0 + pictureOffset);
+		smh->resources->GetSprite("sceneFive")->Render(512.0, 284.0 + pictureOffset);
 	}
 
 	//Text
