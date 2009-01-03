@@ -14,7 +14,6 @@
  * King Tut
  * Barvinoid
  * Make pits have a hue change variable in the var layer.  Then we can match pits to the level colors.
- * Condense Map Border texture
  * Merge projectile texture with sprites texture
 
 === Graphics To Do ===
