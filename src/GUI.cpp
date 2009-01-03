@@ -1,5 +1,6 @@
 #include "SmileyEngine.h"
 #include "Player.h"
+#include "WindowFramework.h"
 #include "WeaponParticle.h"
 
 extern SMH *smh;
@@ -112,7 +113,7 @@ void GUI::toggleAvailableAbility(int ability) {
 void GUI::update(float dt) {
 	
 	//Input to change ability
-	if (!(getSelectedAbility() == WATER_BOOTS && smh->player->isSmileyTouchingWater())) {
+	if (!smh->windowManager->isOpenWindow() && !(getSelectedAbility() == WATER_BOOTS && smh->player->isSmileyTouchingWater())) {
 		if (smh->input->keyPressed(INPUT_PREVIOUS_ABILITY)) {
 			changeAbility(LEFT);
 		} else if  (smh->input->keyPressed(INPUT_NEXT_ABILITY)) {

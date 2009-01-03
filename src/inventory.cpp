@@ -156,7 +156,7 @@ bool Inventory::update(float dt) {
 		if (cursorY < HEIGHT-1) cursorY++;
 	}
 
-	if (smh->input->keyPressed(INPUT_ATTACK)) {
+	if (smh->input->keyPressed(INPUT_ATTACK) && smh->saveManager->hasAbility[cursorY*4 + cursorX]) {
 		smh->player->gui->toggleAvailableAbility(cursorY*4 + cursorX);
 	}
 

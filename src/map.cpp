@@ -20,7 +20,12 @@ Map::Map() {
 	windowX = (1024-windowWidth)/2;
 	windowY = (768-windowHeight)/2;
 	gridXOffset = gridYOffset = 0;
-	xOffset = yOffset = 0.0f;
+	
+	//Set the (x,y) offset based on Smiley's current position
+	xOffset = smh->player->x/2.666666 - float((gridWidth/2)*24);
+	yOffset = smh->player->y/2.666666 - float((gridHeight/2)*24);
+	if (xOffset < 0.0f) xOffset = 0.0;
+	if (yOffset < 0.0f) yOffset = 0.0;
 
 }
 
@@ -57,8 +62,6 @@ void Map::draw(float dt) {
 						c != DIZZY_MUSHROOM_1 && c != DIZZY_MUSHROOM_2 &&
 						c != PLAYER_END && c != PIT && 
 						c != UNWALKABLE_PROJECTILE && 
-						c != SHRINK_TUNNEL_HORIZONTAL &&
-						c != SHRINK_TUNNEL_VERTICAL &&					
 						!(Util::isWarp(c) && smh->environment->variable[i][j] == 990)) {
 					smh->resources->GetAnimation("walkLayer")->SetFrame(smh->environment->collision[i][j]);
 					smh->resources->GetAnimation("walkLayer")->RenderStretch(drawX,drawY,drawX+squareSize,drawY+squareSize);
@@ -122,8 +125,11 @@ void Map::draw(float dt) {
 		}
 	}
 
-	//Top left
-	smh->drawSprite("mapBackground", windowX - 30, windowY - 30);
+	//Draw border
+	smh->drawSprite("topBorder", windowX - 30, windowY - 30);
+	smh->drawSprite("leftBorder", windowX - 30, windowY);
+	smh->drawSprite("rightBorder", windowX + 600, windowY);
+	smh->drawSprite("bottomBorder", windowX - 30, windowY + 432);
 
 }
 
@@ -164,16 +170,4 @@ bool Map::update(float dt) {
 
 	return true;
 
-}
-
-/**
- * Overrides BaseWindow's open() method. This is called by the window
- * framework when the map window is open. This sets the offset in the
- * map according to Smiley's current position.
- */
-void Map::open() {
-	xOffset = smh->player->x/2.666666f - float((gridWidth/2)*24);
-	yOffset = smh->player->y/2.666666f - float((gridHeight/2)*24);
-	if (xOffset < 0.0f) xOffset = 0.0f;
-	if (yOffset < 0.0f) yOffset = 0.0f;
 }

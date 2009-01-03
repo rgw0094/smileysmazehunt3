@@ -8,10 +8,10 @@ class Button;
 class hgeRect;
 class Slider;
 
-#define NUM_MENU_WINDOWS 2
+#define NUM_MENU_WINDOWS 3
 #define INVENTORY 0
 #define AREA_MAP 1
-
+#define WORLD_MAP 2
 
 //----------------------------------------------------------------
 //------------------BASE WINDOW-----------------------------------
@@ -25,8 +25,6 @@ public:
 	//methods
 	virtual void draw(float dt) { };
 	virtual bool update(float dt) { return true; };	//return false to close
-	virtual void open() { };
-	virtual void close() { };
 
 	bool isWindowOpen;
 
@@ -214,7 +212,6 @@ public:
 	//methods
 	void draw(float dt);
 	bool update(float dt);
-	void open();
 
 	//stuff
 	int windowWidth, windowHeight;	//Pixel size of the map
@@ -224,6 +221,25 @@ public:
 	float xOffset, yOffset;
 	int gridXOffset, gridYOffset;
 	float drawX,drawY;
+
+};
+
+//----------------------------------------------------------------
+//------------------WORLD MAP-------------------------------------
+//----------------------------------------------------------------
+class WorldMap : public BaseWindow {
+
+public:
+	WorldMap();
+	~WorldMap();
+
+	//methods
+	void draw(float dt);
+	bool update(float dt);
+
+private:
+
+	int windowX, windowY;
 
 };
 

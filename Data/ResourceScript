@@ -554,10 +554,6 @@ Texture menuBackgroundTx {
  filename="Graphics/titlescreen.png"
  resgroup=10
 }
-Texture menuItemsTx {
- filename="Graphics/menuitems.png"
- resgroup=10
-}
 Sprite menuBackground {
  texture=menuBackgroundTx
  rect=0,0,1024,768
@@ -597,13 +593,6 @@ Sprite loadingText {
  texture=menuBackgroundTx
  rect=1,844,334,88
  hotspot=168,45
- blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=10
-}
-Sprite menuSaveBox {
- texture=menuItemsTx
- rect=0,75,650,125
- hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=10
 }
@@ -752,17 +741,9 @@ Sprite optionsPatch {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 
-
-
 ;*************************
 ;******** MINI MAP *******
 ;*************************
-Sprite mapBackground {
- texture="Graphics/mapborder.png"
- rect=0,0,660,492
- hotspot=0,0
- blendmode=COLORMUL,ALPHABLEND,NOZWRITE
-}
 Sprite mapFogOfWarLeft {
  texture=general
  rect=384,64,64,64
@@ -811,7 +792,30 @@ Sprite mapFogOfWarDownLeft {
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
-
+Sprite topBorder {
+ texture=UserInterfaceTx
+ rect=0,0,660,30
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite leftBorder {
+ texture=UserInterfaceTx
+ rect=0,30,30,432
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite rightBorder {
+ texture=UserInterfaceTx
+ rect=630,30,30,432
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite bottomBorder {
+ texture=UserInterfaceTx
+ rect=0,462,660,30
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
 
 ;********************
 ;******** GUI *******
@@ -963,6 +967,18 @@ Animation upgradeIcons {
  fps=20.0
  mode=LOOP
  hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite windowArrowLeft {
+ texture=UserInterfaceTx
+ rect=917,3,17,104
+ hotspot=9,52
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite windowArrowRight {
+ texture=UserInterfaceTx
+ rect=938,3,17,104
+ hotspot=9,52
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 
