@@ -110,7 +110,6 @@ class ScreenEffectsManager;
 
 //State
 #define MENU 10
-#define INTRO_SCENE 15
 #define GAME 20
 
 //Directions
@@ -310,6 +309,7 @@ private:
 	bool debugMovePressed;
 	float lastDebugMoveTime;
 	float gameTime;
+	float timeInState;
 	int gameState;
 	int frameCounter;
 	bool debugMode;

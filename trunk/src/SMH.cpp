@@ -109,6 +109,7 @@ bool SMH::updateGame() {
 
 	float dt = hge->Timer_GetDelta();
 
+	timeInState += dt;
 	frameCounter++;
 	input->UpdateInput();
 	doDebugInput(dt);
@@ -119,7 +120,7 @@ bool SMH::updateGame() {
 	}
 	
 	if (gameState == MENU) {
-	
+
 		if (menu->update(dt) || hge->Input_KeyDown(HGEK_ESCAPE)) return true;
 
 	} else if (gameState == GAME) {
@@ -286,6 +287,7 @@ void SMH::enterGameState(int newState) {
 	}
 
 	gameState = newState;
+	timeInState = 0.0;
 
 	//If entering game state
 	if (gameState == GAME) {

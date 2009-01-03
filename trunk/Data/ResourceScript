@@ -712,15 +712,22 @@ Sprite sceneFour {
 }
 Sprite sceneFive {
  texture=cinematicTx
- rect=440,340,440,430
- hotspot=220,215
+ rect=440,340,440,400
+ hotspot=220,200
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=12
+}
+Sprite sceneSix {
+ texture=cinematicTx
+ rect=440,740,182,182
+ hotspot=91,91
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=12
 }
 Music SceneOneSong {
  filename="SceneOneMusic.xm"
  amplify=50
- resgroup=1
+ resgroup=12
 }
 
 ;*******************************
