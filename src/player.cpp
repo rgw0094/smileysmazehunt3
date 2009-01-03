@@ -102,6 +102,7 @@ void Player::reset() {
 	startedFlashing = -10.0;
 	timeEnteredShrinkTunnel = -10.0;
 	timeStartedImmobilize = 0.0;
+	dx = dy = 0.0;
 
 	//State variables
 	reflectionShieldActive = flashing = knockback = sliding = stunned =
