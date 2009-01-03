@@ -311,6 +311,7 @@ void DesertBoss::updateGroundSpikeState(float dt) {
 	if (groundSpikeState == GSS_SPIKES_RAISING && timeEnteredGSS + 0.25 < smh->getGameTime()) {
 		groundSpikeState = GSS_SPIKES_UP;
 		smh->resources->GetAnimation("groundSpike")->Stop();
+		smh->soundManager->playSound("snd_CornwallisGroundSpike");
 		timeEnteredGSS = smh->getGameTime();
 	}
 
