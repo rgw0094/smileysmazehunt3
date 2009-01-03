@@ -270,7 +270,7 @@ Music serpentinePathMusic {
 }
 Music oldeTowneMusic {
  filename="oldetowne.xm"
- amplify=70
+ amplify=60
 }
 Music smolderHollowMusic {
  filename="smolderhollow.xm"
@@ -684,22 +684,29 @@ Texture cinematicTx {
 }
 Sprite sceneOne {
  texture=cinematicTx
- rect=0,0,470,340
- hotspot=235,170
+ rect=0,0,440,340
+ hotspot=220,170
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=12
 }
 Sprite sceneTwo {
  texture=cinematicTx
- rect=470,0,470,340
- hotspot=235,170
+ rect=440,0,440,340
+ hotspot=220,170
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=12
 }
 Sprite sceneThree {
  texture=cinematicTx
- rect=0,340,448,430
- hotspot=224,215
+ rect=0,340,440,340
+ hotspot=220,170
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=12
+}
+Sprite sceneFour {
+ texture=cinematicTx
+ rect=440,340,440,430
+ hotspot=220,215
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=12
 }
@@ -951,6 +958,18 @@ Animation upgradeIcons {
 Sound snd_fireBreath {
  filename="FireBreath.wav"
 }
+Sound snd_LightningOrb {
+ filename="LightningOrb.mp3"
+}
+Sound snd_HitByFireball {
+ filename="HitByFireball.mp3"
+}
+Sound snd_FirePassBy {
+ filename="FirePassBy.mp3"
+}
+Sound snd_FrisbeeHitWall {
+ filename="FrisbeeHitWall.mp3"
+}
 Sound snd_splat {
  filename="splat.wav"
 }
@@ -970,7 +989,7 @@ Sound snd_iceDie {
  filename="ice_die.wav"
 }
 Sound snd_warp {
- filename="warp.wav"
+ filename="warp.mp3"
 }
 Sound snd_freeze {
  filename="freeze.wav"
@@ -1023,6 +1042,9 @@ Sound snd_fireWorm {
 Sound snd_purchaseUpgrade {
  filename="purchaseUpgrade.wav"
 }
+Sound snd_ReflectionShield {
+ filename="ReflectionShield.mp3"
+}
 
 ;************************************************
 ;******** CORNWALLIS (Resource group 103 ********
@@ -1061,6 +1083,9 @@ Animation groundSpike {
  hotspot=10,50
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=103
+}
+Sound snd_CornwallisGroundSpike {
+ filename="CornwallisGroundSpike.mp3"
 }
 
 ;**************************************************
@@ -1115,7 +1140,10 @@ Sprite flameLauncher {
  rect=256,128,64,64
  hotspot=32,32
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=1
+ resgroup=100
+}
+Sound snd_FireCannonLaunch {
+ filename="FireCannonLaunch.mp3"
 }
 
 ;**************************************************

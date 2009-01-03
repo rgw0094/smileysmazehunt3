@@ -41,7 +41,9 @@ void CinematicScreen::draw(float dt) {
 	} else if (scene == 3) {
 		smh->resources->GetSprite("sceneThree")->Render(512.0, 284.0 + pictureOffset);
 	} else if (scene == 4) {
-		smh->resources->GetSprite("sceneThree")->Render(512.0, 284.0 + pictureOffset);
+		smh->resources->GetSprite("sceneFour")->Render(512.0, 284.0 + pictureOffset);
+	} else if (scene == 5) {
+		smh->resources->GetSprite("sceneFour")->Render(512.0, 284.0 + pictureOffset);
 	}
 
 	//Text
@@ -112,20 +114,23 @@ void CinematicScreen::enterScene(int newScene) {
 	scene = newScene;
 
 	if (scene == 1) {
-		text = "scene one text - smiley and his gay lover are living \ngayly in smiley town";
+		text = "Our story takes us to the far away land of Spherifagia. \nHere lives Smiley in the peaceful and ethnically \ndiverse Smiley Town.";
 		sceneDuration = 3.4;
 		smh->soundManager->playMusic("SceneOneSong");
 	} else if (scene == 2) {
-		text = "scene two text - the lover is off doing something gay \nand gets kidnapped";
+		text = "Smiley enjoys life in this seaside town with the companionship\n of his beautiful lover.";
 		sceneDuration = 3.4;
 	} else if (scene == 3) {
-		text = "scene three text";;
+		text = "But one fateful day while his lover was out picking \nflowers, disaster struck...";
 		sceneDuration = 3.4;
 	} else if (scene == 4){ 
-		text = "scene three text - show fenwar in his evil lair with \nthe gay lover";
+		text = "The terrible and mighty Lord Fenwar's tyranny befell the\nunforunate young spherifageous.";
 		sceneDuration = 3.4;
 		smh->soundManager->playMusic("fenwarLietmotif");
-	} else if (scene > 4) {
+	} else if (scene == 5) {
+		text = "The dastardly villian whisked away Smiley's lover to \nhis most evil of castles.";
+		sceneDuration = 3.4;
+	} else if (scene > 5) {
 		finish();
 	}
 

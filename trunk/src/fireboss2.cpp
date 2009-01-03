@@ -374,7 +374,7 @@ bool FireBossTwo::updateState(float dt) {
 	if (state == FIREBOSS_BATTLE) {
 
 		//After a while do a leet attack
-		if (smh->timePassedSince(timeEnteredState) > 13.0) {
+		if (smh->timePassedSince(timeEnteredState) > 8.0) {
 
 			if (smh->randomInt(0,100000) < 50000) {
 				setState(FIREBOSS_LEET_ATTACK1);
@@ -413,6 +413,7 @@ bool FireBossTwo::updateState(float dt) {
 			for (int i = 0; i < 13; i ++) {
 				addFireBall(x, y, (2.0*PI/13.0)*float(i), 400.0, false, false);
 			}
+			smh->soundManager->playSound("snd_FirePassBy");
 			lastAttackTime = smh->getGameTime();
 		}
 
@@ -436,6 +437,7 @@ bool FireBossTwo::updateState(float dt) {
 
 		//Return to default battle stage after a while
 		if (smh->timePassedSince(timeEnteredState) > 5.0) {
+			smh->soundManager->stopAbilityChannel();
 			setState(FIREBOSS_BATTLE);
 		}
 
@@ -461,6 +463,10 @@ void FireBossTwo::setState(int newState) {
 
 	if (newState == FIREBOSS_LEET_ATTACK1 || FIREBOSS_LEET_ATTACK2) {
 		lastAttackTime = smh->getGameTime();
+	}
+
+	if (newState == FIREBOSS_LEET_ATTACK2) {
+		smh->soundManager->playAbilityEffect("snd_fireBreath", true);
 	}
 
 	if (newState == FIREBOSS_BATTLE) {
@@ -648,6 +654,7 @@ void FireBossTwo::updateFireBalls(float dt) {
 		{
 			if (i->explodes) {
 				smh->explosionManager->addExplosion(i->x, i->y, 0.55, ORB_DAMAGE, 0.0);
+				smh->soundManager->playSound("snd_HitByFireball");
 			}
 			delete i->particle;
 			delete i->collisionBox;
@@ -840,6 +847,7 @@ void FireBossTwo::resetFlameWalls() {
  */
 void FireBossTwo::launchFlames(bool allFlames) {
 	int facing, gridX, gridY;
+	bool flamesLaunched = false;
 	for (int i = 0; i < 8; i++) {
 
 		facing = flameLaunchers[i].facing;
@@ -860,9 +868,14 @@ void FireBossTwo::launchFlames(bool allFlames) {
 					(facing == LEFT && smh->player->gridY >= gridY - 1 && smh->player->gridY <= gridY + 1) ||
 					(facing == RIGHT && smh->player->gridY >= gridY - 1 && smh->player->gridY <= gridY + 1)) {
 				addFlameWall(flameLaunchers[i].gridX*64+32, flameLaunchers[i].gridY*64+32, flameLaunchers[i].facing);
+				flamesLaunched = true;
 			}
 		}
 
+	}
+
+	if (flamesLaunched) {
+		smh->soundManager->playSound("snd_FireCannonLaunch");
 	}
 
 }

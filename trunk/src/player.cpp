@@ -448,14 +448,18 @@ void Player::doAbility(float dt) {
 	}
 
 	//////////// Reflection Shield //////////////
-
-	reflectionShieldActive = (canUseAbility &&
-							 smh->input->keyDown(INPUT_ABILITY) &&
-							 gui->getSelectedAbility() == REFLECTION_SHIELD && 
-							 mana >= smh->gameData->getAbilityInfo(REFLECTION_SHIELD).manaCost*dt);
-	if (reflectionShieldActive) {
+	if (canUseAbility && smh->input->keyDown(INPUT_ABILITY) && gui->getSelectedAbility() == REFLECTION_SHIELD && 
+		mana >= smh->gameData->getAbilityInfo(REFLECTION_SHIELD).manaCost*dt) 
+	{
+		if (!reflectionShieldActive) {
+			smh->soundManager->playAbilityEffect("snd_ReflectionShield", true);
+			reflectionShieldActive = true;
+		}
 		mana -= smh->gameData->getAbilityInfo(REFLECTION_SHIELD).manaCost*dt;
 		usingManaItem = true;
+	} else if (reflectionShieldActive) {
+		reflectionShieldActive = false;
+		smh->soundManager->stopAbilityChannel();
 	}
 
 	////////////// Tut's Mask //////////////
@@ -515,6 +519,7 @@ void Player::doAbility(float dt) {
 		{
 			mana -= smh->gameData->getAbilityInfo(LIGHTNING_ORB).manaCost;
 			lastOrb = smh->getGameTime();
+			smh->soundManager->playSound("snd_LightningOrb");
 			smh->projectileManager->addProjectile(x, y, 700.0, angles[facing]-.5*PI, getLightningOrbDamage(), false, PROJECTILE_LIGHTNING_ORB, true);
 		}
 
@@ -1193,7 +1198,7 @@ void Player::updateVelocities(float dt) {
  */
 void Player::setFacingDirection() {
 	
-	if (!frozen && !drowning && !falling && !iceSliding && !knockback && !springing && smh->environment->collision[gridX][gridY] != SPRING_PAD) {
+	if (!frozen && !drowning && !falling && !iceSliding && !knockback && !springing && smh->environment->collision[gridX][gridY] != SPRING_PAD && smh->environment->collision[gridX][gridY] != SUPER_SPRING) {
 			
 		if (smh->input->keyDown(INPUT_LEFT)) facing = LEFT;
 		else if (smh->input->keyDown(INPUT_RIGHT)) facing = RIGHT;

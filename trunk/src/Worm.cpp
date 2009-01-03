@@ -28,7 +28,6 @@ Worm::~Worm() {
 
 }
 
-
 // Public /////////////////////
 
 void Worm::update() {
@@ -77,7 +76,6 @@ void Worm::reset() {
        }
 }
 
-
 // Private ///////////////////////////////
 
 /***********
@@ -98,7 +96,6 @@ void Worm::addWormTrail() {
 
 	bool left=false, right=false, up=false, down=false;
 	
-
     while (!exitWhile) {
 		
 		left = right = up = down = false;

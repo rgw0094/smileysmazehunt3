@@ -157,6 +157,9 @@ void ProjectileManager::update(float dt) {
 			//collision. They will be taken care of in the environment class when it
 			//tests collision with silly pads.
 			if (!deleteProjectile && smh->environment->testCollision(i->terrainCollisionBox, canPass, true)) {
+				if (i->id == PROJECTILE_FRISBEE) {
+					smh->soundManager->playSound("snd_FrisbeeHitWall");
+				}
 				deleteProjectile = true;
 			}
 		} else {

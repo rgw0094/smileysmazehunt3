@@ -90,7 +90,9 @@ void MainMenu::draw(float dt) {
 	menuScreen->draw(dt);
 
 	//Draw the mouse
-	if (smh->input->isMouseInWindow() && currentScreen != LOADING_SCREEN && currentScreen != CREDITS_SCREEN) {
+	if (smh->input->isMouseInWindow() && currentScreen != LOADING_SCREEN && currentScreen != CREDITS_SCREEN && 
+		currentScreen != CINEMATIC_SCREEN) 
+	{
 		smh->drawSprite("mouseCursor", smh->input->getMouseX(), smh->input->getMouseY());
 	}
 
