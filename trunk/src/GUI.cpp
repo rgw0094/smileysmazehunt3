@@ -88,6 +88,7 @@ void GUI::toggleAvailableAbility(int ability) {
 	for (int i = 0; i < 3; i++) {
 		if (availableAbilities[i].ability == ability) {
 			availableAbilities[i].ability = NO_ABILITY;
+			smh->soundManager->playSound("snd_AbilityDeSelect");
 			return;
 		}
 	}
@@ -95,19 +96,22 @@ void GUI::toggleAvailableAbility(int ability) {
 	//Otherwise, add it.
 	if (availableAbilities[1].ability == NO_ABILITY) {
 		availableAbilities[1].ability = ability;
+		smh->soundManager->playSound("snd_AbilitySelect");
 		return;
 	}
 	if (availableAbilities[0].ability == NO_ABILITY) {
 		availableAbilities[0].ability = ability;
+		smh->soundManager->playSound("snd_AbilitySelect");
 		return;
 	}
 	if (availableAbilities[2].ability == NO_ABILITY) {
 		availableAbilities[2].ability = ability;
+		smh->soundManager->playSound("snd_AbilitySelect");
 		return;
 	}
 
 	//If we got here then there is no room for the ability!
-	//TODO: play sound effect
+	smh->soundManager->playSound("snd_Error");
 }
 
 void GUI::update(float dt) {

@@ -91,12 +91,14 @@ bool Shop::update(float dt) {
 	if (smh->input->keyPressed(INPUT_LEFT)) {
 		if (currentSelection == 0) currentSelection = EXIT;
 		else currentSelection--;
+		smh->soundManager->playSound("snd_MouseOver");
 	}
 
 	//Move selection right
 	if (smh->input->keyPressed(INPUT_RIGHT)) {
 		if (currentSelection == EXIT) currentSelection = HEALTH;
 		else currentSelection++;
+		smh->soundManager->playSound("snd_MouseOver");
 	}
 
 	if (smh->input->keyPressed(INPUT_ATTACK)) {
@@ -119,8 +121,7 @@ void Shop::purchaseItem(int item) {
 	
 	if (smh->saveManager->money < costs[item]) {
 
-		//Play no money sound
-
+		smh->soundManager->playSound("snd_Error");
 
 	} else {
 

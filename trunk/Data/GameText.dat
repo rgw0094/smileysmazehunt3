@@ -47,10 +47,16 @@ Hint3-4 = "Where to go, you ask?  You should put your new boots to use in the ne
 Hint3-5 = "A good place to train would be on a *HOT* hiking trail.  That'll help you lose that baby fat!"
 Hint3-6 = "Thanks so much!  I hope to see you at the event!"
 
-Hint4Pages = "1"
-Hint4-1 = "Yo, bud. In the Sessaria Snowplains is a switch which can only be activated by your fancy new lightning orbs."
+Hint4Pages = "7"
+Hint4-1 = "Hey man.  I've heard you got lightning orbs now."
+Hint4-2 = "Who told me, you ask?  Well, for my own presidential safety I have security cameras installed all over the land."
+Hint4-3 = "I know what you're thinking.  Don't worry.  I only have them in the gals' bathrooms."
+Hint4-4 = "But anyways, there's only one place I don't have any cameras: The Realm of Despair."
+Hint4-5 = "It's located east of the fountain but Fenwar destroyed the bridge there."
+Hint4-6 = "You should use your lightning orbs to find a detour, then help me with my quest for pseudo-omniscience."
+Hint4-7 = "Thanks a bunch, dog!"
 
-Hint5Pages = "4"
+Hint5Pages = "6"
 Hint5-1 = "Dickens, Smiley, do you always need my help?"
 Hint5-2 = "If I tell you where to go for every item, you'll never figure it out on your own!"
 Hint5-3 = "Alright, alright, stop your sobbing. Inside the Forest of Fundoria is a land of mushrooms!!"
@@ -59,7 +65,7 @@ Hint5-5 = "You should try using your new-fangled force field thing you just got.
 Hint5-6 = "I need to get back to work.  Have fun!"
 
 Hint6Pages = "1"
-Hint6-1 = "Go back to the realm of despair you faggot."
+Hint6-1 = ""
 
 Hint7Pages = "1"
 Hint7-1 = "Dickens, Dickens, Dickens, Bartli, Dickens"
@@ -67,17 +73,25 @@ Hint7-1 = "Dickens, Dickens, Dickens, Bartli, Dickens"
 Hint8Pages = "1"
 Hint8-1 = "Go to the swamp"
 
-Hint9Pages = "1"
-Hint9-1 = "Tut's Tomb"
+Hint9Pages = "5"
+Hint9-1 = "Smiley.  You're nearing the end of your adventure."
+Hint9-2 = "That means it's about time you start figuring out things on your own!"
+Hint9-3 = "I'm going on vacation soon and my telepathic powers will be turned off.  I'm still debating on where to go."
+Hint9-4 = "I heard there are some nice women that go tanning by the Mile River.  Could you check that out for me?"
+Hint9-5 = "Where is the Mile River?  Somewhere south.  Take pictures.  *wink*"
 
-Hint10Pages = "1"
-Hint10-1 = "Serpentine Path"
+Hint10Pages = "4"
+Hint10-1 = "Smiley, my boy.  You are becoming quite powerful now."
+Hint10-2 = "With Tut's mask you will finally be able to access the Castle of Evil via the Serpentine Path."
+Hint10-3 = "But to reach Fenwar himself, you will need one more item."
+Hint10-4 = "Good luck!  The most difficult part of your journey awaits you!"
 
-Hint11Pages = "1"
-Hint11-1 = "Calypso 2"
+Hint11Pages = "4"
+Hint11-1 = "Are you kidding me, Smiley?"
+Hint11-2 = "I don't know if you have noticed, but your inventory is completely filled."
+Hint11-3 = "Usually in these types of games, that implies you should probably be near the end."
+Hint11-4 = "So yeah.  Go defeat Fenwar already.  I know you can do it!"
 
-Hint12Pages = "1"
-Hint12-1 = "Fenwar"
 
 ;=============================================SIGNS======================================
 ;FOUNTAIN.SMH
@@ -193,6 +207,10 @@ NPC19Name = "Bill Clinton"
 NPC19Pages = "2"
 NPC19-1 = "Hey, uhhh, I'd prefer it if we weren't seen talking in public. You still have that cane right?"
 NPC19-2 = "You see, I prefer to only be seen talking to important people and hot chicks."
+
+NPC20Name = "Random Woman"
+NPC20Pages = "1"
+NPC20-1 = "Oh hey honey.  You're a cutie."
 
 ;OLDETOWNE.SMH
 NPC2Name = "Abner"

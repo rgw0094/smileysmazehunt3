@@ -38,6 +38,7 @@ public:
 	float width, height;
 	char text[50];
 	bool highlighted;
+	bool soundPlayedThisFrame;
 
 	hgeRect *collisionBox;
 
