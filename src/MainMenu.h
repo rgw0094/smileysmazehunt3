@@ -79,9 +79,12 @@ public:
 
 private:
 
+	void drawTransition(float dt);
+	void drawCircle(float dt);
+	bool updateTransition(float dt);
 	void enterSceneState(int newState);
 	void enterScene(int scene);
-	void finish();
+	void startTransition();
 
 	float backgroundAlpha;
 	int scene;
@@ -92,7 +95,12 @@ private:
 	float textAlpha;
 	float timeCinematicStarted;
 	bool musicTransitionedYet;
+	bool musicFadeoutYet;
 	std::string text;
+
+	bool inTransition;
+	float transitionScale;
+	float timeInTransition;
 
 };
 
