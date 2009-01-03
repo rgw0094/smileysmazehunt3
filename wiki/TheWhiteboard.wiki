@@ -10,6 +10,7 @@
  * Opening Cinematic text
 
 === Programming To Do ===
+ * World Map
  * Lovecraftian Boss
  * King Tut
  * Barvinoid
