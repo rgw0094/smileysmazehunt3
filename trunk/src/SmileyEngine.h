@@ -213,6 +213,7 @@ class ScreenEffectsManager;
 #define SMILELET_FLOWER_HAPPY 66
 #define NO_WALK_PIT 67
 #define FAKE_PIT 68
+#define NO_WALK_WATER 69
 //...
 #define WHITE_SWITCH_LEFT 74
 #define YELLOW_SWITCH_LEFT 75

@@ -520,7 +520,7 @@ void Environment::draw(float dt) {
 					if (theCollision == SHALLOW_WATER) {
 						smh->resources->GetAnimation("water")->SetColor(ARGB(125,255,255,255));
 						smh->resources->GetAnimation("water")->Render(drawX,drawY);
-					} else if (theCollision == DEEP_WATER) {
+					} else if (theCollision == DEEP_WATER || theCollision == NO_WALK_WATER) {
 						smh->resources->GetAnimation("water")->SetColor(ARGB(255,255,255,255));
 						smh->resources->GetAnimation("water")->Render(drawX,drawY);
 					} else if (theCollision == WALK_LAVA || theCollision == NO_WALK_LAVA) {

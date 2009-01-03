@@ -507,6 +507,9 @@
 				<File
 					RelativePath=".\src\WindowManager.cpp">
 				</File>
+				<File
+					RelativePath=".\src\WorldMap.cpp">
+				</File>
 			</Filter>
 		</Filter>
 		<Filter

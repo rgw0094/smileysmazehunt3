@@ -31,7 +31,6 @@ void WindowManager::openGameMenu() {
  * Opens the game menu to the specified menu window.
  */
 void WindowManager::openGameMenu(int whichWindow) {
-	gameMenuOpen = true;
 	switch (whichWindow) {
 		case INVENTORY:
 			openWindow(new Inventory());
@@ -39,7 +38,11 @@ void WindowManager::openGameMenu(int whichWindow) {
 		case AREA_MAP:
 			openWindow(new Map());
 			break;
+		case WORLD_MAP:
+			openWindow(new WorldMap());
+			break;
 	}
+	gameMenuOpen = true;
 }
 
 /**
@@ -53,17 +56,18 @@ bool WindowManager::isGameMenuOpen() {
  * Opens a new window. If another window is already open, it is closed first.
  */
 void WindowManager::openWindow(BaseWindow *newWindow) {
-	if (activeWindow) {
-		activeWindow->close();
+	if (isOpenWindow()) {
+		closeWindow();
 	}
+	smh->log("opening window");
 	activeWindow = newWindow;
-	activeWindow->open();
 }
 
 /**
  * If there is currently a window open, closes it.
  */
 void WindowManager::closeWindow() {
+	smh->log("closing window");
 	gameMenuOpen = false;
 	textBoxOpen = false;
 	if (activeWindow) delete activeWindow;
@@ -76,6 +80,23 @@ void WindowManager::closeWindow() {
 void WindowManager::draw(float dt) {
 	if (activeWindow) {
 		activeWindow->draw(dt);
+	}
+
+	//Draw flashing arrows for the menu windows
+	if (gameMenuOpen) {
+		float flashingAlpha = 255.0;
+		float n = 0.6;
+		float x = smh->getRealTime();
+		while (x > n) x -= n;
+		if (x < n/2.0) {
+			flashingAlpha = 255 * (x/(n/2.0));
+		} else {
+			flashingAlpha = 255.0 - 255.0 * ((x - n/2.0)/(n/2.0));
+		}
+		smh->resources->GetSprite("windowArrowLeft")->SetColor(ARGB(flashingAlpha, 255.0, 255.0, 255.0));
+		smh->resources->GetSprite("windowArrowRight")->SetColor(ARGB(flashingAlpha, 255.0, 255.0, 255.0));
+		smh->drawSprite("windowArrowLeft", 160, 384);
+		smh->drawSprite("windowArrowRight", 864, 384);
 	}
 }
 
@@ -110,11 +131,7 @@ void WindowManager::update(float dt) {
  * Returns whether or not there is currently an open window.
  */
 bool WindowManager::isOpenWindow() {
-	if (activeWindow || textBoxOpen) {
-		return true;
-	} else {
-		return false;
-	}
+	return (activeWindow || textBoxOpen || gameMenuOpen);
 }
 
 /**

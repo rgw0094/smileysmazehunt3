@@ -54,7 +54,9 @@ Hint5Pages = "4"
 Hint5-1 = "Dickens, Smiley, do you always need my help?"
 Hint5-2 = "If I tell you where to go for every item, you'll never figure it out on your own!"
 Hint5-3 = "Alright, alright, stop your sobbing. Inside the Forest of Fundoria is a land of mushrooms!!"
-Hint5-4 = "I'm so excited for you I can hardly breathe!"
+Hint5-4 = "Getting inside is tricky, however."
+Hint5-5 = "You should try using your new-fangled force field thing you just got.  That will surely get you in!"
+Hint5-6 = "I need to get back to work.  Have fun!"
 
 Hint6Pages = "1"
 Hint6-1 = "Go back to the realm of despair you faggot."
@@ -80,7 +82,7 @@ Hint12-1 = "Fenwar"
 ;=============================================SIGNS======================================
 ;FOUNTAIN.SMH
 Sign1 = "Smiley's house"
-Sign2 = "Welcome to Smiley Town.\nPopulation: 5"
+Sign2 = "Welcome to Smiley Town.\nPopulation: 6"
 Sign3 = "Stuck?  Trying hitting a switch with your tongue."
 Sign4 = "Watch out for enemies!  Attack them with your tongue to destroy them!"
 Sign5 = "Use springs to hop over obstacles."
@@ -93,6 +95,7 @@ Sign34 = "Watch out for slime!  It's pretty slippery!"
 Sign35 = "If you get blocked into an area, destroying all of the enemies there will open the exits."
 Sign36 = "Lick the lollipop to save the game."
 Sign37 = "Don't forget to access your map and inventory.  If you don't know how, check your controls in the options menu!"
+Sign64 = "Get off my lawn - \n\n Bill Clinton"
  
 ;OLDETOWNE.SMH
 Sign10 = "To pass through this door, you will first need to find a red key"
