@@ -9,7 +9,7 @@ extern SMH *smh;
 #define TITLE_START 300.0
 #define ENEMY_START 1300.0
 #define NUM_UNIQUE_BOSSES 7
-#define NUM_UNIQUE_NPCS 12
+#define NUM_UNIQUE_NPCS 13
 
 CreditsScreen::CreditsScreen() {
 	offset = 0.0;
@@ -196,6 +196,8 @@ void CreditsScreen::init() {
 			newNPC.name = "Akil";
 		} else if (i == 11) {
 			newNPC.name = "Pharaoh Moan";
+		} else if (i == 12) {
+			newNPC.name = "Random Hot Chick";
 		}
 
 		npcList.push_back(newNPC);

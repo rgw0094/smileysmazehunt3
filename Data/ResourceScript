@@ -988,6 +988,24 @@ Sprite windowArrowRight {
 Sound snd_fireBreath {
  filename="FireBreath.wav"
 }
+Sound snd_Error {
+ filename="Error.mp3"
+}
+Sound snd_MouseOver {
+ filename="MouseOver.wav"
+}
+Sound snd_ButtonClick {
+ filename="ButtonClick.mp3"
+}
+Sound snd_AbilitySelect {
+ filename="AbilitySelect.mp3"
+}
+Sound snd_AbilityDeSelect {
+ filename="AbilityDeSelect.mp3"
+}
+Sound snd_ChangeMenu {
+ filename="ChangeMenu.mp3"
+}
 Sound snd_LightningOrb {
  filename="LightningOrb.mp3"
 }

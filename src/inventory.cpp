@@ -144,16 +144,28 @@ bool Inventory::update(float dt) {
 
 	//Process Input to move cursor
 	if (smh->input->keyPressed(INPUT_LEFT)) {
-		if (cursorX > 0) cursorX--;
+		if (cursorX > 0) {
+			cursorX--;
+			smh->soundManager->playSound("snd_MouseOver");
+		}
 	}
 	if (smh->input->keyPressed(INPUT_RIGHT)) {
-		if (cursorX < WIDTH-1) cursorX++;
+		if (cursorX < WIDTH-1) {
+			cursorX++;
+			smh->soundManager->playSound("snd_MouseOver");
+		}
 	}
 	if (smh->input->keyPressed(INPUT_UP)) {
-		if (cursorY > 0) cursorY--;
+		if (cursorY > 0) {
+			cursorY--;
+			smh->soundManager->playSound("snd_MouseOver");
+		}
 	}
 	if (smh->input->keyPressed(INPUT_DOWN)) {
-		if (cursorY < HEIGHT-1) cursorY++;
+		if (cursorY < HEIGHT-1) {
+			cursorY++;
+			smh->soundManager->playSound("snd_MouseOver");
+		}
 	}
 
 	if (smh->input->keyPressed(INPUT_ATTACK) && smh->saveManager->hasAbility[cursorY*4 + cursorX]) {

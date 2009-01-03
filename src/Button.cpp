@@ -36,10 +36,19 @@ void Button::draw(float dt) {
 void Button::update(float dt) {
 	collisionBox->Set(x, y, x+width, y+height);
 	highlighted = collisionBox->TestPoint(smh->input->getMouseX(), smh->input->getMouseY());
+	soundPlayedThisFrame = false;
 }
 
 bool Button::isClicked() {
-	return (highlighted && (smh->hge->Input_KeyDown(HGEK_LBUTTON)|| smh->input->keyPressed(INPUT_ATTACK)));
+	if (highlighted && (smh->hge->Input_KeyDown(HGEK_LBUTTON)|| smh->input->keyPressed(INPUT_ATTACK))) {
+		if (!soundPlayedThisFrame) {
+			smh->soundManager->playSound("snd_ButtonClick");
+			soundPlayedThisFrame = true;
+		}
+		return true;
+	} else {
+		return false;
+	}
 }
 
 void Button::setText(const char* _text) {

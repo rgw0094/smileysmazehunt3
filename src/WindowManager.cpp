@@ -111,10 +111,12 @@ void WindowManager::update(float dt) {
 			currentMenuWindow--;
 			if (currentMenuWindow < 0) currentMenuWindow = NUM_MENU_WINDOWS-1;
 			openGameMenu(currentMenuWindow);
+			smh->soundManager->playSound("snd_ChangeMenu");
 		} else if (smh->input->keyPressed(INPUT_NEXT_ABILITY)) {
 			currentMenuWindow++;
 			if (currentMenuWindow >= NUM_MENU_WINDOWS) currentMenuWindow = 0;
 			openGameMenu(currentMenuWindow);
+			smh->soundManager->playSound("snd_ChangeMenu");
 		}
 	}
 
