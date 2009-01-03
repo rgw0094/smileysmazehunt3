@@ -705,6 +705,13 @@ Sprite sceneThree {
 }
 Sprite sceneFour {
  texture=cinematicTx
+ rect=0,680,440,340
+ hotspot=220,215
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=12
+}
+Sprite sceneFive {
+ texture=cinematicTx
  rect=440,340,440,430
  hotspot=220,215
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
