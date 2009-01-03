@@ -19,7 +19,6 @@
  * Merge projectile texture with sprites texture
 
 === Graphics To Do ===
- * Opening Cinematic
  * New Keys (I think all keys can be the same but just a different hue)
  I like the keys -RYAN
  * New ability loot graphic (the thing that appears when you kill a boss)
@@ -53,7 +52,7 @@
 
 ===Done===
 ||Item||Date||Done By||
-||Opening cinematic programming||1/1/09||RGW||
+||Opening cinematic||1/2/09||RGW||
 ||Moved money to inventory and replaced damage dealt/received with pixels travelled||1/1/09||RGW||
 ||New ability selection system||1/1/09||RGW||
 ||Fake and NoWalk pits||12/31/08||RGW||
