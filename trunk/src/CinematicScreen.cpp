@@ -94,7 +94,7 @@ bool CinematicScreen::update(float dt, float mouseX, float mouseY) {
 		musicTransitionedYet = true;
 	}
 
-	if (!musicFadeoutYet && scene == FINAL_SCENE && sceneState == SCENE_WAIT && timeInSceneState > 2.5) {
+	if (!musicFadeoutYet && scene == FINAL_SCENE && sceneState == SCENE_WAIT && timeInSceneState > 3.0) {
 		//Start fading out the music near the end of the final scene
 		smh->soundManager->fadeOutMusic();
 		musicFadeoutYet = true;
@@ -165,7 +165,7 @@ void CinematicScreen::enterScene(int newScene) {
 		text = "The dastardly villian and his minions whisked away \nSmiley's lover to his most evil of castles.";
 		sceneDuration = 3.4;
 	} else if (scene == 6) {
-		sceneDuration = 4.0;
+		sceneDuration = 4.5;
 		text = "It is now up to Smiley to uncover Fenwar's diabolical plan \nand rescue his lover! Undoubtedly, hours of puzzle and \nadventure based excitement await!";
 	}
 
