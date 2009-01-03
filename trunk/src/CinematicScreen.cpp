@@ -12,7 +12,7 @@ extern SMH *smh;
 #define SCENE_FADE_TEXT 3
 #define SCENE_FADE_PICTURE 4
 
-#define SCENE_ONE_MUSIC_LENGTH 26.7
+#define SCENE_ONE_MUSIC_LENGTH 26.6
 
 CinematicScreen::CinematicScreen() {
 	backgroundAlpha = 0.0;
@@ -67,7 +67,7 @@ bool CinematicScreen::update(float dt, float mouseX, float mouseY) {
 		}
 	}
 
-	if (smh->getRealTime() - timeCinematicStarted > 26.55 && !musicTransitionedYet) {
+	if (smh->getRealTime() - timeCinematicStarted > SCENE_ONE_MUSIC_LENGTH && !musicTransitionedYet) {
 		//Music transition
 		smh->soundManager->stopMusic();
 		musicTransitionedYet = true;
@@ -128,7 +128,7 @@ void CinematicScreen::enterScene(int newScene) {
 		sceneDuration = 3.4;
 		smh->soundManager->playMusic("fenwarLietmotif");
 	} else if (scene == 5) {
-		text = "The dastardly villian whisked away Smiley's lover to \nhis most evil of castles.";
+		text = "The dastardly villian and his minions whisked away \nSmiley's lover to his most evil of castles.";
 		sceneDuration = 3.4;
 	} else if (scene > 5) {
 		finish();
