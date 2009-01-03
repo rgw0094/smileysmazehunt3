@@ -219,6 +219,11 @@ void SMH::doDebugInput(float dt) {
 	//Toggle debug mode
 	if (hge->Input_KeyDown(HGEK_D)) toggleDebugMode();
 
+	if (hge->Input_KeyDown(HGEK_G)) {
+		enterGameState(GAME);
+		windowManager->openGameMenu(WORLD_MAP);
+	}
+
 	if (getGameState() == GAME) {
 
 		//Toggle invincibility

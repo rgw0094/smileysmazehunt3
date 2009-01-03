@@ -64,7 +64,7 @@ void SoundManager::playAreaMusic(int id) {
 	} else if (id == CASTLE_OF_EVIL) {
 		playMusic("castleOfEvilMusic");
 	} else if (id == CONSERVATORY) {
-		//playMusic("dfsfds");
+		playMusic("conservatoryMusic");
 	} else if (id == DEBUG_AREA) {
 		smh->soundManager->stopMusic();
 	}

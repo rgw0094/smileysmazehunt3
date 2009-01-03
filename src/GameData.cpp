@@ -60,6 +60,8 @@ const char *GameData::getAreaName(int area) {
 		return "The Serpentine Path";
 	} else if (area == DEBUG_AREA) {
 		return "Debug Area";
+	} else if (area == CONSERVATORY) {
+		return "Calypso's Conservatory";
 	} else {
 		return "Dickens";
 	}
