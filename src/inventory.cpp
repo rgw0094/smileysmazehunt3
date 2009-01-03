@@ -108,7 +108,7 @@ void Inventory::draw(float dt) {
 	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 345, 
 		HGETEXT_LEFT, "Mana Multiplier: ");
 	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 345, 
-		HGETEXT_RIGHT, "%1.2f", int(smh->saveManager->getManaModifier()));
+		HGETEXT_RIGHT, "%1.2f", smh->saveManager->getManaModifier());
 	//Damage multiplier
 	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 369, 
 		HGETEXT_LEFT, "Damage Multiplier:");
