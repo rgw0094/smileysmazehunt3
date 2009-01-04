@@ -442,3 +442,15 @@ void SMH::shadeScreen(int alpha) {
 float SMH::timePassedSince(float time) {
 	return gameTime - time;
 }
+
+float SMH::getFlashingAlpha(float n) {
+	float flashingAlpha = 255.0;
+	float x = smh->getRealTime();
+	while (x > n) x -= n;
+	if (x < n/2.0) {
+		flashingAlpha = 255 * (x/(n/2.0));
+	} else {
+		flashingAlpha = 255.0 - 255.0 * ((x - n/2.0)/(n/2.0));
+	}
+	return flashingAlpha;
+}

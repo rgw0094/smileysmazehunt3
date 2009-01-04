@@ -281,6 +281,7 @@ public:
 	float randomFloat(float min, float max);
 	void shadeScreen(int alpha);
 	float timePassedSince(float time);
+	float getFlashingAlpha(float n);
 
 	//Game objects
 	AreaChanger *areaChanger;

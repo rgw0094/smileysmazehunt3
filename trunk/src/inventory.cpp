@@ -35,16 +35,6 @@ void Inventory::draw(float dt) {
 	//Draw the inventory background
 	smh->resources->GetSprite("inventory")->Render(INVENTORY_X_OFFSET, INVENTORY_Y_OFFSET);
 
-	float flashingAlpha = 255.0;
-	float n = 0.6;
-	float x = smh->getRealTime();
-	while (x > n) x -= n;
-	if (x < n/2.0) {
-		flashingAlpha = 255 * (x/(n/2.0));
-	} else {
-		flashingAlpha = 255.0 - 255.0 * ((x - n/2.0)/(n/2.0));
-	}
-
 	//Ability grid
 	int drawX, drawY;
 	for (int i = 0; i < WIDTH; i++) {
@@ -66,7 +56,7 @@ void Inventory::draw(float dt) {
 				}
 				//Draw a check if the ability is one of the ones selected to be available in the GUI
 				if (smh->player->gui->isAbilityAvailable(j*4 + i)) {
-					smh->resources->GetSprite("selectedAbilityCheck")->SetColor(ARGB(flashingAlpha, 255.0, 255.0, 255.0));
+					smh->resources->GetSprite("selectedAbilityCheck")->SetColor(ARGB(smh->getFlashingAlpha(0.6), 255.0, 255.0, 255.0));
 					smh->resources->GetSprite("selectedAbilityCheck")->Render(drawX - 27.0, drawY + 23.0);
 				}
 			}
