@@ -9,11 +9,11 @@
  * Fenwar Encounters
 
 === Programming To Do ===
- * World Map
  * Lovecraftian Boss
  * King Tut
  * Barvinoid
  * Make pits have a hue change variable in the var layer.  Then we can match pits to the level colors.
+ * Keep track of # of gems per area
  * Merge projectile texture with sprites texture
 
 === Graphics To Do ===
@@ -50,6 +50,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||World Map||1/3/09||RGW||
 ||Opening cinematic||1/2/09||RGW||
 ||Moved money to inventory and replaced damage dealt/received with pixels travelled||1/1/09||RGW||
 ||New ability selection system||1/1/09||RGW||
