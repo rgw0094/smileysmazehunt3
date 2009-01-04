@@ -3,7 +3,6 @@
  * Sarah Palin
 
 === Data To Do ===
- * Bill Clinton hints
  * Enemy names
  * Sound effects
  * Fenwar Encounters
@@ -50,6 +49,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Bill Clinton Hints||1/3/09||RMM||
 ||World Map||1/3/09||RGW||
 ||Opening cinematic||1/2/09||RGW||
 ||Moved money to inventory and replaced damage dealt/received with pixels travelled||1/1/09||RGW||
