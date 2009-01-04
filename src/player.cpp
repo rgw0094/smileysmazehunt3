@@ -212,6 +212,10 @@ void Player::updateLocation() {
 	baseGridY = baseY / 64.0;
 	smh->saveManager->playerGridX = gridX;
 	smh->saveManager->playerGridY = gridY;	
+
+	if (!smh->environment->isInBounds(gridX, gridY)) {
+		throw new System::Exception("Player went out of bounds");
+	}
 }
 
 /**

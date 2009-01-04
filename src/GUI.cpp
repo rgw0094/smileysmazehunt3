@@ -228,7 +228,11 @@ void GUI::changeAbility(int direction) {
 	//Stop old ability
 	smh->player->fireBreathParticle->Stop(false);
 	smh->player->iceBreathParticle->Stop(false);
-	smh->player->shrinkActive = false;
+	
+	if (smh->player->shrinkActive) {
+		smh->player->shrinkActive = false;
+		smh->soundManager->playSound("snd_DeShrink");
+	}
  
 	int a, b;
 
