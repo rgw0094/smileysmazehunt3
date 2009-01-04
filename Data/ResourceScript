@@ -1140,6 +1140,9 @@ Sprite windowArrowRight {
 ;***********************
 ;******** SOUNDS *******
 ;***********************
+Sound snd_SwitchItem {
+ filename="SwitchItem.mp3"
+}
 Sound snd_Falling {
  filename="Falling.mp3"
 }

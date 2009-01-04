@@ -223,6 +223,8 @@ void GUI::draw() {
  */
 void GUI::changeAbility(int direction) {
 
+	smh->soundManager->playSound("snd_SwitchItem");
+
 	//Stop old ability
 	smh->player->fireBreathParticle->Stop(false);
 	smh->player->iceBreathParticle->Stop(false);
