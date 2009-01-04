@@ -46,6 +46,8 @@ void Tongue::startAttack() {
 		return;
 	}
 
+	playSound();
+
 	smh->saveManager->numTongueLicks++;
 	hasActivatedSomething = false;
 	timeStartedAttack = smh->getGameTime();
@@ -105,6 +107,26 @@ void Tongue::update(float dt) {
 
 	}
 
+}
+
+void Tongue::playSound() {
+	switch (smh->hge->Random_Int(1,5)) {
+		case 1:
+			smh->soundManager->playSound("snd_Lick1");
+			break;
+		case 2:
+			smh->soundManager->playSound("snd_Lick2");
+			break;
+		case 3:
+			smh->soundManager->playSound("snd_Lick3");
+			break;
+		case 4:
+			smh->soundManager->playSound("snd_Lick4");
+			break;
+		case 5:
+			smh->soundManager->playSound("snd_Lick5");
+			break;
+	}
 }
 
 /**

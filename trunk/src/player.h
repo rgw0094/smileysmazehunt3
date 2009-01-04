@@ -260,6 +260,8 @@ public:
 
 private:
 
+	void playSound();
+
 	int tongueState;
 	bool attacking;
 	bool hasActivatedSomething;

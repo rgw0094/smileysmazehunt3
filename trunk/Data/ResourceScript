@@ -308,73 +308,147 @@ Music creditsMusic {
 Texture WorldMapTx {
  filename="Graphics/WorldMap.png"
 }
+Texture WorldMapBordersTx {
+ filename="Graphics/WorldMapBorders.png"
+}
 Sprite SessariaMap {
  texture=WorldMapTx
  rect=0,0,243,121
- hotspot=0,0
+ hotspot=121,60
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=13
 }
 Sprite SalabiaMap {
  texture=WorldMapTx
  rect=245,0,153,123
- hotspot=0,0
+ hotspot=76,61
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=13
 }
 Sprite FundoriaMap {
  texture=WorldMapTx
  rect=0,123,168,198
- hotspot=0,0
+ hotspot=84,99
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=13
 }
 Sprite DespairMap {
  texture=WorldMapTx
  rect=169,124,148,147
- hotspot=0,0
+ hotspot=74,73
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=13
 }
 Sprite PathMap {
  texture=WorldMapTx
  rect=320,125,108,96
- hotspot=0,0
+ hotspot=54,48
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=13
 }
 Sprite CastleMap {
  texture=WorldMapTx
  rect=320,223,107,81
- hotspot=0,0
+ hotspot=53,40
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=13
 }
 Sprite FountainMap {
  texture=WorldMapTx
  rect=170,273,128,70
- hotspot=0,0
+ hotspot=64,35
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=13
 }
 Sprite TutMap {
  texture=WorldMapTx
  rect=1,322,99,74
- hotspot=0,0
+ hotspot=50,37
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=13
 }
 Sprite ConservatoryMap {
  texture=WorldMapTx
  rect=112,333,49,52
- hotspot=0,0
+ hotspot=25,26
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=13
 }
 Sprite SmolderMap {
  texture=WorldMapTx
  rect=1,397,120,112
- hotspot=0,0
+ hotspot=60,56
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=13
+}
+
+Sprite SessariaMapBorder {
+ texture=WorldMapBordersTx
+ rect=0,0,252,130
+ hotspot=126,65
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=13
+}
+Sprite SalabiaMapBorder {
+ texture=WorldMapBordersTx
+ rect=253,0,161,132
+ hotspot=80,66
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=13
+}
+Sprite FundoriaMapBorder {
+ texture=WorldMapBordersTx
+ rect=1,131,177,206
+ hotspot=88,103
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=13
+}
+Sprite DespairMapBorder {
+ texture=WorldMapBordersTx
+ rect=179,133,156,155
+ hotspot=78,72
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=13
+}
+Sprite PathMapBorder {
+ texture=WorldMapBordersTx
+ rect=336,133,119,104
+ hotspot=59,52
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=13
+}
+Sprite ConservatoryMapBorder {
+ texture=WorldMapBordersTx
+ rect=415,1,57,60
+ hotspot=28,30
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=13
+}
+Sprite FountainMapBorder {
+ texture=WorldMapBordersTx
+ rect=179,289,136,78
+ hotspot=68,37
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=13
+}
+Sprite CastleMapBorder {
+ texture=WorldMapBordersTx
+ rect=336,238,116,89
+ hotspot=58,44
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=13
+}
+Sprite SmolderMapBorder {
+ texture=WorldMapBordersTx
+ rect=1,338,128,121
+ hotspot=64,60
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=13
+}
+Sprite TutMapBorder {
+ texture=WorldMapBordersTx
+ rect=130,368,107,82
+ hotspot=53,41
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=13
 }
@@ -1066,11 +1140,38 @@ Sprite windowArrowRight {
 ;***********************
 ;******** SOUNDS *******
 ;***********************
+Sound snd_Lick1 {
+ filename="Lick1.mp3"
+}
+Sound snd_Lick2 {
+ filename="Lick2.mp3"
+}
+Sound snd_Lick3 {
+ filename="Lick3.mp3"
+}
+Sound snd_Lick4 {
+ filename="Lick4.mp3"
+}
+Sound snd_Lick5 {
+ filename="Lick5.mp3"
+}
 Sound snd_fireBreath {
  filename="FireBreath.wav"
 }
 Sound snd_Error {
  filename="Error.mp3"
+}
+Sound snd_Shrink {
+ filename="Shrink.mp3"
+}
+Sound snd_DeShrink {
+ filename="DeShrink.mp3"
+}
+Sound snd_StartTut {
+ filename="StartTut.mp3"
+}
+Sound snd_EndTut {
+ filename="EndTut.mp3"
 }
 Sound snd_MouseOver {
  filename="MouseOver.wav"

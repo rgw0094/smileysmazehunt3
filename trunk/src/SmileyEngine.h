@@ -523,6 +523,7 @@ public:
 	int numKeys[5][4];
 	int numGems[NUM_AREAS][4];
 	int numUpgrades[3];
+	bool hasVisitedArea[NUM_AREAS];
 	int money;	
 
 private:
