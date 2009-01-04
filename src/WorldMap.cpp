@@ -28,27 +28,39 @@ void WorldMap::draw(float dt) {
 	smh->drawSprite("rightBorder", windowX + 630, windowY + 30);
 	smh->drawSprite("bottomBorder", windowX, windowY + 462);
 
-	if (selectedArea == SESSARIA_SNOWPLAINS)
-		smh->drawSprite("SessariaMapBorder", fountainX + 33, fountainY - 87);
-	if (selectedArea == FOUNTAIN_AREA)
-		smh->drawSprite("FountainMapBorder", fountainX - 1, fountainY - 2);
-	if (selectedArea == FOREST_OF_FUNGORIA)
-		smh->drawSprite("FundoriaMapBorder", fountainX - 119, fountainY + 9);
-	if (selectedArea == OLDE_TOWNE)
-		smh->drawSprite("SalabiaMapBorder", fountainX - 20, fountainY + 87);
-	if (selectedArea == TUTS_TOMB)
-		smh->drawSprite("TutMapBorder", fountainX + 5, fountainY + 170);
-	if (selectedArea == SMOLDER_HOLLOW)
-		smh->drawSprite("SmolderMapBorder", fountainX + 81, fountainY + 59);
-	if (selectedArea == WORLD_OF_DESPAIR)
-		smh->drawSprite("DespairMapBorder", fountainX + 122, fountainY - 18);
-	if (selectedArea == SERPENTINE_PATH)
-		smh->drawSprite("PathMapBorder", fountainX + 248, fountainY - 78);
-	if (selectedArea == CASTLE_OF_EVIL)
-		smh->drawSprite("CastleMapBorder", fountainX + 272, fountainY - 152);
-	if (selectedArea == CONSERVATORY)
-		smh->drawSprite("ConservatoryMapBorder", fountainX + 340, fountainY - 119);
+	float a = smh->getFlashingAlpha(0.7);
 
+	if (selectedArea == SESSARIA_SNOWPLAINS) {
+		smh->resources->GetSprite("SessariaMapBorder")->SetColor(ARGB(a, 255.0, 255.0, 255.0));
+		smh->drawSprite("SessariaMapBorder", fountainX + 33, fountainY - 87);
+	} else if (selectedArea == FOUNTAIN_AREA) {
+		smh->resources->GetSprite("FountainMapBorder")->SetColor(ARGB(a, 255.0, 255.0, 255.0));
+		smh->drawSprite("FountainMapBorder", fountainX - 1, fountainY - 2);
+	} else if (selectedArea == FOREST_OF_FUNGORIA) {
+		smh->resources->GetSprite("FundoriaMapBorder")->SetColor(ARGB(a, 255.0, 255.0, 255.0));
+		smh->drawSprite("FundoriaMapBorder", fountainX - 119, fountainY + 9);
+	} else if (selectedArea == OLDE_TOWNE) {
+		smh->resources->GetSprite("SalabiaMapBorder")->SetColor(ARGB(a, 255.0, 255.0, 255.0));
+		smh->drawSprite("SalabiaMapBorder", fountainX - 20, fountainY + 87);
+	} else if (selectedArea == TUTS_TOMB) {
+		smh->resources->GetSprite("TutMapBorder")->SetColor(ARGB(a, 255.0, 255.0, 255.0));
+		smh->drawSprite("TutMapBorder", fountainX + 5, fountainY + 170);
+	} else if (selectedArea == SMOLDER_HOLLOW) {
+		smh->resources->GetSprite("SmolderMapBorder")->SetColor(ARGB(a, 255.0, 255.0, 255.0));
+		smh->drawSprite("SmolderMapBorder", fountainX + 81, fountainY + 59);
+	} else if (selectedArea == WORLD_OF_DESPAIR) {
+		smh->resources->GetSprite("DespairMapBorder")->SetColor(ARGB(a, 255.0, 255.0, 255.0));
+		smh->drawSprite("DespairMapBorder", fountainX + 122, fountainY - 18);
+	} else if (selectedArea == SERPENTINE_PATH) {
+		smh->resources->GetSprite("PathMapBorder")->SetColor(ARGB(a, 255.0, 255.0, 255.0));
+		smh->drawSprite("PathMapBorder", fountainX + 248, fountainY - 78);
+	} else if (selectedArea == CASTLE_OF_EVIL) {
+		smh->resources->GetSprite("CastleMapBorder")->SetColor(ARGB(a, 255.0, 255.0, 255.0));
+		smh->drawSprite("CastleMapBorder", fountainX + 272, fountainY - 152);
+	} else if (selectedArea == CONSERVATORY) {
+		smh->resources->GetSprite("ConservatoryMapBorder")->SetColor(ARGB(a, 255.0, 255.0, 255.0));
+		smh->drawSprite("ConservatoryMapBorder", fountainX + 340, fountainY - 119);
+	}
 
 	if (smh->saveManager->hasVisitedArea[SESSARIA_SNOWPLAINS])
 		smh->drawSprite("SessariaMap", fountainX + 32, fountainY - 88);
