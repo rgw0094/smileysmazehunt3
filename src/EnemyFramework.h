@@ -222,6 +222,7 @@ public:
 private:
 
 	void killEnemy(std::list<EnemyStruct>::iterator i);
+	void playHitSoundEffect();
 
 };
 

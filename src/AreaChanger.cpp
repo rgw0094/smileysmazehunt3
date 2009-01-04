@@ -67,6 +67,7 @@ void AreaChanger::changeArea(int _destinationX, int _destinationY, int _destinat
 
 	state = STATE_IN;
 	loadingEffectScale = 3.0;
+	smh->soundManager->playSound("snd_AreaChangeUp");
 
 }
 
@@ -129,22 +130,23 @@ void AreaChanger::update(float dt) {
 			
 			state = STATE_OUT;
 		} else {
-			loadingEffectScale -= 6.0 * dt;
+			loadingEffectScale -= 3.0 * dt;
 		}
 
 		//When done zooming in don't actually move Smiley until the next frame so
 		//that it draws the circle completely zoomed in while the level is loading
-		if (loadingEffectScale < 0.00001) {
+		if (loadingEffectScale < 0.00001 && !doneZoomingIn) {
 			doneZoomingIn = true;
+			smh->soundManager->playSound("snd_AreaChangeDown");
 		}
 
 	//Circle zooming out
 	} else if (state == STATE_OUT) {
-		loadingEffectScale += 6.0 * dt;
+		loadingEffectScale += 3.0 * dt;
 		//Done zooming out
 		if (loadingEffectScale > 3.0) {
 			loadingEffectScale = 3.0;
-			state = STATE_INACTIVE;			
+			state = STATE_INACTIVE;	
 		}
 	}
 }

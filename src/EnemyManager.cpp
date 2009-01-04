@@ -242,6 +242,11 @@ bool EnemyManager::tongueCollision(Tongue *tongue, float damage) {
 			}
 		}
 	}
+
+	if (hit) {
+		playHitSoundEffect();
+	}
+
 	return hit;
 } //end tongueCollision()
 
@@ -312,6 +317,25 @@ bool EnemyManager::hitEnemiesWithProjectile(hgeRect *collisionBox, float damage,
 	return false;
 }
 
+void EnemyManager::playHitSoundEffect() {
+	switch (smh->hge->Random_Int(1,5)) {
+		case 1:
+			smh->soundManager->playSound("snd_Hit1");
+			break;
+		case 2:
+			smh->soundManager->playSound("snd_Hit2");
+			break;
+		case 3:
+			smh->soundManager->playSound("snd_Hit3");
+			break;
+		case 4:
+			smh->soundManager->playSound("snd_Hit4");
+			break;
+		case 5:
+			smh->soundManager->playSound("snd_Hit5");
+			break;
+	}
+}
 
 /**
  * Deletes all the managed enemies

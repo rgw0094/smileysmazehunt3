@@ -1140,6 +1140,18 @@ Sprite windowArrowRight {
 ;***********************
 ;******** SOUNDS *******
 ;***********************
+Sound snd_Falling {
+ filename="Falling.mp3"
+}
+Sound snd_TextBoxChange {
+ filename="TextBoxChange.mp3"
+}
+Sound snd_AreaChangeUp {
+ filename="AreaChangeUp.mp3"
+}
+Sound snd_AreaChangeDown {
+ filename="AreaChangeDown.mp3"
+}
 Sound snd_Lick1 {
  filename="Lick1.mp3"
 }
@@ -1154,6 +1166,21 @@ Sound snd_Lick4 {
 }
 Sound snd_Lick5 {
  filename="Lick5.mp3"
+}
+Sound snd_Hit1 {
+ filename="Hit1.mp3"
+}
+Sound snd_Hit2 {
+ filename="Hit2.mp3"
+}
+Sound snd_Hit3 {
+ filename="Hit3.mp3"
+}
+Sound snd_Hit4 {
+ filename="Hit4.mp3"
+}
+Sound snd_Hit5 {
+ filename="Hit5.mp3"
 }
 Sound snd_fireBreath {
  filename="FireBreath.wav"

@@ -321,6 +321,7 @@ bool TextBox::update(float dt) {
 		//More pages left - go to the next one
 		} else {
 			currentPage++;
+			smh->soundManager->playSound("snd_TextBoxChange");
 			if (currentPage > numPages) currentPage = numPages;
 		}
 	}
