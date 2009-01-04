@@ -855,6 +855,7 @@ void Player::doFalling(float dt) {
 		float dist = Util::distance(baseGridX*64+32, baseGridY*64+32, x, y);
 		fallingDx = (dist/2.0) * cos(angle);
 		fallingDy = (dist/2.0) * sin(angle);
+		smh->soundManager->playSound("snd_Falling");
 	}
 
 	//Continue falling
