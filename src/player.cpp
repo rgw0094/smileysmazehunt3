@@ -465,12 +465,19 @@ void Player::doAbility(float dt) {
 
 	////////////// Tut's Mask //////////////
 
-	cloaked = (!frozen && smh->input->keyDown(INPUT_ABILITY) &&
+	if (canUseAbility && smh->input->keyDown(INPUT_ABILITY) &&
 			   gui->getSelectedAbility() == TUTS_MASK && 
-			   mana >= smh->gameData->getAbilityInfo(TUTS_MASK).manaCost*dt);
-	if (cloaked) {
+			   mana >= smh->gameData->getAbilityInfo(TUTS_MASK).manaCost*dt) 
+	{
+		if (!cloaked) {
+			cloaked = true;
+			smh->soundManager->playSound("snd_StartTut");
+		}
 		mana -= smh->gameData->getAbilityInfo(TUTS_MASK).manaCost*dt;
 		usingManaItem = true;
+	} else if (cloaked) {
+		cloaked = false;
+		smh->soundManager->playSound("snd_EndTut");
 	}
 	
 	////////////// Sprint Boots //////////////
@@ -555,6 +562,11 @@ void Player::doAbility(float dt) {
 		//Toggle shrink mode
 		if (gui->getSelectedAbility() == SHRINK) {
 			shrinkActive = !shrinkActive;
+			if (shrinkActive) {
+				smh->soundManager->playSound("snd_Shrink");
+			} else {
+				smh->soundManager->playSound("snd_DeShrink");
+			}
 		}
 
 	}

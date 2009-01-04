@@ -165,6 +165,7 @@ void Environment::loadArea(int id, int from, bool playMusic) {
 	std::ifstream areaFile;
 	char threeBuffer[3];
 
+	smh->saveManager->hasVisitedArea[id] = true;
 	smh->saveManager->currentArea = id;
 
 	//Delete all objects from the previous area.

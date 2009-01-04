@@ -101,6 +101,11 @@ void SaveManager::resetCurrentData() {
 		}
 	}
 
+	for (int i = 0; i < NUM_AREAS; i++) {
+		hasVisitedArea[i] = false;
+	}
+	hasVisitedArea[FOUNTAIN] = true;
+
 	money = 0;
 	tutorialManCompleted = false;
 	for (int i = 0; i < 3; i++) numUpgrades[i] = 0;
@@ -192,6 +197,10 @@ void SaveManager::load(int fileNumber) {
 		smh->player->gui->setAbilityInSlot(input->readBits(5), i);
 	}
 
+	for (int i = 0; i < 12; i++) {
+		hasVisitedArea[i] = input->readBit();
+	}
+
 	//Exploration data
 	for (int i = 0; i < NUM_AREAS; i++) {
 		for (int j = 0; j < 256; j++) {
@@ -280,6 +289,11 @@ void SaveManager::save(bool showConfirmation) {
 	//Selected abilities
 	for (int i = 0; i < 3; i++) {
 		output->writeBits(smh->player->gui->getAbilityInSlot(i), 5);
+	}
+
+	//Which areas have been visited
+	for (int i = 0; i < 12; i++) {
+		output->writeBit(hasVisitedArea[i] ? 1 : 0);
 	}
 
 	//Exploration data

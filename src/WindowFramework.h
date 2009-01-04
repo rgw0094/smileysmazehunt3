@@ -239,7 +239,12 @@ public:
 
 private:
 
+	void moveAreaLeft();
+	void moveAreaRight();
+
 	int windowX, windowY;
+	int fountainX, fountainY;
+	int selectedArea;
 
 };
 
