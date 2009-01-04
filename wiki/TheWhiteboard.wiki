@@ -18,11 +18,9 @@
 === Graphics To Do ===
  * New Keys (I think all keys can be the same but just a different hue)
  I like the keys -RYAN
- * New ability loot graphic (the thing that appears when you kill a boss)
  * Bomb guy graphic
  * Lovecraftian Boss
  * "Exit Shop" icon
- * Hover pad
  * New button graphics maybe
  * Mirror switch graphic 	 
  * Arrow switch graphic (bunny) 
