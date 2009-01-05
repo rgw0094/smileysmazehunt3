@@ -63,6 +63,31 @@ void Inventory::draw(float dt) {
 		}
 	}
 
+	//Key selection graphic
+	float selectedKeyAlpha = (sin(smh->getRealTime()    )+1.0)/2.0*60.0+30.0;
+	float selectedKeyRed   = (sin(smh->getRealTime()*1.3)+1.0)/2.0*100.0+100.0;
+    float selectedKeyGreen = (sin(smh->getRealTime()*1.6)+1.0)/2.0*100.0+100.0;
+	float selectedKeyBlue  = (sin(smh->getRealTime()*0.7)+1.0)/2.0*100.0+100.0;
+	smh->resources->GetSprite("selectedKeys")->SetColor(ARGB(selectedKeyAlpha,selectedKeyRed,selectedKeyGreen,selectedKeyBlue));
+
+	switch (smh->saveManager->currentArea) {
+		case OLDE_TOWNE:
+            smh->resources->GetSprite("selectedKeys")->Render(INVENTORY_X_OFFSET + 375+50*0,INVENTORY_Y_OFFSET + 28);
+			break;
+		case FOREST_OF_FUNGORIA:
+            smh->resources->GetSprite("selectedKeys")->Render(INVENTORY_X_OFFSET + 375+50*1,INVENTORY_Y_OFFSET + 28);
+			break;
+		case SESSARIA_SNOWPLAINS:
+            smh->resources->GetSprite("selectedKeys")->Render(INVENTORY_X_OFFSET + 375+50*2,INVENTORY_Y_OFFSET + 28);
+			break;
+		case WORLD_OF_DESPAIR:
+            smh->resources->GetSprite("selectedKeys")->Render(INVENTORY_X_OFFSET + 375+50*3,INVENTORY_Y_OFFSET + 28);
+			break;
+		case CASTLE_OF_EVIL:
+            smh->resources->GetSprite("selectedKeys")->Render(INVENTORY_X_OFFSET + 375+50*4,INVENTORY_Y_OFFSET + 28);
+			break;
+	};
+    
 	//Key Matrix
 	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 4; j++) {

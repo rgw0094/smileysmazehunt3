@@ -1097,6 +1097,12 @@ Sprite selectedAbilityCheck {
  hotspot=10,10
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
+Sprite selectedKeys {
+ texture=UserInterfaceTx
+  rect=661,559,73,249
+  hotspot=0,0
+  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
 Animation levelIcons {
  texture=UserInterfaceTx
  rect=0,984,40,40
