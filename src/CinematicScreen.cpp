@@ -162,11 +162,11 @@ void CinematicScreen::enterScene(int newScene) {
 		sceneDuration = 3.4;
 		smh->soundManager->playMusic("fenwarLietmotif");
 	} else if (scene == 5) {
-		text = "The dastardly villian and his minions whisked away \nSmiley's lover to his most evil of castles.";
+		text = "The dastardly villain and his minions whisked away \nSmiley's lover to his most evil of castles.";
 		sceneDuration = 3.4;
 	} else if (scene == 6) {
 		sceneDuration = 5.0;
-		text = "It is now up to Smiley to uncover Fenwar's diabolical plan \nand rescue his lover! Undoubtedly, hours of puzzle and \nadventure based excitement await!";
+		text = "It is now up to Smiley to uncover Fenwar's diabolical plan \nand rescue his lover! Undoubtedly, hours of puzzle- and \nadventure-based excitement await!";
 	}
 
 	enterSceneState(SCENE_SHOW_PICTURE);
