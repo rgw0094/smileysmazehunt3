@@ -18,7 +18,7 @@ public:
     
 	//Methods
 	void activateEvilWall(int id);
-	void deactivateEvilWall(int id);
+	void deactivateEvilWalls();
 	void addEvilWall(int id);
 	void reset();
 	

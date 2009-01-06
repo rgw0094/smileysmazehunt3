@@ -51,14 +51,12 @@ void EvilWallManager::activateEvilWall(int id) {
 	}
 }
 
-void EvilWallManager::deactivateEvilWall(int id) {
-	//Loop through until we get to the wall with the correct id, then deactivate it	
+void EvilWallManager::deactivateEvilWalls() {
+	//Deactivate all evil walls.
 	
 	std::list<EvilWallStruct>::iterator i;
 	for(i = theEvilWalls.begin(); i != theEvilWalls.end(); i++) {
-		if (i->evilWall->evilWallID == id) {
-			i->evilWall->deactivate();
-		}				
+		i->evilWall->deactivate();
 	}
 }
 
@@ -69,7 +67,7 @@ void EvilWallManager::update(float dt) {
 		activateEvilWall(smh->environment->ids[smh->player->gridX][smh->player->gridY]);
 	}
 	if (smh->environment->collision[smh->player->gridX][smh->player->gridY] == EVIL_WALL_DEACTIVATOR) {
-		deactivateEvilWall(smh->environment->ids[smh->player->gridX][smh->player->gridY]);
+		deactivateEvilWalls();
 	}
 
 	std::list<EvilWallStruct>::iterator i;
