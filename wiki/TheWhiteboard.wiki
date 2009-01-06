@@ -6,6 +6,7 @@
  * Enemy names
  * Sound effects
  * Fenwar Encounters
+ * Tutorial man encounters - some items need more explaining (like silly pads, frisbee if we do what I say below, etc.)
 
 === Programming To Do ===
  * IDEA TO MAKE FRISBEE BETTER:
