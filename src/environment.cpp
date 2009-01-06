@@ -396,6 +396,8 @@ void Environment::loadArea(int id, int from, bool playMusic) {
 			if (item[i][j] > 0 && item[i][j] < 16) {
 				if (smh->saveManager->isTileChanged(i,j)) {
 					item[i][j] = NONE;
+				} else { //spawn particle there
+					environmentParticles->SpawnPS(&smh->resources->GetParticleSystem("itemParticle")->info, i*64+32, j*64+32);
 				}
 			}
 
