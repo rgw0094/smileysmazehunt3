@@ -121,6 +121,8 @@ Sign35 = "If you get blocked into an area, destroying all of the enemies there w
 Sign36 = "Lick the lollipop to save the game."
 Sign37 = "Don't forget to access your map and inventory.  If you don't know how, check your controls in the options menu!"
 Sign64 = "Get off my lawn - \n\n Bill Clinton"
+Sign67 = "Find gems such as this to buy upgrades from Speirdyke in town.  Red gems are worth 1 Smiley dollar, yellow are worth 3, and blue are worth 5."
+Sign68 = "Have you talked to Bill Clinton yet?  He has a very important item that is critical to your quest."
  
 ;OLDETOWNE.SMH
 Sign10 = "To pass through this door, you will first need to find a red key"
@@ -140,7 +142,7 @@ Sign55 = "Maintenance - It appears global cooling is even affecting us down here
  
 ;SNOW.SMH
 Sign16 = "This way to Candy Mountain."
-Sign17 = "Bridge currently out of order.  Construction will continue one day, hopefully."
+Sign17 = "Bridge currently out of order.  Construction will continue one day, if this recession ever stops."
 Sign18 = "Ahead lies the temple of the sacred frisbee.  Tours are cancelled until evil creatures go away.  Beware."
 Sign23 = "Some switches only work for a certain period of time..."
 Sign30 = "This way to a mysterious warp to the Realm of Despair.  Enter at your own risk."
