@@ -197,7 +197,10 @@ Particle tutLightning {
  filename=lightningpart.psi
  sprite=particleGraphic8
 }
-
+Particle itemParticle {
+ filename=item.psi
+ sprite=particleGraphic3
+}
 ;********************************************
 ;******** FENWAR (Resource Group 110) *******
 ;********************************************

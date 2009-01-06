@@ -249,7 +249,7 @@ void SpecialTileManager::addSillyPad(int gridX, int gridY) {
 
 
 /**
- * Draws all flames that have been created.
+ * Draws all silly pads that have been created.
  */
 void SpecialTileManager::drawSillyPads(float dt) {
 	std::list<SillyPad>::iterator i;
@@ -265,7 +265,7 @@ void SpecialTileManager::drawSillyPads(float dt) {
 }
 
 /**
- * Updates all flames that have been created.
+ * Updates all silly pads that have been created.
  */
 void SpecialTileManager::updateSillyPads(float dt) {
 	std::list<SillyPad>::iterator i;
@@ -313,7 +313,7 @@ bool SpecialTileManager::destroySillyPad(int gridX, int gridY) {
 }
 
 /**
- * Deletes all flames that have been created.
+ * Deletes all silly pads that have been created.
  */
 void SpecialTileManager::resetSillyPads() {
 	std::list<SillyPad>::iterator i;
