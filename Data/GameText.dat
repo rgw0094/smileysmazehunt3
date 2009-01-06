@@ -75,7 +75,7 @@ Hint7-1 = "Oh my God!  You got Jesus' Sandals!  Haha, get it?!"
 Hint7-2 = "I'm on my game today, huh buddy?  That's what my girl told me, at least."
 Hint7-3 = "I wanted to buy her some chocolates today, but I forgot that there's football on tonight."
 Hint7-4 = "Could you pick up some for me?  Thanks a bunch."
-Hint7-5 = "There should be somewhere in Smiley Town with some, right?"
+Hint7-5 = "There should be somewhere in this game with some, right?"
 
 Hint8Pages = "5"
 Hint8-1 = "Good day, Smiley."
@@ -136,7 +136,7 @@ Sign63 = "Remember that EVIL CYLINDER from early in the adventure? That's what t
 
 ;SMHOLLOW.SMH
 Sign13 = "Dangerous and deep pits ahead!  Beware!"
-Sign55 = "Maintenance - It appears global cooling is even affecting us down here. Please try to keep the walkways clear of ice!\n- Phyrebozz                      "
+Sign55 = "Maintenance - It appears global cooling is even affecting us down here. Please try to keep the walkways clear of ice!\n- Phyrebawz                      "
  
 ;SNOW.SMH
 Sign16 = "This way to Candy Mountain."
@@ -185,6 +185,10 @@ Sign59 = "Walk 3 more blocks to the right and you're toast."
 
 ;CASTLE.SMH
 Sign60 = "There is a warp hidden in the Tapestry of Evil."
+
+;CONSERVE.SMH
+Sign65 = "Note to maintenance: The enormous amount of treasure that was once here has been moved to the secret conservatory room to hide from Smiley."
+
 
 
 
@@ -453,10 +457,32 @@ NPC181-9 = "I do hope my slaves remembered to paint food on the walls so I don't
 
 ;==============================================FENWAR ENCOUNTERS=====================================
 NPC240Name = "Fenwar"
-NPC240Pages = "3"
-NPC240-1 = "Hi, I'm Fenwar"
-NPC240-2 = "This is an example Fenwar encounter"
-NPC240-3 = "I hope you like it"
+NPC240Pages = "5"
+NPC240-1 = "Hello there, Smiley.  Just where do you think you're going?"
+NPC240-2 = "It would be wise of you to return to your silly little town and twiddle your non-existent thumbs in your criminally underfurnished house."
+NPC240-3 = "Your rug doesn't even match your linoleum tile!  Oh ho ho!"
+NPC240-4 = "I assure you a dire fate awaits you if you continue your journey."
+NPC240-5 = "But I must be going - I believe my water I set to boil is ready."
+
+NPC241Name = "Fenwar"
+NPC241Pages = "7"
+NPC241-1 = "Oh, hey Smiley."
+NPC241-2 = "I was just in the neighborhood so I figured I would come and verbally harass you."
+NPC241-3 = "You dearest one is being held in my castle - aptly called the Castle of Evil."
+NPC241-4 = "Although you have temporarilly subdued my top goon, Phyrebawz, don't let yourself get too cocky."
+NPC241-5 = "In his defense, he was quite hungover from last night's tupperware party."
+NPC241-6 = "My legion of evil minions will surely destroy you at some point simply by probability."
+NPC241-7 = "Now I must go for if not I may miss Jeopardy."
+
+NPC242Name = "Fenwar"
+NPC242Pages = "6"
+NPC242-1 = "I'm quite impressed by your persistence."
+NPC242-2 = "I'm also quite impressed by your remarkable tongue.  I'm a bit jealous."
+NPC242-3 = "You see, I was born with quite a small tongue.  The pain this brought me as a child gave me no choice but to become evil."
+NPC242-4 = "People always told me that it would get bigger one day, but that day has yet to transpire."
+NPC242-5 = "I'm warning you - the more I see your tongue, the darker my savage jealousy becomes."
+NPC242-6 = "Oh dickens - I'm missing tea time.  Farewell!"
+
 
 
 ;==============================================OTHER SHIT=====================================
