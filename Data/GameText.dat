@@ -185,6 +185,7 @@ Sign56 = "If at any point you wish to exit, take one of the red warps.  Otherwis
 Sign57 = "The next room is guarded by the Protectors.  They are invulnerable and will destroy you with one touch.  Take heed.  Turn around now.  I'm serious."
 Sign58 = "Did you read the last sign?  We're warning you."
 Sign59 = "Walk 3 more blocks to the right and you're toast."
+Sign72 = "Take a left after the mushroom-room.  You'll like what you find!"
 
 ;CASTLE.SMH
 Sign0  = "Minions,\nWarning! Stepping on the skull is necessary but dangerous! Beware the Evil Wall that will chase you!\n   -Fenwar"
