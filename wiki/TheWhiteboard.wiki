@@ -18,6 +18,8 @@
  * Merge projectile texture with sprites texture
  * Make it so you can see # gems while in the shop
  * When you die, start with no less than 3 life (so you can't fuck yourself)
+ * Solved smilelets/flowers need to be saved
+ * Make item particles disappear when item is collected or map is changed
 
 === Graphics To Do ===
  * Bomb guy graphic
