@@ -29,6 +29,7 @@
 
 === Bugs ===
  * Bouncing spikey enemies that I put to appear in line with each other in game sometimes are not in line when testing, making it a lot harder to get by them than planned.
+ * No particle effects when enemy blocks appear/disappear anymore.
 
 == Progress ==
 ||*Item Goal*||*Level found*||*Boss*||*Level Completion*||Boss Completion||
