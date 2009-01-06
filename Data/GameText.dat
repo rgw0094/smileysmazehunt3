@@ -483,7 +483,50 @@ NPC242-4 = "People always told me that it would get bigger one day, but that day
 NPC242-5 = "I'm warning you - the more I see your tongue, the darker my savage jealousy becomes."
 NPC242-6 = "Oh dickens - I'm missing tea time.  Farewell!"
 
+NPC243Name = "Fenwar"
+NPC243Pages = "7"
+NPC243-1 = "Does this place not induce a considerable amount of despair?  I named it that myself."
+NPC243-2 = "It used to be nice town like yours."
+NPC243-3 = "But unfortunately, they had an economy based purely on consumption of super cheap products made by my evil slaves."
+NPC243-4 = "The town's inability to produce led to the collapse of their currency, and of course turned the town purple and created demons."
+NPC243-5 = "But let's not live in the past, Smiley.  For I have my eyes set on a possible annex in Smiley Town."
+NPC243-6 = "It will need a new name.  How about, Frowny Town?  Excellent!"
+NPC243-7 = "After my mighty wizard Calypso has his way with you, I'll initiate my plans for this evil addition to my empire!  HA!"
 
+NPC244Name = "Fenwar"
+NPC244Pages = "7"
+NPC244-1 = "I know you're wondering why I have kidnapped your soulmate.  Everything I do is for a reason."
+NPC244-2 = "My reason is simple: it's what is best for my business.  Surely you understand the cut-throat ways of capitalism."
+NPC244-3 = "I know your wooden toy business is suffering these days.  All kids want today are Ipods and video games."
+NPC244-4 = "Didn't you ever just want to destroy all of these wretched electronics companies that are stealing you customers?"
+NPC244-5 = "If you ever decide to become evil and do exactly that, just let me know."
+NPC244-6 = "But, I have a feeling that this game isn't quite that open-ended so you are forced to be the protagonist."
+NPC244-7 = "Oh well.  Blame the lazy creators of this game  for your doom!  Mwahahaha!"
+
+NPC245Name = "Fenwar"
+NPC245Pages = "4"
+NPC245-1 = "Ahem."
+NPC245-2 = "Dear Smiley I don't mean to boast. \nBut your behind is going to roast."
+NPC245-3 = "Phyrebawz would like\n Your head on a pike\nAnd your soul on a plate with some toast."
+NPC245-4 = "Thank you."
+
+NPC246Name = "Fenwar"
+NPC246Pages = "3"
+NPC246-1 = "You are progressing quite well, Smiley."
+NPC246-2 = "It will be a shame to watch Bartli stomp you to pieces.  She is my pet yeti who lives at the zenith of Candy Mountain."
+NPC246-3 = "She actually used to be a middle school social studies teacher."
+
+NPC247Name = "Fenwar"
+NPC247Pages = "1"
+NPC247-1 = "Lovecraft owns you dickens"
+
+NPC248Name = "Fenwar"
+NPC248Pages = "1"
+NPC248-1 = "This is the serpentine path dickens"
+
+NPC249Name = "Fenwar"
+NPC249Pages = "1"
+NPC249-1 = "Botonoids R here LoLz"
 
 ;==============================================OTHER SHIT=====================================
 NPC900Name = "Tutorial Man"
