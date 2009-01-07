@@ -21,6 +21,8 @@
  * Solved smilelets/flowers need to be saved
  * Make item particles disappear when item is collected or map is changed
  * Make it so we can add more Tutorial Man encounters
+ * Add timer above timed switches
+ * New collision type that stops the minimap from scrolling
 
 === Graphics To Do ===
  * Bomb guy graphic
