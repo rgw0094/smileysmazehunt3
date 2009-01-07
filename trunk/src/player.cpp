@@ -1294,7 +1294,7 @@ void Player::doIce(float dt) {
 	
 	//Continue Puzzle Ice - slide towards the center of the square
 	if (iceSliding) {
-		smh->hge->System_SetState(HGE_TITLE, "Smiley's Maze Hunt ICE");
+		//smh->hge->System_SetState(HGE_TITLE, "Smiley's Maze Hunt ICE");
 		if (facing == LEFT || facing == RIGHT) {		
 			if ((int)y % 64 < 31) y += 30.0f*dt;
 			if ((int)y % 64 > 33) y -= 30.0f*dt; 
