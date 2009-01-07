@@ -167,7 +167,7 @@ Sign42 = "A large boulder blocks the path.\n \nAnother entrance must be found if
 Sign43 = "Fenwar received one less boulder than he ordered from BoulderDash, Inc.\nI wonder if he made an illusion to compensate?"
 Sign49 = "God said this fire will burn forever as a neverending source of energy for this world.  Please do NOT put it out and cause an energy crisis!"
 Sign52 = "The entrance to the loot room has crumbled and is only accessable to those who are height-challenged."
-Sign73 = "Walkin'-Bombs always turn left and explode when you get too close.  Use silly pads to make them clear paths for you!"
+Sign73 = "Walkin'-Bombs always turn left and explode when you get too close.  Use silly pads and clever timing to make them clear paths for you!"
 
 ;DESPAIR.SMH
 Sign31 = "The sandals of Jesus to be on exhibit in the near future, just ahead.  Admission: 100$  \n\n-Lord Phyrebawz"
@@ -420,13 +420,13 @@ NPC151Pages = "1"
 NPC151-1 = "Oh dear, I've been defeated."
 
 ;Phyrebozz Round 2
-NPC160Name = "Lord Phyrebozz"
+NPC160Name = "Lord Phyrebawz"
 NPC160Pages = "1"
 NPC160-1 = "You again! Dickens, dickens, dickens."
-NPC161Name = "Lord Phyrebozz"
+NPC161Name = "Lord Phyrebawz"
 NPC161Pages = "1"
 NPC161-1 = "I see you have gotten stronger since our last battle Smiley. Unfortunately for you, I remembered my vitamins this morning!"
-NPC162Name = "Load Phyrebozz"
+NPC162Name = "Load Phyrebawz"
 NPC162Pages = "1"
 NPC162-1 = "Gwwaaarrghhh (Dickens)."
 
