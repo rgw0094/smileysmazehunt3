@@ -19,11 +19,11 @@ Map::Map() {
 
 	windowWidth = gridWidth*squareSize;
 	windowHeight = gridHeight*squareSize;
-	windowX = (1024-windowWidth)/2;
-	windowY = (768-windowHeight)/2;
+	windowX = 182 + 30;
+	windowY = 138 + 30;
 	gridXOffset = gridYOffset = 0;
-	
-	//Set the (x,y) offset based on Smiley's current position
+
+	//When the map opens, set the (x,y) offset based on Smiley's current position
 	xOffset = smh->player->x / (64.0 / (float)squareSize) - float((gridWidth/2)*squareSize);
 	yOffset = smh->player->y / (64.0 / (float)squareSize) - float((gridHeight/2)*squareSize);
 	if (xOffset < 0.0) xOffset = 0.0;
