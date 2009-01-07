@@ -57,6 +57,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Filled empty spaces on maps with collision||1/6/09||RGW||
 ||Made the mini-map leet||1/6/09||RGW||
 ||Particle effect under items||1/5/09||ETI||
 ||New enemy for Pools of Dead||1/5/09||ETI||
