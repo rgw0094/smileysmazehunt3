@@ -213,7 +213,11 @@ public:
 	void draw(float dt);
 	bool update(float dt);
 
-	//stuff
+private:
+
+	void drawFogAt(int gridX, int gridY, int drawX, int drawY);
+	void drawSquare(int gridX, int gridY, int drawX, int drawY);
+	
 	int windowWidth, windowHeight;	//Pixel size of the map
 	int windowX, windowY;			//x and y position of the map window
 	int gridWidth, gridHeight;		//Dimensions of the map grid
