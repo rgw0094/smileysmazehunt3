@@ -20,6 +20,7 @@
  * When you die, start with no less than 3 life (so you can't fuck yourself)
  * Solved smilelets/flowers need to be saved
  * Make item particles disappear when item is collected or map is changed
+ * Make it so we can add more Tutorial Man encounters
 
 === Graphics To Do ===
  * Bomb guy graphic
@@ -54,6 +55,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Made the mini-map leet||1/6/09||RGW||
 ||Particle effect under items||1/5/09||ETI||
 ||New enemy for Pools of Dead||1/5/09||ETI||
 ||Highlight keys on inventory screen||1/4/09||ETI||
