@@ -52,7 +52,7 @@
 ||Shrink||Swamp||Lovecraft||Done||0%||
 ||Tut's Mask||Tut's Tomb||King Tut||Done||15%||
 ||---||Serpentine Path||---||Done||---||
-||Hover||Calypso's Conservatory||Barvinoid||100%||0%||
+||Hover||Calypso's Conservatory||Barvinoid||Done||0%||
 ||---||Castle of Evil||Fenwar||Done||0%||
 
 ===Done===
