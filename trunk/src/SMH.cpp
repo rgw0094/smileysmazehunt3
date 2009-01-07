@@ -125,18 +125,16 @@ bool SMH::updateGame() {
 
 	} else if (gameState == GAME) {
 
-		//Toggle game menu
-		if (input->keyPressed(INPUT_PAUSE)) {
-			if (windowManager->isGameMenuOpen()) {
-				windowManager->closeWindow();
-			} else if (!windowManager->isOpenWindow()) {
-				windowManager->openGameMenu();
-			}
-		}
-
 		//Toggle options/exit
 		if (hge->Input_KeyDown(HGEK_ESCAPE)) {
 			windowManager->openWindow(new MiniMenu(MINIMENU_EXIT));
+		}
+
+		//Close game menu
+		bool menuClosedThisFrame = false;
+		if (input->keyPressed(INPUT_PAUSE) && windowManager->isGameMenuOpen()) {
+			windowManager->closeWindow();
+			menuClosedThisFrame = true;
 		}
 
 		//Update the objects that can interrupt gameplay.
@@ -150,6 +148,12 @@ bool SMH::updateGame() {
 		//If none of them are active, update the game objects!
 		if (!windowManager->isOpenWindow() && !areaChanger->isChangingArea() && 
 				!fenwarManager->isEncounterActive() && !environment->isTutorialManActive()) {
+
+			//Open game menu
+			if (input->keyPressed(INPUT_PAUSE) && !windowManager->isOpenWindow() && !menuClosedThisFrame) {
+				windowManager->openGameMenu();
+			}
+
 			player->update(dt);
 			explosionManager->update(dt);
 			environment->update(dt);

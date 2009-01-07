@@ -514,7 +514,7 @@ void Environment::draw(float dt) {
 					theCollision != PLAYER_END && theCollision != PIT && 
 					theCollision != UNWALKABLE_PROJECTILE && theCollision != FAKE_PIT &&
 					theCollision != FLAME && theCollision != NO_WALK_PIT &&
-					theCollision != FIRE_DESTROY &&
+					theCollision != FIRE_DESTROY && theCollision != FAKE_COLLISION && 
 					theCollision != FOUNTAIN && 
 					!(Util::isWarp(theCollision) && 
 					variable[i + xGridOffset][j + yGridOffset] == 990)) {
