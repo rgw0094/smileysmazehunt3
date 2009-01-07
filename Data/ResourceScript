@@ -993,6 +993,18 @@ Sprite miniMapWater {
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
+Sprite miniMapPit {
+ texture=general
+ rect=896,64,64,64
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite miniMapLava {
+ texture=general
+ rect=960,64,64,64
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
 
 ;********************
 ;******** GUI *******

@@ -4,6 +4,7 @@
 #include "player.h"
 #include "hgeresource.h"
 #include "hgeanim.h"
+#include "EnemyFramework.h"
 
 extern SMH *smh;
 
@@ -76,19 +77,16 @@ void Map::drawSquare(int i , int j, int drawX, int drawY) {
 	int c = smh->environment->collision[i][j];
 
 	bool isHiddenWarp = Util::isWarp(c) && smh->environment->variable[i][j] == 990;
-	bool isSpecialCollision = 
-		Util::isArrowPad(c) || Util::isCylinderDown(c) || Util::isCylinderSwitchLeft(c) || Util::isCylinderSwitchRight(c) ||
-		Util::isCylinderUp(c) || (Util::isWarp(c) && smh->environment->variable[i][j] != 990) || c == SAVE_SHRINE || c == ICE ||
-		c == RED_KEYHOLE || c == GREEN_KEYHOLE || c == BLUE_KEYHOLE || c == SPRING_PAD || c == SPIN_ARROW_SWITCH ||
-		c == MIRROR_UP_LEFT || c == MIRROR_UP_RIGHT || c == MIRROR_DOWN_RIGHT || c == MIRROR_DOWN_LEFT || c == DIZZY_MUSHROOM_1 ||
-		c == DIZZY_MUSHROOM_2 || c == HOVER_PAD || c == BOMBABLE_WALL || c == SHRINK_TUNNEL_SWITCH || c == SHRINK_TUNNEL_HORIZONTAL ||
-		c == SHRINK_TUNNEL_VERTICAL || c == SUPER_SPRING || c == SMILELET_FLOWER_SAD || c == SIGN;
 	bool drawNoCollision = 
 		smh->player->canPass(c) || isHiddenWarp || Util::isCylinderUp(c) || Util::isCylinderSwitchLeft(c) ||
 		Util::isCylinderSwitchRight(c) || c == SIGN;
 
 	//Basic map tiles
-	if (drawNoCollision && !isHiddenWarp) {
+	if (c == WALK_LAVA || c == NO_WALK_LAVA) {
+		smh->drawSprite("miniMapLava", drawX, drawY);
+	} else if (c == PIT || c == NO_WALK_PIT || c == FAKE_PIT) {
+		smh->drawSprite("miniMapPit", drawX, drawY);
+	} else if (drawNoCollision && !isHiddenWarp) {
 		smh->drawSprite("miniMapNoCollision", drawX, drawY);
 	} else if (smh->environment->isDeepWaterAt(i, j)) {
 		smh->drawSprite("miniMapWater", drawX, drawY);
@@ -97,16 +95,15 @@ void Map::drawSquare(int i , int j, int drawX, int drawY) {
 	}
 
 	//Special collision graphics
-	if (isSpecialCollision) {
+	if (shouldDrawSpecialCollision(c) || (Util::isWarp(c) && smh->environment->variable[i][j] != 990)) {
 		smh->resources->GetAnimation("walkLayer")->SetFrame(c);
 		smh->resources->GetAnimation("walkLayer")->RenderStretch(drawX,drawY,drawX+squareSize,drawY+squareSize);
 	}
 	
-/**				
-	//Item Layer
-	if (smh->environment->itemLayer[smh->environment->item[i][j]] != NONE) {
+	//Items
+	if (shouldDrawItem(smh->environment->item[i][j])) {
 		smh->environment->itemLayer[smh->environment->item[i][j]]->RenderStretch(drawX,drawY,drawX+squareSize,drawY+squareSize);
-	}*/
+	}
 
 	//Smiley
 	if (smh->player->gridX == i && smh->player->gridY == j) {
@@ -180,4 +177,32 @@ bool Map::update(float dt) {
 
 	return true;
 
+}
+
+bool Map::shouldDrawItem(int item) {
+	switch (item) {
+		case ENEMYGROUP_BLOCKGRAPHIC:
+		case RED_KEY:
+		case YELLOW_KEY:
+		case GREEN_KEY:
+		case BLUE_KEY:
+		case SMALL_GEM:
+		case MEDIUM_GEM:
+		case LARGE_GEM:
+		case HEALTH_ITEM:
+		case MANA_ITEM:
+			return true;
+		default:
+			return false;
+	}
+}
+
+bool Map::shouldDrawSpecialCollision(int c) {
+	return
+		Util::isArrowPad(c) || Util::isCylinderDown(c) || Util::isCylinderSwitchLeft(c) || Util::isCylinderSwitchRight(c) ||
+		Util::isCylinderUp(c) || c == SAVE_SHRINE || c == ICE ||
+		c == RED_KEYHOLE || c == GREEN_KEYHOLE || c == BLUE_KEYHOLE || c == SPRING_PAD || c == SPIN_ARROW_SWITCH ||
+		c == MIRROR_UP_LEFT || c == MIRROR_UP_RIGHT || c == MIRROR_DOWN_RIGHT || c == MIRROR_DOWN_LEFT || c == DIZZY_MUSHROOM_1 ||
+		c == DIZZY_MUSHROOM_2 || c == HOVER_PAD || c == BOMBABLE_WALL || c == SHRINK_TUNNEL_SWITCH || c == SHRINK_TUNNEL_HORIZONTAL ||
+		c == SHRINK_TUNNEL_VERTICAL || c == SUPER_SPRING || c == SMILELET_FLOWER_SAD || c == SIGN || c == FIRE_DESTROY;
 }

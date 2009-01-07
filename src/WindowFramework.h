@@ -217,6 +217,8 @@ private:
 
 	void drawFogAt(int gridX, int gridY, int drawX, int drawY);
 	void drawSquare(int gridX, int gridY, int drawX, int drawY);
+	bool shouldDrawItem(int item);
+	bool shouldDrawSpecialCollision(int c);
 	
 	int windowWidth, windowHeight;	//Pixel size of the map
 	int windowX, windowY;			//x and y position of the map window
