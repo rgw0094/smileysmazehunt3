@@ -1515,21 +1515,19 @@ void Player::updateSmileyColor(float dt) {
  *
  * Currently this fix will be used in the following cases:
  *
- * - The player is on or moving to an ice square.
- * - The player is on or moving to a spring pad.
+ * - The player is on or moving to an ice square or an arrow pad.
+ * - The player is moving onto a spring pad.
  */
 bool Player::doGayMovementFix(int xDist, int yDist) {
 
 	int nextX = Util::getGridX(x + xDist);
 	int nextY = Util::getGridY(y + yDist);
 	
-	bool useGayFix = 
-		smh->environment->collision[nextX][nextY] == ICE || 
-		smh->environment->collision[nextX][nextY] == SPRING_PAD;
+	bool useGayFix = smh->environment->collision[nextX][nextY] == SPRING_PAD;
 
 	for (int i = nextX-1; i <= nextX+1; i++) {
 		for (int j = nextY-1; j <= nextY+1; j++) {
-			if (Util::isArrowPad(smh->environment->collision[i][j])) {
+			if (Util::isArrowPad(smh->environment->collision[i][j]) || smh->environment->collision[i][j] == ICE) {
 				useGayFix = true;
 			}
 		}
