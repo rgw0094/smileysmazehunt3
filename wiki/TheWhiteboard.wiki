@@ -44,7 +44,7 @@
 ||Fire Breath||Smolder Hollow||Lord Phyrebawz||Done||Done||
 ||Frisbee||Sessaria Snowplains||Portly Penguin||Done||Done||
 ||Sprint boots||Forest of Fundoria||Garmborn||90%||Done||
-||Orbs||Dunes of Salabia||Cornwallis||100%||Done||
+||Orbs||Dunes of Salabia||Cornwallis||Done||Done||
 ||Reflection Shield||Realm of Despair||Calypso||Done||Done||
 ||Silly Pads||Mushroom Kingdom||Brian Fungus||Done||Done||
 ||Jesus' Sandals||Pools of the Dead||Lord Phyrebawz 2||90%||Done||
@@ -53,7 +53,7 @@
 ||Tut's Mask||Tut's Tomb||King Tut||Done||15%||
 ||---||Serpentine Path||---||Done||---||
 ||Hover||Calypso's Conservatory||Barvinoid||100%||0%||
-||---||Castle of Evil||Fenwar||100%||0%||
+||---||Castle of Evil||Fenwar||Done||0%||
 
 ===Done===
 ||Item||Date||Done By||
