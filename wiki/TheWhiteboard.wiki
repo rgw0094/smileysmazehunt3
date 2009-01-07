@@ -20,7 +20,6 @@
  * When you die, start with no less than 3 life (so you can't fuck yourself)
  * Solved smilelets/flowers need to be saved
  * Make item particles disappear when item is collected or map is changed
- * Make it so we can add more Tutorial Man encounters
  * Add timer above timed switches
  * New collision type that stops the minimap from scrolling
 
@@ -44,8 +43,8 @@
 ||Smiley's Cane||Fountain||---||Done||---||
 ||Fire Breath||Smolder Hollow||Lord Phyrebawz||Done||Done||
 ||Frisbee||Sessaria Snowplains||Portly Penguin||Done||Done||
-||Sprint boots||Forest of Fundoria||Garmborn||80%||Done||
-||Orbs||Dunes of Salabia||Cornwallis||90%||Done||
+||Sprint boots||Forest of Fundoria||Garmborn||90%||Done||
+||Orbs||Dunes of Salabia||Cornwallis||100%||Done||
 ||Reflection Shield||Realm of Despair||Calypso||Done||Done||
 ||Silly Pads||Mushroom Kingdom||Brian Fungus||Done||Done||
 ||Jesus' Sandals||Pools of the Dead||Lord Phyrebawz 2||90%||Done||
@@ -53,8 +52,8 @@
 ||Shrink||Swamp||Lovecraft||Done||0%||
 ||Tut's Mask||Tut's Tomb||King Tut||Done||15%||
 ||---||Serpentine Path||---||Done||---||
-||Hover||Calypso's Conservatory||Barvinoid||90%||0%||
-||---||Castle of Evil||Fenwar||90%||0%||
+||Hover||Calypso's Conservatory||Barvinoid||100%||0%||
+||---||Castle of Evil||Fenwar||100%||0%||
 
 ===Done===
 ||Item||Date||Done By||
