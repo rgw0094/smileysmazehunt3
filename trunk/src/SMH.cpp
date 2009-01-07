@@ -107,7 +107,7 @@ void SMH::init() {
  */
 bool SMH::updateGame() {
 
-	float dt = hge->Timer_GetDelta();
+	float dt = min(0.1, hge->Timer_GetDelta());
 
 	timeInState += dt;
 	frameCounter++;
