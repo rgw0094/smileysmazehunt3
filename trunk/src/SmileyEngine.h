@@ -845,7 +845,7 @@ public:
 	 * Returns whether or not a collision layer id is a warp.
 	 */
 	static bool isWarp(int id) {
-		return (id == BLUE_WARP || id == RED_WARP || id == GREEN_WARP || YELLOW_WARP);
+		return (id == BLUE_WARP || id == RED_WARP || id == GREEN_WARP || id == YELLOW_WARP);
 	}
 
 	/**

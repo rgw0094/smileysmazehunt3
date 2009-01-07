@@ -975,6 +975,25 @@ Sprite bottomBorder {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 
+Sprite miniMapNoCollision {
+ texture=general
+ rect=704,64,64,64
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite miniMapCollision {
+ texture=general
+ rect=768,64,64,64
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite miniMapWater {
+ texture=general
+ rect=832,64,64,64
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+
 ;********************
 ;******** GUI *******
 ;********************
