@@ -1520,9 +1520,14 @@ void Player::updateSmileyColor(float dt) {
  */
 bool Player::doGayMovementFix(int xDist, int yDist) {
 
+		
+	static int prevX = 0;
+	static int prevY = 0;
+/*
 	int nextX = Util::getGridX(x + xDist);
 	int nextY = Util::getGridY(y + yDist);
-	
+
+
 	bool useGayFix = smh->environment->collision[nextX][nextY] == SPRING_PAD;
 
 	for (int i = nextX-1; i <= nextX+1; i++) {
@@ -1556,6 +1561,20 @@ bool Player::doGayMovementFix(int xDist, int yDist) {
 			return true;
 		}
 	}
+	*/
+
+	if (gridX > prevX && gridY > prevY) {
+		MessageBox(NULL,"Went right and down.","Ice shit",MB_OK);
+	} else if (gridX > prevX && gridY < prevY) {
+		MessageBox(NULL,"Went right and up.","Ice shit",MB_OK);
+	} else if (gridX < prevX && gridY > prevY) {
+		MessageBox(NULL,"Went left and down.","Ice shit",MB_OK);
+	} else if (gridX < prevX && gridY < prevY) {
+		MessageBox(NULL,"Went left and up.","Ice shit",MB_OK);
+	}
+
+	prevX = gridX;
+	prevY = gridY;
 
 	return false;
 }

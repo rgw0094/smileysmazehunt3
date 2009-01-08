@@ -1143,8 +1143,16 @@ int Environment::checkItem(int x, int y) {
 int Environment::removeItem(int x, int y) {
 	int retVal = item[x][y];
 	item[x][y] = NONE;
+	removeItemParticle(x,y);
 	smh->saveManager->change(x, y);	
 	return retVal;
+}
+
+/**
+ * Removes an item particle at (x,y)
+ */
+void Environment::removeItemParticle(int x, int y) {
+	
 }
 
 /**
