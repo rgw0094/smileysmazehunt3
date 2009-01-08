@@ -1520,6 +1520,8 @@ void Player::updateSmileyColor(float dt) {
  */
 bool Player::doGayMovementFix(int xDist, int yDist) {
 
+	//if (hovering) return false;
+
 		
 	static int prevX = 0;
 	static int prevY = 0;
@@ -1566,13 +1568,16 @@ bool Player::doGayMovementFix(int xDist, int yDist) {
 	}
 	*/
 
+	bool didGayFix = false;
+
 	//down-right
 	if (gridX > prevX && gridY > prevY) {
-		if (Util::isTileForGayFix(smh->environment->collision[gridX][gridY]) && Util::isTileForGayFix(smh->environment->collision[gridX-1][gridY])) {
+		if (Util::isTileForGayFix(smh->environment->collision[gridX][gridY-1]) && Util::isTileForGayFix(smh->environment->collision[gridX-1][gridY])) {
 			//Make it as if Smiley was moving right
-			x = gridX*64+1;
-			y = prevY*64+62;
+			x = gridX*64+32;
+			y = prevY*64+32;
 			facing = RIGHT;
+			didGayFix = true;
 		}
 		MessageBox(NULL,"Went right and down.","Ice shit",MB_OK);
 	//up-right
@@ -1582,6 +1587,7 @@ bool Player::doGayMovementFix(int xDist, int yDist) {
 			x = gridX*64+32;
 			y = prevY*64+32;
 			facing = RIGHT;
+			didGayFix = true;
 		}
 		MessageBox(NULL,"Went right and up.","Ice shit",MB_OK);
 	//down-left
@@ -1591,6 +1597,7 @@ bool Player::doGayMovementFix(int xDist, int yDist) {
 			x = gridX*64+32;
 			y = prevY*64+32;
 			facing = LEFT;
+			didGayFix = true;
 		}
 		MessageBox(NULL,"Went left and down.","Ice shit",MB_OK);
 	} else if (gridX < prevX && gridY < prevY) {
@@ -1599,8 +1606,58 @@ bool Player::doGayMovementFix(int xDist, int yDist) {
 			x = gridX*64+32;
 			y = prevY*64+32;
 			facing = LEFT;
+			didGayFix = true;
 		}
 		MessageBox(NULL,"Went left and up.","Ice shit",MB_OK);
+	}
+	
+	bool superSpring = false;
+	int jumpGridDist,dist;
+
+	if (didGayFix) {
+		switch (smh->environment->collision[gridX][prevY]) {
+			case ICE:
+				//start puzzle ice
+				iceSliding = true; dy = 0;
+				if (facing == LEFT) dx = -MOVE_SPEED;
+				if (facing == RIGHT) dx = MOVE_SPEED;
+				break;
+			case SUPER_SPRING:
+					superSpring = true;
+			case SPRING_PAD:
+					
+					smh->soundManager->playSound("snd_spring");
+					springing = true;
+					startedSpringing = smh->getGameTime();
+					dx = dy = 0;
+					//Start the spring animation
+					smh->environment->activated[gridX][gridY] = smh->getGameTime();
+					if (superSpring) {
+						smh->resources->GetAnimation("superSpring")->Play();
+					} else {
+						smh->resources->GetAnimation("spring")->Play();
+					}
+					
+					//Determine how long smiley will have to spring to skip a square
+					jumpGridDist = superSpring ? 4 : 2;
+					springVelocity = superSpring ? SPRING_VELOCITY * 1.5 : SPRING_VELOCITY;
+					dist;
+					if (facing == LEFT) dist = x - ((gridX-jumpGridDist)*64+32);
+					else if (facing == RIGHT) dist = ((gridX+jumpGridDist)*64+32) - x;
+					else if (facing == DOWN) dist = (gridY+jumpGridDist)*64+32 - y;
+					else if (facing == UP) dist = y - ((gridY-jumpGridDist)*64+32);
+					springTime = float(dist)/springVelocity;
+
+				break;
+			case UP_ARROW:
+				break;
+			case DOWN_ARROW:
+				break;
+			case LEFT_ARROW:
+				break;
+			case RIGHT_ARROW:
+				break;
+		};
 	}
 
 	prevX = gridX;
