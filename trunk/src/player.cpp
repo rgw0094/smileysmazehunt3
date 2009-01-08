@@ -1574,7 +1574,7 @@ bool Player::doGayMovementFix(int xDist, int yDist) {
 	if (gridX > prevX && gridY > prevY) {
 		if (Util::isTileForGayFix(smh->environment->collision[gridX][gridY-1]) && Util::isTileForGayFix(smh->environment->collision[gridX-1][gridY])) {
 			//Make it as if Smiley was moving right
-			x = gridX*64+32;
+			x = gridX*64+14;
 			y = prevY*64+32;
 			facing = RIGHT;
 			didGayFix = true;
@@ -1584,7 +1584,7 @@ bool Player::doGayMovementFix(int xDist, int yDist) {
 	} else if (gridX > prevX && gridY < prevY) {
 		if (Util::isTileForGayFix(smh->environment->collision[gridX][gridY+1]) && Util::isTileForGayFix(smh->environment->collision[gridX-1][gridY])) {
 			//Make it as if Smiley was moving right
-			x = gridX*64+32;
+			x = gridX*64+14;
 			y = prevY*64+32;
 			facing = RIGHT;
 			didGayFix = true;
@@ -1594,16 +1594,17 @@ bool Player::doGayMovementFix(int xDist, int yDist) {
 	} else if (gridX < prevX && gridY > prevY) {
 		if (Util::isTileForGayFix(smh->environment->collision[gridX][gridY-1]) && Util::isTileForGayFix(smh->environment->collision[gridX+1][gridY])) {
 			//Make it as if Smiley was moving left
-			x = gridX*64+32;
+			x = gridX*64+50;
 			y = prevY*64+32;
 			facing = LEFT;
 			didGayFix = true;
 		}
 		MessageBox(NULL,"Went left and down.","Ice shit",MB_OK);
+	//up-left
 	} else if (gridX < prevX && gridY < prevY) {
 		if (Util::isTileForGayFix(smh->environment->collision[gridX][gridY+1]) && Util::isTileForGayFix(smh->environment->collision[gridX+1][gridY])) {
 			//Make it as if Smiley was moving left
-			x = gridX*64+32;
+			x = gridX*64+50;
 			y = prevY*64+32;
 			facing = LEFT;
 			didGayFix = true;
