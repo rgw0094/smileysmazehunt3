@@ -1537,18 +1537,22 @@ bool Player::doGayMovementFix(int xDist, int yDist) {
 		if (nextX > gridX && nextY > gridY) {
 			x -= 2.0;
 			y -= 4.0;
+			smh->log("nigger");
 			return true;
 		} else if (nextX < gridX && nextY > gridY) {
 			x += 2.0;
 			y -= 4.0;
+			smh->log("jungle bunny");
 			return true;
 		} else if (nextX > gridX && nextY < gridY) {
 			x -= 2.0;
 			y += 4.0;
+			smh->log("porch monkey");
 			return true;
 		} else if (nextX < gridX && nextY < gridY) {
 			x += 2.0;
 			y += 4.0;
+			smh->log("jiggaboo");
 			return true;
 		}
 	}
