@@ -1515,156 +1515,58 @@ void Player::updateSmileyColor(float dt) {
  *
  * Currently this fix will be used in the following cases:
  *
- * - The player is on or moving to an ice square or an arrow pad.
- * - The player is moving onto a spring pad.
+ * - The player is moving diagonally between shit like springs or ice
+ * - The player is moving onto ice or springs
  */
 bool Player::doGayMovementFix(int xDist, int yDist) {
 
-	//if (hovering) return false;
-
-		
-	static int prevX = 0;
-	static int prevY = 0;
-
-	bool movedDiagonally = false;
-	int diagonalDirection = 0;
-/*
 	int nextX = Util::getGridX(x + xDist);
 	int nextY = Util::getGridY(y + yDist);
 
+	bool movedRight = nextX > gridX;
+	bool movedLeft = nextX < gridX;
+	bool movedUp = nextY < gridY;
+	bool movedDown = nextY > gridY;
 
-	bool useGayFix = smh->environment->collision[nextX][nextY] == SPRING_PAD;
+	bool enteringGayTile = Util::isTileForGayFix(smh->environment->collision[nextX][nextY]);
+	int newDir = -1;
 
-	for (int i = nextX-1; i <= nextX+1; i++) {
-		for (int j = nextY-1; j <= nextY+1; j++) {
-			if (Util::isArrowPad(smh->environment->collision[i][j]) || smh->environment->collision[i][j] == ICE) {
-				useGayFix = true;
-			}
+	//Up right
+	if (movedUp && movedRight) {
+		//MessageBox(NULL,"Went right and up.","Ice shit",MB_OK);
+		if (enteringGayTile || (Util::isTileForGayFix(smh->environment->collision[gridX][gridY-1]) && Util::isTileForGayFix(smh->environment->collision[gridX+1][gridY]))) {
+			newDir = RIGHT;
+		}
+	//Down right
+	} else if (movedDown && movedRight) {
+		//MessageBox(NULL,"Went right and down.","Ice shit",MB_OK);
+		if (enteringGayTile || (Util::isTileForGayFix(smh->environment->collision[gridX][gridY+1]) && Util::isTileForGayFix(smh->environment->collision[gridX+1][gridY]))) {
+			newDir = RIGHT;
+		}
+	//Up left
+	} else if (movedUp && movedLeft) {
+		//MessageBox(NULL,"Went left and up.","Ice shit",MB_OK);
+		if (enteringGayTile || (Util::isTileForGayFix(smh->environment->collision[gridX][gridY-1]) && Util::isTileForGayFix(smh->environment->collision[gridX-1][gridY]))) {
+			newDir = LEFT;
+		}
+	//Down left
+	} else if (movedDown && movedLeft) {
+		//MessageBox(NULL,"Went left and down.","Ice shit",MB_OK);
+		if (enteringGayTile || (Util::isTileForGayFix(smh->environment->collision[gridX][gridY+1]) && Util::isTileForGayFix(smh->environment->collision[gridX-1][gridY]))) {
+			newDir = LEFT;
 		}
 	}
 
-	if (useGayFix) {
-		if (nextX > gridX && nextY > gridY) {
-			x -= 2.0;
-			y -= 4.0;
-			smh->log("nigger");
-			return true;
-		} else if (nextX < gridX && nextY > gridY) {
-			x += 2.0;
-			y -= 4.0;
-			smh->log("jungle bunny");
-			return true;
-		} else if (nextX > gridX && nextY < gridY) {
-			x -= 2.0;
-			y += 4.0;
-			smh->log("porch monkey");
-			return true;
-		} else if (nextX < gridX && nextY < gridY) {
-			x += 2.0;
-			y += 4.0;
-			smh->log("jiggaboo");
-			return true;
-		}
-	}
-	*/
-
-	bool didGayFix = false;
-
-	//down-right
-	if (gridX > prevX && gridY > prevY) {
-		if (Util::isTileForGayFix(smh->environment->collision[gridX][gridY-1]) && Util::isTileForGayFix(smh->environment->collision[gridX-1][gridY])) {
-			//Make it as if Smiley was moving right
-			x = gridX*64+14;
-			y = prevY*64+32;
-			facing = RIGHT;
-			didGayFix = true;
-		}
-		MessageBox(NULL,"Went right and down.","Ice shit",MB_OK);
-	//up-right
-	} else if (gridX > prevX && gridY < prevY) {
-		if (Util::isTileForGayFix(smh->environment->collision[gridX][gridY+1]) && Util::isTileForGayFix(smh->environment->collision[gridX-1][gridY])) {
-			//Make it as if Smiley was moving right
-			x = gridX*64+14;
-			y = prevY*64+32;
-			facing = RIGHT;
-			didGayFix = true;
-		}
-		MessageBox(NULL,"Went right and up.","Ice shit",MB_OK);
-	//down-left
-	} else if (gridX < prevX && gridY > prevY) {
-		if (Util::isTileForGayFix(smh->environment->collision[gridX][gridY-1]) && Util::isTileForGayFix(smh->environment->collision[gridX+1][gridY])) {
-			//Make it as if Smiley was moving left
-			x = gridX*64+50;
-			y = prevY*64+32;
-			facing = LEFT;
-			didGayFix = true;
-		}
-		MessageBox(NULL,"Went left and down.","Ice shit",MB_OK);
-	//up-left
-	} else if (gridX < prevX && gridY < prevY) {
-		if (Util::isTileForGayFix(smh->environment->collision[gridX][gridY+1]) && Util::isTileForGayFix(smh->environment->collision[gridX+1][gridY])) {
-			//Make it as if Smiley was moving left
-			x = gridX*64+50;
-			y = prevY*64+32;
-			facing = LEFT;
-			didGayFix = true;
-		}
-		MessageBox(NULL,"Went left and up.","Ice shit",MB_OK);
-	}
-	
-	bool superSpring = false;
-	int jumpGridDist,dist;
-
-	if (didGayFix) {
-		switch (smh->environment->collision[gridX][prevY]) {
-			case ICE:
-				//start puzzle ice
-				iceSliding = true; dy = 0;
-				if (facing == LEFT) dx = -MOVE_SPEED;
-				if (facing == RIGHT) dx = MOVE_SPEED;
-				break;
-			case SUPER_SPRING:
-					superSpring = true;
-			case SPRING_PAD:
-					
-					smh->soundManager->playSound("snd_spring");
-					springing = true;
-					startedSpringing = smh->getGameTime();
-					dx = dy = 0;
-					//Start the spring animation
-					smh->environment->activated[gridX][gridY] = smh->getGameTime();
-					if (superSpring) {
-						smh->resources->GetAnimation("superSpring")->Play();
-					} else {
-						smh->resources->GetAnimation("spring")->Play();
-					}
-					
-					//Determine how long smiley will have to spring to skip a square
-					jumpGridDist = superSpring ? 4 : 2;
-					springVelocity = superSpring ? SPRING_VELOCITY * 1.5 : SPRING_VELOCITY;
-					dist;
-					if (facing == LEFT) dist = x - ((gridX-jumpGridDist)*64+32);
-					else if (facing == RIGHT) dist = ((gridX+jumpGridDist)*64+32) - x;
-					else if (facing == DOWN) dist = (gridY+jumpGridDist)*64+32 - y;
-					else if (facing == UP) dist = y - ((gridY-jumpGridDist)*64+32);
-					springTime = float(dist)/springVelocity;
-
-				break;
-			case UP_ARROW:
-				break;
-			case DOWN_ARROW:
-				break;
-			case LEFT_ARROW:
-				break;
-			case RIGHT_ARROW:
-				break;
-		};
+	if (newDir == -1) {
+		//We didn't need to use the gay fix
+		return false;
+	} else {
+		if (newDir == RIGHT) x += xDist;
+		if (newDir == LEFT) y += yDist;
+		facing = newDir;
+		return true;
 	}
 
-	prevX = gridX;
-	prevY = gridY;
-
-	return false;
 }
 
 ///////////////////////////////////////////////////////////////
