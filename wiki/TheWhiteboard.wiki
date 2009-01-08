@@ -50,7 +50,7 @@
 ||Jesus' Sandals||Pools of the Dead||Lord Phyrebawz 2||90%||Done||
 ||Ice Breath||Candy Mountain||Bartli||Done||Done||
 ||Shrink||Swamp||Lovecraft||Done||0%||
-||Tut's Mask||Tut's Tomb||King Tut||Done||75%||
+||Tut's Mask||Tut's Tomb||King Tut||Done||70%||
 ||---||Serpentine Path||---||Done||---||
 ||Hover||Calypso's Conservatory||Barvinoid||Done||0%||
 ||---||Castle of Evil||Fenwar||Done||0%||
