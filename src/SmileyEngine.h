@@ -810,7 +810,7 @@ public:
 	 * Returns whether or not id is one that should use the gay fix
 	 */
 	static bool isTileForGayFix(int id) {
-		return (isArrowPad(id) || id == SPRING_PAD || id == ICE || id == SUPER_SPRING);
+		return (isArrowPad(id) || id == SPRING_PAD || id == ICE || id == SUPER_SPRING || id == PIT);
 	}
 
 	/**
