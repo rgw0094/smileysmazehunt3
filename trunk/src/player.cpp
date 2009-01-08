@@ -1537,19 +1537,23 @@ bool Player::doGayMovementFix(int xDist, int yDist) {
 		if (nextX > gridX && nextY > gridY) {
 			x -= 3.0;
 			y -= 3.0;
+			return true;
 		} else if (nextX < gridX && nextY > gridY) {
 			x += 3.0;
 			y -= 3.0;
+			return true;
 		} else if (nextX > gridX && nextY < gridY) {
 			x -= 3.0;
 			y += 3.0;
+			return true;
 		} else if (nextX < gridX && nextY < gridY) {
 			x += 3.0;
 			y += 3.0;
+			return true;
 		}
 	}
 
-	return useGayFix;
+	return false;
 }
 
 ///////////////////////////////////////////////////////////////
