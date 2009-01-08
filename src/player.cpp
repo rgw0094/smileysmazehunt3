@@ -1000,7 +1000,7 @@ bool Player::canPass(int collision) {
 		case BOMB_PAD_UP: return true;
 		case BOMB_PAD_DOWN: return true;
 		case FLAME: return true;
-		case FAKE_COLLISION: true;
+		case FAKE_COLLISION: return true;
 
 		default: return false;
 	}
