@@ -1535,20 +1535,20 @@ bool Player::doGayMovementFix(int xDist, int yDist) {
 
 	if (useGayFix) {
 		if (nextX > gridX && nextY > gridY) {
-			x -= 3.0;
-			y -= 3.0;
+			x -= 2.0;
+			y -= 4.0;
 			return true;
 		} else if (nextX < gridX && nextY > gridY) {
-			x += 3.0;
-			y -= 3.0;
+			x += 2.0;
+			y -= 4.0;
 			return true;
 		} else if (nextX > gridX && nextY < gridY) {
-			x -= 3.0;
-			y += 3.0;
+			x -= 2.0;
+			y += 4.0;
 			return true;
 		} else if (nextX < gridX && nextY < gridY) {
-			x += 3.0;
-			y += 3.0;
+			x += 2.0;
+			y += 4.0;
 			return true;
 		}
 	}
