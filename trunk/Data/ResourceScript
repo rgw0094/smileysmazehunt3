@@ -1183,6 +1183,18 @@ Sprite windowArrowRight {
 Sound snd_SwitchItem {
  filename="SwitchItem.mp3"
 }
+Sound snd_HitInvulnerable {
+ filename="HitInvulnerable.mp3"
+}
+Sound snd_TutCoffinOpen {
+ filename="TutCoffinOpen.mp3"
+}
+Sound snd_HitTut1 {
+ filename="HitTut1.mp3"
+}
+Sound snd_HitTut2 {
+ filename="HitTut2.mp3"
+}
 Sound snd_Falling {
  filename="Falling.mp3"
 }

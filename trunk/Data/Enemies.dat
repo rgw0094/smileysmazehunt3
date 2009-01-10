@@ -1,6 +1,6 @@
 [HGESTRINGTABLE]
 
-numEnemies="68"
+numEnemies="69"
 
 ;Croc
 0Name=      "Crazy Croc"
@@ -1163,7 +1163,7 @@ numEnemies="68"
 64GRow=      "7"
 64EnemyType= "0"
 64WanderType="0"
-64HP=        "200"
+64HP=        "175"
 64Damage=    "50"
 64Radius=    "28"
 64Speed=     "130"
@@ -1220,3 +1220,17 @@ numEnemies="68"
 67Land=      "T"
 67SWater=    "T"
 67Chases=    "F"
+
+;Mummy charger
+68GCol=      "4"
+68GRow=      "7"
+68NumFrames= "1"
+68EnemyType= "4"
+68WanderType="0"
+68HP=        "175"
+68Damage=    "50"
+68Radius=    "28"
+68Speed=     "130"
+68Land=      "T"
+68SWater=    "T"
+68Chases=    "F"

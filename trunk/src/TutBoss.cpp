@@ -19,7 +19,7 @@ extern SMH *smh;
 #define TUTBOSS_MOVING_TO_CENTER 4
 #define TUTBOSS_LOWERING 5
 #define TUTBOSS_OPENING 6
-#define TUTBOSS_WAITING_WHILE_OPEN 7
+#define TUTBOSS_TOMB_OPEN 7
 #define TUTBOSS_CLOSING 8
 
 //Attributes
@@ -31,16 +31,18 @@ extern SMH *smh;
 
 #define INITIAL_FLOATING_HEIGHT 3.0
 #define MAX_FLOATING_HEIGHT 25.0
+#define FLASHING_DURATION 0.5
+#define MUMMY_SPAWN_DELAY 1.0
 
-#define TUTBOSS_DAMAGE 2.0
+#define TUTBOSS_DAMAGE 1.1
 #define TUTBOSS_KNOCKBACK_DISTANCE 300.0
 
 //Time to spend in each state
 #define TIME_TO_BE_ON_GROUND 2.0
 #define TIME_TO_RISE 0.5
-#define TIME_TO_HOVER 13.0
+#define TIME_TO_HOVER 1.0 // 13.0
 #define TIME_TO_LOWER 0.5
-#define TIME_TO_WAIT 25.0
+#define TIME_TO_STAY_OPEN 25.0
 
 //Hovering around constants
 #define TUTBOSS_FLOWER_RADIUS 300
@@ -67,11 +69,9 @@ extern SMH *smh;
 #define TUTBOSS_DEFEATTEXT 181
 
 TutBoss::TutBoss(int _gridX,int _gridY,int _groupID) {
-	gridX=_gridX;
-	gridY=_gridY;
 	
-	x=gridX*64+32;
-	y=gridY*64+32;
+	x = _gridX * 64 + 32;
+	y = _gridY * 64 + 32;
 	
 	xLoot=xInitial=x;
 	yLoot=yInitial=y;
@@ -89,9 +89,10 @@ TutBoss::TutBoss(int _gridX,int _gridY,int _groupID) {
 	whichShotInterval = TUTBOSS_SHORT_INTERVAL;
 	nextLongInterval = TUTBOSS_DOUBLE_SHOT_LONG_INTERVAL;
 	timeOfLastShot = 0.0;
-
-	numMummiesShot=0;
-	lastTimeHit = smh->getGameTime();
+	flashing = false;
+	mummyLaunchAngle = 0.0;
+	lastMummySpawnTime = 0.0;
+	timeLastHitSoundPlayed = 0.0;
 
 	a[0]=0.120;
 	b[0]=0.532;
@@ -105,29 +106,54 @@ TutBoss::TutBoss(int _gridX,int _gridY,int _groupID) {
 
 TutBoss::~TutBoss() {
 	delete collisionBox;
-	//smh->resources->Purge(RES_KINGTUT);
+	smh->resources->Purge(RES_KINGTUT);
 }
 
+void TutBoss::doCollision(float dt) {
 
-
-void TutBoss::placeCollisionBox() {
-
+	//Update tut's collision box
 	collisionBox = new hgeRect(x-TUTBOSS_WIDTH/2-floatingHeight,
 								y-TUTBOSS_HEIGHT/2-floatingHeight,
 								x+TUTBOSS_WIDTH/2-floatingHeight,
 								y+TUTBOSS_HEIGHT/2-floatingHeight);
-}
 
-void TutBoss::checkSmileyCollision() {
+	//Hurt the player if he runs into tut
 	if (smh->player->collisionCircle->testBox(collisionBox)) {
 		smh->player->dealDamageAndKnockback(TUTBOSS_DAMAGE,true,TUTBOSS_KNOCKBACK_DISTANCE,x,y);
 	}
+
+	//Tut only takes damage while his tomb is open!
+	if (state == TUTBOSS_TOMB_OPEN || state == TUTBOSS_CLOSING || state == TUTBOSS_OPENING) {
+		if (!flashing && smh->player->getTongue()->testCollision(collisionBox)) {
+			dealDamage(smh->player->getDamage());
+			playHitSound();
+		}
+		if (smh->player->fireBreathParticle->testCollision(collisionBox)) {
+			dealDamage(smh->player->getFireBreathDamage()*dt);
+			playHitSound();
+		}
+		if (smh->projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_LIGHTNING_ORB)) {
+			dealDamage(smh->player->getLightningOrbDamage());
+			playHitSound();
+		}
+		if (smh->projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_FRISBEE)) {
+			dealDamage(0.0);
+			playHitSound();
+		}
+	} else {
+		if (smh->projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_LIGHTNING_ORB) ||
+			smh->projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_FRISBEE) ||
+			smh->player->getTongue()->testCollision(collisionBox)) 
+		{
+			smh->soundManager->playSound("snd_HitInvulnerable");
+		}
+	}
+
 }
 
 bool TutBoss::update(float dt) {
-	
-	placeCollisionBox();
-	checkSmileyCollision();
+
+	doCollision(dt);
 
 	//When smiley triggers the boss' enemy blocks start his dialogue.
 	if (state == TUTBOSS_INACTIVE && !startedIntroDialogue) {
@@ -144,6 +170,8 @@ bool TutBoss::update(float dt) {
 		enterState(TUTBOSS_ON_GROUND);
 		smh->soundManager->playMusic("bossMusic");
 	}
+
+	if (flashing && smh->timePassedSince(timeStartedFlashing) > FLASHING_DURATION) flashing = false;
 
 	switch (state) {
 		case TUTBOSS_ON_GROUND:
@@ -164,8 +192,8 @@ bool TutBoss::update(float dt) {
 		case TUTBOSS_OPENING:
 			doOpening(dt);
 			break;
-		case TUTBOSS_WAITING_WHILE_OPEN:
-			doWaitingWhileOpen(dt);
+		case TUTBOSS_TOMB_OPEN:
+			doTombOpen(dt);
 			break;
 		case TUTBOSS_CLOSING:
 			doClosing(dt);
@@ -174,12 +202,19 @@ bool TutBoss::update(float dt) {
 	};
 
 	return false;
-
 }
 
 void TutBoss::draw(float dt) {
 
-	if (state == TUTBOSS_OPENING || state == TUTBOSS_WAITING_WHILE_OPEN || state == TUTBOSS_CLOSING) {
+	if (state == TUTBOSS_OPENING || state == TUTBOSS_TOMB_OPEN || state == TUTBOSS_CLOSING) {
+		
+		if (flashing) {
+			smh->resources->GetSprite("KingTutInsideSarcophagus")->SetColor(
+				ARGB(smh->getFlashingAlpha(FLASHING_DURATION / 4.0), 255.0, 255.0, 255.0));
+		} else {
+			smh->resources->GetSprite("KingTutInsideSarcophagus")->SetColor(ARGB(255.0, 255.0, 255.0, 255.0));
+		}
+		
 		//Render king tut in his sarcophagus
 		smh->resources->GetSprite("KingTutShadow")->Render(smh->getScreenX(x),smh->getScreenY(y));
 		smh->resources->GetSprite("KingTutInsideSarcophagus")->Render((int)(smh->getScreenX(x)-floatingHeight),(int)(smh->getScreenY(y)-floatingHeight));
@@ -190,7 +225,10 @@ void TutBoss::draw(float dt) {
 	} else {
 		smh->resources->GetSprite("KingTutShadow")->Render(smh->getScreenX(x),smh->getScreenY(y));
 		smh->resources->GetSprite("KingTut")->Render((int)(smh->getScreenX(x)-floatingHeight),(int)(smh->getScreenY(y)-floatingHeight));
-		if (collisionBox && smh->isDebugOn()) smh->drawCollisionBox(collisionBox,RED);
+	}
+
+	if (smh->isDebugOn()) {
+		smh->drawCollisionBox(collisionBox,RED);
 	}
 
 	//Draw the health bar and lives
@@ -199,9 +237,35 @@ void TutBoss::draw(float dt) {
 	}
 }
 
+void TutBoss::dealDamage(float damage) {
+	if (!flashing) {
+		flashing = true;
+		timeStartedFlashing = smh->getGameTime();
+	}
+	health -= damage;
+}
+
+void TutBoss::playHitSound() {
+	if (smh->timePassedSince(timeLastHitSoundPlayed) > 1.0) {
+		if (smh->hge->Random_Int(0,100000) < 50000) {
+			smh->soundManager->playSound("snd_HitTut1");
+		} else {
+			smh->soundManager->playSound("snd_HitTut2");
+		}
+		timeLastHitSoundPlayed = smh->getGameTime();
+	} 
+}
+
 void TutBoss::enterState(int _state) {
 	state=_state;
 	timeEnteredState=smh->getGameTime();
+
+	if (state == TUTBOSS_TOMB_OPEN) {
+		numMummiesSpawned = 0;
+	}
+	if (state == TUTBOSS_OPENING) {
+		smh->soundManager->playSound("snd_TutCoffinOpen");
+	}
 }
 
 void TutBoss::doOnGround(float dt) {
@@ -221,7 +285,6 @@ void TutBoss::doRising(float dt) {
 }
 
 void TutBoss::fireLightning() {
-	//float extraAngle; //this one looks at what angle smiley is facing, and tries to lead the shot to hit him
 	float angleToSmiley = Util::getAngleBetween(x,y,smh->player->x,smh->player->y);
 	angleToSmiley += smh->hge->Random_Float(-TUTBOSS_DOUBLE_SHOT_SPREAD,TUTBOSS_DOUBLE_SHOT_SPREAD);
 
@@ -273,7 +336,6 @@ void TutBoss::doMovingToCenter(float dt) {
 		y = yInitial;
 		enterState(TUTBOSS_LOWERING);
 	}
-	
 }
 
 void TutBoss::doLowering(float dt) {
@@ -294,45 +356,22 @@ void TutBoss::doOpening(float dt) {
 
 	if (smh->timePassedSince(timeEnteredState) >= PI/2) {
 		lidSize = 1;
-		enterState(TUTBOSS_WAITING_WHILE_OPEN);
-		numMummiesShot=0;
+		enterState(TUTBOSS_TOMB_OPEN);
 	}
 }
 
-void TutBoss::doWaitingWhileOpen(float dt) {
-	//"waiting while open" is not a good name for this state, cause Tut is shooting Mummies!!!
+void TutBoss::doTombOpen(float dt) {
 
-	if (smh->timePassedSince(timeEnteredState) >= 1.0 && numMummiesShot==0) {
-		smh->projectileManager->addProjectile(x,y,MUMMY_PROJECTILE_SPEED,0.0,MUMMY_PROJECTILE_DAMAGE,true,PROJECTILE_TUT_MUMMY,true);
-		numMummiesShot=1;
+	//Periodically spawn mummies (up to a maximum of 4)
+	if (numMummiesSpawned < 4 && smh->timePassedSince(lastMummySpawnTime) > MUMMY_SPAWN_DELAY) {
+		smh->projectileManager->addProjectile(x,y,MUMMY_PROJECTILE_SPEED,mummyLaunchAngle,MUMMY_PROJECTILE_DAMAGE,true,PROJECTILE_TUT_MUMMY,true);
+		mummyLaunchAngle += PI/2.0;
+		lastMummySpawnTime = smh->getGameTime();
+		numMummiesSpawned++;
 	}
 
-	if (smh->timePassedSince(timeEnteredState) >= 2.0 && numMummiesShot==1) {
-		smh->projectileManager->addProjectile(x,y,MUMMY_PROJECTILE_SPEED,PI/2,MUMMY_PROJECTILE_DAMAGE,true,PROJECTILE_TUT_MUMMY,true);
-		numMummiesShot=2;
-	}
-
-	if (smh->timePassedSince(timeEnteredState) >= 3.0 && numMummiesShot==2) {
-		smh->projectileManager->addProjectile(x,y,MUMMY_PROJECTILE_SPEED,PI,MUMMY_PROJECTILE_DAMAGE,true,PROJECTILE_TUT_MUMMY,true);
-		numMummiesShot=3;
-	}
-
-	if (smh->timePassedSince(timeEnteredState) >= 4.0 && numMummiesShot==3) {
-		smh->projectileManager->addProjectile(x,y,MUMMY_PROJECTILE_SPEED,3*PI/2,MUMMY_PROJECTILE_DAMAGE,true,PROJECTILE_TUT_MUMMY,true);
-		numMummiesShot=4;
-	}
-
-	if (smh->timePassedSince(timeEnteredState) >= TIME_TO_WAIT) {
+	if (smh->timePassedSince(timeEnteredState) >= TIME_TO_STAY_OPEN) {
 		enterState(TUTBOSS_CLOSING);
-	}
-
-	if (smh->timePassedSince(lastTimeHit) >= TUTBOSS_FLASH_TIME && smh->player->getTongue()->testCollision(collisionBox)) {
-		health -= smh->player->getDamage();
-		lastTimeHit = smh->getGameTime();
-	}
-
-	if (smh->player->fireBreathParticle->testCollision(collisionBox)) {
-		health -= smh->player->getFireBreathDamage()*dt;
 	}
 
 }

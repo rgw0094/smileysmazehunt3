@@ -10,7 +10,10 @@ extern SMH *smh;
 
 #define LASER_LENGTH 20.0
 #define MINI_MUSHROOM_ENEMYID 43
-#define MUMMY_ENEMYID 64
+
+#define RANGED_MUMMY 48
+#define FLAIL_MUMMY 49
+#define CHARGER_MUMMY 68
 
 ProjectileManager::ProjectileManager() {
 
@@ -333,9 +336,18 @@ void ProjectileManager::update(float dt) {
 			if (i->id == PROJECTILE_MINI_MUSHROOM && i->hostile) {
 				smh->enemyManager->addEnemy(MINI_MUSHROOM_ENEMYID,i->x/64,i->y/64,0.25,0.75,-1);
 			}
-			//if it was a mummy, spawn an enemy mummy
+			//if it was a mummy, spawn a random mummy to spawn
 			if (i->id == PROJECTILE_TUT_MUMMY) {
-				smh->enemyManager->addEnemy(MUMMY_ENEMYID,i->x/64,i->y/64,0.25,0.75,-1);
+				int random = smh->hge->Random_Int(0, 10000);
+				int enemy = 0;
+				if (random < 1000) {
+					enemy = FLAIL_MUMMY;
+				} else if (random < 6000) {
+					enemy = CHARGER_MUMMY;
+				} else {
+					enemy = RANGED_MUMMY;
+				}
+				smh->enemyManager->addEnemy(enemy,i->x/64,i->y/64,0.25,0.75,-1);
 			}
 			delete i->collisionBox;
 			delete i->terrainCollisionBox;
