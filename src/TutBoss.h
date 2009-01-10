@@ -16,9 +16,10 @@ public:
 	void draw(float dt);
 	bool update(float dt);
 	void enterState(int _state);
-	void placeCollisionBox();
 	void fireLightning();
-	void checkSmileyCollision();
+	void doCollision(float dt);
+	void dealDamage(float damage);
+	void playHitSound();
 
 	//State-specific methods
 	void doOnGround(float dt);
@@ -27,22 +28,23 @@ public:
 	void doMovingToCenter(float dt);
 	void doLowering(float dt);
 	void doOpening(float dt);
-	void doWaitingWhileOpen(float dt);
+	void doTombOpen(float dt);
 	void doClosing(float dt);
 
 	//Variables
-	int gridX, gridY;
 	float x, y,xInitial,yInitial;
 	float xLoot,yLoot;
 	int state;
 	float alpha;
 	bool startedIntroDialogue;
 	bool startedDrowningDialogue;
-	float lastHitByTongue;
 	float timeEnteredState;
 	float timeEnteredGSS;
+	float timeStartedFlashing;
 	hgeRect *collisionBox;
 	bool droppedLoot;
+	bool flashing;
+	float timeLastHitSoundPlayed;
 
 	float floatingHeight;
 	float a[10],b[10]; //used for the parametric motion of Tut while he's hovering around
@@ -51,14 +53,13 @@ public:
 	int whichShotInterval; //either long interval or short (creates double shot effect)
 	float nextLongInterval; //this tells it how long to wait until shooting the next double shot
 	float timeToMoveToCenter;
+	float lastMummySpawnTime;
+	float mummyLaunchAngle;
+	int numMummiesSpawned;
 
 	//sarcophagus opening variables
 	float lidSize;
 	float lidXOffset;
-
-	int numMummiesShot;
-
-	float lastTimeHit;
 
 };
 
