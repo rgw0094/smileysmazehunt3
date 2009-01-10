@@ -15,7 +15,6 @@
  * Make pits have a hue change variable in the var layer.  Then we can match pits to the level colors.
  * Merge projectile texture with sprites texture
  * Make it so you can see # gems while in the shop
- * Solved smilelets/flowers need to be saved
  * Make item particles disappear when item is collected or map is changed
  * Add timer above timed switches
  * New collision type that stops the minimap from scrolling
@@ -55,6 +54,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Smilelets and flowers are now saved||1/10/09||RGW||
 ||Number of gems per area are now shown on the world map||1/10/09||RGW||
 ||Fenwar Encounters||1/7/09||RMM||
 ||Filled empty spaces on maps with collision||1/6/09||RGW||
