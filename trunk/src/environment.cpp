@@ -319,11 +319,12 @@ void Environment::loadArea(int id, int from, bool playMusic) {
 		for (int col = 0; col < areaWidth; col++) {
 			areaFile.read(threeBuffer,3);
 			int newItem = atoi(threeBuffer);
-			if (newItem < 16) {
-				//environmentParticles->SpawnPS(&smh->resources->GetParticleSystem("itemParticle")->info, i*64+32, j*64+32);
-			} else if (newItem >= 16 && newItem < 32) {
+			if (newItem >= 16 && newItem < 32) {
 				tapestryManager->addTapestry(col, row, newItem);
 			} else {
+				if (newItem < 16) {
+					//environmentParticles->SpawnPS(&smh->resources->GetParticleSystem("itemParticle")->info, i*64+32, j*64+32);
+				}
 				item[col][row] = newItem;
 			}
 

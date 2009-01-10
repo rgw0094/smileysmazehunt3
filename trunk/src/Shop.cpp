@@ -54,31 +54,33 @@ void Shop::draw(float dt) {
 	smh->resources->GetSprite("inventoryCursor")->Render(X_OFFSET + 60.0 + currentSelection*80.0 - 20.0, Y_OFFSET + 110.0 - 20.0);
 	
 	std::string descString = "";
-	std::string priceString = "";
+	int price;
 
 	switch (currentSelection) {
 		case HEALTH:
-			descString = "Purchase Health Upgrade";
-			priceString = "Price: 4 Gems";
+			descString = "Health Upgrade";
+			price = 4;
 			break;
 		case MANA:
-			descString = "Purchase 15% Mana Upgrade";
-			priceString = "Price: 3 Gems";
+			descString = "15% Mana Upgrade";
+			price = 3;
 			break;
 		case DAMAGE:
-			descString = "Purchase 10% Damage Upgrade";
-			priceString = "Price: 3 Gems";
+			descString = "10% Damage Upgrade";
+			price = 3;
 			break;
 		case EXIT:
 			descString = "Exit Shop";
-			priceString = " ";
 			break;
 	}
 
 	smh->resources->GetFont("textBoxFnt")->printf(X_OFFSET + 200.0, Y_OFFSET + 165.0,
 				HGETEXT_CENTER, "%s", descString.c_str());
-	smh->resources->GetFont("textBoxFnt")->printf(X_OFFSET + 200.0, Y_OFFSET + 205.0,
-				HGETEXT_CENTER, "%s", priceString.c_str());
+
+	if (currentSelection != EXIT) {
+		smh->resources->GetFont("textBoxFnt")->printf(X_OFFSET + 200.0, Y_OFFSET + 205.0,
+			HGETEXT_CENTER, "Cost: %d     Money: %d", price, smh->saveManager->money);
+	}
 
 }
 
