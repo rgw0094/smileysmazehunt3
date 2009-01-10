@@ -444,6 +444,7 @@ public:
 	EnemyInfo getEnemyInfo(int enemyID);
 	Ability getAbilityInfo(int abilityID);
 	std::list<EnemyName> getEnemyNames();
+	int getNumTotalGemsInArea(int area, int gemType);
 	const char *getGameText(const char *text);
 	const char *getAreaName(int area);
 
@@ -524,7 +525,7 @@ public:
 	//Stuff in inventory
 	bool hasAbility[12];
 	int numKeys[5][4];
-	int numGems[NUM_AREAS][4];
+	int numGems[NUM_AREAS][3];
 	int numUpgrades[3];
 	bool hasVisitedArea[NUM_AREAS];
 	int money;	
