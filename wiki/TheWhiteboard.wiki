@@ -22,6 +22,7 @@
  * New collision type that stops the minimap from scrolling
 
 === Graphics To Do ===
+ * Pit graphics for different areas
  * More projectile graphics
  * Bomb guy graphic
  * Lovecraftian Boss
