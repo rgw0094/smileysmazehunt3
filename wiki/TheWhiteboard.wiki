@@ -5,6 +5,7 @@
 === Data To Do ===
  * Enemy names
  * Sound effects
+ * Finish adding gems and get a count of each type for each area
 
 === Programming To Do ===
  * IDEA TO MAKE FRISBEE BETTER:
@@ -12,7 +13,6 @@
  * Lovecraftian Boss
  * Barvinoid
  * Make pits have a hue change variable in the var layer.  Then we can match pits to the level colors.
- * Keep track of # of gems per area
  * Merge projectile texture with sprites texture
  * Make it so you can see # gems while in the shop
  * When you die, start with no less than 3 life (so you can't fuck yourself)
@@ -56,6 +56,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Number of gems per area are now shown on the world map||1/10/09||RGW||
 ||Fenwar Encounters||1/7/09||RMM||
 ||Filled empty spaces on maps with collision||1/6/09||RGW||
 ||Made the mini-map leet||1/6/09||RGW||
