@@ -21,8 +21,13 @@ void WorldMap::draw(float dt) {
 
 	smh->shadeScreen(100.0);
 
-	smh->resources->GetSprite("blackScreen")->SetColor(ARGB(255.0, 255.0, 255.0));
-	smh->resources->GetSprite("blackScreen")->RenderStretch(windowX + 30, windowY + 30, windowX + 630, windowY + 462);
+	smh->hge->Gfx_SetClipping(windowX + 30, windowY + 30, 600, 432);
+	for (int i = 0; i < 7; i++) {
+		for (int j = 0; j < 4; j++) {
+			smh->drawSprite("WorldMapBackgroundTile", windowX + 30 + 128*i, windowY + 30 + 128*j);
+		}
+	}
+	smh->hge->Gfx_SetClipping();
 
 	smh->drawSprite("topBorder", windowX, windowY);
 	smh->drawSprite("leftBorder", windowX, windowY + 30);

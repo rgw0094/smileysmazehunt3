@@ -455,6 +455,13 @@ Sprite TutMapBorder {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=13
 }
+Sprite WorldMapBackgroundTile {
+ texture=WorldMapTx
+ rect=175,352,128,128
+ hotspot=53,41
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=13
+}
 
 ;**********************************************
 ;******** FOUNTAIN (Resource group 69) ********
