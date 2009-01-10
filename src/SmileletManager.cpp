@@ -306,12 +306,14 @@ void SmileletManager::switchToCircleFlower() {
 
 	for (i=theSmilelets.begin(); i != theSmilelets.end(); i++) {
 		if (i->state == SMILELET_STATE_MOVE_TO_FLOWER) i->state = SMILELET_STATE_CIRCLE_FLOWER;
+		smh->saveManager->change(i->initialXTile, i->initialYTile);
 	}
 
 	timeEnteredState = smh->getGameTime();
 
 	//Make flower happy, so Smiley can pass
 	smh->environment->collision[flowerGridX][flowerGridY] = SMILELET_FLOWER_HAPPY;
+	smh->saveManager->change(flowerGridX, flowerGridY);
 }
 
 int SmileletManager::convertAngleToDir(double angle) {

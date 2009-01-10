@@ -319,11 +319,10 @@ void Environment::loadArea(int id, int from, bool playMusic) {
 		for (int col = 0; col < areaWidth; col++) {
 			areaFile.read(threeBuffer,3);
 			int newItem = atoi(threeBuffer);
-
-			//Tapestries - second row of the item layer
-			if (newItem >= 16 && newItem < 32) {
+			if (newItem < 16) {
+				//environmentParticles->SpawnPS(&smh->resources->GetParticleSystem("itemParticle")->info, i*64+32, j*64+32);
+			} else if (newItem >= 16 && newItem < 32) {
 				tapestryManager->addTapestry(col, row, newItem);
-			//Other item
 			} else {
 				item[col][row] = newItem;
 			}
@@ -390,36 +389,30 @@ void Environment::loadArea(int id, int from, bool playMusic) {
 	//Load changes
 	for (int i = 0; i < areaWidth; i++) {
 		for (int j = 0; j < areaHeight; j++) {
+			if (smh->saveManager->isTileChanged(i,j)) {
 
-			//If there is an item at this tile check to see if it has already
-			//been collected
-			if (item[i][j] > 0 && item[i][j] < 16) {
-				if (smh->saveManager->isTileChanged(i,j)) {
+				if (item[i][j] > 0 && item[i][j] < 16) {
 					item[i][j] = NONE;
-				} else { //spawn particle there
-					environmentParticles->SpawnPS(&smh->resources->GetParticleSystem("itemParticle")->info, i*64+32, j*64+32);
 				}
-			}
 
-			//If there is a door on this tile check to see if it has already
-			//been opened
-			if (collision[i][j] >= RED_KEYHOLE && collision[i][j] <= BLUE_KEYHOLE) {
-				if (smh->saveManager->isTileChanged(i,j)) {
+				if (collision[i][j] >= RED_KEYHOLE && collision[i][j] <= BLUE_KEYHOLE) {
 					collision[i][j] = WALKABLE;
 				}
-			}
 
-			//If there is a bombable wall at this square check to see if it has
-			//already been bombed
-			if (collision[i][j] == BOMBABLE_WALL) {
-				if (smh->saveManager->isTileChanged(i,j)) {
+				if (collision[i][j] == SMILELET_FLOWER_SAD) {
+					collision[i][j] = SMILELET_FLOWER_HAPPY;
+				}
+
+				if (collision[i][j] == SMILELET) {
+					collision[i][j] = NONE;
+				}
+
+				if (collision[i][j] == BOMBABLE_WALL) {
 					collision[i][j] = WALKABLE;
 				}
-			}
 
-			//Flip switches that have been marked as changed
-			if (Util::isCylinderSwitchLeft(collision[i][j]) || Util::isCylinderSwitchRight(collision[i][j])) {
-				if (smh->saveManager->isTileChanged( i, j)) {
+				//Flip switches that have been marked as changed
+				if (Util::isCylinderSwitchLeft(collision[i][j]) || Util::isCylinderSwitchRight(collision[i][j])) {
 					int id = ids[i][j];
 					//Scan the area for cylinders linked to this switch
 					for (int k = 0; k < areaWidth; k++) {
