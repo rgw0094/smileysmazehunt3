@@ -68,6 +68,13 @@ const char *GameData::getAreaName(int area) {
 	
 }
 
+/**
+ * Returns the total number of gems of the given type there are to find in the given area.
+ */
+int GameData::getNumTotalGemsInArea(int area, int gemType) {
+	return 14;
+}
+
 ////////// Private functions //////////////////
 
 

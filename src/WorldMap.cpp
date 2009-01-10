@@ -1,5 +1,6 @@
 #include "SmileyEngine.h"
 #include "WindowFramework.h"
+#include "Environment.h"
 
 extern SMH *smh;
 
@@ -84,6 +85,15 @@ void WorldMap::draw(float dt) {
 		smh->drawSprite("ConservatoryMap", fountainX + 340, fountainY - 119);
 
 	smh->resources->GetFont("inventoryFnt")->printf(windowX + 255, windowY + 40, HGETEXT_CENTER, smh->gameData->getAreaName(selectedArea));
+
+	//Draw number of gems in the current area
+	smh->resources->GetFont("controls")->SetColor(ARGB(255,255,255,255));
+	for (int i = SMALL_GEM; i <= LARGE_GEM; i++) {
+		smh->environment->itemLayer[i]->RenderEx(windowX + 500, windowY + 320 + 45 * (i-SMALL_GEM), 0.0, 0.55, 0.55);
+		smh->resources->GetFont("controls")->printf(windowX + 550, windowY + 325 + 45 * (i-SMALL_GEM), HGETEXT_LEFT, "%d / %d", 
+			smh->saveManager->numGems[selectedArea][i-SMALL_GEM], smh->gameData->getNumTotalGemsInArea(selectedArea, i));
+	}
+	smh->resources->GetFont("controls")->SetColor(ARGB(255,0,0,0));
 
 }	
 
