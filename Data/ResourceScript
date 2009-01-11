@@ -1190,6 +1190,9 @@ Sprite windowArrowRight {
 Sound snd_SwitchItem {
  filename="SwitchItem.mp3"
 }
+Sound snd_ClockTick {
+ filename="ClockTick.mp3"
+}
 Sound snd_HitInvulnerable {
  filename="HitInvulnerable.mp3"
 }

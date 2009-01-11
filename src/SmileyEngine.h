@@ -604,6 +604,7 @@ public:
 	void playAbilityEffect(char *effect, bool loop);
 	void stopAbilityChannel();
 	void playSound(const char* sound);
+	void playSound(const char* sound, float delay);
 	void playSwitchSound(int gridX, int gridY, bool alwaysPlaySound);
 	int getMusicVolume();
 	int getSoundVolume();
@@ -620,6 +621,7 @@ private:
 	int musicVolume;
 	int soundVolume;
 	float lastSwitchSoundTime;
+	float lastSoundTime;
 
 };
 

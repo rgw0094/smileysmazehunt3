@@ -15,7 +15,7 @@ SoundManager::SoundManager() {
 	setMusicVolume(smh->hge->Ini_GetInt("Options", "musicVolume", 100));
 	setSoundVolume(smh->hge->Ini_GetInt("Options", "soundVolume", 100));
 
-	lastSwitchSoundTime = 0.0;
+	lastSwitchSoundTime = lastSoundTime= 0.0;
 }
 
 /**
@@ -146,7 +146,14 @@ void SoundManager::playAbilityEffect(char *effect, bool loop) {
 }
 
 void SoundManager::playSound(const char* sound) {
-	smh->hge->Effect_Play(smh->resources->GetEffect(sound));
+	playSound(sound, 0.0);
+}
+
+void SoundManager::playSound(const char* sound, float delay) {
+	if (smh->timePassedSince(lastSoundTime < delay)) {
+		smh->hge->Effect_Play(smh->resources->GetEffect(sound));
+		lastSoundTime = smh->getGameTime();
+	}
 }
 
 void SoundManager::stopAbilityChannel() {

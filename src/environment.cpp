@@ -145,10 +145,14 @@ void Environment::reset() {
 			collision[i][j] = 0;
 			ids[i][j] = -1;
 			item[i][j] = 0;
-			activated[i][j] = -100.0f;
+			activated[i][j] = -100.0;
 			variable[i][j] = 0;
 			enemyLayer[i][j] = -1;
 		}
+	}
+
+	for (std::list<Timer>::iterator i = timerList.begin(); i != timerList.end(); i++) {
+		i = timerList.erase(i);
 	}
 
 }
@@ -744,6 +748,19 @@ void Environment::drawAfterSmiley(float dt) {
 }
 
 /**
+ * Draw the number of seconds left over every activated timed switch
+ */ 
+void Environment::drawSwitchTimers(float dt) {
+	for (std::list<Timer>::iterator i = timerList.begin(); i != timerList.end(); i++) {
+		smh->resources->GetFont("controls")->SetColor(ARGB(255,255,255,255));
+		smh->resources->GetFont("controls")->SetScale(1.0);
+		smh->resources->GetFont("controls")->printf(smh->getScreenX(i->x), smh->getScreenY(i->y),
+			HGETEXT_CENTER, "%d", int(i->duration - smh->timePassedSince(i->startTime)) + 1);
+			smh->resources->GetFont("controls")->SetColor(ARGB(255,0,0,0));
+	}
+}
+
+/**
  * Update the environment variables
  */
 void Environment::update(float dt) {
@@ -797,6 +814,17 @@ void Environment::update(float dt) {
 	
 				}
 			}
+		}
+	}
+
+	//Update timers
+	for (std::list<Timer>::iterator i = timerList.begin(); i != timerList.end(); i++) {
+		if (smh->timePassedSince(i->lastClockTickTime) > 1.0) {
+			i->lastClockTickTime = smh->getGameTime();
+			smh->soundManager->playSound("snd_ClockTick", 1.0);
+		}
+		if (smh->timePassedSince(i->startTime) > i->duration) {
+			i = timerList.erase(i);
 		}
 	}
 
@@ -1038,6 +1066,17 @@ bool Environment::toggleSwitchAt(int gridX, int gridY, bool playSoundFarAway) {
 
 	if (hasSwitch) {
 		smh->soundManager->playSwitchSound(gridX, gridY, playSoundFarAway);
+
+		//If this is a timed switch, create a timer to display the time left over the switch
+		if (variable[gridX][gridY] != -1) {
+			Timer timer;
+			timer.x = gridX * 64 + 32;
+			timer.y = gridY * 64;
+			timer.duration = variable[gridX][gridY];
+			timer.startTime = smh->getGameTime();
+			timer.lastClockTickTime = smh->getGameTime();
+			timerList.push_back(timer);
+		}
 	}
 
 	return hasSwitch;
