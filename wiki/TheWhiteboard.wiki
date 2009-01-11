@@ -13,7 +13,6 @@
  * Lovecraftian Boss
  * Barvinoid
  * Merge projectile texture with sprites texture
- * Make item particles disappear when item is collected or map is changed
 
 === Graphics To Do ===
  * Pit graphics for different areas
@@ -50,6 +49,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Particles disappear when you collect an item||1/11/09||RGW||
 ||Timer above timed switches||1/10/09||RGW||
 ||Money is now shown in the shop||1/10/09||RGW||
 ||Smilelets and flowers are now saved||1/10/09||RGW||
