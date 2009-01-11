@@ -18,6 +18,12 @@ class Fountain;
 class FenwarManager;
 class TutorialMan;
 
+struct Timer {
+	float duration, startTime;
+	float lastClockTickTime;
+	float x, y;
+};
+
 class Environment {
 
 public:
@@ -29,6 +35,7 @@ public:
 	void drawAfterSmiley(float dt);
 	void drawGrid(float dt);
 	void drawPits(float dt);
+	void drawSwitchTimers(float dt);
 	void update(float dt);
 	void loadArea(int id, int from, bool playMusic);
 	int checkItem(int x, int y);
@@ -97,6 +104,7 @@ private:
 	SmileletManager *smileletManager;
 	TutorialMan *tutorialMan;
 	hgeRect *collisionBox;
+	std::list<Timer> timerList;
 
 	hgeAnimation *silverCylinder, *brownCylinder, *blueCylinder, *greenCylinder, *yellowCylinder, *whiteCylinder;
 	hgeAnimation *silverCylinderRev, *brownCylinderRev, *blueCylinderRev, *greenCylinderRev, *yellowCylinderRev, *whiteCylinderRev;

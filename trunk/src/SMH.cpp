@@ -198,6 +198,7 @@ void SMH::drawGame() {
 		explosionManager->draw(dt);
 		fenwarManager->draw(dt);
 		projectileManager->draw(dt);
+		environment->drawSwitchTimers(dt);
 		shadeScreen(darkness);
 		areaChanger->draw(dt);
 		player->drawGUI(dt);
