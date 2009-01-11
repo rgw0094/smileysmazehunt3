@@ -120,7 +120,7 @@ void EnemyGroupManager::triggerGroup(int whichGroup) {
 					smh->environment->variable[i][j] == whichGroup) {
 						smh->enemyManager->addEnemy(smh->environment->enemyLayer[i][j], i, j, 0.25, 0.25, whichGroup);
 						addEnemy(smh->environment->variable[i][j]);
-						smh->environment->environmentParticles->SpawnPS(&smh->resources->GetParticleSystem("treeletSpawn")->info, i*64+32, j*64+32);
+						smh->environment->addParticle("treeletSpawn", i*64+32, j*64+32);
 					}
 			}
 		}
@@ -150,10 +150,7 @@ void EnemyGroupManager::enableBlocks(int whichGroup) {
 				//Set stuff in the environment to make an enemy block
 				smh->environment->item[i][j] = ENEMYGROUP_BLOCKGRAPHIC;
 				smh->environment->collision[i][j] = UNWALKABLE;
-				smh->environment->environmentParticles->SpawnPS(
-					&smh->resources->GetParticleSystem("enemyBlockCloud")->info, 
-					i*64.0+32.0, j*64.0+32.0);
-
+				smh->environment->addParticle("enemyBlockCloud", i*64.0+32.0, j*64.0+32.0);
 			}
 		}
 	}

@@ -33,9 +33,6 @@ extern SMH *smh;
  */
 Environment::Environment() {
 	
-	//Load particles
-	environmentParticles = new hgeParticleManager();
-
 	//Load item layer
 	for (int i = 0; i < 16; i++) {
 		for (int j = 0; j < 16; j++) {
@@ -127,6 +124,7 @@ void Environment::reset() {
 	evilWallManager->reset();
 	smileletManager->reset();
 	smh->fenwarManager->reset();
+	removeAllParticles();
 
 	if (fountain) {
 		delete fountain;
@@ -326,12 +324,11 @@ void Environment::loadArea(int id, int from, bool playMusic) {
 			if (newItem >= 16 && newItem < 32) {
 				tapestryManager->addTapestry(col, row, newItem);
 			} else {
-				if (newItem < 16) {
-					//environmentParticles->SpawnPS(&smh->resources->GetParticleSystem("itemParticle")->info, i*64+32, j*64+32);
+				if (newItem > 0 && newItem < 16) {
+					addParticle("itemParticle", col*64+32, row*64+32);
 				}
 				item[col][row] = newItem;
 			}
-
 		}
 		//Read the newline
 		areaFile.read(threeBuffer,1);
@@ -636,10 +633,12 @@ void Environment::draw(float dt) {
 		fountain->draw(dt);
 	}
 
-	//Draw environment particles
-	environmentParticles->Update(dt);
-	environmentParticles->Transpose(-1*(xGridOffset*64 + xOffset), -1*(yGridOffset*64 + yOffset));
-	environmentParticles->Render();
+	//Draw particles
+	for (std::list<ParticleStruct>::iterator i = particleList.begin(); i != particleList.end(); i++) {
+		i->particle->MoveTo(smh->getScreenX(i->x), smh->getScreenY(i->y));
+		i->particle->Update(dt);
+		i->particle->Render();
+	}
 
 	//Debug mode stuff
 	if (smh->isDebugOn()) {
@@ -1164,7 +1163,7 @@ void Environment::switchCylinders(int switchID) {
 
 
 /**
- * Returns the item in a square (x,y) but does not removes it.
+ * Returns the item in a square (x,y) but does not remove it.
  */
 int Environment::checkItem(int x, int y) {
 	return item[x][y];
@@ -1176,16 +1175,22 @@ int Environment::checkItem(int x, int y) {
 int Environment::removeItem(int x, int y) {
 	int retVal = item[x][y];
 	item[x][y] = NONE;
-	removeItemParticle(x,y);
+	removeParticle(x,y);
 	smh->saveManager->change(x, y);	
 	return retVal;
 }
 
 /**
- * Removes an item particle at (x,y)
+ * Removes a particle at (x,y)
  */
-void Environment::removeItemParticle(int x, int y) {
-	
+void Environment::removeParticle(int x, int y) {
+	for (std::list<ParticleStruct>::iterator i = particleList.begin(); i != particleList.end(); i++) {
+		if (i->gridX == x && i->gridY == y) {
+			i->particle->Stop();
+			delete i->particle;
+			i = particleList.erase(i);
+		}
+	}
 }
 
 /**
@@ -1507,6 +1512,26 @@ bool Environment::testCollision(hgeRect *box, bool canPass[256], bool ignoreSill
 
 }
 
+void Environment::removeAllParticles() {
+	for (std::list<ParticleStruct>::iterator i = particleList.begin(); i != particleList.end(); i++) {
+		i->particle->Stop();
+		delete i->particle;
+		i = particleList.erase(i);
+	}
+}
+
+void Environment::addParticle(const char* particleName, float x, float y) {
+
+	ParticleStruct particleStruct;
+	particleStruct.x = x;
+	particleStruct.y = y;
+	particleStruct.gridX = Util::getGridX(x);
+	particleStruct.gridY = Util::getGridY(y);
+	particleStruct.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem(particleName)->info);
+	particleStruct.particle->FireAt(smh->getScreenX(x), smh->getScreenY(y));
+
+	particleList.push_back(particleStruct);
+}
 
 /**
  * Returns whether or not the player is on top of any cylinders that will pop up

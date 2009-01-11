@@ -24,6 +24,12 @@ struct Timer {
 	float x, y;
 };
 
+struct ParticleStruct {
+	hgeParticleSystem *particle;
+	float x, y;
+	int gridX, gridY;
+};
+
 class Environment {
 
 public:
@@ -74,8 +80,9 @@ public:
 	bool isTutorialManActive();
 	bool isInBounds(int gridX, int gridY);
 	float getSwitchDelay();
-	void removeItemParticle(int x,int y);
-	void removeAllItemParticles();
+	void removeParticle(int x,int y);
+	void removeAllParticles();
+	void addParticle(const char* particle, float x, float y);
 
 	//variables
 	int areaWidth,areaHeight;		//Width and height of the area in squares
@@ -92,7 +99,6 @@ public:
 	int drawX,drawY;				//Location to draw a tile
 	int offScreenRange;				//Number of tiles offscreen to draw
 
-	hgeParticleManager *environmentParticles;
 	hgeSprite *itemLayer[512];
 
 private:
@@ -105,6 +111,7 @@ private:
 	TutorialMan *tutorialMan;
 	hgeRect *collisionBox;
 	std::list<Timer> timerList;
+	std::list<ParticleStruct> particleList;
 
 	hgeAnimation *silverCylinder, *brownCylinder, *blueCylinder, *greenCylinder, *yellowCylinder, *whiteCylinder;
 	hgeAnimation *silverCylinderRev, *brownCylinderRev, *blueCylinderRev, *greenCylinderRev, *yellowCylinderRev, *whiteCylinderRev;
