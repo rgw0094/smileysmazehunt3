@@ -225,7 +225,7 @@ void SaveManager::save(bool showConfirmation) {
 	smh->hge->System_Log("Saving file %d", currentSave);	
 
 	//Heal the player to a minimum of 3 health when they save
-	smh->player->setHealth(min(3.0, smh->player->getHealth()));
+	smh->player->setHealth(max(3.0, smh->player->getHealth()));
 
 	//Select the specified save file
 	BitStream *output = new BitStream();
