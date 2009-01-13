@@ -27,6 +27,7 @@ public:
 	void doHoveringAround(float dt);
 	void doMovingToCenter(float dt);
 	void doLowering(float dt);
+	void doLightning(float dt);
 	void doOpening(float dt);
 	void doTombOpen(float dt);
 	void doClosing(float dt);
@@ -56,6 +57,14 @@ public:
 	float lastMummySpawnTime;
 	float mummyLaunchAngle;
 	int numMummiesSpawned;
+
+	//lightning states
+	int lightningState;
+	float lightningWidth;
+	float lightningAngle;
+	float lightningFlickerTime;
+	int lightningRotateDir;
+	float changeInRotation;
 
 	//sarcophagus opening variables
 	float lidSize;

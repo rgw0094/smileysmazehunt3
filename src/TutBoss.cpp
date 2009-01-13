@@ -18,9 +18,10 @@ extern SMH *smh;
 #define TUTBOSS_HOVERING_AROUND 3
 #define TUTBOSS_MOVING_TO_CENTER 4
 #define TUTBOSS_LOWERING 5
-#define TUTBOSS_OPENING 6
-#define TUTBOSS_TOMB_OPEN 7
-#define TUTBOSS_CLOSING 8
+#define TUTBOSS_SHOOTING_LIGHTNING 6
+#define TUTBOSS_OPENING 7
+#define TUTBOSS_TOMB_OPEN 8
+#define TUTBOSS_CLOSING 9
 
 //Attributes
 #define TUTBOSS_HEALTH 50.0
@@ -54,6 +55,33 @@ extern SMH *smh;
 #define TUTBOSS_LONG_INTERVAL 1
 #define TUTBOSS_SHOT_DAMAGE 3.0
 #define TUTBOSS_SHOT_SPEED 600.0
+
+//Lightning constants
+#define TUT_LIGHTNING_STATE_APPEARING 0
+#define TUT_LIGHTNING_STATE_ROTATING 1
+#define TUT_LIGHTNING_STATE_WIDENING 2
+#define TUT_LIGHTNING_STATE_WAITING_WHILE_WIDE 3
+#define TUT_LIGHTNING_STATE_NARROWING 4
+#define TUT_LIGHTNING_STATE_DISAPPEARING 5
+
+#define TUT_LIGHTNING_INITIAL_WIDTH 0.1
+#define TUT_LIGHTNING_DAMAGE 2.0
+#define TUT_LIGHTNING_ROTATE_SPEED 0.013
+#define TUT_LIGHTNING_ROTATE_PERIOD 1.5
+
+#define TUT_LIGHTNING_ROTATE_CW 0
+#define TUT_LIGHTNING_ROTATE_CCW 1
+
+#define TUT_LIGHTNING_NUM_SHOTS 4
+#define TUT_LIGHTNING_NUM_WEDGES 7
+
+#define TUT_LIGHTNING_TIME_TO_APPEAR 0.7
+#define TUT_LIGHTNING_TIME_TO_WIDEN 0.5
+#define TUT_LIGHTNING_TIME_TO_WAIT 1.0
+#define TUT_LIGHTNING_TIME_TO_NARROW 0.5
+#define TUT_LIGHTNING_TIME_TO_ROTATE 8.0
+#define TUT_LIGHTNING_TIME_TO_DISAPPEAR 0.3
+
 
 //Open casket constants
 #define OPEN_CASKET_SPEED 40.0
@@ -189,6 +217,9 @@ bool TutBoss::update(float dt) {
 		case TUTBOSS_LOWERING:
 			doLowering(dt);
 			break;
+		case TUTBOSS_SHOOTING_LIGHTNING:
+			doLightning(dt);
+			break;
 		case TUTBOSS_OPENING:
 			doOpening(dt);
 			break;
@@ -225,6 +256,14 @@ void TutBoss::draw(float dt) {
 	} else {
 		smh->resources->GetSprite("KingTutShadow")->Render(smh->getScreenX(x),smh->getScreenY(y));
 		smh->resources->GetSprite("KingTut")->Render((int)(smh->getScreenX(x)-floatingHeight),(int)(smh->getScreenY(y)-floatingHeight));
+	}
+
+	//Draw arcs of light
+	if (state == TUTBOSS_SHOOTING_LIGHTNING) {
+		for (int i=0; i < TUT_LIGHTNING_NUM_WEDGES; i++) {
+			float wedgeAngle = i*2*3.14159/TUT_LIGHTNING_NUM_WEDGES + lightningAngle;
+			smh->resources->GetSprite("KingTutLightningWedge")->RenderEx(smh->getScreenX(x),smh->getScreenY(y),wedgeAngle,1.0,lightningWidth);
+		}
 	}
 
 	if (smh->isDebugOn()) {
@@ -342,10 +381,51 @@ void TutBoss::doLowering(float dt) {
 	floatingHeight = MAX_FLOATING_HEIGHT + (INITIAL_FLOATING_HEIGHT-MAX_FLOATING_HEIGHT)*smh->timePassedSince(timeEnteredState)/TIME_TO_LOWER;
 	if (smh->timePassedSince(timeEnteredState) > TIME_TO_LOWER) {
 		floatingHeight = INITIAL_FLOATING_HEIGHT;
-		enterState(TUTBOSS_OPENING);
+		enterState(TUTBOSS_SHOOTING_LIGHTNING);
+
+		lightningState = TUT_LIGHTNING_STATE_APPEARING;
+		lightningWidth = TUT_LIGHTNING_INITIAL_WIDTH;
+		lightningAngle = smh->hge->Random_Float(0,2*3.14);
+		lightningFlickerTime = 0.5;
+		smh->resources->GetSprite("KingTutLightningWedge")->SetColor(ARGB(255.0,255.0,255.0,255.0));
+        		
 		lidXOffset = 0;
 		lidSize = 1.0;
 	}
+}
+
+void TutBoss::doLightning(float dt) {
+	switch(lightningState) {
+		case TUT_LIGHTNING_STATE_APPEARING:
+			lightningFlickerTime -= dt*500;
+			if (lightningFlickerTime < 0.1) lightningFlickerTime = 0.1;
+			smh->resources->GetSprite("KingTutLightningWedge")->SetColor(ARGB(smh->getFlashingAlpha(lightningFlickerTime),255.0,255.0,255.0));
+			if (smh->timePassedSince(timeEnteredState) >= TUT_LIGHTNING_TIME_TO_APPEAR) {
+				timeEnteredState = smh->getGameTime();
+				lightningState = TUT_LIGHTNING_STATE_ROTATING;
+				lightningRotateDir = smh->hge->Random_Int(0,1);
+				smh->resources->GetSprite("KingTutLightningWedge")->SetColor(ARGB(255.0,255.0,255.0,255.0));
+			}
+			break;
+		case TUT_LIGHTNING_STATE_ROTATING:
+			
+			changeInRotation = TUT_LIGHTNING_ROTATE_SPEED * sin(smh->timePassedSince(timeEnteredState)/TUT_LIGHTNING_ROTATE_PERIOD*3.14159);
+			if (lightningRotateDir == TUT_LIGHTNING_ROTATE_CCW) {
+				lightningAngle += changeInRotation;
+			} else {
+				lightningAngle -= changeInRotation;
+			}
+
+			break;
+		case TUT_LIGHTNING_STATE_WIDENING:
+			break;
+		case TUT_LIGHTNING_STATE_WAITING_WHILE_WIDE:
+			break;
+		case TUT_LIGHTNING_STATE_NARROWING:
+			break;
+		case TUT_LIGHTNING_STATE_DISAPPEARING:
+			break;
+	};
 }
 
 void TutBoss::doOpening(float dt) {
