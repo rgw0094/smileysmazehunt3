@@ -41,7 +41,7 @@ extern SMH *smh;
 //Time to spend in each state
 #define TIME_TO_BE_ON_GROUND 2.0
 #define TIME_TO_RISE 0.5
-#define TIME_TO_HOVER 1.0 // 13.0
+#define TIME_TO_HOVER 13.0
 #define TIME_TO_LOWER 0.5
 #define TIME_TO_STAY_OPEN 25.0
 
@@ -65,21 +65,22 @@ extern SMH *smh;
 #define TUT_LIGHTNING_STATE_DISAPPEARING 5
 
 #define TUT_LIGHTNING_INITIAL_WIDTH 0.1
-#define TUT_LIGHTNING_MAX_WIDTH 1.12
+#define TUT_LIGHTNING_MAX_WIDTH 1.0
+#define TUT_LIGHTNING_MAX_WIDTH_IN_PIXELS 484
 #define TUT_LIGHTNING_DAMAGE 2.0
-#define TUT_LIGHTNING_ROTATE_SPEED 0.012
+#define TUT_LIGHTNING_ROTATE_SPEED 0.011
 #define TUT_LIGHTNING_ROTATE_PERIOD 1.6
 
 #define TUT_LIGHTNING_ROTATE_CW 0
 #define TUT_LIGHTNING_ROTATE_CCW 1
 
-#define TUT_LIGHTNING_NUM_SHOTS 4
+#define TUT_LIGHTNING_NUM_SERIES 3
 #define TUT_LIGHTNING_NUM_WEDGES 7
 
 #define TUT_LIGHTNING_TIME_TO_APPEAR 0.7
 #define TUT_LIGHTNING_TIME_TO_WIDEN 3.3
 #define TUT_LIGHTNING_TIME_TO_WAIT 1.0
-#define TUT_LIGHTNING_TIME_TO_NARROW 0.5
+#define TUT_LIGHTNING_TIME_TO_NARROW 4.0
 #define TUT_LIGHTNING_TIME_TO_ROTATE 8.0
 #define TUT_LIGHTNING_TIME_TO_DISAPPEAR 0.3
 
@@ -180,9 +181,50 @@ void TutBoss::doCollision(float dt) {
 
 }
 
+bool TutBoss::testLightningCollision() {
+	int rad = smh->player->collisionCircle->radius;
+	float testPointX, testPointY,testAngle;
+
+	int arcNum;
+
+	//Test 8 points on the outside of smiley's collision circle
+	//If any of these points is between the angles defined by any of the 7 lightning arcs, smiley has collided with an arc
+	for (float curAngle = 0; curAngle < 2*3.14159; curAngle += 2*3.14159/8) {
+		testPointX = smh->player->x + rad*cos(curAngle);
+		testPointY = smh->player->y + rad*sin(curAngle);
+		testAngle = Util::getAngleBetween(x,y,testPointX,testPointY);
+		testAngle = Util::normalizeAngle(testAngle);
+
+		//loop through each of the arcs, and define the arc angles of the beam
+		for (arcNum = 0; arcNum < TUT_LIGHTNING_NUM_WEDGES; arcNum++) {
+			float wedgeAngle = arcNum*2*3.14159/TUT_LIGHTNING_NUM_WEDGES + lightningAngle;
+			wedgeAngle = Util::normalizeAngle(wedgeAngle);
+
+			float angleOfTriangle = asin(lightningWidth*TUT_LIGHTNING_MAX_WIDTH_IN_PIXELS/1240); //solve a right triangle to find the angle of offset from the center of each side of the wedge, based on its "width"
+			
+            float minAngle = Util::normalizeAngle(wedgeAngle - angleOfTriangle);
+			float maxAngle = Util::normalizeAngle(wedgeAngle + angleOfTriangle);
+
+			if (Util::isAngleBetween(testAngle,minAngle,maxAngle)) {
+				return true;
+			}
+
+			
+		} //next arcNum
+		
+	} //next point to test on smiley
+    
+	return false;
+}
+
 bool TutBoss::update(float dt) {
 
 	doCollision(dt);
+	if (state == TUTBOSS_SHOOTING_LIGHTNING) {
+		if (testLightningCollision()) {
+			smh->player->dealDamage(TUT_LIGHTNING_DAMAGE,true);
+		}
+	}
 
 	//When smiley triggers the boss' enemy blocks start his dialogue.
 	if (state == TUTBOSS_INACTIVE && !startedIntroDialogue) {
@@ -264,6 +306,24 @@ void TutBoss::draw(float dt) {
 		for (int i=0; i < TUT_LIGHTNING_NUM_WEDGES; i++) {
 			float wedgeAngle = i*2*3.14159/TUT_LIGHTNING_NUM_WEDGES + lightningAngle;
 			smh->resources->GetSprite("KingTutLightningWedge")->RenderEx(smh->getScreenX(x),smh->getScreenY(y),wedgeAngle,1.0,lightningWidth);
+		}
+		if (smh->isDebugOn()) {
+			//loop through each of the arcs, and define the arc angles of the beam
+			for (int arcNum = 0; arcNum < TUT_LIGHTNING_NUM_WEDGES; arcNum++) {
+				float wedgeAngle = arcNum*2*3.14159/TUT_LIGHTNING_NUM_WEDGES + lightningAngle;
+				wedgeAngle = Util::normalizeAngle(wedgeAngle);
+
+				float angleOfTriangle = asin(lightningWidth*TUT_LIGHTNING_MAX_WIDTH_IN_PIXELS/1240); //solve a right triangle to find the angle of offset from the center of each side of the wedge, based on its "width"
+
+				float minAngle = Util::normalizeAngle(wedgeAngle - angleOfTriangle);
+				float maxAngle = Util::normalizeAngle(wedgeAngle + angleOfTriangle);
+				
+				smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(x)+620*cos(minAngle),smh->getScreenY(y)+620*sin(minAngle),ARGB(255.0,255.0,0.0,255.0));
+				smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(x)+620*cos(maxAngle),smh->getScreenY(y)+620*sin(maxAngle),ARGB(255.0,0.0,0.0,255.0));
+				
+			} //next arcNum
+
+				
 		}
 	}
 
@@ -406,7 +466,8 @@ void TutBoss::doLightning(float dt) {
 				lightningState = TUT_LIGHTNING_STATE_ROTATING;
 				lightningRotateDir = smh->hge->Random_Int(0,1);
 				smh->resources->GetSprite("KingTutLightningWedge")->SetColor(ARGB(255.0,255.0,255.0,255.0));
-			}
+				lightningNum = 0; // keeps track of how many series of lightning we've gone through
+   			}
 			break;
 		case TUT_LIGHTNING_STATE_ROTATING:
 			
@@ -435,10 +496,34 @@ void TutBoss::doLightning(float dt) {
 			}
 			break;
 		case TUT_LIGHTNING_STATE_WAITING_WHILE_WIDE:
+			if (smh->timePassedSince(timeEnteredState) >= TUT_LIGHTNING_TIME_TO_WAIT) {
+				lightningState = TUT_LIGHTNING_STATE_NARROWING;
+				timeEnteredState = smh->getGameTime();
+			}
 			break;
 		case TUT_LIGHTNING_STATE_NARROWING:
+			lightningWidth = TUT_LIGHTNING_MAX_WIDTH + (TUT_LIGHTNING_INITIAL_WIDTH - TUT_LIGHTNING_MAX_WIDTH) * smh->timePassedSince(timeEnteredState)/TUT_LIGHTNING_TIME_TO_NARROW;
+
+			if (smh->timePassedSince(timeEnteredState) >= TUT_LIGHTNING_TIME_TO_NARROW) {
+				timeEnteredState = smh->getGameTime();
+				lightningState = TUT_LIGHTNING_STATE_ROTATING;
+				lightningRotateDir = smh->hge->Random_Int(0,1);
+				smh->resources->GetSprite("KingTutLightningWedge")->SetColor(ARGB(255.0,255.0,255.0,255.0));
+				lightningNum++;
+				if (lightningNum >= TUT_LIGHTNING_NUM_SERIES) {
+					lightningState = TUT_LIGHTNING_STATE_DISAPPEARING;
+					lightningNum = 0;
+					lightningFlickerTime = 0.5;
+				}
+			}
 			break;
 		case TUT_LIGHTNING_STATE_DISAPPEARING:
+			lightningFlickerTime -= dt*500;
+			if (lightningFlickerTime < 0.1) lightningFlickerTime = 0.1;
+			smh->resources->GetSprite("KingTutLightningWedge")->SetColor(ARGB(smh->getFlashingAlpha(lightningFlickerTime),255.0,255.0,255.0));
+			if (smh->timePassedSince(timeEnteredState) >= TUT_LIGHTNING_TIME_TO_DISAPPEAR) {
+				enterState(TUTBOSS_OPENING);
+   			}
 			break;
 	};
 }

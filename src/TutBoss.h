@@ -20,6 +20,7 @@ public:
 	void doCollision(float dt);
 	void dealDamage(float damage);
 	void playHitSound();
+	bool testLightningCollision();
 
 	//State-specific methods
 	void doOnGround(float dt);
@@ -65,6 +66,7 @@ public:
 	float lightningFlickerTime;
 	int lightningRotateDir;
 	float changeInRotation;
+	int lightningNum;
 
 	//sarcophagus opening variables
 	float lidSize;

@@ -854,6 +854,30 @@ public:
 	}
 
 	/**
+	 * Normalizes an angle to be between 0 and 2 pi
+	 */
+	static float normalizeAngle(float angle) {
+		while (angle < 0) angle += 2*PI;
+		while (angle > 2*PI) angle -= 2*PI;
+		return angle;
+	}
+
+	/**
+	 * Returns whether or not a normalized angle is between two normalized angles
+	 */
+	static bool isAngleBetween(float testAngle, float minAngle, float maxAngle) {
+		if (minAngle < maxAngle) { //easy case -- the angles do not span over 0
+			return (testAngle >= minAngle && testAngle <= maxAngle);	
+		} else if (minAngle == maxAngle) { //the only way it can be between is if it's equal
+			return (testAngle == maxAngle);
+		} else if (minAngle > maxAngle) { //in this case, 0 is between the min and the max. So if test angle is < max or > min then it's between
+			return (testAngle > minAngle || testAngle < maxAngle);
+		}
+
+		return false;
+	}
+
+	/**
 	 * Returns whether or not a collision layer id is a warp.
 	 */
 	static bool isWarp(int id) {
