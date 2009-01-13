@@ -65,9 +65,10 @@ extern SMH *smh;
 #define TUT_LIGHTNING_STATE_DISAPPEARING 5
 
 #define TUT_LIGHTNING_INITIAL_WIDTH 0.1
+#define TUT_LIGHTNING_MAX_WIDTH 1.12
 #define TUT_LIGHTNING_DAMAGE 2.0
-#define TUT_LIGHTNING_ROTATE_SPEED 0.013
-#define TUT_LIGHTNING_ROTATE_PERIOD 1.5
+#define TUT_LIGHTNING_ROTATE_SPEED 0.012
+#define TUT_LIGHTNING_ROTATE_PERIOD 1.6
 
 #define TUT_LIGHTNING_ROTATE_CW 0
 #define TUT_LIGHTNING_ROTATE_CCW 1
@@ -76,7 +77,7 @@ extern SMH *smh;
 #define TUT_LIGHTNING_NUM_WEDGES 7
 
 #define TUT_LIGHTNING_TIME_TO_APPEAR 0.7
-#define TUT_LIGHTNING_TIME_TO_WIDEN 0.5
+#define TUT_LIGHTNING_TIME_TO_WIDEN 3.3
 #define TUT_LIGHTNING_TIME_TO_WAIT 1.0
 #define TUT_LIGHTNING_TIME_TO_NARROW 0.5
 #define TUT_LIGHTNING_TIME_TO_ROTATE 8.0
@@ -410,14 +411,28 @@ void TutBoss::doLightning(float dt) {
 		case TUT_LIGHTNING_STATE_ROTATING:
 			
 			changeInRotation = TUT_LIGHTNING_ROTATE_SPEED * sin(smh->timePassedSince(timeEnteredState)/TUT_LIGHTNING_ROTATE_PERIOD*3.14159);
+			//changeInRotation = 0.0;
 			if (lightningRotateDir == TUT_LIGHTNING_ROTATE_CCW) {
 				lightningAngle += changeInRotation;
 			} else {
 				lightningAngle -= changeInRotation;
 			}
 
+			if (smh->timePassedSince(timeEnteredState) > TUT_LIGHTNING_TIME_TO_ROTATE) {
+				timeEnteredState = smh->getGameTime();
+				lightningState = TUT_LIGHTNING_STATE_WIDENING;
+				lightningWidth = TUT_LIGHTNING_INITIAL_WIDTH;
+			}
+
 			break;
 		case TUT_LIGHTNING_STATE_WIDENING:
+			lightningWidth = TUT_LIGHTNING_INITIAL_WIDTH + (TUT_LIGHTNING_MAX_WIDTH - TUT_LIGHTNING_INITIAL_WIDTH) * smh->timePassedSince(timeEnteredState)/TUT_LIGHTNING_TIME_TO_WIDEN;
+
+			if (smh->timePassedSince(timeEnteredState) >= TUT_LIGHTNING_TIME_TO_WIDEN) {
+				lightningState = TUT_LIGHTNING_STATE_WAITING_WHILE_WIDE;
+				lightningWidth = TUT_LIGHTNING_MAX_WIDTH;
+				timeEnteredState = smh->getGameTime();
+			}
 			break;
 		case TUT_LIGHTNING_STATE_WAITING_WHILE_WIDE:
 			break;
