@@ -1684,6 +1684,13 @@ Sprite KingTutInsideSarcophagus {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=107
 }
+Sprite KingTutLightningWedge {
+ texture="Graphics/Tut.png"
+ rect=205,0,621,429
+ hotspot=0,214
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=107
+}
  
 ;*****************************
 ;******** PROJECTILES ********
