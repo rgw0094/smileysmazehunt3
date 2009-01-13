@@ -41,7 +41,7 @@ extern SMH *smh;
 //Time to spend in each state
 #define TIME_TO_BE_ON_GROUND 2.0
 #define TIME_TO_RISE 0.5
-#define TIME_TO_HOVER 13.0
+#define TIME_TO_HOVER 9.0
 #define TIME_TO_LOWER 0.5
 #define TIME_TO_STAY_OPEN 25.0
 
@@ -221,7 +221,7 @@ bool TutBoss::update(float dt) {
 
 	doCollision(dt);
 	if (state == TUTBOSS_SHOOTING_LIGHTNING) {
-		if (testLightningCollision()) {
+		if (testLightningCollision() && lightningState != TUT_LIGHTNING_STATE_APPEARING && lightningState != TUT_LIGHTNING_STATE_DISAPPEARING) {
 			smh->player->dealDamage(TUT_LIGHTNING_DAMAGE,true);
 		}
 	}
