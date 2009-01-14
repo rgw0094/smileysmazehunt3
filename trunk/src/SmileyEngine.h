@@ -454,12 +454,14 @@ private:
 	void loadEnemyData();
 	void loadAbilityData();
 	void addEnemyName(int id, std::string name);
+	void initializeGemCounts();
 
 	hgeStringTable *enemyStringTable;
 	EnemyInfo enemyInfo[99];
 	Ability abilities[16];
 	std::list<EnemyName> enemyNameList;
 	hgeStringTable *gameText;
+	int totalGemCounts[NUM_AREAS][3];
 
 };
 

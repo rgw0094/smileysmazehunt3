@@ -162,8 +162,8 @@ void GUI::draw() {
 
 	//Draw health
 	for (int i = 1; i <= smh->player->getMaxHealth(); i++) {
-		drawX = (i < 10) ? 120+i*35 : 110+(i-9)*35;
-		drawY = (i < 10) ? 25 : 70;
+		drawX = (i <= 10) ? 120+i*35 : 120+(i-10)*35;
+		drawY = (i <= 10) ? 25 : 70;
 		if (smh->player->getHealth() >= i) {
 			smh->resources->GetSprite("fullHealth")->Render(drawX, drawY);
 		} else if (smh->player->getHealth() < i && smh->player->getHealth() >= i-.25) {

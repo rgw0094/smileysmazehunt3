@@ -126,7 +126,8 @@ public:
 private:
 
 	void purchaseItem(int item);
-	int costs[3];
+	bool isInStock(int item);
+	int itemPrice(int item);
 	int currentSelection;
 
 };
