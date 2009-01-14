@@ -15,6 +15,7 @@ GameData::GameData() {
 	loadEnemyData();
 	loadAbilityData();
 	gameText = new hgeStringTable("Data/GameText.dat");
+	initializeGemCounts();
 }
 
 GameData::~GameData() {
@@ -72,7 +73,7 @@ const char *GameData::getAreaName(int area) {
  * Returns the total number of gems of the given type there are to find in the given area.
  */
 int GameData::getNumTotalGemsInArea(int area, int gemType) {
-	return 14;
+	return totalGemCounts[area][gemType];
 }
 
 ////////// Private functions //////////////////
@@ -370,6 +371,48 @@ void GameData::loadEnemyData() {
 	}
 
 } // end loadEnemyData()
+
+void GameData::initializeGemCounts() {
+	totalGemCounts[FOUNTAIN_AREA][0] = 8;
+	totalGemCounts[FOUNTAIN_AREA][1] = 1;
+	totalGemCounts[FOUNTAIN_AREA][2] = 1;
+
+	totalGemCounts[OLDE_TOWNE][0] = 7;
+	totalGemCounts[OLDE_TOWNE][1] = 3;
+	totalGemCounts[OLDE_TOWNE][2] = 1;
+
+	totalGemCounts[FOREST_OF_FUNGORIA][0] = 14;
+	totalGemCounts[FOREST_OF_FUNGORIA][1] = 6;
+	totalGemCounts[FOREST_OF_FUNGORIA][2] = 3;
+	
+	totalGemCounts[SESSARIA_SNOWPLAINS][0] = 7;
+	totalGemCounts[SESSARIA_SNOWPLAINS][1] = 2;
+	totalGemCounts[SESSARIA_SNOWPLAINS][2] = 1;
+
+	totalGemCounts[WORLD_OF_DESPAIR][0] = 8;
+	totalGemCounts[WORLD_OF_DESPAIR][1] = 3;
+	totalGemCounts[WORLD_OF_DESPAIR][2] = 1;
+
+	totalGemCounts[SERPENTINE_PATH][0] = 1;
+	totalGemCounts[SERPENTINE_PATH][1] = 1;
+	totalGemCounts[SERPENTINE_PATH][2] = 1;
+
+	totalGemCounts[TUTS_TOMB][0] = 8;
+	totalGemCounts[TUTS_TOMB][1] = 2;
+	totalGemCounts[TUTS_TOMB][2] = 1;
+
+	totalGemCounts[CASTLE_OF_EVIL][0] = 3;
+	totalGemCounts[CASTLE_OF_EVIL][1] = 3;
+	totalGemCounts[CASTLE_OF_EVIL][2] = 4;
+
+	totalGemCounts[CONSERVATORY][0] = 4;
+	totalGemCounts[CONSERVATORY][1] = 1;
+	totalGemCounts[CONSERVATORY][2] = 1;
+
+	totalGemCounts[SMOLDER_HOLLOW][0] = 1;
+	totalGemCounts[SMOLDER_HOLLOW][1] = 1;
+	totalGemCounts[SMOLDER_HOLLOW][2] = 2;
+}
 
 /**
  * Adds an enemy name to the list of enemy names if it doesn't already exist.

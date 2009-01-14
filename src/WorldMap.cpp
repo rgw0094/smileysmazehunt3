@@ -96,7 +96,7 @@ void WorldMap::draw(float dt) {
 	for (int i = SMALL_GEM; i <= LARGE_GEM; i++) {
 		smh->environment->itemLayer[i]->RenderEx(windowX + 500, windowY + 320 + 45 * (i-SMALL_GEM), 0.0, 0.55, 0.55);
 		smh->resources->GetFont("controls")->printf(windowX + 550, windowY + 325 + 45 * (i-SMALL_GEM), HGETEXT_LEFT, "%d / %d", 
-			smh->saveManager->numGems[selectedArea][i-SMALL_GEM], smh->gameData->getNumTotalGemsInArea(selectedArea, i));
+			smh->saveManager->numGems[selectedArea][i-SMALL_GEM], smh->gameData->getNumTotalGemsInArea(selectedArea, i-SMALL_GEM));
 	}
 	smh->resources->GetFont("controls")->SetColor(ARGB(255,0,0,0));
 

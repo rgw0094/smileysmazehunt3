@@ -19,9 +19,6 @@ extern SMH *smh;
  */
 Shop::Shop() {
 	currentSelection = EXIT;
-	costs[HEALTH] = 5;
-	costs[MANA] = 3;
-	costs[DAMAGE] = 3;
 }
 
 /**
@@ -54,24 +51,19 @@ void Shop::draw(float dt) {
 	smh->resources->GetSprite("inventoryCursor")->Render(X_OFFSET + 60.0 + currentSelection*80.0 - 20.0, Y_OFFSET + 110.0 - 20.0);
 	
 	std::string descString = "";
-	int price;
 
-	switch (currentSelection) {
-		case HEALTH:
+	if (currentSelection == EXIT) {
+		descString = "Exit Shop";
+	} else if (!isInStock(currentSelection)) {
+		descString = "Out of stock";
+	} else {
+		if (currentSelection == HEALTH) {
 			descString = "Health Upgrade";
-			price = 4;
-			break;
-		case MANA:
+		} else if (currentSelection == MANA) {
 			descString = "15% Mana Upgrade";
-			price = 3;
-			break;
-		case DAMAGE:
+		} else if (currentSelection == DAMAGE) {
 			descString = "10% Damage Upgrade";
-			price = 3;
-			break;
-		case EXIT:
-			descString = "Exit Shop";
-			break;
+		}
 	}
 
 	smh->resources->GetFont("textBoxFnt")->printf(X_OFFSET + 200.0, Y_OFFSET + 165.0,
@@ -79,7 +71,7 @@ void Shop::draw(float dt) {
 
 	if (currentSelection != EXIT) {
 		smh->resources->GetFont("textBoxFnt")->printf(X_OFFSET + 200.0, Y_OFFSET + 205.0,
-			HGETEXT_CENTER, "Cost: %d     Money: %d", price, smh->saveManager->money);
+			HGETEXT_CENTER, "Cost: %d     Money: %d", itemPrice(currentSelection), smh->saveManager->money);
 	}
 
 }
@@ -119,22 +111,53 @@ bool Shop::update(float dt) {
 	return true;
 }
 
-void Shop::purchaseItem(int item) {
-	
-	if (smh->saveManager->money < costs[item]) {
-
+void Shop::purchaseItem(int item) 
+{
+	smh->saveManager->money += 20;
+	if (smh->saveManager->money < itemPrice(item) || !isInStock(item)) 
+	{
 		smh->soundManager->playSound("snd_Error");
-
-	} else {
-
-		smh->saveManager->money -= costs[item];
+	} 
+	else 
+	{
+		smh->saveManager->money -= itemPrice(item);
 		smh->saveManager->numUpgrades[item]++;
 		smh->soundManager->playSound("snd_purchaseUpgrade");
 
-		if (currentSelection == HEALTH) {
+		if (currentSelection == HEALTH) 
+		{
 			smh->player->setHealth(smh->player->getHealth() + 1.0);
 		}
-
 	}
+}
 
+/**
+ * Returns whether or not the specified item is in stock. We are only letting the player buy the next
+ * level of upgrades if they have bought all of the items at the current level.
+ */
+bool Shop::isInStock(int item) {
+	int currentLevel =min(min(smh->saveManager->numUpgrades[HEALTH], smh->saveManager->numUpgrades[MANA]), smh->saveManager->numUpgrades[DAMAGE]);
+	if (currentLevel == 14) {
+		return false;
+	} else {
+		return smh->saveManager->numUpgrades[item] == currentLevel;
+	}
+}
+
+/**
+ * Returns the cost of the given item based on the player's current "upgrade level".
+ */
+int Shop::itemPrice(int item) {
+	int currentLevel = min(min(smh->saveManager->numUpgrades[HEALTH], smh->saveManager->numUpgrades[MANA]), smh->saveManager->numUpgrades[DAMAGE]);
+	if (currentLevel < 3) {
+		return 3;
+	} else if (currentLevel < 6) {
+		return 4;
+	} else if (currentLevel < 9) {
+		return 5;
+	} else if (currentLevel < 12) {
+		return 6;
+	} else {
+		return 8;
+	}
 }
