@@ -5,7 +5,6 @@
 === Data To Do ===
  * Enemy names
  * Sound effects
- * Finish adding gems and get a count of each type for each area
 
 === Programming To Do ===
  * IDEA TO MAKE FRISBEE BETTER:
@@ -50,6 +49,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Implemented [LootSummary THIS SHIT]||1/13/09||RGW||
 ||Particles disappear when you collect an item||1/11/09||RGW||
 ||Timer above timed switches||1/10/09||RGW||
 ||Money is now shown in the shop||1/10/09||RGW||
