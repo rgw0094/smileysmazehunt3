@@ -1,0 +1,18 @@
+#summary List of where all the gems are.
+
+= LOOT =
+
+||Area||R||Y||B||
+||Fountain||8||1||1||
+||Dunes of Salabia||7||3||1||
+||Forest of Fundoria||14||6||3||
+||Sessaria Snowplains||7||2||1||
+||Realm of Despair||8||3||1||
+||Serpentine Path||1||1||1||
+||Tut's Tomb||8||2||1||
+||Castle of Evil||3||3||4||
+||Conservatory||4||1||1||
+||Smolder Hollow||1||1||2||
+||Totals x value||61||69||80||
+
+So total $ in the game comes out to 210 even.
