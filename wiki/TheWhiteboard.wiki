@@ -13,6 +13,7 @@
  * Lovecraftian Boss
  * Barvinoid
  * Merge projectile texture with sprites texture
+ * Difficulties
 
 === Graphics To Do ===
  * Pit graphics for different areas
