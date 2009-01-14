@@ -16,3 +16,14 @@
 ||Totals x value||61||69||80||
 
 So total $ in the game comes out to 210 even.
+
+= PROPOSED METHOD OF PRICING UPGRADES =
+The cost of "Upgrade level 1" applies to the price of all 3 upgrades for the first time, etc.
+||Upgrade levels||Cost||Cumulative cost for all of the said upgrades||
+||1-3||3||27||
+||4-6||4||27+36=63||
+||7-9||5||63+45=108||
+||10-12||6||108+54=162||
+||13-14||8||162+48=210||
+
+So you can upgrade everything FOURTEEN times.  So I guess you finish the game with NINETEEN hearts?
