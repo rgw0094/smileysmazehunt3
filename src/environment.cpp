@@ -695,7 +695,7 @@ void Environment::drawPits(float dt) {
 				}
 	
 				if (draw) {
-					smh->resources->GetSprite("parallaxPit")->Render(int(float(i)*64.0f - xOffset*.5), int(float(j)*64.0f - yOffset*.5));
+					smh->resources->GetSprite("parallaxPit")->Render(int(i*64.0 - xOffset*.5), int(j*64.0 - yOffset*.5));
 				}
 			}
 		}
