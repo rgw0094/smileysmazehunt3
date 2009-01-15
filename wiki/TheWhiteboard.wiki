@@ -20,11 +20,9 @@
 === Graphics To Do ===
  * Pit graphics for different areas
  * More projectile graphics
- * Bomb guy graphic
- * Lovecraftian Boss
+ * Lovecraftian Boss tentacles
  * "Exit Shop" icon
  * New button graphics maybe	 
- * Background tile for world map
 
 === Bugs ===
  * Bouncing spikey enemies that I put to appear in line with each other in game sometimes are not in line when testing, making it a lot harder to get by them than planned.
