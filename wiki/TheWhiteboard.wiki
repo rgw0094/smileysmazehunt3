@@ -23,9 +23,7 @@
  * Bomb guy graphic
  * Lovecraftian Boss
  * "Exit Shop" icon
- * New button graphics maybe
- * Mirror switch graphic 	 
- * Arrow switch graphic (bunny) 
+ * New button graphics maybe	 
  * Background tile for world map
 
 === Bugs ===
@@ -52,6 +50,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Switch graphics||1/14/09||RMM||
 ||Implemented [LootSummary THIS SHIT]||1/13/09||RGW||
 ||Particles disappear when you collect an item||1/11/09||RGW||
 ||Timer above timed switches||1/10/09||RGW||
