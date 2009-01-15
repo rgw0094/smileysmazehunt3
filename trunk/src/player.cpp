@@ -1294,13 +1294,12 @@ void Player::doIce(float dt) {
 	
 	//Continue Puzzle Ice - slide towards the center of the square
 	if (iceSliding) {
-		//smh->hge->System_SetState(HGE_TITLE, "Smiley's Maze Hunt ICE");
 		if (facing == LEFT || facing == RIGHT) {		
-			if ((int)y % 64 < 31) y += 30.0f*dt;
-			if ((int)y % 64 > 33) y -= 30.0f*dt; 
+			if ((int)y % 64 < 32) y += 30.0f*dt;
+			if ((int)y % 64 > 32) y -= 30.0f*dt; 
 		} else if (facing == UP || facing == DOWN) {		
-			if ((int)x % 64 < 31) x += 30.0f*dt;
-			if ((int)x % 64 > 33) x -= 30.0f*dt; 
+			if ((int)x % 64 < 32) x += 30.0f*dt;
+			if ((int)x % 64 > 32) x -= 30.0f*dt; 
 		}
 	}
 
@@ -1312,10 +1311,10 @@ void Player::doIce(float dt) {
 		//stop once the player is in the middle of the square.
 		if (c == SPRING_PAD || c == SHRINK_TUNNEL_HORIZONTAL || c == SHRINK_TUNNEL_VERTICAL ||
 				c == UP_ARROW || c == DOWN_ARROW || c == LEFT_ARROW || c == RIGHT_ARROW ||
-				(facing == RIGHT && (int)x % 64 > 31) ||
-				(facing == LEFT && (int)x % 64 < 33) ||
-				(facing == UP && (int)y % 64 < 31) ||
-				(facing == DOWN && (int)y % 64 > 33)) {
+				(facing == RIGHT && (int)x % 64 > 32) ||
+				(facing == LEFT && (int)x % 64 < 32) ||
+				(facing == UP && (int)y % 64 < 32) ||
+				(facing == DOWN && (int)y % 64 > 32)) {
 			dx = dy = 0;
 			iceSliding = false;
 		}
