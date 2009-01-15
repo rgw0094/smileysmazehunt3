@@ -91,9 +91,10 @@
 ||Desert||Buzzard, Cactlet, ^Green Snake^||
 ||Realm||^Purple Fangie^, Eye||
 ||Mush Cave||Mushroom, ^Snail^||
-||Pools||Skullie, Spider||
+||Pools||Skullie, Thing||
 ||Mt Frostbite||Batlet, Ice Cream Man, Candy Floater, Circular Head Thing||
 ||Swamp||Buzzard, Tentacle, Crab/Clown, ^Green Croc^||
 ||Tut||Tan Snake, Mummy||
-||Castle||^Red Skullie^, ^Red Spikey Ball^, Batlet(2), ^Protector^||
+||Castle||^Red Skullie^, ^Red Spikey Ball^, Batlet(2), Spider, ^Protector^||
+||Conservatory||^Alphanoid^, ^Herbanoid^||
 ||Superscript denotes yet to be done||||
