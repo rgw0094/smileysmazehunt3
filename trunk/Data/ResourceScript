@@ -701,7 +701,7 @@ Sprite iceBlock {
 }
 Sprite loading {
  texture=general
- rect=623,623,400,400
+ rect=623,623,399,399
  hotspot=200,200
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }

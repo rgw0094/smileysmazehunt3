@@ -117,11 +117,19 @@ void GUI::toggleAvailableAbility(int ability) {
 void GUI::update(float dt) {
 	
 	//Input to change ability
-	if (!smh->windowManager->isOpenWindow() && !(getSelectedAbility() == WATER_BOOTS && smh->player->isSmileyTouchingWater())) {
+	if (!smh->windowManager->isOpenWindow()) {
 		if (smh->input->keyPressed(INPUT_PREVIOUS_ABILITY)) {
-			changeAbility(LEFT);
+			if (getSelectedAbility() == WATER_BOOTS && smh->player->isSmileyTouchingWater()) {
+				smh->soundManager->playSound("snd_Error");
+			} else {
+				changeAbility(LEFT);
+			}
 		} else if  (smh->input->keyPressed(INPUT_NEXT_ABILITY)) {
-			changeAbility(RIGHT);
+			if (getSelectedAbility() == WATER_BOOTS && smh->player->isSmileyTouchingWater()) {
+				smh->soundManager->playSound("snd_Error");
+			} else {
+				changeAbility(RIGHT);
+			}
 		}
 	}
 
