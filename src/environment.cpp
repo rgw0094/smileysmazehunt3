@@ -321,13 +321,15 @@ void Environment::loadArea(int id, int from, bool playMusic) {
 		for (int col = 0; col < areaWidth; col++) {
 			areaFile.read(threeBuffer,3);
 			int newItem = atoi(threeBuffer);
-			if (newItem >= 16 && newItem < 32) {
-				tapestryManager->addTapestry(col, row, newItem);
-			} else {
-				if (newItem > 0 && newItem < 16) {
-					addParticle("itemParticle", col*64+32, row*64+32);
+			if (!smh->saveManager->isTileChanged(col, row)) {
+				if (newItem >= 16 && newItem < 32) {
+					tapestryManager->addTapestry(col, row, newItem);
+				} else {
+					if (newItem > 0 && newItem < 16) {
+						addParticle("itemParticle", col*64+32, row*64+32);
+					}
+					item[col][row] = newItem;
 				}
-				item[col][row] = newItem;
 			}
 		}
 		//Read the newline
@@ -392,10 +394,6 @@ void Environment::loadArea(int id, int from, bool playMusic) {
 	for (int i = 0; i < areaWidth; i++) {
 		for (int j = 0; j < areaHeight; j++) {
 			if (smh->saveManager->isTileChanged(i,j)) {
-
-				if (item[i][j] > 0 && item[i][j] < 16) {
-					item[i][j] = NONE;
-				}
 
 				if (collision[i][j] >= RED_KEYHOLE && collision[i][j] <= BLUE_KEYHOLE) {
 					collision[i][j] = WALKABLE;
@@ -482,8 +480,8 @@ void Environment::draw(float dt) {
 	for (int j = -1; j <= screenHeight + 1; j++) {
 		for (int i = -1; i <= screenWidth + 1; i++) {
 			
-			drawX = int(float(i)*64.0f - xOffset);
-			drawY = int(float(j)*64.0f - yOffset);
+			drawX = i * 64 - (int)xOffset;
+			drawY = j * 64 - (int)yOffset;
 
 			if (isInBounds(i+xGridOffset, j+yGridOffset)) {	
 
@@ -548,6 +546,14 @@ void Environment::draw(float dt) {
 					} else if ((theCollision == WHITE_SWITCH_LEFT || theCollision == WHITE_SWITCH_RIGHT) && timeSinceSquareActivated < SWITCH_DELAY) {
 						smh->resources->GetAnimation("whiteSwitch")->Render(drawX,drawY);
 					
+					//Special switches
+					} else if (theCollision == SPIN_ARROW_SWITCH && timeSinceSquareActivated < 0.45) {
+						smh->resources->GetAnimation("bunnySwitch")->Render(drawX, drawY);
+					} else if (theCollision == MIRROR_SWITCH && timeSinceSquareActivated < 0.45) {
+						smh->resources->GetAnimation("mirrorSwitch")->Render(drawX, drawY);
+					} else if (theCollision == SHRINK_TUNNEL_SWITCH && timeSinceSquareActivated < 0.45) {
+						smh->resources->GetAnimation("shrinkTunnelSwitch")->Render(drawX, drawY);
+
 					//Cylinder animations
 					} else if ((theCollision == SILVER_CYLINDER_DOWN) && timeSinceSquareActivated < SWITCH_DELAY) {
 						silverCylinder->Render(drawX,drawY);
@@ -776,6 +782,9 @@ void Environment::update(float dt) {
 	smh->resources->GetAnimation("greenSwitch")->Update(dt);
 	smh->resources->GetAnimation("yellowSwitch")->Update(dt);
 	smh->resources->GetAnimation("whiteSwitch")->Update(dt);
+	smh->resources->GetAnimation("bunnySwitch")->Update(dt);
+	smh->resources->GetAnimation("shrinkTunnelSwitch")->Update(dt);
+	smh->resources->GetAnimation("mirrorSwitch")->Update(dt);
 	silverCylinder->Update(dt);
 	brownCylinder->Update(dt);
 	blueCylinder->Update(dt);
@@ -1005,6 +1014,8 @@ bool Environment::toggleSwitchAt(int gridX, int gridY, bool playSoundFarAway) {
 
 		hasSwitch = true;
 		activated[gridX][gridY] = smh->getGameTime();
+		smh->resources->GetAnimation("shrinkTunnelSwitch")->Play();
+
 		//Loop through the grid and look for shrink tunnels with the same id as the switch
 		for (int i = 0; i < areaWidth; i++) {
 			for (int j = 0; j < areaHeight; j++) {
@@ -1024,6 +1035,7 @@ bool Environment::toggleSwitchAt(int gridX, int gridY, bool playSoundFarAway) {
 
 		hasSwitch = true;
 		activated[gridX][gridY] = smh->getGameTime();
+		smh->resources->GetAnimation("bunnySwitch")->Play();
 
 		//Loop through the grid and look for arrows with the same id as the switch
 		for (int i = 0; i < areaWidth; i++) {
@@ -1048,6 +1060,7 @@ bool Environment::toggleSwitchAt(int gridX, int gridY, bool playSoundFarAway) {
 
 		hasSwitch = true;
 		activated[gridX][gridY] = smh->getGameTime();
+		smh->resources->GetAnimation("mirrorSwitch")->Play();
 		
 		//Switch up and down cylinders
 		for (int i = 0; i < areaWidth; i++) {
