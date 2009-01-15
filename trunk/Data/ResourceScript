@@ -638,6 +638,33 @@ Animation smileletGfx {
  hotspot=14,13
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
+Animation mirrorSwitch {
+ texture=animations
+ rect=640,512,64,64
+ frames=5
+ fps=20.0
+ mode=FORWARD,PINGPONG
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Animation shrinkTunnelSwitch {
+ texture=animations
+ rect=448,704,64,64
+ frames=5
+ fps=20.0
+ mode=FORWARD,PINGPONG
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Animation bunnySwitch {
+ texture=animations
+ rect=768,704,64,64
+ frames=4
+ fps=16.0
+ mode=FORWARD,PINGPONG
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
 
 ;***********************
 ;******** COMMON *******
