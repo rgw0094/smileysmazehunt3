@@ -16,6 +16,7 @@
  * Barvinoid
  * Merge projectile texture with sprites texture
  * Difficulties
+ * Fix timed switches so that they don't make sound if hit by a turret's cannonball. (in the Snowplains you hear clicking now and then because of the turret at 56,117) An alternative fix is any timed switch won't make noise if its total time was 1 or 2 seconds, since that sounds gay anyway.
 
 === Graphics To Do ===
  * Pit graphics for different areas
