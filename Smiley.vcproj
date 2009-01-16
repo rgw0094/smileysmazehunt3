@@ -194,6 +194,9 @@
 					RelativePath=".\src\ForestBoss.cpp">
 				</File>
 				<File
+					RelativePath=".\src\LovecraftBoss.cpp">
+				</File>
+				<File
 					RelativePath=".\src\MushroomBoss.cpp">
 				</File>
 				<File
@@ -226,6 +229,9 @@
 				</File>
 				<File
 					RelativePath=".\src\ForestBoss.h">
+				</File>
+				<File
+					RelativePath=".\src\LovecraftBoss.h">
 				</File>
 				<File
 					RelativePath=".\src\MushroomBoss.h">

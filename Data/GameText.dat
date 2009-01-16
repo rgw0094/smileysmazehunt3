@@ -463,6 +463,10 @@ NPC181-7 = "Especially remarkable if you defeated me on the first or second atte
 NPC181-8 = "Well, I'd best be moving on now to the after-afterlife."
 NPC181-9 = "I do hope my slaves remembered to paint food on the walls so I don't starve to death this time."
 
+;Lovecraft
+NPC190Name = "Nhyy'garr"
+NPC190Pages = "1"
+NPC190-1 = "Something lovecraftian"
 
 ;==============================================FENWAR ENCOUNTERS=====================================
 NPC240Name = "Fenwar"

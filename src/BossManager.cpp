@@ -10,6 +10,7 @@
 #include "CandyBoss.h"
 #include "TutBoss.h"
 #include "EnemyFramework.h"
+#include "LovecraftBoss.h"
 
 extern SMH *smh;
 
@@ -46,6 +47,8 @@ void BossManager::spawnBoss(int bossID, int groupID, int gridX, int gridY) {
 		newBoss.boss = new CandyBoss(gridX, gridY, groupID);
 	} else if (bossID == TUT_BOSS) {
 		newBoss.boss = new TutBoss(gridX, gridY, groupID);
+	} else if (bossID == LOVECRAFT_BOSS) {
+		newBoss.boss = new LovecraftBoss(gridX, gridY, groupID);
 	} else {
 		//Unimplemented boss - exit the program
 		smh->log("FATAL ERROR: BossManager.spawnBoss() received invalid boss ID!!!");

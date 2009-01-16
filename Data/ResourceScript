@@ -1718,6 +1718,18 @@ Sprite KingTutLightningWedge {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=107
 }
+
+;****************************
+;**** LOVECRAFTIAN BOSS *****
+;*** Resource group  108 ****
+;****************************
+Sprite LovecraftBody {
+ texture="Graphics/Lovecraft.png"
+ rect=0,0,192,192
+ hotspot=96,96
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=108
+}
  
 ;*****************************
 ;******** PROJECTILES ********
