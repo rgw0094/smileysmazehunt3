@@ -3,6 +3,8 @@
 #include "EnemyFramework.h"
 #include "WindowFramework.h"
 
+extern SMH *smh;
+
 //States (LS = lovecraft state)
 #define LS_INACTIVE 0
 #define LS_TENTACLES 1
@@ -25,6 +27,10 @@ LovecraftBoss::~LovecraftBoss() {
 
 void LovecraftBoss::draw(float dt) {
 	smh->drawGlobalSprite("LovecraftBody", x, y);
+}
+
+void LovecraftBoss::drawAfterSmiley(float dt) {
+
 }
 
 bool LovecraftBoss::update(float dt) {

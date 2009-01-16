@@ -14,6 +14,8 @@
 
 extern SMH *smh;
 
+class LovecraftBoss;
+
 BossManager::BossManager() {
 }
 

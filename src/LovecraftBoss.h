@@ -1,5 +1,5 @@
-#ifndef _SNOWBOSS_H_
-#define _SNOWBOSS_H_
+#ifndef _LOVECRAFTBOSS_H_
+#define _LOVECRAFTBOSS_H_
 
 #include "boss.h"
 
@@ -12,6 +12,7 @@ public:
 
 	void draw(float dt);
 	bool update(float dt);
+	void drawAfterSmiley(float dt);
 
 private:
     	
