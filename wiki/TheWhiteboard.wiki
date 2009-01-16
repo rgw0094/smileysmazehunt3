@@ -19,6 +19,7 @@
 === Ideas To Consider ===
  * Frisbee: Have the player hold the key down and then release it to throw the frisbee.  Then the longer the button is held, the faster it spins and/or moves and more importantly the longer the enemy is stunned.  This will discourage lame complete frisbee ownage attacking strategies and allow us to make it cost no mana.
  * Damage: Perhaps the damage Smiley does on each swing should be randomized a bit (10% or so) so you don't always know how many hits it will take to destroy an enemy. Also, randomizing the enemies' HP by 10% or so could be interesting.
+ * To fix the ice glitch: every time you are standing on a NON-ICE square it saves that position. Then when you are on ice it checks to see if it was possible to get to that row or column based on your last non-ice position.
 
 === Graphics To Do ===
  * Pit graphics for different areas
