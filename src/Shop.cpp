@@ -113,7 +113,7 @@ bool Shop::update(float dt) {
 
 void Shop::purchaseItem(int item) 
 {
-	smh->saveManager->money += 20;
+	//smh->saveManager->money += 20;
 	if (smh->saveManager->money < itemPrice(item) || !isInStock(item)) 
 	{
 		smh->soundManager->playSound("snd_Error");
