@@ -39,7 +39,7 @@ bool LovecraftBoss::update(float dt) {
 		case LS_INACTIVE:
 			doInactive(dt);
 			break;
-	}
+	};
 
 	return false;
 }
