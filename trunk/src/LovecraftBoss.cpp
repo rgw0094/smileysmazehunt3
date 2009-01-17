@@ -13,8 +13,9 @@ extern SMH *smh;
 
 LovecraftBoss::LovecraftBoss(int _gridX, int _gridY, int _groupID) {
 	
-	x = _gridX * 64 + 64 + 32;
+	x = _gridX * 64 + 64;
 	y = _gridY * 64 + 32;
+	groupID = _groupID;
 
 	startedIntroDialogue = false;
 

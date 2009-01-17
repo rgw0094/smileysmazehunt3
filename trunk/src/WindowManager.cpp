@@ -59,7 +59,6 @@ void WindowManager::openWindow(BaseWindow *newWindow) {
 	if (isOpenWindow()) {
 		closeWindow();
 	}
-	smh->log("opening window");
 	activeWindow = newWindow;
 }
 
@@ -67,7 +66,6 @@ void WindowManager::openWindow(BaseWindow *newWindow) {
  * If there is currently a window open, closes it.
  */
 void WindowManager::closeWindow() {
-	smh->log("closing window");
 	gameMenuOpen = false;
 	textBoxOpen = false;
 	if (activeWindow) delete activeWindow;

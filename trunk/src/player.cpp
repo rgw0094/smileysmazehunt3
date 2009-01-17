@@ -1376,7 +1376,7 @@ void Player::dealDamageAndKnockback(float damage, bool makesFlash, bool alwaysKn
 	
 	if (!makesFlash || (makesFlash && !flashing)) {
 		if (!invincible) {
-			health -= damage;
+			health -= (damage * (2.0 - smh->gameData->getDifficultyModifier(smh->saveManager->difficulty)));
 		}
 	}
 

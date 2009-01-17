@@ -8,6 +8,7 @@ class hgeSprite;
 class OptionsWindow;
 class Button;
 class ControlActionGroup;
+class DifficultyPrompt;
 
 //Menu States
 #define NUM_MENU_SCREENS 4
@@ -210,6 +211,12 @@ public:
 //-----------------------------------------------------------
 //------------------SELECT FILE SCREEN-----------------------
 //-----------------------------------------------------------
+struct SaveBox {
+	hgeRect *collisionBox;
+	float x, y;
+	int saveFile;
+};
+
 #define SFS_NUM_BUTTONS 3
 #define SFS_BACK_BUTTON 0
 #define SFS_DELETE_BUTTON 1
@@ -219,11 +226,6 @@ public:
 #define ON_DELETE_YES 7
 #define ON_DELETE_NO 8
 
-struct SaveBox {
-	hgeRect *collisionBox;
-	float x, y;
-	int saveFile;
-};
 
 class SelectFileScreen : public MenuScreen {
 
@@ -240,6 +242,7 @@ public:
 
 	Button *buttons[SFS_NUM_BUTTONS];
 	SaveBox saveBoxes[4];
+	DifficultyPrompt *difficultyPrompt;
 	hgeRect *yesDeleteBox, *noDeleteBox;
 
 	//Variables
@@ -287,6 +290,30 @@ public:
 
 	ControlActionGroup *controlActionGroup;
 	int clickedButton;
+
+};
+
+//----------------------------------------------------
+//---------------DIFFICULTY PROMPT--------------------
+//----------------------------------------------------
+class DifficultyPrompt {
+
+public:
+	
+	DifficultyPrompt();
+	~DifficultyPrompt();
+
+	int update(float dt);
+	void draw(float dt);
+
+	bool visible;
+
+private:
+
+	int currentSelection;
+	hgeRect *okBox;
+	hgeRect *leftBox;
+	hgeRect *rightBox;
 
 };
 

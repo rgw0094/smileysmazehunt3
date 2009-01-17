@@ -201,6 +201,8 @@ void SaveManager::load(int fileNumber) {
 		hasVisitedArea[i] = input->readBit();
 	}
 
+	difficulty = input->readByte();
+
 	//Exploration data
 	for (int i = 0; i < NUM_AREAS; i++) {
 		for (int j = 0; j < 256; j++) {
@@ -298,6 +300,9 @@ void SaveManager::save(bool showConfirmation) {
 	for (int i = 0; i < 12; i++) {
 		output->writeBit(hasVisitedArea[i] ? 1 : 0);
 	}
+
+	//Difficulty
+	output->writeByte(difficulty);
 
 	//Exploration data
 	for (int i = 0; i < NUM_AREAS; i++) {
@@ -518,7 +523,7 @@ void SaveManager::incrementTimePlayed(int file, int amount) {
 }
 
 float SaveManager::getDamageModifier() {
-	return 1.0 + float(numUpgrades[2]) * 0.2;
+	return (1.0 + float(numUpgrades[2]) * 0.2) * smh->gameData->getDifficultyModifier(difficulty);
 }
 
 float SaveManager::getManaModifier() {

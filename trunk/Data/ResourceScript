@@ -802,6 +802,30 @@ Sprite selectedControlsBox {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=10
 }
+Sprite difficultyPromptBackground {
+ texture=UserInterfaceTx
+ rect=661,809,325,150
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite leftArrow {
+ texture=UserInterfaceTx
+ rect=989,810,32,32
+ hotspot=16,16
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite rightArrow {
+ texture=UserInterfaceTx
+ rect=989,844,32,32
+ hotspot=16,16
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite okButton {
+ texture=UserInterfaceTx
+ rect=989,878,32,32
+ hotspot=16,16
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
 
 ;********************************************
 ;******** CREDITS (Resource Group 11) *******
