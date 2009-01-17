@@ -39,6 +39,12 @@
  * The mana meter display is fucked after you upgrade.
  * After you kill an eye, you still can't walk on that square.
 
+=== Terry's comments ===
+ * The default attack key should be Space, not Shift.
+ * It's too tough to figure out how to use the inventory (Pause vs. escape) and item switching at the beginning. 
+ * Put a fence around the barns so you know you can't go in them.
+ * When deleting a file, you don't notice the YES/NO easily enough.
+
 == Progress ==
 ||*Item Goal*||*Level found*||*Boss*||*Level Completion*||Boss Completion||
 ||Smiley's Cane||Fountain||---||Done||---||
