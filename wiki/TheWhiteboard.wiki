@@ -21,7 +21,6 @@
  * Damage: Perhaps the damage Smiley does on each swing should be randomized a bit (10% or so) so you don't always know how many hits it will take to destroy an enemy. Also, randomizing the enemies' HP by 10% or so could be interesting.
  * Exterminate the "unpure" races.
  * To fix the ice glitch: every time you are standing on a NON-ICE square it saves that position. Then when you are on ice it checks to see if it was possible to get to that row or column based on your last non-ice position. (FYI: I just did the ice glitch by going up-right at 223,50 in Sessaria. I ended up bouncing left/right on row 49.)
- * Perhaps the MAX GEM DISPLAY in the world map should be dependent on how many you can get at that time. I can go ahead and figure it out in an item-dependent way. It won't be hard, but my question is: should it be done?
 
 === Graphics To Do ===
  * Pit graphics for different areas
