@@ -15,6 +15,7 @@
  * Merge projectile texture with sprites texture
  * Difficulties
  * Fix timed switches so that they don't make sound if hit by a turret's cannonball. (in the Snowplains you hear clicking now and then because of the turret at 56,117) An alternative fix is any timed switch won't make noise if its total time was 1 or 2 seconds, since that sounds gay anyway.
+ * Make it so you can't see enemy blocks on the mini map before they appear
 
 === Ideas To Consider ===
  * Frisbee: Have the player hold the key down and then release it to throw the frisbee.  Then the longer the button is held, the faster it spins and/or moves and more importantly the longer the enemy is stunned.  This will discourage lame complete frisbee ownage attacking strategies and allow us to make it cost no mana.
@@ -33,7 +34,7 @@
  * Bouncing spikey enemies that I put to appear in line with each other in game sometimes are not in line when testing, making it a lot harder to get by them than planned.
  * No particle effects when enemy blocks appear/disappear anymore.
  * If you pause while drowning it still makes you wait the duration of the drowning sound after you unpause.  Disable pausing while drowning?
-
+ * Hit a timed switch twice and it will play the timed shit from both times you hit it.
 == Progress ==
 ||*Item Goal*||*Level found*||*Boss*||*Level Completion*||Boss Completion||
 ||Smiley's Cane||Fountain||---||Done||---||
