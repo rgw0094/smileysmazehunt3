@@ -29,11 +29,9 @@
  * New button graphics maybe	 
 
 === Bugs ===
- * Bouncing spikey enemies that I put to appear in line with each other in game sometimes are not in line when testing, making it a lot harder to get by them than planned.
- * No particle effects when enemy blocks appear/disappear anymore.
+ * Bouncing spikey enemies that I put to appear in line with each other in game sometimes are not in line when testing, making it a lot harder to get by them than planned. (this is impossible to fix)
  * If you pause while drowning it still makes you wait the duration of the drowning sound after you unpause.  Disable pausing while drowning?
  * Hit a timed switch twice and it will play the timed shit from both times you hit it.
- * If you spring over an obstacle into a pit, you will start on that obstacle and get stuck. (157,39 of realm of despair)
  * The mana meter display is fucked after you upgrade.
  * After you kill an eye, you still can't walk on that square.
 
