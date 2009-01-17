@@ -473,6 +473,9 @@
 					RelativePath=".\src\DeathScreen.cpp">
 				</File>
 				<File
+					RelativePath=".\src\DifficultyPrompt.cpp">
+				</File>
+				<File
 					RelativePath=".\src\LoadingScreen.cpp">
 				</File>
 				<File

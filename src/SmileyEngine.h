@@ -48,6 +48,13 @@ class ScreenEffectsManager;
 //Constants
 #define PI 3.14159265357989232684
 
+//Difficulty
+#define VERY_EASY 0
+#define EASY 1
+#define MEDIUM 2
+#define HARD 3
+#define VERY_HARD 4
+
 //Gameplay values
 #define SCREEN_WIDTH 1024
 #define SCREEN_HEIGHT 768
@@ -448,7 +455,7 @@ public:
 	int getNumTotalGemsInArea(int area, int gemType);
 	const char *getGameText(const char *text);
 	const char *getAreaName(int area);
-
+	float getDifficultyModifier(int difficulty);
 
 private:
 
@@ -524,6 +531,7 @@ public:
 	bool tutorialManCompleted;
 	int playerGridX, playerGridY;
 	float playerHealth, playerMana;
+	int difficulty;
 
 	//Stuff in inventory
 	bool hasAbility[12];

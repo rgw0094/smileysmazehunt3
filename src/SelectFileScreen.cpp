@@ -19,6 +19,7 @@ SelectFileScreen::SelectFileScreen() {
 	selectedFile = 0;
 	yesDeleteBox = new hgeRect();
 	noDeleteBox = new hgeRect();
+	difficultyPrompt = new DifficultyPrompt();
 
 	//Buttons
 	buttons[SFS_BACK_BUTTON] = new Button(0, 0, "Back");
@@ -39,6 +40,7 @@ SelectFileScreen::~SelectFileScreen() {
 	for (int i = 0; i < 4; i++) delete saveBoxes[i].collisionBox;
 	delete yesDeleteBox;
 	delete noDeleteBox;
+	delete difficultyPrompt;
 }
 
 void SelectFileScreen::setWindowPosition(float x, float y) {
@@ -71,6 +73,15 @@ void SelectFileScreen::setWindowPosition(float x, float y) {
  */
 bool SelectFileScreen::update(float dt, float mouseX, float mouseY) {
 
+	if (difficultyPrompt->visible) {
+		int result = difficultyPrompt->update(dt);
+		if (result == -1) {
+			return false;
+		} else {
+			smh->saveManager->difficulty = result;
+		}
+	}
+
 	if (state == ENTERING_SCREEN) {
 		setWindowPosition(windowX, windowY + 1800.0 * dt);
 		if (windowY >= 138.0) {
@@ -101,6 +112,9 @@ bool SelectFileScreen::update(float dt, float mouseX, float mouseY) {
 		if (buttons[i]->isClicked() && i != SFS_DELETE_BUTTON) {
 			clickedButton = i;
 			state = EXITING_SCREEN;
+			if (i == SFS_START_BUTTON && smh->saveManager->isFileEmpty(selectedFile)) {
+				difficultyPrompt->visible = true;
+			}
 		}
 	}
 
@@ -201,6 +215,9 @@ void SelectFileScreen::draw(float dt) {
 		buttons[i]->draw(dt);
 	}
 
+	if (difficultyPrompt->visible) {
+		difficultyPrompt->draw(dt);
+	}
 }
 
 /**
