@@ -37,6 +37,7 @@
  * Hit a timed switch twice and it will play the timed shit from both times you hit it.
  * If you spring over an obstacle into a pit, you will start on that obstacle and get stuck. (157,39 of realm of despair)
  * The mana meter display is fucked after you upgrade.
+ * After you kill an eye, you still can't walk on that square.
 
 == Progress ==
 ||*Item Goal*||*Level found*||*Boss*||*Level Completion*||Boss Completion||
