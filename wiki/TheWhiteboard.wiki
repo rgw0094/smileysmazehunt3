@@ -35,6 +35,8 @@
  * No particle effects when enemy blocks appear/disappear anymore.
  * If you pause while drowning it still makes you wait the duration of the drowning sound after you unpause.  Disable pausing while drowning?
  * Hit a timed switch twice and it will play the timed shit from both times you hit it.
+ * If you spring over an obstacle into a pit, you will start on that obstacle and get stuck. (157,39 of realm of despair)
+
 == Progress ==
 ||*Item Goal*||*Level found*||*Boss*||*Level Completion*||Boss Completion||
 ||Smiley's Cane||Fountain||---||Done||---||
