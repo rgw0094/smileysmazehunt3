@@ -11,6 +11,9 @@ extern SMH *smh;
 
 #define LOVECRAFT_INTRO_TEXT 190
 
+#define EYE_X_OFFSET 0
+#define EYE_Y_OFFSET 60
+
 LovecraftBoss::LovecraftBoss(int _gridX, int _gridY, int _groupID) {
 	
 	x = _gridX * 64 + 64;
@@ -18,6 +21,8 @@ LovecraftBoss::LovecraftBoss(int _gridX, int _gridY, int _groupID) {
 	groupID = _groupID;
 
 	startedIntroDialogue = false;
+
+	smh->resources->GetAnimation("LightningEye")->Play();
 
 	enterState(LS_INACTIVE);
 }
@@ -28,11 +33,11 @@ LovecraftBoss::~LovecraftBoss() {
 
 void LovecraftBoss::draw(float dt) {
 	smh->drawGlobalSprite("LovecraftBody", x, y);
+
+	smh->resources->GetAnimation("LightningEye")->Render(smh->getScreenX(x + EYE_X_OFFSET), smh->getScreenY(y + EYE_Y_OFFSET));
 }
 
-void LovecraftBoss::drawAfterSmiley(float dt) {
-
-}
+void LovecraftBoss::drawAfterSmiley(float dt) { }
 
 bool LovecraftBoss::update(float dt) {
 
@@ -41,6 +46,8 @@ bool LovecraftBoss::update(float dt) {
 			doInactive(dt);
 			break;
 	};
+
+	smh->resources->GetAnimation("LightningEye")->Update(dt);
 
 	return false;
 }

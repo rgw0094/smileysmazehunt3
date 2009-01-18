@@ -1754,6 +1754,16 @@ Sprite LovecraftBody {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=108
 }
+Animation LightningEye {
+ texture="Graphics/Lovecraft.png"
+ rect=193,1,88,41
+ frames=5
+ fps=10.0
+ mode=NOLOOP
+ hotspot=44,20
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=108
+}
  
 ;*****************************
 ;******** PROJECTILES ********
