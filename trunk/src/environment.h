@@ -22,6 +22,7 @@ struct Timer {
 	float duration, startTime;
 	float lastClockTickTime;
 	float x, y;
+	bool playTickSound;
 };
 
 struct ParticleStruct {
@@ -41,7 +42,6 @@ public:
 	void drawAfterSmiley(float dt);
 	void drawGrid(float dt);
 	void drawPits(float dt);
-	void drawSwitchTimers(float dt);
 	void update(float dt);
 	void loadArea(int id, int from, bool playMusic);
 	int checkItem(int x, int y);
@@ -50,10 +50,9 @@ public:
 	bool playerCollision(int x, int y,float dt);
 	bool enemyCollision(hgeRect *box, BaseEnemy *enemy, float dt);
 	void unlockDoor(int gridX, int gridY);
-	bool toggleSwitches(hgeRect* box);
-	bool toggleSwitches(hgeRect* box, bool playSoundFarAway);
+	bool toggleSwitches(hgeRect* box, bool playSoundFarAway, bool playTimerSound);
 	bool toggleSwitches(Tongue *tongue);
-	bool toggleSwitchAt(int gridX, int gridY, bool playSoundFarAway);
+	bool toggleSwitchAt(int gridX, int gridY, bool playSoundFarAway, bool playTimerSound);
 	void toggleSwitch(int id);
 	bool hitSigns(Tongue *tongue);
 	bool hitSaveShrine(Tongue *tongue);
@@ -83,6 +82,10 @@ public:
 	void removeParticle(int x,int y);
 	void removeAllParticles();
 	void addParticle(const char* particle, float x, float y);
+
+	void killSwitchTimer(int gridX, int gridY);
+	void updateSwitchTimers(float dt);
+	void drawSwitchTimers(float dt);
 
 	//variables
 	int areaWidth,areaHeight;		//Width and height of the area in squares

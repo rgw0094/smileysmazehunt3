@@ -825,9 +825,18 @@ void Environment::update(float dt) {
 		}
 	}
 
-	//Update timers
+	specialTileManager->update(dt);
+	evilWallManager->update(dt);
+	tapestryManager->update(dt);
+	smileletManager->update();
+	updateSwitchTimers(dt);
+	if (fountain) fountain->update(dt);
+
+}
+
+void Environment::updateSwitchTimers(float dt) {
 	for (std::list<Timer>::iterator i = timerList.begin(); i != timerList.end(); i++) {
-		if (smh->timePassedSince(i->lastClockTickTime) > 1.0) {
+		if (i->playTickSound && smh->timePassedSince(i->lastClockTickTime) > 1.0) {
 			i->lastClockTickTime = smh->getGameTime();
 			smh->soundManager->playSound("snd_ClockTick", 1.0);
 		}
@@ -835,13 +844,17 @@ void Environment::update(float dt) {
 			i = timerList.erase(i);
 		}
 	}
+}
 
-	specialTileManager->update(dt);
-	evilWallManager->update(dt);
-	tapestryManager->update(dt);
-	smileletManager->update();
-	if (fountain) fountain->update(dt);
-
+/**
+ * Kills a switch timer at (gridX, gridY) if there is one.
+ */
+void Environment::killSwitchTimer(int gridX, int gridY) {
+	for (std::list<Timer>::iterator i = timerList.begin(); i != timerList.end(); i++) {
+		if (Util::getGridX(i->x) == gridX && Util::getGridY(i->y) == gridY) {
+			i = timerList.erase(i);
+		}
+	}
 }
 
 /**
@@ -894,21 +907,13 @@ void Environment::unlockDoor(int gridX, int gridY) {
 }
 
 /**
- * Toggles any switches hit by a collision box. Returns whether or not a
- * switch was toggled.
- */
-bool Environment::toggleSwitches(hgeRect *box) {
-	return toggleSwitches(box, true);
-}
-
-/**
  * Toggles switches hit by a collision box. Returns whether or not a switch
  * was toggled.
  *
  * @param playSoundFarAway  If this is true the switch sound will always play even if Smiley is
  *							really far away
  */
-bool Environment::toggleSwitches(hgeRect *box, bool playSoundFarAway) {
+bool Environment::toggleSwitches(hgeRect *box, bool playSoundFarAway, bool playTimerSound) {
 
 	//Determine what grid square the collision box is in
 	int boxGridX = (box->x1 + ((box->x2-box->x1)/2)) / 64;
@@ -926,7 +931,7 @@ bool Environment::toggleSwitches(hgeRect *box, bool playSoundFarAway) {
 				
 				//Check collision with any switches
 				if (smh->timePassedSince(activated[gridX][gridY]) > SWITCH_DELAY && collisionBox->Intersect(box)) {
-					if (toggleSwitchAt(gridX, gridY, playSoundFarAway)) return true;
+					if (toggleSwitchAt(gridX, gridY, playSoundFarAway, playTimerSound)) return true;
 				}
 			}
 		}
@@ -955,7 +960,7 @@ bool Environment::toggleSwitches(Tongue *tongue) {
 				
 				//Check collision with any switches
 				if (smh->timePassedSince(activated[gridX][gridY]) > TONGUE_SWITCH_DELAY && tongue->testCollision(collisionBox)) {			
-					if (toggleSwitchAt(gridX, gridY, true)) {
+					if (toggleSwitchAt(gridX, gridY, true, true)) {
 						return true;
 					}
 				}
@@ -974,17 +979,14 @@ bool Environment::toggleSwitches(Tongue *tongue) {
  * @param id	id of the switch to toggle.
  */
 void Environment::toggleSwitch(int id) {
-
-	//Scan the area to find the switch then toggle it
 	for (int i = 0; i < areaWidth; i++) {
 		for (int j = 0; j < areaHeight; j++) {
 			if (ids[i][j] == id && (Util::isCylinderSwitchLeft(collision[i][j]) || Util::isCylinderSwitchLeft(collision[i][j]))) {
-				toggleSwitchAt(i,j,true);
+				toggleSwitchAt(i,j,true, false);
 				return;
 			}
 		}
 	}
-
 }
 
 /** 
@@ -998,10 +1000,10 @@ void Environment::toggleSwitch(int id) {
  * switched switch is close to smiley, or one of the things it switched is close to smiley. If the
  * playSoundFarAway parameter is true then the sound will be guaranteed to play if a switch is switched.
  */
-bool Environment::toggleSwitchAt(int gridX, int gridY, bool playSoundFarAway) {
-	
+bool Environment::toggleSwitchAt(int gridX, int gridY, bool playSoundFarAway, bool playTimerSound) {
 	int switchID = ids[gridX][gridY];
 	bool hasSwitch = false;
+	bool hitToggledTimedSwitch = smh->timePassedSince(activated[gridX][gridY]) < variable[gridX][gridY] && smh->saveManager->isTileChanged(gridX, gridY);
 		
 	//Flip cylinder switch
 	if (Util::isCylinderSwitchLeft(collision[gridX][gridY]) || Util::isCylinderSwitchRight(collision[gridX][gridY])) {
@@ -1079,14 +1081,19 @@ bool Environment::toggleSwitchAt(int gridX, int gridY, bool playSoundFarAway) {
 	if (hasSwitch) {
 		smh->soundManager->playSwitchSound(gridX, gridY, playSoundFarAway);
 
-		//If this is a timed switch, create a timer to display the time left over the switch
-		if (variable[gridX][gridY] != -1) {
+		if (hitToggledTimedSwitch) {
+			//If a timed switch was already toggled and then we just untoggled it, we need to
+			//remove the switch's timer.
+			killSwitchTimer(gridX, gridY);
+		} else if (variable[gridX][gridY] != -1) {
+			//If this is a timed switch, create a timer to display the time left over the switch
 			Timer timer;
 			timer.x = gridX * 64 + 32;
 			timer.y = gridY * 64;
 			timer.duration = variable[gridX][gridY];
 			timer.startTime = smh->getGameTime();
 			timer.lastClockTickTime = smh->getGameTime();
+			timer.playTickSound = playTimerSound;
 			timerList.push_back(timer);
 		}
 	}

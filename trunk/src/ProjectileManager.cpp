@@ -191,7 +191,7 @@ void ProjectileManager::update(float dt) {
 
 		//Orbs, Frisbees, and Cannonballs can toggle switches
 		if (!deleteProjectile && i->id == PROJECTILE_LIGHTNING_ORB || i->id == PROJECTILE_FRISBEE || i->id == PROJECTILE_TURRET_CANNONBALL) {	
-			if (smh->environment->toggleSwitches(i->collisionBox, i->id != PROJECTILE_TURRET_CANNONBALL)) {
+			if (smh->environment->toggleSwitches(i->collisionBox, i->id != PROJECTILE_TURRET_CANNONBALL, i->id != PROJECTILE_TURRET_CANNONBALL)) {
 				deleteProjectile = true;
 			}
 		}

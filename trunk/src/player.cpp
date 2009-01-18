@@ -882,7 +882,9 @@ void Player::doFalling(float dt) {
 	}
 
 	//Keep track of where the player was before he fell
-	if (!falling && smh->environment->collision[gridX][gridY] != PIT) {
+	if (!falling && smh->environment->collision[gridX][gridY] != PIT && smh->environment->collision[gridX][gridY] != UNWALKABLE
+		&& smh->environment->collision[gridX][gridY] != SPRING_PAD) 
+	{
 		startedFallingX = gridX;
 		startedFallingY = gridY;
 	}
