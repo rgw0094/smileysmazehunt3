@@ -24,7 +24,6 @@
  * Pit graphics for different areas
  * More projectile graphics
  * Lovecraftian Boss tentacles
- * "Exit Shop" icon
  * New button graphics maybe	 
 
 === Bugs ===
