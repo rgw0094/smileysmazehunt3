@@ -56,6 +56,8 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fixed parallax pits so the graphic doesn't jump by 32 pixels||1/23/09||ETI||
+||Fixed how graphics in the item layer were drawn 1 pixel off||1/23/09||ETI||
 ||Fixed switch timer shit||1/17/09||RGW||
 ||Difficulties||1/17/09||RGW||
 ||Switch graphics||1/14/09||RMM||
