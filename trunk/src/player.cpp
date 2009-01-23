@@ -1672,16 +1672,28 @@ void Player::checkForIceGlitch() {
 			if (gridX != lastNonIceGridX) {
 				//ICE GLITCH HAS HAPPENED, DO SOMETHING
 				iceSliding = false;
-				x = lastNonIceGridX * 64 + 32;
-				y = lastNonIceGridY * 64 + 32;
+				if (gridX > lastNonIceGridX) {
+					x = lastNonIceGridX * 64 + 60;
+					y = lastNonIceGridY * 64 + 32;
+				} else { 
+					x = lastNonIceGridX * 64 + 4;
+					y = lastNonIceGridY * 64 + 32;
+				}
+				if (smh->isDebugOn()) MessageBox(NULL,"Gay ice fix (moving up/down, column not the same).","Gay ice fix",MB_OK);
 			}
 		} else if (facing == LEFT || facing == RIGHT) {
 			//should not have a different Y position than the last non-ice square
 			if (gridY != lastNonIceGridY) {
 				//ICE GLITCH HAS HAPPENED, DO SOMETHING
 				iceSliding = false;
-				x = lastNonIceGridX * 64 + 32;
-				y = lastNonIceGridY * 64 + 32;
+				if (gridY > lastNonIceGridY) {
+					x = lastNonIceGridX * 64 + 32;
+					y = lastNonIceGridY * 64 + 60;
+				} else {
+					x = lastNonIceGridX * 64 + 32;
+					y = lastNonIceGridY * 64 + 4;
+				}
+				if (smh->isDebugOn()) MessageBox(NULL,"Gay ice fix (moving left/right, row not the same).","Gay ice fix",MB_OK);
 			}
 		}
 	}

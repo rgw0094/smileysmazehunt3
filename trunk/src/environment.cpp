@@ -651,7 +651,7 @@ void Environment::draw(float dt) {
 
 		//Column lines
 		for (int i = 0; i <= screenWidth; i++) {
-			smh->hge->Gfx_RenderLine(i*64.0 - xOffset,0,i*64.0 - yOffset,SCREEN_HEIGHT);
+			smh->hge->Gfx_RenderLine(i*64.0 - xOffset,0,i*64.0 - xOffset,SCREEN_HEIGHT);
 		}
 		//Row lines
 		for (int i = 0; i <= screenHeight; i++) {
