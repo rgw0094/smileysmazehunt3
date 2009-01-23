@@ -40,6 +40,7 @@ public:
 	void heal(float amount);
 	void immobilize(float duration);
 	void reset();
+	void checkForIceGlitch();
 
 	//Accessors/mutators
 	bool isInvisible();
@@ -72,6 +73,7 @@ public:
 	int baseGridX, baseGridY;				//The grid coordinate of the center of smiley's shadow
 	int gridX,gridY;						//Global grid coordinates
 	int lastGridX, lastGridY;
+	int lastNonIceGridX, lastNonIceGridY;
 	float springOffset;
 	float hoveringYOffset;
 	bool shrinkActive;
