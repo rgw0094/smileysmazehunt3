@@ -480,8 +480,8 @@ void Environment::draw(float dt) {
 	for (int j = -1; j <= screenHeight + 1; j++) {
 		for (int i = -1; i <= screenWidth + 1; i++) {
 			
-			drawX = i * 64 - (int)xOffset;
-			drawY = j * 64 - (int)yOffset;
+			drawX = i * 64 - xOffset;
+			drawY = j * 64 - yOffset;
 
 			if (isInBounds(i+xGridOffset, j+yGridOffset)) {	
 
@@ -651,7 +651,7 @@ void Environment::draw(float dt) {
 
 		//Column lines
 		for (int i = 0; i <= screenWidth; i++) {
-			smh->hge->Gfx_RenderLine(i*64.0 - xOffset,0,i*64.0 - xOffset,SCREEN_HEIGHT);
+			smh->hge->Gfx_RenderLine(i*64.0 - xOffset,0,i*64.0 - yOffset,SCREEN_HEIGHT);
 		}
 		//Row lines
 		for (int i = 0; i <= screenHeight; i++) {
@@ -688,21 +688,10 @@ void Environment::drawPits(float dt) {
 	bool draw;
 
 	//Loop through each tile to draw the parallax layer
-	for (int j = -1; j <= screenHeight + 1; j++) {
-		for (int i = -1; i <= screenWidth + 1; i++) {
+	for (int j = -1; j <= screenHeight*2 + 1; j++) {
+		for (int i = -1; i <= screenWidth*2 + 1; i++) {
 			if (isInBounds(i+xGridOffset, j+yGridOffset)) {	
-				
-				//Only draw if there is a pit in an adjacent square to improve performance.
-				draw = false;
-				for (int x = i+xGridOffset-1; x <= i+xGridOffset+1; x++) {
-					for (int y = j+yGridOffset-1; y <= j+yGridOffset+1; y++) {
-						if (collision[x][y] == PIT || collision[x][y] == FAKE_PIT || collision[x][y] == NO_WALK_PIT) draw = true;
-					}
-				}
-	
-				if (draw) {
-					smh->resources->GetSprite("parallaxPit")->Render(int(i*64.0 - xOffset*.5), int(j*64.0 - yOffset*.5));
-				}
+				smh->resources->GetSprite("parallaxPit")->Render(int(i*32.0 - xOffset*0.5), int(j*32.0 - yOffset*.5));
 			}
 		}
 	}
