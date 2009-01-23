@@ -133,6 +133,9 @@ void Player::update(float dt) {
 	//has been completed
 	updateLocation();
 
+	//Check to see if an ICE GLITCH has occurred
+	checkForIceGlitch();
+
 	//Do level exits
 	if (smh->environment->collision[gridX][gridY] == PLAYER_END) {
 		smh->areaChanger->changeArea(0, 0, smh->environment->ids[gridX][gridY]);
@@ -204,6 +207,10 @@ void Player::updateGUI(float dt) {
 void Player::updateLocation() {
 	lastGridX = gridX;
 	lastGridY = gridY;
+	if (smh->environment->collision[gridX][gridY] != ICE) {
+		lastNonIceGridX = gridX;
+		lastNonIceGridY = gridY;
+	}
 	gridX = x / 64.0;
 	gridY = y / 64.0;
 	baseX = x + 0;
@@ -1652,5 +1659,30 @@ void Player::heal(float amount) {
 		setHealth(getHealth() + amount);
 		healing = true;
 		timeStartedHeal = smh->getGameTime();
+	}
+}
+
+/**
+ * Checks to see if an ICE GLITCH has occurred, and fixes it if it has
+ */
+void Player::checkForIceGlitch() {
+	if (smh->environment->collision[gridX][gridY] == ICE) {
+		if (facing == UP || facing == DOWN) {
+			//should not have a different X position than the last non-ice square
+			if (gridX != lastNonIceGridX) {
+				//ICE GLITCH HAS HAPPENED, DO SOMETHING
+				iceSliding = false;
+				x = lastNonIceGridX * 64 + 32;
+				y = lastNonIceGridY * 64 + 32;
+			}
+		} else if (facing == LEFT || facing == RIGHT) {
+			//should not have a different Y position than the last non-ice square
+			if (gridY != lastNonIceGridY) {
+				//ICE GLITCH HAS HAPPENED, DO SOMETHING
+				iceSliding = false;
+				x = lastNonIceGridX * 64 + 32;
+				y = lastNonIceGridY * 64 + 32;
+			}
+		}
 	}
 }
