@@ -32,6 +32,7 @@
  * The sound effects for the buttons don't work when you first enter the main menu. They work after you enter a game and exit back to the menu, though.
  * Spikey enemies start in the wrong spot sometimes. Ex: the mass of spikey enemies in Egypt, sometimes one of them will move down first and then will bounce horizontally in the wrong spot.
  * There is still a shadow of an orb being displayed ahead of the main mass of orbs.
+ * The pit graphics aren't drawn in their tile, as exemplified during the Calypso battle. During this battle, on the right side, you see a large area where the pit graphics aren't being drawn.
 
 === Terry's comments ===
  * The default attack key should be Space, not Shift.
