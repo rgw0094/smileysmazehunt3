@@ -1288,6 +1288,13 @@ void Player::startPuzzleIce() {
 				dx = 0;
 				dy = -MOVE_SPEED;
 				break;
+			default:
+				if (smh->isDebugOn()) MessageBox(NULL,"Went diagonally onto ice in startPuzzleIce","Dickens Ice",MB_OK);
+				//Smiley is trying to move diagonally onto puzzle ice -- bump him back!
+				x = lastNonIceGridX * 64 + 20;
+				y = lastNonIceGridY * 64 + 40;
+				iceSliding = false;
+				break;
 			};
 		}
 		iceSliding = true;
@@ -1679,7 +1686,7 @@ void Player::checkForIceGlitch() {
 					x = lastNonIceGridX * 64 + 4;
 					y = lastNonIceGridY * 64 + 32;
 				}
-				if (smh->isDebugOn()) MessageBox(NULL,"Gay ice fix (moving up/down, column not the same).","Gay ice fix",MB_OK);
+				//if (smh->isDebugOn()) MessageBox(NULL,"Gay ice fix (moving up/down, column not the same).","Gay ice fix",MB_OK);
 			}
 		} else if (facing == LEFT || facing == RIGHT) {
 			//should not have a different Y position than the last non-ice square
@@ -1693,8 +1700,30 @@ void Player::checkForIceGlitch() {
 					x = lastNonIceGridX * 64 + 32;
 					y = lastNonIceGridY * 64 + 4;
 				}
-				if (smh->isDebugOn()) MessageBox(NULL,"Gay ice fix (moving left/right, row not the same).","Gay ice fix",MB_OK);
+				//if (smh->isDebugOn()) MessageBox(NULL,"Gay ice fix (moving left/right, row not the same).","Gay ice fix",MB_OK);
 			}
+		} else { //facing diagonally
+			//if smiley only moved adjacently (1 tile) from lastNonIce square, set his facing to the correct direction
+			
+			if (gridY == lastNonIceGridY - 1 && gridX == lastNonIceGridX) {
+				//facing = UP;
+				//iceSliding = true;
+			} else if (gridY == lastNonIceGridY + 1 && gridX == lastNonIceGridX) {
+				//facing = DOWN;
+				//iceSliding = true;
+			} else if (gridX == lastNonIceGridX + 1 && gridY == lastNonIceGridY) {
+				//facing = RIGHT;
+				//iceSliding = true;
+			} else if (gridX == lastNonIceGridX - 1 && gridY == lastNonIceGridY) {
+				//facing = LEFT;
+				//iceSliding = true;
+			} else { // uh-oh, has actually moved diagonally, let's just go ahead and put smiley back onto land
+				x = lastNonIceGridX * 64 + 32;
+				y = lastNonIceGridY * 64 + 32;
+				iceSliding = false;
+				//if (smh->isDebugOn()) MessageBox(NULL,"Gay ice fix (moving diagonally).","Gay ice fix",MB_OK);
+			}
+			
 		}
 	}
 }
