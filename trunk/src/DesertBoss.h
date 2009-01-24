@@ -14,7 +14,7 @@ class hgeParticleSystem;
 #define DESERTBOSS_FADING 6
 
 //Attributes
-#define HEALTH 335.0
+#define HEALTH 185.0
 #define FLYING_SPIKE_DAMAGE 0.075
 #define GROUND_SPIKE_DAMAGE 0.5
 #define COLLISION_DAMAGE 0.5
