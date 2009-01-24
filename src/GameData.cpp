@@ -119,19 +119,19 @@ void GameData::loadAbilityData() {
 	//Fire Breath
 	strcpy(abilities[FIRE_BREATH].name, "Fire Breath");
 	strcpy(abilities[FIRE_BREATH].description, 
-		"Allows you to breath deadly fire breath.\n\nMana Cost: 10/second\n");
+		"Allows you to breath deadly fire breath.\n\nMana Cost: 15/second\n");
 	strcat(abilities[FIRE_BREATH].description, "Damage: ");
 	strcat(abilities[FIRE_BREATH].description, Util::intToString(smh->player->getFireBreathDamage()).c_str());
 	strcat(abilities[FIRE_BREATH].description, " per second.");
 	abilities[FIRE_BREATH].type = HOLD;
-	abilities[FIRE_BREATH].manaCost = 10;
+	abilities[FIRE_BREATH].manaCost = 15;
 
 	//Ice Breath
 	strcpy(abilities[ICE_BREATH].name, "Ice Breath");
 	strcpy(abilities[ICE_BREATH].description, 
 		"Unleashes an icy blast that can freeze enemies.\n\n\nMana Cost: 10");
 	abilities[ICE_BREATH].type = ACTIVATED;
-	abilities[ICE_BREATH].manaCost = 10;
+	abilities[ICE_BREATH].manaCost = 20;
 
 	//Reflection Shield
 	strcpy(abilities[REFLECTION_SHIELD].name, "Reflection Shield");
