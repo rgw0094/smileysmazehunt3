@@ -57,10 +57,6 @@ bool CollisionCircle::testBox(hgeRect *box) {
 bool CollisionCircle::testCircle(CollisionCircle *circle) {
 	int distance = Util::distance(x,y,circle->x,circle->y);
 
-	if (distance > System::Int32::MaxValue || distance < System::Int32::MinValue) return false;
-
-	distance = abs(distance);
-
 	return (distance < radius + circle->radius);
 }
 
