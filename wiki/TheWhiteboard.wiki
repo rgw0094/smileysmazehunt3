@@ -33,6 +33,7 @@
  * Spikey enemies start in the wrong spot sometimes. Ex: the mass of spikey enemies in Egypt, sometimes one of them will move down first and then will bounce horizontally in the wrong spot.
  * There is still a shadow of an orb being displayed ahead of the main mass of orbs.
  * The pit graphics aren't drawn in their tile, as exemplified during the Calypso battle. During this battle, on the right side, you see a large area where the pit graphics aren't being drawn.
+ * Saving in the mushroom land, after changing the direction of the blue turret at the mushroom entrance, causes the game to crash when you try to load the file. Deleting the blue turret enemy makes it so you can open the file without it crashing.
 
 === Terry's comments ===
  * The default attack key should be Space, not Shift.
