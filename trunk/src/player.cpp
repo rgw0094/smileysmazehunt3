@@ -1373,7 +1373,7 @@ void Player::dealDamage(float damage, bool makesFlash) {
  */ 
 void Player::dealDamageAndKnockback(float damage, bool makesFlash, float knockbackDist,
 									float knockbackerX, float knockbackerY) {
-	dealDamageAndKnockback(damage, true, false, knockbackDist, knockbackerX, knockbackerY);
+	dealDamageAndKnockback(damage, makesFlash, false, knockbackDist, knockbackerX, knockbackerY);
 }
 
 /**

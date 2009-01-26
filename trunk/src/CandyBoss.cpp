@@ -234,8 +234,10 @@ bool CandyBoss::update(float dt) {
 		if (smh->player->collisionCircle->testBox(collisionBox)) {
 			if (state == CANDY_STATE_MULTI_JUMP) {
 				smh->player->dealDamage(0.25, false);
+				smh->setDebugText("Smiley hit by CandyBoss during MultiJump");
 			} else {
 				smh->player->dealDamageAndKnockback(COLLISION_DAMAGE, true, 225.0, x, y);
+				smh->setDebugText("Smiley hit by CandyBoss");
 			}
 		}
 
