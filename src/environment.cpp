@@ -641,7 +641,7 @@ void Environment::draw(float dt) {
 
 	//Draw particles
 	for (std::list<ParticleStruct>::iterator i = particleList.begin(); i != particleList.end(); i++) {
-		i->particle->MoveTo(smh->getScreenX(i->x), smh->getScreenY(i->y));
+		i->particle->MoveTo(smh->getScreenX(i->x), smh->getScreenY(i->y), true);
 		i->particle->Update(dt);
 		i->particle->Render();
 	}
