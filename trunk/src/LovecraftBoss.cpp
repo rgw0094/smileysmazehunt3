@@ -22,7 +22,7 @@ LovecraftBoss::LovecraftBoss(int _gridX, int _gridY, int _groupID) {
 
 	startedIntroDialogue = false;
 
-	smh->resources->GetAnimation("LightningEye")->Play();
+	//smh->resources->GetAnimation("LightningEye")->Play();
 
 	enterState(LS_INACTIVE);
 }

@@ -725,7 +725,7 @@ Sprite tutorialManDown {
 }
 Sprite parallaxPit {
  texture=general
- rect=960,0,64,64
+ rect=960,0,32,32
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
@@ -1759,7 +1759,7 @@ Animation LightningEye {
  rect=0,193,88,41
  frames=5
  fps=10.0
- mode=NOLOOP
+ mode=LOOP
  hotspot=44,20
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=108
