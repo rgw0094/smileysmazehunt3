@@ -197,7 +197,7 @@ void SaveManager::load(int fileNumber) {
 		smh->player->gui->setAbilityInSlot(input->readBits(5), i);
 	}
 
-	for (int i = 0; i < 12; i++) {
+	for (int i = 0; i < NUM_AREAS; i++) {
 		hasVisitedArea[i] = input->readBit();
 	}
 
@@ -297,7 +297,7 @@ void SaveManager::save(bool showConfirmation) {
 	}
 
 	//Which areas have been visited
-	for (int i = 0; i < 12; i++) {
+	for (int i = 0; i < NUM_AREAS; i++) {
 		output->writeBit(hasVisitedArea[i] ? 1 : 0);
 	}
 
