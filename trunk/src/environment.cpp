@@ -686,12 +686,26 @@ void Environment::draw(float dt) {
 void Environment::drawPits(float dt) {
 
 	bool draw;
+	int drawX, drawY, gridX, gridY;
 
 	//Loop through each tile to draw the parallax layer
 	for (int j = -1; j <= screenHeight*2 + 1; j++) {
 		for (int i = -1; i <= screenWidth*2 + 1; i++) {
-			if (isInBounds(i+xGridOffset, j+yGridOffset)) {	
-				smh->resources->GetSprite("parallaxPit")->Render(int(i*32.0 - xOffset*0.5), int(j*32.0 - yOffset*.5));
+			drawX = int(i*32.0 - xOffset*0.5);
+			drawY = int(j*32.0 - yOffset*.5);
+			gridX = Util::getGridX(drawX + 16);
+			gridY = Util::getGridY(drawY + 16);
+
+			//Only draw the pit graphic here if it is in bounds and near a pit to improve performance.
+			draw = isInBounds(gridX, gridY);
+			for (int x = i+gridX-1; x <= i+gridX+1; x++) {
+				for (int y = j+gridY-1; y <= j+gridY+1; y++) {
+					if (collision[x][y] == PIT || collision[x][y] == FAKE_PIT || collision[x][y] == NO_WALK_PIT) draw = true;
+				}
+			}
+
+			if (draw) {
+				smh->resources->GetSprite("parallaxPit")->Render(drawX, drawY);
 			}
 		}
 	}
