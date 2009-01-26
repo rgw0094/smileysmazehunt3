@@ -87,6 +87,7 @@ bool SelectFileScreen::update(float dt, float mouseX, float mouseY) {
 		if (windowY >= 138.0) {
 			state = IN_SCREEN;
 			windowY = 138.0;
+			setWindowPosition(windowX, windowY);
 		}
 	} else if (state == EXITING_SCREEN) {
 		setWindowPosition(windowX, windowY - 1800.0 * dt);
@@ -205,8 +206,8 @@ void SelectFileScreen::draw(float dt) {
 			smh->resources->GetFont("inventoryFnt")->printf(saveBoxes[i].x + 70.0, saveBoxes[i].y + 5, 
 				HGETEXT_LEFT, smh->saveManager->isFileEmpty(i) ? "- Empty -" : "Save File %d", i+1);
 			smh->resources->GetFont("description")->printf(saveBoxes[i].x + 70.0, saveBoxes[i].y + 50.0, 
-				HGETEXT_LEFT, smh->saveManager->isFileEmpty(i) ? "Time Played: 0:00:00" :
-				"Time Played: %s", getTimeString(smh->saveManager->getTimePlayed(i)));
+				HGETEXT_LEFT, smh->saveManager->isFileEmpty(i) ? "0:00:00" :
+				"%s", getTimeString(smh->saveManager->getTimePlayed(i)));
 		}
 	}
 
@@ -227,7 +228,7 @@ const char *SelectFileScreen::getTimeString(int time) {
 
 	std::string timeString;
 
-	char hours[2];
+	char hours[3];
 	char minutes[2];
 	char seconds[2];
 	char temp[2];
@@ -257,5 +258,6 @@ const char *SelectFileScreen::getTimeString(int time) {
 	timeString += minutes;
 	timeString += ":";
 	timeString += seconds;
+	
 	return timeString.c_str();
 }

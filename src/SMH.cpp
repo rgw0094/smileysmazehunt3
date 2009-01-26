@@ -16,6 +16,7 @@
 SMH::SMH(HGE *_hge) { 
 	hge = _hge;
 	debugMode = false;
+	debugText = "";
 	debugMovePressed = false;
 	lastDebugMoveTime = 0.0;
 	darkness = 0.0;
@@ -210,6 +211,9 @@ void SMH::drawGame() {
 		//Grid co-ords and fps
 		resources->GetFont("curlz")->printf(1000,5,HGETEXT_RIGHT,"(%d,%d)  FPS: %d", 
 			player->gridX, player->gridY, hge->Timer_GetFPS());
+
+		//Debug text
+		resources->GetFont("curlz")->printf(10,700,HGETEXT_LEFT,debugText);
 	}
 
 	hge->Gfx_EndScene();
@@ -412,6 +416,20 @@ int SMH::getScreenY(int y) {
  */
 void SMH::log(const char* text) {
 	hge->System_Log(text);
+}
+
+/**
+ * This text will be displayed on the debug screen
+ */
+void SMH::setDebugText(char* text) {
+	debugText = text;
+}
+
+/**
+ * Returns the debug text
+ */
+char* SMH::getDebugText() {
+	return debugText;
 }
 
 /**

@@ -292,6 +292,8 @@ public:
 	void shadeScreen(int alpha);
 	float timePassedSince(float time);
 	float getFlashingAlpha(float n);
+	void setDebugText(char* text);
+	char* getDebugText();
 
 	//Game objects
 	AreaChanger *areaChanger;
@@ -327,6 +329,7 @@ private:
 	int frameCounter;
 	bool debugMode;
 	float darkness;
+	char *debugText;
 
 };
 
