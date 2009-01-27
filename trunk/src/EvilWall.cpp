@@ -224,6 +224,7 @@ void EvilWall::doCollision() {
 		smh->player->x = restartX*64+32;
 		smh->player->y = restartY*64+32;
 		smh->player->dealDamage(EVIL_WALL_DAMAGE,true);
+		smh->setDebugText("Smiley hit by EvilWall");
 	}
 }
 

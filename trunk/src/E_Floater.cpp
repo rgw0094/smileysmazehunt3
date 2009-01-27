@@ -74,6 +74,11 @@ void E_Floater::update(float dt) {
 	//Collision with player
 	if (smh->player->collisionCircle->testBox(collisionBox)) {
 		smh->player->dealDamageAndKnockback(damage, true, 115, x, y);
+		std::string debugText;
+		debugText = "E_Floater.cpp Smiley hit by enemy type " + Util::intToString(id) +
+			" at grid (" + Util::intToString(gridX) + "," + Util::intToString(gridY) +
+			") pos (" + Util::intToString((int)x) + "," + Util::intToString((int)y) + ")";
+		smh->setDebugText(debugText);
 	}
 
 	move(dt);

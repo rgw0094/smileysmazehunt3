@@ -178,6 +178,11 @@ void ProjectileManager::update(float dt) {
 				reflectProjectile(i);
 			} else {
 				smh->player->dealDamage(i->damage, i->makesSmileyFlash);
+				std::string debugString;
+				debugString = "Smiley hit by projectile of type " + Util::intToString(i->id) + 
+					" at pos (" + Util::intToString((int)i->x) + "," + Util::intToString((int)i->y) + 
+					") grid ("	+ Util::intToString(i->gridX) + "," + Util::intToString(i->gridY) +")";
+				smh->setDebugText(debugString.c_str());
 				deleteProjectile = true;
 			}
 		}

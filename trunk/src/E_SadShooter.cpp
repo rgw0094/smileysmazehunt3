@@ -85,7 +85,8 @@ void E_SadShooter::update(float dt) {
 		sadBlockers[i].y = y + sadBlockers[i].distance*sin(sadBlockers[i].angle);
 
 		if (Util::distance(sadBlockers[i].x,sadBlockers[i].y,smh->player->x,smh->player->y) <= BLOCKER_RADIUS + smh->player->collisionCircle->radius) {
-			smh->player->dealDamageAndKnockback(damage,true,100,sadBlockers[i].x,sadBlockers[i].y);			
+			smh->player->dealDamageAndKnockback(damage,true,100,sadBlockers[i].x,sadBlockers[i].y);	
+			smh->setDebugText("Smiley hit by a Sad Blocker");
 		}
 
 		collisionBlocker->x1=sadBlockers[i].x-BLOCKER_RADIUS+3; //add 3 to make the rect a bit smaller so it better approximates the circle

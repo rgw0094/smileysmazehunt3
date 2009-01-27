@@ -158,6 +158,7 @@ void E_BatletDist::updateBatlets(float dt) {
 		//Check for collision with Smiley
 		if (smh->player->collisionCircle->testBox(i->collisionBox)) {
 			smh->player->dealDamage(BATLET_DAMAGE, true);
+			smh->setDebugText("Smiley hit by batlet E_BatletDist.cpp");
 			collision = true;
 		}
 

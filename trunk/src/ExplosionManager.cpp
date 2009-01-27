@@ -76,6 +76,7 @@ void ExplosionManager::update(float dt) {
 		if (!i->hitPlayerYet && smh->player->collisionCircle->testCircle(i->collisionCircle)) {
 			i->hitPlayerYet = true;
 			smh->player->dealDamageAndKnockback(i->damage, true, true, i->knockback, i->x, i->y);
+			smh->setDebugText("Smiley hit by ExplosionManager");
 		}
 		
 		if (i->timeAlive > i->duration) {

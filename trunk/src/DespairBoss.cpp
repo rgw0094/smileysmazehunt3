@@ -129,6 +129,7 @@ bool DespairBoss::update(float dt) {
 	//Smiley collision
 	if (smh->player->collisionCircle->testBox(isInEvilMode() ? damageCollisionBox : collisionBox)) {
 		smh->player->dealDamageAndKnockback(COLLISION_DAMAGE, true, isInEvilMode() ? 0 : 165, x, y);
+		smh->setDebugText("Smiley hit by DespairBoss");
 	}
 
 	//Do flashing
@@ -630,6 +631,7 @@ void DespairBoss::updateProjectiles(float dt) {
 			switch (i->type) {
 				case PROJECTILE_ICE:
 					smh->player->dealDamage(ICE_DAMAGE, false);
+					smh->setDebugText("Smiley hit by Calypso's ice");
 					smh->player->freeze(FREEZE_DURATION);
 					//Don't delete the ice nova if it hits Smiley.
 					deleteProjectile = false;

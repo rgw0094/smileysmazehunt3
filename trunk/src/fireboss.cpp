@@ -303,6 +303,7 @@ bool FireBoss::update(float dt) {
 		for (int i = 0; i < 3; i++) {
 			if (smh->player->collisionCircle->testBox(collisionBoxes[i])) {
 				smh->player->dealDamageAndKnockback(0.25, true, 150, x, y);
+				smh->setDebugText("Smiley hit by Fireboss1");
 			}
 		}
 	}
@@ -406,6 +407,7 @@ void FireBoss::updateOrbs(float dt) {
 		//Enemy collision
 		if (smh->player->collisionCircle->testBox(i->collisionBox) && !deleteOrb) {
 			smh->player->dealDamage(ORB_DAMAGE, false);
+			smh->setDebugText("Smiley hit by Fireboss1's orb");
 			deleteOrb = true;
 		}
 

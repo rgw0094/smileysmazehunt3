@@ -121,6 +121,7 @@ bool SnowBoss::update(float dt) {
 	if (state == SNOWBOSS_SLIDING) { //test only collisionbox 0
 		if (smh->player->collisionCircle->testBox(collisionBoxes[0])) {
 			smh->player->dealDamageAndKnockback(PENGUIN_SLIDING_DAMAGE, true, 150, x, y);
+			smh->setDebugText("Smiley hit by penguin sliding");
 		}
 	} else {
 		if (smh->player->collisionCircle->testBox(collisionBoxes[0]) ||
@@ -128,6 +129,7 @@ bool SnowBoss::update(float dt) {
 			smh->player->collisionCircle->testBox(collisionBoxes[2])) {
 				
 				smh->player->dealDamageAndKnockback(PENGUIN_COLLISION_DAMAGE, true, 150, x, y);
+				smh->setDebugText("Smiley hit by penguin");
 	
 		}
 	} //end if SLIDING

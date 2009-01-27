@@ -160,6 +160,7 @@ bool MushroomBoss::update(float dt) {
 		//collision
 		if (smh->player->collisionCircle->testBox(collisionRects[0]) || smh->player->collisionCircle->testBox(collisionRects[1])) {
 			smh->player->dealDamageAndKnockback(MUSHBOOM_DAMAGE,true,MUSHBOOM_KNOCKBACK_DISTANCE,x,y);
+			smh->setDebugText("Smiley hit by MushroomBoss");
 		}
 	}
 

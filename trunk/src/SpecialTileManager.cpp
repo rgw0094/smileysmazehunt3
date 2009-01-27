@@ -363,6 +363,7 @@ void SpecialTileManager::updateFlames(float dt) {
 		i->collisionBox->SetRadius(i->x, i->y, 20.0);
 		if (smh->player->collisionCircle->testBox(i->collisionBox)) {
 			smh->player->dealDamageAndKnockback(1.0, true, true, 100.0, i->x, i->y); 
+			smh->setDebugText("Smiley hit by Flame tile");
 		}
 
 		//Flames are put out by ice breath. The flame isn't deleted yet so that

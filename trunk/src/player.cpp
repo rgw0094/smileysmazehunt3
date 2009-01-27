@@ -886,6 +886,7 @@ void Player::doFalling(float dt) {
 		scale = 1.0;
 		rotation = 0.0;
 		this->dealDamage(0.5, true);
+		smh->setDebugText("Smiley just arose from a pit.");
 	}
 
 	//Keep track of where the player was before he fell
@@ -1111,7 +1112,8 @@ void Player::doWater() {
 			//Take damage every half second
 			if (smh->getGameTime() - .5f > lastLavaDamage) {
 				lastLavaDamage = smh->getGameTime();
-				health -= .25f;
+				if (!smh->player->invincible) health -= .25f;
+				smh->setDebugText("Smiley is walking in lava and getting hurt!");
 			}
 		}
 		//Exit Lava
@@ -1148,6 +1150,7 @@ void Player::doWater() {
 			drowning = false;
 			moveTo(enteredWaterX, enteredWaterY);
 			dealDamage(0.5, true);
+			smh->setDebugText("Smiley just recovered from drowning.");
 
 			//If smiley was placed onto an up cylinder, toggle its switch
 			if (Util::isCylinderUp(smh->environment->collision[gridX][gridY])) {

@@ -109,6 +109,7 @@ void E_Tentacle::update(float dt) {
 		//Collision with smiley
 		if (Util::distance(tentacleNodes[i].position.x,tentacleNodes[i].position.y,smh->player->x,smh->player->y) <= radius + smh->player->collisionCircle->radius) {
 			smh->player->dealDamageAndKnockback(damage,true,100,tentacleNodes[i].position.x,tentacleNodes[i].position.y);			
+			smh->setDebugText("Smiley hit by a tentacle");
 		}		
 
 	}
