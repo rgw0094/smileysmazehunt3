@@ -191,6 +191,9 @@ void E_Flailer::updateFlail(float dt) {
 	if (flailing || coolingDown) {
 		if (Util::distance(flailX, flailY, smh->player->x, smh->player->y) <= FLAIL_RADIUS + smh->player->collisionCircle->radius) {	
 			smh->player->dealDamageAndKnockback(damage,true,100,flailX,flailY);
+			std::string debugText;
+			debugText = "Smiley hit by flail belonging to enemy type " + Util::intToString(id);
+			smh->setDebugText(debugText);
 			flailDx *= -1;
 			flailDy *= -1;
 		}

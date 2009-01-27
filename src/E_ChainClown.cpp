@@ -96,6 +96,7 @@ void E_ChainClown::update(float dt) {
 		smh->player->dealDamageAndKnockback(damage,true,100,xClown,yClown);
 		xClownVel=-xClownVel;
 		yClownVel=-yClownVel;
+		smh->setDebugText("Smiley hit by evil clown's clown head, E_ChainClown.cpp");
 	}
 
 }

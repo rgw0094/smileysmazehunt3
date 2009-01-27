@@ -125,11 +125,13 @@ bool DesertBoss::update(float dt) {
 		//Check collision with Smiley
 		if (smh->player->collisionCircle->testBox(collisionBox)) {
 			smh->player->dealDamageAndKnockback(COLLISION_DAMAGE, true, 150, x, y);
+			smh->setDebugText("Smiley hit by Cornwallis himself");
 		}
 
 		//Check collision with Smiley's tongue
 		if (smh->player->getTongue()->testCollision(collisionBox) && smh->getGameTime() > lastHitByTongue + .34f) {
 			smh->player->dealDamageAndKnockback(TONGUE_DAMAGE,true,150,x,y);
+			smh->setDebugText("Smiley hit by Cornwallis by licking him");
 		}
 
 		//The boss only takes damage from smiley's fire breath and when in
@@ -417,6 +419,7 @@ void DesertBoss::doGroundSpikeCollision(float dt) {
 				setGroundSpikeCollisionBox(groundSpikes[i][j].x, groundSpikes[i][j].y);
 				if (smh->player->collisionCircle->testBox(spikeCollisionBox)) {
 					smh->player->dealDamage(GROUND_SPIKE_DAMAGE, true);
+					smh->setDebugText("Smiley hit by Cornwallis groundspike");
 				}
 			}
 		}

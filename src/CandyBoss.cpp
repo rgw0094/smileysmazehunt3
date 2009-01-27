@@ -607,6 +607,7 @@ void CandyBoss::updateNovas(float dt) {
 		if (smh->player->collisionCircle->testCircle(i->collisionCircle)) {
 			smh->player->stun(SHOCKWAVE_STUN_DURATION);
 			smh->player->dealDamage(SHOCKWAVE_DAMAGE, false);
+			smh->setDebugText("Smiley hit by CandyBoss during Shockwave");
 			if (state == CANDY_STATE_JUMPING) {
 				enterState(CANDY_STATE_MULTI_JUMP);
 			}
@@ -675,6 +676,7 @@ void CandyBoss::updateBartlets(float dt) {
 		//Damage the player when they touch or lick a bartlet
 		if (smh->player->collisionCircle->testBox(i->collisionBox) || smh->player->getTongue()->testCollision(i->collisionBox)) {
 			smh->player->dealDamageAndKnockback(BARTLET_DAMAGE, true, false, 130.0, i->x, i->y);
+			smh->setDebugText("Smiley hit by CandyBoss bartlet");
 		}
 	}
 }

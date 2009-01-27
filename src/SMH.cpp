@@ -213,7 +213,7 @@ void SMH::drawGame() {
 			player->gridX, player->gridY, hge->Timer_GetFPS());
 
 		//Debug text
-		resources->GetFont("curlz")->printf(10,700,HGETEXT_LEFT,debugText);
+		resources->GetFont("curlz")->printf(10,700,HGETEXT_LEFT,debugText.c_str());
 	}
 
 	hge->Gfx_EndScene();
@@ -421,16 +421,10 @@ void SMH::log(const char* text) {
 /**
  * This text will be displayed on the debug screen
  */
-void SMH::setDebugText(char* text) {
+void SMH::setDebugText(std::string text) {
 	debugText = text;
 }
 
-/**
- * Returns the debug text
- */
-char* SMH::getDebugText() {
-	return debugText;
-}
 
 /**
  * Generates a random integer in the specified range.

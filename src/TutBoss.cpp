@@ -150,6 +150,7 @@ void TutBoss::doCollision(float dt) {
 	//Hurt the player if he runs into tut
 	if (smh->player->collisionCircle->testBox(collisionBox)) {
 		smh->player->dealDamageAndKnockback(TUTBOSS_DAMAGE,true,TUTBOSS_KNOCKBACK_DISTANCE,x,y);
+		smh->setDebugText("Smiley hit by Tut by running into him");
 	}
 
 	//Tut only takes damage while his tomb is open!
@@ -223,6 +224,7 @@ bool TutBoss::update(float dt) {
 	if (state == TUTBOSS_SHOOTING_LIGHTNING) {
 		if (testLightningCollision() && lightningState != TUT_LIGHTNING_STATE_APPEARING && lightningState != TUT_LIGHTNING_STATE_DISAPPEARING) {
 			smh->player->dealDamage(TUT_LIGHTNING_DAMAGE,true);
+			smh->setDebugText("Smiley hit by Tut's lightning");
 		}
 	}
 

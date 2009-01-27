@@ -96,6 +96,7 @@ void WeaponParticleSystem::Update(float fDeltaTime) {
 			collisionBox->SetRadius(x, y, par->fSize);
 			if (smh->player->collisionCircle->testBox(collisionBox)) {
 				smh->player->dealDamage(NOVA_DAMAGE, true);
+				smh->setDebugText("Smiley hit by ice nova, weaponparticle.cpp");
 			}
 		} else if (type == PARTICLE_ICE_NOVA) {
 			collisionBox->SetRadius(x, y, par->fSize);

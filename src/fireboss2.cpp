@@ -259,6 +259,7 @@ bool FireBossTwo::update(float dt) {
 		for (int i = 0; i < 3; i++) {
 			if (smh->player->collisionCircle->testBox(collisionBoxes[i])) {
 				smh->player->dealDamageAndKnockback(0.25, true, 150, x, y);
+				smh->setDebugText("Smiley hit by Fireboss2 himself");
 			}
 		}
 	}
@@ -787,6 +788,7 @@ void FireBossTwo::updateFlameWalls(float dt) {
 				//Player collision
 				if (!deleteFireBall && smh->player->collisionCircle->testBox(i->fireBalls[j].collisionBox)) {
 					smh->player->dealDamage(FLAME_WALL_DAMAGE, false);
+					smh->setDebugText("Smiley hit by Fireboss2 flamewall");
 					deleteFireBall = true;
 				}
 

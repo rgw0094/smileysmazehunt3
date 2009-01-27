@@ -78,6 +78,7 @@ bool ForestBoss::update(float dt) {
 	//Smiley collision
 	if (smh->player->collisionCircle->testBox(collisionBox)) {
 		smh->player->dealDamageAndKnockback(COLLISION_DAMAGE, true, 165, x, y);
+		smh->setDebugText("Smiley hit by Garmborn, Lord of Treelets");
 	}	
 
 	//Update the treelets and owlets
@@ -190,6 +191,7 @@ void ForestBoss::updateTreelets(float dt) {
 				//Smiley collision
 				if (smh->player->collisionCircle->testBox(treeletCollisionBox)) {
 					smh->player->dealDamageAndKnockback(TREELET_COLLISION_DAMAGE,true, 125,treeletLocs[i].x, treeletLocs[i].y);
+					smh->setDebugText("Smiley hit by Treelet");
 				}
 				
 				//Check for frisbee collision
@@ -417,6 +419,7 @@ void ForestBoss::updateOwlets(float dt) {
 		//Check for collision with Smiley
 		if (i->collisionCircle->testCircle(smh->player->collisionCircle)) {
 			smh->player->dealDamage(OWLET_DAMAGE, true);
+			smh->setDebugText("Smiley hit by owlet");
 			collision = true;
 		}
 
