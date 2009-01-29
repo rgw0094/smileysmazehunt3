@@ -84,6 +84,7 @@ public:
 	float mouthYOffset[8];
 
 	bool invincible;
+	bool uber;
 
 	CollisionCircle *collisionCircle;
 	WeaponParticleSystem *fireBreathParticle;
