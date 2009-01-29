@@ -88,6 +88,8 @@ private:
 	float timeEnteredState;
 	bool moving;
 	float attackAngle;
+	bool addedExtraLavaSquares;
+	bool shotFireNova;
 
 	//Graphics
 	WeaponParticleSystem *fireNova;

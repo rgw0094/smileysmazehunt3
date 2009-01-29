@@ -32,6 +32,8 @@ extern SMH *smh;
 #define FLAME_WALL_DAMAGE 1.0
 #define FLAME_WALL_SPEED 400.0
 
+#define FIREBALL_DAMAGE 1.0
+
 //Attributes
 #define HEALTH 10.00
 #define NOVA_DAMAGE 0.5
@@ -52,6 +54,7 @@ FireBossTwo::FireBossTwo(int gridX, int gridY, int _groupID) {
 	for (int i = 0; i < 3; i++) collisionBoxes[i] = new hgeRect();
 	health = maxHealth = HEALTH;
 	state = FIREBOSS_INACTIVE;
+	moving = false;
 	targetChasePoint = 0;	//Start at the middle location
 	lastAttackTime = timeEnteredState = smh->getGameTime();
 	startedIntroDialogue = false;
@@ -59,6 +62,9 @@ FireBossTwo::FireBossTwo(int gridX, int gridY, int _groupID) {
 	floatY = 0.0;
 	droppedLoot = false;
 	saidVitaminDialogYet = false;
+
+	addedExtraLavaSquares = false; //This makes the pool of lava wider to make sure no squares are safe from the flame launchers
+	shotFireNova = false;
 
 	fireNova = new WeaponParticleSystem("firenova.psi", smh->resources->GetSprite("particleGraphic13"), PARTICLE_FIRE_NOVA2);
 
@@ -313,6 +319,30 @@ void FireBossTwo::updateFireNova(float dt) {
 			}
 		}
 	}
+
+	//Add another column so that there aren't spaces Smiley can be in that are safe from flame launchers
+	int gridX;
+	if (timePassed > 1.5 && !addedExtraLavaSquares && shotFireNova) {
+		
+		//two columns at -5x and +5x which are 5 tiles tall (-2y to +2y)
+		for (int gridY = Util::getGridY(y) - 2; gridY <= Util::getGridY(y) + 2; gridY++) {
+			smh->environment->addTimedTile(Util::getGridX(x) - 5, gridY, WALK_LAVA, 99999.0);
+			smh->environment->addTimedTile(Util::getGridX(x) + 5, gridY, WALK_LAVA, 99999.0);
+		}
+
+		//now fill in the corners
+		smh->environment->addTimedTile(Util::getGridX(x)-4, Util::getGridY(y)-3, WALK_LAVA, 99999.0);
+		smh->environment->addTimedTile(Util::getGridX(x)-4, Util::getGridY(y)+3, WALK_LAVA, 99999.0);
+		smh->environment->addTimedTile(Util::getGridX(x)+4, Util::getGridY(y)-3, WALK_LAVA, 99999.0);
+		smh->environment->addTimedTile(Util::getGridX(x)+4, Util::getGridY(y)+3, WALK_LAVA, 99999.0);
+
+		smh->environment->addTimedTile(Util::getGridX(x)-3, Util::getGridY(y)-4, WALK_LAVA, 99999.0);
+		smh->environment->addTimedTile(Util::getGridX(x)-3, Util::getGridY(y)+4, WALK_LAVA, 99999.0);
+		smh->environment->addTimedTile(Util::getGridX(x)+3, Util::getGridY(y)-4, WALK_LAVA, 99999.0);
+		smh->environment->addTimedTile(Util::getGridX(x)+3, Util::getGridY(y)+4, WALK_LAVA, 99999.0);
+		
+		addedExtraLavaSquares = true;
+	}
 }
 
 /**
@@ -359,6 +389,7 @@ bool FireBossTwo::updateState(float dt) {
 						//Do big attack to own smiley
 						fireNova->FireAt(smh->getScreenX(x), smh->getScreenY(y));
 						lastFireNovaTime = smh->getGameTime();
+						shotFireNova = true;
 						launchFlames(true);
 					}
 				}
@@ -411,8 +442,9 @@ bool FireBossTwo::updateState(float dt) {
 
 		//Launch rotating rings
 		if (smh->timePassedSince(lastAttackTime) > 0.75) {
+			float randomAngle = smh->hge->Random_Float(0,2*PI);
 			for (int i = 0; i < 13; i ++) {
-				addFireBall(x, y, (2.0*PI/13.0)*float(i), 400.0, false, false);
+				addFireBall(x, y, (2.0*PI/13.0)*float(i)+randomAngle, 400.0, false, false);
 			}
 			smh->soundManager->playSound("snd_FirePassBy");
 			lastAttackTime = smh->getGameTime();
@@ -432,7 +464,7 @@ bool FireBossTwo::updateState(float dt) {
 		
 		//Launch stream of fireballs
 		if (smh->timePassedSince(lastAttackTime) > 0.05) {
-			addFireBall(x, y-50.0, Util::getAngleBetween(x,y,smh->player->x,smh->player->y), 700.0, false, false);
+			addFireBall(x, y-50.0, Util::getAngleBetween(x,y-50.0,smh->player->x,smh->player->y), 700.0, false, false);
 			lastAttackTime = smh->getGameTime();
 		}
 
@@ -648,10 +680,23 @@ void FireBossTwo::updateFireBalls(float dt) {
 			i->y += i->dy * dt;
 		}
 
-		//Environment and player collision
+		//Player collision
 		i->collisionBox->SetRadius(i->x, i->y, 15);
-		if (smh->player->collisionCircle->testBox(i->collisionBox) ||
-			smh->environment->collisionAt(i->x, i->y) == UNWALKABLE) 
+		if (smh->player->collisionCircle->testBox(i->collisionBox)) {
+			smh->player->dealDamage(FIREBALL_DAMAGE, true);
+			
+			smh->setDebugText("Smiley hit by fireboss 2's fireball");
+			if (i->explodes) {
+				smh->explosionManager->addExplosion(i->x, i->y, 0.55, ORB_DAMAGE, 0.0);
+				smh->soundManager->playSound("snd_HitByFireball");
+			}
+			delete i->particle;
+			delete i->collisionBox;
+			i = fireBallList.erase(i);
+		}
+
+		//Environment collision
+        else if (smh->environment->collisionAt(i->x, i->y) == UNWALKABLE) 
 		{
 			if (i->explodes) {
 				smh->explosionManager->addExplosion(i->x, i->y, 0.55, ORB_DAMAGE, 0.0);
@@ -660,7 +705,23 @@ void FireBossTwo::updateFireBalls(float dt) {
 			delete i->particle;
 			delete i->collisionBox;
 			i = fireBallList.erase(i);
-		}	
+		}
+
+		//Silly pad collision
+		else if (smh->environment->hasSillyPad(Util::getGridX(i->x),Util::getGridY(i->y))) {
+
+			smh->environment->destroySillyPad(Util::getGridX(i->x),Util::getGridY(i->y));
+
+
+			delete i->particle;
+			delete i->collisionBox;
+			i = fireBallList.erase(i);
+			if (i->explodes) {
+				smh->explosionManager->addExplosion(i->x, i->y, 0.55, ORB_DAMAGE, 0.0);
+				smh->soundManager->playSound("snd_HitByFireball");
+			}
+
+		}
 	}
 }
 
@@ -748,7 +809,7 @@ void FireBossTwo::updateFlameWalls(float dt) {
 		if (i->direction == UP) i->y -= FLAME_WALL_SPEED * dt;
 		if (i->direction == DOWN) i->y += FLAME_WALL_SPEED * dt;
 
-		//Multiple fireballs might hit the same hilly pad in the same frame. We want all the fireballs to
+		//Multiple fireballs might hit the same silly pad in the same frame. We want all the fireballs to
 		//dissapear so we can't destroy them until we know what fireballs have hit them
 		std::list<Point> sillyPadsToDestroy;
 
@@ -787,7 +848,7 @@ void FireBossTwo::updateFlameWalls(float dt) {
 
 				//Player collision
 				if (!deleteFireBall && smh->player->collisionCircle->testBox(i->fireBalls[j].collisionBox)) {
-					smh->player->dealDamage(FLAME_WALL_DAMAGE, false);
+					smh->player->dealDamage(FLAME_WALL_DAMAGE, true);
 					smh->setDebugText("Smiley hit by Fireboss2 flamewall");
 					deleteFireBall = true;
 				}

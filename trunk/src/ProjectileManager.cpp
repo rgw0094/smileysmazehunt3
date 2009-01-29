@@ -134,6 +134,9 @@ void ProjectileManager::update(float dt) {
 		i->gridX = Util::getGridX(i->x);
 		i->gridY = Util::getGridY(i->y);
 		i->timeAlive += dt;
+
+		//If the projectile goes off the map, delete it
+		if (i->gridX < 0 || i->gridX > 255 || i->gridY < 0 || i->gridY > 255) deleteProjectile = true;
 		
 		//Parabola stuff.
 		if (i->hasParabola) {
