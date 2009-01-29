@@ -109,7 +109,7 @@ void Player::reset() {
 		onWarp = falling = breathingFire = inLava = inShallowWater = healing =
 		waterWalk = onWater = drowning = shrinkActive = sprinting = isHovering = 
 		cloaked = springing = usingCane = iceSliding = frozen = 
-		inShrinkTunnel = immobile = invincible = false;
+		inShrinkTunnel = immobile = invincible = uber = false;
 }
 
 /**
@@ -245,6 +245,10 @@ void Player::doMove(float dt) {
 		xDist *= 1.2;
 		yDist *= 1.2;
 	}
+	if (uber && !iceSliding && !springing && !sliding) {
+		xDist *= 3;
+		yDist *= 3;
+	}
 
 	//Check for collision with frozen enemies
 	collisionCircle->set(x + xDist, y + yDist, (PLAYER_WIDTH/2.0-3.0)*shrinkScale);
@@ -335,6 +339,14 @@ void Player::draw(float dt) {
 
 		//Draw Smiley sprite
 		smh->resources->GetAnimation("player")->SetFrame(facing);
+		if (uber) {
+            float uberRed   = (sin(smh->getRealTime()*1.3)+1.0)/2.0*50.0+200.0;
+			float uberGreen = (sin(smh->getRealTime()*1.6)+1.0)/2.0*50.0+200.0;
+			float uberBlue  = (sin(smh->getRealTime()*0.7)+1.0)/2.0*50.0+200.0;
+			smh->resources->GetAnimation("player")->SetColor(ARGB(255,uberRed,uberGreen,uberBlue));
+		} else {
+			smh->resources->GetAnimation("player")->SetColor(ARGB(255,255,255,255));
+		}
 		smh->resources->GetAnimation("player")->RenderEx(512.0, 384.0 - hoveringYOffset - springOffset, 
 			rotation, scale * hoverScale * shrinkScale, scale * hoverScale * shrinkScale);
 
@@ -1629,15 +1641,24 @@ float Player::getHealth() {
 }
 
 float Player::getDamage() {
-	return .25 * smh->saveManager->getDamageModifier();
+	if (!uber)
+		return .25 * smh->saveManager->getDamageModifier();
+	else
+		return 1.0 * smh->saveManager->getDamageModifier();
 }
 
 float Player::getFireBreathDamage() {
-	return 1.0 * smh->saveManager->getDamageModifier();
+	if (!uber)
+		return 1.0 * smh->saveManager->getDamageModifier();
+	else
+		return 4.0 * smh->saveManager->getDamageModifier();
 }
 
 float Player::getLightningOrbDamage() {
-	return 0.15 * smh->saveManager->getDamageModifier();
+	if (!uber)
+		return 0.15 * smh->saveManager->getDamageModifier();
+	else
+		return 0.60 * smh->saveManager->getDamageModifier();
 }
 
 float Player::getMaxHealth() {

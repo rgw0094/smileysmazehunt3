@@ -239,6 +239,11 @@ void SMH::doDebugInput(float dt) {
 		if (hge->Input_KeyDown(HGEK_I)) {
 			player->invincible = !player->invincible;
 		}
+
+		//Toggle uber-ness (really fast, a shitload of damage)
+		if (hge->Input_KeyDown(HGEK_U)) {
+			player->uber = !player->uber;
+		}
 		
 		//Gives you life (& mana) when you press L
 		if (hge->Input_KeyDown(HGEK_L)) {
