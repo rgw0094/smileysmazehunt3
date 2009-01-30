@@ -60,6 +60,8 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fixed Phyrebozz2's attacks, and fixed the "safe spot" where FlameWalls wouldn't be shot||1/29/08||ETI||
+||Fixed glitch where a projectile shot off the map would hurt Smiley randomly||1/29/08||ETI||
 ||If you get to an impossible ice row/col based on last non-ice square, puts you back on last non-ice square||1/23/09||ETI||
 ||Fixed parallax pits so the graphic doesn't jump by 32 pixels||1/23/09||ETI||
 ||Fixed how graphics in the item layer were drawn 1 pixel off||1/23/09||ETI||
