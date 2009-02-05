@@ -671,8 +671,8 @@ Animation bunnySwitch {
 ;***********************
 Sprite mouseCursor {
  texture=general
- rect=96,96,19,27
- hotspot=0,0
+ rect=96,96,32,32
+ hotspot=1,1
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 Sprite sillyPad {
