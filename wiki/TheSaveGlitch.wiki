@@ -26,3 +26,12 @@ Instance 1:
  * Die to Bartli (rather fast, she needs balanced)
  * Click continue, damage is 0.00, items selected from left to right look like orb, freeze, orb; but when opening inventory, only orbs have a check mark; clicking on that orb gets rid of of the one in the right. Note also I don't have freeze yet at this point. Fighting Bartli here has her throw candy, not Jethro.
  * Exiting the program at this point and continuing has the same symptoms as above.
+
+Instance 2: (good news -- this happened when trying to reproduce the above)
+ * Load File 4 from "File 4 candy 02 06 08" (see downloads section of this site)
+ * Run up and change that yellow switch at 105,120
+ * Save at 121,148 (entrance to Candy Mountain)
+ * Go to town and heal
+ * Come back and save at 91,41 (Bartli's cave)
+ * Go to Bartli -- her candy is a thin, vertical black line
+ * Quit the program, come back in, and load, and her candy is normal again
