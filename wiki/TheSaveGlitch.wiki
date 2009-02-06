@@ -15,7 +15,7 @@ Update: the damage being set to 0 is because of the difficulty modifier. So some
 Every time the SAVE GLITCH happens, I'll put the CHRONOLOGY and SYMPTOMS here. Hopefully that'll help us resolve it.
 
 Instance 1:
- * Load File 4 from "File 4 candy 02 06 08"
+ * Load File 4 from "File 4 candy 02 06 08" (see downloads section of this site)
  * Play through the candy level to the point where the 3 white cylinders are down.
  * Save in the save point at 121,148 (at entrance to Candy Mountain)
  * Run to town to heal
