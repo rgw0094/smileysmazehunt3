@@ -568,6 +568,9 @@
 						RelativePath=".\src\E_SadShooter.cpp">
 					</File>
 					<File
+						RelativePath=".\src\E_Spawner.cpp">
+					</File>
+					<File
 						RelativePath=".\src\E_Tentacle.cpp">
 					</File>
 					<File

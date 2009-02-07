@@ -53,6 +53,7 @@ class hgeRect;
 #define ENEMY_FAKE 14
 #define ENEMY_RANGED 15
 #define ENEMY_HOPPER 16
+#define ENEMY_SPAWNER 17
 
 //Stuff on ID layer
 #define ENEMYGROUP_TRIGGER 996
@@ -136,7 +137,7 @@ public:
 	int id, gridX, gridY, facing;
 	bool chases;
 	int mapPath[256][256];
-	int variable1, variable2;
+	int variable1, variable2, variable3;
 
 	int groupID;
 	bool markMap[256][256];
@@ -748,6 +749,30 @@ public:
 	float hopYOffset;
 	float hopDistance, hopAngle;
 
+};
+
+class E_Spawner : public BaseEnemy {
+
+public:
+
+	E_Spawner(int id, int x, int y, int groupID);
+	~E_Spawner();
+
+	//methods
+	void draw(float dt);
+	void update(float dt);
+
+private:
+	void spawnEnemy();
+
+	//Can spawn up to 3 enemy types
+	//The chance to spawn them is defined as 45%, 35%, 20%
+	int enemyTypeToSpawn1;
+	int enemyTypeToSpawn2;
+	int enemyTypeToSpawn3;
+
+	//Variables to keep track of SPAWNING
+	float timeOfLastSpawn;
 };
 
 #endif

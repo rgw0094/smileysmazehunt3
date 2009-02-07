@@ -423,7 +423,7 @@ struct EnemyInfo {
 	int enemyType, wanderType, hp, speed, radius, damage, rangedType;
 	bool land, shallowWater, deepWater, slime, lava, mushrooms;
 	bool immuneToFire, immuneToTongue, immuneToLightning, immuneToStun, immuneToFreeze, invincible;
-	int variable1, variable2;
+	int variable1, variable2, variable3;
 	int numFrames;
 	bool hasOneGraphic;
 	bool chases, hasRangedAttack;
