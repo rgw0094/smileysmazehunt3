@@ -390,7 +390,7 @@ bool FireBossTwo::updateState(float dt) {
 						fireNova->FireAt(smh->getScreenX(x), smh->getScreenY(y));
 						lastFireNovaTime = smh->getGameTime();
 						shotFireNova = true;
-						launchFlames(true);
+						launchFlames(false);
 					}
 				}
 			}
@@ -554,6 +554,8 @@ void FireBossTwo::die() {
 	smh->saveManager->killBoss(FIRE_BOSS2);
 	smh->enemyGroupManager->notifyOfDeath(groupID);
 	smh->soundManager->fadeOutMusic();
+	resetFlameWalls();
+	resetFireBalls();
 }
 
 
