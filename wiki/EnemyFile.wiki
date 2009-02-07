@@ -93,7 +93,7 @@
 ||Realm||^Purple Fangie^, Eye||
 ||Mush Cave||Mushroom, ^Snail^||
 ||Pools||Skullie, Thing||
-||Mt Frostbite||Batlet, Ice Cream Man, Candy Floater, Circular Head Thing||
+||Mt Frostbite||Batlet, Ice Cream Man, Candy Floater, Candy Spawner, 5-frownies||
 ||Swamp||Buzzard, Tentacle, Crab/Clown, ^Green Croc^||
 ||Tut||Tan Snake, Mummy||
 ||Castle||^Red Skullie^, ^Red Spikey Ball^, Batlet(2), Spider, ^Protector^||
