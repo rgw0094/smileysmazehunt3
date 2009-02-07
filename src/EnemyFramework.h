@@ -164,7 +164,8 @@ public:
 	float rangedAttackDelay;
 	float lastRangedAttack;
 	float projectileSpeed;
-	float projectileDamage;	
+	float projectileDamage;
+	float projectileYOffset;
 	float x, y, dx, dy;
 	hgeRect *collisionBox, *futureCollisionBox;
 
@@ -773,6 +774,13 @@ private:
 
 	//Variables to keep track of SPAWNING
 	float timeOfLastSpawn;
+
+	//Variables of floating
+	float angleCoefficient;
+	float angle, angleVel;
+	float lastDirChange;
+	float dirChangeDelay;
+	float shadowOffset;
 };
 
 #endif

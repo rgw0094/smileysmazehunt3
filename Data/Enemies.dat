@@ -1311,9 +1311,9 @@ numEnemies="76"
 73Land=      "T"
 73SWater=    "T"
 73Chases=    "F"
-73Variable1= "0"
-73Variable2= "0"
-73Variable3= "0"
+73Variable1= "75"
+73Variable2= "75"
+73Variable3= "74"
 
 ;Floating green candy which shoots at you
 74Name=      "Haliira"

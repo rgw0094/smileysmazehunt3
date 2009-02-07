@@ -62,6 +62,7 @@ void BaseEnemy::initEnemy(int _id, int _gridX, int _gridY, int _groupID) {
 		rangedAttackDelay = smh->gameData->getEnemyInfo(id).delay;
 		projectileSpeed = smh->gameData->getEnemyInfo(id).projectileSpeed; //Here is a float-to-int conversion
 		projectileDamage = smh->gameData->getEnemyInfo(id).projectileDamage;
+		projectileYOffset = 0;
 	}
 
 	//Set pathing shit
