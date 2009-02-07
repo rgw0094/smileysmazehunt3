@@ -22,8 +22,8 @@ void ES_RangedAttack::update(float dt) {
 	if (!owner->frozen && !owner->stunned && !smh->player->isInvisible() &&
 		smh->getGameTime() - owner->rangedAttackDelay > owner->lastRangedAttack) {
 			owner->lastRangedAttack = smh->getGameTime();
-			smh->projectileManager->addProjectile(owner->x, owner->y, owner->projectileSpeed, 
-				Util::getAngleBetween(owner->x, owner->y, smh->player->x, smh->player->y), 
+			smh->projectileManager->addProjectile(owner->x, owner->y - owner->projectileYOffset, owner->projectileSpeed, 
+				Util::getAngleBetween(owner->x, owner->y - owner->projectileYOffset, smh->player->x, smh->player->y), 
 				owner->projectileDamage, true, owner->rangedType, true);
 	}
 

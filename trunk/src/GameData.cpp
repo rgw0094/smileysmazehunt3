@@ -349,8 +349,8 @@ void GameData::loadEnemyData() {
 		//Variable 3
 		varName = Util::intToString(i);
 		varName += "Variable3";
-		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].variable2 = 0;
-		else enemyInfo[i].variable2 = atoi(enemyStringTable->GetString(varName.c_str()));
+		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].variable3 = 0;
+		else enemyInfo[i].variable3 = atoi(enemyStringTable->GetString(varName.c_str()));
 					
 		//Has a ranged attack
 		varName = Util::intToString(i);

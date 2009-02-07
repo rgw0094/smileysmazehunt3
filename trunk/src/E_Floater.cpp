@@ -15,8 +15,8 @@ E_Floater::E_Floater(int id, int gridX, int gridY, int groupID) {
 	//Call parent init function
 	initEnemy(id, gridX, gridY, groupID);
 
-	//Doesn't use states
-	currentState = NULL;
+	//Start in the wander state
+	setState(new ES_Wander(this));
 
 	dealsCollisionDamage = false;
 	facing = LEFT;
@@ -44,6 +44,7 @@ void E_Floater::update(float dt) {
 
 	//Update floating shit
 	shadowOffset = 35.0 + 12.0 * cos(smh->getGameTime() * 2.0);
+	projectileYOffset = shadowOffset;
 	collisionBox->SetRadius(x,y-shadowOffset,radius);
 	
 	//Update position
@@ -79,6 +80,13 @@ void E_Floater::update(float dt) {
 			" at grid (" + Util::intToString(gridX) + "," + Util::intToString(gridY) +
 			") pos (" + Util::intToString((int)x) + "," + Util::intToString((int)y) + ")";
 		smh->setDebugText(debugText);
+	}
+
+	//see if close enough to player to shoot
+	if (hasRangedAttack && canShootPlayer()) {
+		setState(new ES_RangedAttack(this));
+	} else {
+		setState(new ES_Wander(this));
 	}
 
 	move(dt);
