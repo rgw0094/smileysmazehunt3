@@ -25,6 +25,7 @@
 ||Invincible||If the enemy is invincible||T/F||N||
 ||Variable 1||Usage is enemy-dependent, see below||any int||N||
 ||Variable 2||Usage is enemy-dependent, see below||any int||N||
+||Variable 3||Usage is enemy-dependent, see below||any int||N||
 ||Chases||If the enemy chases Smiley when he gets near||T/F||If EnemyType==0||
 ||HasRanged||If the enemy has a ranged attack||T/F||??||
 ||Range||Projectile attack range||any int||If EnemyType==0 && HasRanged==T||
@@ -35,7 +36,7 @@
 
 ----
 = Enemy Types =
-||Code||Enemy Type||Variable 1||Variable 2||
+||Code||Enemy Type||Variable 1||Variable 2||Variable 3||
 ||0||Basic Enemy|| || ||
 ||1||Evil eye|| || ||
 ||2||Gumdrop|| || ||
