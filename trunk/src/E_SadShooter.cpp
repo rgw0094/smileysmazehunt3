@@ -15,6 +15,8 @@ extern SMH *smh;
 
 E_SadShooter::E_SadShooter(int id, int x, int y, int groupID) {
 
+	smh->log("Sad Shooter init");
+
 	//Call parent's init function
 	initEnemy(id, x, y, groupID);
 
@@ -98,14 +100,7 @@ void E_SadShooter::update(float dt) {
 		//Reflect different types of projectiles
 		smh->projectileManager->reflectProjectilesInBox(collisionBlocker,PROJECTILE_FRISBEE);
 		smh->projectileManager->reflectProjectilesInBox(collisionBlocker,PROJECTILE_LIGHTNING_ORB);
-
-
-
-
-
-		
+	
 	}
-
-
 
 }

@@ -1,6 +1,6 @@
 [HGESTRINGTABLE]
 
-numEnemies="73"
+numEnemies="74"
 
 ;Croc
 0Name=      "Crazy Croc"
@@ -1296,3 +1296,21 @@ numEnemies="73"
 72Land=      "T"
 72SWater=    "T"
 72Chases=    "F"
+
+;Floating red candy which spawns ice cream cones
+73Name=      "Red Spawner"
+73GCol=	     "12"
+73GRow=	     "0"
+73OneGraphic="T"
+73EnemyType= "17"
+73WanderType="0"
+73HP=        "100"
+73Damage=    "25"
+73Radius=    "28"
+73Speed=     "100"
+73Land=      "T"
+73SWater=    "T"
+73Chases=    "F"
+73Variable1= "0"
+73Variable2= "3"
+73Variable3= "4"

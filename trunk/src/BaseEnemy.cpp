@@ -54,6 +54,7 @@ void BaseEnemy::initEnemy(int _id, int _gridX, int _gridY, int _groupID) {
 	chases = smh->gameData->getEnemyInfo(id).chases;
 	variable1 = smh->gameData->getEnemyInfo(id).variable1;
 	variable2 = smh->gameData->getEnemyInfo(id).variable2;
+	variable3 = smh->gameData->getEnemyInfo(id).variable3;
 	hasRangedAttack = smh->gameData->getEnemyInfo(id).hasRangedAttack;
 	if (hasRangedAttack) {
 		rangedType = smh->gameData->getEnemyInfo(id).rangedType;	
@@ -562,9 +563,10 @@ void BaseEnemy::doPlayerCollision() {
 	if (dealsCollisionDamage && smh->player->collisionCircle->testBox(collisionBox)) {
 		smh->player->dealDamageAndKnockback(damage, true, 115, x, y);
 		std::string debugText;
-		debugText = "baseenemy.cpp Smiley hit by enemy type " + Util::intToString(id) +
-			" at grid (" + Util::intToString(gridX) + "," + Util::intToString(gridY) +
-			") pos (" + Util::intToString((int)x) + "," + Util::intToString((int)y) + ")";
+		debugText = "baseenemy.cpp Smiley hit by enemy id " + Util::intToString(id) +
+			//" at grid (" + Util::intToString(gridX) + "," + Util::intToString(gridY) +
+			//") pos (" + Util::intToString((int)x) + "," + Util::intToString((int)y) + ")";
+			" type " + Util::intToString((int)enemyType);
 		smh->setDebugText(debugText);
 	}
 }
