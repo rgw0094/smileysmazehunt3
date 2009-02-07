@@ -1509,8 +1509,8 @@ Animation phyrebozzRightMouth {
  resgroup=100
 }
 Sprite flameLauncher {
- texture=general
- rect=256,128,64,64
+ texture=phyrebozzTx
+ rect=129,158,64,64
  hotspot=32,32
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=100
@@ -1832,8 +1832,8 @@ Sprite tutProjectileMummy {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 Sprite CandyProjectile {
- texture=general
- rect=196,144,58,45
+ texture="Graphics/Bartli.png"
+ rect=132,172,58,45
  hotspot=29,22
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=106
