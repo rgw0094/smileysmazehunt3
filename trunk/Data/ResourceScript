@@ -725,7 +725,7 @@ Sprite tutorialManDown {
 }
 Sprite parallaxPit {
  texture=general
- rect=960,0,32,32
+ rect=960,0,64,64
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
