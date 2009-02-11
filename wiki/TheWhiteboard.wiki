@@ -8,6 +8,8 @@
  * Add enemies to levels
 
 === Programming To Do ===
+ * Leet Death Effect
+ * Implement version of SoundManager->playSound that won't play the same sound within a specified time interval
  * Lovecraftian Boss
  * Barvinoid
  * Merge projectile texture with sprites texture
