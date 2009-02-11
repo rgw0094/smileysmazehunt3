@@ -83,6 +83,7 @@ public:
 	float mouthXOffset[8];
 	float mouthYOffset[8];
 
+	bool dontUpdate;
 	bool invincible;
 	bool uber;
 

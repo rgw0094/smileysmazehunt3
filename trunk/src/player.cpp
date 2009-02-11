@@ -92,6 +92,7 @@ Player::~Player() {
 
 void Player::reset() {
 
+	dontUpdate = false;
 	scale = hoverScale = shrinkScale = 1.0;
 	rotation = 0.0;
 	facing = DOWN;
@@ -118,6 +119,8 @@ void Player::reset() {
  * on that new position!
  */
 void Player::update(float dt) {
+
+	if (dontUpdate) return;
 
 	//Movement stuff
 	setFacingDirection();
