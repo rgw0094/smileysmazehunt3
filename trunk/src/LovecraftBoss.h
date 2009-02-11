@@ -43,6 +43,7 @@ private:
 	void enterState(int newState);
 	void spawnTentacle();
 	void updateEye(float dt);
+	void updateCollision(float dt);
 	void openEye(std::string type);
 	void closeEye();
 	void deleteTentacles();

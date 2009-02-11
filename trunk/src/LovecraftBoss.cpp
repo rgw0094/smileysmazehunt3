@@ -3,6 +3,7 @@
 #include "EnemyFramework.h"
 #include "WindowFramework.h"
 #include "Player.h"
+#include "CollisionCircle.h"
 
 extern SMH *smh;
 
@@ -34,6 +35,9 @@ extern SMH *smh;
 
 #define EYE_X_OFFSET 0
 #define EYE_Y_OFFSET 50
+
+//Attributes
+#define COLLISION_DAMAGE 2.0
 
 LovecraftBoss::LovecraftBoss(int _gridX, int _gridY, int _groupID) {
 	
@@ -161,8 +165,21 @@ bool LovecraftBoss::update(float dt) {
 	};
 
 	updateEye(dt);
+	updateCollision(dt);
 
 	return false;
+}
+
+void LovecraftBoss::updateCollision(float dt) {
+
+	if (smh->player->collisionCircle->testBox(bodyCollisionBox)) {
+		smh->player->dealDamageAndKnockback(COLLISION_DAMAGE, true, false, 225.0, x, y);
+	}
+
+	if (smh->player->getTongue()->testCollision(bodyCollisionBox)) {
+		smh->soundManager->playSound("snd_HitInvulnerable", 0.5);
+	}
+
 }
 
 void LovecraftBoss::updateEye(float dt) {
