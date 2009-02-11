@@ -439,7 +439,7 @@ const char* SmileyInput::getInputName(int whichInput) {
 		case INPUT_AIM: return "Aim";
 		case INPUT_PREVIOUS_ABILITY: return "Last Ability";
 		case INPUT_NEXT_ABILITY: return "Next Ability";
-		case INPUT_PAUSE: return "Pause";
+		case INPUT_PAUSE: return "Inventory/Map";
 		default: return "Error";
 	}
 }

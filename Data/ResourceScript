@@ -1747,20 +1747,44 @@ Sprite KingTutLightningWedge {
 ;**** LOVECRAFTIAN BOSS *****
 ;*** Resource group  108 ****
 ;****************************
-Sprite LovecraftBody {
- texture="Graphics/Lovecraft.png"
- rect=0,0,192,192
- hotspot=96,96
- blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=108
+Texture LovecraftTx {
+ filename="Graphics/Lovecraft.png"
+ resgroup=105
 }
 Animation LightningEye {
- texture="Graphics/Lovecraft.png"
+ texture=LovecraftTx
  rect=0,193,88,41
  frames=5
  fps=10.0
  mode=LOOP
  hotspot=44,20
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=108
+}
+Animation IceEye {
+ texture=LovecraftTx
+ rect=0,235,88,41
+ frames=5
+ fps=10.0
+ mode=LOOP
+ hotspot=44,20
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=108
+}
+Animation FireEye {
+ texture=LovecraftTx
+ rect=0,277,88,41
+ frames=5
+ fps=10.0
+ mode=LOOP
+ hotspot=44,20
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=108
+}
+Sprite TentacleShadow {
+ texture=LovecraftTx
+ rect=1,319,45,9
+ hotspot=23,4
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=108
 }
