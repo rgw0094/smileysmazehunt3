@@ -150,10 +150,13 @@ void SoundManager::playSound(const char* sound) {
 }
 
 void SoundManager::playSound(const char* sound, float delay) {
-	if (smh->timePassedSince(lastSoundTime < delay)) {
+
+	//TODO: implement delay
+
+	//if (smh->timePassedSince(lastSoundTime) >= delay) {
 		smh->hge->Effect_Play(smh->resources->GetEffect(sound));
 		lastSoundTime = smh->getGameTime();
-	}
+	//}
 }
 
 void SoundManager::stopAbilityChannel() {
