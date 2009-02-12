@@ -9,11 +9,10 @@ class hgeRect;
 struct Tentacle {
 	float x, y;
 	int state;
-	float angleVel, angleCoefficient, angle;
-	float lastDirChangeTime;
-	float dirChangeDelay;
-	float speed;
+	float timeEnteredState;
 	float randomTimeOffset;
+	float tentacleVisiblePercent;
+	float duration;
 	hgeDistortionMesh *mesh;
 	hgeRect *collisionBox;
 };
@@ -41,15 +40,16 @@ private:
 	void drawBody(float dt);
 	void drawEye(float dt);
 	void enterState(int newState);
-	void spawnTentacle();
+	void spawnTentacle(float duration);
 	void updateEye(float dt);
 	void updateCollision(float dt);
 	void openEye(std::string type);
 	void closeEye();
 	void deleteTentacles();
+	void updateTentacles(float dt);
 
-	void doInactive(float dt);
-	void doTentacles(float dt);
+	void doInactiveState(float dt);
+	void doTentacleState(float dt);
 
 	float timeInState;
 	int state;
@@ -57,6 +57,7 @@ private:
 	int groupID;
 	float x, y;
 	float arenaCenterX, arenaCenterY;
+	float lastTentacleSpawnTime;
 
 	EyeStatus eyeStatus;
 	std::list<Tentacle> tentacleList;
