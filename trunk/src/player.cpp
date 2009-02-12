@@ -120,7 +120,10 @@ void Player::reset() {
  */
 void Player::update(float dt) {
 
-	if (dontUpdate) return;
+	if (dontUpdate) {
+		dx = dy = 0.0;	
+		return;
+	}
 
 	//Movement stuff
 	setFacingDirection();

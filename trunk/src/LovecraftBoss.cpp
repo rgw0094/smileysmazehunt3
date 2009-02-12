@@ -12,9 +12,9 @@ extern SMH *smh;
 #define LS_TENTACLES 1
 
 //Tentacle states
-#define TENTACLE_HIDDEN 0
-#define TENTACLE_EXTENDING 1
-#define TENTACLE_HIDING 2
+#define TENTACLE_ENTERING 0
+#define TENTACLE_EXTENDED 1
+#define TENTACLE_EXITING 2
 
 //Eye states
 #define EYE_CLOSED 0
@@ -35,6 +35,9 @@ extern SMH *smh;
 
 #define EYE_X_OFFSET 0
 #define EYE_Y_OFFSET 50
+
+#define TENTACLE_WIDTH 56
+#define TENTACLE_HEIGHT 185
 
 //Attributes
 #define COLLISION_DAMAGE 2.0
@@ -111,8 +114,8 @@ void LovecraftBoss::drawBody(float dt) {
 			bodyDistortionMesh->SetDisplacement(
 				j, //column
 				i, //row
-				cosf(smh->getGameTime()*3+(i+j)/3)*1.2, //dx
-				sinf(smh->getGameTime()*3+(i+j)/3)*1.2, //dy
+				cosf(smh->getRealTime()*3+(i+j)/3)*1.2, //dx
+				sinf(smh->getRealTime()*3+(i+j)/3)*1.2, //dy
 				HGEDISP_NODE
 			);
 		}
@@ -126,21 +129,24 @@ void LovecraftBoss::drawTentacles(float dt) {
 
 	for (std::list<Tentacle>::iterator i = tentacleList.begin(); i != tentacleList.end(); i++) {
 
-		//Update distortion mesh
-		for (int x = 0; x < TENTACLE_MESH_X_GRANULARITY; x++) {
-			for(int y = 0; y < TENTACLE_MESH_Y_GRANULARITY-1; y++) {
-				i->mesh->SetDisplacement(
-					x, //column
-					y, //row
-					cosf((smh->getGameTime() + i->randomTimeOffset)*3.0+(TENTACLE_MESH_Y_GRANULARITY-y))*2.5*y, //dx
-					sinf((smh->getGameTime() + i->randomTimeOffset)*3.0+(x+y)/2)*2, //dy					
-					HGEDISP_NODE); //reference
+		//Update distortion mesh when the tentacles are fully extended
+		if (i->state == TENTACLE_EXTENDED) {
+			float t = smh->timePassedSince(i->timeEnteredState) + i->randomTimeOffset;
+			for (int x = 0; x < TENTACLE_MESH_X_GRANULARITY; x++) {
+				for(int y = 0; y < TENTACLE_MESH_Y_GRANULARITY-1; y++) {
+					i->mesh->SetDisplacement(
+						x, //column
+						y, //row
+						cosf(t*3.0+(TENTACLE_MESH_Y_GRANULARITY-y))*2.5*y, //dx
+						sinf(t*3.0+(x+y)/2)*2, //dy					
+						HGEDISP_NODE); //reference
+				}
 			}
 		}
 
-		i->mesh->Render(smh->getScreenX(i->x), smh->getScreenY(i->y));
-
-		//smh->drawGlobalSprite("TentacleShadow", i->x, i->y);
+		smh->hge->Gfx_SetClipping(smh->getScreenX(i->x), smh->getScreenY(i->y) + TENTACLE_HEIGHT*(1.0-i->tentacleVisiblePercent), TENTACLE_WIDTH, TENTACLE_HEIGHT * i->tentacleVisiblePercent);
+		i->mesh->Render(smh->getScreenX(i->x), smh->getScreenY(i->y + TENTACLE_HEIGHT*(1.0-i->tentacleVisiblePercent)));
+		smh->hge->Gfx_SetClipping();
 	}
 	
 }
@@ -155,17 +161,20 @@ void LovecraftBoss::drawEye(float dt) {
 
 bool LovecraftBoss::update(float dt) {
 
+	timeInState += dt;
+
 	switch (state) {
 		case LS_INACTIVE:
-			doInactive(dt);
+			doInactiveState(dt);
 			break;
 		case LS_TENTACLES:
-			doTentacles(dt);
+			doTentacleState(dt);
 			break;
 	};
 
 	updateEye(dt);
 	updateCollision(dt);
+	updateTentacles(dt);
 
 	return false;
 }
@@ -198,7 +207,36 @@ void LovecraftBoss::updateEye(float dt) {
 	}
 }
 
-void LovecraftBoss::doInactive(float dt) {
+void LovecraftBoss::updateTentacles(float dt) 
+{
+	for (std::list<Tentacle>::iterator i = tentacleList.begin(); i != tentacleList.end(); i++) 
+	{
+		if (i->state == TENTACLE_ENTERING) 
+		{
+			i->tentacleVisiblePercent += 3.5 * dt;
+			if (i->tentacleVisiblePercent >= 1.0) {
+				i->tentacleVisiblePercent = 1.0;
+				i->state = TENTACLE_EXTENDED;
+			}
+		} 
+		else if (i->state == TENTACLE_EXTENDED) 
+		{
+			if (smh->timePassedSince(i->timeEnteredState) > i->duration) {
+				i->state = TENTACLE_EXITING;
+			}
+		} 
+		else if (i->state == TENTACLE_EXITING) 
+		{
+			i->tentacleVisiblePercent -= 3.5 * dt;
+			if (i->tentacleVisiblePercent <= 0.0) {
+				delete i->collisionBox;
+				i = tentacleList.erase(i);
+			}
+		}
+	}
+}
+
+void LovecraftBoss::doInactiveState(float dt) {
 
 	//When smiley triggers the boss' enemy blocks start his dialogue.
 	if (!startedIntroDialogue) {
@@ -230,44 +268,16 @@ void LovecraftBoss::doInactive(float dt) {
 
 }
 
-void LovecraftBoss::doTentacles(float dt) {
+void LovecraftBoss::doTentacleState(float dt) {
 
-	int tentaclesToRespawn = 0;
-
-	for (std::list<Tentacle>::iterator i = tentacleList.begin(); i != tentacleList.end(); i++) {
-
-		/**
-		//Hidden state - the tentacle shadows move around randomly
-		if (i->state == TENTACLE_HIDDEN) {
-
-			//Periodically change directions
-			if (smh->timePassedSince(i->lastDirChangeTime) > i->dirChangeDelay) {
-				i->angleCoefficient = smh->randomFloat(50.0, 100.0);
-				if (smh->randomInt(0,1) == 1) i->angleCoefficient *= -1;
-
-				i->dirChangeDelay = smh->randomFloat(2.0,3.0);
-				i->lastDirChangeTime = smh->getGameTime();
-				i->speed = smh->randomFloat(200.0, 400.0);
-			}
-
-			i->angleVel = i->angleCoefficient * cos(smh->getGameTime()) * dt;
-			i->angle += i->angleVel * dt;
-			i->x += i->speed * cos(i->angle) * dt;
-			i->y += i->speed * sin(i->angle) * dt;
-
-			If the tentacle gets too far away from the center of the arena it will dissapear and respawn
-			if (Util::distance(i->x, i->y, arenaCenterX, arenaCenterY) > 400.0) {
-				i = tentacleList.erase(i);
-				tentaclesToRespawn++;
-			}
-		}*/
-
+	if (smh->timePassedSince(lastTentacleSpawnTime) > 4.5) {
+		lastTentacleSpawnTime = smh->getGameTime();
+		
+		for (int i = 0; i < 5; i++) {
+			spawnTentacle(4.0);
+		}
 	}
-
-	for (int i = 0; i < tentaclesToRespawn; i++) {
-		spawnTentacle();
-	}
-
+	
 }
 
 //~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
@@ -279,30 +289,27 @@ void LovecraftBoss::enterState(int newState) {
 	state = newState;
 
 	if (state == LS_TENTACLES) {
-		for (int i = 0; i < 5; i++) {
-			spawnTentacle();
-		}
+		lastTentacleSpawnTime = -10.0;
 	}
-
 }
 
-void LovecraftBoss::spawnTentacle() 
+void LovecraftBoss::spawnTentacle(float duration) 
 {
 	float angle = smh->randomFloat(0, 2.0 * PI);
-	float dist = smh->randomFloat(25.0, 350.0);
+	float dist = smh->randomFloat(100.0, 350.0);
 
 	Tentacle tentacle;
 	tentacle.x = arenaCenterX + dist * cos(angle);
 	tentacle.y = arenaCenterY + dist * sin(angle);
-	tentacle.angle = smh->randomFloat(0.0, 2.0 * PI);
-	tentacle.state = TENTACLE_HIDDEN;
-	tentacle.lastDirChangeTime = smh->getGameTime();
-	tentacle.dirChangeDelay = 0.0;
+	tentacle.state = TENTACLE_ENTERING;
+	tentacle.timeEnteredState = smh->getGameTime();
+	tentacle.tentacleVisiblePercent = 0.0;
 	tentacle.collisionBox = new hgeRect();
+	tentacle.duration = duration;
 
 	tentacle.mesh = new hgeDistortionMesh(TENTACLE_MESH_X_GRANULARITY, TENTACLE_MESH_Y_GRANULARITY);
 	tentacle.mesh->SetTexture(smh->resources->GetTexture("LovecraftTx"));
-	tentacle.mesh->SetTextureRect(195, 3, 56, 185);
+	tentacle.mesh->SetTextureRect(195, 3, TENTACLE_WIDTH, TENTACLE_HEIGHT);
 	tentacle.randomTimeOffset = smh->randomFloat(0.0, 3.0);
 
 	tentacleList.push_back(tentacle);
