@@ -598,6 +598,11 @@ private:
 // Encapsulates all sound logic. This class should be used to 
 // play any sounds or music.
 //----------------------------------------------------------------
+struct Sound {
+	std::string name;
+	float lastTimePlayed;
+};
+
 class SoundManager {
 
 public:
@@ -629,13 +634,13 @@ private:
 	HCHANNEL abilityChannel;		//Audio channel for player ability sound effects
 	HCHANNEL environmentChannel;	//Audio channel for environment sound effects
 	
+	std::list<Sound> lastPlayTimes;
 	std::string currentMusic;
 	std::string previousMusic;
 	int previousMusicPosition;
 	int musicVolume;
 	int soundVolume;
 	float lastSwitchSoundTime;
-	float lastSoundTime;
 
 };
 
