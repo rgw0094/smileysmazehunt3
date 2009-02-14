@@ -178,12 +178,12 @@ bool SnowBoss::update(float dt) {
 			float angle3 = angleToSmiley+0.5;
 			float angle4 = angleToSmiley-1.6;
 			float angle5 = angleToSmiley+1.6;
-			smh->projectileManager->addProjectile(x,y-51.0,FLYING_FISH_SPEED,angleToSmiley,FLYING_FISH_DAMAGE,true,PROJECTILE_PENGUIN_FISH,true);
-			smh->projectileManager->addProjectile(x,y-51.0,FLYING_FISH_SPEED,angle2,FLYING_FISH_DAMAGE,true,PROJECTILE_PENGUIN_FISH,true);
-			smh->projectileManager->addProjectile(x,y-51.0,FLYING_FISH_SPEED,angle3,FLYING_FISH_DAMAGE,true,PROJECTILE_PENGUIN_FISH,true);
+			smh->projectileManager->addProjectile(x,y-51.0,FLYING_FISH_SPEED,angleToSmiley,FLYING_FISH_DAMAGE,true,false,PROJECTILE_PENGUIN_FISH,true);
+			smh->projectileManager->addProjectile(x,y-51.0,FLYING_FISH_SPEED,angle2,FLYING_FISH_DAMAGE,true,false,PROJECTILE_PENGUIN_FISH,true);
+			smh->projectileManager->addProjectile(x,y-51.0,FLYING_FISH_SPEED,angle3,FLYING_FISH_DAMAGE,true,false,PROJECTILE_PENGUIN_FISH,true);
 			if (numFishLaunched >= NUM_FISH_VOLLEYS-1) {
-				smh->projectileManager->addProjectile(x,y-51.0,FLYING_FISH_SPEED,angle4,FLYING_FISH_DAMAGE,true,PROJECTILE_PENGUIN_FISH,true);
-				smh->projectileManager->addProjectile(x,y-51.0,FLYING_FISH_SPEED,angle5,FLYING_FISH_DAMAGE,true,PROJECTILE_PENGUIN_FISH,true);
+				smh->projectileManager->addProjectile(x,y-51.0,FLYING_FISH_SPEED,angle4,FLYING_FISH_DAMAGE,true,false,PROJECTILE_PENGUIN_FISH,true);
+				smh->projectileManager->addProjectile(x,y-51.0,FLYING_FISH_SPEED,angle5,FLYING_FISH_DAMAGE,true,false,PROJECTILE_PENGUIN_FISH,true);
 			}
 			smh->soundManager->playSound("snd_sillyPad");
 			lastFishLaunched=smh->getGameTime();

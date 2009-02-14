@@ -557,7 +557,7 @@ void Player::doAbility(float dt) {
 			mana -= smh->gameData->getAbilityInfo(LIGHTNING_ORB).manaCost;
 			lastOrb = smh->getGameTime();
 			smh->soundManager->playSound("snd_LightningOrb");
-			smh->projectileManager->addProjectile(x, y, 700.0, angles[facing]-.5*PI, getLightningOrbDamage(), false, PROJECTILE_LIGHTNING_ORB, true);
+			smh->projectileManager->addProjectile(x, y, 700.0, angles[facing]-.5*PI, getLightningOrbDamage(), false, false,PROJECTILE_LIGHTNING_ORB, true);
 		}
 
 		//Start using cane
@@ -585,7 +585,7 @@ void Player::doAbility(float dt) {
 		//Throw frisbee
 		if (gui->getSelectedAbility() == FRISBEE && !smh->projectileManager->frisbeeActive() && mana >= smh->gameData->getAbilityInfo(FRISBEE).manaCost) {
 			mana -= smh->gameData->getAbilityInfo(FRISBEE).manaCost;
-			smh->projectileManager->addProjectile(x,y,400.0,angles[facing]-.5*PI,0,false,PROJECTILE_FRISBEE, true);
+			smh->projectileManager->addProjectile(x,y,400.0,angles[facing]-.5*PI,0,false,false,PROJECTILE_FRISBEE, true);
 		}
 
 		//Toggle shrink mode

@@ -9,7 +9,7 @@ class hgeRect;
 class hgeSprite;
 
 //Projectile Types
-#define NUM_PROJECTILES 12
+#define NUM_PROJECTILES 13
 #define PROJECTILE_ALL -1
 #define PROJECTILE_1 0
 #define PROJECTILE_FRISBEE 1
@@ -23,6 +23,7 @@ class hgeSprite;
 #define PROJECTILE_TUT_LIGHTNING 9
 #define PROJECTILE_TUT_MUMMY 10
 #define PROJECTILE_CANDY 11
+#define PROJECTILE_FIGURE_8 12
 
 #define LIGHTNING_ORB_SPEED 650.0
 
@@ -30,6 +31,7 @@ struct Projectile {
 
 	//Generic shit
 	float x, y, dx, dy, speed, angle;
+	float startX,startY;
 	float damage;
 	int gridX, gridY;
 	bool changedGridSquare;
@@ -86,9 +88,9 @@ public:
 	int killProjectilesInCircle(float x, float y, float radius, int type);
 	int rotateLeftOrRightForMinimumRotation(float projectileAngle, float angleToTarget);
 
-	void addProjectile(float x, float y, float speed, float angle, float damage, bool hostile, 
+	void addProjectile(float x, float y, float speed, float angle, float damage, bool hostile, bool homing,
 		int id, bool makesSmileyFlash);
-	void addProjectile(float x, float y, float speed, float angle, float damage, bool hostile, 
+	void addProjectile(float x, float y, float speed, float angle, float damage, bool hostile, bool homing,
 		int id, bool makesSmileyFlash, bool hasParabola, float parabolaLength, 
 		float parabolaDuration, float parabolaHeight);
 

@@ -282,7 +282,7 @@ void MushroomBoss::spawnMiniMushroom() {
 void MushroomBoss::spawnMiniMushroomProjectile() {
 	smh->projectileManager->addProjectile(x,y,MINI_MUSHROOM_PROJECTILE_SPEED,
 			Util::getAngleBetween(x,y,smh->player->x,smh->player->y)+smh->randomFloat(-PI/32,PI/32),
-			MINI_MUSHROOM_PROJECTILE_DAMAGE,true,MINI_MUSHROOM_PROJECTILE_ID,true);
+			MINI_MUSHROOM_PROJECTILE_DAMAGE,true,false,MINI_MUSHROOM_PROJECTILE_ID,true);
 }
 
 void MushroomBoss::doSpiral(float dt) {

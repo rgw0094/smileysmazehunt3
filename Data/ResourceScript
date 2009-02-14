@@ -1862,6 +1862,12 @@ Sprite CandyProjectile {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=106
 }
+Sprite Figure8Projectile {
+ texture=projectileTx
+ rect=0,214,32,32
+ hotspot=16,16
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
 
 ;**************************
 ;******** Tiles ********

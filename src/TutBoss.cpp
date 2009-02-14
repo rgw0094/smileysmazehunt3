@@ -390,7 +390,7 @@ void TutBoss::fireLightning() {
 	float angleToSmiley = Util::getAngleBetween(x,y,smh->player->x,smh->player->y);
 	angleToSmiley += smh->hge->Random_Float(-TUTBOSS_DOUBLE_SHOT_SPREAD,TUTBOSS_DOUBLE_SHOT_SPREAD);
 
-	smh->projectileManager->addProjectile(x,y,TUTBOSS_SHOT_SPEED,angleToSmiley,TUTBOSS_SHOT_DAMAGE,true,PROJECTILE_TUT_LIGHTNING,true);
+	smh->projectileManager->addProjectile(x,y,TUTBOSS_SHOT_SPEED,angleToSmiley,TUTBOSS_SHOT_DAMAGE,true,true,PROJECTILE_TUT_LIGHTNING,true);
 	timeOfLastShot = smh->getGameTime();
 }
 
@@ -546,7 +546,7 @@ void TutBoss::doTombOpen(float dt) {
 
 	//Periodically spawn mummies (up to a maximum of 4)
 	if (numMummiesSpawned < 4 && smh->timePassedSince(lastMummySpawnTime) > MUMMY_SPAWN_DELAY) {
-		smh->projectileManager->addProjectile(x,y,MUMMY_PROJECTILE_SPEED,mummyLaunchAngle,MUMMY_PROJECTILE_DAMAGE,true,PROJECTILE_TUT_MUMMY,true);
+		smh->projectileManager->addProjectile(x,y,MUMMY_PROJECTILE_SPEED,mummyLaunchAngle,MUMMY_PROJECTILE_DAMAGE,true,false,PROJECTILE_TUT_MUMMY,true);
 		mummyLaunchAngle += PI/2.0;
 		lastMummySpawnTime = smh->getGameTime();
 		numMummiesSpawned++;

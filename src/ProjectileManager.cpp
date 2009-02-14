@@ -45,21 +45,21 @@ ProjectileManager::~ProjectileManager() {
 /**
  * Add a projectile to the manager
  */
-void ProjectileManager::addProjectile(float x, float y, float speed, float angle, float damage, bool hostile, int id, bool makesSmileyFlash) {
-	addProjectile(x, y, speed, angle, damage, hostile, id, makesSmileyFlash, false, 0.0, 0.0, 0.0);
+void ProjectileManager::addProjectile(float x, float y, float speed, float angle, float damage, bool hostile, bool homing, int id, bool makesSmileyFlash) {
+	addProjectile(x, y, speed, angle, damage, hostile, homing, id, makesSmileyFlash, false, 0.0, 0.0, 0.0);
 }
 
 /**
  * Add a projectile to the manager
  */
-void ProjectileManager::addProjectile(float x, float y, float speed, float angle, float damage, bool hostile, 
+void ProjectileManager::addProjectile(float x, float y, float speed, float angle, float damage, bool hostile, bool homing,
 									  int id, bool makesSmileyFlash, bool hasParabola, float parabolaLength, 
 									  float parabolaDuration, float parabolaHeight) {
 
 	//Create new projectile struct
 	Projectile newProjectile;
-	newProjectile.x = x;
-	newProjectile.y = y;
+	newProjectile.x = newProjectile.startX = x;
+	newProjectile.y = newProjectile.startY = y;
 	newProjectile.speed = speed;
 	newProjectile.angle = angle;
 	newProjectile.id = id;
@@ -72,7 +72,7 @@ void ProjectileManager::addProjectile(float x, float y, float speed, float angle
 	newProjectile.terrainCollisionBox->SetRadius(x,y,projectileTypes[id].radius/2.0);
 	newProjectile.makesSmileyFlash = makesSmileyFlash;
 	newProjectile.timeReflected = -10.0;
-	newProjectile.homing = false;
+	newProjectile.homing = homing;
 	newProjectile.hasParabola = hasParabola;
 	newProjectile.timeAlive = 0.0;
 	newProjectile.parabolaDistance = parabolaLength;
@@ -96,7 +96,6 @@ void ProjectileManager::addProjectile(float x, float y, float speed, float angle
 	if (id == PROJECTILE_TUT_LIGHTNING) {
 		newProjectile.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("tutLightning")->info);
 		newProjectile.particle->Fire();
-		newProjectile.homing = true;
 	}
 	//Add it to the list
 	theProjectiles.push_back(newProjectile);
@@ -396,6 +395,12 @@ void ProjectileManager::draw(float dt) {
 			i->particle->Render();
 			projectileTypes[i->id].sprite->RenderEx(smh->getScreenX(i->x), smh->getScreenY(i->y), i->angle, 1.0f, 1.0f);			
 		
+		//Figure 8 (width based on distance from its origin so it gets wider & skinnier as it travels)
+		} else if (i->id == PROJECTILE_FIGURE_8) {
+			float distanceFromOrigin = Util::distance(i->x,i->y,i->startX,i->startY);
+			float width = sin(distanceFromOrigin/30.0); //from -1 to 1
+			projectileTypes[i->id].sprite->RenderEx(smh->getScreenX(i->x),smh->getScreenY(i->y),i->angle,1.0,width);
+					
 		//Normal projectiles
 		} else {
 			projectileTypes[i->id].sprite->RenderEx(smh->getScreenX(i->x), smh->getScreenY(i->y - i->parabolaYOffset), i->hasParabola ? 0.0 : i->angle, 1.0f, 1.0f);
@@ -584,10 +589,13 @@ void ProjectileManager::initProjectiles() {
 	projectileTypes[PROJECTILE_TUT_LIGHTNING].radius=10;
 	projectileTypes[PROJECTILE_TUT_LIGHTNING].sprite = smh->resources->GetSprite("tutProjectile");
 
-	projectileTypes[PROJECTILE_TUT_MUMMY].radius = 32;
+	projectileTypes[PROJECTILE_TUT_MUMMY].radius = 27;
 	projectileTypes[PROJECTILE_TUT_MUMMY].sprite = smh->resources->GetSprite("tutProjectileMummy");
 
 	projectileTypes[PROJECTILE_CANDY].radius = 23;
 	projectileTypes[PROJECTILE_CANDY].sprite = smh->resources->GetSprite("CandyProjectile");
+
+	projectileTypes[PROJECTILE_FIGURE_8].radius=16;
+	projectileTypes[PROJECTILE_FIGURE_8].sprite = smh->resources->GetSprite("Figure8Projectile");
 
 }

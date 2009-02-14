@@ -541,7 +541,7 @@ void CandyBoss::updateThrowingCandy(float dt)
 			angle = Util::getAngleBetween(x, y, targetX, targetY);
 
 			//Spawn the projectile
-			smh->projectileManager->addProjectile(x, y - 75.0, 0.0, angle, THROWN_CANDY_DAMAGE, true, 
+			smh->projectileManager->addProjectile(x, y - 75.0, 0.0, angle, THROWN_CANDY_DAMAGE, true, false,
 				PROJECTILE_CANDY, true, true, distance, duration, distance / 1.5);
 		}
 

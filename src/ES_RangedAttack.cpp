@@ -24,7 +24,7 @@ void ES_RangedAttack::update(float dt) {
 			owner->lastRangedAttack = smh->getGameTime();
 			smh->projectileManager->addProjectile(owner->x, owner->y - owner->projectileYOffset, owner->projectileSpeed, 
 				Util::getAngleBetween(owner->x, owner->y - owner->projectileYOffset, smh->player->x, smh->player->y), 
-				owner->projectileDamage, true, owner->rangedType, true);
+				owner->projectileDamage, true,owner->projectileHoming, owner->rangedType, true);
 	}
 
 	//Face the player

@@ -387,6 +387,14 @@ void GameData::loadEnemyData() {
 			strcpy(param, num);
 			strcat(param, "PDamage");
 			enemyInfo[i].projectileDamage = (float)atoi(enemyStringTable->GetString(param)) / 100.0;
+
+			//Does the ranged attack home?
+			varName = Util::intToString(i);
+			varName += "PHoming";
+
+			//if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].projectileHoming = false;
+			//else enemyInfo[i].projectileHoming = (strcmp(enemyStringTable->GetString(varName.c_str()), "T") == 0);
+			enemyInfo[i].projectileHoming=false;
 		}
 			
 	}
