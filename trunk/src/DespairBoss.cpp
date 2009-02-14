@@ -249,7 +249,7 @@ bool DespairBoss::update(float dt) {
 			for (int i = 0; i < 14; i++) {
 				angle = float(i)*(2.0*PI/14.0);
 				smh->projectileManager->addProjectile(x + 90.0 * cos(angle), y + 90.0 * sin(angle), 
-					300, angle, LIGHTNING_DAMAGE, true, PROJECTILE_LIGHTNING_ORB, true);
+					300, angle, LIGHTNING_DAMAGE, true, false,PROJECTILE_LIGHTNING_ORB, true);
 			}
 
 		}
@@ -411,11 +411,11 @@ bool DespairBoss::update(float dt) {
 			//Left eye
 			smh->projectileManager->addProjectile(x - 10 + 50*cos(angle), 
 				y - 60 + floatingOffset + 50*sin(angle), 
-				LASER_SPEED, angle, LASER_DAMAGE, true, PROJECTILE_LASER, true);
+				LASER_SPEED, angle, LASER_DAMAGE, true,false, PROJECTILE_LASER, true);
 			//Right eye
 			smh->projectileManager->addProjectile(x + 10 + 50*cos(angle), 
 				y - 60 + floatingOffset + 50*sin(angle),  
-				LASER_SPEED, angle, LASER_DAMAGE, true, PROJECTILE_LASER, true);
+				LASER_SPEED, angle, LASER_DAMAGE, true,false, PROJECTILE_LASER, true);
 		}
 	}
 

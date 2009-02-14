@@ -70,7 +70,7 @@ void E_Gumdrop::update(float dt) {
 				lastAttackTime = smh->getGameTime();
 				smh->projectileManager->addProjectile(x, y, ATTACK_VELOCITY, 
 					Util::getAngleBetween(x, y, smh->player->x, smh->player->y), damage, 
-					true, PROJECTILE_1, true);
+					true,projectileHoming, PROJECTILE_1, true);
 			}
 
 		} else {

@@ -166,6 +166,7 @@ public:
 	float projectileSpeed;
 	float projectileDamage;
 	float projectileYOffset;
+	bool projectileHoming;
 	float x, y, dx, dy;
 	hgeRect *collisionBox, *futureCollisionBox;
 

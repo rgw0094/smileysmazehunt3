@@ -47,7 +47,7 @@ void E_Ranged::update(float dt) {
 				shotYet = true;
 				smh->projectileManager->addProjectile(x, y, projectileSpeed, 
 					Util::getAngleBetween(x, y, smh->player->x, smh->player->y), 
-					projectileDamage, true, rangedType, true);
+					projectileDamage, true,projectileHoming, rangedType, true);
 			}
 		}
 

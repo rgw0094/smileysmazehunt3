@@ -429,6 +429,7 @@ struct EnemyInfo {
 	bool chases, hasRangedAttack;
 	int range, delay, projectileSpeed;
 	float projectileDamage;
+	float projectileHoming;
 	
 };
 

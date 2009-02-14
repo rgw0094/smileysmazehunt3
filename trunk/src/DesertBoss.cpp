@@ -169,7 +169,7 @@ bool DesertBoss::update(float dt) {
 			//Launch spikes
 			if (smh->timePassedSince(lastSpikeLaunch) > 0.1) {
 				for (int i = 0; i < NUM_SPIKE_STREAMS; i++) {				
-					smh->projectileManager->addProjectile(x + 63.0*cos(spikeAngles[i]), y - 30.0 + 63.0*sin(spikeAngles[i]), 600, spikeAngles[i], FLYING_SPIKE_DAMAGE, true, PROJECTILE_CACTUS_SPIKE, false);
+					smh->projectileManager->addProjectile(x + 63.0*cos(spikeAngles[i]), y - 30.0 + 63.0*sin(spikeAngles[i]), 600, spikeAngles[i], FLYING_SPIKE_DAMAGE, true, false, PROJECTILE_CACTUS_SPIKE, false);
 				}
 				lastSpikeLaunch = smh->getGameTime();
 			}
