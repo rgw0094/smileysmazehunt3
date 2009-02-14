@@ -33,6 +33,7 @@
 ||PDamage||Projectile damage. 100 = 1 smiley face||any int||If HasRanged==T||
 ||PSpeed||Projectile speed in pixels/second||any float||If HasRanged==T||
 ||PType||What type of projectile the enemy shoots||int, see chart below||If HasRanged==T||
+||PHoming||Whether the projectiles home toward Smiley||T/F||N||
 
 ----
 = Enemy Types =
