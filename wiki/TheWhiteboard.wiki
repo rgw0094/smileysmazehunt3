@@ -1,16 +1,6 @@
-=== Shit List ===
- * Patric
- * Sarah Palin
-
-=== Data To Do ===
- * Enemy names
- * Sound effects
- * Add enemies to levels
-
 === Programming To Do ===
  * Make particle attacks continue to update while the textbox is active.
  * Leet Death Effect
- * Implement version of SoundManager->playSound that won't play the same sound within a specified time interval
  * Lovecraftian Boss
  * Barvinoid
  * Merge projectile texture with sprites texture
@@ -61,6 +51,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Added ability to specify a minimum DELAY between playing the same sound||2/14/09||RGW||
 ||Fixed Phyrebozz2's attacks, and fixed the "safe spot" where FlameWalls wouldn't be shot||1/29/08||ETI||
 ||Fixed glitch where a projectile shot off the map would hurt Smiley randomly||1/29/08||ETI||
 ||If you get to an impossible ice row/col based on last non-ice square, puts you back on last non-ice square||1/23/09||ETI||
