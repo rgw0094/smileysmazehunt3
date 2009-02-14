@@ -1864,8 +1864,8 @@ Sprite CandyProjectile {
 }
 Sprite Figure8Projectile {
  texture=projectileTx
- rect=0,214,32,32
- hotspot=16,16
+ rect=1,215,30,30
+ hotspot=15,15
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 
