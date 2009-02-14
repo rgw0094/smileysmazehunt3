@@ -51,6 +51,11 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Added "PHoming" attribute to enemy projectiles||2/14/09||ETI||
+||Added "Figure 8" projectile type||2/14/09||ETI||
+||Added ice cream cone enemies to candy level||2/14/09||ETI||
+||Added a "spawning enemy type"||2/14/09||ETI||
+||Made it so floating enemies can shoot projectiles||2/10/09||ETI||
 ||Added ability to specify a minimum DELAY between playing the same sound||2/14/09||RGW||
 ||Fixed Phyrebozz2's attacks, and fixed the "safe spot" where FlameWalls wouldn't be shot||1/29/08||ETI||
 ||Fixed glitch where a projectile shot off the map would hurt Smiley randomly||1/29/08||ETI||
