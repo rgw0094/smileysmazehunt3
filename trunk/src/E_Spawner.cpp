@@ -8,7 +8,7 @@
 
 extern SMH *smh;
 
-#define TIME_BETWEEN_SPAWNS 3.6
+#define TIME_BETWEEN_SPAWNS 8.0
 #define MAX_DISTANCE_FROM_SMILEY_TO_SPAWN 400
 
 
