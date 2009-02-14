@@ -7,6 +7,7 @@ Texture UserInterfaceTx {
 Font curlz {
  filename="curlz.fnt"
  tracking=1.0
+ 
 }
 Font description {
  filename="description.fnt"
