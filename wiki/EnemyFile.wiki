@@ -83,6 +83,12 @@
 ||4||Penguin fish||
 ||5||Fireball||
 ||6||Turret cannonball||
+||7||Mini mushroom (shot by Mushboom)||
+||8||Laser (shot by Calypso)||
+||9||Tut's Lightning||
+||10||Tut's Mummy||
+||11||Candy (shot by Bartli)||
+||12||Figure 8-type||
 
 ----
 = Enemies by Area =
