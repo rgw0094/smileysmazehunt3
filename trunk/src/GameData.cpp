@@ -392,9 +392,9 @@ void GameData::loadEnemyData() {
 			varName = Util::intToString(i);
 			varName += "PHoming";
 
-			//if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].projectileHoming = false;
-			//else enemyInfo[i].projectileHoming = (strcmp(enemyStringTable->GetString(varName.c_str()), "T") == 0);
-			enemyInfo[i].projectileHoming=false;
+			if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].projectileHoming = false;
+			else enemyInfo[i].projectileHoming = (strcmp(enemyStringTable->GetString(varName.c_str()), "T") == 0);
+			
 		}
 			
 	}
