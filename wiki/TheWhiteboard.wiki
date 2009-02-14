@@ -8,6 +8,7 @@
  * Add enemies to levels
 
 === Programming To Do ===
+ * Make particle attacks continue to update while the textbox is active.
  * Leet Death Effect
  * Implement version of SoundManager->playSound that won't play the same sound within a specified time interval
  * Lovecraftian Boss
