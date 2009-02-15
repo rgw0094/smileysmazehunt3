@@ -14,7 +14,7 @@ DeathScreen::DeathScreen() {
 	buttons[DS_QUIT_BUTTON] = new Button(250.0, 650.0, "Quit");
 	buttons[DS_CONTINUE_BUTTON] = new Button(1024.0-250.0-250.0, 650.0, "Continue");
 	alpha = 0;
-	smh->setDarkness(0.0);
+	smh->setScreenColor(BLACK, 0.0);	//set alpha to 0 to reset any previous screen color settings
 }
 
 /**
@@ -63,7 +63,7 @@ void DeathScreen::draw(float dt) {
 	//Death screen background fades in
 	if (alpha < 255.0f) alpha += 200.0f*dt;
 	if (alpha > 255.0f) alpha = 255.0f;
-	smh->shadeScreen(alpha);
+	smh->drawScreenColor(BLACK, alpha);
 
 	smh->resources->GetFont("textBoxNameFnt")->SetColor(ARGB(alpha,255,255,255));
 	smh->resources->GetFont("textBoxNameFnt")->printf(512,300,HGETEXT_CENTER, "Game Over");

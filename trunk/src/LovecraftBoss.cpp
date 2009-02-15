@@ -51,6 +51,7 @@ extern SMH *smh;
 #define HEALTH 12.0
 #define COLLISION_DAMAGE 2.0
 #define TENTACLE_DAMAGE 0.5
+#define FIREBALL_DAMAGE 1.0
 #define NUM_TENTACLE_HITS_REQUIRED 1
 
 LovecraftBoss::LovecraftBoss(int _gridX, int _gridY, int _groupID) {
@@ -101,6 +102,9 @@ LovecraftBoss::LovecraftBoss(int _gridX, int _gridY, int _groupID) {
 
 LovecraftBoss::~LovecraftBoss() {
 	
+	//Turn off any screen coloring
+	smh->setScreenColor(0, 0.0);
+
 	delete bodyDistortionMesh;
 	delete eyeCollisionBox;
 	delete bodyCollisionBox;
@@ -109,6 +113,12 @@ LovecraftBoss::~LovecraftBoss() {
 		delete i->collisionBox;
 		delete i->mesh;
 		i = tentacleList.erase(i);
+	}
+
+	for (std::list<BigFireBall>::iterator i = fireballList.begin(); i != fireballList.end(); i++) {
+		delete i->particle;
+		delete i->collisionBox;
+		i = fireballList.erase(i);
 	}
 
 	smh->resources->Purge(RES_LOVECRAFT);
@@ -123,6 +133,7 @@ void LovecraftBoss::draw(float dt) {
 	drawBody(dt);
 	drawEye(dt);
 	drawTentacles(dt);
+	drawFireballs(dt);
 
 	if (state != LS_INACTIVE) drawHealth("Bh'shoghaclll");
 
@@ -197,6 +208,15 @@ void LovecraftBoss::drawTentacles(float dt) {
 	
 }
 
+void LovecraftBoss::drawFireballs(float dt) {
+	for (std::list<BigFireBall>::iterator i = fireballList.begin(); i != fireballList.end(); i++) {
+		i->particle->Render();
+		if (smh->isDebugOn()) {
+			smh->drawCollisionBox(i->collisionBox, RED);
+		}
+	}
+}
+
 void LovecraftBoss::drawEye(float dt) {
 	smh->resources->GetAnimation(eyeStatus.type.c_str())->SetColor(ARGB(fadeAlpha, 255.0, 255.0, 255.0));
 	smh->resources->GetAnimation(eyeStatus.type.c_str())->Render(smh->getScreenX(x + EYE_X_OFFSET), smh->getScreenY(y + EYE_Y_OFFSET));
@@ -233,6 +253,7 @@ bool LovecraftBoss::update(float dt) {
 	updateEye(dt);
 	updateCollision(dt);
 	updateTentacles(dt);
+	updateFireballs(dt);
 
 	return false;
 }
@@ -363,6 +384,41 @@ void LovecraftBoss::updateTentacles(float dt)
 	}
 }
 
+void LovecraftBoss::updateFireballs(float dt) {
+	for (std::list<BigFireBall>::iterator i = fireballList.begin(); i != fireballList.end(); i++) {
+		i->y += 500.0 * dt;
+		i->particle->MoveTo(smh->getScreenX(i->x), smh->getScreenY(i->y), true);
+		i->particle->Update(dt);
+		i->collisionBox->SetRadius(i->x, i->y, 30);
+		if (smh->player->collisionCircle->testBox(i->collisionBox)) {
+			smh->player->dealDamage(FIREBALL_DAMAGE, true);
+		}
+	}
+}
+
+void LovecraftBoss::updateFireAttack(float dt) {
+	if (smh->timePassedSince(attackState.lastAttackTime) > 0.55) {
+		for (int i = 0; i < 2; i++) {
+			BigFireBall fireball;
+			fireball.y = smh->player->y - 500.0;
+			fireball.x = smh->player->x + smh->randomInt(-200, 200);
+			fireball.collisionBox = new hgeRect();
+			fireball.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("bigFireball")->info);
+			fireball.particle->FireAt(smh->getScreenX(fireball.x), smh->getScreenY(fireball.y));
+			fireballList.push_back(fireball);
+			attackState.lastAttackTime = smh->getGameTime();
+		}
+	}
+}
+
+void LovecraftBoss::updateLightningAttack(float dt) {
+
+}
+
+void LovecraftBoss::updateIceAttack(float dt) {
+
+}
+
 void LovecraftBoss::doInactiveState(float dt) {
 
 	//When smiley triggers the boss' enemy blocks start his dialogue.
@@ -434,8 +490,39 @@ bool LovecraftBoss::doDeathState(float dt) {
 }
 
 void LovecraftBoss::doEyeAttackState(float dt) {
+	
+	//Determine what color to shade the screen during the attack
+	int screenColor;
+	if (strcmp(eyeStatus.type.c_str(), LIGHTNING_EYE) == 0) screenColor = YELLOW;
+	else if (strcmp(eyeStatus.type.c_str(), FIRE_EYE) == 0) screenColor = RED;
+	else if (strcmp(eyeStatus.type.c_str(), ICE_EYE) ==0) screenColor = BLUE;
 
-	if (timeInState > 5.0) {
+	if (!attackState.attackStarted) {
+		//Before starting the attack, shade the screen the appropriate color based on the attack
+		smh->setScreenColor(screenColor, smh->getScreenColorAlpha() + 60.0 * dt);
+		if (smh->getScreenColorAlpha() >= 60.0) {
+			smh->setScreenColor(screenColor, 60.0);
+			attackState.attackStarted = true;
+			attackState.attackStartedTime = smh->getGameTime();
+			attackState.lastAttackTime = smh->getGameTime();
+		}
+	} else {
+		//Do the attack for 5 seconds
+		if (smh->timePassedSince(attackState.attackStartedTime) < 5.0) {
+			if (strcmp(eyeStatus.type.c_str(), LIGHTNING_EYE) == 0) {
+				updateLightningAttack(dt);
+			} else if (strcmp(eyeStatus.type.c_str(), FIRE_EYE) == 0) {
+				updateFireAttack(dt);
+			} else if (strcmp(eyeStatus.type.c_str(), ICE_EYE) ==0) {
+				updateIceAttack(dt);
+			}
+		} else {
+			//Fade out the screen shading after the attack is done
+			smh->setScreenColor(screenColor, smh->getScreenColorAlpha() - 60.0 * dt);
+		}
+	}
+
+	if (timeInState > 8.0) {
 		if (eyeStatus.state == EYE_OPEN) {
 			closeEye();
 		}
@@ -451,6 +538,12 @@ void LovecraftBoss::doEyeAttackState(float dt) {
 //~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
 
 void LovecraftBoss::enterState(int newState) {
+	
+	if (state == LS_EYE_ATTACK) {
+		//Turn off any screen coloring when leaving the eye attack state.
+		smh->setScreenColor(0, 0.0);
+	}
+	
 	timeInState = 0.0;
 	state = newState;
 
@@ -460,6 +553,7 @@ void LovecraftBoss::enterState(int newState) {
 	}
 
 	if (state == LS_EYE_ATTACK) {
+		attackState.attackStarted = false;
 		int r = smh->randomInt(0, 2);
 		if (r == 0) {
 			openEye(LIGHTNING_EYE);
