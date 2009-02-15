@@ -5,6 +5,7 @@
 #include "hgeresource.h"
 #include "EnemyFramework.h"
 #include "CollisionCircle.h"
+#include "ExplosionManager.h"
 
 extern SMH *smh;
 
@@ -150,6 +151,9 @@ void ProjectileManager::update(float dt) {
 
 			if (i->timeAlive > i->parabolaDuration) {
 				deleteProjectile = true;
+				if (i->id == PROJECTILE_SLIME) {
+					smh->explosionManager->addSlimeExplosion(i->x, i->y, 1.0, 0.5, 0.0);
+				}
 			}
 		} else {
 			i->collisionBox->SetRadius(i->x, i->y, projectileTypes[i->id].radius);
@@ -597,5 +601,8 @@ void ProjectileManager::initProjectiles() {
 
 	projectileTypes[PROJECTILE_FIGURE_8].radius=16;
 	projectileTypes[PROJECTILE_FIGURE_8].sprite = smh->resources->GetSprite("Figure8Projectile");
+
+	projectileTypes[PROJECTILE_SLIME].radius = 12;
+	projectileTypes[PROJECTILE_SLIME].sprite = smh->resources->GetSprite("SlimeProjectile");
 
 }

@@ -166,17 +166,15 @@ void LovecraftBoss::drawTentacles(float dt) {
 	for (std::list<Tentacle>::iterator i = tentacleList.begin(); i != tentacleList.end(); i++) {
 
 		//Update distortion mesh when the tentacles are fully extended
-		if (i->state == TENTACLE_EXTENDED || i->state == TENTACLE_EXITING) {
-			float t = smh->timePassedSince(i->timeCreated) + i->randomTimeOffset;
-			for (int x = 0; x < TENTACLE_MESH_X_GRANULARITY; x++) {
-				for(int y = 0; y < TENTACLE_MESH_Y_GRANULARITY-1; y++) {
-					i->mesh->SetDisplacement(
-						x, //column
-						y, //row
-						cosf(t*3.0+(TENTACLE_MESH_Y_GRANULARITY-y))*2.5*y, //dx
-						sinf(t*3.0+(x+y)/2)*2, //dy					
-						HGEDISP_NODE); //reference
-				}
+		float t = smh->timePassedSince(i->timeCreated) + i->randomTimeOffset;
+		for (int x = 0; x < TENTACLE_MESH_X_GRANULARITY; x++) {
+			for(int y = 0; y < TENTACLE_MESH_Y_GRANULARITY-1; y++) {
+				i->mesh->SetDisplacement(
+					x, //column
+					y, //row
+					cosf(t*3.0+(TENTACLE_MESH_Y_GRANULARITY-y))*2.5*y, //dx
+					sinf(t*3.0+(x+y)/2)*2, //dy					
+					HGEDISP_NODE); //reference
 			}
 		}
 
@@ -298,6 +296,7 @@ void LovecraftBoss::updateTentacles(float dt)
 			i->x + TENTACLE_WIDTH/3.0,
 			i->y + TENTACLE_HEIGHT - 5.0);
 
+		//Do collision while not hidden
 		if (i->state != TENTACLE_HIDDEN) {
 			if (smh->player->collisionCircle->testBox(i->collisionBox)) {
 				smh->player->dealDamageAndKnockback(TENTACLE_DAMAGE, true, false, 160.0, i->x + TENTACLE_WIDTH/2.0, i->y + TENTACLE_HEIGHT/2.0);
@@ -319,6 +318,7 @@ void LovecraftBoss::updateTentacles(float dt)
 			}
 		}
 
+		//Tentacle state logic
 		if (i->state == TENTACLE_HIDDEN) {
 			if (smh->timePassedSince(i->timeCreated) > 1.0) {
 				i->state = TENTACLE_ENTERING;
@@ -328,8 +328,18 @@ void LovecraftBoss::updateTentacles(float dt)
 			if (i->tentacleVisiblePercent >= 1.0) {
 				i->tentacleVisiblePercent = 1.0;
 				i->state = TENTACLE_EXTENDED;
+				i->timeBecameFullyExtended = smh->getGameTime();
 			}
 		}  else if (i->state == TENTACLE_EXTENDED)  {
+			//Throw a slime ball after a random time
+			if (!i->firedSlimeYet && smh->timePassedSince(i->timeBecameFullyExtended) > (i->randomTimeOffset/2.0)) {
+				float slimeX = i->x + TENTACLE_WIDTH/2.0;
+				float slimeY = i->y + 20.0;
+				float angle = Util::getAngleBetween(slimeX, slimeY, smh->player->x, smh->player->y) + smh->randomFloat(-PI/8.0, PI/8.0);
+				float dist = Util::distance(slimeX, slimeY, smh->player->x, smh->player->y);
+				smh->projectileManager->addProjectile(slimeX, slimeY, 300.0, angle, 0.5, true, false, PROJECTILE_SLIME, true, true, dist, 1.0, 150.0);
+				i->firedSlimeYet = true;
+			}
 			if (smh->timePassedSince(i->timeCreated) > i->duration) {
 				i->state = TENTACLE_EXITING;
 			}
@@ -496,6 +506,7 @@ void LovecraftBoss::spawnTentacle(float duration, float x, float y, bool hasBand
 	tentacle.tentacleVisiblePercent = 0.0;
 	tentacle.collisionBox = new hgeRect();
 	tentacle.duration = duration;
+	tentacle.firedSlimeYet = false;
 
 	tentacle.mesh = new hgeDistortionMesh(TENTACLE_MESH_X_GRANULARITY, TENTACLE_MESH_Y_GRANULARITY);
 	tentacle.mesh->SetTexture(smh->resources->GetTexture("LovecraftTx"));

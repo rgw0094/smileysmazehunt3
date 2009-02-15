@@ -15,10 +15,13 @@ struct Tentacle {
 	float randomTimeOffset;
 	float tentacleVisiblePercent;
 	float duration;
+	float timeBecameFullyExtended;
 	bool hasBandaid;
+	bool firedSlimeYet;
 	hgeDistortionMesh *mesh;
 	hgeRect *collisionBox;
 };
+
 
 struct EyeStatus {
 	std::string type;

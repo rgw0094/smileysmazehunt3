@@ -38,6 +38,7 @@ public:
 	void freeze(float duration);
 	void stun(float duration);
 	void heal(float amount);
+	void slime(float duration);
 	void immobilize(float duration);
 	void reset();
 	void checkForIceGlitch();
@@ -152,6 +153,8 @@ private:
 	float timeStartedHeal;
 	float timeStartedImmobilize;
 	float immobilizeDuration;
+	float timeSlimed;
+	float slimeDuration;
 
 	//State info
 	bool breathingFire;				//If using Fire Breath ability
@@ -178,6 +181,7 @@ private:
 	bool stunned;
 	bool healing;
 	bool immobile;
+	bool slimed;
 };
 
 //----------------------------------------------------------------
