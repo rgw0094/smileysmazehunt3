@@ -35,7 +35,7 @@ CinematicScreen::~CinematicScreen() {
 
 void CinematicScreen::draw(float dt) {
 	
-	smh->shadeScreen(backgroundAlpha);
+	smh->drawScreenColor(BLACK, backgroundAlpha);
 
 	if (backgroundAlpha < 255.0) return;
 

@@ -22,6 +22,17 @@ struct Tentacle {
 	hgeRect *collisionBox;
 };
 
+struct AttackState {
+	float lastAttackTime;
+	float attackStartedTime;
+	bool attackStarted;
+};
+
+struct BigFireBall {
+	float x, y, timeCreated;
+	hgeParticleSystem *particle;
+	hgeRect *collisionBox;
+};
 
 struct EyeStatus {
 	std::string type;
@@ -45,19 +56,26 @@ private:
 	void drawTentacles(float dt);
 	void drawBody(float dt);
 	void drawEye(float dt);
-	void enterState(int newState);
-	void spawnTentacle(float duration, float x, float y, bool hasBandaid);
+	void drawFireballs(float dt);
+
+	void updateTentacles(float dt);
 	void updateEye(float dt);
 	void updateCollision(float dt);
-	void openEye(std::string type);
-	void closeEye();
-	void updateTentacles(float dt);
-	void dealDamage(float amount);
+	void updateFireballs(float dt);
+	void updateFireAttack(float dt);
+	void updateLightningAttack(float dt);
+	void updateIceAttack(float dt);
 
 	void doInactiveState(float dt);
 	void doTentacleState(float dt);
 	void doEyeAttackState(float dt);
 	bool doDeathState(float dt);
+
+	void openEye(std::string type);
+	void closeEye();
+	void dealDamage(float amount);
+	void enterState(int newState);
+	void spawnTentacle(float duration, float x, float y, bool hasBandaid);
 
 	float timeInState;
 	int state;
@@ -73,10 +91,12 @@ private:
 
 	EyeStatus eyeStatus;
 	std::list<Tentacle> tentacleList;
+	std::list<BigFireBall> fireballList;
 	hgeDistortionMesh *bodyDistortionMesh;
 	hgeRect *eyeCollisionBox;
 	hgeRect *bodyCollisionBox;
 	Point tentaclePoints[5];
+	AttackState attackState;
 
 };
 

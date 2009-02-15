@@ -50,7 +50,7 @@ void DifficultyPrompt::draw(float dt) {
 
 	if (!visible) return;
 
-	smh->shadeScreen(100);
+	smh->drawScreenColor(BLACK, 100.0);
 	smh->drawSprite("difficultyPromptBackground", DRAWX, DRAWY);
 
 	std::string s;

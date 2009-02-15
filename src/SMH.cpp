@@ -19,7 +19,7 @@ SMH::SMH(HGE *_hge) {
 	debugText = "";
 	debugMovePressed = false;
 	lastDebugMoveTime = 0.0;
-	darkness = 0.0;
+	screenColorAlpha = 0.0;
 
 	//Game time and frame counter are only set once and carry over when "re-entering"
 	//game mode. 
@@ -200,7 +200,7 @@ void SMH::drawGame() {
 		fenwarManager->draw(dt);
 		projectileManager->draw(dt);
 		environment->drawSwitchTimers(dt);
-		shadeScreen(darkness);
+		drawScreenColor(screenColor, screenColorAlpha);
 		areaChanger->draw(dt);
 		player->drawGUI(dt);
 		saveManager->drawSaveConfirmation(dt);
@@ -346,12 +346,14 @@ int SMH::getCurrentFrame() {
 	return frameCounter;
 }
 
-void SMH::setDarkness(float _darkness) {
-	darkness = _darkness;
+void SMH::setScreenColor(int color, float alpha) {
+	screenColor = color;
+	screenColorAlpha = alpha;
+	if (screenColorAlpha < 0.0) screenColorAlpha = 0.0;
 }
 
-float SMH::getDarkness() {
-	return darkness;
+float SMH::getScreenColorAlpha() {
+	return screenColorAlpha;
 }
 
 /////////////////////////////
@@ -446,19 +448,6 @@ float SMH::randomFloat(float min, float max) {
 }
 
 /**
- * Shades the entire screen.
- */
-void SMH::shadeScreen(int alpha) {
-	if (alpha == 0.0) return;
-	resources->GetSprite("blackScreen")->SetColor(ARGB(alpha,255,255,255));
-	for (int i = 0; i < 35; i++) {
-		for (int j = 0; j < 26; j++) {
-			resources->GetSprite("blackScreen")->Render(i*30,j*30);
-		}
-	}
-}
-
-/**
  * Returns the amount of time that has passed since time
  */
 float SMH::timePassedSince(float time) {
@@ -475,4 +464,37 @@ float SMH::getFlashingAlpha(float n) {
 		flashingAlpha = 255.0 - 255.0 * ((x - n/2.0)/(n/2.0));
 	}
 	return flashingAlpha;
+}
+
+void SMH::drawScreenColor(int color, float alpha) {
+	if (alpha == 0.0) return;
+	
+	std::string sprite;
+	float r = 0.0;
+	float g = 0.0;
+	float b = 0.0;
+
+	if (color == RED) {
+		sprite = "redScreen";
+		r = 255;
+	} else if (color == BLUE) {
+		sprite = "blueScreen";
+		b = 255;
+	} else if (color == YELLOW) {
+		sprite = "yellowScreen";
+		g = 255;
+		b = 255;
+	} else if (color == BLACK) {
+		sprite = "blackScreen";
+		r = 255;
+		g = 255;
+		b = 255;
+	}
+
+	resources->GetSprite(sprite.c_str())->SetColor(ARGB(alpha,r,g,b));
+	for (int i = 0; i < 16; i++) {
+		for (int j = 0; j < 12; j++) {
+			resources->GetSprite(sprite.c_str())->Render(i*64,j*64);
+		}
+	}
 }

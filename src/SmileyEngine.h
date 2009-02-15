@@ -151,6 +151,7 @@ class ScreenEffectsManager;
 #define YELLOW 1
 #define GREEN 2
 #define BLUE 3
+#define BLACK 4
 
 //Collision Layer
 #define NUM_COLLISION 36
@@ -276,8 +277,8 @@ public:
 	int getGameState();
 	float getGameTime();
 	float getRealTime();
-	void setDarkness(float darkness);
-	float getDarkness();
+	void setScreenColor(int color, float alpha);
+	float getScreenColorAlpha();
 
 	//Utility Functions
 	void drawCollisionBox(hgeRect *box, int color);
@@ -289,7 +290,7 @@ public:
 	void log(const char* text);
 	int randomInt(int min, int max);
 	float randomFloat(float min, float max);
-	void shadeScreen(int alpha);
+	void drawScreenColor(int color, float alpha);
 	float timePassedSince(float time);
 	float getFlashingAlpha(float n);
 	void setDebugText(std::string);
@@ -327,7 +328,8 @@ private:
 	int gameState;
 	int frameCounter;
 	bool debugMode;
-	float darkness;
+	int screenColor;
+	float screenColorAlpha;
 	std::string debugText;
 
 };

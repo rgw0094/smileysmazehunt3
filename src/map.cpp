@@ -42,7 +42,7 @@ Map::~Map() { }
 void Map::draw(float dt) {
 
 	//Shade behind the map
-	smh->shadeScreen(100);
+	smh->drawScreenColor(BLACK, 100.0);
 
 	smh->hge->Gfx_SetClipping(windowX, windowY, windowWidth, windowHeight);
 
@@ -83,13 +83,13 @@ void Map::drawSquare(int i , int j, int drawX, int drawY) {
 
 	//Basic map tiles
 	if (c == WALK_LAVA || c == NO_WALK_LAVA) {
-		smh->drawSprite("miniMapLava", drawX, drawY);
+		smh->drawSprite("redScreen", drawX, drawY);
 	} else if (c == PIT || c == NO_WALK_PIT || c == FAKE_PIT) {
-		smh->drawSprite("miniMapPit", drawX, drawY);
+		smh->drawSprite("blackScreen", drawX, drawY);
 	} else if (drawNoCollision && !isHiddenWarp) {
 		smh->drawSprite("miniMapNoCollision", drawX, drawY);
 	} else if (smh->environment->isDeepWaterAt(i, j)) {
-		smh->drawSprite("miniMapWater", drawX, drawY);
+		smh->drawSprite("blueScreen", drawX, drawY);
 	} else {
 		smh->drawSprite("miniMapCollision", drawX, drawY);
 	}

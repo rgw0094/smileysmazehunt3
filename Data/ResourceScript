@@ -205,6 +205,10 @@ Particle slimeParticle {
  filename=slime.psi
  sprite=shockwaveGraphic
 }
+Particle bigFireball {
+ filename=bigFireball.psi
+ sprite=particleGraphic13
+}
 ;********************************************
 ;******** FENWAR (Resource Group 110) *******
 ;********************************************
@@ -685,9 +689,27 @@ Sprite sillyPad {
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
+Sprite blueScreen {
+ texture=general
+ rect=832,64,64,64
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
 Sprite blackScreen {
  texture=general
- rect=97,65,30,30
+ rect=896,64,64,64
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite redScreen {
+ texture=general
+ rect=960,64,64,64
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite yellowScreen {
+ texture=general
+ rect=832,128,64,64
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
@@ -1046,24 +1068,6 @@ Sprite miniMapNoCollision {
 Sprite miniMapCollision {
  texture=general
  rect=768,64,64,64
- hotspot=0,0
- blendmode=COLORMUL,ALPHABLEND,NOZWRITE
-}
-Sprite miniMapWater {
- texture=general
- rect=832,64,64,64
- hotspot=0,0
- blendmode=COLORMUL,ALPHABLEND,NOZWRITE
-}
-Sprite miniMapPit {
- texture=general
- rect=896,64,64,64
- hotspot=0,0
- blendmode=COLORMUL,ALPHABLEND,NOZWRITE
-}
-Sprite miniMapLava {
- texture=general
- rect=960,64,64,64
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
