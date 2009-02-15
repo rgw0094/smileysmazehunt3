@@ -36,7 +36,7 @@
 ||Silly Pads||Mushroom Kingdom||Brian Fungus||Done||Done||
 ||Jesus' Sandals||Pools of the Dead||Lord Phyrebawz 2||90%||Done||
 ||Ice Breath||Candy Mountain||Bartli||Done||Done||
-||Shrink||Swamp||Lovecraft||Done||60%||
+||Shrink||Swamp||Lovecraft||Done||70%||
 ||Tut's Mask||Tut's Tomb||King Tut||Done||85%||
 ||---||Serpentine Path||---||Done||---||
 ||Hover||Calypso's Conservatory||Barvinoid||Done||0%||
@@ -44,6 +44,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Added support for shading the screen different colors to SMH.cpp||2/15/09||RGW||
 ||Fixed lightning orbs||2/15/09||RGW||
 ||Added "PHoming" attribute to enemy projectiles||2/14/09||ETI||
 ||Added "Figure 8" projectile type||2/14/09||ETI||
