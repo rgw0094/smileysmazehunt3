@@ -3,13 +3,8 @@
  * Leet Death Effect
  * Lovecraftian Boss
  * Barvinoid
- * Merge projectile texture with sprites texture
  * Make it so you can't see enemy blocks on the mini map before they appear
-
-=== Ideas To Consider ===
  * Frisbee: Have the player hold the key down and then release it to throw the frisbee.  Then the longer the button is held, the faster it spins and/or moves and more importantly the longer the enemy is stunned.  This will discourage lame complete frisbee ownage attacking strategies and allow us to make it cost no mana.
- * Damage: Perhaps the damage Smiley does on each swing should be randomized a bit (10% or so) so you don't always know how many hits it will take to destroy an enemy. Also, randomizing the enemies' HP by 10% or so could be interesting.
- * Exterminate the "unpure" races.
 
 === Graphics To Do ===
  * Difficulty prompt graphics
@@ -41,7 +36,7 @@
 ||Silly Pads||Mushroom Kingdom||Brian Fungus||Done||Done||
 ||Jesus' Sandals||Pools of the Dead||Lord Phyrebawz 2||90%||Done||
 ||Ice Breath||Candy Mountain||Bartli||Done||Done||
-||Shrink||Swamp||Lovecraft||Done||45%||
+||Shrink||Swamp||Lovecraft||Done||60%||
 ||Tut's Mask||Tut's Tomb||King Tut||Done||85%||
 ||---||Serpentine Path||---||Done||---||
 ||Hover||Calypso's Conservatory||Barvinoid||Done||0%||
