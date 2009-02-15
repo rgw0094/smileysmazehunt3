@@ -17,33 +17,16 @@ ExplosionManager::~ExplosionManager() { }
  * Size must be a float between 0.0 and 1.0.
  */
 void ExplosionManager::addExplosion(float x, float y, float size, float damage, float knockback) {
-	
-	if (size < 0.0 || size > 1.0) {
-		throw new System::Exception("Illegal Argument: size must be between 0.0 and 1.0");
-	}
-	
-	Explosion explosion;
-	explosion.x = x;
-	explosion.y = y;
-	explosion.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("explosion")->info);
-	explosion.particle->FireAt(x, y);
-	explosion.timeAlive = 0.0;
-	explosion.damage = damage;
-	explosion.knockback = knockback;
-	explosion.hitPlayerYet = false;
-	explosion.collisionCircle = new CollisionCircle();
+	createExplosion(x, y, size, damage, knockback, false);
+}
 
-	//Scale 
-	explosion.particle->info.fParticleLifeMax *= size;
-	explosion.particle->info.fParticleLifeMin *= size;
-	explosion.particle->info.fLifetime *= size;
-
-	explosion.radius = explosion.particle->info.fSizeEnd + explosion.particle->info.fSizeVar;
-	explosion.duration = explosion.particle->info.fLifetime + explosion.particle->info.fParticleLifeMax;
-	explosion.expandDuration = explosion.particle->info.fParticleLifeMax;
-	explosion.expandSpeed = (explosion.particle->info.fSpeedMax + explosion.particle->info.fSpeedMin) / 2.0;
-
-	explosionList.push_back(explosion);
+/**
+ * Spawns a new managed slime explosion.
+ * 
+ * Size must be a float between 0.0 and 1.0.
+ */
+void ExplosionManager::addSlimeExplosion(float x, float y, float size, float damage, float knockback) {
+	createExplosion(x, y, size, damage, knockback, true);
 }
 
 /**
@@ -76,6 +59,9 @@ void ExplosionManager::update(float dt) {
 		if (!i->hitPlayerYet && smh->player->collisionCircle->testCircle(i->collisionCircle)) {
 			i->hitPlayerYet = true;
 			smh->player->dealDamageAndKnockback(i->damage, true, true, i->knockback, i->x, i->y);
+			if (i->isSlime) {
+				smh->player->slime(6.0);
+			}
 			smh->setDebugText("Smiley hit by ExplosionManager");
 		}
 		
@@ -83,4 +69,44 @@ void ExplosionManager::update(float dt) {
 			i = explosionList.erase(i);
 		}
 	}
+}
+
+//~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+// Private helper methods
+//~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+
+void ExplosionManager::createExplosion(float x, float y, float size, float damage, float knockback, bool slime) {
+	
+	if (size < 0.0 || size > 1.0) {
+		throw new System::Exception("Illegal Argument: size must be between 0.0 and 1.0");
+	}
+	
+	Explosion explosion;
+	explosion.x = x;
+	explosion.y = y;
+	explosion.timeAlive = 0.0;
+	explosion.damage = damage;
+	explosion.knockback = knockback;
+	explosion.hitPlayerYet = false;
+	explosion.collisionCircle = new CollisionCircle();
+	explosion.isSlime = slime;
+
+	if (slime) {
+		explosion.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("slimeParticle")->info);
+	} else {
+		explosion.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("explosion")->info);
+	}
+	explosion.particle->FireAt(x, y);
+
+	//Scale 
+	explosion.particle->info.fParticleLifeMax *= size;
+	explosion.particle->info.fParticleLifeMin *= size;
+	explosion.particle->info.fLifetime *= size;
+
+	explosion.radius = explosion.particle->info.fSizeEnd + explosion.particle->info.fSizeVar;
+	explosion.duration = explosion.particle->info.fLifetime + explosion.particle->info.fParticleLifeMax;
+	explosion.expandDuration = explosion.particle->info.fParticleLifeMax;
+	explosion.expandSpeed = (explosion.particle->info.fSpeedMax + explosion.particle->info.fSpeedMin) / 2.0;
+
+	explosionList.push_back(explosion);
 }

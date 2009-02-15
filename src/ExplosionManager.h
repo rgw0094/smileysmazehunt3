@@ -11,6 +11,7 @@ struct Explosion {
 	float radius;
 	float duration, timeAlive, expandDuration, expandSpeed;
 	float damage, knockback;
+	bool isSlime;
 	bool hitPlayerYet;
 	hgeParticleSystem *particle;
 	CollisionCircle *collisionCircle;
@@ -26,8 +27,11 @@ public:
 	void update(float dt);
 	void draw(float dt);
 	void addExplosion(float x, float y, float size, float damage, float knockback);
+	void addSlimeExplosion(float x, float y, float size, float damage, float knockback);
 
 private:
+
+	void createExplosion(float x, float y, float size, float damage, float knockback, bool slime);
 
 	std::list<Explosion> explosionList;
 

@@ -109,7 +109,7 @@ void Player::reset() {
 	reflectionShieldActive = flashing = knockback = sliding = stunned =
 		onWarp = falling = breathingFire = inLava = inShallowWater = healing =
 		waterWalk = onWater = drowning = shrinkActive = sprinting = isHovering = 
-		cloaked = springing = usingCane = iceSliding = frozen = 
+		cloaked = springing = usingCane = iceSliding = frozen = slimed =
 		inShrinkTunnel = immobile = invincible = uber = false;
 }
 
@@ -160,6 +160,7 @@ void Player::update(float dt) {
 	if (stunned && smh->timePassedSince(timeStartedStun) > stunDuration) stunned = false;
 	if (healing && smh->timePassedSince(timeStartedHeal) > HEAL_FLASH_DURATION) healing = false;
 	if (immobile && smh->timePassedSince(timeStartedImmobilize) > immobilizeDuration) immobile = false;
+	if (slimed && smh->timePassedSince(timeSlimed) > slimeDuration) slimed = false;
 
 	//Update shit if in Knockback state
 	if (!falling && !sliding && knockback && smh->timePassedSince(startedKnockBack) > KNOCKBACK_DURATION) {
@@ -254,6 +255,10 @@ void Player::doMove(float dt) {
 	if (uber && !iceSliding && !springing && !sliding) {
 		xDist *= 3;
 		yDist *= 3;
+	}
+	if (slimed && !iceSliding && !springing && !sliding) {
+		xDist *= 0.5;
+		yDist *= 0.5;
 	}
 
 	//Check for collision with frozen enemies
@@ -350,6 +355,8 @@ void Player::draw(float dt) {
 			float uberGreen = (sin(smh->getRealTime()*1.6)+1.0)/2.0*50.0+200.0;
 			float uberBlue  = (sin(smh->getRealTime()*0.7)+1.0)/2.0*50.0+200.0;
 			smh->resources->GetAnimation("player")->SetColor(ARGB(255,uberRed,uberGreen,uberBlue));
+		} else if (slimed) {
+			smh->resources->GetAnimation("player")->SetColor(ARGB(255,100,200,100));
 		} else {
 			smh->resources->GetAnimation("player")->SetColor(ARGB(255,255,255,255));
 		}
@@ -1466,6 +1473,24 @@ void Player::immobilize(float duration) {
 	}
 }
 
+/**
+ * Heals the player the specified amount and starts a "flash" effect to indicate
+ * that the player is getting healed.
+ */
+void Player::heal(float amount) {
+	if (!healing) {
+		setHealth(getHealth() + amount);
+		healing = true;
+		timeStartedHeal = smh->getGameTime();
+	}
+}
+
+void Player::slime(float duration) {
+	slimed = true;
+	slimeDuration = duration;
+	timeSlimed = smh->getGameTime();
+}
+
 /** 
  * Handles everything related to shrink tunnels.
  */ 
@@ -1605,6 +1630,65 @@ bool Player::doGayMovementFix(int xDist, int yDist) {
 
 }
 
+/**
+ * Checks to see if an ICE GLITCH has occurred, and fixes it if it has
+ */
+void Player::checkForIceGlitch() {
+	if (smh->environment->collision[gridX][gridY] == ICE) {
+		if (facing == UP || facing == DOWN) {
+			//should not have a different X position than the last non-ice square
+			if (gridX != lastNonIceGridX) {
+				//ICE GLITCH HAS HAPPENED, DO SOMETHING
+				iceSliding = false;
+				if (gridX > lastNonIceGridX) {
+					x = lastNonIceGridX * 64 + 60;
+					y = lastNonIceGridY * 64 + 32;
+				} else { 
+					x = lastNonIceGridX * 64 + 4;
+					y = lastNonIceGridY * 64 + 32;
+				}
+				//if (smh->isDebugOn()) MessageBox(NULL,"Gay ice fix (moving up/down, column not the same).","Gay ice fix",MB_OK);
+			}
+		} else if (facing == LEFT || facing == RIGHT) {
+			//should not have a different Y position than the last non-ice square
+			if (gridY != lastNonIceGridY) {
+				//ICE GLITCH HAS HAPPENED, DO SOMETHING
+				iceSliding = false;
+				if (gridY > lastNonIceGridY) {
+					x = lastNonIceGridX * 64 + 32;
+					y = lastNonIceGridY * 64 + 60;
+				} else {
+					x = lastNonIceGridX * 64 + 32;
+					y = lastNonIceGridY * 64 + 4;
+				}
+				//if (smh->isDebugOn()) MessageBox(NULL,"Gay ice fix (moving left/right, row not the same).","Gay ice fix",MB_OK);
+			}
+		} else { //facing diagonally
+			//if smiley only moved adjacently (1 tile) from lastNonIce square, set his facing to the correct direction
+			
+			if (gridY == lastNonIceGridY - 1 && gridX == lastNonIceGridX) {
+				//facing = UP;
+				//iceSliding = true;
+			} else if (gridY == lastNonIceGridY + 1 && gridX == lastNonIceGridX) {
+				//facing = DOWN;
+				//iceSliding = true;
+			} else if (gridX == lastNonIceGridX + 1 && gridY == lastNonIceGridY) {
+				//facing = RIGHT;
+				//iceSliding = true;
+			} else if (gridX == lastNonIceGridX - 1 && gridY == lastNonIceGridY) {
+				//facing = LEFT;
+				//iceSliding = true;
+			} else { // uh-oh, has actually moved diagonally, let's just go ahead and put smiley back onto land
+				x = lastNonIceGridX * 64 + 32;
+				y = lastNonIceGridY * 64 + 32;
+				iceSliding = false;
+				//if (smh->isDebugOn()) MessageBox(NULL,"Gay ice fix (moving diagonally).","Gay ice fix",MB_OK);
+			}
+			
+		}
+	}
+}
+
 ///////////////////////////////////////////////////////////////
 /////////////////// MUTATORS AND ACCESSORS ////////////////////								
 ///////////////////////////////////////////////////////////////
@@ -1685,75 +1769,4 @@ void Player::setMana(float amount) {
 
 float Player::getMana() {
 	return mana;
-}
-
-/**
- * Heals the player the specified amount and starts a "flash" effect to indicate
- * that the player is getting healed.
- */
-void Player::heal(float amount) {
-	if (!healing) {
-		setHealth(getHealth() + amount);
-		healing = true;
-		timeStartedHeal = smh->getGameTime();
-	}
-}
-
-/**
- * Checks to see if an ICE GLITCH has occurred, and fixes it if it has
- */
-void Player::checkForIceGlitch() {
-	if (smh->environment->collision[gridX][gridY] == ICE) {
-		if (facing == UP || facing == DOWN) {
-			//should not have a different X position than the last non-ice square
-			if (gridX != lastNonIceGridX) {
-				//ICE GLITCH HAS HAPPENED, DO SOMETHING
-				iceSliding = false;
-				if (gridX > lastNonIceGridX) {
-					x = lastNonIceGridX * 64 + 60;
-					y = lastNonIceGridY * 64 + 32;
-				} else { 
-					x = lastNonIceGridX * 64 + 4;
-					y = lastNonIceGridY * 64 + 32;
-				}
-				//if (smh->isDebugOn()) MessageBox(NULL,"Gay ice fix (moving up/down, column not the same).","Gay ice fix",MB_OK);
-			}
-		} else if (facing == LEFT || facing == RIGHT) {
-			//should not have a different Y position than the last non-ice square
-			if (gridY != lastNonIceGridY) {
-				//ICE GLITCH HAS HAPPENED, DO SOMETHING
-				iceSliding = false;
-				if (gridY > lastNonIceGridY) {
-					x = lastNonIceGridX * 64 + 32;
-					y = lastNonIceGridY * 64 + 60;
-				} else {
-					x = lastNonIceGridX * 64 + 32;
-					y = lastNonIceGridY * 64 + 4;
-				}
-				//if (smh->isDebugOn()) MessageBox(NULL,"Gay ice fix (moving left/right, row not the same).","Gay ice fix",MB_OK);
-			}
-		} else { //facing diagonally
-			//if smiley only moved adjacently (1 tile) from lastNonIce square, set his facing to the correct direction
-			
-			if (gridY == lastNonIceGridY - 1 && gridX == lastNonIceGridX) {
-				//facing = UP;
-				//iceSliding = true;
-			} else if (gridY == lastNonIceGridY + 1 && gridX == lastNonIceGridX) {
-				//facing = DOWN;
-				//iceSliding = true;
-			} else if (gridX == lastNonIceGridX + 1 && gridY == lastNonIceGridY) {
-				//facing = RIGHT;
-				//iceSliding = true;
-			} else if (gridX == lastNonIceGridX - 1 && gridY == lastNonIceGridY) {
-				//facing = LEFT;
-				//iceSliding = true;
-			} else { // uh-oh, has actually moved diagonally, let's just go ahead and put smiley back onto land
-				x = lastNonIceGridX * 64 + 32;
-				y = lastNonIceGridY * 64 + 32;
-				iceSliding = false;
-				//if (smh->isDebugOn()) MessageBox(NULL,"Gay ice fix (moving diagonally).","Gay ice fix",MB_OK);
-			}
-			
-		}
-	}
 }

@@ -201,6 +201,10 @@ Particle itemParticle {
  filename=item.psi
  sprite=particleGraphic3
 }
+Particle slimeParticle {
+ filename=slime.psi
+ sprite=shockwaveGraphic
+}
 ;********************************************
 ;******** FENWAR (Resource Group 110) *******
 ;********************************************
@@ -1815,7 +1819,7 @@ Sprite spikeProjectile {
 }
 Sprite lightningOrbProjectile {
  texture=projectileTx
- rect=0,99,64,31
+ rect=0,98,31,31
  hotspot=16,16
  blendmode=COLORMUL,ALPHAADD,NOZWRITE
 }
@@ -1866,6 +1870,12 @@ Sprite Figure8Projectile {
  texture=projectileTx
  rect=1,215,30,30
  hotspot=15,15
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite SlimeProjectile {
+ texture=general
+ rect=129,221,24,34
+ hotspot=12,17
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 
