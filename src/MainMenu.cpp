@@ -34,8 +34,6 @@ void MainMenu::setScreen(int screen) {
 		menuScreen = new OptionsScreen();
 	} else if (currentScreen == LOAD_SCREEN) {
 		menuScreen = new SelectFileScreen();
-	} else if (currentScreen == DEATH_SCREEN) {
-		menuScreen = new DeathScreen();
 	} else if (currentScreen == CREDITS_SCREEN) {
 		menuScreen = new CreditsScreen();
 	} else if (currentScreen == CINEMATIC_SCREEN) {

@@ -11,14 +11,12 @@ class ControlActionGroup;
 class DifficultyPrompt;
 
 //Menu States
-#define NUM_MENU_SCREENS 4
 #define TITLE_SCREEN 0
 #define LOAD_SCREEN 1
 #define OPTIONS_SCREEN 2
-#define DEATH_SCREEN 3
-#define LOADING_SCREEN 4
-#define CREDITS_SCREEN 5
-#define CINEMATIC_SCREEN 6
+#define LOADING_SCREEN 3
+#define CREDITS_SCREEN 4
+#define CINEMATIC_SCREEN 5
 
 //Screen States
 #define ENTERING_SCREEN 0
@@ -139,31 +137,6 @@ private:
 	float timeActive;
 	float endY;
 	bool resourcesCachedYet;
-
-};
-
-
-//-----------------------------------------------------
-//------------------DEATH SCREEN-----------------------
-//-----------------------------------------------------
-#define DS_NUM_BUTTONS 2
-#define DS_QUIT_BUTTON 0
-#define DS_CONTINUE_BUTTON 1
-
-class DeathScreen : public MenuScreen {
-
-public:
-
-	DeathScreen();
-	~DeathScreen();
-
-	//Draw methods
-	void draw(float dt);
-	bool update(float dt, float mouseX, float mouseY);
-
-	Button *buttons[DS_NUM_BUTTONS];
-	float alpha;
-	
 
 };
 

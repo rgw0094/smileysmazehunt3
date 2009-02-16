@@ -34,11 +34,14 @@ int DifficultyPrompt::update(float dt) {
 
 	if (smh->hge->Input_KeyDown(HGEK_LBUTTON)) {
 		if (leftBox->TestPoint(smh->input->getMouseX(), smh->input->getMouseY())) {
+			if (currentSelection != 0) smh->soundManager->playSound("snd_ButtonClick");
 			currentSelection = max(0, currentSelection - 1);
 		} else if (rightBox->TestPoint(smh->input->getMouseX(), smh->input->getMouseY())) {
+			if (currentSelection != VERY_HARD) smh->soundManager->playSound("snd_ButtonClick");
 			currentSelection = min(VERY_HARD, currentSelection + 1);
 		} else if (okBox->TestPoint(smh->input->getMouseX(), smh->input->getMouseY())) {
 			visible = false;
+			smh->soundManager->playSound("snd_ButtonClick");
 			return currentSelection;
 		}
 	}
@@ -78,14 +81,26 @@ void DifficultyPrompt::draw(float dt) {
 	smh->resources->GetFont("inventoryFnt")->SetScale(1.0);
 
 	if (currentSelection != VERY_EASY) {
-		smh->drawSprite("leftArrow", DRAWX + 40, DRAWY + 80);
+		if (leftBox->TestPoint(smh->input->getMouseX(), smh->input->getMouseY())) {
+			smh->drawSprite("leftArrowHighlighted", DRAWX + 35, DRAWY + 80);
+		} else {
+			smh->drawSprite("leftArrow", DRAWX + 35, DRAWY + 80);
+		}
 	}
 
 	if (currentSelection != VERY_HARD) {
-		smh->drawSprite("rightArrow", DRAWX + 325 - 40, DRAWY + 80);
+		if (rightBox->TestPoint(smh->input->getMouseX(), smh->input->getMouseY())) {
+			smh->drawSprite("rightArrowHighlighted", DRAWX + 330 - 40, DRAWY + 80);
+		} else {
+			smh->drawSprite("rightArrow", DRAWX + 330 - 40, DRAWY + 80);
+		}
 	}
 
-	smh->drawSprite("okButton", DRAWX + 162.5, DRAWY + 120);
+	if (okBox->TestPoint(smh->input->getMouseX(), smh->input->getMouseY())) {
+		smh->drawSprite("okButtonHighlighted", DRAWX + 162.5, DRAWY + 120);
+	} else {
+		smh->drawSprite("okButton", DRAWX + 162.5, DRAWY + 120);
+	}
 
 	//smh->drawCollisionBox(okBox, RED);
 	//smh->drawCollisionBox(leftBox, RED);

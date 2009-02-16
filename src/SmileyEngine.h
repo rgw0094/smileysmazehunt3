@@ -44,6 +44,7 @@ class SoundManager;
 class ChangeManager;
 class BitStream;
 class ScreenEffectsManager;
+class DeathEffectManager;
 
 //Constants
 #define PI 3.14159265357989232684
@@ -316,6 +317,7 @@ public:
 	WindowManager *windowManager;
 	ScreenEffectsManager *screenEffectsManager;
 	ExplosionManager *explosionManager;
+	DeathEffectManager *deathEffectManager;
 
 private:
 
@@ -741,6 +743,34 @@ private:
 	float timeEffectStarted;
 
 	float xOffset, yOffset, rotation, hScale, vScale;
+
+};
+
+//----------------------------------------------------------------
+//-------------- DEATH EFFECT MANAGER ----------------------------
+//----------------------------------------------------------------
+// Draws the death effect and then returns the player to the main menu
+//----------------------------------------------------------------
+class DeathEffectManager {
+
+public:
+
+	DeathEffectManager();
+	~DeathEffectManager();
+
+	//Draw methods
+	void draw(float dt);
+	void update(float dt);
+	void beginEffect();
+	bool isActive();
+
+private:
+
+	float alpha;
+	float smileyScale;
+	float timeEffectFinished;
+	bool effectFinished;
+	bool active;
 
 };
 
