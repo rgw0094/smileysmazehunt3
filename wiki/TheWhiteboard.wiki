@@ -7,11 +7,9 @@
  * Frisbee: Have the player hold the key down and then release it to throw the frisbee.  Then the longer the button is held, the faster it spins and/or moves and more importantly the longer the enemy is stunned.  This will discourage lame complete frisbee ownage attacking strategies and allow us to make it cost no mana.
 
 === Graphics To Do ===
- * Difficulty prompt graphics
+ * Lovecraftian Boss tentacles
  * Pit graphics for different areas
  * More projectile graphics
- * Lovecraftian Boss tentacles
- * New button graphics maybe	 
 
 === Bugs ===
  * Bouncing spikey enemies that I put to appear in line with each other in game sometimes are not in line when testing, making it a lot harder to get by them than planned. (this is impossible to fix)
@@ -44,6 +42,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Made difficulty buttons highlighted when you mouseover them||2/15/09||RGW||
 ||Added support for shading the screen different colors to SMH.cpp||2/15/09||RGW||
 ||Fixed lightning orbs||2/15/09||RGW||
 ||Added "PHoming" attribute to enemy projectiles||2/14/09||ETI||
