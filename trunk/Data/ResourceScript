@@ -833,23 +833,60 @@ Sprite difficultyPromptBackground {
  rect=661,809,325,150
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=10
 }
 Sprite leftArrow {
  texture=UserInterfaceTx
  rect=989,810,32,32
  hotspot=16,16
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=10
 }
 Sprite rightArrow {
  texture=UserInterfaceTx
  rect=989,844,32,32
  hotspot=16,16
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=10
 }
 Sprite okButton {
  texture=UserInterfaceTx
  rect=989,878,32,32
  hotspot=16,16
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=10
+}
+Sprite leftArrowHighlighted {
+ texture=UserInterfaceTx
+ rect=989,912,32,32
+ hotspot=16,16
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=10
+}
+Sprite rightArrowHighlighted {
+ texture=UserInterfaceTx
+ rect=989,946,32,32
+ hotspot=16,16
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=10
+}
+Sprite okButtonHighlighted {
+ texture=UserInterfaceTx
+ rect=989,980,32,32
+ hotspot=16,16
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=10
+}
+Sprite smileyWithoutHat {
+ texture=general
+ rect=3,590,53,42
+ hotspot=26,21
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite smileysHat {
+ texture=general
+ rect=71,594,51,34
+ hotspot=25,17
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 

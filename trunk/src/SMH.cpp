@@ -21,8 +21,7 @@ SMH::SMH(HGE *_hge) {
 	lastDebugMoveTime = 0.0;
 	screenColorAlpha = 0.0;
 
-	//Game time and frame counter are only set once and carry over when "re-entering"
-	//game mode. 
+	//Game time and frame counter are only set once and carry over when "re-entering" game mode. 
 	gameTime = 0.0;
 	frameCounter = 0;
 }
@@ -95,6 +94,9 @@ void SMH::init() {
 	log("Creating ExplosionManager");
 	explosionManager = new ExplosionManager();
 
+	log("Creating DeathEffectManager");
+	deathEffectManager = new DeathEffectManager();
+
 	//Create Environment last
 	log("Creating Environment");
 	environment = new Environment();
@@ -127,7 +129,7 @@ bool SMH::updateGame() {
 	} else if (gameState == GAME) {
 
 		//Toggle options/exit
-		if (hge->Input_KeyDown(HGEK_ESCAPE)) {
+		if (!deathEffectManager->isActive() && hge->Input_KeyDown(HGEK_ESCAPE)) {
 			windowManager->openWindow(new MiniMenu(MINIMENU_EXIT));
 		}
 
@@ -145,10 +147,12 @@ bool SMH::updateGame() {
 		fenwarManager->update(dt);
 		environment->updateTutorialMan(dt);
 		player->updateGUI(dt);
+		deathEffectManager->update(dt);
 
 		//If none of them are active, update the game objects!
-		if (!windowManager->isOpenWindow() && !areaChanger->isChangingArea() && 
-				!fenwarManager->isEncounterActive() && !environment->isTutorialManActive()) {
+		if (!windowManager->isOpenWindow() && !areaChanger->isChangingArea() && !fenwarManager->isEncounterActive() && 
+			!environment->isTutorialManActive() && !deathEffectManager->isActive())
+		{
 
 			//Open game menu
 			if (input->keyPressed(INPUT_PAUSE) && !windowManager->isOpenWindow() && !menuClosedThisFrame) {
@@ -193,9 +197,9 @@ void SMH::drawGame() {
 		enemyManager->draw(dt);
 		npcManager->draw(dt);
 		bossManager->drawBeforeSmiley(dt);
-		player->draw(dt);
-		bossManager->drawAfterSmiley(dt);
+		if (!deathEffectManager->isActive()) player->draw(dt);
 		environment->drawAfterSmiley(dt);
+		bossManager->drawAfterSmiley(dt);
 		explosionManager->draw(dt);
 		fenwarManager->draw(dt);
 		projectileManager->draw(dt);
@@ -205,6 +209,7 @@ void SMH::drawGame() {
 		player->drawGUI(dt);
 		saveManager->drawSaveConfirmation(dt);
 		windowManager->draw(dt);
+		deathEffectManager->draw(dt);
 	}
 
 	if (isDebugOn()) {
@@ -229,8 +234,7 @@ void SMH::doDebugInput(float dt) {
 	if (hge->Input_KeyDown(HGEK_D)) toggleDebugMode();
 
 	if (hge->Input_KeyDown(HGEK_G)) {
-		enterGameState(GAME);
-		windowManager->openGameMenu(WORLD_MAP);
+		smh->player->setHealth(-1);
 	}
 
 	if (getGameState() == GAME) {

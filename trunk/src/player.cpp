@@ -200,9 +200,9 @@ void Player::update(float dt) {
 	updateSmileyColor(dt);
 
 	//Die
-	if (health <= 0.0f) {
+	if (health <= 0.0 && smh->getGameState() == GAME) {
 		flashing = false;
-		smh->menu->open(DEATH_SCREEN);
+		smh->deathEffectManager->beginEffect();
 	}
 
 }

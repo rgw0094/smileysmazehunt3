@@ -147,6 +147,9 @@
 					RelativePath=".\src\ChangeManager.cpp">
 				</File>
 				<File
+					RelativePath=".\src\DeathEffectManager.cpp">
+				</File>
+				<File
 					RelativePath=".\src\GameData.cpp">
 				</File>
 				<File
@@ -468,9 +471,6 @@
 				</File>
 				<File
 					RelativePath=".\src\CreditsScreen.cpp">
-				</File>
-				<File
-					RelativePath=".\src\DeathScreen.cpp">
 				</File>
 				<File
 					RelativePath=".\src\DifficultyPrompt.cpp">
