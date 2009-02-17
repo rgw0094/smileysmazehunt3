@@ -288,7 +288,7 @@ void EnemyManager::unFreezeEnemies(int x, int y) {
  *
  * Returns whether or not any enemies were hit
  */
-bool EnemyManager::hitEnemiesWithProjectile(hgeRect *collisionBox, float damage, int type) {
+bool EnemyManager::hitEnemiesWithProjectile(hgeRect *collisionBox, float damage, int type, float stunPower) {
 		
 	//Loop through the enemies
 	std::list<EnemyStruct>::iterator i;
@@ -301,17 +301,17 @@ bool EnemyManager::hitEnemiesWithProjectile(hgeRect *collisionBox, float damage,
 
 			if (smh->gameData->getEnemyInfo(i->enemy->id).invincible) return true;
 
-			if (type == PROJECTILE_FRISBEE) {
+			if (stunPower > 0.0) {
 				if (!i->enemy->immuneToStun) {
 					i->enemy->stunned = true;
-					i->enemy->stunLength = 2.0f;
+					i->enemy->stunLength = stunPower;
 					i->enemy->startedStun = smh->getGameTime();
 				}			
 			} 
 
 			if (!(type == PROJECTILE_LIGHTNING_ORB && i->enemy->immuneToLightning)) {
 				i->enemy->dealDamageAndKnockback(damage, 0.0, 0.0, 0.0);
-				i->enemy->startFlashing();
+				if (damage > 0.0) i->enemy->startFlashing();
 			}
 
 			return true;

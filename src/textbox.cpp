@@ -128,6 +128,8 @@ void TextBox::setNewAbility(int _ability) {
 
 	if (ability == CANE) {
 		numPages = 5;
+	} else if (ability == FRISBEE) {
+		numPages = 2;
 	} else {
 		numPages = 1;
 	}
@@ -369,7 +371,10 @@ std::string TextBox::getAbilityText(int ability, int page) {
 		case WATER_BOOTS:
 			return "You found Jesus' Sandals. You can now walk on Water!";
 		case FRISBEE:
-			return "You got the Frisbee! Use it to stun enemies and hit far away switches!";
+			switch (page) {
+				case 1: return "You got the Frisbee! Tap the Ability button (" + smh->input->getInputDescription(INPUT_ABILITY) + ") to throw the frisbee in order to toggle far away switches!";
+				case 2: return "You can also charge up a powerful stun attack by holding the ability button before releasing it to launch the frisbee. The longer you charge up, the longer any enemies you hit will be stunned!";
+			}
 		case FIRE_BREATH:
 			return "You can now breath fire! Don't sneeze around a dry forest!";
 		case SPRINT_BOOTS:

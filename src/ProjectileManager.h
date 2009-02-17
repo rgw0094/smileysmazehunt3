@@ -55,6 +55,7 @@ struct Projectile {
 
 	//Frisbee shit
 	float frisbeeAngle;
+	float stunPower;
 
 	//Orb shit
 	bool waitingToReflect;
@@ -89,6 +90,7 @@ public:
 	int killProjectilesInCircle(float x, float y, float radius, int type);
 	int rotateLeftOrRightForMinimumRotation(float projectileAngle, float angleToTarget);
 
+	void addFrisbee(float x, float y, float speed, float angle, float stunPower);
 	void addProjectile(float x, float y, float speed, float angle, float damage, bool hostile, bool homing,
 		int id, bool makesSmileyFlash);
 	void addProjectile(float x, float y, float speed, float angle, float damage, bool hostile, bool homing,
@@ -98,6 +100,12 @@ public:
 	ProjectileType projectileTypes[NUM_PROJECTILES];
 	std::list<Projectile> theProjectiles;
 	bool canPass[256];
+
+private:
+
+	void addProjectile(float x, float y, float speed, float angle, float damage, bool hostile, bool homing,
+		int id, bool makesSmileyFlash, bool hasParabola, float parabolaLength, 
+		float parabolaDuration, float parabolaHeight, float stunPower);
 
 };
 
