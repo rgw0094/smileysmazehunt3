@@ -3,7 +3,6 @@
  * Leet Death Effect
  * Lovecraftian Boss
  * Barvinoid
- * Make it so you can't see enemy blocks on the mini map before they appear
  * Frisbee: Have the player hold the key down and then release it to throw the frisbee.  Then the longer the button is held, the faster it spins and/or moves and more importantly the longer the enemy is stunned.  This will discourage lame complete frisbee ownage attacking strategies and allow us to make it cost no mana.
 
 === Graphics To Do ===
