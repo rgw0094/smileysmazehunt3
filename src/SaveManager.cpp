@@ -67,32 +67,20 @@ void SaveManager::resetCurrentData() {
 	changeManager->reset();
 
 	for (int i = 0; i < NUM_BOSSES; i++) killedBoss[i] = false;
-	
-	//make it a REAL GAME
-	if (currentSave == 3) { 
-		for (int i = 0; i < NUM_ABILITIES; i++) hasAbility[i] = false;
-		for (int i = 0; i < 5; i++) {
-			for (int j = 0; j < 4; j++) {
-				numKeys[i][j] = 0;
-			}
-		}
+	for (int i = 0; i < NUM_ABILITIES; i++) hasAbility[i] = false;
 
-	//Start with keys and abilities
-	} else { 
-		for (int i = 0; i < NUM_ABILITIES; i++) hasAbility[i] = true;
-		for (int i = 0; i < 5; i++) {
-			for (int j = 0; j < 4; j++) {
-				numKeys[i][j] = 5;
-			}
+	for (int i = 0; i < 5; i++) {
+		for (int j = 0; j < 4; j++) {
+			numKeys[i][j] = 0;
 		}
 	}
+
 	for (int i = 0; i < NUM_AREAS; i++) {
 		for (int j = 0; j < 3; j++) {
 			numGems[i][j] = 0;
 		}
 	}
 
-	//reset explored data
 	for (int i = 0; i < NUM_AREAS; i++) {
 		for (int j = 0; j < 256; j++) {
 			for (int k = 0; k < 256; k++) {

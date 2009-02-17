@@ -123,33 +123,13 @@ void TextBox::setNewAbility(int _ability) {
 
 	textBoxType = TYPE_ABILITY;
 	init();
-	numPages = currentPage = 1;
+	currentPage = 1;
 	ability = _ability;
 
 	if (ability == CANE) {
-		strcpy(text, smh->gameData->getGameText("GotCane"));
-	} else if (ability == WATER_BOOTS) {
-		strcpy(text, smh->gameData->getGameText("GotJesusSandals"));
-	} else if (ability == FRISBEE) {
-		strcpy(text, smh->gameData->getGameText("GotFrisbee"));
-	} else if (ability == FIRE_BREATH) {
-		strcpy(text, smh->gameData->getGameText("GotFireBreath"));
-	} else if (ability == SPRINT_BOOTS) {
-		strcpy(text, smh->gameData->getGameText("GotSprintBoots"));
-	} else if (ability == LIGHTNING_ORB) {
-		strcpy(text, smh->gameData->getGameText("GotLightningOrb"));
-	} else if (ability == REFLECTION_SHIELD) {
-		strcpy(text, smh->gameData->getGameText("GotReflectionShield"));
-	} else if (ability == SILLY_PAD) {
-		strcpy(text, smh->gameData->getGameText("GotSillyPad"));
-	} else if (ability == ICE_BREATH) {
-		strcpy(text, smh->gameData->getGameText("GotIceBreath"));
-	} else if (ability == SHRINK) {
-		strcpy(text, smh->gameData->getGameText("GotShrink"));
-	} else if (ability == TUTS_MASK) { 
-		strcpy(text, smh->gameData->getGameText("GotTutsMask"));
-	} else if (ability == HOVER) {
-		strcpy(text, smh->gameData->getGameText("GotHover"));
+		numPages = 5;
+	} else {
+		numPages = 1;
 	}
 
 }
@@ -231,12 +211,14 @@ void TextBox::draw(float dt) {
 			smh->resources->GetSprite("arrowIcon")->Render(x + 350, y + 220);
 		}
 
-
+	//New ability
 	} else if (textBoxType == TYPE_ABILITY) {
 		smh->resources->GetSprite("textBox")->Render(x,y);
 		smh->resources->GetAnimation("abilities")->SetFrame(ability);
 		smh->resources->GetAnimation("abilities")->Render(x+212,y+52);
-		smh->resources->GetFont("textBoxFnt")->printfb(x + 20, y + 25 + 64, 360, 200 - 64, HGETEXT_CENTER, "%s", text);
+		smh->resources->GetFont("textBoxFnt")->SetScale(0.75);
+		smh->resources->GetFont("textBoxFnt")->printfb(x + 20, y + 25 + 64, 360, 200 - 64, HGETEXT_CENTER, getAbilityText(ability, currentPage).c_str());
+		smh->resources->GetFont("textBoxFnt")->SetScale(1.0);
 
 	} else if (textBoxType == TYPE_SIGN) {
 		
@@ -371,4 +353,40 @@ bool TextBox::doFadeOut(float dt) {
 	}
 
 	return true;
+}
+
+std::string TextBox::getAbilityText(int ability, int page) {
+
+	switch (ability) {
+		case CANE:
+			switch (page) {
+				case 1: return "You got Bill Clinton's Cane! You can now receive the President's wisdom whenever you wish.";
+				case 2: return "You will receive abilities such as these throughout your adventure. They will appear in your inventory, which you can access by pressing [" + smh->input->getInputDescription(INPUT_PAUSE) + "].";
+				case 3: return "In your inventory you can select up to three abilities that will be available in the ability wheel in the top left hand side of your screen. You can toggle which abilities appear there by pressing Attack (" + smh->input->getInputDescription(INPUT_ATTACK) + ")";
+				case 4: return "The ability in the big center circle will be the one activated when you press or hold the Ability button (" + smh->input->getInputDescription(INPUT_ABILITY) + ").";
+				case 5: return "You can cycle left and right through your abilities by pressing (" + smh->input->getInputDescription(INPUT_PREVIOUS_ABILITY) + ") and (" + smh->input->getInputDescription(INPUT_NEXT_ABILITY) + "). Remember that you can press Escape at any time to access the menu and change your controls!";
+			}
+		case WATER_BOOTS:
+			return "You found Jesus' Sandals. You can now walk on Water!";
+		case FRISBEE:
+			return "You got the Frisbee!  Use it to stun enemies and hit far away switches!";
+		case FIRE_BREATH:
+			return "You can now breath fire!  Don't sneeze around a dry forest!";
+		case SPRINT_BOOTS:
+			return "You got the Sprint Boots!  You can now run as fast as the dickens!";
+		case LIGHTNING_ORB:
+			return "You can now shoot lightning orbs!  These projectiles reflect off of mirrors.";
+		case REFLECTION_SHIELD:
+			return "You got the Reflection Shield!  You can now reflect projectiles back towards enemies!";
+		case SILLY_PAD:
+			return "You got the Silly Pads! They are so silly that enemies cannot even cross them.";
+		case ICE_BREATH:
+			return "You got Ice Breath! Your breath is now so cold it can freeze enemies in their tracks!";
+		case SHRINK:
+			return "You got Shrink!  You may now change size at will!";
+		case TUTS_MASK:
+			return "You got Tut's Mask!  Wearing it makes you invisible to enemies!";
+		case HOVER:
+			return "You got Hover!  You can now fly as long as you take off on a hover pad (marked 'H')!";
+	}
 }
