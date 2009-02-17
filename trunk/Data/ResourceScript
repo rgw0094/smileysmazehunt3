@@ -1277,10 +1277,18 @@ Animation keyIcons {
 Animation upgradeIcons {
  texture=UserInterfaceTx
  rect=360,984,40,40
- frames=5
+ frames=3
  fps=20.0
  mode=LOOP
  hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Animation adviceIcons {
+ texture=UserInterfaceTx
+ rect=480,984,40,40
+ frames=8
+ fps=20.0
+ mode=LOOP
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 Sprite windowArrowLeft {

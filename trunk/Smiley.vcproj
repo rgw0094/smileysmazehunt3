@@ -415,6 +415,9 @@
 				Name="Source"
 				Filter="">
 				<File
+					RelativePath=".\src\Advice.cpp">
+				</File>
+				<File
 					RelativePath=".\src\inventory.cpp">
 				</File>
 				<File
