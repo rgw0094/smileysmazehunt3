@@ -38,7 +38,7 @@
 
 ===Done===
 ||Item||Date||Done By||
-||The mana meter can now expand without looking like the dickens||2/16/09||RGW||
+||The mana meter can now be upgraded without looking like the dickens||2/16/09||RGW||
 ||Added explanation of inventory.||2/16/09||RGW||
 ||Console (press ~)||2/16/09||RGW||
 ||Made difficulty buttons highlighted when you mouseover them||2/15/09||RGW||
