@@ -43,19 +43,25 @@ ProjectileManager::~ProjectileManager() {
 }
 
 
-/**
- * Add a projectile to the manager
- */
-void ProjectileManager::addProjectile(float x, float y, float speed, float angle, float damage, bool hostile, bool homing, int id, bool makesSmileyFlash) {
-	addProjectile(x, y, speed, angle, damage, hostile, homing, id, makesSmileyFlash, false, 0.0, 0.0, 0.0);
+void ProjectileManager::addFrisbee(float x, float y, float speed, float angle, float stunPower) {
+	addProjectile(x, y, speed, angle, 0.0, false, false, PROJECTILE_FRISBEE, false, false, 0.0, 0.0, 0.0, stunPower);
 }
 
-/**
- * Add a projectile to the manager
- */
+void ProjectileManager::addProjectile(float x, float y, float speed, float angle, float damage, bool hostile, bool homing, int id, bool makesSmileyFlash) {
+	addProjectile(x, y, speed, angle, damage, hostile, homing, id, makesSmileyFlash, false, 0.0, 0.0, 0.0, 0.0);
+}
+
 void ProjectileManager::addProjectile(float x, float y, float speed, float angle, float damage, bool hostile, bool homing,
 									  int id, bool makesSmileyFlash, bool hasParabola, float parabolaLength, 
-									  float parabolaDuration, float parabolaHeight) {
+									  float parabolaDuration, float parabolaHeight) 
+{
+	addProjectile(x, y, speed, angle, damage, hostile, homing, id, makesSmileyFlash, hasParabola, parabolaLength, parabolaDuration, parabolaHeight, 0.0);
+}
+
+void ProjectileManager::addProjectile(float x, float y, float speed, float angle, float damage, bool hostile, bool homing,
+									  int id, bool makesSmileyFlash, bool hasParabola, float parabolaLength, 
+									  float parabolaDuration, float parabolaHeight, float stunPower) 
+{
 
 	//Create new projectile struct
 	Projectile newProjectile;
@@ -83,6 +89,7 @@ void ProjectileManager::addProjectile(float x, float y, float speed, float angle
 	if (hasParabola) newProjectile.speed = parabolaLength / parabolaDuration;
 	newProjectile.dx = newProjectile.speed * cos(angle);
 	newProjectile.dy = newProjectile.speed * sin(angle);
+	newProjectile.stunPower = stunPower;
 
 	if (id == PROJECTILE_LIGHTNING_ORB) {
 		newProjectile.waitingToReflect = false;
@@ -195,7 +202,8 @@ void ProjectileManager::update(float dt) {
 
 		//Do collision with enemies
 		if (!i->hostile || i->id==PROJECTILE_TURRET_CANNONBALL) {
-			if (smh->enemyManager->hitEnemiesWithProjectile(i->collisionBox, i->damage, i->id)) {
+			if (smh->enemyManager->hitEnemiesWithProjectile(i->collisionBox, i->damage, i->id, i->stunPower)) {
+				
 				deleteProjectile = true;
 			}
 		}

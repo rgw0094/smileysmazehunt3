@@ -125,6 +125,7 @@ private:
 	int enteredSpringX, enteredSpringY;
 	bool usingManaItem;
 	float fallingDx, fallingDy;
+	float frisbeePower;
 	float dx, dy;
 
 	//Time variables
@@ -182,6 +183,7 @@ private:
 	bool healing;
 	bool immobile;
 	bool slimed;
+	bool chargingFrisbee;
 };
 
 //----------------------------------------------------------------

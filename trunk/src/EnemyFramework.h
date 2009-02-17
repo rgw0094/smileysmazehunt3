@@ -215,7 +215,7 @@ public:
 	bool collidesWithFrozenEnemy(CollisionCircle *circle);
 	void doAStar(BaseEnemy *enemy);
 	void reset();
-	bool hitEnemiesWithProjectile(hgeRect *collisionBox, float damage, int type);
+	bool hitEnemiesWithProjectile(hgeRect *collisionBox, float damage, int type, float stunPower);
 
 	//Variables
 	std::list<EnemyStruct> enemyList;

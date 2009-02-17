@@ -26,6 +26,7 @@ extern SMH *smh;
 #define SPEED_BOOTS_MODIFIER 1.75
 #define MOVE_SPEED 300.0
 #define CANE_TIME 1.5
+#define MAX_FRISBEE_POWER 2.0
 
 /**
  * Constructor
@@ -103,13 +104,14 @@ void Player::reset() {
 	startedFlashing = -10.0;
 	timeEnteredShrinkTunnel = -10.0;
 	timeStartedImmobilize = 0.0;
+	frisbeePower = 0.0;
 	dx = dy = 0.0;
 
 	//State variables
 	reflectionShieldActive = flashing = knockback = sliding = stunned =
 		onWarp = falling = breathingFire = inLava = inShallowWater = healing =
 		waterWalk = onWater = drowning = shrinkActive = sprinting = isHovering = 
-		cloaked = springing = usingCane = iceSliding = frozen = slimed =
+		cloaked = springing = usingCane = iceSliding = frozen = slimed = chargingFrisbee = 
 		inShrinkTunnel = immobile = invincible = uber = false;
 }
 
@@ -439,6 +441,15 @@ void Player::drawGUI(float dt) {
 			512.0 - 30.0 + 60.0f*((HOVER_DURATION-(smh->getGameTime()-timeStartedHovering))/HOVER_DURATION), 
 			384.0 - 50.0 - hoveringYOffset);
 	}
+
+	//Frisbee bar
+	if (chargingFrisbee && frisbeePower > (MAX_FRISBEE_POWER/10.0)) {
+		smh->resources->GetSprite("bossHealthBar")->RenderStretch(
+			512.0 - 30.0, 
+			384.0 - 55.0 - hoveringYOffset, 
+			512.0 - 30.0 + 60.0 * (frisbeePower/MAX_FRISBEE_POWER), 
+			384.0 - 50.0 - hoveringYOffset);
+	}
 }
 
 
@@ -526,7 +537,20 @@ void Player::doAbility(float dt) {
 				 smh->environment->collision[gridX][gridY] != DOWN_ARROW &&
 				 smh->environment->collision[gridX][gridY] != ICE);
 
-	
+	//////////////  Frisbee /////////////////
+
+	if (canUseAbility && gui->getSelectedAbility() == FRISBEE) {
+		if (smh->input->keyPressed(INPUT_ABILITY) && !chargingFrisbee && !smh->projectileManager->frisbeeActive()) {
+			frisbeePower = 0.0;
+			chargingFrisbee = true;
+		}
+		if (chargingFrisbee) frisbeePower = min(MAX_FRISBEE_POWER, frisbeePower + (MAX_FRISBEE_POWER/2.0) * dt);
+		if (chargingFrisbee && !smh->input->keyDown(INPUT_ABILITY)) {
+			smh->projectileManager->addFrisbee(x, y, 400.0, angles[facing]-.5*PI, frisbeePower > (MAX_FRISBEE_POWER/10.0) ? frisbeePower : 0.0);
+			chargingFrisbee = false;
+		}
+	}
+
 	////////////// Fire Breath //////////////
 
 	if (canUseAbility && gui->getSelectedAbility() == FIRE_BREATH && smh->input->keyDown(INPUT_ABILITY) 
@@ -589,12 +613,6 @@ void Player::doAbility(float dt) {
 			breathingIce = true;
 		}
 		
-		//Throw frisbee
-		if (gui->getSelectedAbility() == FRISBEE && !smh->projectileManager->frisbeeActive() && mana >= smh->gameData->getAbilityInfo(FRISBEE).manaCost) {
-			mana -= smh->gameData->getAbilityInfo(FRISBEE).manaCost;
-			smh->projectileManager->addProjectile(x,y,400.0,angles[facing]-.5*PI,0,false,false,PROJECTILE_FRISBEE, true);
-		}
-
 		//Toggle shrink mode
 		if (gui->getSelectedAbility() == SHRINK) {
 			shrinkActive = !shrinkActive;
