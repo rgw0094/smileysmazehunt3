@@ -185,7 +185,7 @@ void Player::update(float dt) {
 	worm->update();
 
 	//Update health and mana
-	if (!usingManaItem) mana += (getMaxMana() * MANA_REGENERATE_RATE/100) * dt;
+	if (!usingManaItem) mana += (getMaxMana() * 1.2 * MANA_REGENERATE_RATE/100) * dt;
 	if (mana < 0.0f) mana = 0.0f;
 	if (mana > getMaxMana()) mana = getMaxMana();
 	if (health > getMaxHealth()) health = getMaxHealth();

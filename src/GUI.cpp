@@ -187,10 +187,17 @@ void GUI::draw() {
 
 	//Draw mana bar
 	drawX = 155;
-	drawY = smh->player->getMaxHealth() < 10 ? 65 : 110;
-	smh->resources->GetSprite("manabarBackground")->RenderEx(drawX, drawY, 0.0, 1.0 + .15 * smh->saveManager->numUpgrades[1], 1.0);
-	smh->resources->GetSprite("manaBar")->SetTextureRect(661, 304, 115*(smh->player->getMana()/smh->player->getMaxMana()), 15, true);
+	drawY = smh->player->getMaxHealth() < 11 ? 65 : 110;
+	float manaBarSizeMultiplier = (1.0 + .15 * smh->saveManager->numUpgrades[1]) * 0.96; //adjust the size multiplier so max mana bar is the same width as max hearts
+	
+	smh->resources->GetSprite("manabarBackgroundCenter")->SetTextureRect(675, 282, 115*manaBarSizeMultiplier-4, 22, true);
+	smh->resources->GetSprite("manabarBackgroundCenter")->Render(drawX+4, drawY);
+	smh->resources->GetSprite("manaBar")->SetTextureRect(661, 304, 115*(smh->player->getMana()/smh->player->getMaxMana())*manaBarSizeMultiplier, 15, true);
 	smh->resources->GetSprite("manaBar")->Render(drawX+4,drawY+3);
+
+	smh->resources->GetSprite("manabarBackgroundLeftTip")->Render(drawX, drawY);
+	smh->resources->GetSprite("manabarBackgroundRightTip")->Render(drawX + 115 * manaBarSizeMultiplier - 2, drawY);
+	
 
 	//Draw abilities
 	smh->resources->GetSprite("abilityBackground")->Render(5.0, 12.0);

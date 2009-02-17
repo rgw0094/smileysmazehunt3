@@ -1122,15 +1122,27 @@ Sprite abilityBackground {
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
-Sprite manabarBackground {
+Sprite manabarBackgroundLeftTip {
  texture=UserInterfaceTx
- rect=661,282,123,22
+ rect=661,282,6,22
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite manabarBackgroundRightTip {
+ texture=UserInterfaceTx
+ rect=668,282,6,22
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite manabarBackgroundCenter {
+ texture=UserInterfaceTx
+ rect=675,282,349,22
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 Sprite manaBar {
  texture=UserInterfaceTx
- rect=661,304,115,16
+ rect=661,304,360,16
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
