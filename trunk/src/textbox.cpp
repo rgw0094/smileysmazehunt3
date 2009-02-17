@@ -369,24 +369,24 @@ std::string TextBox::getAbilityText(int ability, int page) {
 		case WATER_BOOTS:
 			return "You found Jesus' Sandals. You can now walk on Water!";
 		case FRISBEE:
-			return "You got the Frisbee!  Use it to stun enemies and hit far away switches!";
+			return "You got the Frisbee! Use it to stun enemies and hit far away switches!";
 		case FIRE_BREATH:
-			return "You can now breath fire!  Don't sneeze around a dry forest!";
+			return "You can now breath fire! Don't sneeze around a dry forest!";
 		case SPRINT_BOOTS:
-			return "You got the Sprint Boots!  You can now run as fast as the dickens!";
+			return "You got the Sprint Boots! You can now run as fast as the dickens!";
 		case LIGHTNING_ORB:
-			return "You can now shoot lightning orbs!  These projectiles reflect off of mirrors.";
+			return "You can now shoot lightning orbs! These projectiles reflect off of mirrors.";
 		case REFLECTION_SHIELD:
-			return "You got the Reflection Shield!  You can now reflect projectiles back towards enemies!";
+			return "You got the Reflection Shield! You can now reflect projectiles back towards enemies!";
 		case SILLY_PAD:
 			return "You got the Silly Pads! They are so silly that enemies cannot even cross them.";
 		case ICE_BREATH:
 			return "You got Ice Breath! Your breath is now so cold it can freeze enemies in their tracks!";
 		case SHRINK:
-			return "You got Shrink!  You may now change size at will!";
+			return "You got Shrink! You may now change size at will!";
 		case TUTS_MASK:
-			return "You got Tut's Mask!  Wearing it makes you invisible to enemies!";
+			return "You got Tut's Mask! Wearing it makes you invisible to enemies!";
 		case HOVER:
-			return "You got Hover!  You can now fly as long as you take off on a hover pad (marked 'H')!";
+			return "You got Hover! You can now fly as long as you take off on a hover pad (marked 'H')!";
 	}
 }

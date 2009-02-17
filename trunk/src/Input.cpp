@@ -394,7 +394,7 @@ void SmileyInput::loadInputs() {
 	inputs[INPUT_RIGHT].code = smh->hge->Ini_GetInt("Controls","right",HGEK_RIGHT);
 	inputs[INPUT_UP].code = smh->hge->Ini_GetInt("Controls","up",HGEK_UP);
 	inputs[INPUT_DOWN].code = smh->hge->Ini_GetInt("Controls","down",HGEK_DOWN);
-	inputs[INPUT_ATTACK].code = smh->hge->Ini_GetInt("Controls","attack",HGEK_SHIFT);
+	inputs[INPUT_ATTACK].code = smh->hge->Ini_GetInt("Controls","attack",HGEK_SPACE);
 	inputs[INPUT_ABILITY].code = smh->hge->Ini_GetInt("Controls","ability",HGEK_CTRL);
 	inputs[INPUT_AIM].code = smh->hge->Ini_GetInt("Controls","aim",HGEK_ALT);
 	inputs[INPUT_NEXT_ABILITY].code = smh->hge->Ini_GetInt("Controls","next",HGEK_X);

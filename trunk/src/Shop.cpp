@@ -124,9 +124,10 @@ void Shop::purchaseItem(int item)
 		smh->saveManager->numUpgrades[item]++;
 		smh->soundManager->playSound("snd_purchaseUpgrade");
 
-		if (currentSelection == HEALTH) 
-		{
-			smh->player->setHealth(smh->player->getHealth() + 1.0);
+		if (currentSelection == HEALTH) {
+			smh->player->setHealth(smh->player->getMaxHealth());
+		} else if (currentSelection == MANA) {
+			smh->player->setMana(smh->player->getMaxMana());
 		}
 	}
 }
