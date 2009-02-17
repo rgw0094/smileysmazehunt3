@@ -17,8 +17,6 @@
  * Spikey enemies start in the wrong spot sometimes. Ex: the mass of spikey enemies in Egypt, sometimes one of them will move down first and then will bounce horizontally in the wrong spot.
 
 === Terry's comments ===
- * The default attack key should be Space, not Shift.
- * It's too tough to figure out how to use the inventory (Pause vs. escape) and item switching at the beginning. 
  * Put a fence around the barns so you know you can't go in them.
  * When deleting a file, you don't notice the YES/NO easily enough.
 
