@@ -41,6 +41,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Added explanation of inventory.||2/16/09||RGW||
 ||Console (press ~)||2/16/09||RGW||
 ||Made difficulty buttons highlighted when you mouseover them||2/15/09||RGW||
 ||Added support for shading the screen different colors to SMH.cpp||2/15/09||RGW||
