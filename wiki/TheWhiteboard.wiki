@@ -3,7 +3,8 @@
  * Leet Death Effect
  * Lovecraftian Boss
  * Barvinoid
- * Frisbee: Have the player hold the key down and then release it to throw the frisbee.  Then the longer the button is held, the faster it spins and/or moves and more importantly the longer the enemy is stunned.  This will discourage lame complete frisbee ownage attacking strategies and allow us to make it cost no mana.
+ * Fenwar
+ * Closing Cinematic
 
 === Graphics To Do ===
  * Lovecraftian Boss tentacles
@@ -38,6 +39,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Implemented charged frisbee attack||2/16/09||RGW||
 ||The mana meter can now be upgraded without looking like the dickens||2/16/09||RGW||
 ||Added explanation of inventory.||2/16/09||RGW||
 ||Console (press ~)||2/16/09||RGW||
