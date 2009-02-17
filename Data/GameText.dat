@@ -205,10 +205,13 @@ NPC1-2 = "Think he was goin' south down towards ye Olde Towne, but why would any
 NPC1-3 = "That mud hole of a town's got no one left after Fenwar terrorized thems peoples."
 
 NPC5Name = "Speirdyke"
-NPC5Pages = "3"
-NPC5-1 = "Name's Captain Speirdyke, pirate extraordinaire.  My ship was mortally wounded by fierce storm in the Atlarctic Ocean."
-NPC5-2 = "Anyways, to make a long story short, boy, I need some loot to buy myself a new ship and get back on the water."
-NPC5-3 = "If you help me out, I'll repay you!  You have my word."
+NPC5Pages = "6"
+NPC5-1 = "Rob, I am currently making an ADVICE window. When you talk to the Monocle Man in Glen's house he'll give you advice."
+NPC5-2 = "Unfortunately, for some reason the window only opens for Spierdyke. So, that's why Spierdyke is giving advice."
+NPC5-3 = "After I finish the ADVICE window I'll figure out how to make it open for Monocle Man."
+NPC5-4 = "Name's Captain Speirdyke, pirate extraordinaire.  My ship was mortally wounded by fierce storm in the Atlarctic Ocean."
+NPC5-5 = "Anyways, to make a long story short, boy, I need some loot to buy myself a new ship and get back on the water."
+NPC5-6 = "If you help me out, I'll repay you!  You have my word."
 
 NPC8Name = "Bill Clinton"
 NPC8Pages = "2"
@@ -224,6 +227,12 @@ NPC19-2 = "You see, I prefer to only be seen talking to important people and hot
 NPC20Name = "Random Woman"
 NPC20Pages = "1"
 NPC20-1 = "Oh hey honey.  You're a cutie."
+
+NPC21Name = "Monocle Man"
+NPC21Pages = "3"
+NPC21-1 = "Hello there, stranger. I am brimming with knowledge."
+NPC21-2 = "I am expert in all areas. Just let me know the area in which you need advice."
+NPC21-3 = "Disclaimer: any advice I give is based on the default control scheme."
 
 ;OLDETOWNE.SMH
 NPC2Name = "Abner"

@@ -19,6 +19,7 @@ extern SMH *smh;
 #define SPIERDYKE 5
 #define BILL_CLINTON 8
 #define BILL_CLINTON_TEXT2 19
+#define MONOCLE 21
 
 #define PSYCHEDELIC_GRANULARITY 16
 
@@ -283,6 +284,11 @@ bool TextBox::update(float dt) {
 			
 			//If this is spierdyke, open the shop
 			if (textBoxType == TYPE_DIALOG && npcID == SPIERDYKE) {
+				smh->windowManager->openWindow(new Advice());
+				return true; //Don't tell manager to close window
+
+			//If this is Monocle Man, open up the "Advice" window
+			} else if (textBoxType == TYPE_DIALOG && npcID == MONOCLE) {
 				smh->windowManager->openWindow(new Shop());
 				return true; //Don't tell manager to close window
 
