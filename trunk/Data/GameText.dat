@@ -3,19 +3,6 @@
 ;NPC >= 100 < 240 is for bosses
 ;NPC >= 240 is for fenwar encounters
 
-GotCane = "You got Bill Clinton's Cane! You can now receive the President's wisdom whenever you wish."
-GotFireBreath = "You can now breath fire!  Don't sneeze around a dry forest!"
-GotFrisbee = "You got the Frisbee!  Use it to stun enemies and hit far away switches!"
-GotSprintBoots = "You got the Sprint Boots!  You can now run as fast as the dickens!"
-GotLightningOrb = "You can now shoot lightning orbs!  These projectiles reflect off of mirrors."
-GotJesusSandals = "You found Jesus' Sandals. You can now walk on Water!"
-GotReflectionShield = "You got the Reflection Shield!  You can now reflect projectiles back towards enemies!"
-GotIceBreath = "You got Ice Breath! Your breath is now so cold it can freeze enemies in their tracks!"
-GotSillyPad = "You got the Silly Pads! They are so silly that enemies cannot even cross them."
-GotShrink = "You got Shrink!  You may now change size at will!"
-GotTutsMask = "You got Tut's Mask!  Wearing it makes you invisible to enemies!"
-GotHover = "You got Hover!  You can now fly as long as you take off on a hover pad (marked 'H')!"
-
 ;=============================================HINTS======================================
 Hint0Pages = "5"
 Hint0-1 = "Hold on Smiley, let me put down this cigar."

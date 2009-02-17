@@ -17,8 +17,6 @@ SMH::SMH(HGE *_hge) {
 	hge = _hge;
 	debugMode = false;
 	debugText = "";
-	debugMovePressed = false;
-	lastDebugMoveTime = 0.0;
 	screenColorAlpha = 0.0;
 
 	//Game time and frame counter are only set once and carry over when "re-entering" game mode. 
@@ -42,6 +40,9 @@ void SMH::init() {
 	hge->Resource_AttachPack("Data/Sounds.zip");
 	hge->Resource_AttachPack("Data/Fonts.zip");
 	hge->Resource_AttachPack("Data/GameData.zip");
+
+	log("Creating Console");
+	console = new Console();
 
 	log("Creating SaveManager");
 	saveManager = new SaveManager();
@@ -115,7 +116,6 @@ bool SMH::updateGame() {
 	timeInState += dt;
 	frameCounter++;
 	input->UpdateInput();
-	doDebugInput(dt);
 	
 	//Input for taking screenshots
 	if (hge->Input_KeyDown(HGEK_F9)) {
@@ -127,6 +127,10 @@ bool SMH::updateGame() {
 		if (menu->update(dt) || hge->Input_KeyDown(HGEK_ESCAPE)) return true;
 
 	} else if (gameState == GAME) {
+
+		//Update the console
+		if (smh->hge->Input_KeyDown(HGEK_GRAVE)) console->toggle();
+		console->update(dt);
 
 		//Toggle options/exit
 		if (!deathEffectManager->isActive() && hge->Input_KeyDown(HGEK_ESCAPE)) {
@@ -210,6 +214,7 @@ void SMH::drawGame() {
 		saveManager->drawSaveConfirmation(dt);
 		windowManager->draw(dt);
 		deathEffectManager->draw(dt);
+		console->draw(dt);
 	}
 
 	if (isDebugOn()) {
@@ -222,75 +227,6 @@ void SMH::drawGame() {
 	}
 
 	hge->Gfx_EndScene();
-}
-
-
-/**
- * Put all gay debug input here.
- */
-void SMH::doDebugInput(float dt) {
-
-	//Toggle debug mode
-	if (hge->Input_KeyDown(HGEK_D)) toggleDebugMode();
-
-	if (hge->Input_KeyDown(HGEK_G)) {
-		smh->player->setHealth(-1);
-	}
-
-	if (getGameState() == GAME) {
-
-		//Toggle invincibility
-		if (hge->Input_KeyDown(HGEK_I)) {
-			player->invincible = !player->invincible;
-		}
-
-		//Toggle uber-ness (really fast, a shitload of damage)
-		if (hge->Input_KeyDown(HGEK_U)) {
-			player->uber = !player->uber;
-		}
-		
-		//Gives you life (& mana) when you press L
-		if (hge->Input_KeyDown(HGEK_L)) {
-			player->setHealth(player->getMaxHealth());
-			player->setMana(player->getMaxMana());
-		}
-
-		//Teleport to warp zone
-		if (hge->Input_KeyDown(HGEK_F1)) {
-			if (!areaChanger->isChangingArea()) {
-				areaChanger->changeArea(-1, -1, DEBUG_AREA);
-			}
-		}
-
-		//Move smiley with num pad
-		int xMove = 0;
-		int yMove = 0;
-
-		//int upKey = HGEK_UP;
-		//int downKey = HGEK_DOWN;
-		//int leftKey = HGEK_LEFT;
-		//int rightKey = HGEK_RIGHT;
-		int upKey = HGEK_NUMPAD8;
-		int downKey = HGEK_NUMPAD5;
-		int leftKey = HGEK_NUMPAD4;
-		int rightKey = HGEK_NUMPAD6;
-
-		if (hge->Input_GetKeyState(upKey) || hge->Input_GetKeyState(downKey) || hge->Input_GetKeyState(leftKey) || hge->Input_GetKeyState(rightKey)) {
-			if (!debugMovePressed) {
-				debugMovePressed = true;
-				lastDebugMoveTime = getGameTime();
-			}
-			if (hge->Input_KeyDown(upKey) || (timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(upKey))) yMove = -1;
-			if (hge->Input_KeyDown(downKey) || (timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(downKey))) yMove = 1;
-			if (hge->Input_KeyDown(leftKey) || (timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(leftKey))) xMove = -1;
-			if (hge->Input_KeyDown(rightKey) || (timePassedSince(lastDebugMoveTime) > 0.5 && hge->Input_GetKeyState(rightKey))) xMove = 1;
-		} else {
-			debugMovePressed = false;
-		}
-		if (abs(xMove) > 0 || abs(yMove) > 0) player->moveTo(player->gridX + xMove, player->gridY + yMove);
-
-	}
-
 }
 	
 /**

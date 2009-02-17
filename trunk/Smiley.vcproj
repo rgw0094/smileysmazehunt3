@@ -147,6 +147,9 @@
 					RelativePath=".\src\ChangeManager.cpp">
 				</File>
 				<File
+					RelativePath=".\src\Console.cpp">
+				</File>
+				<File
 					RelativePath=".\src\DeathEffectManager.cpp">
 				</File>
 				<File

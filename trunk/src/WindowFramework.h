@@ -88,6 +88,7 @@ public:
 	void setNewAbility(int ability);
 	void init();
 	bool doFadeOut(float dt);
+	std::string getAbilityText(int ability, int page);
 
 	//Variables
 	int textBoxType;

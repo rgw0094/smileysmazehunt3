@@ -45,6 +45,7 @@ class ChangeManager;
 class BitStream;
 class ScreenEffectsManager;
 class DeathEffectManager;
+class Console;
 
 //Constants
 #define PI 3.14159265357989232684
@@ -297,6 +298,7 @@ public:
 	void setDebugText(std::string);
 	
 	//Game objects
+	Console *console;
 	AreaChanger *areaChanger;
 	BossManager *bossManager;
 	EnemyGroupManager *enemyGroupManager;
@@ -323,8 +325,6 @@ private:
 
 	void doDebugInput(float dt);
 
-	bool debugMovePressed;
-	float lastDebugMoveTime;
 	float gameTime;
 	float timeInState;
 	int gameState;
@@ -771,6 +771,33 @@ private:
 	float timeEffectFinished;
 	bool effectFinished;
 	bool active;
+
+};
+
+//----------------------------------------------------------------
+//---------------------------- CONSOLE ----------------------------
+//----------------------------------------------------------------
+// Toggle by pressing ~ to allow debug input
+//----------------------------------------------------------------
+class Console {
+
+public:
+
+	Console();
+	~Console();
+
+	void update(float dt);
+	void draw(float dt);
+	void toggle();
+
+private:
+
+	void write (std::string text, int toggled);
+
+	bool active;
+	bool debugMovePressed;
+	float lastDebugMoveTime;
+	int lineNum;
 
 };
 

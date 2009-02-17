@@ -20,6 +20,10 @@ Font controls {
  filename="controls.fnt"
  tracking=1.0
 }
+Font consoleFnt {
+ filename="consoleFnt.fnt"
+ tracking=1.0
+}
 Font inventoryFnt {
  filename="inventory.fnt"
  tracking=1.0
