@@ -19,7 +19,7 @@ extern SMH *smh;
 #define SPIERDYKE 5
 #define BILL_CLINTON 8
 #define BILL_CLINTON_TEXT2 19
-#define MONOCLE 21
+#define MONOCLE 13
 
 #define PSYCHEDELIC_GRANULARITY 16
 
@@ -283,21 +283,19 @@ bool TextBox::update(float dt) {
 			smh->windowManager->frameLastWindowClosed = smh->getCurrentFrame();
 			
 			//If this is spierdyke, open the shop
-			if (textBoxType == TYPE_DIALOG && npcID == SPIERDYKE) {
-				smh->windowManager->openWindow(new Advice());
-				return true; //Don't tell manager to close window
-
-			//If this is Monocle Man, open up the "Advice" window
-			} else if (textBoxType == TYPE_DIALOG && npcID == MONOCLE) {
-				smh->windowManager->openWindow(new Shop());
-				return true; //Don't tell manager to close window
-
-			//Give smiley the cane the first time he talks to Bill Clinton
-			} else if (textBoxType == TYPE_DIALOG && npcID == BILL_CLINTON && !smh->saveManager->hasAbility[CANE]) {
-				smh->saveManager->hasAbility[CANE] = true;
-				setNewAbility(CANE);
-				return true;
-			
+			if (textBoxType == TYPE_DIALOG) {
+				if (npcID == SPIERDYKE) {
+					smh->windowManager->openWindow(new Shop());
+					return true; //Don't tell manager to close window
+				} else if (npcID == MONOCLE) {
+					smh->log("NIGGER");
+					smh->windowManager->openWindow(new Advice());
+					return true; //Don't tell manager to close window
+				} else if (npcID == BILL_CLINTON && !smh->saveManager->hasAbility[CANE]) {
+					smh->saveManager->hasAbility[CANE] = true;
+					setNewAbility(CANE);
+					return true;
+				}		
 			//Close hint box by fading out psychedelic background
 			} else if (textBoxType == TYPE_HINT) {
 				fadingOut = true;
