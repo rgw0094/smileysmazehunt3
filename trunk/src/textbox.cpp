@@ -288,7 +288,6 @@ bool TextBox::update(float dt) {
 					smh->windowManager->openWindow(new Shop());
 					return true; //Don't tell manager to close window
 				} else if (npcID == MONOCLE) {
-					smh->log("NIGGER");
 					smh->windowManager->openWindow(new Advice());
 					return true; //Don't tell manager to close window
 				} else if (npcID == BILL_CLINTON && !smh->saveManager->hasAbility[CANE]) {
