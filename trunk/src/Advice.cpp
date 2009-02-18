@@ -23,6 +23,7 @@ extern SMH *smh;
  */
 Advice::Advice() {
 	currentSelection = ADVICE_EXIT;
+	smh->log("cunt");
 }
 
 /**
@@ -103,6 +104,8 @@ void Advice::draw(float dt) {
  */
 bool Advice::update(float dt) {
 
+	smh->log("dicks1");
+
 	//Move selection left
 	if (smh->input->keyPressed(INPUT_LEFT)) {
 		if (currentSelection == 0) currentSelection = 3;
@@ -127,6 +130,7 @@ bool Advice::update(float dt) {
 	}
 
 	if (smh->input->keyPressed(INPUT_ATTACK)) {
+		smh->log("dicks2");
 		switch (currentSelection) {
 			
 			case ADVICE_EXIT:
