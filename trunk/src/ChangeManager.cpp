@@ -74,7 +74,7 @@ void ChangeManager::addChange(int area, int x, int y) {
 void ChangeManager::writeToStream(BitStream *stream) {
 	
 	//Write the number of changes so they can be read back later
-	stream->writeByte(theChanges.size());
+	stream->writeBits(theChanges.size(), 16);
 
 	//Write the changes
 	for (std::list<Change>::iterator i = theChanges.begin(); i != theChanges.end(); i++) {

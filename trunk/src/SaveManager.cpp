@@ -168,7 +168,7 @@ void SaveManager::load(int fileNumber) {
 	playerMana = float(input->readByte());
 
 	//Load changed shit
-	int numChanges = input->readByte();
+	int numChanges = input->readBits(16);
 	for (int i = 0; i < numChanges; i++) {
 		changeManager->change(input->readByte(), input->readByte(), input->readByte());
 	}
