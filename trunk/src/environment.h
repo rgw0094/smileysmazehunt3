@@ -115,6 +115,7 @@ private:
 	hgeRect *collisionBox;
 	std::list<Timer> timerList;
 	std::list<ParticleStruct> particleList;
+	CollisionCircle *collisionCircle;
 
 	hgeAnimation *silverCylinder, *brownCylinder, *blueCylinder, *greenCylinder, *yellowCylinder, *whiteCylinder;
 	hgeAnimation *silverCylinderRev, *brownCylinderRev, *blueCylinderRev, *greenCylinderRev, *yellowCylinderRev, *whiteCylinderRev;

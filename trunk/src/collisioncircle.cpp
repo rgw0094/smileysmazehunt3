@@ -35,6 +35,9 @@ bool CollisionCircle::testBox(hgeRect *box) {
 	if (Util::distance(box->x2, box->y2, x, y) < radius) return true;
 	if (Util::distance(box->x1, box->y2, x, y) < radius) return true;
 
+	//Test middle of box
+	if (Util::distance(box->x1+(box->x2 - box->x1)/2.0, box->y1 + (box->y2 - box->y1)/2.0, x, y) < radius) return true;
+
 	//Test top and bottom of box
 	if (x > box->x1 && x < box->x2) {
 		if (abs(box->y2 - y) < radius) return true;
