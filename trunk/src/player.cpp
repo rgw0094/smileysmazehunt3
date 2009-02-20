@@ -199,7 +199,6 @@ void Player::update(float dt) {
 	doAbility(dt);
 	doItems();
 	doWater();
-	updateSmileyColor(dt);
 
 	//Die
 	if (health <= 0.0 && smh->getGameState() == GAME) {
@@ -351,17 +350,8 @@ void Player::draw(float dt) {
 		}
 
 		//Draw Smiley sprite
+		updateSmileyColor(dt);
 		smh->resources->GetAnimation("player")->SetFrame(facing);
-		if (uber) {
-            float uberRed   = (sin(smh->getRealTime()*1.3)+1.0)/2.0*50.0+200.0;
-			float uberGreen = (sin(smh->getRealTime()*1.6)+1.0)/2.0*50.0+200.0;
-			float uberBlue  = (sin(smh->getRealTime()*0.7)+1.0)/2.0*50.0+200.0;
-			smh->resources->GetAnimation("player")->SetColor(ARGB(255,uberRed,uberGreen,uberBlue));
-		} else if (slimed) {
-			smh->resources->GetAnimation("player")->SetColor(ARGB(255,100,200,100));
-		} else {
-			smh->resources->GetAnimation("player")->SetColor(ARGB(255,255,255,255));
-		}
 		smh->resources->GetAnimation("player")->RenderEx(512.0, 384.0 - hoveringYOffset - springOffset, 
 			rotation, scale * hoverScale * shrinkScale, scale * hoverScale * shrinkScale);
 
@@ -1582,6 +1572,14 @@ void Player::updateSmileyColor(float dt) {
 
 	if (healing) {
 		g = 255.0 - sin((smh->timePassedSince(timeStartedHeal)/HEAL_FLASH_DURATION) * PI) * 65.0;
+	} else if (uber) {
+		r = (sin(smh->getRealTime()*1.3)+1.0)/2.0*50.0+200.0;
+		g = (sin(smh->getRealTime()*1.6)+1.0)/2.0*50.0+200.0;
+		b = (sin(smh->getRealTime()*0.7)+1.0)/2.0*50.0+200.0;
+	} else if (slimed) {
+		r = 100.0;
+		g = 200.0;
+		b = 100.0;
 	}
 
 	smh->resources->GetAnimation("player")->SetColor(ARGB(alpha, r, g, b));
