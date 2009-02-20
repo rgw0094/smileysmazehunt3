@@ -39,7 +39,7 @@
 
 ===Done===
 ||Item||Date||Done By||
-||Fixed the save glitch||2/19/09||RGW||
+||Fixed the save bug||2/19/09||RGW||
 ||Implemented charged frisbee attack||2/16/09||RGW||
 ||The mana meter can now be upgraded without looking like the dickens||2/16/09||RGW||
 ||Added explanation of inventory.||2/16/09||RGW||
