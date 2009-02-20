@@ -103,6 +103,7 @@ Environment::Environment() {
 	smileletManager = new SmileletManager();
 
 	collisionBox = new hgeRect();
+	collisionCircle = new CollisionCircle();
 
 }
 
@@ -1305,9 +1306,11 @@ bool Environment::playerCollision(int x, int y, float dt) {
 			//Ignore squares off the map
 			if (isInBounds(i,j) && !canPass) {
 		
-				//Set collision box depending on collision type
+				//Test collision with this square
 				setTerrainCollisionBox(collisionBox, collision[i][j], i, j);
 
+				//Note that this is different than normal circle/box collision!!!
+				
 				//Test top and bottom of box
 				if (x > collisionBox->x1 && x < collisionBox->x2) {
 					if (abs(collisionBox->y2 - y) < smh->player->radius) return true;
@@ -1320,6 +1323,10 @@ bool Environment::playerCollision(int x, int y, float dt) {
 					if (abs(collisionBox->x1 - x) < smh->player->radius) return true;
 				}
 
+				//Test the center of the box
+				if (Util::distance(collisionBox->x1+(collisionBox->x2 - collisionBox->x1)/2.0, collisionBox->y1 + (collisionBox->y2 - collisionBox->y1)/2.0, x, y) < smh->player->radius) return true;
+
+				//Now do a ton of shit to make smiley round corners
 				bool onlyDownPressed = smh->input->keyDown(INPUT_DOWN) && !smh->input->keyDown(INPUT_UP) && !smh->input->keyDown(INPUT_LEFT) && !smh->input->keyDown(INPUT_RIGHT);
 				bool onlyUpPressed = !smh->input->keyDown(INPUT_DOWN) && smh->input->keyDown(INPUT_UP) && !smh->input->keyDown(INPUT_LEFT) && !smh->input->keyDown(INPUT_RIGHT);
 				bool onlyLeftPressed = !smh->input->keyDown(INPUT_DOWN) && !smh->input->keyDown(INPUT_UP) && smh->input->keyDown(INPUT_LEFT) && !smh->input->keyDown(INPUT_RIGHT);
