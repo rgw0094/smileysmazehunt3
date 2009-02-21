@@ -41,21 +41,19 @@ extern SMH *smh;
 #define CANDY_HEIGHT 128.0
 #define CANDY_RUN_SPEED 800.0
 #define CANDY_JUMP_DELAY 1.00
-#define COLLISION_DAMAGE 1.0
+#define COLLISION_DAMAGE 0.7
 #define SHOCKWAVE_STUN_DURATION 1.5
-#define SHOCKWAVE_DAMAGE 0.25
-#define BARTLET_DAMAGE 0.5
+#define BARTLET_DAMAGE 0.7
 #define THROWN_CANDY_DAMAGE 0.75
-#define BARTLET_DAMAGE 1.0
 #define FLASHING_DURATION 0.75
 
-#define THROWING_CANDY_STATE_DURATION 10.0
+#define THROWING_CANDY_STATE_DURATION 8.0
 #define RUN_STATE_DURATION 8.0
 #define REST_STATE_DURATION 5.0
 #define SHRINKING_DURATION 1.0
 
-#define HEALTH 1.8
-#define NUM_LIVES 7 //7
+#define HEALTH 4
+#define NUM_LIVES 7
 
 CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 	initialGridX = gridX = _gridX;
@@ -87,6 +85,7 @@ CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 	fadeOutAlpha = 255.0;
 	flashingAlpha = 255.0;
 	restYOffset = 0.0;
+	lastTimeHitSmiley = 0.0;
 
 	numLives = NUM_LIVES;
     size = 1.0;
@@ -200,7 +199,7 @@ bool CandyBoss::update(float dt) {
 		//Stage 3a - jumping
 		if (state == CANDY_STATE_JUMPING) {
 			updateJumping(dt);
-			if (numJumps >= 10) {
+			if (numJumps >= 7) {
 				jumping = false;
 				enterState(CANDY_STATE_RESTING);
 			}
@@ -233,11 +232,16 @@ bool CandyBoss::update(float dt) {
 		}
 		if (smh->player->collisionCircle->testBox(collisionBox)) {
 			if (state == CANDY_STATE_MULTI_JUMP) {
-				smh->player->dealDamage(0.25, false);
+				if (smh->timePassedSince(lastTimeHitSmiley) > 0.5 * (1.0 / speedMultiplier)) {
+					smh->player->dealDamage(0.25, false);
+					lastTimeHitSmiley = smh->getGameTime();
+				}
 				smh->setDebugText("Smiley hit by CandyBoss during MultiJump");
 			} else {
-				smh->player->dealDamageAndKnockback(COLLISION_DAMAGE, true, 225.0, x, y);
-				smh->setDebugText("Smiley hit by CandyBoss");
+				if (smh->timePassedSince(lastTimeHitSmiley) > 0.5 * (1.0 / speedMultiplier)) {
+					smh->player->dealDamageAndKnockback(COLLISION_DAMAGE, true, 225.0, x, y);
+					smh->setDebugText("Smiley hit by CandyBoss");
+				}
 			}
 		}
 
@@ -257,10 +261,11 @@ bool CandyBoss::update(float dt) {
 			lastTimeHit = smh->getGameTime();
 			openMouth(0.15);
 		}
-
-		smh->projectileManager->reflectProjectilesInBox(collisionBox, PROJECTILE_FRISBEE);
-		smh->projectileManager->reflectProjectilesInBox(collisionBox, PROJECTILE_LIGHTNING_ORB);
-
+		if (smh->projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_FRISBEE) > 0 ||
+			smh->projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_LIGHTNING_ORB) > 0)
+		{
+			smh->soundManager->playSound("snd_HitInvulnerable");
+		}
 	}
 
 	updateNovas(dt);
@@ -606,7 +611,6 @@ void CandyBoss::updateNovas(float dt) {
 
 		if (smh->player->collisionCircle->testCircle(i->collisionCircle)) {
 			smh->player->stun(SHOCKWAVE_STUN_DURATION);
-			smh->player->dealDamage(SHOCKWAVE_DAMAGE, false);
 			smh->setDebugText("Smiley hit by CandyBoss during Shockwave");
 			if (state == CANDY_STATE_JUMPING) {
 				enterState(CANDY_STATE_MULTI_JUMP);
