@@ -150,12 +150,11 @@ void E_Spawner::spawnEnemy() {
 	}
 
 	std::string debugText;
-	debugText = "E_Spawner.cpp E1= " + Util::intToString(enemyTypeToSpawn1) + 
-		" E2= " + Util::intToString(enemyTypeToSpawn2) +
-		" E3= " + Util::intToString(enemyTypeToSpawn3);
+	debugText = "E_Spawner.cpp spawned enemy at";
 	smh->setDebugText(debugText);
 	
-	smh->enemyManager->addEnemy(enemy,Util::getGridX(x),Util::getGridY(y),0.15,0.15,-1);
+	smh->enemyManager->addEnemy(enemy,Util::getGridX(x),Util::getGridY(y),0.15,0.15,groupID);
+	smh->enemyGroupManager->addEnemy(groupID);
 	timeOfLastSpawn = smh->getGameTime();
 }
 
