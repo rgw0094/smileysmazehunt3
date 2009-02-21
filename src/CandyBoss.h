@@ -86,6 +86,7 @@ private:
 	float timeMouthOpened;
 	float flashingAlpha;
 	float timeToGetToCenter;
+	float lastTimeHitSmiley;
 
 	int groupID;
 	bool startedIntroDialogue;
