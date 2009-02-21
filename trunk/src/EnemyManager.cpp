@@ -164,6 +164,10 @@ void EnemyManager::killEnemy(std::list<EnemyStruct>::iterator i) {
 	//Notify enemy group
 	smh->enemyGroupManager->notifyOfDeath(i->enemy->groupID);
 
+	std::string debugText;
+	debugText = "Enemy type " + Util::intToString(i->enemy->id) + " died at " + Util::intToString(Util::getGridX(i->enemy->x)) + "," + Util::intToString(Util::getGridY(i->enemy->y));
+	smh->setDebugText(debugText);
+
 	if (i->enemy->frozen) {
 		smh->soundManager->playSound("snd_iceDie");
 	} else {
@@ -180,6 +184,7 @@ void EnemyManager::killEnemy(std::list<EnemyStruct>::iterator i) {
 	}
 
 	smh->saveManager->numEnemiesKilled++;
+
 }
 
 /**
