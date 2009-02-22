@@ -758,6 +758,12 @@ private:
 //----------------------------------------------------------------
 // Draws the death effect and then returns the player to the main menu
 //----------------------------------------------------------------
+struct Letter {
+	float yOffset;
+	bool startedYet;
+	hgeSprite *sprite;
+};
+
 class DeathEffectManager {
 
 public:
@@ -773,11 +779,15 @@ public:
 
 private:
 
+	void initLetters();
+	void enterState(int newState);
+
 	float alpha;
 	float smileyScale;
-	float timeEffectFinished;
-	bool effectFinished;
+	int state;
+	float timeEnteredState;
 	bool active;
+	Letter letters[8];
 
 };
 
