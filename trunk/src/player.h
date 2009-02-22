@@ -61,6 +61,7 @@ public:
 	float getFireBreathDamage();
 	float getLightningOrbDamage();
 	bool isSmileyTouchingWater();
+	void bumpOntoSquare(); //bumps smiley over so he's not touching water when he takes off Jesus' sandals
 
 	WormNode getWormNode(int num);
 	Tongue *getTongue();

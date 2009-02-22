@@ -1069,6 +1069,18 @@ bool Player::isSmileyTouchingWater() {
 	return false;
 }
 
+void Player::bumpOntoSquare() {
+	int xSquareOffset = x - gridX*64;
+	int ySquareOffset = y - gridY*64;
+
+	if (xSquareOffset < radius)    x += (radius - xSquareOffset);
+	if (xSquareOffset > 64-radius) x -= (xSquareOffset - (64-radius));
+
+	if (ySquareOffset < radius)    y += (radius - ySquareOffset);
+	if (ySquareOffset > 64-radius) y -= (ySquareOffset - (64-radius));
+
+}
+
 void Player::setFacingStraight() {
 
 	//Simple cases
