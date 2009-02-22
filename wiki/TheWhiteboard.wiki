@@ -1,5 +1,4 @@
 === Programming To Do ===
- * Combine Tutorial Man and Advice Man
  * Leet Death Effect
  * Lovecraftian Boss
  * Barvinoid
@@ -39,6 +38,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Combined Tutorial Man and Monocle Man||2/21/09||
 ||Made it not look like the dickens when the textbox comes up during a particle attack||2/21/09||RGW||
 ||Fixed the save bug||2/19/09||RGW||
 ||Implemented charged frisbee attack||2/16/09||RGW||
