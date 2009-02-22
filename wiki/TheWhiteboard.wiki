@@ -1,4 +1,5 @@
 === Programming To Do ===
+ * Combine Tutorial Man and Advice Man
  * Make particle attacks continue to update while the textbox is active.
  * Leet Death Effect
  * Lovecraftian Boss
