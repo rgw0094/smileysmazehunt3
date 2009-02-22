@@ -108,7 +108,7 @@ void Player::reset() {
 	dx = dy = 0.0;
 
 	//State variables
-	reflectionShieldActive = flashing = knockback = sliding = stunned =
+	reflectionShieldActive = flashing = knockback = sliding = stunned = graduallyMoving =
 		onWarp = falling = breathingFire = inLava = inShallowWater = healing =
 		waterWalk = onWater = drowning = shrinkActive = sprinting = isHovering = 
 		cloaked = springing = usingCane = iceSliding = frozen = slimed = chargingFrisbee = 
@@ -163,9 +163,15 @@ void Player::update(float dt) {
 	if (healing && smh->timePassedSince(timeStartedHeal) > HEAL_FLASH_DURATION) healing = false;
 	if (immobile && smh->timePassedSince(timeStartedImmobilize) > immobilizeDuration) immobile = false;
 	if (slimed && smh->timePassedSince(timeSlimed) > slimeDuration) slimed = false;
+	if (graduallyMoving && smh->timePassedSince(timeStartedGraduallyMoving) > timeToGraduallyMove) {
+		graduallyMoving = false;
+		x = graduallyMoveTargetX;
+		y = graduallyMoveTargetY;
+		dx = dy = 0;
+	}
 
 	//Update shit if in Knockback state
-	if (!falling && !sliding && knockback && smh->timePassedSince(startedKnockBack) > KNOCKBACK_DURATION) {
+	if (!falling && !graduallyMoving && !sliding && knockback && smh->timePassedSince(startedKnockBack) > KNOCKBACK_DURATION) {
 		knockback = false;
 		dx = dy = 0.0;
 		//Help slow the player down if they are on ice by using PLAYER_ACCEL for 1 frame
@@ -240,6 +246,10 @@ void Player::doMove(float dt) {
 
 	float xDist = dx * dt;
 	float yDist = dy * dt;
+
+	if (graduallyMoving) {
+		smh->hge->System_Log("%f %f", dx, dy);
+	}
 
 	if ((inShallowWater || inLava) && !springing && gui->getSelectedAbility() != WATER_BOOTS) {
 		xDist *= 0.5;
@@ -1019,9 +1029,9 @@ bool Player::canPass(int collision) {
 		case EVIL_WALL_TRIGGER: return true;
 		case EVIL_WALL_DEACTIVATOR: return true;
 		case EVIL_WALL_RESTART: return true;
-		case DEEP_WATER: return ((gui->getSelectedAbility() == WATER_BOOTS) && !drowning) || springing || isHovering;
+		case DEEP_WATER: return ((gui->getSelectedAbility() == WATER_BOOTS) && !drowning) || springing || isHovering || graduallyMoving;
 		case NO_WALK_WATER: return false;
-		case GREEN_WATER: return ((gui->getSelectedAbility() == WATER_BOOTS) && !drowning) || springing || isHovering;
+		case GREEN_WATER: return ((gui->getSelectedAbility() == WATER_BOOTS) && !drowning) || springing || isHovering || graduallyMoving;
 		case SMILELET_FLOWER_HAPPY: return true;
 		case WHITE_SWITCH_LEFT: return false || springing;
 		case YELLOW_SWITCH_LEFT: return false || springing;
@@ -1067,18 +1077,6 @@ bool Player::isSmileyTouchingWater() {
 
 	delete box;
 	return false;
-}
-
-void Player::bumpOntoSquare() {
-	int xSquareOffset = x - gridX*64;
-	int ySquareOffset = y - gridY*64;
-
-	if (xSquareOffset < radius)    x += (radius - xSquareOffset);
-	if (xSquareOffset > 64-radius) x -= (xSquareOffset - (64-radius));
-
-	if (ySquareOffset < radius)    y += (radius - ySquareOffset);
-	if (ySquareOffset > 64-radius) y -= (ySquareOffset - (64-radius));
-
 }
 
 void Player::setFacingStraight() {
@@ -1219,7 +1217,7 @@ void Player::doWater() {
 void Player::updateVelocities(float dt) {
 
 	//For the following states, velocities are handled in their respective update methods
-	if (falling || inShrinkTunnel || iceSliding || sliding || springing) return;
+	if (falling || inShrinkTunnel || iceSliding || sliding || springing || graduallyMoving) return;
 
 	if (frozen || drowning || stunned || immobile) {
 		dx = dy = 0.0;
@@ -1393,6 +1391,23 @@ void Player::moveTo(int _gridX, int _gridY) {
 	y = gridY*64+32;
 	dx = dy = 0.0;
 	updateLocation();
+}
+
+/**
+ * Moves the player to (x,y) at the given speed. The player cannot move while this is taking place.
+ */
+void Player::graduallyMoveTo(float targetX, float targetY, float speed) {
+
+	graduallyMoveTargetX = targetX;
+	graduallyMoveTargetY = targetY;
+	graduallyMoving = true;
+	timeStartedGraduallyMoving = smh->getGameTime();
+	timeToGraduallyMove = Util::distance(targetX, targetY, x, y) / speed;
+
+	float angle = Util::getAngleBetween(x, y, targetX, targetY);
+
+	dx = speed * cos(angle);
+	dy = speed * sin(angle);
 }
 
 /**
