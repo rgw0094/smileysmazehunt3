@@ -108,9 +108,21 @@ void EnemyManager::addEnemy(int id, int x, int y, float spawnHealthChance, float
  * Kills all enemies of the specified type.
  */
 void EnemyManager::killEnemies(int type) {
-	std::list<EnemyStruct>::iterator i;
-	for (i = enemyList.begin(); i != enemyList.end(); i++) {
+	for (std::list<EnemyStruct>::iterator i = enemyList.begin(); i != enemyList.end(); i++) {
 		if (i->enemy->id == type) {
+			killEnemy(i);
+			delete i->enemy;
+			i = enemyList.erase(i);
+		}
+	}
+}
+
+/**
+ * Kills all enemies of the given type in the given box.
+ */ 
+void EnemyManager::killEnemiesInBox(hgeRect *box, int type) {
+	for (std::list<EnemyStruct>::iterator i = enemyList.begin(); i != enemyList.end(); i++) {
+		if (i->enemy->collisionBox->Intersect(box) && i->enemy->id == type) {
 			killEnemy(i);
 			delete i->enemy;
 			i = enemyList.erase(i);

@@ -136,9 +136,10 @@ TutBoss::TutBoss(int _gridX,int _gridY,int _groupID) {
 }
 
 TutBoss::~TutBoss() {
-	smh->enemyManager->killEnemies(RANGED_MUMMY);
-	smh->enemyManager->killEnemies(FLAIL_MUMMY);
-	smh->enemyManager->killEnemies(CHARGER_MUMMY);
+	collisionBox->SetRadius(x, y, 1000);
+	smh->enemyManager->killEnemiesInBox(collisionBox, RANGED_MUMMY);
+	smh->enemyManager->killEnemiesInBox(collisionBox, FLAIL_MUMMY);
+	smh->enemyManager->killEnemiesInBox(collisionBox, CHARGER_MUMMY);
 	delete collisionBox;
 	smh->resources->Purge(RES_KINGTUT);
 }

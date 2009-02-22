@@ -207,6 +207,7 @@ public:
 	void update(float dt);
 	void addEnemy(int id, int x, int y, float spawnHealthChance, float spawnManaChance, int groupID);
 	void killEnemies(int type);
+	void killEnemiesInBox(hgeRect *box, int type);
 	bool tongueCollision(Tongue *tongue, float damage);
 	void freezeEnemies(int x, int y);
 	void unFreezeEnemies(int x, int y);
