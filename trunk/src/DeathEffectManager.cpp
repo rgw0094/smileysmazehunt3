@@ -27,6 +27,7 @@ void DeathEffectManager::beginEffect() {
 	active = true;
 	initLetters();
 	enterState(FADING_IN);
+	smh->soundManager->fadeOutMusic();
 }
 
 /**
@@ -49,6 +50,7 @@ void DeathEffectManager::update(float dt) {
 		if (smileyScale <= 0.0) {
 			smileyScale = 0.0;
 			enterState(LETTERS_FALLING);
+			smh->soundManager->playMusic("deathMusic");
 		}
 	} else if (state == LETTERS_FALLING) {
 		for (int i = 0; i < 8; i++) {

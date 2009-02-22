@@ -263,6 +263,10 @@ Music menuMusic {
  filename="menu.xm"
  amplify=50
 }
+Music deathMusic {
+ filename="DeathScreen.xm"
+ amplify=50
+}
 Music townMusic {
  filename="town.xm"
  amplify=60
