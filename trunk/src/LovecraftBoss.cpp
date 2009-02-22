@@ -135,7 +135,7 @@ void LovecraftBoss::draw(float dt) {
 	drawTentacles(dt);
 	drawFireballs(dt);
 
-	if (state != LS_INACTIVE) drawHealth("Bh'shoghaclll");
+	if (state != LS_INACTIVE) drawHealth("Magnitogorsk");
 
 	if (smh->isDebugOn()) {
 		smh->drawCollisionBox(eyeCollisionBox, RED);

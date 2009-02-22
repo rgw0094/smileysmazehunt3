@@ -8,6 +8,9 @@
 
 extern SMH *smh;
 
+
+#define MAX_DISTANCE_TO_HOP_TOWARD_SMILEY 500.0
+
 /** 
  * Constructor
  */
@@ -45,9 +48,14 @@ void E_Hopper::update(float dt) {
 
 		if (chases) {
 			//Hop towards Smiley
-			hopAngle = Util::getAngleBetween(x, y, smh->player->x, smh->player->y);
-			hopDistance = distanceFromPlayer();
-			if (hopDistance > 300.0) hopDistance = 300.0;
+			if (distanceFromPlayer() < MAX_DISTANCE_TO_HOP_TOWARD_SMILEY) {
+                hopAngle = Util::getAngleBetween(x, y, smh->player->x, smh->player->y);
+				hopDistance = smh->randomFloat(125.0, 300.0);
+			} else {
+				hopAngle = smh->hge->Random_Float(0,2.0*PI);
+				hopDistance = distanceFromPlayer();
+				if (hopDistance > 300.0) hopDistance = 300.0;
+			}	
 		} else {
 			//Find a random angle and distance to hop that won't result in running into a wall
 			do {
