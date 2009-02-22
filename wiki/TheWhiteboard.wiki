@@ -7,6 +7,7 @@
 
 === Graphics To Do ===
  * Lovecraftian Boss tentacles
+ * The boxes on the controls screen
  * Pit graphics for different areas
  * More projectile graphics
 
