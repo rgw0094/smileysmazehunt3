@@ -818,10 +818,66 @@ Sprite loadingText {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=10
 }
+Sprite gameOverG {
+ texture=menuBackgroundTx
+ rect=811,769,48,58
+ hotspot=170,21
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=10
+}
+Sprite gameOverA {
+ texture=menuBackgroundTx
+ rect=863,769,48,63
+ hotspot=127,30
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=10
+}
+Sprite gameOverM {
+ texture=menuBackgroundTx
+ rect=913,769,52,68
+ hotspot=88,36
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=10
+}
+Sprite gameOverE1 {
+ texture=menuBackgroundTx
+ rect=967,769,35,69
+ hotspot=38,37
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=10
+}
+Sprite gameOverO {
+ texture=menuBackgroundTx
+ rect=811,833,41,72
+ hotspot=-17,37
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=10
+}
+Sprite gameOverV {
+ texture=menuBackgroundTx
+ rect=852,833,45,69
+ hotspot=-54,35
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=10
+}
+Sprite gameOverE2 {
+ texture=menuBackgroundTx
+ rect=897,838,46,64
+ hotspot=-87,29
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=10
+}
+Sprite gameOverR {
+ texture=menuBackgroundTx
+ rect=943,839,53,59
+ hotspot=-117,23
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=10
+}
 Sprite gameOverText {
  texture=menuBackgroundTx
- rect=1,935,338,72
- hotspot=169,36
+ rect=0,934,340,74
+ hotspot=170,37
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=10
 }
