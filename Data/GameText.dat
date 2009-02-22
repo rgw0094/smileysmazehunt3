@@ -157,7 +157,7 @@ Sign52 = "The entrance to the loot room has crumbled and is only accessable to t
 Sign73 = "Walkin'-Bombs always turn left and explode when you get too close.  Use silly pads and clever timing to make them clear paths for you!"
 
 ;DESPAIR.SMH
-Sign31 = "The sandals of Jesus to be on exhibit in the near future, just ahead.  Admission: 100$  \n\n-Lord Phyrebawz"
+Sign31 = "The sandals of Jesus to be on exhibit in the near future, just ahead.  Admission: $100  \n\n-Lord Phyrebawz"
 Sign32 = "To the south lies the lair of Calypso, guardian reflection shield.  This would be a useful item to have in one's inventory..."
 Sign33 = "Four, Three, Two, One, keys in each layer, isn't that fun?\n\n-Calypso"
 Sign38 = "To the north lies the Serpentine Path, which leads to the Castle of Evil (Fenwar's lair)."
@@ -460,11 +460,11 @@ NPC181-8 = "Well, I'd best be moving on now to the after-afterlife."
 NPC181-9 = "I do hope my slaves remembered to paint food on the walls so I don't starve to death this time."
 
 ;Lovecraft
-NPC190Name = "Bh'shoghaclll"
+NPC190Name = "Magnitogorsk"
 NPC190Pages = "2"
 NPC190-1 = "L'pharhokrta dakelot-pholo uaa'mi krnae a'daehost motschor ratlaclihaz."
 NPC190-2 = "C'thoshazsi egu-listh ndhurlhug deph dharnaacho m'llegab!"
-NPC191Name = "Bh'shoghaclll"
+NPC191Name = "Magnitogorsk"
 NPC191Pages = "1"
 NPC191-1 = "Melorakehlo dathath at'kianoilo sagngnast krnae gnthaosat :("
 
@@ -536,11 +536,11 @@ NPC246-7 = "Now begone, my delicious yeti-snack!  Haha!"
 NPC247Name = "Fenwar"
 NPC247Pages = "7"
 NPC247-1 = "The murky, muddy waters of this swamp make it ideal for dumping bodies."
-NPC247-2 = "Then my lovely tentacled friend Magnitigorsk typically consumes them with one of his seven mouths."
+NPC247-2 = "Then my lovely tentacled friend Magnitogorsk typically consumes them with one of his seven mouths."
 NPC247-3 = "Then, there you have it.  No evidence!  You know my secret now."
 NPC247-4 = "Don't worry.  Your dearest one won't end up at the bottom of this lake."
 NPC247-5 = "For then this game couldn't possibly have a generic, happy ending when you reunite."
-NPC247-6 = "Magnitigorsk is in a temple at the lake's center.  You know the drill.  Destroy him and gain a new ability.  Rinse and repeat."
+NPC247-6 = "Magnitogorsk is in a temple at the lake's center.  You know the drill.  Destroy him and gain a new ability.  Rinse and repeat."
 NPC247-7 = "Speaking of which, my protruding vein near my eye needs a good rinsing.  Ciao!"
 
 NPC248Name = "Fenwar"
