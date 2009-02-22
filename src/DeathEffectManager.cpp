@@ -28,6 +28,7 @@ void DeathEffectManager::beginEffect() {
 	initLetters();
 	enterState(FADING_IN);
 	smh->soundManager->fadeOutMusic();
+	textAlpha = 0.0;
 }
 
 /**
@@ -55,11 +56,11 @@ void DeathEffectManager::update(float dt) {
 	} else if (state == LETTERS_FALLING) {
 		for (int i = 0; i < 8; i++) {
 			if (!letters[i].startedYet) {
-				if (smh->getRealTime() - timeEnteredState > 1.0 +  float(i)*0.5) {
+				if (smh->getRealTime() - timeEnteredState > 1.0 +  float(i)*0.35) {
 					letters[i].startedYet = true;
 				}
 			} else {
-				letters[i].yOffset += 500.0 * dt;
+				letters[i].yOffset += 700.0 * dt;
 				if (letters[i].yOffset >= 0.0) {
 					letters[i].yOffset = 0.0;
 					if (i == 7) {
@@ -69,7 +70,12 @@ void DeathEffectManager::update(float dt) {
 			}
 		}
 	} else if (state == EFFECT_FINISHED) {
-		if (smh->getRealTime() - timeEnteredState > 2.0) {
+
+		if (textAlpha < 255.0) {
+			textAlpha += min(255.0, textAlpha + 255.0 * dt);
+		}
+
+		if (smh->hge->Input_KeyDown(HGEK_ENTER)) {
 			active = false;
 			smh->menu->open(TITLE_SCREEN);
 		}
@@ -91,6 +97,12 @@ void DeathEffectManager::draw(float dt) {
 		letters[i].sprite->Render(512.0, 220.0 + letters[i].yOffset);
 	}
 
+	if (state == EFFECT_FINISHED) {
+		float n = 8 * sin(smh->getRealTime() * 2.5);
+		smh->resources->GetFont("inventoryFnt")->SetColor(ARGB(textAlpha, 255, 255, 255));
+		smh->resources->GetFont("inventoryFnt")->printf(512.0, 650.0 + n, HGETEXT_CENTER, "Press Enter To Continue");
+	}
+
 }
 
 void DeathEffectManager::enterState(int newState) {
@@ -99,7 +111,6 @@ void DeathEffectManager::enterState(int newState) {
 }
 
 void DeathEffectManager::initLetters() {
-
 	for (int i = 0; i < 8; i++) {
 		letters[i].yOffset = -500;
 		letters[i].startedYet = false;
@@ -113,5 +124,4 @@ void DeathEffectManager::initLetters() {
 	letters[5].sprite = smh->resources->GetSprite("gameOverV");
 	letters[6].sprite = smh->resources->GetSprite("gameOverE2");
 	letters[7].sprite = smh->resources->GetSprite("gameOverR");
-
 }

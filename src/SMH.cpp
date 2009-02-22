@@ -219,11 +219,11 @@ void SMH::drawGame() {
 
 	if (isDebugOn()) {
 		//Grid co-ords and fps
-		resources->GetFont("curlz")->printf(1000,5,HGETEXT_RIGHT,"(%d,%d)  FPS: %d", 
+		resources->GetFont("consoleFnt")->printf(1000,5,HGETEXT_RIGHT,"(%d,%d)  FPS: %d", 
 			player->gridX, player->gridY, hge->Timer_GetFPS());
 
 		//Debug text
-		resources->GetFont("curlz")->printf(10,700,HGETEXT_LEFT,debugText.c_str());
+		resources->GetFont("consoleFnt")->printf(10,700,HGETEXT_LEFT,debugText.c_str());
 	}
 
 	hge->Gfx_EndScene();
