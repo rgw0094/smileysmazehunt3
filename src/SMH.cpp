@@ -149,13 +149,13 @@ bool SMH::updateGame() {
 		areaChanger->update(dt);
 		enemyGroupManager->update(dt);
 		fenwarManager->update(dt);
-		environment->updateTutorialMan(dt);
+		environment->updateAdviceMan(dt);
 		player->updateGUI(dt);
 		deathEffectManager->update(dt);
 
 		//If none of them are active, update the game objects!
 		if (!windowManager->isOpenWindow() && !areaChanger->isChangingArea() && !fenwarManager->isEncounterActive() && 
-			!environment->isTutorialManActive() && !deathEffectManager->isActive())
+			!environment->isAdviceManActive() && !deathEffectManager->isActive())
 		{
 
 			//Open game menu

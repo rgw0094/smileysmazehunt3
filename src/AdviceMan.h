@@ -1,12 +1,12 @@
-#ifndef _TUTORIALMAN_H_
-#define _TUTORIALMAN_H_
+#ifndef _ADVICEMAN_H_
+#define _ADVICEMAN_H_
 
-class TutorialMan {
+class AdviceMan {
 
 public:
 
-	TutorialMan(int gridX, int gridY);
-	~TutorialMan();
+	AdviceMan(int gridX, int gridY);
+	~AdviceMan();
 
 	void draw(float dt);
 	void update(float dt);

@@ -16,7 +16,7 @@ class TapestryManager;
 class SmileletManager;
 class Fountain;
 class FenwarManager;
-class TutorialMan;
+class AdviceMan;
 
 struct Timer {
 	float duration, startTime;
@@ -75,8 +75,8 @@ public:
 	bool isTimedTileAt(int gridX, int gridY);
 	bool isTimedTileAt(int gridX, int gridY, int tile);
 	void reset();
-	void updateTutorialMan(float dt);
-	bool isTutorialManActive();
+	void updateAdviceMan(float dt);
+	bool isAdviceManActive();
 	bool isInBounds(int gridX, int gridY);
 	float getSwitchDelay();
 	void removeParticle(int x,int y);
@@ -111,7 +111,7 @@ private:
 	TapestryManager *tapestryManager;
 	Fountain *fountain;
 	SmileletManager *smileletManager;
-	TutorialMan *tutorialMan;
+	AdviceMan *adviceMan;
 	hgeRect *collisionBox;
 	std::list<Timer> timerList;
 	std::list<ParticleStruct> particleList;
