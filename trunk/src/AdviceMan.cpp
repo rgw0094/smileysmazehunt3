@@ -1,8 +1,9 @@
 #include "SmileyEngine.h"
-#include "TutorialMan.h"
+#include "AdviceMan.h"
 #include "hgeresource.h"
 #include "Player.h"
 #include "WindowFramework.h"
+#include "NPCManager.h"
 
 extern SMH *smh;
 
@@ -17,20 +18,20 @@ extern SMH *smh;
 #define RUNNING_AWAY 4
 #define FINISHED 5
 
-TutorialMan::TutorialMan(int _triggerGridX, int _triggerGridY) {
+AdviceMan::AdviceMan(int _triggerGridX, int _triggerGridY) {
 	triggerGridX = _triggerGridX;
 	triggerGridY = _triggerGridY;
 	state = INACTIVE;
 }
 
-TutorialMan::~TutorialMan() { }
+AdviceMan::~AdviceMan() { }
 
-void TutorialMan::update(float dt) {
+void AdviceMan::update(float dt) {
 
 	if (state == FINISHED) return;
 
 	//Trigger the tutorial man when the player steps on his trigger square
-	if (!smh->saveManager->tutorialManCompleted && state == INACTIVE && smh->player->gridX == triggerGridX 
+	if (!smh->saveManager->adviceManEncounterCompleted && state == INACTIVE && smh->player->gridX == triggerGridX 
 			&& smh->player->gridY == triggerGridY) {
 		state = FIRST_DIALOG;
 		smh->windowManager->openDialogueTextBox(-1, FIRST_TEXT);
@@ -44,15 +45,15 @@ void TutorialMan::update(float dt) {
 
 }
 
-void TutorialMan::draw(float dt) {
+void AdviceMan::draw(float dt) {
 	if (state == FIRST_DIALOG || state == RUNNING_UP || state == SECOND_DIALOG) {
-		smh->resources->GetSprite("tutorialManUp")->Render(smh->getScreenX(x), smh->getScreenY(y));
+		smh->resources->GetSprite("adviceManUp")->Render(smh->getScreenX(x), smh->getScreenY(y));
 	} else if (state == RUNNING_AWAY) {
-		smh->resources->GetSprite("tutorialManDown")->Render(smh->getScreenX(x), smh->getScreenY(y));
+		smh->resources->GetSprite("adviceManLeft")->Render(smh->getScreenX(x), smh->getScreenY(y));
 	}
 }
 
-void TutorialMan::updateState(float dt) {
+void AdviceMan::updateState(float dt) {
 
 	if (state == FIRST_DIALOG) {
 		if (!smh->windowManager->isTextBoxOpen()) {
@@ -64,7 +65,8 @@ void TutorialMan::updateState(float dt) {
 
 	if (state == RUNNING_UP) {
 		y -= 300.0 * dt;
-		if (y < smh->player->y + 100.0) {
+		if (y < smh->player->gridY * 64 + 64 + 32) {
+			y = smh->player->gridY * 64 + 64 + 32;
 			state = SECOND_DIALOG;
 			smh->windowManager->openDialogueTextBox(-1, SECOND_TEXT);
 		}
@@ -77,15 +79,17 @@ void TutorialMan::updateState(float dt) {
 	}
 
 	if (state == RUNNING_AWAY) {
-		y += 500.0 * dt;
-		if (y > smh->player->y + 600.0) {
+		x -= 300.0 * dt;
+		if (x < smh->player->gridX * 64 + 32 - (4*64)) {
 			state = FINISHED;
-			smh->saveManager->tutorialManCompleted = true;
+			smh->saveManager->adviceManEncounterCompleted = true;
+			smh->npcManager->addNPC(MONOCLE_MAN_NPC_ID, MONOCLE_MAN_TEXT_ID, Util::getGridX(x), Util::getGridY(y));
+			smh->saveManager->save(false);
 		}
 	}
 
 }
 
-bool TutorialMan::isActive() {
+bool AdviceMan::isActive() {
 	return state != INACTIVE && state != FINISHED;
 }

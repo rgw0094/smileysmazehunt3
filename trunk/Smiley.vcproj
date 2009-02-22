@@ -292,6 +292,9 @@
 				Name="Source"
 				Filter="">
 				<File
+					RelativePath=".\src\AdviceMan.cpp">
+				</File>
+				<File
 					RelativePath=".\src\environment.cpp">
 				</File>
 				<File
@@ -315,13 +318,13 @@
 				<File
 					RelativePath=".\src\TapestryManager.cpp">
 				</File>
-				<File
-					RelativePath=".\src\TutorialMan.cpp">
-				</File>
 			</Filter>
 			<Filter
 				Name="Header"
 				Filter="">
+				<File
+					RelativePath=".\src\AdviceMan.h">
+				</File>
 				<File
 					RelativePath=".\src\environment.h">
 				</File>
@@ -345,9 +348,6 @@
 				</File>
 				<File
 					RelativePath=".\src\TapestryManager.h">
-				</File>
-				<File
-					RelativePath=".\src\TutorialMan.h">
 				</File>
 			</Filter>
 		</Filter>
@@ -415,7 +415,7 @@
 				Name="Source"
 				Filter="">
 				<File
-					RelativePath=".\src\Advice.cpp">
+					RelativePath=".\src\AdviceWindow.cpp">
 				</File>
 				<File
 					RelativePath=".\src\inventory.cpp">

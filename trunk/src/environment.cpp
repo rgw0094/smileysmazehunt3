@@ -15,7 +15,7 @@
 #include "SmileletManager.h"
 #include "Fountain.h"
 #include "FenwarManager.h"
-#include "TutorialMan.h"
+#include "AdviceMan.h"
 #include "WindowFramework.h"
 
 #include <string>
@@ -132,9 +132,9 @@ void Environment::reset() {
 		fountain = NULL;
 	}
 
-	if (tutorialMan) {
-		delete tutorialMan;
-		tutorialMan = NULL;
+	if (adviceMan) {
+		delete adviceMan;
+		adviceMan = NULL;
 	}
 
 	//Clear old level data
@@ -379,7 +379,11 @@ void Environment::loadArea(int id, int from, bool playMusic) {
 
 			//128 - 239 are NPCs
 			} else if (enemy >= 128 && enemy < 240) {
-				smh->npcManager->addNPC(enemy-128,ids[col][row],col,row);
+				smh->hge->System_Log("%d %d", enemy,  smh->saveManager->adviceManEncounterCompleted);
+				if (enemy != 128 + MONOCLE_MAN_NPC_ID || smh->saveManager->adviceManEncounterCompleted) {
+					smh->hge->System_Log("dickens %d", ids[col][row]);
+					smh->npcManager->addNPC(enemy-128,ids[col][row],col,row);
+				}
 			} 
 		}
 		//Read the newline
@@ -453,8 +457,8 @@ void Environment::loadArea(int id, int from, bool playMusic) {
 		}
 	}
 	smh->player->moveTo(playerX, playerY);
-	if (smh->saveManager->currentArea == FOUNTAIN_AREA && !smh->saveManager->tutorialManCompleted) {
-		tutorialMan = new TutorialMan(smh->player->gridX, smh->player->gridY + 4);
+	if (smh->saveManager->currentArea == FOUNTAIN_AREA && !smh->saveManager->adviceManEncounterCompleted) {
+		adviceMan = new AdviceMan(smh->player->gridX, smh->player->gridY + 1);
 	}
 
 	//Update to get shit set up
@@ -679,7 +683,7 @@ void Environment::draw(float dt) {
 	smileletManager->drawBeforeSmiley();
 	smileletManager->drawAfterSmiley();
 	specialTileManager->draw(dt);
-	if (tutorialMan) tutorialMan->draw(dt);
+	if (adviceMan) adviceMan->draw(dt);
 	evilWallManager->draw(dt);
 
 }
@@ -1661,12 +1665,12 @@ bool Environment::isTimedTileAt(int gridX, int gridY, int tile) {
 	return specialTileManager->isTimedTileAt(gridX, gridY, tile);
 }
 
-void Environment::updateTutorialMan(float dt) {
-	if (tutorialMan) tutorialMan->update(dt);
+void Environment::updateAdviceMan(float dt) {
+	if (adviceMan) adviceMan->update(dt);
 }
 
-bool Environment::isTutorialManActive() {
-	return (tutorialMan && tutorialMan->isActive());
+bool Environment::isAdviceManActive() {
+	return (adviceMan && adviceMan->isActive());
 }
 
 bool Environment::isInBounds(int gridX, int gridY) {

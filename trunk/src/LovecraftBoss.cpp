@@ -574,6 +574,17 @@ void LovecraftBoss::dealDamage(float amount) {
 	if (!flashing) {
 		flashing = true;
 		timeStartedFlashing = smh->getGameTime();
+		switch (smh->randomInt(0, 2)) {
+			case 0:
+				smh->soundManager->playSound("snd_LovecraftHit1");
+				break;
+			case 1:
+				smh->soundManager->playSound("snd_LovecraftHit2");
+				break;
+			case 2:
+				smh->soundManager->playSound("snd_LovecraftHit3");
+				break;
+		}
 	}
 
 	health -= amount;

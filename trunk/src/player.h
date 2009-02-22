@@ -41,7 +41,8 @@ public:
 	void slime(float duration);
 	void immobilize(float duration);
 	void reset();
-	void checkForIceGlitch();
+	void stopFireBreath();
+	void stopMovement();
 
 	//Accessors/mutators
 	bool isInvisible();
@@ -113,6 +114,7 @@ private:
 	void doShrinkTunnels(float dt);
 	void updateSmileyColor(float dt);
 	bool doGayMovementFix(int xDist, int yDist);
+	void checkForIceGlitch();
 
 	Tongue *tongue;
 	Worm *worm;

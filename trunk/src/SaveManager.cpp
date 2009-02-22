@@ -95,7 +95,7 @@ void SaveManager::resetCurrentData() {
 	hasVisitedArea[FOUNTAIN] = true;
 
 	money = 0;
-	tutorialManCompleted = false;
+	adviceManEncounterCompleted = false;
 	for (int i = 0; i < 3; i++) numUpgrades[i] = 0;
 	currentArea = FOUNTAIN_AREA;
 	playerGridX = 0;
@@ -179,7 +179,7 @@ void SaveManager::load(int fileNumber) {
 	pixelsTravelled = input->readBits(24);
 
 	//Tutorial Man
-	tutorialManCompleted = input->readBit();
+	adviceManEncounterCompleted = input->readBit();
 
 	for (int i = 0; i < 3; i++) {
 		smh->player->gui->setAbilityInSlot(input->readBits(5), i);
@@ -277,7 +277,7 @@ void SaveManager::save(bool showConfirmation) {
 	output->writeBits(pixelsTravelled, 24);
 
 	//Tutorial Man
-	output->writeBit(tutorialManCompleted);
+	output->writeBit(adviceManEncounterCompleted);
 
 	//Selected abilities
 	for (int i = 0; i < 3; i++) {

@@ -50,6 +50,13 @@ class Console;
 //Constants
 #define PI 3.14159265357989232684
 
+//NPCS
+#define MONOCLE_MAN_NPC_ID 13
+#define MONOCLE_MAN_TEXT_ID 902
+#define SPIERDYKE_TEXT_ID 5
+#define BILL_CLINTON_TEXT_ID 8
+#define BILL_CLINTON_TEXT_ID2 19
+
 //Difficulty
 #define VERY_EASY 0
 #define EASY 1
@@ -535,7 +542,7 @@ public:
 	float timeFileSaved;
 	int currentSave;
 	int currentArea;
-	bool tutorialManCompleted;
+	bool adviceManEncounterCompleted;
 	int playerGridX, playerGridY;
 	float playerHealth, playerMana;
 	int difficulty;

@@ -577,13 +577,18 @@ NPC250-9 = "Let me tell you, sincerely, from the bottom of my heart:  I hope you
 NPC250-10 = "Now I'm going to go cry."
 
 ;==============================================OTHER SHIT=====================================
-NPC900Name = "Tutorial Man"
+NPC900Name = "Monocle Man"
 NPC900Pages = "1"
 NPC900-1 = "Hey! You there!"
-NPC901Name = "Tutorial Man"
+NPC901Name = "Monocle Man"
 NPC901Pages = "5"
 NPC901-1 = "Excuse me, I can't help but think that you are about to go on a great adventure."
 NPC901-2 = "I'm sure a brave adventurer such as yourself already knows to set his controls by pressing escape and going to the Controls menu, so I don't even need to tell you that."
 NPC901-3 = "Of course you also know that it's always a good idea to talk to everyone in town before heading out on a great adventure."
 NPC901-4 = "You look so prepared that you must also know that you can talk to people and read signs simply by licking them, which can be done by pressing the 'Attack' button."
-NPC901-5 = "Well EXCUSE ME Mr. grizzled veteran, I'm sorry for wasting your time telling you things you already know! Gosh, people these days..."
+NPC901-5 = "Well, I'll be wandering around outside your house for the rest of the game in case you need any help. Don't worry, I have nothing better to do."
+NPC902Name = "Monocle Man"
+NPC902Pages = "1"
+NPC902-1 = "What kind of advice do you need?";
+
+

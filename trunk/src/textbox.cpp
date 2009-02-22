@@ -2,6 +2,7 @@
 #include "WindowFramework.h"
 #include "player.h"
 #include "npcmanager.h"
+#include "WeaponParticle.h"
 
 #include "hgedistort.h"
 #include "hgesprite.h"
@@ -15,11 +16,6 @@ extern SMH *smh;
 #define TYPE_DIALOG 1
 #define TYPE_HINT 2
 #define TYPE_ABILITY 3
-
-#define SPIERDYKE 5
-#define BILL_CLINTON 8
-#define BILL_CLINTON_TEXT2 19
-#define MONOCLE 13
 
 #define PSYCHEDELIC_GRANULARITY 16
 
@@ -52,6 +48,8 @@ void TextBox::init() {
 	fadingOut = false;
 	distortion = NULL;
 	graphic = NULL;
+	smh->player->stopFireBreath();
+	smh->player->stopMovement();
 
 }
 
@@ -69,8 +67,8 @@ void TextBox::setDialogue(int _npcID, int _textID) {
 	graphic = new hgeSprite(smh->resources->GetTexture("npcTx"),0,npcID*64.0, 64,64);
 
 	//After Smiley gets the cane, Bill Clinton needs new dialogue
-	if (npcID == BILL_CLINTON && smh->saveManager->hasAbility[CANE]) {
-		textID = BILL_CLINTON_TEXT2;
+	if (textID == BILL_CLINTON_TEXT_ID && smh->saveManager->hasAbility[CANE]) {
+		textID = BILL_CLINTON_TEXT_ID2;
 	}
 
 	paramString = "NPC";
@@ -92,7 +90,7 @@ void TextBox::setHint() {
 
 	smh->soundManager->playMusic("hintMusic");
 
-	npcID = BILL_CLINTON;
+	npcID = BILL_CLINTON_TEXT_ID; //bill clinton's text id and npc id are the same
 	textID = smh->saveManager->getCurrentHint();
 	paramString = "Hint";
 	paramString += Util::intToString(textID);
@@ -241,6 +239,9 @@ bool TextBox::update(float dt) {
 		return doFadeOut(dt);
 	}
 
+	smh->player->fireBreathParticle->Update(dt);
+	smh->player->iceBreathParticle->Update(dt);
+
 	//Update icon alphas
 	if (increaseAlpha) {
 		alpha += 600.0f*dt;
@@ -284,13 +285,13 @@ bool TextBox::update(float dt) {
 			
 			//If this is spierdyke, open the shop
 			if (textBoxType == TYPE_DIALOG) {
-				if (npcID == SPIERDYKE) {
+				if (textID == SPIERDYKE_TEXT_ID) {
 					smh->windowManager->openWindow(new Shop());
 					return true; //Don't tell manager to close window
-				} else if (npcID == MONOCLE) {
-					smh->windowManager->openWindow(new Advice());
+				} else if (textID == MONOCLE_MAN_TEXT_ID) {
+					smh->windowManager->openWindow(new AdviceWindow());
 					return true; //Don't tell manager to close window
-				} else if (npcID == BILL_CLINTON && !smh->saveManager->hasAbility[CANE]) {
+				} else if (textID == BILL_CLINTON_TEXT_ID && !smh->saveManager->hasAbility[CANE]) {
 					smh->saveManager->hasAbility[CANE] = true;
 					setNewAbility(CANE);
 					return true;

@@ -741,15 +741,15 @@ Sprite billClinton {
  hotspot=32,32
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
-Sprite tutorialManUp {
+Sprite adviceManUp {
  texture=npcTx
- rect=192,386,64,64
+ rect=192,834,64,64
  hotspot=32,32
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
-Sprite tutorialManDown {
+Sprite adviceManLeft {
  texture=npcTx
- rect=0,386,64,64
+ rect=64,834,64,64
  hotspot=32,32
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
@@ -1307,6 +1307,15 @@ Sprite windowArrowRight {
 ;***********************
 ;******** SOUNDS *******
 ;***********************
+Sound snd_LovecraftHit1 {
+ filename="LovecraftHit1.mp3"
+}
+Sound snd_LovecraftHit2 {
+ filename="LovecraftHit2.mp3"
+}
+Sound snd_LovecraftHit3 {
+ filename="LovecraftHit3.mp3"
+}
 Sound snd_SwitchItem {
  filename="SwitchItem.mp3"
 }

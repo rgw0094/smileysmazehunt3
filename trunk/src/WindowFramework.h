@@ -137,11 +137,11 @@ private:
 //------------ MONOCLE MAN'S (BASE) ADVICE WINDOW-----------------
 //----------------------------------------------------------------
 
-class Advice : public BaseWindow {
+class AdviceWindow : public BaseWindow {
 public:
 
-	Advice();
-	~Advice();
+	AdviceWindow();
+	~AdviceWindow();
 
 	void draw(float dt);
 	bool update(float dt);

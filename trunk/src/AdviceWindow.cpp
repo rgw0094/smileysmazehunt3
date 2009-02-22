@@ -21,7 +21,7 @@ extern SMH *smh;
 /**
  * Constructor
  */
-Advice::Advice() {
+AdviceWindow::AdviceWindow() {
 	currentSelection = ADVICE_EXIT;
 	smh->log("cunt");
 }
@@ -29,14 +29,14 @@ Advice::Advice() {
 /**
  * Destructor
  */
-Advice::~Advice() {
+AdviceWindow::~AdviceWindow() {
 
 }
 
 /**
  * Called every frame to draw the advice window.
  */
-void Advice::draw(float dt) {
+void AdviceWindow::draw(float dt) {
 
 	//Uses the text box graphic
 	smh->resources->GetSprite("textBox")->Render(X_OFFSET, Y_OFFSET);
@@ -102,7 +102,7 @@ void Advice::draw(float dt) {
 /**
  * Called every frame to update the advice window.
  */
-bool Advice::update(float dt) {
+bool AdviceWindow::update(float dt) {
 
 	//Move selection left
 	if (smh->input->keyPressed(INPUT_LEFT)) {

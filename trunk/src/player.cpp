@@ -562,9 +562,7 @@ void Player::doAbility(float dt) {
 
 	//Stop breathing fire
 	} else if (breathingFire) {
-		smh->soundManager->stopAbilityChannel();
-		breathingFire = false;
-		fireBreathParticle->Stop(false);
+		stopFireBreath();
 	}
 
 	/////////////////// Triggered Abilities ///////////////
@@ -599,7 +597,7 @@ void Player::doAbility(float dt) {
 			mana -= smh->gameData->getAbilityInfo(ICE_BREATH).manaCost;
 			smh->soundManager->playSound("snd_iceBreath");
 			startedIceBreath = smh->getGameTime();
-			iceBreathParticle->Fire();
+			iceBreathParticle->FireAt(smh->getScreenX(x) + mouthXOffset[facing], smh->getScreenY(y) + mouthYOffset[facing]);
 			breathingIce = true;
 		}
 		
@@ -626,7 +624,6 @@ void Player::doAbility(float dt) {
 	if (breathingIce) {
 
 		iceBreathParticle->info.fDirection = angles[facing];
-		iceBreathParticle->FireAt(smh->getScreenX(x) + mouthXOffset[facing], smh->getScreenY(y) + mouthYOffset[facing]);
 		iceBreathParticle->MoveTo(smh->getScreenX(x) + mouthXOffset[facing], smh->getScreenY(y) + mouthYOffset[facing], false);
 		iceBreathParticle->Update(dt);
 
@@ -1449,6 +1446,16 @@ void Player::dealDamageAndKnockback(float damage, bool makesFlash, bool alwaysKn
 		startedFlashing = smh->getGameTime();
 	}
 
+}
+
+void Player::stopFireBreath() {
+	smh->soundManager->stopAbilityChannel();
+	breathingFire = false;
+	fireBreathParticle->Stop(false);
+}
+
+void Player::stopMovement() {
+	dx = dy = 0.0;
 }
 
 /**
