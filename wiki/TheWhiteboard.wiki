@@ -1,5 +1,4 @@
 === Programming To Do ===
- * Leet Death Effect
  * Lovecraftian Boss
  * Barvinoid
  * Fenwar
@@ -39,6 +38,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Death Screen||2/22/09||RGW||
 ||Made GAME OVER graphic||2/22/09||ETI||
 ||You can now actually kill King Tut||2/22/09||RGW||
 ||Removing Jesus' sandals on the edge of water pushes you onto land||2/22/09||RGW||
