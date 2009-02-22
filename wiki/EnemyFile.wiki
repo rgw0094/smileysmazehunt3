@@ -102,8 +102,8 @@
 ||Mush Cave||Mushroom, ^Snail^||
 ||Pools||Skullie, Thing||
 ||Mt Frostbite||Batlet, Ice Cream Man, Candy Floater, Candy Spawner, Sad Shooters||
-||Swamp||Buzzard, Tentacle, Crab/Clown, ^Green Croc^||
+||Swamp||Buzzard, Tentacle, Crab/Clown, Pumpkin*3||
 ||Tut||Tan Snake, Mummy||
-||Castle||^Red Skullie^, ^Red Spikey Ball^, Batlet(2), Spider, ^Protector^||
+||Castle||^Red Skullie^, ^Red Spikey Ball^, Batlet(2), Spider, ^Protector^,^Green croc^||
 ||Conservatory||^Alphanoid^, ^Herbanoid^||
 ||Superscript denotes yet to be done||||
