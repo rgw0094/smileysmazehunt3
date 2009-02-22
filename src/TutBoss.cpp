@@ -42,7 +42,7 @@ extern SMH *smh;
 #define TIME_TO_RISE 0.5
 #define TIME_TO_HOVER 9.0
 #define TIME_TO_LOWER 0.5
-#define TIME_TO_STAY_OPEN 22.0
+#define TIME_TO_STAY_OPEN 25.0
 
 //Hovering around constants
 #define TUTBOSS_FLOWER_RADIUS 300
