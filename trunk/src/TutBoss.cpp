@@ -35,7 +35,6 @@ extern SMH *smh;
 #define FLASHING_DURATION 0.5
 #define MUMMY_SPAWN_DELAY 1.0
 
-#define TUTBOSS_DAMAGE 1.1
 #define TUTBOSS_KNOCKBACK_DISTANCE 300.0
 
 //Time to spend in each state
@@ -43,7 +42,7 @@ extern SMH *smh;
 #define TIME_TO_RISE 0.5
 #define TIME_TO_HOVER 9.0
 #define TIME_TO_LOWER 0.5
-#define TIME_TO_STAY_OPEN 25.0
+#define TIME_TO_STAY_OPEN 22.0
 
 //Hovering around constants
 #define TUTBOSS_FLOWER_RADIUS 300
@@ -53,7 +52,6 @@ extern SMH *smh;
 #define TUTBOSS_DOUBLE_SHOT_SPREAD 0.2
 #define TUTBOSS_SHORT_INTERVAL 0
 #define TUTBOSS_LONG_INTERVAL 1
-#define TUTBOSS_SHOT_DAMAGE 3.0
 #define TUTBOSS_SHOT_SPEED 600.0
 
 //Lightning constants
@@ -67,13 +65,10 @@ extern SMH *smh;
 #define TUT_LIGHTNING_INITIAL_WIDTH 0.1
 #define TUT_LIGHTNING_MAX_WIDTH 1.0
 #define TUT_LIGHTNING_MAX_WIDTH_IN_PIXELS 484
-#define TUT_LIGHTNING_DAMAGE 2.0
 #define TUT_LIGHTNING_ROTATE_SPEED 0.011
 #define TUT_LIGHTNING_ROTATE_PERIOD 1.6
-
 #define TUT_LIGHTNING_ROTATE_CW 0
 #define TUT_LIGHTNING_ROTATE_CCW 1
-
 #define TUT_LIGHTNING_NUM_SERIES 3
 #define TUT_LIGHTNING_NUM_WEDGES 7
 
@@ -84,11 +79,9 @@ extern SMH *smh;
 #define TUT_LIGHTNING_TIME_TO_ROTATE 8.0
 #define TUT_LIGHTNING_TIME_TO_DISAPPEAR 0.3
 
-
 //Open casket constants
 #define OPEN_CASKET_SPEED 40.0
 #define MUMMY_PROJECTILE_SPEED 300
-#define MUMMY_PROJECTILE_DAMAGE 1.0
 #define TUTBOSS_FLASH_TIME 1.0
 
 //Fading define
@@ -97,6 +90,12 @@ extern SMH *smh;
 //Battle text ids in GameText.dat
 #define TUTBOSS_INTROTEXT 180
 #define TUTBOSS_DEFEATTEXT 181
+
+//Damages
+#define TUTBOSS_SHOT_DAMAGE 1.2
+#define TUTBOSS_DAMAGE 1.0
+#define TUT_LIGHTNING_DAMAGE 1.0
+#define MUMMY_PROJECTILE_DAMAGE 1.0
 
 TutBoss::TutBoss(int _gridX,int _gridY,int _groupID) {
 	
