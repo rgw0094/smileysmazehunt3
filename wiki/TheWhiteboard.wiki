@@ -32,13 +32,15 @@
 ||Jesus' Sandals||Pools of the Dead||Lord Phyrebawz 2||90%||Done||
 ||Ice Breath||Candy Mountain||Bartli||Done||Done||
 ||Shrink||Swamp||Lovecraft||Done||70%||
-||Tut's Mask||Tut's Tomb||King Tut||Done||85%||
+||Tut's Mask||Tut's Tomb||King Tut||Done||Done||
 ||---||Serpentine Path||---||Done||---||
 ||Hover||Calypso's Conservatory||Barvinoid||Done||0%||
 ||---||Castle of Evil||Fenwar||Done||0%||
 
 ===Done===
 ||Item||Date||Done By||
+||You can now actually kill King Tut||2/22/09||RGW||
+||Removing Jesus' sandals on the edge of water pushes you onto land||2/22/09||RGW||
 ||Combined Tutorial Man and Monocle Man||2/21/09||RGW||
 ||Made it not look like the dickens when the textbox comes up during a particle attack||2/21/09||RGW||
 ||Fixed the save bug||2/19/09||RGW||
