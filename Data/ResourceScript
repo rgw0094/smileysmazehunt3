@@ -818,6 +818,13 @@ Sprite loadingText {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=10
 }
+Sprite gameOverText {
+ texture=menuBackgroundTx
+ rect=1,935,338,72
+ hotspot=169,36
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=10
+}
 Sprite controlsBox {
  texture=menuBackgroundTx
  rect=248,769,130,30
