@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "WindowFramework.h"
 #include "WeaponParticle.h"
+#include "environment.h"
 
 extern SMH *smh;
 
@@ -115,18 +116,34 @@ void GUI::toggleAvailableAbility(int ability) {
 }
 
 void GUI::update(float dt) {
+
+	int collisionAtPlayer = smh->environment->collision[smh->player->gridX][smh->player->gridY];
 	
 	//Input to change ability
 	if (!smh->windowManager->isOpenWindow()) {
 		if (smh->input->keyPressed(INPUT_PREVIOUS_ABILITY)) {
 			if (getSelectedAbility() == WATER_BOOTS && smh->player->isSmileyTouchingWater()) {
-				smh->soundManager->playSound("snd_Error");
+				if (collisionAtPlayer != DEEP_WATER && collisionAtPlayer != GREEN_WATER) {
+					//player is mostly on land; bump him over and change abilities
+					changeAbility(LEFT);
+					smh->player->bumpOntoSquare();
+				} else {
+					//player is mostly on water; cannot take off the sandals; play error message
+					smh->soundManager->playSound("snd_Error");
+				}
 			} else {
 				changeAbility(LEFT);
 			}
 		} else if  (smh->input->keyPressed(INPUT_NEXT_ABILITY)) {
 			if (getSelectedAbility() == WATER_BOOTS && smh->player->isSmileyTouchingWater()) {
-				smh->soundManager->playSound("snd_Error");
+				if (collisionAtPlayer != DEEP_WATER && collisionAtPlayer != GREEN_WATER) {
+					//player is mostly on land; bump him over and change abilities
+					changeAbility(RIGHT);
+					smh->player->bumpOntoSquare();
+				} else {
+					//player is mostly on water; cannot take off the sandals; play error message
+					smh->soundManager->playSound("snd_Error");
+				}
 			} else {
 				changeAbility(RIGHT);
 			}
