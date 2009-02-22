@@ -48,6 +48,7 @@
 ||Made it not look like the dickens when the textbox comes up during a particle attack||2/21/09||RGW||
 ||Fixed the save bug||2/19/09||RGW||
 ||Discovered the source of the save bug||2/19/09||ETI/RGW||
+||Added Monocle Man (advice man) -- not finished yet||2/17/09||ETI||
 ||Implemented charged frisbee attack||2/16/09||RGW||
 ||The mana meter can now be upgraded without looking like the dickens||2/16/09||RGW||
 ||Added explanation of inventory.||2/16/09||RGW||
