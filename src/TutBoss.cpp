@@ -22,9 +22,9 @@ extern SMH *smh;
 #define TUTBOSS_OPENING 7
 #define TUTBOSS_TOMB_OPEN 8
 #define TUTBOSS_CLOSING 9
+#define TUTBOSS_DYING 10
+#define TUTBOSS_FADING 11
 
-//Attributes
-#define TUTBOSS_HEALTH 50.0
 #define TUTBOSS_SPEED 20.0 //used for hovering parabolic motion
 #define TUTBOSS_QUICK_SPEED 100.0 //used when moving to center
 #define TUTBOSS_WIDTH 54.0
@@ -91,7 +91,8 @@ extern SMH *smh;
 #define TUTBOSS_INTROTEXT 180
 #define TUTBOSS_DEFEATTEXT 181
 
-//Damages
+//Balancing Attributes
+#define TUTBOSS_HEALTH 50.0
 #define TUTBOSS_SHOT_DAMAGE 1.2
 #define TUTBOSS_DAMAGE 1.0
 #define TUT_LIGHTNING_DAMAGE 1.0
@@ -122,6 +123,7 @@ TutBoss::TutBoss(int _gridX,int _gridY,int _groupID) {
 	mummyLaunchAngle = 0.0;
 	lastMummySpawnTime = 0.0;
 	timeLastHitSoundPlayed = 0.0;
+	fadeAlpha = 255.0;
 
 	a[0]=0.120;
 	b[0]=0.532;
@@ -134,6 +136,9 @@ TutBoss::TutBoss(int _gridX,int _gridY,int _groupID) {
 }
 
 TutBoss::~TutBoss() {
+	smh->enemyManager->killEnemies(RANGED_MUMMY);
+	smh->enemyManager->killEnemies(FLAIL_MUMMY);
+	smh->enemyManager->killEnemies(CHARGER_MUMMY);
 	delete collisionBox;
 	smh->resources->Purge(RES_KINGTUT);
 }
@@ -273,7 +278,10 @@ bool TutBoss::update(float dt) {
 		case TUTBOSS_CLOSING:
 			doClosing(dt);
 			break;
-
+		case TUTBOSS_DYING:
+		case TUTBOSS_FADING:
+			if (doDeath(dt)) return true;
+			break;
 	};
 
 	return false;
@@ -281,13 +289,14 @@ bool TutBoss::update(float dt) {
 
 void TutBoss::draw(float dt) {
 
-	if (state == TUTBOSS_OPENING || state == TUTBOSS_TOMB_OPEN || state == TUTBOSS_CLOSING) {
+	if (state == TUTBOSS_OPENING || state == TUTBOSS_TOMB_OPEN || state == TUTBOSS_CLOSING || state == TUTBOSS_DYING || state == TUTBOSS_FADING) {
 		
 		if (flashing) {
 			smh->resources->GetSprite("KingTutInsideSarcophagus")->SetColor(
 				ARGB(smh->getFlashingAlpha(FLASHING_DURATION / 4.0), 255.0, 255.0, 255.0));
 		} else {
-			smh->resources->GetSprite("KingTutInsideSarcophagus")->SetColor(ARGB(255.0, 255.0, 255.0, 255.0));
+			smh->resources->GetSprite("KingTutInsideSarcophagus")->SetColor(ARGB(fadeAlpha, 255.0, 255.0, 255.0));
+			smh->resources->GetSprite("KingTutShadow")->SetColor(ARGB(fadeAlpha, 255.0, 255.0, 255.0));
 		}
 		
 		//Render king tut in his sarcophagus
@@ -344,6 +353,18 @@ void TutBoss::dealDamage(float damage) {
 		timeStartedFlashing = smh->getGameTime();
 	}
 	health -= damage;
+
+	if (health <= 0.0) {
+		health = 0.0;
+		enterState(TUTBOSS_DYING);
+		smh->projectileManager->killProjectiles(PROJECTILE_TUT_MUMMY);
+		fadeAlpha = 255.0;
+		flashing = false;
+		smh->windowManager->openDialogueTextBox(-1, TUTBOSS_DEFEATTEXT);	
+		smh->saveManager->killBoss(TUT_BOSS);
+		smh->enemyGroupManager->notifyOfDeath(groupID);
+		smh->soundManager->fadeOutMusic();
+	}
 }
 
 void TutBoss::playHitSound() {
@@ -573,3 +594,25 @@ void TutBoss::doClosing(float dt) {
 	}
 }
 
+bool TutBoss::doDeath(float dt) {
+	
+	//After being defeated, wait for the text box to be closed
+	if (state == TUTBOSS_DYING && !smh->windowManager->isTextBoxOpen()) {
+		enterState(TUTBOSS_FADING);
+	}
+
+	//After defeat and the text box is closed, fade away
+	if (state == TUTBOSS_FADING) {
+		fadeAlpha -= 155.0 * dt;
+		
+		//When done fading away, drop the loot
+		if (fadeAlpha < 0.0) {
+			fadeAlpha = 0.0;
+			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, TUTS_MASK);
+			smh->soundManager->playAreaMusic(TUTS_TOMB);
+			return true;
+		}
+	}
+
+	return false;
+}

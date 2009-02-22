@@ -12,10 +12,6 @@ extern SMH *smh;
 #define LASER_LENGTH 20.0
 #define MINI_MUSHROOM_ENEMYID 43
 
-#define RANGED_MUMMY 48
-#define FLAIL_MUMMY 49
-#define CHARGER_MUMMY 68
-
 ProjectileManager::ProjectileManager() {
 
 	initProjectiles();
@@ -477,6 +473,18 @@ bool ProjectileManager::frisbeeActive() {
 		}
 	}
 	return false;
+}
+
+int ProjectileManager::killProjectiles(int type) {
+	int num = 0;
+	for (std::list<Projectile>::iterator i = theProjectiles.begin(); i != theProjectiles.end(); i++) {
+		if (i->id == type) {
+			delete i->collisionBox;
+			i = theProjectiles.erase(i);
+			num++;
+		}
+	}
+	return num;
 }
 
 /**

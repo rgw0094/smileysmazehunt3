@@ -43,6 +43,7 @@ public:
 	void reset();
 	void stopFireBreath();
 	void stopMovement();
+	void graduallyMoveTo(float x, float y, float speed);
 
 	//Accessors/mutators
 	bool isInvisible();
@@ -61,12 +62,11 @@ public:
 	float getFireBreathDamage();
 	float getLightningOrbDamage();
 	bool isSmileyTouchingWater();
-	void bumpOntoSquare(); //bumps smiley over so he's not touching water when he takes off Jesus' sandals
 
 	WormNode getWormNode(int num);
 	Tongue *getTongue();
 
-	//variables that might be directly accessed by other objects (which isn't great)
+	//variables that might be directly accessed by other objects
 	float scale,hoverScale,shrinkScale;		//Scales to draw smiley
 	float rotation;							//Smiley's sprite rotation angle in radians
 	float radius;
@@ -130,6 +130,7 @@ private:
 	float fallingDx, fallingDy;
 	float frisbeePower;
 	float dx, dy;
+	float graduallyMoveTargetX, graduallyMoveTargetY;
 
 	//Time variables
 	float startedFlashing;
@@ -159,6 +160,8 @@ private:
 	float immobilizeDuration;
 	float timeSlimed;
 	float slimeDuration;
+	float timeStartedGraduallyMoving;
+	float timeToGraduallyMove;
 
 	//State info
 	bool breathingFire;				//If using Fire Breath ability
@@ -187,6 +190,7 @@ private:
 	bool immobile;
 	bool slimed;
 	bool chargingFrisbee;
+	bool graduallyMoving;
 };
 
 //----------------------------------------------------------------

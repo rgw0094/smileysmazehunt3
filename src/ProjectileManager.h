@@ -28,6 +28,10 @@ class hgeSprite;
 
 #define LIGHTNING_ORB_SPEED 650.0
 
+#define RANGED_MUMMY 48
+#define FLAIL_MUMMY 49
+#define CHARGER_MUMMY 68
+
 struct Projectile {
 
 	//Generic shit
@@ -88,6 +92,7 @@ public:
 	int killProjectilesInBox(hgeRect *collisionBox, int type);
 	int killProjectilesInBox(hgeRect *collisionBox, int type, bool killHostile, bool killNonhostile);
 	int killProjectilesInCircle(float x, float y, float radius, int type);
+	int killProjectiles(int type);
 	int rotateLeftOrRightForMinimumRotation(float projectileAngle, float angleToTarget);
 
 	void addFrisbee(float x, float y, float speed, float angle, float stunPower);

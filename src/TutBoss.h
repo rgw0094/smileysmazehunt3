@@ -32,6 +32,7 @@ public:
 	void doOpening(float dt);
 	void doTombOpen(float dt);
 	void doClosing(float dt);
+	bool doDeath(float dt);
 
 	//Variables
 	float x, y,xInitial,yInitial;
@@ -47,6 +48,7 @@ public:
 	bool droppedLoot;
 	bool flashing;
 	float timeLastHitSoundPlayed;
+	float fadeAlpha;
 
 	float floatingHeight;
 	float a[10],b[10]; //used for the parametric motion of Tut while he's hovering around

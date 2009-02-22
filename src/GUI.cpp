@@ -118,35 +118,29 @@ void GUI::toggleAvailableAbility(int ability) {
 void GUI::update(float dt) {
 
 	int collisionAtPlayer = smh->environment->collision[smh->player->gridX][smh->player->gridY];
-	
+	int dir = -1;
+
 	//Input to change ability
 	if (!smh->windowManager->isOpenWindow()) {
 		if (smh->input->keyPressed(INPUT_PREVIOUS_ABILITY)) {
-			if (getSelectedAbility() == WATER_BOOTS && smh->player->isSmileyTouchingWater()) {
-				if (collisionAtPlayer != DEEP_WATER && collisionAtPlayer != GREEN_WATER) {
-					//player is mostly on land; bump him over and change abilities
-					changeAbility(LEFT);
-					smh->player->bumpOntoSquare();
-				} else {
-					//player is mostly on water; cannot take off the sandals; play error message
-					smh->soundManager->playSound("snd_Error");
-				}
-			} else {
-				changeAbility(LEFT);
-			}
+			dir = LEFT;
 		} else if  (smh->input->keyPressed(INPUT_NEXT_ABILITY)) {
-			if (getSelectedAbility() == WATER_BOOTS && smh->player->isSmileyTouchingWater()) {
-				if (collisionAtPlayer != DEEP_WATER && collisionAtPlayer != GREEN_WATER) {
-					//player is mostly on land; bump him over and change abilities
-					changeAbility(RIGHT);
-					smh->player->bumpOntoSquare();
-				} else {
-					//player is mostly on water; cannot take off the sandals; play error message
-					smh->soundManager->playSound("snd_Error");
-				}
+			dir = RIGHT;
+		}
+	}
+
+	if (dir != -1) {
+		if (getSelectedAbility() == WATER_BOOTS && smh->player->isSmileyTouchingWater()) {
+			if (collisionAtPlayer != DEEP_WATER && collisionAtPlayer != GREEN_WATER) {
+				//player is on a land tile, but touching water; bump him over and change abilities
+				changeAbility(dir);
+				smh->player->graduallyMoveTo(smh->player->gridX * 64.0 + 32.0, smh->player->gridY * 64.0 + 32.0, 500.0);
 			} else {
-				changeAbility(RIGHT);
+				//player actually on a water tile; cannot take off the sandals; play error message
+				smh->soundManager->playSound("snd_Error");
 			}
+		} else {
+			changeAbility(dir);
 		}
 	}
 
