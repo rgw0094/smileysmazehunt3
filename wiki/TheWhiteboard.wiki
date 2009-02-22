@@ -1,6 +1,5 @@
 === Programming To Do ===
  * Combine Tutorial Man and Advice Man
- * Make particle attacks continue to update while the textbox is active.
  * Leet Death Effect
  * Lovecraftian Boss
  * Barvinoid
@@ -40,6 +39,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Made it not look like the dickens when the textbox comes up during a particle attack||2/21/09||RGW||
 ||Fixed the save bug||2/19/09||RGW||
 ||Implemented charged frisbee attack||2/16/09||RGW||
 ||The mana meter can now be upgraded without looking like the dickens||2/16/09||RGW||
