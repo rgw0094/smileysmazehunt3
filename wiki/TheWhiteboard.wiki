@@ -39,8 +39,11 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Made GAME OVER graphic||2/22/09||ETI||
 ||You can now actually kill King Tut||2/22/09||RGW||
 ||Removing Jesus' sandals on the edge of water pushes you onto land||2/22/09||RGW||
+||Added pumpkin enemies to swamp||2/21/09||ETI||
+||Made it so hopping enemies don't hop toward you unless you are fairly close||2/21/09||ETI||
 ||Combined Tutorial Man and Monocle Man||2/21/09||RGW||
 ||Made it not look like the dickens when the textbox comes up during a particle attack||2/21/09||RGW||
 ||Fixed the save bug||2/19/09||RGW||
