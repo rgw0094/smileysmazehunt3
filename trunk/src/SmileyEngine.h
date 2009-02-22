@@ -787,6 +787,7 @@ private:
 	int state;
 	float timeEnteredState;
 	bool active;
+	float textAlpha;
 	Letter letters[8];
 
 };
