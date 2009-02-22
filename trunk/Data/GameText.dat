@@ -205,10 +205,7 @@ NPC1-2 = "Think he was goin' south down towards ye Olde Towne, but why would any
 NPC1-3 = "That mud hole of a town's got no one left after Fenwar terrorized thems peoples."
 
 NPC5Name = "Speirdyke"
-NPC5Pages = "6"
-NPC5-1 = "Rob, I am currently making an ADVICE window. When you talk to the Monocle Man in Glen's house he'll give you advice."
-NPC5-2 = "Unfortunately, for some reason the window only opens for Spierdyke. So, that's why Spierdyke is giving advice."
-NPC5-3 = "After I finish the ADVICE window I'll figure out how to make it open for Monocle Man."
+NPC5Pages = "3"
 NPC5-4 = "Name's Captain Speirdyke, pirate extraordinaire.  My ship was mortally wounded by fierce storm in the Atlarctic Ocean."
 NPC5-5 = "Anyways, to make a long story short, boy, I need some loot to buy myself a new ship and get back on the water."
 NPC5-6 = "If you help me out, I'll repay you!  You have my word."

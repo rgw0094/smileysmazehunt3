@@ -162,6 +162,7 @@ private:
 	float slimeDuration;
 	float timeStartedGraduallyMoving;
 	float timeToGraduallyMove;
+	float timeStoppedBreathingFire;
 
 	//State info
 	bool breathingFire;				//If using Fire Breath ability

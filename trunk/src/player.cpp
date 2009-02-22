@@ -105,6 +105,7 @@ void Player::reset() {
 	timeEnteredShrinkTunnel = -10.0;
 	timeStartedImmobilize = 0.0;
 	frisbeePower = 0.0;
+	timeStoppedBreathingFire = 0.0;
 	dx = dy = 0.0;
 
 	//State variables
@@ -573,6 +574,7 @@ void Player::doAbility(float dt) {
 	//Stop breathing fire
 	} else if (breathingFire) {
 		stopFireBreath();
+		timeStoppedBreathingFire = smh->getGameTime();
 	}
 
 	/////////////////// Triggered Abilities ///////////////
@@ -994,7 +996,12 @@ void Player::doArrowPads(float dt) {
  * Returns whether or not the player can pass through the specified collision type.
  */
 bool Player::canPass(int collision) {
+
 	if (springing) return true;
+
+	bool canPassWater = (((gui->getSelectedAbility() == WATER_BOOTS) && !drowning) || springing || isHovering || graduallyMoving) &&
+		smh->timePassedSince(timeStoppedBreathingFire) > 0.5;
+
 	switch (collision) {
 		case SLIME: return true;
 		case ICE: return !knockback;
@@ -1029,9 +1036,9 @@ bool Player::canPass(int collision) {
 		case EVIL_WALL_TRIGGER: return true;
 		case EVIL_WALL_DEACTIVATOR: return true;
 		case EVIL_WALL_RESTART: return true;
-		case DEEP_WATER: return ((gui->getSelectedAbility() == WATER_BOOTS) && !drowning) || springing || isHovering || graduallyMoving;
+		case DEEP_WATER: return canPassWater;
 		case NO_WALK_WATER: return false;
-		case GREEN_WATER: return ((gui->getSelectedAbility() == WATER_BOOTS) && !drowning) || springing || isHovering || graduallyMoving;
+		case GREEN_WATER: return canPassWater;
 		case SMILELET_FLOWER_HAPPY: return true;
 		case WHITE_SWITCH_LEFT: return false || springing;
 		case YELLOW_SWITCH_LEFT: return false || springing;
