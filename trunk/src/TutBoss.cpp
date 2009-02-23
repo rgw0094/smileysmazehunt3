@@ -33,7 +33,7 @@ extern SMH *smh;
 #define INITIAL_FLOATING_HEIGHT 3.0
 #define MAX_FLOATING_HEIGHT 25.0
 #define FLASHING_DURATION 0.5
-#define MUMMY_SPAWN_DELAY 1.0
+#define MUMMY_SPAWN_DELAY 1.5
 
 #define TUTBOSS_KNOCKBACK_DISTANCE 300.0
 
@@ -42,7 +42,7 @@ extern SMH *smh;
 #define TIME_TO_RISE 0.5
 #define TIME_TO_HOVER 9.0
 #define TIME_TO_LOWER 0.5
-#define TIME_TO_STAY_OPEN 25.0
+#define TIME_TO_STAY_OPEN 20.0
 
 //Hovering around constants
 #define TUTBOSS_FLOWER_RADIUS 300
@@ -63,13 +63,13 @@ extern SMH *smh;
 #define TUT_LIGHTNING_STATE_DISAPPEARING 5
 
 #define TUT_LIGHTNING_INITIAL_WIDTH 0.1
-#define TUT_LIGHTNING_MAX_WIDTH 1.0
+#define TUT_LIGHTNING_MAX_WIDTH 0.97
 #define TUT_LIGHTNING_MAX_WIDTH_IN_PIXELS 484
 #define TUT_LIGHTNING_ROTATE_SPEED 0.011
 #define TUT_LIGHTNING_ROTATE_PERIOD 1.6
 #define TUT_LIGHTNING_ROTATE_CW 0
 #define TUT_LIGHTNING_ROTATE_CCW 1
-#define TUT_LIGHTNING_NUM_SERIES 3
+#define TUT_LIGHTNING_NUM_SERIES 1
 #define TUT_LIGHTNING_NUM_WEDGES 7
 
 #define TUT_LIGHTNING_TIME_TO_APPEAR 0.7
@@ -92,7 +92,7 @@ extern SMH *smh;
 #define TUTBOSS_DEFEATTEXT 181
 
 //Balancing Attributes
-#define TUTBOSS_HEALTH 50.0
+#define TUTBOSS_HEALTH 100.0
 #define TUTBOSS_SHOT_DAMAGE 1.2
 #define TUTBOSS_DAMAGE 1.0
 #define TUT_LIGHTNING_DAMAGE 1.0
@@ -566,7 +566,7 @@ void TutBoss::doOpening(float dt) {
 void TutBoss::doTombOpen(float dt) {
 
 	//Periodically spawn mummies (up to a maximum of 4)
-	if (numMummiesSpawned < 4 && smh->timePassedSince(lastMummySpawnTime) > MUMMY_SPAWN_DELAY) {
+	if (numMummiesSpawned < 3 && smh->timePassedSince(lastMummySpawnTime) > MUMMY_SPAWN_DELAY) {
 		smh->projectileManager->addProjectile(x,y,MUMMY_PROJECTILE_SPEED,mummyLaunchAngle,MUMMY_PROJECTILE_DAMAGE,true,false,PROJECTILE_TUT_MUMMY,true);
 		mummyLaunchAngle += PI/2.0;
 		lastMummySpawnTime = smh->getGameTime();
