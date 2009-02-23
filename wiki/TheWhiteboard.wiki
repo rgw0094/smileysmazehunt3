@@ -38,7 +38,7 @@
 
 ===Done===
 ||Item||Date||Done By||
-||Enemies which are immune to lightning play 'immune' sound when hit by lightning||2/23/09||ETI||
+||Enemies play "immune" sound when hit by something they are immune to||2/23/09||ETI||
 ||You can't walk onto water until your fire attack is done||2/22/09||RGW||
 ||Death Screen||2/22/09||RGW||
 ||Made GAME OVER graphic||2/22/09||ETI||
