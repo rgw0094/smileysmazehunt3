@@ -260,6 +260,10 @@ bool EnemyManager::tongueCollision(Tongue *tongue, float damage) {
 				i->enemy->notifyTongueHit();
 				hit = true;
 			}
+		} else {
+			if (smh->player->getTongue()->testCollision(i->enemy->collisionBox)) {
+				smh->soundManager->playSound("snd_HitInvulnerable");
+			}
 		}
 	}
 
@@ -279,9 +283,13 @@ void EnemyManager::freezeEnemies(int x, int y) {
 	std::list<EnemyStruct>::iterator i;
 	for (i = enemyList.begin(); i != enemyList.end(); i++) {
 		//Check collision
-		if (!smh->gameData->getEnemyInfo(i->enemy->id).immuneToFreeze && i->enemy->collisionBox->TestPoint(x,y)) {
-			i->enemy->frozen = true;
-			i->enemy->timeFrozen = smh->getGameTime();
+		if (i->enemy->collisionBox->TestPoint(x,y)) {
+			if (!smh->gameData->getEnemyInfo(i->enemy->id).immuneToFreeze) { 
+				i->enemy->frozen = true;
+				i->enemy->timeFrozen = smh->getGameTime();
+			} else {
+				smh->soundManager->playSound("snd_HitInvulnerable");
+			}
 		}
 	}
 }
@@ -323,12 +331,16 @@ bool EnemyManager::hitEnemiesWithProjectile(hgeRect *collisionBox, float damage,
 					i->enemy->stunned = true;
 					i->enemy->stunLength = stunPower;
 					i->enemy->startedStun = smh->getGameTime();
-				}			
+				} else {
+					smh->soundManager->playSound("snd_HitInvulnerable");
+				}
 			} 
 
 			if (!(type == PROJECTILE_LIGHTNING_ORB && i->enemy->immuneToLightning)) {
 				i->enemy->dealDamageAndKnockback(damage, 0.0, 0.0, 0.0);
 				if (damage > 0.0) i->enemy->startFlashing();
+			} else if (type==PROJECTILE_LIGHTNING_ORB && i->enemy->immuneToLightning) {
+				smh->soundManager->playSound("snd_HitInvulnerable");
 			}
 
 			return true;

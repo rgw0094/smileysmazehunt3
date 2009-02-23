@@ -206,9 +206,9 @@ NPC1-3 = "That mud hole of a town's got no one left after Fenwar terrorized them
 
 NPC5Name = "Speirdyke"
 NPC5Pages = "3"
-NPC5-4 = "Name's Captain Speirdyke, pirate extraordinaire.  My ship was mortally wounded by fierce storm in the Atlarctic Ocean."
-NPC5-5 = "Anyways, to make a long story short, boy, I need some loot to buy myself a new ship and get back on the water."
-NPC5-6 = "If you help me out, I'll repay you!  You have my word."
+NPC5-1 = "Name's Captain Speirdyke, pirate extraordinaire.  My ship was mortally wounded by fierce storm in the Atlarctic Ocean."
+NPC5-2 = "Anyways, to make a long story short, boy, I need some loot to buy myself a new ship and get back on the water."
+NPC5-3 = "If you help me out, I'll repay you!  You have my word."
 
 NPC8Name = "Bill Clinton"
 NPC8Pages = "2"
