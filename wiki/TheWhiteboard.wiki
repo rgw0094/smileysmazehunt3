@@ -2,6 +2,7 @@
  * Add something telling you to use the minimap
  * Maybe have "full health/mana" pop up on the screen somewhere when you try to pick up health/mana when it is already full
  * Make map scrolling not choppy
+ * Exit Prompt from excape menu and for clicking the X(if we can capture that somehow)
  * Lovecraftian Boss
  * Barvinoid
  * Fenwar
