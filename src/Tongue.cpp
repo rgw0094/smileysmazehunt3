@@ -11,8 +11,9 @@
 extern SMH *smh;
 
 #define ATTACK_RADIUS (PI / 3.0)
-#define NUM_COLLISION_POINTS 8
-#define TONGUE_LENGTH 55.0
+#define NUM_COLLISION_POINTS 10
+#define TONGUE_LENGTH 70.0
+#define NUM_FRAMES 13
 
 //Tongue states
 #define STATE_EXTENDING 0
@@ -81,7 +82,7 @@ void Tongue::update(float dt) {
 		smh->resources->GetAnimation("smileyTongue")->Update(dt);
 
 		//Once the tongue is fully extended enter swinging state
-		if (smh->resources->GetAnimation("smileyTongue")->GetFrame() >= 10) {
+		if (smh->resources->GetAnimation("smileyTongue")->GetFrame() >= NUM_FRAMES-1) {
 			tongueState = STATE_SWINGING;
 		}
 
@@ -91,7 +92,7 @@ void Tongue::update(float dt) {
 		//When tongue finishes swinging, start retracting it
 		if (tongueOffsetAngle > ATTACK_RADIUS / 2.0) {
 			tongueOffsetAngle = ATTACK_RADIUS / 2.0;
-			smh->resources->GetAnimation("smileyTongue")->SetFrame(10);
+			smh->resources->GetAnimation("smileyTongue")->SetFrame(NUM_FRAMES-1);
 			smh->resources->GetAnimation("smileyTongue")->SetMode(HGEANIM_REV);
 			smh->resources->GetAnimation("smileyTongue")->Play();
 			tongueState = STATE_RETRACTING;
