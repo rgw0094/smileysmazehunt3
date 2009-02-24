@@ -4,6 +4,7 @@
  * Make map scrolling not choppy
  * Exit Prompt from excape menu and for clicking the X(if we can capture that somehow)
  * Draw key doors on the map
+ * Make enemies that are immune to something play "snd_HitInvulnerable" when they are hit with that thing
  * Lovecraftian Boss
  * Barvinoid
  * Fenwar
