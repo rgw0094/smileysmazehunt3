@@ -13,6 +13,7 @@
  * The boxes on the controls screen
  * Pit graphics for different areas
  * More projectile graphics
+ * Ability loot (the thing that appears when you kill a boss) - it should probably have a particle behind it too
 
 === Bugs ===
  * There are randomly item particles in places where there shouldn't be
