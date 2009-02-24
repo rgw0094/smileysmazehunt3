@@ -15,6 +15,7 @@
  * More projectile graphics
 
 === Bugs ===
+ * There are randomly item particles in places where there shouldn't be
  * Bouncing spikey enemies that I put to appear in line with each other in game sometimes are not in line when testing, making it a lot harder to get by them than planned. (this is impossible to fix)
  * One time, the "Continue" "Back" and "Delete" buttons in the select file screen went too far down, as if the dt was excessively large the frame before they stopped.
  * Spikey enemies start in the wrong spot sometimes. Ex: the mass of spikey enemies in Egypt, sometimes one of them will move down first and then will bounce horizontally in the wrong spot.
