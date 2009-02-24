@@ -429,7 +429,27 @@ void SaveManager::loadFileInfo() {
  * Returns the current hint number based on what boss has been killed.
  */
 int SaveManager::getCurrentHint() {
-	if (isBossKilled(FIRE_BOSS2)) {
+
+#define FIRE_BOSS 240
+#define DESERT_BOSS 241
+#define SNOW_BOSS 242
+#define FOREST_BOSS 243
+#define MUSHROOM_BOSS 244
+#define DESPAIR_BOSS 245
+#define FIRE_BOSS2 246
+#define CANDY_BOSS 247
+#define LOVECRAFT_BOSS 248
+#define TUT_BOSS 249
+
+	if (isBossKilled(CONSERVATORY_BOSS)) {
+		return 11;
+	} else if (isBossKilled(TUT_BOSS)) {
+		return 10;
+	} else if (isBossKilled(LOVECRAFT_BOSS)) {
+		return 9;
+	} else if (isBossKilled(CANDY_BOSS)) {
+		return 8;
+	} else if (isBossKilled(FIRE_BOSS2)) {
 		return 7;
 	} else if (isBossKilled(MUSHROOM_BOSS)) {
 		return 6;

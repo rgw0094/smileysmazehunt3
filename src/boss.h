@@ -17,6 +17,7 @@
 #define CANDY_BOSS 247
 #define LOVECRAFT_BOSS 248
 #define TUT_BOSS 249
+#define CONSERVATORY_BOSS 250
 
 extern SMH *smh;
 
