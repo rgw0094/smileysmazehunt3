@@ -1226,7 +1226,7 @@ void Player::updateVelocities(float dt) {
 	//For the following states, velocities are handled in their respective update methods
 	if (falling || inShrinkTunnel || iceSliding || sliding || springing || graduallyMoving) return;
 
-	if (frozen || drowning || stunned || immobile) {
+	if (frozen || drowning || stunned || immobile || tongue->isAttacking()) {
 		dx = dy = 0.0;
 		return;
 	}
