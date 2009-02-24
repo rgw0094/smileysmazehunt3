@@ -6,6 +6,7 @@
  * Draw key doors on the map
  * Make enemies that are immune to something play "snd_HitInvulnerable" when they are hit with that thing
  * Make some sort of graphical effect for enemies spawning from the enemy spawners.
+ * Floaters jump when they hit a wall and they float too close to the ground (they actually go into the ground)
  * Lovecraftian Boss
  * Barvinoid
  * Fenwar
