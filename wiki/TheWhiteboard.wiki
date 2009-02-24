@@ -1,6 +1,7 @@
 === Programming To Do ===
  * Add something telling you to use the minimap
  * Maybe have "full health/mana" pop up on the screen somewhere when you try to pick up health/mana when it is already full
+ * Make map scrolling not choppy
  * Lovecraftian Boss
  * Barvinoid
  * Fenwar
