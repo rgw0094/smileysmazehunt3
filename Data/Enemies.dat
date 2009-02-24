@@ -69,6 +69,7 @@ numEnemies="83"
 
 ;Ice Floater
 4Name=      "Diabolical Diamond"
+4OneGraphic="T"
 4GCol=      "9"
 4GRow=      "0"
 4EnemyType= "9"
@@ -132,6 +133,7 @@ numEnemies="83"
 
 ;Sentinel
 8Name=      "Sentinel"
+8OneGraphic="T"
 8GCol=      "2"
 8GRow=      "2"
 8EnemyType= "0"
@@ -230,6 +232,7 @@ numEnemies="83"
 
 ;Mortimer (Earth Floater)
 14Name=      "Mortimer"
+14OneGraphic="T"
 14GCol=      "8"
 14GRow=      "0"
 14EnemyType= "9"
@@ -319,6 +322,7 @@ numEnemies="83"
 
 ;Fire floater
 20Name=      "Furious Flame"
+20OneGraphic="T"
 20GCol=      "0"
 20GRow=      "2"
 20EnemyType= "9"
@@ -1303,6 +1307,7 @@ numEnemies="83"
 
 ;Floating red candy which spawns ice cream cones
 73Name=      "Hoorolo"
+73OneGraphic="T"
 73GCol=	     "12"
 73GRow=	     "0"
 73OneGraphic="T"
@@ -1321,6 +1326,7 @@ numEnemies="83"
 
 ;Floating green candy which shoots at you
 74Name=      "Haliira"
+74OneGraphic="T"
 74GCol=	     "13"
 74GRow=	     "0"
 74OneGraphic="T"

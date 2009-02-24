@@ -264,13 +264,19 @@ void Player::doMove(float dt) {
 		xDist *= 1.2;
 		yDist *= 1.2;
 	}
-	if (uber && !iceSliding && !springing && !sliding) {
-		xDist *= 3;
-		yDist *= 3;
-	}
-	if (slimed && !iceSliding && !springing && !sliding) {
-		xDist *= 0.5;
-		yDist *= 0.5;
+	if (!iceSliding && !springing && !sliding && !graduallyMoving) {
+		if (uber) {
+			xDist *= 3;
+			yDist *= 3;
+		}
+		if (slimed) {
+			xDist *= 0.5;
+			yDist *= 0.5;
+		}
+		if (tongue->isAttacking()) {
+			xDist *= 0.1;
+			yDist *= 0.1;
+		}
 	}
 
 	//Check for collision with frozen enemies
@@ -1226,7 +1232,7 @@ void Player::updateVelocities(float dt) {
 	//For the following states, velocities are handled in their respective update methods
 	if (falling || inShrinkTunnel || iceSliding || sliding || springing || graduallyMoving) return;
 
-	if (frozen || drowning || stunned || immobile || tongue->isAttacking()) {
+	if (frozen || drowning || stunned || immobile) {
 		dx = dy = 0.0;
 		return;
 	}
