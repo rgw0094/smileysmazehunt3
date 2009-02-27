@@ -30,7 +30,7 @@ SnowBoss::SnowBoss(int _gridX,int _gridY,int _groupID) {
 	startedIntroDialogue = false;
 	startedDrowningDialogue = false;
 
-	health = maxHealth = SNOWBOSS_HEALTH;
+	health = maxHealth = SNOWBOSS_HEALTH/smh->gameData->getDifficultyModifier(smh->saveManager->difficulty);
 	droppedLoot=false;
 	
 	iceNova = new WeaponParticleSystem("icenova.psi", smh->resources->GetSprite("particleGraphic13"), PARTICLE_ICE_NOVA);
