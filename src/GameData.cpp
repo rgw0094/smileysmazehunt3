@@ -79,15 +79,15 @@ int GameData::getNumTotalGemsInArea(int area, int gemType) {
 float GameData::getDifficultyModifier(int difficulty) {
 	switch (difficulty) {
 		case VERY_EASY:
-			return 1.3;
+			return 1.5;
 		case EASY:
-			return 1.15;
+			return 1.25;
 		case MEDIUM:
 			return 1.0;
 		case HARD:
-			return 0.85;
+			return 0.75;
 		case VERY_HARD:
-			return 0.7;
+			return 0.5;
 	}
 }
 
