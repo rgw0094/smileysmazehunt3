@@ -250,8 +250,6 @@ private:
 	int gridWidth, gridHeight;		//Dimensions of the map grid
 	int squareSize;					//Size of a square in the map grid
 	float xOffset, yOffset;
-	int gridXOffset, gridYOffset;
-	float drawX,drawY;
 
 };
 
