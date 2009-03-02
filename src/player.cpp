@@ -1398,8 +1398,8 @@ void Player::doIce(float dt) {
  * Moves the player to the specified position.
  */
 void Player::moveTo(int _gridX, int _gridY) {
-	gridX = _gridX;
-	gridY = _gridY;
+	gridX = min(max(0,_gridX), smh->environment->areaWidth-1);
+	gridY = min(max(0,_gridY), smh->environment->areaHeight-1);
 	x = gridX*64+32;
 	y = gridY*64+32;
 	dx = dy = 0.0;

@@ -72,7 +72,7 @@ void Console::update(float dt) {
 		}
 		
 		//Teleport to warp zone
-		if (smh->hge->Input_KeyDown(HGEK_F1)) {
+		if (smh->hge->Input_KeyDown(HGEK_F1) && smh->saveManager->currentArea != DEBUG_AREA) {
 			if (!smh->areaChanger->isChangingArea()) {
 				smh->areaChanger->changeArea(-1, -1, DEBUG_AREA);
 			}

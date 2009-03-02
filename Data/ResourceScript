@@ -735,7 +735,7 @@ Sprite iceBlock {
 }
 Sprite loading {
  texture=general
- rect=623,623,399,399
+ rect=623,623,400,400
  hotspot=200,200
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
@@ -1169,13 +1169,31 @@ Sprite bottomBorder {
 
 Sprite miniMapNoCollision {
  texture=general
- rect=704,64,64,64
+ rect=704,64,16,16
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 Sprite miniMapCollision {
  texture=general
- rect=768,64,64,64
+ rect=768,64,16,16
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite miniMapBlueSquare {
+ texture=general
+ rect=832,64,16,16
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite miniMapBlackSquare {
+ texture=general
+ rect=896,64,16,16
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite miniMapRedSquare {
+ texture=general
+ rect=960,64,16,16
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }

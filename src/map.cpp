@@ -21,7 +21,6 @@ Map::Map() {
 	windowHeight = gridHeight*squareSize;
 	windowX = 182 + 30;
 	windowY = 138 + 30;
-	gridXOffset = gridYOffset = 0;
 
 	//When the map opens, set the (x,y) offset based on Smiley's current position
 	xOffset = smh->player->x / (64.0 / (float)squareSize) - float((gridWidth/2)*squareSize);
@@ -44,15 +43,18 @@ void Map::draw(float dt) {
 	//Shade behind the map
 	smh->drawScreenColor(BLACK, 100.0);
 
+	int gridX = xOffset / squareSize;
+	int gridY = yOffset / squareSize;
+
 	smh->hge->Gfx_SetClipping(windowX, windowY, windowWidth, windowHeight);
 
 	//Draw the map tiles
-	for (int i = gridXOffset; i < gridXOffset + gridWidth+1; i++) {
-		for (int j = gridYOffset; j < gridYOffset + gridHeight+1; j++) {
+	for (int i = gridX; i < gridX + gridWidth+1; i++) {
+		for (int j = gridY; j < gridY + gridHeight+1; j++) {
 			
 			//Calculate the top left corner of the square and its width
-			drawX = windowX+(i-gridXOffset)*squareSize - ((int)xOffset%squareSize);
-			drawY = windowY+(j-gridYOffset)*squareSize - ((int)yOffset%squareSize);
+			int drawX = windowX+(i-gridX)*squareSize - ((int)xOffset%squareSize);
+			int drawY = windowY+(j-gridY)*squareSize - ((int)yOffset%squareSize);
 			
 			if (smh->environment->isInBounds(i,j) && smh->saveManager->isExplored(i,j)) {
 				drawSquare(i, j, drawX, drawY);
@@ -83,13 +85,13 @@ void Map::drawSquare(int i , int j, int drawX, int drawY) {
 
 	//Basic map tiles
 	if (c == WALK_LAVA || c == NO_WALK_LAVA) {
-		smh->drawSprite("redScreen", drawX, drawY);
+		smh->drawSprite("miniMapRedSquare", drawX, drawY);
 	} else if (c == PIT || c == NO_WALK_PIT || c == FAKE_PIT) {
-		smh->drawSprite("blackScreen", drawX, drawY);
+		smh->drawSprite("miniMapBlackSquare", drawX, drawY);
 	} else if (drawNoCollision && !isHiddenWarp) {
 		smh->drawSprite("miniMapNoCollision", drawX, drawY);
 	} else if (smh->environment->isDeepWaterAt(i, j)) {
-		smh->drawSprite("blueScreen", drawX, drawY);
+		smh->drawSprite("miniMapBlueSquare", drawX, drawY);
 	} else {
 		smh->drawSprite("miniMapCollision", drawX, drawY);
 	}
@@ -135,8 +137,7 @@ void Map::drawFogAt(int i, int j, int drawX, int drawY) {
 			smh->drawSprite("mapFogOfWarDownRight", drawX+squareSize/2, drawY+squareSize/2, squareSize/2, squareSize/2);
 	//Out of bounds or not explored
 	} else {
-		smh->resources->GetAnimation("mainLayer")->SetFrame(0);
-		smh->resources->GetAnimation("mainLayer")->RenderStretch(drawX,drawY,drawX+squareSize,drawY+squareSize);
+		smh->drawSprite("miniMapBlackSquare", drawX, drawY);
 	}
 }
 
@@ -145,38 +146,21 @@ void Map::drawFogAt(int i, int j, int drawX, int drawY) {
  */
 bool Map::update(float dt) {
 
-	//Do input
+	//Scrolling input
 	if (smh->input->keyDown(INPUT_LEFT)) {
-		if (xOffset > 0) {
-			xOffset -= 400.0f*dt;
-			if (xOffset < 0.0f) xOffset = 0.0f;
-		}
+		xOffset = max(0.0, xOffset - 400.0 * dt);
 	}
 	if (smh->input->keyDown(INPUT_RIGHT)) {
-		if (xOffset < smh->environment->areaWidth*squareSize - gridWidth*squareSize) {
-			xOffset += 400.0f*dt;
-			if (xOffset > smh->environment->areaWidth*squareSize) xOffset = smh->environment->areaWidth*squareSize;
-		}
+		xOffset = min(smh->environment->areaWidth*squareSize - gridWidth*squareSize, xOffset + 400.0 * dt);
 	}
 	if (smh->input->keyDown(INPUT_UP)) {
-		if (yOffset > 0.0f) {
-			yOffset -= 400.0f*dt;
-			if (yOffset < 0.0f) yOffset = 0.0f;
-		}
+		yOffset = max(0.0, yOffset - 400.0 * dt);
 	}
 	if (smh->input->keyDown(INPUT_DOWN)) {
-		if (yOffset < smh->environment->areaHeight*squareSize - gridHeight*squareSize) {
-			yOffset += 400.0f*dt;
-			if (yOffset > smh->environment->areaHeight*squareSize) yOffset = smh->environment->areaHeight*squareSize;
-		}
+		yOffset = min(smh->environment->areaHeight*squareSize - gridHeight*squareSize, yOffset + 400.0 * dt);
 	}
 
-	//Update gridOffset
-	gridXOffset = xOffset / squareSize;
-	gridYOffset = yOffset / squareSize;
-
 	return true;
-
 }
 
 bool Map::shouldDrawItem(int item) {
@@ -200,7 +184,7 @@ bool Map::shouldDrawItem(int item) {
 bool Map::shouldDrawSpecialCollision(int c) {
 	return
 		Util::isArrowPad(c) || Util::isCylinderDown(c) || Util::isCylinderSwitchLeft(c) || Util::isCylinderSwitchRight(c) ||
-		Util::isCylinderUp(c) || c == SAVE_SHRINE || c == ICE ||
+		Util::isCylinderUp(c) || c == SAVE_SHRINE || c == ICE || c == YELLOW_KEYHOLE ||
 		c == RED_KEYHOLE || c == GREEN_KEYHOLE || c == BLUE_KEYHOLE || c == SPRING_PAD || c == SPIN_ARROW_SWITCH ||
 		c == MIRROR_UP_LEFT || c == MIRROR_UP_RIGHT || c == MIRROR_DOWN_RIGHT || c == MIRROR_DOWN_LEFT || c == DIZZY_MUSHROOM_1 ||
 		c == DIZZY_MUSHROOM_2 || c == HOVER_PAD || c == BOMBABLE_WALL || c == SHRINK_TUNNEL_SWITCH || c == SHRINK_TUNNEL_HORIZONTAL ||
