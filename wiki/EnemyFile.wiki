@@ -40,7 +40,7 @@
 ||Code||Enemy Type||Variable 1||Variable 2||Variable 3||
 ||0||Basic Enemy|| || ||
 ||1||Evil eye|| || ||
-||2||Gumdrop|| || ||
+||2||Burrower||Animation to use for burrowing<p>0=gumdrop,1=brown desert burrower||Distance at which the burrower burrows (in pixels)||
 ||3||Bomb generator|| || ||
 ||4||Charger|| || ||
 ||5||Clown balloon|| || ||
