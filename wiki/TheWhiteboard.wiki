@@ -9,6 +9,8 @@
  * Closing Cinematic
 
 === Graphics To Do ===
+ * Barvinoid boss
+ * Fenwar boss
  * Lovecraftian Boss tentacles
  * The boxes on the controls screen
  * Pit graphics for different areas
