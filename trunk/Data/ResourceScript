@@ -2101,7 +2101,7 @@ Animation evileye {
  hotspot=32,32
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
-Animation gumdrop {
+Animation burrowAnim0 {
  texture=animations
  rect=640,256,64,64
  frames=5
@@ -2109,6 +2109,15 @@ Animation gumdrop {
  mode=NOLOOP
  hotspot=32,32
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Animation burrowAnim1 {
+ texture=animations
+ rect=640,320,64,64
+ frames=5
+ fps=10.0
+ mode=NOLOOP
+ hotspot=32,32
+ blendmode=COLORMUL,ALPHABLENDNOZWRITE
 }
 Animation bombSpawn {
  texture=animations
@@ -2165,8 +2174,8 @@ Animation batlet {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 Sprite buzzardWing {
- texture=animations
- rect=768,320,98,27
+ texture=general
+ rect=154,221,98,27
  hotspot=100,14
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }

@@ -28,6 +28,8 @@ numEnemies="83"
 1Radius=    "28"
 1Speed=     "80"
 1Land=      "T"
+1Variable1= "0" ;use gumdrop burrowing animation
+1Variable2= "200" ;distance at which to burrow
 
 ;Evil Eye
 2Name=      "Evil Eye"

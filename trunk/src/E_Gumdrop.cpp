@@ -6,7 +6,6 @@
 
 extern SMH *smh;
 
-#define BURROW_RADIUS 200
 #define ATTACK_DELAY 2.0
 #define ATTACK_VELOCITY 400.0
 #define ATTACK_RANGE 450.0
@@ -25,10 +24,17 @@ E_Gumdrop::E_Gumdrop(int id, int x, int y, int groupID) {
 	//Doesn't use framework states
 	currentState = NULL;
 
-	burrowAnimation = new hgeAnimation(*smh->resources->GetAnimation("gumdrop"));
+	std::string burrowAnimationName;
+	burrowAnimationName = "burrowAnim" + Util::intToString(variable1);
+	smh->log(burrowAnimationName.c_str());
+	burrowAnimation = new hgeAnimation(*smh->resources->GetAnimation(burrowAnimationName.c_str()));
+	smh->log("Done loading burrow animation.");
+
 	burrowState = GUMDROP_UNBURROWED;
 	lastAttackTime = -10.0;
 	facing = DOWN;
+
+	burrowDistance = variable2;
 
 }
 
@@ -78,7 +84,7 @@ void E_Gumdrop::update(float dt) {
 		}	
 
 		//When the player gets close the gumdrop burrows
-		if (distanceFromPlayer() < BURROW_RADIUS) {
+		if (distanceFromPlayer() < burrowDistance) {
 			burrowState = GUMDROP_BURROWING;
 			burrowAnimation->SetMode(HGEANIM_FWD);
 			burrowAnimation->Play();
@@ -102,7 +108,7 @@ void E_Gumdrop::update(float dt) {
 
 	//Burrowed - > Unburrowing
 	if (burrowState == GUMDROP_BURROWED) {
-		if (distanceFromPlayer() > BURROW_RADIUS) {
+		if (distanceFromPlayer() > burrowDistance) {
 			burrowState = GUMDROP_UNBURROWING;
 			burrowAnimation->SetMode(HGEANIM_REV);
 			burrowAnimation->Play();

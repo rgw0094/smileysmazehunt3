@@ -408,6 +408,7 @@ private:
 	hgeAnimation *burrowAnimation;
 	int burrowState;
 	float lastAttackTime;
+	int burrowDistance;
 
 };
 
