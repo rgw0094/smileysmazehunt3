@@ -40,7 +40,7 @@
 ||Code||Enemy Type||Variable 1||Variable 2||Variable 3||
 ||0||Basic Enemy|| || ||
 ||1||Evil eye|| || ||
-||2||Burrower||Animation to use for burrowing<p>nomenclature = 'burrowanimN'||Distance at which the burrower burrows (in pixels)||
+||2||Burrower||Animation N to use for burrowing<p>nomenclature to use in ResourceScript = 'burrowAnimN'||Distance at which the burrower burrows (in pixels)||
 ||3||Bomb generator|| || ||
 ||4||Charger|| || ||
 ||5||Clown balloon|| || ||
