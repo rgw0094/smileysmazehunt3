@@ -1,6 +1,4 @@
 === Programming To Do ===
- * Add something telling you to use the minimap (in the advice screen)
- * Maybe have "full health/mana" pop up on the screen somewhere when you try to pick up health/mana when it is already full
  * Exit Prompt from excape menu and for clicking the X(if we can capture that somehow)
  * Make some sort of graphical effect for enemies spawning from the enemy spawners.
  * Lovecraftian Boss
@@ -51,6 +49,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||PopupMessageManager||3/14/09||RGW||
 ||Made it so burrower and buzzard can be stunned||3/14/09||ETI||
 ||Added desert burrower||3/14/09||ETI||
 ||Improved burrowing enemy functionality||3/14/09||ETI||
