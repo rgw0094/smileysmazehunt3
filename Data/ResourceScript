@@ -2037,6 +2037,12 @@ Sprite SlimeProjectile {
  hotspot=12,17
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
+Sprite OrangeProjectile {
+ texture=projectileTx
+ rect=21,0,16,16
+ hotspot=7,7
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
 
 ;**************************
 ;******** Tiles ********
