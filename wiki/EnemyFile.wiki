@@ -96,9 +96,9 @@
 ----
 = Enemies by Area =
 ||Area||Enemies||
-||Fountain||Red croc, turtle||
+||Fountain||Red croc^4^, turtle^4^||
 ||Olde Towne||Beaker^1^,Blue alien guy^1^||
-||Smolder Hollow^4^||Fire Floater^4^, Fangie^4^||
+||Smolder Hollow||Fire Floater^4^, Fangie^4^||
 ||Sessaria||Crystal^4^, Snowman^4^, Snowfang^4^||
 ||Forest||Floating Turnip^4^, Squirrel^4^, Gumdrop^4^||
 ||Desert||Buzzard^4^, Brown burrower^4^, Green Snake^2^||
