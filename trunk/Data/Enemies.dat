@@ -196,7 +196,6 @@ numEnemies="84"
 10Slime=     "T"
 
 ;Batlet distributor
-11Name=      "Batlet Distributor"
 11GCol=      "0"
 11GRow=      "6"
 11NumFrames= "2"
