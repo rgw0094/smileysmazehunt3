@@ -96,17 +96,17 @@
 = Enemies by Area =
 ||Area||Enemies||
 ||Fountain||Red croc, turtle||
-||Olde Towne||??||
+||Olde Towne||^Beaker^,||
 ||Smolder Hollow||Fire Floater, Fangie||
 ||Sessaria||Crystal, Snowman, Snowfang||
 ||Forest||Floating Turnip, Squirrel, Flower||
 ||Desert||Buzzard, Brown burrower, ^Green Snake^||
 ||Realm||Skullie, ^Eye^||
-||Mush Cave||Mushroom, ^Snail^||
+||Mush Cave||Cone, ^Snail^||
 ||Pools||Orange head, Friigoth Moorer||
 ||Mt Frostbite||Batlet, Ice Cream Man, Candy Floater, Candy Spawner, Sad Shooters||
 ||Swamp||Buzzard, Tentacle, Crab/Clown, Pumpkin*3||
 ||Tut||Tan Snake, Mummy||
-||Castle||^Red Skullie^,^Red Fangie^, ^Red Spikey Ball^, Batlet(2), Spider, ^Protector^,^Green croc^||
+||Castle||^Proennok^,^Ent^,^Frownie^ Batlet(2), ^Spider^, ^Protector^,^Green croc^||
 ||Conservatory||^Alphanoid^, ^Herbanoid^||
 ||Superscript denotes yet to be done||||
