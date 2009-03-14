@@ -49,7 +49,7 @@ bool LoadingScreen::update(float dt, float mouseX, float mouseY) {
 		
 		if (isNewGame) {
 			smh->environment->loadArea(smh->saveManager->currentArea, smh->saveManager->currentArea, false);
-			smh->saveManager->save(false);
+			smh->saveManager->save();
 			smh->resources->Precache(RES_CINEMATIC);
 			smh->menu->setScreen(CINEMATIC_SCREEN);
 		} else {

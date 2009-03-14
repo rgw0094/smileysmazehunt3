@@ -44,6 +44,9 @@ void SMH::init() {
 	log("Creating Console");
 	console = new Console();
 
+	log("Creating PopupMessageManager");
+	popupMessageManager = new PopupMessageManager();
+
 	log("Creating SaveManager");
 	saveManager = new SaveManager();
 
@@ -144,7 +147,6 @@ bool SMH::updateGame() {
 			menuClosedThisFrame = true;
 		}
 
-		//Update the objects that can interrupt gameplay.
 		windowManager->update(dt);
 		areaChanger->update(dt);
 		enemyGroupManager->update(dt);
@@ -152,8 +154,8 @@ bool SMH::updateGame() {
 		environment->updateAdviceMan(dt);
 		player->updateGUI(dt);
 		deathEffectManager->update(dt);
+		popupMessageManager->update(dt);
 
-		//If none of them are active, update the game objects!
 		if (!windowManager->isOpenWindow() && !areaChanger->isChangingArea() && !fenwarManager->isEncounterActive() && 
 			!environment->isAdviceManActive() && !deathEffectManager->isActive())
 		{
@@ -211,10 +213,10 @@ void SMH::drawGame() {
 		drawScreenColor(screenColor, screenColorAlpha);
 		areaChanger->draw(dt);
 		player->drawGUI(dt);
-		saveManager->drawSaveConfirmation(dt);
 		windowManager->draw(dt);
 		deathEffectManager->draw(dt);
 		console->draw(dt);
+		popupMessageManager->draw(dt);
 	}
 
 	if (isDebugOn()) {

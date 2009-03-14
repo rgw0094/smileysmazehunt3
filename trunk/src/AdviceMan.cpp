@@ -84,7 +84,7 @@ void AdviceMan::updateState(float dt) {
 			state = FINISHED;
 			smh->saveManager->adviceManEncounterCompleted = true;
 			smh->npcManager->addNPC(MONOCLE_MAN_NPC_ID, MONOCLE_MAN_TEXT_ID, Util::getGridX(x), Util::getGridY(y));
-			smh->saveManager->save(false);
+			smh->saveManager->save();
 		}
 	}
 

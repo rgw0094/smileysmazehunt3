@@ -46,6 +46,7 @@ class BitStream;
 class ScreenEffectsManager;
 class DeathEffectManager;
 class Console;
+class PopupMessageManager;
 
 //Constants
 #define PI 3.14159265357989232684
@@ -327,6 +328,7 @@ public:
 	ScreenEffectsManager *screenEffectsManager;
 	ExplosionManager *explosionManager;
 	DeathEffectManager *deathEffectManager;
+	PopupMessageManager *popupMessageManager;
 
 private:
 
@@ -511,8 +513,7 @@ public:
 	//Methods
 	void resetCurrentData();
 	void load(int fileNumber);
-	void drawSaveConfirmation(float dt);
-	void save(bool showConfirmation);
+	void save();
 	void deleteFile(int fileNumber);
 	void saveTimePlayed();
 	void startNewGame(int fileNumber);
@@ -539,7 +540,6 @@ public:
 
 	//Save data
 	float timeFileLoaded;	//used to track playing time
-	float timeFileSaved;
 	int currentSave;
 	int currentArea;
 	bool adviceManEncounterCompleted;
@@ -816,6 +816,38 @@ private:
 	bool debugMovePressed;
 	float lastDebugMoveTime;
 	int lineNum;
+
+};
+
+//----------------------------------------------------------------
+//---------------------- POPUPMESSAGEMANAGER----------------------
+//----------------------------------------------------------------
+// Shows messages on the screen
+//----------------------------------------------------------------
+class PopupMessageManager {
+
+public:
+
+	PopupMessageManager();
+	~PopupMessageManager();
+
+	void update(float dt);
+	void draw(float dt);
+
+	void showSaveConfirmation();
+	void showNewAdvice();
+	void showFullMana();
+	void showFullHealth();
+
+private:
+	
+	void startMessage(float duration);
+
+	std::string message;
+	float messageDuration;
+	float timeMessageStarted;
+	float messageAlpha;
+	bool adviceManMessageActive;
 
 };
 

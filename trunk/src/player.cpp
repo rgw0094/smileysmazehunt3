@@ -1138,11 +1138,15 @@ void Player::doItems() {
 		if (getHealth() != getMaxHealth()) {
 			setHealth(getHealth() + 1.0);
 			gatheredItem = true;
+		} else {
+			smh->popupMessageManager->showFullHealth();
 		}
 	} else if (item == MANA_ITEM) {
 		if (getMana() != getMaxMana()) {
 			setMana(getMana() + MANA_PER_ITEM);
 			gatheredItem = true;
+		} else {
+			smh->popupMessageManager->showFullMana();
 		}
 	}
 	
