@@ -89,7 +89,8 @@
 ||10||Tut's Mummy||
 ||11||Candy (shot by Bartli)||
 ||12||Figure 8-type||
-||13||Small orange dot||
+||13||Slime||
+||14||Small orange dot||
 
 ----
 = Enemies by Area =
