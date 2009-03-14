@@ -51,6 +51,8 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Added desert burrower||3/14/09||ETI||
+||Improved burrowing enemy functionality||3/14/09||ETI||
 ||Improved mini map draw performance||2/28/09||RGW||
 ||Fixed floater graphics||2/23/09||RGW||
 ||Enemies play "immune" sound when hit by something they are immune to||2/23/09||ETI||
