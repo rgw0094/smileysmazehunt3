@@ -1,5 +1,4 @@
 === Programming To Do ===
- * Exit Prompt from excape menu and for clicking the X(if we can capture that somehow)
  * Make some sort of graphical effect for enemies spawning from the enemy spawners.
  * Lovecraftian Boss
  * Barvinoid
@@ -49,6 +48,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Exit Prompt||3/14/09||RGW||
 ||PopupMessageManager||3/14/09||RGW||
 ||Made it so burrower and buzzard can be stunned||3/14/09||ETI||
 ||Added desert burrower||3/14/09||ETI||
