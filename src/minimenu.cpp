@@ -14,16 +14,19 @@ MiniMenu::MiniMenu(int mode) {
 
 	x = (1024 - 250) / 2;
 	y = (768 - 75 - 75 - 30) / 2;
+	this->mode = mode;
 
 	if (mode == MINIMENU_EXIT) {
-		addButton("Cancel", 512.0-125.0, 250.0, MINIMENU_CANCEL);
+		addButton("Resume", 512.0-125.0, 250.0, MINIMENU_CANCEL);
 		addButton("Options", 512.0-125.0, 350.0, MINIMENU_OPTIONS);
-		addButton("Quit", 512.0-125.0, 450.0, MINIMENU_QUIT);
+		addButton("Exit", 512.0-125.0, 450.0, MINIMENU_QUIT);
 	} else if (mode == MINIMENU_SAVEGAME) {
 		addButton("Cancel", 512.0-125.0, 300.0, MINIMENU_CANCEL);
 		addButton("Save", 512.0-125.0, 400.0, MINIMENU_SAVE);
+	} else if (mode == MINIMENU_EXIT_PROMPT) {
+		addButton("Exit", 512.0-250.0 - 50.0, 350.0, MINIMENU_YES);
+		addButton("Cancel", 512.0+50.0, 350.0, MINIMENU_NO);
 	}
-
 }
 
 /**
@@ -47,6 +50,11 @@ void MiniMenu::draw(float dt) {
 
 	//Shade the screen behind the menu
 	smh->drawScreenColor(BLACK, 100.0);
+
+	if (mode == MINIMENU_EXIT_PROMPT) {
+		smh->resources->GetFont("inventoryFnt")->printf(512.0, 200.0, HGETEXT_CENTER, "Are you sure you wish to exit?");
+		smh->resources->GetFont("inventoryFnt")->printf(512.0, 240.0, HGETEXT_CENTER, "Any unsaved progress will be lost.");
+	}
 
 	//Draw buttons
 	std::list<ButtonStruct>::iterator i;
@@ -92,16 +100,22 @@ bool MiniMenu::update(float dt) {
 				case MINIMENU_CANCEL:
 					return false;
 				case MINIMENU_QUIT:
-					smh->menu->open(TITLE_SCREEN);
-					smh->saveManager->incrementTimePlayed(smh->saveManager->currentSave, smh->getGameTime());
-					smh->saveManager->saveFileInfo();
-					return false;
+					smh->windowManager->openWindow(new MiniMenu(MINIMENU_EXIT_PROMPT));
+					return true;
 				case MINIMENU_SAVE:
 					smh->saveManager->save();
 					smh->popupMessageManager->showSaveConfirmation();
 					return false;
 				case MINIMENU_OPTIONS:
 					smh->windowManager->openWindow(new OptionsWindow());
+					return true;
+				case MINIMENU_YES:
+					smh->menu->open(TITLE_SCREEN);
+					smh->saveManager->incrementTimePlayed(smh->saveManager->currentSave, smh->getGameTime());
+					smh->saveManager->saveFileInfo();
+					return false;
+				case MINIMENU_NO:
+					smh->windowManager->openWindow(new MiniMenu(MINIMENU_EXIT));
 					return true;
 			}
 		}

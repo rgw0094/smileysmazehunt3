@@ -195,10 +195,13 @@ private:
 #define MINIMENU_CANCEL 1
 #define MINIMENU_QUIT 2
 #define MINIMENU_OPTIONS 3
+#define MINIMENU_YES 4
+#define MINIMENU_NO 5
 
 //Mode
 #define MINIMENU_EXIT 0
 #define MINIMENU_SAVEGAME 1
+#define MINIMENU_EXIT_PROMPT 2
 
 struct ButtonStruct {
 	Button *button;
@@ -220,6 +223,7 @@ public:
 	int x, y;
 	float xOffset, yOffset;
 	int selected;
+	int mode;
 
 	std::list<ButtonStruct> buttonList;
 
