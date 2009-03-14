@@ -95,6 +95,9 @@ void EnemyManager::addEnemy(int id, int x, int y, float spawnHealthChance, float
 		case ENEMY_SPAWNER:
 			newEnemy.enemy = new E_Spawner(id, x, y, groupID);
 			break;
+		case ENEMY_ADJACENT_SHOOTER:
+			newEnemy.enemy = new E_AdjacentShooter(id, x, y, groupID);
+			break;
    		default:
 			newEnemy.enemy = new DefaultEnemy(id, x, y, groupID);
 			break;

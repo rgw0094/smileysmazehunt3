@@ -54,6 +54,7 @@ class hgeRect;
 #define ENEMY_RANGED 15
 #define ENEMY_HOPPER 16
 #define ENEMY_SPAWNER 17
+#define ENEMY_ADJACENT_SHOOTER 18
 
 //Stuff on ID layer
 #define ENEMYGROUP_TRIGGER 996
@@ -784,6 +785,20 @@ private:
 	float lastDirChange;
 	float dirChangeDelay;
 	float shadowOffset;
+};
+
+class E_AdjacentShooter : public BaseEnemy {
+
+public:
+	E_AdjacentShooter(int id, int x, int y, int groupID);
+	~E_AdjacentShooter();
+
+	//methods
+	void draw(float dt);
+	void update(float dt);
+
+private:
+
 };
 
 #endif
