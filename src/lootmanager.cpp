@@ -72,13 +72,21 @@ void LootManager::update(float dt) {
 			bool collected = false;
 
 			//Give the player the loot
-			if (i->type == LOOT_HEALTH && smh->player->getHealth() != smh->player->getMaxHealth()) {
-				smh->player->setHealth(smh->player->getHealth() + 1.0);
-				collected = true;
-			} else if (i->type == LOOT_MANA && smh->player->getMana() != smh->player->getMaxMana()) {
-				smh->player->setMana(smh->player->getMana() + 20.0);
-				if (smh->player->getMana() > smh->player->getMaxMana()) smh->player->setMana(smh->player->getMaxMana());
-				collected = true;
+			if (i->type == LOOT_HEALTH) {
+				if (smh->player->getHealth() != smh->player->getMaxHealth()) {
+					smh->player->setHealth(smh->player->getHealth() + 1.0);
+					collected = true;
+				} else {
+					smh->popupMessageManager->showFullHealth();
+				}
+			} else if (i->type == LOOT_MANA) {
+				if (smh->player->getMana() != smh->player->getMaxMana()) {
+					smh->player->setMana(smh->player->getMana() + 20.0);
+					if (smh->player->getMana() > smh->player->getMaxMana()) smh->player->setMana(smh->player->getMaxMana());
+					collected = true;
+				} else {
+					smh->popupMessageManager->showFullMana();
+				}
 			} else if (i->type == LOOT_NEW_ABILITY) {
 				smh->saveManager->hasAbility[i->ability] = true;
 				smh->windowManager->openNewAbilityTextBox(i->ability);

@@ -12,7 +12,6 @@ extern SMH *smh;
  */ 
 SaveManager::SaveManager() {
 	currentSave = -1;
-	timeFileSaved = -10.0;
 	changeManager = new ChangeManager();
 	resetCurrentData();
 	loadFileInfo();
@@ -210,7 +209,7 @@ void SaveManager::load(int fileNumber) {
 /**
  * Saves the current save data in memory to a file.
  */
-void SaveManager::save(bool showConfirmation) {
+void SaveManager::save() {
 
 	smh->hge->System_Log("Saving file %d", currentSave);	
 
@@ -304,11 +303,6 @@ void SaveManager::save(bool showConfirmation) {
 	//Close the file!
 	output->close();
 	delete output;
-	
-	if (showConfirmation) {
-		timeFileSaved = smh->getRealTime();
-	}
-
 }
 
 /**
@@ -467,29 +461,6 @@ int SaveManager::getCurrentHint() {
 		return 0;
 	}
 
-}
-
-/**
- * For a couple seconds after saving, text will appear on the screen to confirm to the 
- * player that their game was saved.
- */
-void SaveManager::drawSaveConfirmation(float dt) {
-	if (smh->getRealTime() < timeFileSaved + 2.5) {
-		
-		//Determine text alpha - after 1.5 seconds start fading out
-		float alpha = 255.0;
-		if (smh->getRealTime() > timeFileSaved + 1.55) {
-			alpha = (1.0-(smh->getRealTime() - timeFileSaved+1.5)) * 255.0;
-		}
-
-		std::string s = "Game File ";
-		s += Util::intToString(currentSave + 1);
-		s += " Saved!";
-
-		smh->resources->GetFont("inventoryFnt")->SetColor(ARGB(alpha,255.0,255.0,255.0));
-		smh->resources->GetFont("inventoryFnt")->printf(512,710,HGETEXT_CENTER, s.c_str());
-		smh->resources->GetFont("inventoryFnt")->SetColor(ARGB(255.0,255.0,255.0,255.0));
-	}
 }
 
 /**

@@ -159,6 +159,9 @@
 					RelativePath=".\src\Input.cpp">
 				</File>
 				<File
+					RelativePath=".\src\PopupMessageManager.cpp">
+				</File>
+				<File
 					RelativePath=".\src\SaveManager.cpp">
 				</File>
 				<File

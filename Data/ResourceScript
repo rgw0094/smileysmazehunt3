@@ -757,6 +757,12 @@ Sprite adviceManLeft {
  hotspot=32,32
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
+Sprite adviceManDown {
+ texture=npcTx
+ rect=0,834,64,64
+ hotspot=32,32
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
 Sprite parallaxPit {
  texture=general
  rect=960,0,64,64
