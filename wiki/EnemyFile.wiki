@@ -95,11 +95,12 @@
 ----
 = Enemies by Area =
 ||Area||Enemies||
-||Olde Towne||Red Croc, Turtle||
+||Fountain||Red croc, turtle||
+||Olde Towne||??||
 ||Smolder Hollow||Fire Floater, Fangie||
 ||Sessaria||Crystal, Snowman, Snowfang||
 ||Forest||Floating Turnip, Squirrel, Flower||
-||Desert||Buzzard, Cactlet, ^Green Snake^||
+||Desert||Buzzard, Brown burrower, ^Green Snake^||
 ||Realm||Skullie, ^Eye^||
 ||Mush Cave||Mushroom, ^Snail^||
 ||Pools||Orange head, Friigoth Moorer||
