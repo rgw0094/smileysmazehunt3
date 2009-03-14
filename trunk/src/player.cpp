@@ -26,7 +26,7 @@ extern SMH *smh;
 #define SPEED_BOOTS_MODIFIER 1.75
 #define MOVE_SPEED 300.0
 #define CANE_TIME 1.5
-#define MAX_FRISBEE_POWER 2.0
+#define MAX_FRISBEE_POWER 2.8
 
 /**
  * Constructor
@@ -547,15 +547,26 @@ void Player::doAbility(float dt) {
 	//////////////  Frisbee /////////////////
 
 	if (canUseAbility && gui->getSelectedAbility() == FRISBEE) {
-		if (smh->input->keyPressed(INPUT_ABILITY) && !chargingFrisbee && !smh->projectileManager->frisbeeActive()) {
+		if (smh->input->keyPressed(INPUT_ABILITY) && !chargingFrisbee) {
 			frisbeePower = 0.0;
 			chargingFrisbee = true;
 		}
 		if (chargingFrisbee) frisbeePower = min(MAX_FRISBEE_POWER, frisbeePower + (MAX_FRISBEE_POWER/2.0) * dt);
+		
+		//release frisbee
 		if (chargingFrisbee && !smh->input->keyDown(INPUT_ABILITY)) {
-			smh->projectileManager->addFrisbee(x, y, 400.0, angles[facing]-.5*PI, frisbeePower > (MAX_FRISBEE_POWER/10.0) ? frisbeePower : 0.0);
-			chargingFrisbee = false;
+			if (!smh->projectileManager->frisbeeActive()) { //no frisbee out there, so throw a frisbee
+				smh->projectileManager->addFrisbee(x, y, 400.0, angles[facing]-.5*PI, frisbeePower > (MAX_FRISBEE_POWER/10.0) ? frisbeePower : 0.0);
+				chargingFrisbee = false;
+			} else { //already a frisbee, so just stop charging
+				chargingFrisbee = false;
+				frisbeePower = 0;
+			}
 		}
+	}
+	if (gui->getSelectedAbility() != FRISBEE) {
+		frisbeePower = 0;
+		chargingFrisbee = false;
 	}
 
 	////////////// Fire Breath //////////////

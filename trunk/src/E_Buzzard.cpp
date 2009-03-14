@@ -12,6 +12,7 @@ extern SMH *smh;
 #define BUZZARD_ATTACK_RANGE 300
 
 #define BUZZ_ACC 280.0
+#define BUZZ_DEACC 280.0
 
 E_Buzzard::E_Buzzard(int id,int x,int y,int groupID) {
 	//Call parent's init function
@@ -51,24 +52,33 @@ void E_Buzzard::update(float dt) {
 	}
 
 	if (buzzardState == BUZZARD_FLYING) {
-		if (smh->player->x > x) {
-			xVelBuzz += BUZZ_ACC*dt;
-			if (xVelBuzz > speed) xVelBuzz = speed;
-		} else if (smh->player->x < x) {
-			xVelBuzz -= BUZZ_ACC*dt;
-			if (xVelBuzz < -speed) xVelBuzz = -speed;
-		}
+		if (!stunned) {
+			if (smh->player->x > x) {
+				xVelBuzz += BUZZ_ACC*dt;
+				if (xVelBuzz > speed) xVelBuzz = speed;
+			} else if (smh->player->x < x) {
+				xVelBuzz -= BUZZ_ACC*dt;
+				if (xVelBuzz < -speed) xVelBuzz = -speed;
+			}
 
-		if (smh->player->y > y) {
-			yVelBuzz += BUZZ_ACC*dt;
-			if (yVelBuzz > speed) yVelBuzz = speed;
-		} else if (smh->player->y < y) {
-			yVelBuzz -= BUZZ_ACC*dt;
-			if (yVelBuzz < -speed) yVelBuzz = -speed;
+			if (smh->player->y > y) {
+				yVelBuzz += BUZZ_ACC*dt;
+				if (yVelBuzz > speed) yVelBuzz = speed;
+			} else if (smh->player->y < y) {
+				yVelBuzz -= BUZZ_ACC*dt;
+				if (yVelBuzz < -speed) yVelBuzz = -speed;
+			}
+		} else { //stunned
+			if (xVelBuzz > 0) xVelBuzz -= BUZZ_DEACC*dt;
+			if (xVelBuzz < 0) xVelBuzz += BUZZ_DEACC*dt;
+			if (yVelBuzz > 0) yVelBuzz -= BUZZ_DEACC*dt;
+			if (yVelBuzz < 0) yVelBuzz += BUZZ_DEACC*dt;
+			beginFlapTime = smh->getGameTime();
 		}
 
 		x += xVelBuzz*dt;
 		y += yVelBuzz*dt;
+
 	}
 
 	
