@@ -96,13 +96,13 @@
 = Enemies by Area =
 ||Area||Enemies||
 ||Fountain||Red croc, turtle||
-||Olde Towne||^Beaker^,||
+||Olde Towne||^Beaker^,^Blue alien guy^||
 ||Smolder Hollow||Fire Floater, Fangie||
 ||Sessaria||Crystal, Snowman, Snowfang||
-||Forest||Floating Turnip, Squirrel, Flower||
+||Forest||Floating Turnip, Squirrel, Gumdrop||
 ||Desert||Buzzard, Brown burrower, ^Green Snake^||
 ||Realm||Skullie, ^Eye^||
-||Mush Cave||Cone, ^Snail^||
+||Mush Cave||^Cone^, ^Snail^||
 ||Pools||Orange head, Friigoth Moorer||
 ||Mt Frostbite||Batlet, Ice Cream Man, Candy Floater, Candy Spawner, Sad Shooters||
 ||Swamp||Buzzard, Tentacle, Crab/Clown, Pumpkin*3||
