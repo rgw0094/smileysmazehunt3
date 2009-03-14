@@ -535,6 +535,9 @@
 					Name="Enemies"
 					Filter="">
 					<File
+						RelativePath=".\src\E_AdjacentShooter.cpp">
+					</File>
+					<File
 						RelativePath=".\src\E_BatletDist.cpp">
 					</File>
 					<File
