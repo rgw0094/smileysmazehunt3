@@ -101,7 +101,7 @@
 ||Sessaria||Crystal, Snowman, Snowfang||
 ||Forest||Floating Turnip, Squirrel, Gumdrop||
 ||Desert||Buzzard, Brown burrower, ^Green Snake^||
-||Realm||Skullie, ^Eye^||
+||Realm||Skullie, Hopping Eye||
 ||Mush Cave||^Cone^, ^Snail^||
 ||Pools||Orange head, Friigoth Moorer||
 ||Mt Frostbite||Batlet, Ice Cream Man, Candy Floater, Candy Spawner, Sad Shooters||
