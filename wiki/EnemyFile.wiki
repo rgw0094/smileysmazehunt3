@@ -56,7 +56,8 @@
 ||15||Non-Gay Ranged Enemy|| || ||
 ||16||Hopper|| || ||
 ||17||Spawner||Enemy to spawn with 45% chance||Enemy to spawn with 35% chance||Enemy to spawn with 20% chance||
-||18||Adjacent shooter|| || ||
+||18||Adjacent shooter||
+
 ----
 = Directions =
 ||Direction||Code||
