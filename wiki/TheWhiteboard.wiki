@@ -51,6 +51,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Made it so burrower and buzzard can be stunned||3/14/09||ETI||
 ||Added desert burrower||3/14/09||ETI||
 ||Improved burrowing enemy functionality||3/14/09||ETI||
 ||Improved mini map draw performance||2/28/09||RGW||
