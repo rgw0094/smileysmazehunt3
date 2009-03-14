@@ -66,17 +66,17 @@ void E_Gumdrop::update(float dt) {
 	if (burrowState == GUMDROP_UNBURROWED) {
 
 		//If within attack range
-		if (distanceFromPlayer() < ATTACK_RANGE) {
+		if (distanceFromPlayer() < weaponRange && !stunned) {
 
 			//Turn to face smiley
-			setFacingPlayer(1000, DOWN);
+			setFacingPlayer();
 
 			//Shoot at smiley
-			if (!smh->player->isInvisible() && smh->timePassedSince(lastAttackTime) > ATTACK_DELAY) {
+			if (!smh->player->isInvisible() && smh->timePassedSince(lastAttackTime) > rangedAttackDelay) {
 				lastAttackTime = smh->getGameTime();
-				smh->projectileManager->addProjectile(x, y, ATTACK_VELOCITY, 
-					Util::getAngleBetween(x, y, smh->player->x, smh->player->y), damage, 
-					true,projectileHoming, PROJECTILE_1, true);
+				smh->projectileManager->addProjectile(x, y, projectileSpeed, 
+					Util::getAngleBetween(x, y, smh->player->x, smh->player->y), projectileDamage, 
+					true,projectileHoming, rangedType, true);
 			}
 
 		} else {
@@ -84,7 +84,7 @@ void E_Gumdrop::update(float dt) {
 		}	
 
 		//When the player gets close the gumdrop burrows
-		if (distanceFromPlayer() < burrowDistance) {
+		if (distanceFromPlayer() < burrowDistance && !stunned) {
 			burrowState = GUMDROP_BURROWING;
 			burrowAnimation->SetMode(HGEANIM_FWD);
 			burrowAnimation->Play();

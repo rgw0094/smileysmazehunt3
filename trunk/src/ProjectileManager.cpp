@@ -621,4 +621,7 @@ void ProjectileManager::initProjectiles() {
 	projectileTypes[PROJECTILE_SLIME].radius = 12;
 	projectileTypes[PROJECTILE_SLIME].sprite = smh->resources->GetSprite("SlimeProjectile");
 
+	projectileTypes[PROJECTILE_ORANGE].radius = 8;
+	projectileTypes[PROJECTILE_ORANGE].sprite = smh->resources->GetSprite("OrangeProjectile");
+
 }

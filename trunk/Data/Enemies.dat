@@ -1,6 +1,6 @@
 [HGESTRINGTABLE]
 
-numEnemies="83"
+numEnemies="84"
 
 ;Croc
 0Name=      "Crazy Croc"
@@ -28,6 +28,13 @@ numEnemies="83"
 1Radius=    "28"
 1Speed=     "80"
 1Land=      "T"
+1HasRanged= "T"
+1Range=     "400"
+1Delay=     "2"
+1PDamage=   "50"
+1PSpeed=    "400"
+1PType=     "0"
+
 1Variable1= "0" ;use gumdrop burrowing animation
 1Variable2= "200" ;distance at which to burrow
 
@@ -1485,3 +1492,25 @@ numEnemies="83"
 82SWater=    "T"
 82Chases=    "T"
 82HasRanged= "F"
+
+;Brown desert burrower
+83Name=      "Rockhorn"
+83GCol=      "4"
+83GRow=      "12"
+83EnemyType= "2"
+83WanderType="3"
+83HP=        "75"
+83Speed=     "0"
+83Damage=    "50"
+83Radius=    "28"
+83Chases=    "F"
+83Land=      "T"
+83SWater=    "T"
+83HasRanged= "T"
+83Range=     "600"
+83Delay=     "3"
+83PDamage=   "50"
+83PSpeed=    "350"
+83PType=     "14"
+83Variable1= "1"
+83Variable2= "250"
