@@ -209,7 +209,7 @@ NPC5-3 = "If you help me out, I'll repay you!  You have my word."
 NPC8Name = "Bill Clinton"
 NPC8Pages = "2"
 NPC8-1 = "Hi, I'm former US President Bill Clinton.  Thanks for licking me."
-NPC8-2 = "In return, take this cane, it will let us communicate telepathically, lol."
+NPC8-2 = "In return, take this cane, it will let us communicate telepathically."
 
 ;Bill Clinton 2 - used after he gives you the cane
 NPC19Name = "Bill Clinton"

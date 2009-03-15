@@ -56,6 +56,7 @@ public:
 	void openNewAbilityTextBox(int whichAbility);
 	void openDialogueTextBox(int _npcID, int _textID);
 	void openHintTextBox();
+	void openAdviceTextBox(int advice);
 	bool isTextBoxOpen();
 
 	//Variable
@@ -86,9 +87,9 @@ public:
 	void setDialogue(int _npcID, int _textID);
 	void setHint();
 	void setNewAbility(int ability);
+	void setAdvice(int advice);
 	void init();
 	bool doFadeOut(float dt);
-	std::string getAbilityText(int ability, int page);
 
 	//Variables
 	int textBoxType;
@@ -98,12 +99,19 @@ public:
 	char text[200];
 	int alpha;
 	int ability;
+	int advice;
 	bool increaseAlpha;
 	std::string paramString;
 	hgeDistortionMesh *distortion;
 	float fadeAlpha;
 	bool fadingOut;
 	float timePageOpened;
+
+private:
+
+	bool doClose();
+	std::string getAbilityText(int ability);
+	std::string getAdviceText(int advice, int page);
 
 };
 
@@ -134,8 +142,25 @@ private:
 };
 
 //----------------------------------------------------------------
-//------------ MONOCLE MAN'S (BASE) ADVICE WINDOW-----------------
+//--------------- MONOCLE MAN'S  ADVICE WINDOW--------------------
 //----------------------------------------------------------------
+class AdviceTypes {
+public:
+	static const int ADVICE_SAVING = 0;
+	static const int ADVICE_INVENTORY = 1;
+	static const int ADVICE_FRISBEE = 2;
+	static const int ADVICE_UNUSED1 = 3;
+	static const int ADVICE_UNUSED2 = 4;
+	static const int ADVICE_UNUSED3 = 5;
+	static const int ADVICE_UNUSED4 = 6;
+	static const int ADVICE_EXIT = 7;
+	static const int NUM_ADVICE = 8;
+};
+
+struct AdviceOption {
+	std::string text;
+	float x, y;
+};
 
 class AdviceWindow : public BaseWindow {
 public:
@@ -147,14 +172,14 @@ public:
 	bool update(float dt);
 
 private:
+
+	void initAdviceOptions();
+	void drawAdviceOptions(float dt);
+	bool isAdviceAvailable(int advice);
+
 	int currentSelection;
+	AdviceOption adviceOptions[AdviceTypes::NUM_ADVICE];
 };
-
-//----------------------------------------------------------------
-//--------------- INVENTORY ADVICE -------------------------------
-//-------- This is its own class because it is fairly complex ----
-//----------------------------------------------------------------
-
 
 //----------------------------------------------------------------
 //------------------OPTIONS WINDOW--------------------------------

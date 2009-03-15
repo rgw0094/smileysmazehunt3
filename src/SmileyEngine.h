@@ -835,7 +835,7 @@ public:
 	void draw(float dt);
 
 	void showSaveConfirmation();
-	void showNewAdvice();
+	void showNewAdvice(int advice);
 	void showFullMana();
 	void showFullHealth();
 
@@ -848,6 +848,7 @@ private:
 	float timeMessageStarted;
 	float messageAlpha;
 	bool adviceManMessageActive;
+	int advice;
 
 };
 

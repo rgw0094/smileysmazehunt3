@@ -1,4 +1,5 @@
 #include "SmileyEngine.h"
+#include "WindowFramework.h"
 
 extern SMH *smh;
 
@@ -27,16 +28,15 @@ void PopupMessageManager::draw(float dt) {
 		if (adviceManMessageActive) {
 			smh->resources->GetSprite("adviceManDown")->SetColor(ARGB(messageAlpha, 255, 255, 255));
 			smh->resources->GetSprite("adviceManDown")->RenderEx(80.0, 725.0, 0.0, 0.8, 0.8);
+			smh->resources->GetSprite("adviceManDown")->SetColor(ARGB(255, 255, 255, 255));
 		}
 	}
 }
 
 void PopupMessageManager::update(float dt) {
-	//if (smh->hge->Input_KeyDown(HGEK_N)) {
-	//	showNewAdvice();
-	//}
 	if (adviceManMessageActive && smh->hge->Input_KeyDown(HGEK_N)) {
-		//TODO: launch advice man
+		smh->windowManager->openAdviceTextBox(advice);
+		timeMessageStarted = 0.0;
 	}
 }
 
@@ -50,10 +50,11 @@ void PopupMessageManager::showFullMana() {
 	startMessage(1.5);
 }
 
-void PopupMessageManager::showNewAdvice() {
+void PopupMessageManager::showNewAdvice(int _advice) {
 	message = "New advice is available from Monocle Man. Press N to view it now.";
-	startMessage(4.0);
+	startMessage(5.5);
 	adviceManMessageActive = true;
+	advice = _advice;
 }
 
 void PopupMessageManager::showSaveConfirmation() {
