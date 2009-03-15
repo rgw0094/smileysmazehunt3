@@ -59,7 +59,7 @@ void BaseEnemy::initEnemy(int _id, int _gridX, int _gridY, int _groupID) {
 	if (hasRangedAttack) {
 		rangedType = smh->gameData->getEnemyInfo(id).rangedType;	
 		weaponRange = smh->gameData->getEnemyInfo(id).range;
-		rangedAttackDelay = (float)smh->gameData->getEnemyInfo(id).delay/1000.0;
+		rangedAttackDelay = (float)smh->gameData->getEnemyInfo(id).delay/(float)1000.0;
 		projectileSpeed = smh->gameData->getEnemyInfo(id).projectileSpeed; //Here is a float-to-int conversion
 		projectileDamage = smh->gameData->getEnemyInfo(id).projectileDamage;
 		projectileYOffset = 0;
