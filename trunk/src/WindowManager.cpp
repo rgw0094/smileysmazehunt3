@@ -174,6 +174,13 @@ void WindowManager::openHintTextBox() {
 	textBoxOpen = true;
 }
 
+void WindowManager::openAdviceTextBox(int advice) {
+	TextBox *textBox = new TextBox();
+	textBox->setAdvice(advice);
+	openWindow(textBox);
+	textBoxOpen = true;
+}
+
 /**
  * Returns whether or not the text box is currently open.
  */

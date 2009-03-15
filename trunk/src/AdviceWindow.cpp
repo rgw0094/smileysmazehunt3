@@ -8,22 +8,12 @@ extern SMH *smh;
 #define X_OFFSET 312.0
 #define Y_OFFSET 500.0
 
-//Selections
-#define ADVICE_SAVING 0
-#define ADVICE_INVENTORY 1
-#define ADVICE_MAPS 2
-#define ADVICE_SHOP 3
-#define ADVICE_CANE 4
-#define ADVICE_FRISBEE 5
-#define ADVICE_EXTRA 6
-#define ADVICE_EXIT 7
-
 /**
  * Constructor
  */
 AdviceWindow::AdviceWindow() {
-	currentSelection = ADVICE_EXIT;
-	smh->log("cunt");
+	currentSelection = 0;
+	initAdviceOptions();
 }
 
 /**
@@ -42,60 +32,18 @@ void AdviceWindow::draw(float dt) {
 	smh->resources->GetSprite("textBox")->Render(X_OFFSET, Y_OFFSET);
 	smh->resources->GetFont("textBoxNameFnt")->printf(X_OFFSET + 202, Y_OFFSET + 20, HGETEXT_CENTER, "Monocle Man's Advice");
 
-	//Draw upgrade selections 0-3
-	int i;
-	for (i = 0; i < 4; i ++) {
-		smh->resources->GetAnimation("adviceIcons")->SetFrame(i);
-		smh->resources->GetAnimation("adviceIcons")->Render(X_OFFSET + 60.0 + i*80.0, Y_OFFSET + 80.0);
+	for (int i = 0; i < AdviceTypes::NUM_ADVICE; i++) {
+		if (currentSelection == i) {
+			smh->resources->GetSprite("adviceBackground")->SetColor(ARGB(50.0, 255, 255, 255));
+			smh->resources->GetSprite("adviceBackground")->Render(adviceOptions[i].x, adviceOptions[i].y);
+		}
+
+		if (isAdviceAvailable(i)) {
+			smh->resources->GetFont("textBoxFnt")->printf(adviceOptions[i].x, adviceOptions[i].y, HGETEXT_LEFT, adviceOptions[i].text.c_str());
+		} else {
+			smh->resources->GetFont("textBoxFnt")->printf(adviceOptions[i].x, adviceOptions[i].y, HGETEXT_LEFT, "---");
+		}
 	}
-	//Draw upgrade selections 4-6
-	for (i = 4; i < 7; i++) {
-		smh->resources->GetAnimation("adviceIcons")->SetFrame(i);
-		smh->resources->GetAnimation("adviceIcons")->Render(X_OFFSET +60.0 + (i-4)*80.0, Y_OFFSET + 150.0);
-	}
-	//Draw exit
-	smh->resources->GetSprite("exitIcon")->Render(X_OFFSET + 60.0 + 3*80.0, Y_OFFSET + 150.0);
-
-
-	//Draw selection mechanism
-	if (currentSelection < 4)
-		smh->resources->GetSprite("inventoryCursor")->Render(X_OFFSET + 60.0 + currentSelection*80.0 - 20.0, Y_OFFSET + 80.0 - 20.0);
-	else
-		smh->resources->GetSprite("inventoryCursor")->Render(X_OFFSET + 60.0 + (currentSelection-4)*80.0 - 20.0, Y_OFFSET + 150.0 - 20.0);
-
-	std::string descString = "";
-
-	switch (currentSelection) {
-		case ADVICE_EXIT:
-			descString="Exit";
-			break;
-		case ADVICE_SAVING:
-			descString="Advice on saving";
-			break;
-		case ADVICE_INVENTORY:
-			descString="Using the inventory";
-			break;
-		case ADVICE_MAPS:
-			descString="Looking at maps";
-			break;
-		case ADVICE_SHOP:
-			descString="The shop and upgrades";
-			break;
-		case ADVICE_CANE:
-			descString="Using Smiley's cane";
-			break;
-		case ADVICE_FRISBEE:
-			descString="Using the frisbee";
-			break;
-		case ADVICE_EXTRA:
-			descString="???";
-			break;
-	};
-	
-
-	smh->resources->GetFont("textBoxFnt")->printf(X_OFFSET + 200.0, Y_OFFSET + 205.0,
-				HGETEXT_CENTER, "%s", descString.c_str());
-
 	
 }
 
@@ -104,38 +52,57 @@ void AdviceWindow::draw(float dt) {
  */
 bool AdviceWindow::update(float dt) {
 
-	//Move selection left
-	if (smh->input->keyPressed(INPUT_LEFT)) {
-		if (currentSelection == 0) currentSelection = 3;
-		else if (currentSelection == 4) currentSelection = 7;
-		else currentSelection--;
+	if (smh->input->keyPressed(INPUT_RIGHT) || smh->input->keyPressed(INPUT_DOWN)) {
+		do {
+			currentSelection++;
+			if (currentSelection >= AdviceTypes::NUM_ADVICE) currentSelection = 0;
+		} while (!isAdviceAvailable(currentSelection));
 		smh->soundManager->playSound("snd_MouseOver");
 	}
 
-	//Move selection right
-	if (smh->input->keyPressed(INPUT_RIGHT)) {
-		if (currentSelection == 3) currentSelection = 0;
-		else if (currentSelection == 7) currentSelection = 4;
-		else currentSelection++;
-		smh->soundManager->playSound("snd_MouseOver");
-	}
-
-	//Move selection up/down
-	if (smh->input->keyPressed(INPUT_UP) || smh->input->keyPressed(INPUT_DOWN)) {
-		if (currentSelection < 4) currentSelection += 4;
-		else currentSelection -= 4;
+	if (smh->input->keyPressed(INPUT_LEFT) || smh->input->keyPressed(INPUT_UP)) {
+		do {
+			currentSelection--;
+			if (currentSelection < 0) currentSelection = AdviceTypes::NUM_ADVICE-1;
+		} while (!isAdviceAvailable(currentSelection));
 		smh->soundManager->playSound("snd_MouseOver");
 	}
 
 	if (smh->input->keyPressed(INPUT_ATTACK)) {
-		switch (currentSelection) {
-			
-			case ADVICE_EXIT:
-				smh->windowManager->frameLastWindowClosed = smh->getCurrentFrame();
-				return false;
+		if (currentSelection == AdviceTypes::ADVICE_EXIT) {
+			smh->windowManager->frameLastWindowClosed = smh->getCurrentFrame();
+			return false;
+		} else {
+			smh->windowManager->openAdviceTextBox(currentSelection);
 		}
 	}
 
 	return true;
 }
 
+void AdviceWindow::initAdviceOptions() {
+
+	for (int i = 0; i < AdviceTypes::NUM_ADVICE; i++) {
+		adviceOptions[i].x = i < 4 ? X_OFFSET + 30 : X_OFFSET + 215;
+		adviceOptions[i].y = Y_OFFSET + 80 + (i%4) * 40.0;
+		adviceOptions[i].text = "---";
+	}
+
+	adviceOptions[AdviceTypes::ADVICE_EXIT].text = "Exit Advice";
+	adviceOptions[AdviceTypes::ADVICE_FRISBEE].text = "Frisbee";
+	adviceOptions[AdviceTypes::ADVICE_INVENTORY].text = "Inventory";
+	adviceOptions[AdviceTypes::ADVICE_SAVING].text = "Saving";
+
+}
+
+bool AdviceWindow::isAdviceAvailable(int advice) {
+	switch (advice) {
+		case AdviceTypes::ADVICE_EXIT:
+		case AdviceTypes::ADVICE_SAVING:
+			return true;
+		case AdviceTypes::ADVICE_INVENTORY:
+			return smh->saveManager->hasAbility[CANE];
+		default:
+			return false;
+	}
+}

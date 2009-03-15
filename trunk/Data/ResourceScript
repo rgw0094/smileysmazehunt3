@@ -780,6 +780,16 @@ Animation abilities {
 }
 
 ;*****************************************
+;************ USER INTERFACE *************
+;*****************************************
+Sprite adviceBackground {
+ texture=UserInterfaceTx
+ rect=692,396,130,30
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHAADD,NOZWRITE
+}
+
+;*****************************************
 ;******** MENU (Resource Group 10) *******
 ;*****************************************
 Texture menuBackgroundTx {

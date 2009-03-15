@@ -16,6 +16,7 @@ extern SMH *smh;
 #define TYPE_DIALOG 1
 #define TYPE_HINT 2
 #define TYPE_ABILITY 3
+#define TYPE_ADVICE 4
 
 #define PSYCHEDELIC_GRANULARITY 16
 
@@ -119,20 +120,24 @@ void TextBox::setHint() {
  * Opens the text box to tell the user they received a new ability.
  */
 void TextBox::setNewAbility(int _ability) {
-
 	textBoxType = TYPE_ABILITY;
 	init();
 	currentPage = 1;
+	numPages = 1;
 	ability = _ability;
+}
 
-	if (ability == CANE) {
-		numPages = 5;
-	} else if (ability == FRISBEE) {
-		numPages = 2;
+void TextBox::setAdvice(int _advice) {
+	textBoxType = TYPE_ADVICE;
+	init();
+	currentPage = 1;
+	advice = _advice;
+
+	if (advice == AdviceTypes::ADVICE_INVENTORY) {
+		numPages = 4;
 	} else {
 		numPages = 1;
 	}
-
 }
 
 /**
@@ -175,13 +180,6 @@ void TextBox::draw(float dt) {
 		paramString += Util::intToString(currentPage);
 		smh->resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, smh->gameData->getGameText(paramString.c_str()));
 
-		//Draw next page/OK icon
-		if (currentPage == numPages) {
-			smh->resources->GetSprite("okIcon")->Render(x + 350, y + 220);
-		} else {
-			smh->resources->GetSprite("arrowIcon")->Render(x + 350, y + 220);
-		}
-
 	//Dialog box
 	} else if (textBoxType == TYPE_DIALOG) {
 		
@@ -205,26 +203,30 @@ void TextBox::draw(float dt) {
 		paramString += Util::intToString(currentPage);
 		smh->resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, smh->gameData->getGameText(paramString.c_str()));
 
-		//Draw next page/OK icon
-		if (currentPage == numPages) {
-			smh->resources->GetSprite("okIcon")->Render(x + 350, y + 220);
-		} else {
-			smh->resources->GetSprite("arrowIcon")->Render(x + 350, y + 220);
-		}
-
 	//New ability
 	} else if (textBoxType == TYPE_ABILITY) {
 		smh->resources->GetSprite("textBox")->Render(x,y);
 		smh->resources->GetAnimation("abilities")->SetFrame(ability);
-		smh->resources->GetAnimation("abilities")->Render(x+212,y+52);
+		smh->resources->GetAnimation("abilities")->Render(x+212,y+42);
+		smh->resources->GetFont("textBoxFnt")->printfb(x + 20, y + 15 + 64, 360, 200 - 64, HGETEXT_CENTER, getAbilityText(ability).c_str());
+
+	} else if (textBoxType == TYPE_ADVICE) {
+		smh->resources->GetSprite("textBox")->Render(x,y);
+		smh->resources->GetSprite("adviceManDown")->Render(x+212,y+52);
 		smh->resources->GetFont("textBoxFnt")->SetScale(0.75);
-		smh->resources->GetFont("textBoxFnt")->printfb(x + 20, y + 25 + 64, 360, 200 - 64, HGETEXT_CENTER, getAbilityText(ability, currentPage).c_str());
+		smh->resources->GetFont("textBoxFnt")->printfb(x + 20, y + 25 + 64, 360, 200 - 64, HGETEXT_CENTER, getAdviceText(advice, currentPage).c_str());
 		smh->resources->GetFont("textBoxFnt")->SetScale(1.0);
 
 	} else if (textBoxType == TYPE_SIGN) {
-		
 		smh->resources->GetSprite("textBox")->Render(x,y);
 		smh->resources->GetFont("textBoxFnt")->printfb(x + 20, y + 20, 360, 210, HGETEXT_CENTER, "%s", text);
+	}
+
+	//Draw next page/OK icon
+	if (currentPage == numPages) {
+		smh->resources->GetSprite("okIcon")->Render(x + 350, y + 220);
+	} else {
+		smh->resources->GetSprite("arrowIcon")->Render(x + 350, y + 220);
 	}
 
 }
@@ -280,31 +282,7 @@ bool TextBox::update(float dt) {
 		//Last page - close the box
 		if (numPages == currentPage) {
 			
-			//Close the text box
-			smh->windowManager->frameLastWindowClosed = smh->getCurrentFrame();
-			
-			//If this is spierdyke, open the shop
-			if (textBoxType == TYPE_DIALOG) {
-				if (textID == SPIERDYKE_TEXT_ID) {
-					smh->windowManager->openWindow(new Shop());
-					return true; //Don't tell manager to close window
-				} else if (textID == MONOCLE_MAN_TEXT_ID) {
-					smh->windowManager->openWindow(new AdviceWindow());
-					return true; //Don't tell manager to close window
-				} else if (textID == BILL_CLINTON_TEXT_ID && !smh->saveManager->hasAbility[CANE]) {
-					smh->saveManager->hasAbility[CANE] = true;
-					setNewAbility(CANE);
-					return true;
-				}		
-			//Close hint box by fading out psychedelic background
-			} else if (textBoxType == TYPE_HINT) {
-				fadingOut = true;
-			}
-
-			if (!fadingOut) {
-				//Return false to tell the window manager to close this window
-				return false;
-			}
+			return doClose();
 
 		//More pages left - go to the next one
 		} else {
@@ -322,6 +300,49 @@ bool TextBox::update(float dt) {
 
 	return true;
 
+}
+
+// Returns false if the window should close (meaning a new window wasnt opened as a result of this method)
+bool TextBox::doClose() {
+	//Close the text box
+	smh->windowManager->frameLastWindowClosed = smh->getCurrentFrame();
+			
+	//If this is spierdyke, open the shop
+	if (textBoxType == TYPE_DIALOG) {
+		if (textID == SPIERDYKE_TEXT_ID) {
+			smh->windowManager->openWindow(new Shop());
+			return true; //Don't tell manager to close window
+		} else if (textID == MONOCLE_MAN_TEXT_ID) {
+			smh->windowManager->openWindow(new AdviceWindow());
+			return true; //Don't tell manager to close window
+		} else if (textID == BILL_CLINTON_TEXT_ID && !smh->saveManager->hasAbility[CANE]) {
+			smh->saveManager->hasAbility[CANE] = true;
+			setNewAbility(CANE);
+			return true;
+		}		
+	
+	//Close hint box by fading out psychedelic background
+	} else if (textBoxType == TYPE_HINT) {
+		fadingOut = true;
+	
+	//Some new abilities create new available advice
+	} else if (textBoxType == TYPE_ABILITY) {
+		if (ability == CANE) {
+			smh->popupMessageManager->showNewAdvice(AdviceTypes::ADVICE_INVENTORY);
+		} else if (ability == FRISBEE) {
+
+		}
+
+	//After closing advice, go back to the advice menu
+	} else if (textBoxType == TYPE_ADVICE) {
+		smh->windowManager->openWindow(new AdviceWindow());
+		return true;
+	}
+
+	if (!fadingOut) {
+		//Return false to tell the window manager to close this window
+		return false;
+	}
 }
 
 /**
@@ -361,24 +382,17 @@ bool TextBox::doFadeOut(float dt) {
 	return true;
 }
 
-std::string TextBox::getAbilityText(int ability, int page) {
+std::string TextBox::getAbilityText(int ability) {
 
 	switch (ability) {
 		case CANE:
-			switch (page) {
-				case 1: return "You got Bill Clinton's Cane! You can now receive the President's wisdom whenever you wish.";
-				case 2: return "You will receive abilities such as these throughout your adventure. They will appear in your inventory, which you can access by pressing [" + smh->input->getInputDescription(INPUT_PAUSE) + "].";
-				case 3: return "In your inventory you can select up to three abilities that will be available in the ability wheel in the top left hand side of your screen. You can toggle which abilities appear there by pressing Attack (" + smh->input->getInputDescription(INPUT_ATTACK) + ")";
-				case 4: return "The ability in the big center circle will be the one activated when you press or hold the Ability button (" + smh->input->getInputDescription(INPUT_ABILITY) + ").";
-				case 5: return "You can cycle left and right through your abilities by pressing (" + smh->input->getInputDescription(INPUT_PREVIOUS_ABILITY) + ") and (" + smh->input->getInputDescription(INPUT_NEXT_ABILITY) + "). Remember that you can press Escape at any time to access the menu and change your controls!";
-			}
+			return "You got Bill Clinton's Cane! Equip it and hold Ability (" + smh->input->getInputDescription(INPUT_ABILITY) + ") for three seconds to receive the president's wisdom.";
 		case WATER_BOOTS:
 			return "You found Jesus' Sandals. You can now walk on Water!";
 		case FRISBEE:
-			switch (page) {
-				case 1: return "You got the Frisbee! Tap the Ability button (" + smh->input->getInputDescription(INPUT_ABILITY) + ") to throw the frisbee in order to toggle far away switches!";
-				case 2: return "You can also charge up a powerful stun attack by holding the ability button before releasing it to launch the frisbee. The longer you charge up, the longer any enemies you hit will be stunned!";
-			}
+			return "You got the Frisbee! You can now stun enemies and toggle far away switches.";
+							//Tap the Ability button (" + smh->input->getInputDescription(INPUT_ABILITY) + ") to throw the frisbee in order to toggle far away switches!";
+				//case 2: return "You can also charge up a powerful stun attack by holding the ability button before releasing it to launch the frisbee. The longer you charge up, the longer any enemies you hit will be stunned!";
 		case FIRE_BREATH:
 			return "You can now breath fire! Don't sneeze around a dry forest!";
 		case SPRINT_BOOTS:
@@ -397,5 +411,23 @@ std::string TextBox::getAbilityText(int ability, int page) {
 			return "You got Tut's Mask! Wearing it makes you invisible to enemies!";
 		case HOVER:
 			return "You got Hover! You can now fly as long as you take off on a hover pad (marked 'H')!";
+	}
+}
+
+std::string TextBox::getAdviceText(int advice, int page) {
+
+	smh->hge->System_Log("%d %d", advice, page);
+
+	switch (advice) {
+		case AdviceTypes::ADVICE_INVENTORY:
+			switch (page) {
+				case 1: return "You can access your inventory by pressing [" + smh->input->getInputDescription(INPUT_PAUSE) + "].";
+				case 2: return "In your inventory you can select up to three abilities that will be available in the ability wheel in the top left hand side of your screen. You can toggle which abilities appear there by pressing Attack (" + smh->input->getInputDescription(INPUT_ATTACK) + ")";
+				case 3: return "The ability in the big center circle will be the one activated when you press or hold the Ability button (" + smh->input->getInputDescription(INPUT_ABILITY) + ").";
+				case 4: return "You can cycle left and right through your abilities by pressing (" + smh->input->getInputDescription(INPUT_PREVIOUS_ABILITY) + ") and (" + smh->input->getInputDescription(INPUT_NEXT_ABILITY) + "). Remember that you can press Escape at any time to access the menu and change your controls!";
+			}
+		case AdviceTypes::ADVICE_SAVING:
+			return "To save your game you must simply lick one of the many lollipops strewn throughout our land.";
+		default: return "advice";
 	}
 }
