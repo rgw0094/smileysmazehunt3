@@ -13,9 +13,6 @@
  * Pit graphics for different areas
  * More projectile graphics (snowmen throw snowballs, squirrels throw nuts ETCETERA)
  * Ability loot (the thing that appears when you kill a boss) - it should probably have a particle behind it too
- * Shade Portly Penguin
- * Redraw Portly's fish
- * Shade/texture the squirrel
  * Re-texture the sphinx
 
 === Bugs ===
@@ -48,6 +45,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Shaded Portli, redrew his fish, shaded the squirrel, shaded Cornwallis's projectile||3/15/09||ETI||
 ||Exit Prompt||3/14/09||RGW||
 ||PopupMessageManager||3/14/09||RGW||
 ||Made it so burrower and buzzard can be stunned||3/14/09||ETI||
