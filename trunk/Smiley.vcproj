@@ -544,6 +544,9 @@
 						RelativePath=".\src\E_BombGenerator.cpp">
 					</File>
 					<File
+						RelativePath=".\src\E_Botonoid.cpp">
+					</File>
+					<File
 						RelativePath=".\src\E_Buzzard.cpp">
 					</File>
 					<File
