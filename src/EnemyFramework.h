@@ -55,6 +55,7 @@ class hgeRect;
 #define ENEMY_HOPPER 16
 #define ENEMY_SPAWNER 17
 #define ENEMY_ADJACENT_SHOOTER 18
+#define ENEMY_BOTONOID 19 //different from ranged enemies b/c they fire projectiles randomly
 
 //Stuff on ID layer
 #define ENEMYGROUP_TRIGGER 996
@@ -798,6 +799,21 @@ public:
 	void update(float dt);
 
 private:
+
+};
+
+class E_Botonoid : public BaseEnemy {
+
+public:
+	E_Botonoid(int id, int x, int y, int groupID);
+	~E_Botonoid();
+
+	//methods
+	void draw(float dt);
+	void update(float dt);
+
+private:
+	
 
 };
 

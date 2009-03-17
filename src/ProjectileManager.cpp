@@ -12,6 +12,9 @@ extern SMH *smh;
 #define LASER_LENGTH 20.0
 #define MINI_MUSHROOM_ENEMYID 43
 
+#define ACC 350 //used for boomerang acceleration
+#define BOOMERANG_LIFE 4//how long before it self-destructs (necessary b/c boomerangs don't have collision to the terrain)
+
 ProjectileManager::ProjectileManager() {
 
 	initProjectiles();
@@ -133,6 +136,17 @@ void ProjectileManager::update(float dt) {
 		i->x += i->dx * dt;
 		i->y += i->dy * dt;
 
+		//if boomerang
+		if (i->id == PROJECTILE_BOOMERANG) {
+			if (i->x > i->startX) i->dx -= ACC*dt;
+			if (i->x < i->startX) i->dx += ACC*dt;
+			if (i->y > i->startY) i->dy -= ACC*dt;
+			if (i->y < i->startY) i->dy += ACC*dt;
+			if (i->timeAlive >= BOOMERANG_LIFE) deleteProjectile = true;
+
+			i->angle = 2*3.14159*sin(i->timeAlive*3);
+		}
+
 		i->changedGridSquare = (Util::getGridX(i->x) != i->gridX || Util::getGridY(i->y) != i->gridY);
 		i->gridX = Util::getGridX(i->x);
 		i->gridY = Util::getGridY(i->y);
@@ -174,6 +188,8 @@ void ProjectileManager::update(float dt) {
 				}
 				deleteProjectile = true;
 			}
+		} else if (i->id == PROJECTILE_BOOMERANG) {
+			//Boomerang does not hit collision layer!! It goes through stuff
 		} else {
 			//For all other projectiles test collision normally
 			if (!deleteProjectile && smh->environment->testCollision(i->terrainCollisionBox, canPass)) {
@@ -407,8 +423,8 @@ void ProjectileManager::draw(float dt) {
 		} else if (i->id == PROJECTILE_FIGURE_8) {
 			float distanceFromOrigin = Util::distance(i->x,i->y,i->startX,i->startY);
 			float width = sin(distanceFromOrigin/30.0); //from -1 to 1
-			projectileTypes[i->id].sprite->RenderEx(smh->getScreenX(i->x),smh->getScreenY(i->y),i->angle,1.0,width);
-					
+			projectileTypes[i->id].sprite->RenderEx(smh->getScreenX(i->x),smh->getScreenY(i->y),i->angle,1.0,width);		
+			
 		//Normal projectiles
 		} else {
 			projectileTypes[i->id].sprite->RenderEx(smh->getScreenX(i->x), smh->getScreenY(i->y - i->parabolaYOffset), i->hasParabola ? 0.0 : i->angle, 1.0f, 1.0f);
@@ -623,5 +639,8 @@ void ProjectileManager::initProjectiles() {
 
 	projectileTypes[PROJECTILE_ORANGE].radius = 8;
 	projectileTypes[PROJECTILE_ORANGE].sprite = smh->resources->GetSprite("OrangeProjectile");
+
+	projectileTypes[PROJECTILE_BOOMERANG].radius = 16;
+	projectileTypes[PROJECTILE_BOOMERANG].sprite = smh->resources->GetSprite("BoomerangProjectile");
 
 }
