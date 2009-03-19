@@ -12,7 +12,7 @@
 #define EVIL_WALL_COLLISION_CIRCLE_IN 4
 #define EVIL_WALL_COLLISION_CIRCLE_OUT 5
 #define EVIL_WALL_APPEAR_TIME 1.0
-#define EVIL_WALL_DAMAGE 1.5
+#define EVIL_WALL_DAMAGE 0.0
 
 //This tells the evil wall how far it has to be drawn to cover the entire width or height
 //of the screen, in tiles
