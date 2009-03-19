@@ -45,6 +45,8 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Evil walls do no damage||3/19/09||ETI||
+||Shrink tunnels are saved||3/18/09||ETI||
 ||Finished Advice Man||3/15/09||RGW||
 ||Shaded Portli, redrew his fish, shaded the squirrel, shaded Cornwallis's projectile||3/15/09||ETI||
 ||Exit Prompt||3/14/09||RGW||
