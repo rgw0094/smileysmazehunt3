@@ -415,6 +415,23 @@ void Environment::loadArea(int id, int from, bool playMusic) {
 					collision[i][j] = WALKABLE;
 				}
 
+				//Flip shrink tunnel switches
+				if (collision[i][j] == SHRINK_TUNNEL_SWITCH) {
+					int id = ids[i][j];
+					//Scan the area for cylinders linked to this switch
+					for (int k = 0; k < areaWidth; k++) {
+						for (int l = 0; l < areaHeight; l++) {
+							if (ids[k][l] == id) {
+								if (collision[k][l] == SHRINK_TUNNEL_HORIZONTAL)
+									collision[k][l] = SHRINK_TUNNEL_VERTICAL;
+								else if (collision[k][l] == SHRINK_TUNNEL_VERTICAL)
+									collision[k][l] = SHRINK_TUNNEL_HORIZONTAL;
+							}
+						}
+					}
+				}
+				
+
 				//Flip switches that have been marked as changed
 				if (Util::isCylinderSwitchLeft(collision[i][j]) || Util::isCylinderSwitchRight(collision[i][j])) {
 					int id = ids[i][j];
@@ -1033,6 +1050,7 @@ bool Environment::toggleSwitchAt(int gridX, int gridY, bool playSoundFarAway, bo
 		hasSwitch = true;
 		activated[gridX][gridY] = smh->getGameTime();
 		smh->resources->GetAnimation("shrinkTunnelSwitch")->Play();
+		smh->saveManager->change(gridX,gridY);
 
 		//Loop through the grid and look for shrink tunnels with the same id as the switch
 		for (int i = 0; i < areaWidth; i++) {
