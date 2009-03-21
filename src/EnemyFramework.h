@@ -316,6 +316,11 @@ public:
 	void updateMapPath();
 	bool instanceOf(char* type) { return strcmp(type, "ES_Chase") == 0; }
 
+	//Variables
+	float timeOfLastAdjust;
+	float adjustAngle; //used to randomize the angle a little bit.
+	float timeTillNextAdjust;
+
 	//Pointer to the enemy that owns this state
 	BaseEnemy *owner;
 

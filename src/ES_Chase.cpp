@@ -28,7 +28,7 @@ void ES_Chase::update(float dt) {
 	//run straight towards him
 	if (smh->environment->validPath(owner->x, owner->y, smh->player->x, smh->player->y, 32, owner->canPass)) {
 
-		float angle = Util::getAngleBetween(owner->x, owner->y, smh->player->x, smh->player->y);
+		float angle = Util::getAngleBetween(owner->x, owner->y, smh->player->x, smh->player->y) + adjustAngle;
 		owner->dx = owner->speed * cos(angle);
 		owner->dy = owner->speed * sin(angle);
 
@@ -74,13 +74,20 @@ void ES_Chase::update(float dt) {
 		}
 	}
 
+	if (smh->timePassedSince(timeOfLastAdjust) >= timeTillNextAdjust) {
+		timeOfLastAdjust = smh->getGameTime();
+		timeTillNextAdjust = smh->randomFloat(1.2,1.8);
+		adjustAngle = smh->randomFloat(-0.52, 0.52); //0.52 is about 50 degrees
+	}
 }
 
 /**
  * Called by the enemy framework when the enemy enters this state.
  */
 void ES_Chase::enterState() {
-
+	timeOfLastAdjust = smh->getGameTime();
+	timeTillNextAdjust = smh->randomFloat(0.7,1.8);
+	adjustAngle = smh->randomFloat(-0.26, 0.26); //0.26 is about 15 degrees
 }
 
 /**
