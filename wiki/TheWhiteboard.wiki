@@ -45,6 +45,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Enemy movements toward Smiley are slightly randomized, thus they don't overlap as bad||3/21/09||ETI||
 ||Hopping enemies now 'crouch' before hopping via animation||3/21/09||ETI||
 ||Evil walls do no damage||3/19/09||ETI||
 ||Shrink tunnels are saved||3/18/09||ETI||
