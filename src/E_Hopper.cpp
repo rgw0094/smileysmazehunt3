@@ -29,6 +29,10 @@ E_Hopper::E_Hopper(int id, int x, int y, int groupID) {
 	hopping = false;
 	dx = dy = 0.0;
 
+	graphic[0]->SetSpeed(0.5);
+	graphic[1]->SetSpeed(0.5);
+	graphic[2]->SetSpeed(0.5);
+	graphic[3]->SetSpeed(0.5);
 }
 
 /**
@@ -80,6 +84,8 @@ void E_Hopper::update(float dt) {
 			timeStoppedHop = smh->getGameTime();
 			dx = dy = hopYOffset = 0.0;
 		}
+	} else { //if not hopping, face smiley
+        setFacingPlayer();
 	}
 
 	move(dt);
@@ -87,8 +93,22 @@ void E_Hopper::update(float dt) {
 }
 
 void E_Hopper::draw(float dt) {
+	int i;
+
 	smh->resources->GetSprite("playerShadow")->Render(screenX, screenY + 32.0);
+	
+	if (graphic[0]->GetFrames() > 1) { //animate by 'crouching down' just before a jump
+		if (!hopping && smh->timePassedSince(timeStoppedHop) > 0.7)
+			//Set frame to 'crouched' position -- as if ready to hop
+			for (i=0; i<4; i++) graphic[i]->SetFrame(1);
+		else
+			//Set frame to normal position
+			for (i=0; i<4; i++) graphic[i]->SetFrame(0);
+	}
+
+	//Render the graphic
 	graphic[facing]->Render(screenX, screenY - hopYOffset);
+
 }
 
 
