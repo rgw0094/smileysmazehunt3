@@ -101,7 +101,7 @@
 ||Smolder Hollow||Fire Floater^4^, Fangie^4^||
 ||Sessaria||Crystal^4^, Snowman^4^, Snowfang^4^||
 ||Forest||Floating Turnip^4^, Squirrel^4^, Gumdrop^4^||
-||Desert||Buzzard^4^, Brown burrower^4^, Green Snake^2^||
+||Desert||Buzzard^4^, Brown burrower^4^, Green Snake^4^||
 ||Realm||Skullie^4^, Hopping Eye^4^||
 ||Mush Cave||Beaker^2^, Cone^2^||
 ||Pools||Orange head^4^, Friigoth Moorer^4^||
