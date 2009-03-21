@@ -103,12 +103,12 @@
 ||Forest||Floating Turnip^4^, Squirrel^4^, Gumdrop^4^||
 ||Desert||Buzzard^4^, Brown burrower^4^, Green Snake^2^||
 ||Realm||Skullie^4^, Hopping Eye^4^||
-||Mush Cave||Cone^1^, Snail^1^||
+||Mush Cave||Beaker^2^, Cone^2^||
 ||Pools||Orange head^4^, Friigoth Moorer^4^||
 ||Mt Frostbite||Batlet^4^, Ice Cream Man^4^, Candy Floater^4^, Candy Spawner^4^, Sad Shooters^4^||
 ||Swamp||Buzzard^4^, Tentacle^4^, Crab/Clown^4^, Pumpkin*3^4^||
 ||Tut||Tan Snake^4^, Mummy^4^||
 ||Castle||Proennok^1^,Ent^3^,Frownie^1^, Batlet(2)^4^, Spider^3^, Protector^3^,Green croc^3^||
-||Conservatory||Alphanoid^1^, Herbanoid^1^||
+||Conservatory||Alphanoid^2^, Herbanoid^2^,Barvinoid^2^||
 
 Superscript: 1 = not started, 2 = graphic done, 3 = put into Enemies.dat, 4 = put into level (done)
