@@ -46,43 +46,32 @@ void E_DiagoShooter::draw(float dt) {
  * Updates the enemy
  */
 void E_DiagoShooter::update(float dt) {
-	
+
+	int xDist = x - smh->player->x;
+	int yDist = y - smh->player->y;
+	int distanceDifference = abs(xDist) - abs(yDist); //when this is 0, the enemy is diagonal to Smiley
 
 	if (smh->timePassedSince(lastRangedAttack) >= rangedAttackDelay &&
-		Util::distance(x,y,smh->player->x,smh->player->y) <=  weaponRange) {
+		canShootPlayer() &&	abs(distanceDifference) <= smh->player->radius/2) { //within range and approximately diagonal
+			
+		float projectileAngle = 0;
 	
-		//if smiley is in same x grid
-		if (gridX == smh->player->gridX) {
-			if (smh->player->y < y) { //player is above enemy; shoot up
-				smh->projectileManager->addProjectile(x, y, projectileSpeed, 3*3.14159/2, projectileDamage,
-					true,projectileHoming, rangedType, true);
-				lastRangedAttack = smh->getGameTime();
-			} else { //player is below enemy; shoot down
-				smh->projectileManager->addProjectile(x, y, projectileSpeed, 3.14159/2, projectileDamage,
-					true,projectileHoming, rangedType, true);	
-				lastRangedAttack = smh->getGameTime();
-			}
-		} else if (gridY == smh->player->gridY) {
-			if (smh->player->x < x) { //player is to the left
-				smh->projectileManager->addProjectile(x, y, projectileSpeed, 3.14159, projectileDamage,
-					true,projectileHoming, rangedType, true);
-				lastRangedAttack = smh->getGameTime();
-			} else { //player is to the right
-				smh->projectileManager->addProjectile(x, y, projectileSpeed, 0, projectileDamage,
-					true,projectileHoming, rangedType, true);	
-				lastRangedAttack = smh->getGameTime();
-			}
-		}
+		if (xDist > 0 && yDist > 0) projectileAngle = 3*3.14159/4;
+		if (xDist > 0 && yDist < 0) projectileAngle = 5*3.14159/4;
+		if (xDist < 0 && yDist > 0) projectileAngle = 1*3.14159/4;
+		if (xDist < 0 && yDist < 0) projectileAngle = 7*3.14159/4;
+
+		smh->projectileManager->addProjectile(x, y, projectileSpeed, projectileAngle, projectileDamage,
+			true, projectileHoming, rangedType, true);
+	} else { // move to be diagonal to smiley
 		
 	}
-
-	
 		
 	//Collision with player
 	if (smh->player->collisionCircle->testBox(collisionBox)) {
 		smh->player->dealDamageAndKnockback(damage, true, 115, x, y);
 		std::string debugText;
-		debugText = "E_AdjacentShooter.cpp Smiley hit by enemy type " + Util::intToString(id) +
+		debugText = "E_DiagoShooter.cpp Smiley hit by enemy type " + Util::intToString(id) +
 			" at grid (" + Util::intToString(gridX) + "," + Util::intToString(gridY) +
 			") pos (" + Util::intToString((int)x) + "," + Util::intToString((int)y) + ")";
 		smh->setDebugText(debugText);
