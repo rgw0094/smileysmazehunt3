@@ -556,6 +556,9 @@
 						RelativePath=".\src\E_Charger.cpp">
 					</File>
 					<File
+						RelativePath=".\src\E_DiagoShooter.cpp">
+					</File>
+					<File
 						RelativePath=".\src\E_EvilEye.cpp">
 					</File>
 					<File

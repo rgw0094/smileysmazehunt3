@@ -819,7 +819,22 @@ public:
 
 private:
 	
+};
 
+class E_DiagoShooter : public BaseEnemy {
+
+public:
+	E_DiagoShooter(int id, int x, int y, int groupID);
+	~E_DiagoShooter();
+
+	//methods
+	void draw(float dt);
+	void update(float dt);
+
+private:
+	int destinationGridX,destinationGridY;
+	float destinationX, destinationY;
+	bool atDestination;
 };
 
 #endif
