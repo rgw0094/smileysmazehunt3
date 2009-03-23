@@ -237,12 +237,16 @@ void BaseEnemy::move(float dt) {
  * Calculate the mapPath array for an enemy
  */
 void BaseEnemy::doAStar() {
+	doAStar(smh->player->gridX, smh->player->gridY);
+}
+
+void BaseEnemy::doAStar(int destinationX, int destinationY) {
 
 	boolean found;
 	int lowValue;
 
-	//Only update map path if the enemies are within 10 tiles of smiley
-	if (abs(gridX - smh->player->gridX) + abs(gridY - smh->player->gridY) > 10) {
+	//Only update map path if the enemies are within 10 tiles of destination
+	if (abs(gridX - destinationX) + abs(gridY - destinationY) > 10) {
 		return;
 	}
 
@@ -256,7 +260,7 @@ void BaseEnemy::doAStar() {
 	for (int i = startX; i < endX; i++) {
 		for (int j = startY; j < endY; j++) {
 			//If the player is at (i,j), the distance from (i,j) is 0
-			if (i == smh->player->gridX && j == smh->player->gridY) {
+			if (i == destinationX && j == destinationY) {
 				mapPath[i][j] = 0;
 			//If (i,j) is inaccessible, set distance to 999
 			} else if (!canPass[smh->environment->collision[i][j]] || smh->environment->hasSillyPad(i, j)) {			

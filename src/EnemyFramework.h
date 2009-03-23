@@ -56,6 +56,7 @@ class hgeRect;
 #define ENEMY_SPAWNER 17
 #define ENEMY_ADJACENT_SHOOTER 18
 #define ENEMY_BOTONOID 19 //different from ranged enemies b/c they fire projectiles randomly
+#define ENEMY_DIAGO_SHOOTER 20
 
 //Stuff on ID layer
 #define ENEMYGROUP_TRIGGER 996
@@ -119,6 +120,7 @@ public:
 	void move(float dt);
 	bool inChaseRange(int range);
 	void doAStar();
+	void doAStar(int destinationX, int destinationY);
 	bool canShootPlayer();
 	int distanceFromPlayer();
 	void initEnemy(int _id, int _gridX, int _gridY, int _groupID);
@@ -832,9 +834,25 @@ public:
 	void update(float dt);
 
 private:
+
+	//variables
 	int destinationGridX,destinationGridY;
 	float destinationX, destinationY;
-	bool atDestination;
+	bool hasDestination;
+	float timeOfLastDestination;
+	float timeIntervalTillNextDestination;
+
+	//methods
+	void moveToBeDiagonalToPlayer();
+	void createDestinationToBeDiagonalToPlayer();
+
+	//These four functions just call tryDiagonal. They exist to improve the readability of moveToBeDiagonalToPlayer()
+	bool tryUpRightDiagonal(int weaponGridRange);
+	bool tryUpLeftDiagonal(int weaponGridRange);
+	bool tryDownRightDiagonal(int weaponGridRange);
+	bool tryDownLeftDiagonal(int weaponGridRange);
+
+	bool tryDiagonal(int weaponGridRange, int dirx, int diry);
 };
 
 #endif

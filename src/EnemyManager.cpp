@@ -101,6 +101,9 @@ void EnemyManager::addEnemy(int id, int x, int y, float spawnHealthChance, float
 		case ENEMY_BOTONOID:
 			newEnemy.enemy = new E_Botonoid(id, x, y, groupID);
 			break;
+		case ENEMY_DIAGO_SHOOTER:
+			newEnemy.enemy = new E_DiagoShooter(id, x, y, groupID);
+			break;
    		default:
 			newEnemy.enemy = new DefaultEnemy(id, x, y, groupID);
 			break;
