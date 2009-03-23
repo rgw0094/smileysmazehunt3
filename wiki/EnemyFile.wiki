@@ -57,6 +57,8 @@
 ||16||Hopper|| || ||
 ||17||Spawner||Enemy to spawn with 45% chance||Enemy to spawn with 35% chance||Enemy to spawn with 20% chance||
 ||18||Adjacent shooter||
+||19||Botonoid||
+||20||Diago Shooter (ex: Cone)||
 
 ----
 = Directions =
