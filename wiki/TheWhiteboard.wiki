@@ -16,9 +16,9 @@
  * Re-texture the sphinx
 
 === Bugs ===
+ * The Bill Clinton hint screen no longer fades out.
  * Floaters jump when they hit a wall and they float too close to the ground (they actually go into the ground)
  * There are randomly item particles in places where there shouldn't be
- * One time, the "Continue" "Back" and "Delete" buttons in the select file screen went too far down, as if the dt was excessively large the frame before they stopped.
  * Bouncing spikey enemies that I put to appear in line with each other in game sometimes are not in line when testing, making it a lot harder to get by them than planned. (this is impossible to fix)
  * Spikey enemies start in the wrong spot sometimes. Ex: the mass of spikey enemies in Egypt, sometimes one of them will move down first and then will bounce horizontally in the wrong spot.
 
