@@ -56,7 +56,7 @@ void E_DiagoShooter::draw(float dt) {
 		//smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(xDestinationDownRight),smh->getScreenY(yDestinationDownRight),ARGB(255,0,0,255));
 
 		smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(x+64*cos(3.14)),smh->getScreenY(y+64*sin(3.14)));
-		smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(x+64.0*cos(UP_RIGHT_ANGLE)),smh->getScreenY(y+64.0*sin(UP_RIGHT_ANGLE)),ARGB(0,0,255,255));
+		smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(x+64*cos(UP_RIGHT_ANGLE)),smh->getScreenY(y+64*sin(UP_RIGHT_ANGLE)),ARGB(255,0,255,255));
 		//renderNearbyTargetGrid();
 	}
 }
