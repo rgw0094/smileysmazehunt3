@@ -841,7 +841,7 @@ Sprite loadingText {
 Sprite gameOverG {
  texture=menuBackgroundTx
  rect=811,769,48,58
- hotspot=170,23
+ hotspot=170,24
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=10
 }

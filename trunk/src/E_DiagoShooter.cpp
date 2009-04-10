@@ -8,6 +8,15 @@
 
 extern SMH *smh;
 
+#define TARGET_ERROR 3.0
+
+#define DESTINATION_TIME 3.0
+
+#define UP_RIGHT_ANGLE 3.14159/4.0
+#define UP_LEFT_ANGLE 3.0*3.14159/4.0
+#define DOWN_LEFT_ANGLE 5.0*3.14159/4.0
+#define DOWN_RIGHT_ANGLE 7.0*3.14159/4.0
+
 /**
  * Constructor
  */
@@ -16,14 +25,11 @@ E_DiagoShooter::E_DiagoShooter(int id, int gridX, int gridY, int groupID) {
 	//Call parent init method
 	initEnemy(id, gridX, gridY, groupID);
 
-	//Start in wander state
-	setState(new ES_Wander(this));
-
 	facing = DOWN;
 
-	hasDestination = false;
-	timeOfLastDestination = smh->getGameTime();
-	timeIntervalTillNextDestination = 0;
+	findFourDestinations();
+	chooseBestDestination();
+	lastDestinationTime = smh->getGameTime();
 }
 
 /**
@@ -43,6 +49,15 @@ void E_DiagoShooter::draw(float dt) {
 
 	if (smh->isDebugOn()) {
 		smh->drawCollisionBox(collisionBox, RED);
+		//draws a line to the destinations
+		//smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(xDestinationUpLeft),smh->getScreenY(yDestinationUpLeft),ARGB(255,255,0,0));
+		//smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(xDestinationUpRight),smh->getScreenY(yDestinationUpRight),ARGB(255,255,255,0));
+		//smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(xDestinationDownLeft),smh->getScreenY(yDestinationDownLeft),ARGB(255,0,255,0));
+		//smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(xDestinationDownRight),smh->getScreenY(yDestinationDownRight),ARGB(255,0,0,255));
+
+		smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(x+64*cos(3.14)),smh->getScreenY(y+64*sin(3.14)));
+		smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(x+64.0*cos(UP_RIGHT_ANGLE)),smh->getScreenY(y+64.0*sin(UP_RIGHT_ANGLE)),ARGB(0,0,255,255));
+		//renderNearbyTargetGrid();
 	}
 }
 
@@ -51,234 +66,161 @@ void E_DiagoShooter::draw(float dt) {
  */
 void E_DiagoShooter::update(float dt) {
 
-	int xDist = x - smh->player->x;
-	int yDist = y - smh->player->y;
-	int distanceDifference = abs(xDist) - abs(yDist); //when this is 0, the enemy is diagonal to Smiley
 
-	if (smh->timePassedSince(lastRangedAttack) >= rangedAttackDelay &&
-		canShootPlayer() &&	abs(distanceDifference) <= smh->player->radius/2) { //within range and approximately diagonal
-			
-		float projectileAngle = 0;
-	
-		if (xDist > 0 && yDist > 0) projectileAngle = 5*3.14159/4.0;
-		if (xDist > 0 && yDist < 0) projectileAngle = 3*3.14159/4.0;
-		if (xDist < 0 && yDist > 0) projectileAngle = 7*3.14159/4.0;
-		if (xDist < 0 && yDist < 0) projectileAngle = 1*3.14159/4.0;
-
-		smh->projectileManager->addProjectile(x, y, projectileSpeed, projectileAngle, projectileDamage,
-			true, projectileHoming, rangedType, true);
-	} else { // move to be diagonal to smiley
-		moveToBeDiagonalToPlayer();
-		move(dt);
-	}
-		
-	//Collision with player
-	if (smh->player->collisionCircle->testBox(collisionBox)) {
-		smh->player->dealDamageAndKnockback(damage, true, 115, x, y);
-		std::string debugText;
-		debugText = "E_DiagoShooter.cpp Smiley hit by enemy type " + Util::intToString(id) +
-			" at grid (" + Util::intToString(gridX) + "," + Util::intToString(gridY) +
-			") pos (" + Util::intToString((int)x) + "," + Util::intToString((int)y) + ")";
-		smh->setDebugText(debugText);
+	if (smh->timePassedSince(lastDestinationTime) >= destinationDuration) {
+		lastDestinationTime = smh->getGameTime();
+		//destinationDuration = smh->randomFloat(1.5,6.0);
+		findFourDestinations();
+		chooseBestDestination();
 	}
 
-}
+	if (smh->timePassedSince(lastRangedAttack) >= rangedAttackDelay) {
+		bool canShoot = false;
+		float shootAngle;
 
-/**
- * This method moves the enemy to try to be diagonal to Smiley, so that the enemy can get a clear shot.
- */
-void E_DiagoShooter::moveToBeDiagonalToPlayer() {
-	
-	//creates a new destinaton
-	if (smh->timePassedSince(timeOfLastDestination) >= timeIntervalTillNextDestination) createDestinationToBeDiagonalToPlayer();
-	
-	//moves toward a destination -- this is shamelessly copied from ES_Chase.cpp
-	if (hasDestination) {
-		int lowValue = mapPath[gridX][gridY];
-			
-		//Find the best square to go to next
-		for (int i = gridX - 1; i <= gridX+1; i++) {
-			for (int j = gridY-1; j <= gridY+1; j++) {
-				if (smh->environment->isInBounds(i,j) && mapPath[i][j] >= 0 && mapPath[i][j] < 999) {
-					if (mapPath[i][j] <= lowValue) {
-						lowValue = mapPath[i][j];
-						targetX = i;
-						targetY = j;
-					}
-				}
-			}
+		if (canShootPlayer(UP_LEFT_ANGLE)) {
+			canShoot = true;
+			shootAngle = UP_LEFT_ANGLE;
+		} else if (canShootPlayer(UP_RIGHT_ANGLE)) {
+			canShoot = true;
+			shootAngle = UP_RIGHT_ANGLE;
+		} else if (canShootPlayer(DOWN_LEFT_ANGLE)) {
+			canShoot = true;
+			shootAngle = DOWN_LEFT_ANGLE;
+		} else if (canShootPlayer(DOWN_RIGHT_ANGLE)) {
+			canShoot = true;
+			shootAngle = DOWN_RIGHT_ANGLE;
 		}
-		
-		//Update velocity based on best path
-		if (targetX < gridX) dx = -1*speed;
-		if (targetX > gridX) dx = speed;
-		if (targetY < gridY) dy = -1*speed;
-		if (targetY > gridY) dy = speed;
 
-		setFacing();
-		
-	} else {
-		dx = 0;
-		dy = 0;
-		facing = DOWN;
+		if (canShoot && smh->timePassedSince(lastRangedAttack) >= rangedAttackDelay) {
+			dx = dy = 0.0;
+			setFacingPlayer();
+			
+			smh->projectileManager->addProjectile(x, y, projectileSpeed, shootAngle, projectileDamage,
+					true,projectileHoming, rangedType, true);
+
+			lastRangedAttack = smh->getGameTime();
+		}
 	}
 
 
+	move(dt);
 }
 
-/**
- * This method creates the destination for the "moveToBeDiagonalToSmiley" method to work 
+/*
+ * findFourDestinations()
  *
- *-Using the A* algorithm:
- *-The enemy first searches to see if it can get at diagonal grid spots which are almost at the max weapon range
- *-If none of those work, the enemy tries 1 block closer, and so on.
- *-If the enemy cannot get to a location, then it just holds still.
- */
-
-void E_DiagoShooter::createDestinationToBeDiagonalToPlayer() {
-
-	int xDist = x - smh->player->x;
-	int yDist = y - smh->player->y;
-	
-	float oneLegWeaponRange = weaponRange * 1/sqrt(2.0); //the "leg" of a triangle of 45 degrees is 1 / root 2
-	
-	oneLegWeaponRange *= 0.8; //don't want to be so close to the edge of the weapon range, so take away 20%
-	
-	int weaponGridRange = oneLegWeaponRange / 64;
-
-	hasDestination = false;
-
-    // OK now let's see which quadrant the Cone is in relative to Smiley, and test to see if
-	// we can get to anywhere along that diagonal
-	
-	/*              |
-	 *      x<0,y<0 |  x>0,y<0
-	 *         II   |   I
-	 *      -------------------
-	 *        III   |   IV
-	 *      x<0,y>0 |  x>0,y>0
-	 *              |
-	 */
-	
-	int d;
-
-	// Quadrant I, up and right of Smiley ////////////////////
-	if (xDist >= 0 && yDist < 0) { 
-		if (abs(xDist) > abs(yDist)) { //try up-right, then down-right, then up-left, then down-left
-			hasDestination = tryUpRightDiagonal(weaponGridRange);
-			if (!hasDestination) hasDestination = tryDownRightDiagonal(weaponGridRange);
-			if (!hasDestination) hasDestination = tryUpLeftDiagonal(weaponGridRange);
-			if (!hasDestination) hasDestination = tryDownLeftDiagonal(weaponGridRange);
-		} else { //try up-right, then up-left, then down-right, then down-left
-			hasDestination = tryUpRightDiagonal(weaponGridRange);
-			if (!hasDestination) hasDestination = tryUpLeftDiagonal(weaponGridRange);
-			if (!hasDestination) hasDestination = tryDownRightDiagonal(weaponGridRange);
-			if (!hasDestination) hasDestination = tryDownLeftDiagonal(weaponGridRange);
-		}
-
-	// Quadrant II, up and left of Smiley ////////////////////
-	} else if (xDist < 0 && yDist < 0) {
-		if (abs(xDist) > abs(yDist)) { //try up-left, down-left, up-right, down-right
-			hasDestination = tryUpLeftDiagonal(weaponGridRange);
-			if (!hasDestination) hasDestination = tryDownLeftDiagonal(weaponGridRange);
-			if (!hasDestination) hasDestination = tryUpRightDiagonal(weaponGridRange);
-			if (!hasDestination) hasDestination = tryDownRightDiagonal(weaponGridRange);
-		} else { //try up-left, up-right, down-left, down-right
-			hasDestination = tryUpLeftDiagonal(weaponGridRange);
-			if (!hasDestination) hasDestination = tryUpRightDiagonal(weaponGridRange);
-			if (!hasDestination) hasDestination = tryDownLeftDiagonal(weaponGridRange);
-			if (!hasDestination) hasDestination = tryDownRightDiagonal(weaponGridRange);
-		}
-
-		// Quadrant III, down and left of Smiley ////////////////////
-    	} else if (xDist < 0 && yDist >= 0) {
-		if (abs(xDist) > abs(yDist)) { //try down-left, up-left, down-right, up-right
-			hasDestination = tryDownLeftDiagonal(weaponGridRange);
-			if (!hasDestination) hasDestination = tryUpLeftDiagonal(weaponGridRange);
-			if (!hasDestination) hasDestination = tryDownRightDiagonal(weaponGridRange);
-			if (!hasDestination) hasDestination = tryUpRightDiagonal(weaponGridRange);
-		} else { //try down-left, down-right, up-left, up-right
-			hasDestination = tryDownLeftDiagonal(weaponGridRange);
-			if (!hasDestination) hasDestination = tryDownRightDiagonal(weaponGridRange);
-			if (!hasDestination) hasDestination = tryUpLeftDiagonal(weaponGridRange);
-			if (!hasDestination) hasDestination = tryUpRightDiagonal(weaponGridRange);
-		}
-
-	// Quadrant IV, down and right of Smiley ////////////////////
-	} else if (xDist >= 0 && yDist >= 0) {
-		if (abs(xDist) > abs(yDist)) { //try down-right, up-right, down-left, up-left
-			hasDestination = tryDownRightDiagonal(weaponGridRange);
-			if (!hasDestination) hasDestination = tryUpRightDiagonal(weaponGridRange);
-			if (!hasDestination) hasDestination = tryDownLeftDiagonal(weaponGridRange);
-			if (!hasDestination) hasDestination = tryUpLeftDiagonal(weaponGridRange);
-		} else { //try down-right, down-left, up-right, up-left
-			hasDestination = tryDownRightDiagonal(weaponGridRange);
-			if (!hasDestination) hasDestination = tryDownLeftDiagonal(weaponGridRange);
-			if (!hasDestination) hasDestination = tryUpRightDiagonal(weaponGridRange);
-			if (!hasDestination) hasDestination = tryUpLeftDiagonal(weaponGridRange);			
-		}
-	}
-
-	timeOfLastDestination = smh->getGameTime();
-	timeIntervalTillNextDestination = smh->randomFloat(1.0,1.7);
-}
-
-
-/* tryUpRightDiagonal *********
- * Calls tryDiagonal, to create an A* path from the enemy to a position up and right of Smiley
- */
-bool E_DiagoShooter::tryUpRightDiagonal(int weaponGridRange) {
-	return tryDiagonal(weaponGridRange, 1, -1);
-}
-
-/* tryUpLeftDiagonal *********
- * Calls tryDiagonal, to create an A* path from the enemy to a position up and left of Smiley
- */
-bool E_DiagoShooter::tryUpLeftDiagonal(int weaponGridRange) {
-	return tryDiagonal(weaponGridRange, -1, -1);
-}
-
-/* tryDownRightDiagonal *********
- * Calls tryDiagonal, to create an A* path from the enemy to a position down and right of Smiley
- */
-bool E_DiagoShooter::tryDownRightDiagonal(int weaponGridRange) {
-	return tryDiagonal(weaponGridRange, 1, 1);
-}
-
-/* tryDownLeftDiagonal *********
- * Calls tryDiagonal, to create an A* path from the enemy to a position down and left of Smiley
- */
-bool E_DiagoShooter::tryDownLeftDiagonal(int weaponGridRange) {
-	return tryDiagonal(weaponGridRange, -1, 1);
-}
-
-/* tryDiagonal ***********
+ * For each of the 4 diagonals, finds the furthest point from Smiley that the Cone can get to,
+ * and can hit Smiley from.
  * 
- * This function loops from far to near, creating an A* algorithm at each point and seeing if the enemy can
- * get to that point
- *
- * dirx and diry give directionality to which way the destinationGrid points are
- */
-bool E_DiagoShooter::tryDiagonal(int weaponGridRange, int dirx, int diry) {
-	int d;
+ * At the end of the function there will be 4 destination points created. If one of the points is (-1, -1), that
+ * means a destination has not beed found for that direction.
+ */ 
+void E_DiagoShooter::findFourDestinations() {
 
-	//First see the max that a shot could potentially reach Smiley at from that location
-	for (d = 1; d < weaponGridRange; d++) {
-		if (!smh->projectileManager->canPass[smh->environment->collision[smh->player->gridX][smh->player->gridY]]) {
-			weaponGridRange = d - 1;
-			break;
+	bool foundUpLeft, foundUpRight, foundDownLeft, foundDownRight;
+	
+	//set each of the directions to "false" and each of the destinations to -1. 
+	foundUpLeft = foundUpRight = foundDownLeft = foundDownRight = false;
+	xDestinationUpLeft = yDestinationUpLeft = xDestinationUpRight = yDestinationUpRight = xDestinationDownLeft = yDestinationDownLeft = xDestinationDownRight = yDestinationDownRight = -1;
+
+	//loop from as far out as possible so that the cone avoids smiley.
+	float maxDist = weaponRange * 0.707106781; //0.707 = cos(45 degrees)
+	maxDist *= 0.95;
+	
+	if (maxDist > 6*64) maxDist = 6*64; //cap it at 6 tiles away -- that's far enough
+	if (maxDist < 64) maxDist = 64;
+
+	int n;
+	int i,j;
+	int gridI, gridJ;
+	float shootAngle;
+	
+	for (n = maxDist; n > 0; n -= 10) {
+		//up-left
+		i = smh->player->x - n;
+		j = smh->player->y - n;
+		gridI = Util::getGridX(i);
+		gridJ = Util::getGridY(j);
+		shootAngle = DOWN_RIGHT_ANGLE;
+
+		if (!foundUpLeft && smh->environment->isInBounds(gridI,gridJ) && canPass[smh->environment->collision[gridI][gridJ]] && canShootPlayer(i,j,shootAngle)) {
+			foundUpLeft = true;
+			xDestinationUpLeft = i; xGridDestUpLeft = gridI;
+			yDestinationUpLeft = j; yGridDestUpLeft = gridJ;
+		}
+
+		//up-right
+		i = smh->player->gridX + n;
+		j = smh->player->gridY - n;
+		gridI = Util::getGridX(i);
+		gridJ = Util::getGridY(j);
+		shootAngle = DOWN_LEFT_ANGLE;
+
+		if (!foundUpRight && smh->environment->isInBounds(gridI,gridJ) && canPass[smh->environment->collision[gridI][gridJ]] && canShootPlayer(i,j,shootAngle)) {
+			foundUpRight = true;
+			xDestinationUpRight = i; xGridDestUpRight = gridI;
+			yDestinationUpRight = j; yGridDestUpRight = gridJ;
+		}
+
+		//down-left
+		i = smh->player->gridX - n;
+		j = smh->player->gridY + n;
+		gridI = Util::getGridX(i);
+		gridJ = Util::getGridY(j);
+		shootAngle = UP_RIGHT_ANGLE;
+
+		if (!foundDownLeft && smh->environment->isInBounds(gridI,gridJ) && canPass[smh->environment->collision[gridI][gridJ]] && canShootPlayer(i,j,shootAngle)) {
+			foundDownLeft = true;
+			xDestinationDownLeft = i; xGridDestDownLeft = gridI;
+			yDestinationDownLeft = j; yGridDestDownLeft = gridJ;
+		}
+
+		//down-right
+		i = smh->player->gridX + n;
+		j = smh->player->gridY + n;
+		gridI = Util::getGridX(i);
+		gridJ = Util::getGridY(j);
+		shootAngle = UP_LEFT_ANGLE;
+
+		if (!foundDownRight && smh->environment->isInBounds(gridI,gridJ) && canPass[smh->environment->collision[gridI][gridJ]] && canShootPlayer(i,j,shootAngle)) {
+			foundDownRight = true;
+			xDestinationDownRight = i; xGridDestDownRight = gridI;
+			yDestinationDownRight = j; yGridDestDownRight = gridJ;
 		}
 	}
 
-	//Now loop from out to in, creating A* algorithms
-	for (d = weaponGridRange; d > 1; d--) {
-		destinationGridX = gridX + d*dirx;
-		destinationGridY = gridY + d*diry;
-			
-		doAStar(destinationGridX, destinationGridY);
-		if (markMap && mapPath[gridX][gridY] < 999) { //enemy could get to this point; let's go there!
-			return true;			
-		} 
+}
+
+/*
+ * chooseBestDestination
+ *
+ * Chooses the current destination out of the 4 diagonal destinations that have already been found
+ * Chooses based on A* distance
+ */
+void E_DiagoShooter::chooseBestDestination() {
+	bool hasDestination;
+	int AStarToUpLeft=1000, AStarToUpRight=1000, AStarToDownLeft=1000, AStarToDownRight=1000;
+
+	if (xGridDestUpLeft != -1) AStarToUpLeft = AStarDistance(xGridDestUpLeft, yGridDestUpLeft);
+	if (xGridDestUpRight != -1) AStarToUpRight = AStarDistance(xGridDestUpRight, yGridDestUpRight);
+	if (xGridDestDownLeft != -1) AStarToDownLeft = AStarDistance(xGridDestDownLeft, yGridDestDownLeft);
+	if (xGridDestDownRight != -1) AStarToDownRight = AStarDistance(xGridDestDownRight, yGridDestDownRight);
+	
+	//find the minimum A* distance
+	int minDist = min(AStarToUpLeft,AStarToUpRight);
+	minDist = min(minDist,AStarToDownLeft);
+	minDist = min(minDist,AStarToDownRight);
+
+	     if (minDist == AStarToUpLeft) {xDestination = xDestinationUpLeft; yDestination = yDestinationUpLeft; xDestGrid = xGridDestUpLeft; yDestGrid = yGridDestUpLeft;}
+	else if (minDist == AStarToUpRight) {xDestination = xDestinationUpRight; yDestination = yDestinationUpRight; xDestGrid = xGridDestUpRight; yDestGrid = yGridDestUpRight;}
+	else if (minDist == AStarToDownLeft) {xDestination = xDestinationDownLeft; yDestination = yDestinationDownLeft; xDestGrid = xGridDestDownLeft; yDestGrid = yGridDestDownLeft;}
+	else if (minDist == AStarToDownRight) {xDestination = xDestinationDownRight; yDestination = yDestinationDownRight; xDestGrid = xGridDestDownRight; yDestGrid = yGridDestDownRight;}
+
+	if (minDist != 1000) {
+		doAStar(xDestGrid, yDestGrid);
+		hasDestination = true;
+	} else {
+		hasDestination = false;
 	}
-	return false;
 }

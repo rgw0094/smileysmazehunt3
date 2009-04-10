@@ -187,6 +187,14 @@ bool BaseEnemy::canShootPlayer() {
 	return (distanceFromPlayer() <= weaponRange && smh->environment->validPath(x, y, smh->player->x, smh->player->y, 26, canPass));
 }
 
+bool BaseEnemy::canShootPlayer(float angle) {
+	return (distanceFromPlayer() <= weaponRange && smh->environment->validPath(angle, x, y, smh->player->x, smh->player->y, 26, canPass));
+}
+
+bool BaseEnemy::canShootPlayer(float fromX, float fromY, float angle) {
+	return (Util::distance(fromX,fromY,smh->player->x,smh->player->y) <= weaponRange && smh->environment->validPath(angle, fromX, fromY, smh->player->x, smh->player->y, 26, canPass));
+}
+
 /**
  * Returns the length of the straight line connecting the enemy to the
  * player's position.
@@ -238,6 +246,11 @@ void BaseEnemy::move(float dt) {
  */
 void BaseEnemy::doAStar() {
 	doAStar(smh->player->gridX, smh->player->gridY);
+}
+
+int BaseEnemy::AStarDistance(int destinationX, int destinationY) {
+	doAStar(destinationX, destinationY);
+	return mapPath[gridX][gridY];
 }
 
 void BaseEnemy::doAStar(int destinationX, int destinationY) {
@@ -312,8 +325,12 @@ void BaseEnemy::doAStar(int destinationX, int destinationY) {
 							if (ni >= 0 && nj >= 0 && ni < smh->environment->areaWidth && nj < smh->environment->areaHeight && !(ni == i && nj == j)) {
 								//Verify this square hasn't been calculated already
 								if (mapPath[ni][nj] >= 0) {
+									
+									//If diagonal, make sure you can actually get there
+									bool diagonalOK=verifyDiagonal(i,j,ni,nj);
+									
 									//Assign the value to lowvalue if it is lower
-									if (mapPath[ni][nj] < lowValue) {
+									if (mapPath[ni][nj] < lowValue && diagonalOK) {
 										lowValue = mapPath[ni][nj];
 									}
 								}
@@ -327,6 +344,28 @@ void BaseEnemy::doAStar(int destinationX, int destinationY) {
 		}
 
 	} while (found);
+}
+
+/**
+ * "Verify the diagonal"
+ * This functional is used by the A* algorithm to make sure that the algorithm doesn't try to make enemies
+   run "between" 2 diagonal objects. If they did try to run through, they'd be stuck!
+ */
+bool BaseEnemy::verifyDiagonal(int curX, int curY, int neighborX, int neighborY) {
+	int diffX = neighborX - curX;
+	int diffY = neighborY - curY;
+
+	if (diffX == 0 || diffY == 0) return true; //Isn't diagonal, so don't worry about it.
+
+	if (diffX != 0)  //is moving left or right, so check immediately left or right and return false if it's blocked
+		if (!canPass[smh->environment->collision[neighborX][curY]] || mapPath[neighborX][curY] == 999) return false;
+
+	if (diffY != 0) //is moving up or down, so check immediately up or down and return false if it's blocked
+		if (!canPass[smh->environment->collision[curX][neighborY]] || mapPath[curX][neighborY] == 999) return false;
+
+	//Passed both conditions above, so return true
+	return true;
+	
 }
 
 /**
