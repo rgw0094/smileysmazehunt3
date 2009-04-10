@@ -1256,10 +1256,16 @@ void Environment::removeParticle(int x, int y) {
  *	radius		radius of the object taking the path
  *
  */
-bool Environment::validPath(int x1, int y1, int x2, int y2, int radius, bool canPath[256]) {
-	
+
+bool Environment::validPath(int x1, int y1, int x2, int y2, int radius, bool canPass[256]) {
 	//First get the velocities of the path
 	float angle = Util::getAngleBetween(x1,y1,x2,y2);
+
+	//Call validPath using this angle
+	return validPath(angle, x1, y1, x2, y2, radius, canPass);
+}
+
+bool Environment::validPath(float angle,int x1, int y1, int x2, int y2, int radius, bool canPass[256]) {
 	float dx = 10.0*cos(angle);
 	float dy = 10.0*sin(angle);
 
@@ -1273,13 +1279,13 @@ bool Environment::validPath(int x1, int y1, int x2, int y2, int radius, bool can
 	try {
 		while (abs(xTravelled) < abs(x2 - x1) && abs(yTravelled) < abs(y2 - y1)) {
 			//Top left of the object
-			if (!canPath[collisionAt(curX-radius, curY-radius)] || hasSillyPad(int(curX-radius)/64,int(curY-radius)/64)) return false;
+			if (!canPass[collisionAt(curX-radius, curY-radius)] || hasSillyPad(int(curX-radius)/64,int(curY-radius)/64)) return false;
 			//Top right of the object
-			if (!canPath[collisionAt(curX+radius, curY-radius)] || hasSillyPad(int(curX+radius)/64,int(curY-radius)/64)) return false;
+			if (!canPass[collisionAt(curX+radius, curY-radius)] || hasSillyPad(int(curX+radius)/64,int(curY-radius)/64)) return false;
 			//Bottom left of the object
-			if (!canPath[collisionAt(curX-radius, curY+radius)] || hasSillyPad(int(curX-radius)/64,int(curY+radius)/64)) return false;
+			if (!canPass[collisionAt(curX-radius, curY+radius)] || hasSillyPad(int(curX-radius)/64,int(curY+radius)/64)) return false;
 			//Bottom right of the object
-			if (!canPath[collisionAt(curX+radius, curY+radius)] || hasSillyPad(int(curX+radius)/64,int(curY+radius)/64)) return false;
+			if (!canPass[collisionAt(curX+radius, curY+radius)] || hasSillyPad(int(curX+radius)/64,int(curY+radius)/64)) return false;
 			curX += dx;
 			curY += dy;
 			xTravelled += dx;

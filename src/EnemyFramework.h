@@ -121,7 +121,11 @@ public:
 	bool inChaseRange(int range);
 	void doAStar();
 	void doAStar(int destinationX, int destinationY);
+	int AStarDistance(int destinationX, int destinationY);
+	bool verifyDiagonal(int curX, int curY, int neighborX, int neighborY);
 	bool canShootPlayer();
+	bool canShootPlayer(float angle);
+	bool canShootPlayer(float fromX, float fromY, float angle);
 	int distanceFromPlayer();
 	void initEnemy(int _id, int _gridX, int _gridY, int _groupID);
 	void dealDamageAndKnockback(float damage, float knockbackDist, float knockbackerX, float knockbackerY);
@@ -834,25 +838,22 @@ public:
 	void update(float dt);
 
 private:
-
-	//variables
-	int destinationGridX,destinationGridY;
-	float destinationX, destinationY;
 	bool hasDestination;
-	float timeOfLastDestination;
-	float timeIntervalTillNextDestination;
+	float lastDestinationTime;
+	float destinationDuration;
 
-	//methods
-	void moveToBeDiagonalToPlayer();
-	void createDestinationToBeDiagonalToPlayer();
+	int xDestinationUpLeft,    yDestinationUpLeft,    xGridDestUpLeft,    yGridDestUpLeft;	
+	int xDestinationUpRight,   yDestinationUpRight,   xGridDestUpRight,   yGridDestUpRight;
+	int xDestinationDownLeft,  yDestinationDownLeft,  xGridDestDownLeft,  yGridDestDownLeft;
+	int xDestinationDownRight, yDestinationDownRight, xGridDestDownRight, yGridDestDownRight;
+	
+	int xDestination, yDestination;
+	int xDestGrid, yDestGrid;
 
-	//These four functions just call tryDiagonal. They exist to improve the readability of moveToBeDiagonalToPlayer()
-	bool tryUpRightDiagonal(int weaponGridRange);
-	bool tryUpLeftDiagonal(int weaponGridRange);
-	bool tryDownRightDiagonal(int weaponGridRange);
-	bool tryDownLeftDiagonal(int weaponGridRange);
-
-	bool tryDiagonal(int weaponGridRange, int dirx, int diry);
+	void findFourDestinations();
+	void chooseBestDestination();
+	void createAStarToDestination();
+	
 };
 
 #endif
