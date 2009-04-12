@@ -75,8 +75,8 @@ void E_DiagoShooter::update(float dt) {
 
 	if (smh->timePassedSince(lastDestinationTime) >= destinationDuration) {
 		lastDestinationTime = smh->getGameTime();
-		//destinationDuration = smh->randomFloat(1.5,6.0);
-		destinationDuration = 1.5;
+		destinationDuration = smh->randomFloat(0.5,3.0);
+		//destinationDuration = 1.5;
 		findFourDestinations();
 		chooseBestDestination();
 	}
@@ -142,7 +142,7 @@ void E_DiagoShooter::moveDiago() {
 			if (x > xDestination + TARGET_ERROR) dx = -speed;
 			if (x < xDestination - TARGET_ERROR) dx = speed;
 			if (y > yDestination + TARGET_ERROR) dy = -speed;
-			if (y > yDestination - TARGET_ERROR) dy = speed;
+			if (y < yDestination - TARGET_ERROR) dy = speed;
 		} else { //Use the A*
 			
 			//Choose a path towards the player
@@ -435,6 +435,7 @@ void E_DiagoShooter::renderDiagoAStarGrid() {
 				yAStarGrid = j - gridY + yAStarGridOffset; if (yAStarGrid < 0) yAStarGrid = 0; if (yAStarGrid > AStarGridSize-1) yAStarGrid = AStarGridSize-1;
 				dickens = Util::intToString(AStarGrid[xAStarGrid][yAStarGrid]);
 				smh->resources->GetFont("curlz")->printf(smh->getScreenX(i*64+32),smh->getScreenY(j*64+32),HGETEXT_CENTER,dickens.c_str());
+				if (i == targetX && j == targetY) smh->resources->GetFont("curlz")->printf(smh->getScreenX(i*64+32),smh->getScreenY(j*64+32),HGETEXT_CENTER,"*");
 			}
 		}
 	}
