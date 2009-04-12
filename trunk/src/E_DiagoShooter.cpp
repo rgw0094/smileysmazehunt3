@@ -132,11 +132,11 @@ void E_DiagoShooter::moveDiago() {
 	
 	if (!hasDestination) {
 		//wander
-		setState(new ES_Wander(this));
+		//setState(new ES_Wander(this));
 	} else {
 		dx = dy = 0;
 		//Get out of wander state
-		setState(NULL);
+		//setState(NULL);
 
 		if (smh->environment->validPath(x,y,xDestination,yDestination,radius,canPass)) {
 			if (x > xDestination + TARGET_ERROR) dx = -speed;
@@ -201,6 +201,8 @@ void E_DiagoShooter::moveDiago() {
 void E_DiagoShooter::findFourDestinations() {
 
 	bool foundUpLeft, foundUpRight, foundDownLeft, foundDownRight;
+
+	hasDestination = false;
 	
 	//set each of the directions to "false" and each of the destinations to -1. 
 	foundUpLeft = foundUpRight = foundDownLeft = foundDownRight = false;
@@ -272,6 +274,10 @@ void E_DiagoShooter::findFourDestinations() {
 		}
 	}
 
+	std::string debugText;
+	debugText = "UL" + Util::intToString(foundUpLeft) + "; UR" + Util::intToString(foundUpRight) + "; DL" + Util::intToString(foundDownLeft) + "; DR" + Util::intToString(foundDownRight);
+	smh->setDebugText(debugText);
+
 }
 
 /*
@@ -294,7 +300,7 @@ void E_DiagoShooter::chooseBestDestination() {
 		xGrid = xGridDestUpLeft - gridX + xAStarGridOffset;
 		yGrid = yGridDestUpLeft - gridY + yAStarGridOffset;
 		if (xGrid >= 0 && xGrid <= AStarGridSize-1 && yGrid >= 0 && yGrid <= AStarGridSize-1)
-			AStarToUpLeft    = AStarGrid[xGrid][yGrid];
+			AStarToUpLeft = AStarGrid[xGrid][yGrid];
 	}
 	if (xGridDestUpRight != -1) {
 		xGrid = xGridDestUpRight - gridX + xAStarGridOffset; 
