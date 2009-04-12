@@ -841,7 +841,13 @@ private:
 	bool hasDestination;
 	float lastDestinationTime;
 	float destinationDuration;
-
+	
+	//A* variables
+	int AStarGrid[15][15];
+    bool AStarBool[15][15];
+	int xAStarGridOffset, yAStarGridOffset;
+	int AStarGridSize;
+    
 	int xDestinationUpLeft,    yDestinationUpLeft,    xGridDestUpLeft,    yGridDestUpLeft;	
 	int xDestinationUpRight,   yDestinationUpRight,   xGridDestUpRight,   yGridDestUpRight;
 	int xDestinationDownLeft,  yDestinationDownLeft,  xGridDestDownLeft,  yGridDestDownLeft;
@@ -853,6 +859,14 @@ private:
 	void findFourDestinations();
 	void chooseBestDestination();
 	void createAStarToDestination();
+
+	void moveDiago();
+
+	//A* methods
+	void AStarFromDiago();
+	void createAStarGrid(int i, int j);
+	void renderDiagoAStarGrid();
+	void renderBaseEnemyAStarGrid();
 	
 };
 

@@ -1262,10 +1262,10 @@ bool Environment::validPath(int x1, int y1, int x2, int y2, int radius, bool can
 	float angle = Util::getAngleBetween(x1,y1,x2,y2);
 
 	//Call validPath using this angle
-	return validPath(angle, x1, y1, x2, y2, radius, canPass);
+	return validPath(angle, x1, y1, x2, y2, radius, canPass, false);
 }
 
-bool Environment::validPath(float angle,int x1, int y1, int x2, int y2, int radius, bool canPass[256]) {
+bool Environment::validPath(float angle,int x1, int y1, int x2, int y2, int radius, bool canPass[256], bool needsToHitPlayer) {
 	float dx = 10.0*cos(angle);
 	float dy = 10.0*sin(angle);
 
@@ -1274,6 +1274,8 @@ bool Environment::validPath(float angle,int x1, int y1, int x2, int y2, int radi
 	float yTravelled = 0;
 	float curX = x1;
 	float curY = y1;
+	
+	CollisionCircle circle;
 
 	//This can throw an exception if the enemy is perfectly on top of the player
 	try {
@@ -1290,13 +1292,32 @@ bool Environment::validPath(float angle,int x1, int y1, int x2, int y2, int radi
 			curY += dy;
 			xTravelled += dx;
 			yTravelled += dy;
+
+			if (needsToHitPlayer) {
+				circle.x = curX;
+				circle.y = curY;
+				circle.radius = radius;
+				
+				if (smh->player->collisionCircle->testCircle(&circle)) return true;
+			}
 		}
 	} catch(int type) {
 		return true;
 	}
 
-	//You didnt hit any SHIT so return true
-	return true;
+	if (!needsToHitPlayer)
+		//You didnt hit any SHIT so return true
+		return true;
+
+	//Since needsToHitPlayer is true, we only return true if we hit the player
+	circle.x = curX;
+	circle.y = curY;
+	circle.radius = radius;
+	
+	if (smh->player->collisionCircle->testCircle(&circle)) return true;
+
+	return false;
+
 }
 
 

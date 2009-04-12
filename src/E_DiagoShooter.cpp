@@ -12,10 +12,12 @@ extern SMH *smh;
 
 #define DESTINATION_TIME 3.0
 
-#define UP_RIGHT_ANGLE 3.14159/4.0
-#define UP_LEFT_ANGLE 3.0*3.14159/4.0
-#define DOWN_LEFT_ANGLE 5.0*3.14159/4.0
-#define DOWN_RIGHT_ANGLE 7.0*3.14159/4.0
+#define DOWN_RIGHT_ANGLE 1.0*3.14159/4.0
+#define DOWN_LEFT_ANGLE 3.0*3.14159/4.0
+#define UP_LEFT_ANGLE 5.0*3.14159/4.0
+#define UP_RIGHT_ANGLE 7.0*3.14159/4.0
+
+
 
 /**
  * Constructor
@@ -26,6 +28,8 @@ E_DiagoShooter::E_DiagoShooter(int id, int gridX, int gridY, int groupID) {
 	initEnemy(id, gridX, gridY, groupID);
 
 	facing = DOWN;
+
+	hasDestination=false;
 
 	findFourDestinations();
 	chooseBestDestination();
@@ -50,14 +54,15 @@ void E_DiagoShooter::draw(float dt) {
 	if (smh->isDebugOn()) {
 		smh->drawCollisionBox(collisionBox, RED);
 		//draws a line to the destinations
-		//smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(xDestinationUpLeft),smh->getScreenY(yDestinationUpLeft),ARGB(255,255,0,0));
-		//smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(xDestinationUpRight),smh->getScreenY(yDestinationUpRight),ARGB(255,255,255,0));
-		//smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(xDestinationDownLeft),smh->getScreenY(yDestinationDownLeft),ARGB(255,0,255,0));
-		//smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(xDestinationDownRight),smh->getScreenY(yDestinationDownRight),ARGB(255,0,0,255));
+		smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(xDestinationUpLeft),smh->getScreenY(yDestinationUpLeft),ARGB(128,255,0,0));
+		smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(xDestinationUpRight),smh->getScreenY(yDestinationUpRight),ARGB(128,255,255,0));
+		smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(xDestinationDownLeft),smh->getScreenY(yDestinationDownLeft),ARGB(128,0,255,0));
+		smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(xDestinationDownRight),smh->getScreenY(yDestinationDownRight),ARGB(128,0,0,255));
 
-		smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(x+64*cos(3.14)),smh->getScreenY(y+64*sin(3.14)));
-		smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(x+64*cos(UP_RIGHT_ANGLE)),smh->getScreenY(y+64*sin(UP_RIGHT_ANGLE)),ARGB(255,0,255,255));
-		//renderNearbyTargetGrid();
+		if (hasDestination) smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(xDestination),smh->getScreenY(yDestination),ARGB(255,0,255,255));
+
+		//renderDiagoAStarGrid();
+		renderBaseEnemyAStarGrid();
 	}
 }
 
@@ -70,12 +75,15 @@ void E_DiagoShooter::update(float dt) {
 	if (smh->timePassedSince(lastDestinationTime) >= destinationDuration) {
 		lastDestinationTime = smh->getGameTime();
 		//destinationDuration = smh->randomFloat(1.5,6.0);
+		destinationDuration = 1.5;
 		findFourDestinations();
 		chooseBestDestination();
 	}
 
+	bool canShoot = false;
+
 	if (smh->timePassedSince(lastRangedAttack) >= rangedAttackDelay) {
-		bool canShoot = false;
+		
 		float shootAngle;
 
 		if (canShootPlayer(UP_LEFT_ANGLE)) {
@@ -90,10 +98,12 @@ void E_DiagoShooter::update(float dt) {
 		} else if (canShootPlayer(DOWN_RIGHT_ANGLE)) {
 			canShoot = true;
 			shootAngle = DOWN_RIGHT_ANGLE;
+		} else {
+			canShoot = false;
 		}
 
 		if (canShoot && smh->timePassedSince(lastRangedAttack) >= rangedAttackDelay) {
-			dx = dy = 0.0;
+			
 			setFacingPlayer();
 			
 			smh->projectileManager->addProjectile(x, y, projectileSpeed, shootAngle, projectileDamage,
@@ -101,10 +111,88 @@ void E_DiagoShooter::update(float dt) {
 
 			lastRangedAttack = smh->getGameTime();
 		}
+		
+	}
+
+	if (!canShoot) {
+		moveDiago();
 	}
 
 
 	move(dt);
+}
+
+/*
+ * moveDiago()
+ *
+ * moves the DiagoShooter based on the A*, or if there's a clear shot to the destination, goes straight there.
+ */
+void E_DiagoShooter::moveDiago() {
+	
+	if (!hasDestination) {
+		//wander
+		setState(new ES_Wander(this));
+		smh->setDebugText("Moving using wander");
+	} else {
+		dx = dy = 0;
+		//Get out of wander state
+		setState(NULL);
+
+		if (smh->environment->validPath(x,y,xDestination,yDestination,radius,canPass)) {
+			if (x > xDestination + TARGET_ERROR) dx = -speed;
+			if (x < xDestination - TARGET_ERROR) dx = speed;
+			if (y > yDestination + TARGET_ERROR) dy = -speed;
+			if (y > yDestination - TARGET_ERROR) dy = speed;
+			smh->setDebugText("Moving using validPath");
+		} else { //Use the A*
+			
+			//Choose a path towards the player
+			int lowValue = mapPath[gridX][gridY];
+				
+			//Find the best square to go to next
+			for (int i = gridX - 1; i <= gridX+1; i++) {
+				for (int j = gridY-1; j <= gridY+1; j++) {
+					if (smh->environment->isInBounds(i,j) && mapPath[i][j] >= 0 && mapPath[i][j] < 999) {
+						if (mapPath[i][j] <= lowValue) {
+							lowValue = mapPath[i][j];
+							targetX = i;
+							targetY = j;
+						}
+					}
+				}
+			}
+			
+			//Update velocity based on best path
+			if (targetX < gridX) dx = -speed;
+			if (targetX > gridX) dx = speed;
+			if (targetY < gridY) dy = -speed;
+			if (targetY > gridY) dy = speed;
+
+		}
+		
+		//Set facing direction
+		if (abs(dy) > abs(dx)) {
+			if (dy > 0) {
+				facing = DOWN;
+			} else if (dy < 0) {
+				facing = UP;
+			}
+		} else {
+			if (dx < 0) {
+				facing = LEFT;
+			} else if (dx > 0) {
+				facing = RIGHT;
+			}
+		}
+
+		
+			
+		smh->setDebugText("Moving using A*");
+	
+
+
+	}
+
 }
 
 /*
@@ -136,7 +224,7 @@ void E_DiagoShooter::findFourDestinations() {
 	int gridI, gridJ;
 	float shootAngle;
 	
-	for (n = maxDist; n > 0; n -= 10) {
+	for (n = maxDist; n > 80; n -= 10) {
 		//up-left
 		i = smh->player->x - n;
 		j = smh->player->y - n;
@@ -151,8 +239,8 @@ void E_DiagoShooter::findFourDestinations() {
 		}
 
 		//up-right
-		i = smh->player->gridX + n;
-		j = smh->player->gridY - n;
+		i = smh->player->x + n;
+		j = smh->player->y - n;
 		gridI = Util::getGridX(i);
 		gridJ = Util::getGridY(j);
 		shootAngle = DOWN_LEFT_ANGLE;
@@ -164,8 +252,8 @@ void E_DiagoShooter::findFourDestinations() {
 		}
 
 		//down-left
-		i = smh->player->gridX - n;
-		j = smh->player->gridY + n;
+		i = smh->player->x - n;
+		j = smh->player->y + n;
 		gridI = Util::getGridX(i);
 		gridJ = Util::getGridY(j);
 		shootAngle = UP_RIGHT_ANGLE;
@@ -177,8 +265,8 @@ void E_DiagoShooter::findFourDestinations() {
 		}
 
 		//down-right
-		i = smh->player->gridX + n;
-		j = smh->player->gridY + n;
+		i = smh->player->x + n;
+		j = smh->player->y + n;
 		gridI = Util::getGridX(i);
 		gridJ = Util::getGridY(j);
 		shootAngle = UP_LEFT_ANGLE;
@@ -199,16 +287,43 @@ void E_DiagoShooter::findFourDestinations() {
  * Chooses based on A* distance
  */
 void E_DiagoShooter::chooseBestDestination() {
-	bool hasDestination;
+	hasDestination=false;
+	
+	AStarFromDiago();
+
 	int AStarToUpLeft=1000, AStarToUpRight=1000, AStarToDownLeft=1000, AStarToDownRight=1000;
 
-	if (xGridDestUpLeft != -1) AStarToUpLeft = AStarDistance(xGridDestUpLeft, yGridDestUpLeft);
-	if (xGridDestUpRight != -1) AStarToUpRight = AStarDistance(xGridDestUpRight, yGridDestUpRight);
-	if (xGridDestDownLeft != -1) AStarToDownLeft = AStarDistance(xGridDestDownLeft, yGridDestDownLeft);
-	if (xGridDestDownRight != -1) AStarToDownRight = AStarDistance(xGridDestDownRight, yGridDestDownRight);
+	int xGrid, yGrid;
+
+	//get the A* distance for upleft, upright, downleft, and downright
+	if (xGridDestUpLeft != -1) {
+		xGrid = xGridDestUpLeft - gridX + xAStarGridOffset;
+		yGrid = yGridDestUpLeft - gridY + yAStarGridOffset;
+		if (xGrid >= 0 && xGrid <= AStarGridSize-1 && yGrid >= 0 && yGrid <= AStarGridSize-1)
+			AStarToUpLeft    = AStarGrid[xGrid][yGrid];
+	}
+	if (xGridDestUpRight != -1) {
+		xGrid = xGridDestUpRight - gridX + xAStarGridOffset; 
+		yGrid = yGridDestUpRight - gridY + yAStarGridOffset;
+		if (xGrid >= 0 && xGrid <= AStarGridSize-1 && yGrid >= 0 && yGrid <= AStarGridSize-1)
+			AStarToUpRight = AStarGrid[xGrid][yGrid];
+	}
+	if (xGridDestDownLeft != -1) {
+		xGrid = xGridDestDownLeft - gridX + xAStarGridOffset;
+		yGrid = yGridDestDownLeft - gridY + yAStarGridOffset;
+		if (xGrid >= 0 && xGrid <= AStarGridSize-1 && yGrid >= 0 && yGrid <= AStarGridSize-1)
+			AStarToDownLeft = AStarGrid[xGrid][yGrid];	
+	}
+	if (xGridDestDownRight != -1) {
+		xGrid = xGridDestDownRight - gridX + xAStarGridOffset;
+		yGrid = yGridDestDownRight - gridY + yAStarGridOffset;
+		if (xGrid >= 0 && xGrid <= AStarGridSize-1 && yGrid >= 0 && yGrid <= AStarGridSize-1)
+			AStarToDownRight = AStarGrid[xGrid][yGrid];
+	}
 	
 	//find the minimum A* distance
-	int minDist = min(AStarToUpLeft,AStarToUpRight);
+	int minDist;
+	minDist = min(AStarToUpLeft,AStarToUpRight);
 	minDist = min(minDist,AStarToDownLeft);
 	minDist = min(minDist,AStarToDownRight);
 
@@ -217,10 +332,110 @@ void E_DiagoShooter::chooseBestDestination() {
 	else if (minDist == AStarToDownLeft) {xDestination = xDestinationDownLeft; yDestination = yDestinationDownLeft; xDestGrid = xGridDestDownLeft; yDestGrid = yGridDestDownLeft;}
 	else if (minDist == AStarToDownRight) {xDestination = xDestinationDownRight; yDestination = yDestinationDownRight; xDestGrid = xGridDestDownRight; yDestGrid = yGridDestDownRight;}
 
+	std::string debugText;
 	if (minDist != 1000) {
 		doAStar(xDestGrid, yDestGrid);
 		hasDestination = true;
+		debugText = "true ";
 	} else {
 		hasDestination = false;
+		debugText = "false ";
+	}
+
+	
+	debugText += "UpLeft" + Util::intToString(AStarToUpLeft) + "; UpRight" + Util::intToString(AStarToUpRight) +
+		"; DownLeft" + Util::intToString(AStarToDownLeft) + "; DownRight" + Util::intToString(AStarToDownRight) + "; minDist" + Util::intToString(minDist);
+	//if (distanceFromPlayer() < 600) smh->setDebugText(debugText);
+}
+
+void E_DiagoShooter::AStarFromDiago() {
+	int i,j;
+	xAStarGridOffset = 7; //where the DiagoShooter is in the 11x11 A* grid
+	yAStarGridOffset = 7;
+	AStarGridSize = 15;
+    	
+	//first reset the A* grid
+	for (i=0; i<AStarGridSize; i++) {
+		for (j=0; j<AStarGridSize; j++) {
+			AStarGrid[i][j] = 1000;
+			AStarBool[i][j] = false;
+		}
+	}
+	AStarGrid[xAStarGridOffset][yAStarGridOffset] = 0;
+
+	createAStarGrid(xAStarGridOffset,yAStarGridOffset);
+}
+
+void E_DiagoShooter::createAStarGrid(int i, int j) {
+	
+	int curNum = AStarGrid[i][j];
+	int mapI = i + gridX - xAStarGridOffset; //At i == xAStarGridOffset, mapI = gridX
+	int mapJ = j + gridY - yAStarGridOffset; //At j == yAStarGridOffset, mapJ = gridY
+
+	//left
+	if (i > 0 && smh->environment->isInBounds(mapI-1,mapJ)) {
+		if (canPass[smh->environment->collision[mapI-1][mapJ]] && !smh->environment->hasSillyPad(mapI-1,mapJ)) {
+			if (curNum+1 < AStarGrid[i-1][j]) {
+				AStarGrid[i-1][j] = curNum + 1;
+				createAStarGrid(i-1,j);
+			}
+		}
+	}
+
+	//right
+	if (i < AStarGridSize-1 && smh->environment->isInBounds(mapI+1,mapJ)) {
+		if (canPass[smh->environment->collision[mapI+1][mapJ]] && !smh->environment->hasSillyPad(mapI+1,mapJ)) {
+			if (curNum+1 < AStarGrid[i+1][j]) {
+				AStarGrid[i+1][j] = curNum + 1;
+				createAStarGrid(i+1,j);
+			}
+		}
+	}
+
+	//up
+	if (j > 0 && smh->environment->isInBounds(mapI,mapJ-1)) {
+		if (canPass[smh->environment->collision[mapI][mapJ-1]] && !smh->environment->hasSillyPad(mapI,mapJ-1)) {
+			if (curNum+1 < AStarGrid[i][j-1]) {
+				AStarGrid[i][j-1] = curNum + 1;
+				createAStarGrid(i,j-1);
+			}
+		}
+	}
+
+	//down
+	if (j < AStarGridSize && smh->environment->isInBounds(mapI,mapJ+1)) {
+		if (canPass[smh->environment->collision[mapI][mapJ+1]] && !smh->environment->hasSillyPad(mapI,mapJ+1)) {
+			if (curNum+1 < AStarGrid[i][j+1]) {
+				AStarGrid[i][j+1] = curNum + 1;
+				createAStarGrid(i,j+1);
+			}
+		}
+	}
+}
+
+void E_DiagoShooter::renderBaseEnemyAStarGrid() {
+	for (int i = gridX - 8; i <= gridX + 8; i++) {
+		for (int j = gridY - 8; j <= gridY + 8; j++) {
+			if (smh->environment->isInBounds(i,j)) {
+				smh->resources->GetFont("numberFnt")->printf(smh->getScreenX(i*64+32),smh->getScreenY(j*64+32),HGETEXT_CENTER,"%d",mapPath[i][j]);
+			}
+		}
+	}
+
+}
+
+void E_DiagoShooter::renderDiagoAStarGrid() {
+	int xAStarGrid, yAStarGrid;
+	std::string dickens;
+
+	for (int i = gridX - 7; i <= gridX + 7; i++) {
+		for (int j = gridY - 7; j <= gridY + 7; j++) {
+			if (smh->environment->isInBounds(i,j)) {
+				xAStarGrid = i - gridX + xAStarGridOffset; if (xAStarGrid < 0) xAStarGrid = 0; if (xAStarGrid > AStarGridSize-1) xAStarGrid = AStarGridSize-1;
+				yAStarGrid = j - gridY + yAStarGridOffset; if (yAStarGrid < 0) yAStarGrid = 0; if (yAStarGrid > AStarGridSize-1) yAStarGrid = AStarGridSize-1;
+				dickens = Util::intToString(AStarGrid[xAStarGrid][yAStarGrid]);
+				smh->resources->GetFont("curlz")->printf(smh->getScreenX(i*64+32),smh->getScreenY(j*64+32),HGETEXT_CENTER,dickens.c_str());
+			}
+		}
 	}
 }
