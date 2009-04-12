@@ -188,11 +188,11 @@ bool BaseEnemy::canShootPlayer() {
 }
 
 bool BaseEnemy::canShootPlayer(float angle) {
-	return (distanceFromPlayer() <= weaponRange && smh->environment->validPath(angle, x, y, smh->player->x, smh->player->y, 26, canPass));
+	return (distanceFromPlayer() <= weaponRange && smh->environment->validPath(angle, x, y, smh->player->x, smh->player->y, 26, canPass, true));
 }
 
 bool BaseEnemy::canShootPlayer(float fromX, float fromY, float angle) {
-	return (Util::distance(fromX,fromY,smh->player->x,smh->player->y) <= weaponRange && smh->environment->validPath(angle, fromX, fromY, smh->player->x, smh->player->y, 26, canPass));
+	return (Util::distance(fromX,fromY,smh->player->x,smh->player->y) <= weaponRange && smh->environment->validPath(angle, fromX, fromY, smh->player->x, smh->player->y, 26, canPass, true));
 }
 
 /**

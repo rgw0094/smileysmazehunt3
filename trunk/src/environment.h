@@ -57,7 +57,7 @@ public:
 	bool hitSigns(Tongue *tongue);
 	bool hitSaveShrine(Tongue *tongue);
 	bool validPath(int x1, int y1, int x2, int y2, int radius, bool canPass[256]);
-	bool validPath(float angle, int x1, int y1, int x2, int y2, int radius, bool canPass[256]);
+	bool validPath(float angle, int x1, int y1, int x2, int y2, int radius, bool canPass[256], bool needsToHitPlayer);
 	bool testCollision(hgeRect *box, bool canPass[256], bool ignoreSillyPads);
 	bool testCollision(hgeRect *box, bool canPass[256]);
 	bool playerOnCylinder(int x, int y);
