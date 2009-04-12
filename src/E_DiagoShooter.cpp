@@ -60,6 +60,7 @@ void E_DiagoShooter::draw(float dt) {
 		smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(xDestinationDownRight),smh->getScreenY(yDestinationDownRight),ARGB(128,0,0,255));
 
 		if (hasDestination) smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(xDestination),smh->getScreenY(yDestination),ARGB(255,0,255,255));
+		else smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(smh->player->x),smh->getScreenY(smh->player->y),ARGB(255,255,255,255));
 
 		//renderDiagoAStarGrid();
 		renderBaseEnemyAStarGrid();
@@ -132,7 +133,6 @@ void E_DiagoShooter::moveDiago() {
 	if (!hasDestination) {
 		//wander
 		setState(new ES_Wander(this));
-		smh->setDebugText("Moving using wander");
 	} else {
 		dx = dy = 0;
 		//Get out of wander state
@@ -143,7 +143,6 @@ void E_DiagoShooter::moveDiago() {
 			if (x < xDestination - TARGET_ERROR) dx = speed;
 			if (y > yDestination + TARGET_ERROR) dy = -speed;
 			if (y > yDestination - TARGET_ERROR) dy = speed;
-			smh->setDebugText("Moving using validPath");
 		} else { //Use the A*
 			
 			//Choose a path towards the player
@@ -185,12 +184,7 @@ void E_DiagoShooter::moveDiago() {
 			}
 		}
 
-		
-			
-		smh->setDebugText("Moving using A*");
 	
-
-
 	}
 
 }
@@ -345,7 +339,7 @@ void E_DiagoShooter::chooseBestDestination() {
 	
 	debugText += "UpLeft" + Util::intToString(AStarToUpLeft) + "; UpRight" + Util::intToString(AStarToUpRight) +
 		"; DownLeft" + Util::intToString(AStarToDownLeft) + "; DownRight" + Util::intToString(AStarToDownRight) + "; minDist" + Util::intToString(minDist);
-	//if (distanceFromPlayer() < 600) smh->setDebugText(debugText);
+	if (distanceFromPlayer() < 600) smh->setDebugText(debugText);
 }
 
 void E_DiagoShooter::AStarFromDiago() {
