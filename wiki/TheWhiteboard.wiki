@@ -46,6 +46,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fixed the loading effect||4/12/09||RGW||
 ||Enemy movements toward Smiley are slightly randomized, thus they don't overlap as bad||3/21/09||ETI||
 ||Hopping enemies now 'crouch' before hopping via animation||3/21/09||ETI||
 ||Evil walls do no damage||3/19/09||ETI||
