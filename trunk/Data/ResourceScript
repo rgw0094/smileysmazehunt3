@@ -697,27 +697,33 @@ Sprite sillyPad {
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
-Sprite blueScreen {
+Sprite blueSquare {
  texture=general
  rect=832,64,64,64
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
-Sprite blackScreen {
+Sprite blackSquare {
  texture=general
  rect=896,64,64,64
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
-Sprite redScreen {
+Sprite redSquare {
  texture=general
  rect=960,64,64,64
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
-Sprite yellowScreen {
+Sprite yellowSquare {
  texture=general
  rect=832,128,64,64
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite stretchableBlackSquare {
+ texture=general
+ rect=897,65,62,62
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
@@ -2145,7 +2151,7 @@ Animation burrowAnim1 {
  fps=10.0
  mode=NOLOOP
  hotspot=32,32
- blendmode=COLORMUL,ALPHABLENDNOZWRITE
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 Animation bombSpawn {
  texture=animations

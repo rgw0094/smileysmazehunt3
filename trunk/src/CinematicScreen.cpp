@@ -200,11 +200,11 @@ void CinematicScreen::drawTransition(float dt) {
 }
 
 void CinematicScreen::drawCircle(float dt) {
-	smh->resources->GetSprite("blackScreen")->SetColor(ARGB(255,255,255,255));
-	smh->resources->GetSprite("blackScreen")->RenderStretch(0, 0, 1024, int(384.0 - 198.0*transitionScale + pictureOffset));
-	smh->resources->GetSprite("blackScreen")->RenderStretch(0, 0, int(512.0-198.0*transitionScale),768);
-	smh->resources->GetSprite("blackScreen")->RenderStretch(int(512.0+198.0*transitionScale),0,1024,768);
-	smh->resources->GetSprite("blackScreen")->RenderStretch(0,int(384.0+198.0*transitionScale+pictureOffset),1024,768);			
+	smh->resources->GetSprite("stretchableBlackSquare")->SetColor(ARGB(255,255,255,255));
+	smh->resources->GetSprite("stretchableBlackSquare")->RenderStretch(0, 0, 1024, int(384.0 - 198.0*transitionScale + pictureOffset));
+	smh->resources->GetSprite("stretchableBlackSquare")->RenderStretch(0, 0, int(512.0-198.0*transitionScale),768);
+	smh->resources->GetSprite("stretchableBlackSquare")->RenderStretch(int(512.0+198.0*transitionScale),0,1024,768);
+	smh->resources->GetSprite("stretchableBlackSquare")->RenderStretch(0,int(384.0+198.0*transitionScale+pictureOffset),1024,768);			
 	smh->resources->GetSprite("loading")->RenderEx(512, int(384.0 + pictureOffset), 0.0, transitionScale, transitionScale);
 }
 
