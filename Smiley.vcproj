@@ -67,6 +67,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				FavorSizeOrSpeed="0"
+				OptimizeForWindowsApplication="TRUE"
 				PreprocessorDefinitions="WIN32;NDEBUG"
 				MinimalRebuild="FALSE"
 				RuntimeLibrary="0"
@@ -79,7 +80,8 @@
 				AdditionalOptions="hge.lib hgehelp.lib dinput8.lib dxguid.lib"
 				OutputFile="SmileysMazeHunt3.exe"
 				LinkIncremental="1"
-				GenerateDebugInformation="TRUE"/>
+				GenerateDebugInformation="TRUE"
+				MapLines="TRUE"/>
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool

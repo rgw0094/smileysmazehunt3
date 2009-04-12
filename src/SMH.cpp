@@ -417,17 +417,17 @@ void SMH::drawScreenColor(int color, float alpha) {
 	float b = 0.0;
 
 	if (color == RED) {
-		sprite = "redScreen";
+		sprite = "redSquare";
 		r = 255;
 	} else if (color == BLUE) {
-		sprite = "blueScreen";
+		sprite = "blueSquare";
 		b = 255;
 	} else if (color == YELLOW) {
-		sprite = "yellowScreen";
+		sprite = "yellowSquare";
 		g = 255;
 		b = 255;
 	} else if (color == BLACK) {
-		sprite = "blackScreen";
+		sprite = "blackSquare";
 		r = 255;
 		g = 255;
 		b = 255;

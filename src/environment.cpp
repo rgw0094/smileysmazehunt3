@@ -517,7 +517,7 @@ void Environment::draw(float dt) {
 						smh->resources->GetAnimation("mainLayer")->SetFrame(theTerrain);
 						smh->resources->GetAnimation("mainLayer")->Render(drawX,drawY);
 					} else {
-						smh->resources->GetSprite("blackScreen")->RenderStretch(drawX, drawY, drawX+64, drawY+64);
+						smh->resources->GetSprite("blackSquare")->Render(drawX, drawY);
 					}
 				}
 
@@ -650,7 +650,7 @@ void Environment::draw(float dt) {
 			
 			} else {
 				//Out of bounds
-				smh->resources->GetSprite("blackScreen")->RenderStretch(drawX, drawY, drawX+64, drawY+64);
+				smh->resources->GetSprite("blackSquare")->Render(drawX, drawY);
 			}
 		}
 	}

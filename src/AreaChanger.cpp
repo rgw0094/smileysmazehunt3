@@ -77,15 +77,15 @@ void AreaChanger::changeArea(int _destinationX, int _destinationY, int _destinat
 void AreaChanger::draw(float dt) {
 	if (isChangingArea()) {
 		//workaround for HGE full screen clipping bug
-		smh->resources->GetSprite("blackScreen")->SetColor(ARGB(255,255,255,255));
+		smh->resources->GetSprite("stretchableBlackSquare")->SetColor(ARGB(255,255,255,255));
 		//Top
-		smh->resources->GetSprite("blackScreen")->RenderStretch(0,0,1024,384.0-198.0*loadingEffectScale);
+		smh->resources->GetSprite("stretchableBlackSquare")->RenderStretch(0,0,1024,384.0-198.0*loadingEffectScale);
 		//Left
-		smh->resources->GetSprite("blackScreen")->RenderStretch(0,0,512.0-198.0*loadingEffectScale,768.0);
+		smh->resources->GetSprite("stretchableBlackSquare")->RenderStretch(0,0,512.0-198.0*loadingEffectScale,768.0);
 		//Right
-		smh->resources->GetSprite("blackScreen")->RenderStretch(512.0+198.0*loadingEffectScale,0,1024,768);
+		smh->resources->GetSprite("stretchableBlackSquare")->RenderStretch(512.0+198.0*loadingEffectScale,0,1024,768);
 		//Bottom
-		smh->resources->GetSprite("blackScreen")->RenderStretch(0,384.0+198.0*loadingEffectScale,1024,768);			
+		smh->resources->GetSprite("stretchableBlackSquare")->RenderStretch(0,384.0+198.0*loadingEffectScale,1024,768);			
 		//Circle
 		smh->resources->GetSprite("loading")->RenderEx(512.0, 384.0, 0.0, loadingEffectScale, loadingEffectScale);
 	}
