@@ -8,6 +8,7 @@
 #include "hgeresource.h"
 #include "WeaponParticle.h"
 #include "CollisionCircle.h"
+#include "ProjectileManager.h"
 
 extern SMH *smh;
 
@@ -184,15 +185,15 @@ bool BaseEnemy::inChaseRange(int range) {
  * at its current position.
  */
 bool BaseEnemy::canShootPlayer() {
-	return (distanceFromPlayer() <= weaponRange && smh->environment->validPath(x, y, smh->player->x, smh->player->y, 26, canPass));
+	return (distanceFromPlayer() <= weaponRange && smh->environment->validPath(x, y, smh->player->x, smh->player->y, smh->projectileManager->getProjectileRadius(rangedType), canPass));
 }
 
 bool BaseEnemy::canShootPlayer(float angle) {
-	return (distanceFromPlayer() <= weaponRange && smh->environment->validPath(angle, x, y, smh->player->x, smh->player->y, 26, canPass, true));
+	return (distanceFromPlayer() <= weaponRange && smh->environment->validPath(angle, x, y, smh->player->x, smh->player->y, smh->projectileManager->getProjectileRadius(rangedType), canPass, true));
 }
 
 bool BaseEnemy::canShootPlayer(float fromX, float fromY, float angle) {
-	return (Util::distance(fromX,fromY,smh->player->x,smh->player->y) <= weaponRange && smh->environment->validPath(angle, fromX, fromY, smh->player->x, smh->player->y, 26, canPass, true));
+	return (Util::distance(fromX,fromY,smh->player->x,smh->player->y) <= weaponRange && smh->environment->validPath(angle, fromX, fromY, smh->player->x, smh->player->y, smh->projectileManager->getProjectileRadius(rangedType), canPass, true));
 }
 
 /**
@@ -245,29 +246,29 @@ void BaseEnemy::move(float dt) {
  * Calculate the mapPath array for an enemy
  */
 void BaseEnemy::doAStar() {
-	doAStar(smh->player->gridX, smh->player->gridY);
+	doAStar(smh->player->gridX, smh->player->gridY, 10);
 }
 
 int BaseEnemy::AStarDistance(int destinationX, int destinationY) {
-	doAStar(destinationX, destinationY);
+	doAStar(destinationX, destinationY, 10);
 	return mapPath[gridX][gridY];
 }
 
-void BaseEnemy::doAStar(int destinationX, int destinationY) {
+void BaseEnemy::doAStar(int destinationX, int destinationY, int updateRadius) {
 
 	boolean found;
 	int lowValue;
 
 	//Only update map path if the enemies are within 10 tiles of destination
-	if (abs(gridX - destinationX) + abs(gridY - destinationY) > 10) {
+	if (abs(gridX - destinationX) + abs(gridY - destinationY) > updateRadius) {
 		return;
 	}
 
-	//For performance reasons only update mapPath in a 10 tile radius
-	int startX = (gridX <= 10) ? 0 : gridX - 10;
-	int startY = (gridY <= 10) ? 0 : gridY - 10;
-	int endX = (gridX >= smh->environment->areaWidth - 10) ? smh->environment->areaWidth : gridX + 10;
-	int endY = (gridY >= smh->environment->areaHeight - 10) ? smh->environment->areaHeight : gridY + 10;
+	//For performance reasons only update mapPath in a *updateRadius* (default = 10) tile radius
+	int startX = (gridX <= updateRadius) ? 0 : gridX - updateRadius;
+	int startY = (gridY <= updateRadius) ? 0 : gridY - updateRadius;
+	int endX = (gridX >= smh->environment->areaWidth - updateRadius) ? smh->environment->areaWidth : gridX + updateRadius;
+	int endY = (gridY >= smh->environment->areaHeight - updateRadius) ? smh->environment->areaHeight : gridY + updateRadius;
 
 	//Initialize mapPath array
 	for (int i = startX; i < endX; i++) {
