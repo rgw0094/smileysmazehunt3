@@ -65,18 +65,18 @@ LovecraftBoss::LovecraftBoss(int _gridX, int _gridY, int _groupID) {
 	health = maxHealth = HEALTH;
 
 	arenaCenterX = x;
-	arenaCenterY = y + 110;
+	arenaCenterY = y + (5.0*64.0);
 
 	tentaclePoints[0].x = arenaCenterX;
-	tentaclePoints[0].y = arenaCenterY;
+	tentaclePoints[0].y = y + 110;
 	tentaclePoints[1].x = arenaCenterX - 200.0;
-	tentaclePoints[1].y = arenaCenterY - 180.0;
+	tentaclePoints[1].y = y + 110 - 180.0;
 	tentaclePoints[2].x = arenaCenterX + 200.0;
-	tentaclePoints[2].y = arenaCenterY - 180.0;
+	tentaclePoints[2].y = y + 110 - 180.0;
 	tentaclePoints[3].x = arenaCenterX + 200.0;
-	tentaclePoints[3].y = arenaCenterY + 180.0;
+	tentaclePoints[3].y = y + 110 + 180.0;
 	tentaclePoints[4].x = arenaCenterX - 200.0;
-	tentaclePoints[4].y = arenaCenterY + 180.0;
+	tentaclePoints[4].y = y + 110 + 180.0;
 	
 	eyeStatus.type = LIGHTNING_EYE;
 	eyeStatus.state = EYE_CLOSED;
@@ -488,8 +488,8 @@ void LovecraftBoss::updateIceAttack(float dt) {
 	if (smh->timePassedSince(timeLastCrusherCreated) > crusherCreationDelay) {
 
 		//Generate a random range around the player bounded by the top and bottom of the arena.
-		float topY = max(smh->player->y - smh->randomFloat(100.0, 275.0), arenaCenterY - (6.0*64.0));
-		float bottomY = min(smh->player->y + smh->randomFloat(100.0, 275.0), arenaCenterY + (6.0*64.0));
+		float topY = max(smh->player->y - smh->randomFloat(100.0, 300.0), arenaCenterY - (6.0*64.0));
+		float bottomY = min(smh->player->y + smh->randomFloat(100.0, 300.0), arenaCenterY + (6.0*64.0));
 
 		//Generate the number of crushers to spawn
 		int numToSpawn;
@@ -502,17 +502,13 @@ void LovecraftBoss::updateIceAttack(float dt) {
 			numToSpawn = 2;
 		}
 	
-		smh->hge->System_Log("------------");
-		smh->hge->System_Log("%f %f %f", topY, bottomY, smh->player->y);
-
 		//Make sure we aren't about to spawn too many crushers in too small a space. This check is necessary for when
 		//the player is standing near the top or bottom of the arena.
 		float range = bottomY - topY;
-		numToSpawn = min(numToSpawn, range / 100.0);
+		numToSpawn = min(numToSpawn, range / 150.0);
 		float speed = smh->randomFloat(700.0, 1100.0);
 
 		for (int i = 0; i < numToSpawn; i++) {
-			smh->hge->System_Log("%f %f", topY + i * (range / numToSpawn), smh->player->y);
 			spawnCrusher(topY + i * (range / numToSpawn), speed);
 		}
 
@@ -610,7 +606,7 @@ void LovecraftBoss::doEyeAttackState(float dt) {
 			attackState.lastAttackTime = smh->getGameTime();
 		}
 	} else {
-		if (smh->timePassedSince(attackState.attackStartedTime) < EYE_ATTACK_DURATION) {
+		if (smh->timePassedSince(attackState.attackStartedTime) < EYE_ATTACK_DURATION - 1.5) {
 			if (strcmp(eyeStatus.type.c_str(), LIGHTNING_EYE) == 0) {
 				updateLightningAttack(dt);
 			} else if (strcmp(eyeStatus.type.c_str(), FIRE_EYE) == 0) {
@@ -624,7 +620,7 @@ void LovecraftBoss::doEyeAttackState(float dt) {
 		}
 	}
 
-	if (timeInState > 8.0) {
+	if (timeInState > EYE_ATTACK_DURATION) {
 		if (eyeStatus.state == EYE_OPEN) {
 			closeEye();
 		}
