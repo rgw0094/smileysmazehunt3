@@ -42,10 +42,11 @@ struct EyeStatus {
 
 struct Crusher {
 	float y, size, speed;
+	float leftX, rightX;
 	bool extending;
 	float timeCreated;
-	hgeRect *collisionBox;
-	float timeBecameFullyExtended;
+	hgeRect *leftCollisionBox;
+	hgeRect *rightCollisionBox;
 };
 
 class LovecraftBoss : public Boss {
@@ -86,6 +87,7 @@ private:
 	void dealDamage(float amount);
 	void enterState(int newState);
 	void spawnTentacle(float duration, float x, float y, bool hasBandaid);
+	void spawnCrusher(float y, float speed);
 
 	float timeInState;
 	int state;

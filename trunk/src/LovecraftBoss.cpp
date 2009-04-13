@@ -46,13 +46,16 @@ extern SMH *smh;
 
 #define TENTACLE_WIDTH 56
 #define TENTACLE_HEIGHT 175
+#define CRUSHER_MAX_SIZE (7.0*64.0)
 
 //Attributes
 #define HEALTH 12.0
 #define COLLISION_DAMAGE 2.0
 #define TENTACLE_DAMAGE 0.5
 #define FIREBALL_DAMAGE 1.0
+#define CRUSHER_DAMAGE 1.0
 #define NUM_TENTACLE_HITS_REQUIRED 1
+#define EYE_ATTACK_DURATION 1000.0
 
 LovecraftBoss::LovecraftBoss(int _gridX, int _gridY, int _groupID) {
 	
@@ -122,7 +125,8 @@ LovecraftBoss::~LovecraftBoss() {
 	}
 
 	for (std::list<Crusher>::iterator i = crusherList.begin(); i!= crusherList.end(); i++) {
-		delete i->collisionBox;
+		delete i->leftCollisionBox;
+		delete i->rightCollisionBox;
 		i = crusherList.erase(i);
 	}
 
@@ -224,13 +228,19 @@ void LovecraftBoss::drawFireballs(float dt) {
 
 void LovecraftBoss::drawCrushers(float dt) {
 	for (std::list<Crusher>::iterator i = crusherList.begin(); i != crusherList.end(); i++) {
-		smh->resources->GetSprite("LovecraftIceBlock")->SetTextureRect(0, 0, i->size, 60.0);
+		
+		smh->resources->GetSprite("LovecraftIceBlock")->SetTextureRect(0, 329, i->size, 60.0);
 
 		//Draw the left crusher
-		smh->resources->GetSprite("LovecraftIceBlock")->Render(0.0, smh->getScreenY(i->y));
+		smh->resources->GetSprite("LovecraftIceBlock")->Render(smh->getScreenX(i->leftX), smh->getScreenY(i->y));
 		
 		//Draw the right crusher (which is just the left one inverted on the other side of the screen)
-		smh->resources->GetSprite("LovecraftIceBlock")->RenderEx(1024.0, smh->getScreenY(i->y), PI);
+		smh->resources->GetSprite("LovecraftIceBlock")->RenderEx(smh->getScreenX(i->rightX), smh->getScreenY(i->y), PI);
+
+		if (smh->isDebugOn()) {
+			smh->drawCollisionBox(i->leftCollisionBox, RED);
+			smh->drawCollisionBox(i->rightCollisionBox, RED);
+		}
 	}
 }
 
@@ -405,18 +415,13 @@ void LovecraftBoss::updateTentacles(float dt)
 void LovecraftBoss::updateCrushers(float dt) {
 	for (std::list<Crusher>::iterator i = crusherList.begin(); i != crusherList.end(); i++) {
 		
-		//Extend
-		if (i->extending && i->size < 512.0) {
-			i->size += i->speed * dt;
-			if (i->size >= 512.0) {
-				i->size = 512.0;
-				i->timeBecameFullyExtended = smh->getGameTime();
-			}
-		}
+		bool deleted = false;
 
-		//Stay fully extended for a little bit
-		if (i->extending && i->size == 512.0) {
-			if (smh->timePassedSince(i->timeBecameFullyExtended) > 0.5) {
+		//Extend
+		if (i->extending) {
+			i->size += i->speed * dt;
+			if (i->size >= CRUSHER_MAX_SIZE) {
+				i->size = CRUSHER_MAX_SIZE;
 				i->extending = false;
 			}
 		}
@@ -427,6 +432,20 @@ void LovecraftBoss::updateCrushers(float dt) {
 			//Delete the crusher after it has finished contracting
 			if (i->size < 0.0) {
 				i = crusherList.erase(i);
+				deleted = true;
+			}
+		}	
+
+		//Test collision
+		if (!deleted) {
+			
+			float topY = i->y - 30.0;
+			float bottomY = i->y + 30.0;
+			
+			i->leftCollisionBox->Set(i->leftX, topY, i->leftX + i->size, bottomY);
+			i->rightCollisionBox->Set(i->rightX - i->size, topY, i->rightX, bottomY);
+			if (smh->player->collisionCircle->testBox(i->leftCollisionBox) || smh->player->collisionCircle->testBox(i->rightCollisionBox)) {
+				smh->player->dealDamage(CRUSHER_DAMAGE, true);
 			}
 		}
 	}
@@ -466,18 +485,39 @@ void LovecraftBoss::updateLightningAttack(float dt) {
 void LovecraftBoss::updateIceAttack(float dt) {
 
 	//Periodically spawn new crushers
-	if (smh->timePassedSince(timeLastCrusherCreated) > 5.0) {// crusherCreationDelay) {
-		Crusher newCrusher;
-		newCrusher.collisionBox = new hgeRect();
-		newCrusher.size = 0.0;
-		newCrusher.y = smh->player->y + smh->randomFloat(-100.0, 100.0);
-		newCrusher.speed = smh->randomFloat(400.0, 700.0);
-		newCrusher.timeCreated = smh->getGameTime();
-		newCrusher.extending = true;
-		crusherList.push_back(newCrusher);
+	if (smh->timePassedSince(timeLastCrusherCreated) > crusherCreationDelay) {
+
+		//Generate a random range around the player bounded by the top and bottom of the arena.
+		float topY = max(smh->player->y - smh->randomFloat(100.0, 275.0), arenaCenterY - (6.0*64.0));
+		float bottomY = min(smh->player->y + smh->randomFloat(100.0, 275.0), arenaCenterY + (6.0*64.0));
+
+		//Generate the number of crushers to spawn
+		int numToSpawn;
+		int r = smh->randomInt(0, 1000);
+		if (r < 100) {
+			numToSpawn = 4;
+		} else if (r < 500) {
+			numToSpawn = 3;
+		} else {
+			numToSpawn = 2;
+		}
+	
+		smh->hge->System_Log("------------");
+		smh->hge->System_Log("%f %f %f", topY, bottomY, smh->player->y);
+
+		//Make sure we aren't about to spawn too many crushers in too small a space. This check is necessary for when
+		//the player is standing near the top or bottom of the arena.
+		float range = bottomY - topY;
+		numToSpawn = min(numToSpawn, range / 100.0);
+		float speed = smh->randomFloat(700.0, 1100.0);
+
+		for (int i = 0; i < numToSpawn; i++) {
+			smh->hge->System_Log("%f %f", topY + i * (range / numToSpawn), smh->player->y);
+			spawnCrusher(topY + i * (range / numToSpawn), speed);
+		}
 
 		timeLastCrusherCreated = smh->getGameTime();
-		crusherCreationDelay = smh->randomFloat(0.5, 1.0);
+		crusherCreationDelay = 0.5 + speed / 1024.0;
 	}
 
 }
@@ -570,8 +610,7 @@ void LovecraftBoss::doEyeAttackState(float dt) {
 			attackState.lastAttackTime = smh->getGameTime();
 		}
 	} else {
-		//Do the attack for 5 seconds
-		if (smh->timePassedSince(attackState.attackStartedTime) < 5.0) {
+		if (smh->timePassedSince(attackState.attackStartedTime) < EYE_ATTACK_DURATION) {
 			if (strcmp(eyeStatus.type.c_str(), LIGHTNING_EYE) == 0) {
 				updateLightningAttack(dt);
 			} else if (strcmp(eyeStatus.type.c_str(), FIRE_EYE) == 0) {
@@ -690,6 +729,20 @@ void LovecraftBoss::spawnTentacle(float duration, float x, float y, bool hasBand
 	tentacle.randomTimeOffset = smh->randomFloat(0.0, 3.0);
 
 	tentacleList.push_back(tentacle);
+}
+
+void LovecraftBoss::spawnCrusher(float y, float speed) {
+	Crusher newCrusher;	
+	newCrusher.leftCollisionBox = new hgeRect();
+	newCrusher.rightCollisionBox = new hgeRect();
+	newCrusher.size = 0.0;
+	newCrusher.leftX = arenaCenterX - CRUSHER_MAX_SIZE;
+	newCrusher.rightX = arenaCenterX + CRUSHER_MAX_SIZE;
+	newCrusher.y = y;
+	newCrusher.speed = speed;
+	newCrusher.timeCreated = smh->getGameTime();
+	newCrusher.extending = true;
+	crusherList.push_back(newCrusher);
 }
 
 void LovecraftBoss::openEye(std::string type) {
