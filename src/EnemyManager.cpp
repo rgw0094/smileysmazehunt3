@@ -239,6 +239,24 @@ bool EnemyManager::testCollisionExcludingTurrets(hgeRect *collisionBox) {
 }
 
 /**
+ * Returns true if there is an enemy of a certain type in collision with the collisionRect
+ *
+ * Exclude a specific x and y so that the enemy does not recognize himself.
+ */
+bool EnemyManager::testCollisionCertainEnemies(hgeRect *collisionBox, int enemyIDToTest, float specificEnemyXToExclude, float specificEnemyYToExclude) {
+	std::list<EnemyStruct>::iterator i;
+	for (i = enemyList.begin(); i != enemyList.end(); i++) {
+		if (i->enemy->enemyType == enemyIDToTest && i->enemy->x != specificEnemyXToExclude && i->enemy->y != specificEnemyYToExclude) {
+			//is the correct enemy type
+			if (collisionBox->Intersect(i->enemy->collisionBox)) {
+				return true;
+			}
+		}
+			
+	}
+}
+
+/**
  * Returns true if the collision circle collides with a frozen enemy
  */
 bool EnemyManager::collidesWithFrozenEnemy(CollisionCircle *circle) {
