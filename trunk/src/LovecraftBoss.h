@@ -40,6 +40,14 @@ struct EyeStatus {
 	float timeEnteredState;
 };
 
+struct Crusher {
+	float y, size, speed;
+	bool extending;
+	float timeCreated;
+	hgeRect *collisionBox;
+	float timeBecameFullyExtended;
+};
+
 class LovecraftBoss : public Boss {
 
 public:
@@ -57,11 +65,13 @@ private:
 	void drawBody(float dt);
 	void drawEye(float dt);
 	void drawFireballs(float dt);
+	void drawCrushers(float dt);
 
 	void updateTentacles(float dt);
 	void updateEye(float dt);
 	void updateCollision(float dt);
 	void updateFireballs(float dt);
+	void updateCrushers(float dt);
 	void updateFireAttack(float dt);
 	void updateLightningAttack(float dt);
 	void updateIceAttack(float dt);
@@ -88,10 +98,13 @@ private:
 	float timeStartedFlashing;
 	int numTentacleHits;
 	float fadeAlpha;
+	float timeLastCrusherCreated;
+	float crusherCreationDelay;
 
 	EyeStatus eyeStatus;
 	std::list<Tentacle> tentacleList;
 	std::list<BigFireBall> fireballList;
+	std::list<Crusher> crusherList;
 	hgeDistortionMesh *bodyDistortionMesh;
 	hgeRect *eyeCollisionBox;
 	hgeRect *bodyCollisionBox;
