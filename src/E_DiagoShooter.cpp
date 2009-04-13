@@ -221,19 +221,31 @@ void E_DiagoShooter::findFourDestinations() {
 	int i,j;
 	int gridI, gridJ;
 	float shootAngle;
-	
+	int xOffset,yOffset;
+
 	for (n = maxDist; n > 80; n -= 10) {
+		
 		//up-left
 		i = smh->player->x - n;
 		j = smh->player->y - n;
 		gridI = Util::getGridX(i);
 		gridJ = Util::getGridY(j);
 		shootAngle = DOWN_RIGHT_ANGLE;
+        xOffset = i - gridI*64; yOffset = j - gridJ*64;		
 
 		if (!foundUpLeft && smh->environment->isInBounds(gridI,gridJ) && canPass[smh->environment->collision[gridI][gridJ]] && canShootPlayer(i,j,shootAngle)) {
 			foundUpLeft = true;
-			xDestinationUpLeft = i; xGridDestUpLeft = gridI;
-			yDestinationUpLeft = j; yGridDestUpLeft = gridJ;
+
+			//It is possible that this point is non-ideal in that the cone cannot fit here (b/c it's hanging over the edge onto a collision square).
+			//These next few lines try to fix that by setting found=false
+			if (xOffset <= radius && smh->environment->isInBounds(gridI-1,gridJ) && !canPass[smh->environment->collision[gridI-1][gridJ]]) foundUpLeft = false;
+			if (yOffset <= radius && smh->environment->isInBounds(gridI,gridJ-1) && !canPass[smh->environment->collision[gridI][gridJ-1]]) foundUpLeft = false;
+			if (xOffset <= radius && yOffset <= radius && smh->environment->isInBounds(gridI-1,gridJ-1) && !canPass[smh->environment->collision[gridI-1][gridJ-1]]) foundUpLeft = false;
+			
+			if (foundUpLeft) {
+				xDestinationUpLeft = i; xGridDestUpLeft = gridI;
+				yDestinationUpLeft = j; yGridDestUpLeft = gridJ;
+			}
 		}
 
 		//up-right
@@ -242,11 +254,21 @@ void E_DiagoShooter::findFourDestinations() {
 		gridI = Util::getGridX(i);
 		gridJ = Util::getGridY(j);
 		shootAngle = DOWN_LEFT_ANGLE;
+		xOffset = i - gridI*64; yOffset = j - gridJ*64;
 
 		if (!foundUpRight && smh->environment->isInBounds(gridI,gridJ) && canPass[smh->environment->collision[gridI][gridJ]] && canShootPlayer(i,j,shootAngle)) {
 			foundUpRight = true;
-			xDestinationUpRight = i; xGridDestUpRight = gridI;
-			yDestinationUpRight = j; yGridDestUpRight = gridJ;
+			
+			//It is possible that this point is non-ideal in that the cone cannot fit here (b/c it's hanging over the edge onto a collision square).
+			//These next few lines try to fix that by setting found=false
+			if (xOffset >= 64-radius && smh->environment->isInBounds(gridI+1,gridJ) && !canPass[smh->environment->collision[gridI+1][gridJ]]) foundUpRight = false;
+			if (yOffset <= radius && smh->environment->isInBounds(gridI,gridJ-1) && !canPass[smh->environment->collision[gridI][gridJ-1]]) foundUpRight = false;
+			if (xOffset >= 64-radius && yOffset <= radius && smh->environment->isInBounds(gridI+1,gridJ-1) && !canPass[smh->environment->collision[gridI+1][gridJ-1]]) foundUpRight = false;
+
+			if (foundUpRight) {
+				xDestinationUpRight = i; xGridDestUpRight = gridI;
+				yDestinationUpRight = j; yGridDestUpRight = gridJ;
+			}
 		}
 
 		//down-left
@@ -255,11 +277,21 @@ void E_DiagoShooter::findFourDestinations() {
 		gridI = Util::getGridX(i);
 		gridJ = Util::getGridY(j);
 		shootAngle = UP_RIGHT_ANGLE;
+		xOffset = i - gridI*64; yOffset = j - gridJ*64;
 
 		if (!foundDownLeft && smh->environment->isInBounds(gridI,gridJ) && canPass[smh->environment->collision[gridI][gridJ]] && canShootPlayer(i,j,shootAngle)) {
 			foundDownLeft = true;
-			xDestinationDownLeft = i; xGridDestDownLeft = gridI;
-			yDestinationDownLeft = j; yGridDestDownLeft = gridJ;
+			
+			//It is possible that this point is non-ideal in that the cone cannot fit here (b/c it's hanging over the edge onto a collision square).
+			//These next few lines try to fix that by setting found=false
+			if (xOffset <= radius && smh->environment->isInBounds(gridI-1,gridJ) && !canPass[smh->environment->collision[gridI-1][gridJ]]) foundDownLeft = false;
+			if (yOffset >= 64-radius && smh->environment->isInBounds(gridI,gridJ+1) && !canPass[smh->environment->collision[gridI][gridJ+1]]) foundDownLeft = false;
+			if (xOffset <= radius && yOffset >= 64-radius && smh->environment->isInBounds(gridI-1,gridJ+1) && !canPass[smh->environment->collision[gridI-1][gridJ+1]]) foundDownLeft = false;
+
+			if (foundDownLeft) {
+				xDestinationDownLeft = i; xGridDestDownLeft = gridI;
+				yDestinationDownLeft = j; yGridDestDownLeft = gridJ;
+			}
 		}
 
 		//down-right
@@ -268,11 +300,21 @@ void E_DiagoShooter::findFourDestinations() {
 		gridI = Util::getGridX(i);
 		gridJ = Util::getGridY(j);
 		shootAngle = UP_LEFT_ANGLE;
+		xOffset = i - gridI*64; yOffset = j - gridJ*64;
 
 		if (!foundDownRight && smh->environment->isInBounds(gridI,gridJ) && canPass[smh->environment->collision[gridI][gridJ]] && canShootPlayer(i,j,shootAngle)) {
 			foundDownRight = true;
-			xDestinationDownRight = i; xGridDestDownRight = gridI;
-			yDestinationDownRight = j; yGridDestDownRight = gridJ;
+
+			//It is possible that this point is non-ideal in that the cone cannot fit here (b/c it's hanging over the edge onto a collision square).
+			//These next few lines try to fix that by setting found=false
+			if (xOffset >= 64-radius && smh->environment->isInBounds(gridI+1,gridJ) && !canPass[smh->environment->collision[gridI+1][gridJ]]) foundDownRight = false;
+			if (yOffset >= 64-radius && smh->environment->isInBounds(gridI,gridJ+1) && !canPass[smh->environment->collision[gridI][gridJ+1]]) foundDownRight = false;
+			if (xOffset >= 64-radius && yOffset >= 64-radius && smh->environment->isInBounds(gridI+1,gridJ+1) && !canPass[smh->environment->collision[gridI+1][gridJ+1]]) foundDownRight = false;
+
+			if (foundDownRight) {
+				xDestinationDownRight = i; xGridDestDownRight = gridI;
+				yDestinationDownRight = j; yGridDestDownRight = gridJ;
+			}
 		}
 	}
 
