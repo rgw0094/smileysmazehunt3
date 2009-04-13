@@ -39,7 +39,7 @@
 ||Silly Pads||Mushroom Kingdom||Brian Fungus||Done||Done||
 ||Jesus' Sandals||Pools of the Dead||Lord Phyrebawz 2||90%||Done||
 ||Ice Breath||Candy Mountain||Bartli||Done||Done||
-||Shrink||Swamp||Lovecraft||Done||79%||
+||Shrink||Swamp||Lovecraft||Done||90%||
 ||Tut's Mask||Tut's Tomb||King Tut||Done||Done||
 ||---||Serpentine Path||---||Done||---||
 ||Hover||Calypso's Conservatory||Barvinoid||Done||0%||
