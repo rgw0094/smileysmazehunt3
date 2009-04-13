@@ -74,7 +74,6 @@ private:
 	void updateFireballs(float dt);
 	void updateCrushers(float dt);
 	void updateFireAttack(float dt);
-	void updateLightningAttack(float dt);
 	void updateIceAttack(float dt);
 
 	void doInactiveState(float dt);
