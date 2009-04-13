@@ -121,6 +121,11 @@ LovecraftBoss::~LovecraftBoss() {
 		i = fireballList.erase(i);
 	}
 
+	for (std::list<Crusher>::iterator i = crusherList.begin(); i!= crusherList.end(); i++) {
+		delete i->collisionBox;
+		i = crusherList.erase(i);
+	}
+
 	smh->resources->Purge(RES_LOVECRAFT);
 }
 
@@ -134,6 +139,7 @@ void LovecraftBoss::draw(float dt) {
 	drawEye(dt);
 	drawTentacles(dt);
 	drawFireballs(dt);
+	drawCrushers(dt);
 
 	if (state != LS_INACTIVE) drawHealth("Magnitogorsk");
 
@@ -205,7 +211,6 @@ void LovecraftBoss::drawTentacles(float dt) {
 			smh->drawCollisionBox(i->collisionBox, RED);
 		}
 	}
-	
 }
 
 void LovecraftBoss::drawFireballs(float dt) {
@@ -214,6 +219,18 @@ void LovecraftBoss::drawFireballs(float dt) {
 		if (smh->isDebugOn()) {
 			smh->drawCollisionBox(i->collisionBox, RED);
 		}
+	}
+}
+
+void LovecraftBoss::drawCrushers(float dt) {
+	for (std::list<Crusher>::iterator i = crusherList.begin(); i != crusherList.end(); i++) {
+		smh->resources->GetSprite("LovecraftIceBlock")->SetTextureRect(0, 0, i->size, 60.0);
+
+		//Draw the left crusher
+		smh->resources->GetSprite("LovecraftIceBlock")->Render(0.0, smh->getScreenY(i->y));
+		
+		//Draw the right crusher (which is just the left one inverted on the other side of the screen)
+		smh->resources->GetSprite("LovecraftIceBlock")->RenderEx(1024.0, smh->getScreenY(i->y), PI);
 	}
 }
 
@@ -254,6 +271,7 @@ bool LovecraftBoss::update(float dt) {
 	updateCollision(dt);
 	updateTentacles(dt);
 	updateFireballs(dt);
+	updateCrushers(dt);
 
 	return false;
 }
@@ -384,6 +402,36 @@ void LovecraftBoss::updateTentacles(float dt)
 	}
 }
 
+void LovecraftBoss::updateCrushers(float dt) {
+	for (std::list<Crusher>::iterator i = crusherList.begin(); i != crusherList.end(); i++) {
+		
+		//Extend
+		if (i->extending && i->size < 512.0) {
+			i->size += i->speed * dt;
+			if (i->size >= 512.0) {
+				i->size = 512.0;
+				i->timeBecameFullyExtended = smh->getGameTime();
+			}
+		}
+
+		//Stay fully extended for a little bit
+		if (i->extending && i->size == 512.0) {
+			if (smh->timePassedSince(i->timeBecameFullyExtended) > 0.5) {
+				i->extending = false;
+			}
+		}
+
+		//Contract
+		if (!i->extending) {
+			i->size -= i->speed * dt;
+			//Delete the crusher after it has finished contracting
+			if (i->size < 0.0) {
+				i = crusherList.erase(i);
+			}
+		}
+	}
+}
+
 void LovecraftBoss::updateFireballs(float dt) {
 	for (std::list<BigFireBall>::iterator i = fireballList.begin(); i != fireballList.end(); i++) {
 		i->y += 500.0 * dt;
@@ -416,6 +464,21 @@ void LovecraftBoss::updateLightningAttack(float dt) {
 }
 
 void LovecraftBoss::updateIceAttack(float dt) {
+
+	//Periodically spawn new crushers
+	if (smh->timePassedSince(timeLastCrusherCreated) > 5.0) {// crusherCreationDelay) {
+		Crusher newCrusher;
+		newCrusher.collisionBox = new hgeRect();
+		newCrusher.size = 0.0;
+		newCrusher.y = smh->player->y + smh->randomFloat(-100.0, 100.0);
+		newCrusher.speed = smh->randomFloat(400.0, 700.0);
+		newCrusher.timeCreated = smh->getGameTime();
+		newCrusher.extending = true;
+		crusherList.push_back(newCrusher);
+
+		timeLastCrusherCreated = smh->getGameTime();
+		crusherCreationDelay = smh->randomFloat(0.5, 1.0);
+	}
 
 }
 
@@ -553,8 +616,12 @@ void LovecraftBoss::enterState(int newState) {
 	}
 
 	if (state == LS_EYE_ATTACK) {
+
+		crusherCreationDelay = timeLastCrusherCreated = 0.0;
+
 		attackState.attackStarted = false;
-		int r = smh->randomInt(0, 2);
+		//int r = smh->randomInt(0, 2);
+		int r = 2;
 		if (r == 0) {
 			openEye(LIGHTNING_EYE);
 		} else if (r == 1) {

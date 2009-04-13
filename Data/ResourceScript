@@ -1973,6 +1973,13 @@ Sprite TentacleShadow {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=108
 }
+Sprite LovecraftIceBlock {
+ texture=LovecraftTx
+ rect=0,329,512,60
+ hotspot=0,30
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=108
+}
  
 ;*****************************
 ;******** PROJECTILES ********
