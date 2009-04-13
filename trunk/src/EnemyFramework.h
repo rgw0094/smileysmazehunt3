@@ -221,6 +221,7 @@ public:
 	void unFreezeEnemies(int x, int y);
 	bool testCollision(hgeRect *collisionBox);
 	bool testCollisionExcludingTurrets(hgeRect *collisionBox);
+	bool testCollisionCertainEnemies(hgeRect *collisionBox, int enemyIDToTest, float specificEnemyXToExclude, float specificEnemyYToExclude);
 	bool collidesWithFrozenEnemy(CollisionCircle *circle);
 	void doAStar(BaseEnemy *enemy);
 	void reset();

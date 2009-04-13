@@ -17,6 +17,8 @@ extern SMH *smh;
 #define UP_LEFT_ANGLE 5.0*3.14159/4.0
 #define UP_RIGHT_ANGLE 7.0*3.14159/4.0
 
+#define DIAGO_ID 20
+
 
 
 /**
@@ -241,6 +243,10 @@ void E_DiagoShooter::findFourDestinations() {
 			if (xOffset <= radius && smh->environment->isInBounds(gridI-1,gridJ) && !canPass[smh->environment->collision[gridI-1][gridJ]]) foundUpLeft = false;
 			if (yOffset <= radius && smh->environment->isInBounds(gridI,gridJ-1) && !canPass[smh->environment->collision[gridI][gridJ-1]]) foundUpLeft = false;
 			if (xOffset <= radius && yOffset <= radius && smh->environment->isInBounds(gridI-1,gridJ-1) && !canPass[smh->environment->collision[gridI-1][gridJ-1]]) foundUpLeft = false;
+
+			//Multiple cones tend to go one on top of another. So if this spot is intersecting a cone, choose a new spot
+			hgeRect collisionRect; collisionRect.x1 = i - radius/2; collisionRect.x2 = i + radius/2; collisionRect.y1 = j - radius/2; collisionRect.y2 = j + radius/2;
+			if (smh->enemyManager->testCollisionCertainEnemies(&collisionRect,DIAGO_ID,x,y)) foundUpLeft = false;
 			
 			if (foundUpLeft) {
 				xDestinationUpLeft = i; xGridDestUpLeft = gridI;
@@ -265,6 +271,10 @@ void E_DiagoShooter::findFourDestinations() {
 			if (yOffset <= radius && smh->environment->isInBounds(gridI,gridJ-1) && !canPass[smh->environment->collision[gridI][gridJ-1]]) foundUpRight = false;
 			if (xOffset >= 64-radius && yOffset <= radius && smh->environment->isInBounds(gridI+1,gridJ-1) && !canPass[smh->environment->collision[gridI+1][gridJ-1]]) foundUpRight = false;
 
+			//Multiple cones tend to go one on top of another. So if this spot is intersecting a cone, choose a new spot
+			hgeRect collisionRect; collisionRect.x1 = i - radius/2; collisionRect.x2 = i + radius/2; collisionRect.y1 = j - radius/2; collisionRect.y2 = j + radius/2;
+			if (smh->enemyManager->testCollisionCertainEnemies(&collisionRect,DIAGO_ID,x,y)) foundUpRight = false;
+
 			if (foundUpRight) {
 				xDestinationUpRight = i; xGridDestUpRight = gridI;
 				yDestinationUpRight = j; yGridDestUpRight = gridJ;
@@ -288,6 +298,10 @@ void E_DiagoShooter::findFourDestinations() {
 			if (yOffset >= 64-radius && smh->environment->isInBounds(gridI,gridJ+1) && !canPass[smh->environment->collision[gridI][gridJ+1]]) foundDownLeft = false;
 			if (xOffset <= radius && yOffset >= 64-radius && smh->environment->isInBounds(gridI-1,gridJ+1) && !canPass[smh->environment->collision[gridI-1][gridJ+1]]) foundDownLeft = false;
 
+			//Multiple cones tend to go one on top of another. So if this spot is intersecting a cone, choose a new spot
+			hgeRect collisionRect; collisionRect.x1 = i - radius/2; collisionRect.x2 = i + radius/2; collisionRect.y1 = j - radius/2; collisionRect.y2 = j + radius/2;
+			if (smh->enemyManager->testCollisionCertainEnemies(&collisionRect,DIAGO_ID,x,y)) foundDownLeft = false;
+
 			if (foundDownLeft) {
 				xDestinationDownLeft = i; xGridDestDownLeft = gridI;
 				yDestinationDownLeft = j; yGridDestDownLeft = gridJ;
@@ -310,6 +324,10 @@ void E_DiagoShooter::findFourDestinations() {
 			if (xOffset >= 64-radius && smh->environment->isInBounds(gridI+1,gridJ) && !canPass[smh->environment->collision[gridI+1][gridJ]]) foundDownRight = false;
 			if (yOffset >= 64-radius && smh->environment->isInBounds(gridI,gridJ+1) && !canPass[smh->environment->collision[gridI][gridJ+1]]) foundDownRight = false;
 			if (xOffset >= 64-radius && yOffset >= 64-radius && smh->environment->isInBounds(gridI+1,gridJ+1) && !canPass[smh->environment->collision[gridI+1][gridJ+1]]) foundDownRight = false;
+
+			//Multiple cones tend to go one on top of another. So if this spot is intersecting a cone, choose a new spot
+			hgeRect collisionRect; collisionRect.x1 = i - radius/2; collisionRect.x2 = i + radius/2; collisionRect.y1 = j - radius/2; collisionRect.y2 = j + radius/2;
+			if (smh->enemyManager->testCollisionCertainEnemies(&collisionRect,DIAGO_ID,x,y)) foundDownRight = false;
 
 			if (foundDownRight) {
 				xDestinationDownRight = i; xGridDestDownRight = gridI;
