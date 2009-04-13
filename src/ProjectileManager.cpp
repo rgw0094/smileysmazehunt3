@@ -57,6 +57,10 @@ void ProjectileManager::addProjectile(float x, float y, float speed, float angle
 	addProjectile(x, y, speed, angle, damage, hostile, homing, id, makesSmileyFlash, hasParabola, parabolaLength, parabolaDuration, parabolaHeight, 0.0);
 }
 
+int ProjectileManager::getProjectileRadius(int id) {
+	return projectileTypes[id].radius;
+}
+
 void ProjectileManager::addProjectile(float x, float y, float speed, float angle, float damage, bool hostile, bool homing,
 									  int id, bool makesSmileyFlash, bool hasParabola, float parabolaLength, 
 									  float parabolaDuration, float parabolaHeight, float stunPower) 

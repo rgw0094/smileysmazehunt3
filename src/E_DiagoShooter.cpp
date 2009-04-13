@@ -63,7 +63,7 @@ void E_DiagoShooter::draw(float dt) {
 		else smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(smh->player->x),smh->getScreenY(smh->player->y),ARGB(255,255,255,255));
 
 		//renderDiagoAStarGrid();
-		renderBaseEnemyAStarGrid();
+		//renderBaseEnemyAStarGrid();
 	}
 }
 
@@ -75,7 +75,7 @@ void E_DiagoShooter::update(float dt) {
 
 	if (smh->timePassedSince(lastDestinationTime) >= destinationDuration) {
 		lastDestinationTime = smh->getGameTime();
-		destinationDuration = smh->randomFloat(0.5,3.0);
+		destinationDuration = smh->randomFloat(0.1,0.2);
 		//destinationDuration = 1.5;
 		findFourDestinations();
 		chooseBestDestination();
@@ -138,11 +138,12 @@ void E_DiagoShooter::moveDiago() {
 		//Get out of wander state
 		//setState(NULL);
 
-		if (smh->environment->validPath(x,y,xDestination,yDestination,radius,canPass)) {
+		if (smh->environment->validPath(x,y,xDestination,yDestination,radius,canPass) || (gridX==xDestGrid && gridY==yDestGrid)) {
 			if (x > xDestination + TARGET_ERROR) dx = -speed;
 			if (x < xDestination - TARGET_ERROR) dx = speed;
 			if (y > yDestination + TARGET_ERROR) dy = -speed;
 			if (y < yDestination - TARGET_ERROR) dy = speed;
+			//smh->setDebugText("Diago Using Destination");
 		} else { //Use the A*
 			
 			//Choose a path towards the player
@@ -166,6 +167,7 @@ void E_DiagoShooter::moveDiago() {
 			if (targetX > gridX) dx = speed;
 			if (targetY < gridY) dy = -speed;
 			if (targetY > gridY) dy = speed;
+			//smh->setDebugText("Diago Using A*");
 
 		}
 		
@@ -206,7 +208,7 @@ void E_DiagoShooter::findFourDestinations() {
 	
 	//set each of the directions to "false" and each of the destinations to -1. 
 	foundUpLeft = foundUpRight = foundDownLeft = foundDownRight = false;
-	xDestinationUpLeft = yDestinationUpLeft = xDestinationUpRight = yDestinationUpRight = xDestinationDownLeft = yDestinationDownLeft = xDestinationDownRight = yDestinationDownRight = -1;
+	xGridDestUpLeft = yGridDestUpLeft = xGridDestUpRight = yGridDestUpRight = xGridDestDownLeft = yGridDestDownLeft = xGridDestDownRight = yGridDestDownRight = -1;
 
 	//loop from as far out as possible so that the cone avoids smiley.
 	float maxDist = weaponRange * 0.707106781; //0.707 = cos(45 degrees)
@@ -276,7 +278,7 @@ void E_DiagoShooter::findFourDestinations() {
 
 	std::string debugText;
 	debugText = "UL" + Util::intToString(foundUpLeft) + "; UR" + Util::intToString(foundUpRight) + "; DL" + Util::intToString(foundDownLeft) + "; DR" + Util::intToString(foundDownRight);
-	smh->setDebugText(debugText);
+	//smh->setDebugText(debugText);
 
 }
 
@@ -333,8 +335,8 @@ void E_DiagoShooter::chooseBestDestination() {
 	else if (minDist == AStarToDownRight) {xDestination = xDestinationDownRight; yDestination = yDestinationDownRight; xDestGrid = xGridDestDownRight; yDestGrid = yGridDestDownRight;}
 
 	std::string debugText;
-	if (minDist != 1000) {
-		doAStar(xDestGrid, yDestGrid);
+	if (minDist != 1000) {		
+		doAStar(xDestGrid, yDestGrid, 16);
 		hasDestination = true;
 		debugText = "true ";
 	} else {
