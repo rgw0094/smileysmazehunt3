@@ -55,7 +55,8 @@ extern SMH *smh;
 #define FIREBALL_DAMAGE 1.0
 #define CRUSHER_DAMAGE 1.0
 #define NUM_TENTACLE_HITS_REQUIRED 1
-#define EYE_ATTACK_DURATION 1000.0
+#define EYE_ATTACK_DURATION 10.0
+#define WINDOW_TO_ATTACK 4.5
 
 LovecraftBoss::LovecraftBoss(int _gridX, int _gridY, int _groupID) {
 	
@@ -465,10 +466,12 @@ void LovecraftBoss::updateFireballs(float dt) {
 
 void LovecraftBoss::updateFireAttack(float dt) {
 	if (smh->timePassedSince(attackState.lastAttackTime) > 0.55) {
+		float x = smh->player->x + smh->randomFloat(-200, 200);
+		float radius = smh->randomFloat(100.0, 200.0);
 		for (int i = 0; i < 2; i++) {
 			BigFireBall fireball;
 			fireball.y = smh->player->y - 500.0;
-			fireball.x = smh->player->x + smh->randomInt(-200, 200);
+			fireball.x = x + (i == 0 ? -radius : radius);
 			fireball.collisionBox = new hgeRect();
 			fireball.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("bigFireball")->info);
 			fireball.particle->FireAt(smh->getScreenX(fireball.x), smh->getScreenY(fireball.y));
@@ -476,10 +479,6 @@ void LovecraftBoss::updateFireAttack(float dt) {
 			attackState.lastAttackTime = smh->getGameTime();
 		}
 	}
-}
-
-void LovecraftBoss::updateLightningAttack(float dt) {
-
 }
 
 void LovecraftBoss::updateIceAttack(float dt) {
@@ -606,10 +605,8 @@ void LovecraftBoss::doEyeAttackState(float dt) {
 			attackState.lastAttackTime = smh->getGameTime();
 		}
 	} else {
-		if (smh->timePassedSince(attackState.attackStartedTime) < EYE_ATTACK_DURATION - 1.5) {
-			if (strcmp(eyeStatus.type.c_str(), LIGHTNING_EYE) == 0) {
-				updateLightningAttack(dt);
-			} else if (strcmp(eyeStatus.type.c_str(), FIRE_EYE) == 0) {
+		if (timeInState < EYE_ATTACK_DURATION) {
+			if (strcmp(eyeStatus.type.c_str(), FIRE_EYE) == 0) {
 				updateFireAttack(dt);
 			} else if (strcmp(eyeStatus.type.c_str(), ICE_EYE) ==0) {
 				updateIceAttack(dt);
@@ -620,7 +617,8 @@ void LovecraftBoss::doEyeAttackState(float dt) {
 		}
 	}
 
-	if (timeInState > EYE_ATTACK_DURATION) {
+	//Close the eye and exit the state after the attack is done and the player has had a couple seconds to get an attack in
+	if (timeInState > EYE_ATTACK_DURATION + WINDOW_TO_ATTACK) {
 		if (eyeStatus.state == EYE_OPEN) {
 			closeEye();
 		}
@@ -653,15 +651,11 @@ void LovecraftBoss::enterState(int newState) {
 	if (state == LS_EYE_ATTACK) {
 
 		crusherCreationDelay = timeLastCrusherCreated = 0.0;
-
 		attackState.attackStarted = false;
-		//int r = smh->randomInt(0, 2);
-		int r = 2;
-		if (r == 0) {
-			openEye(LIGHTNING_EYE);
-		} else if (r == 1) {
+
+		if (smh->randomInt(0,1) == 0) {
 			openEye(FIRE_EYE);
-		} else if (r == 2) {
+		} else {
 			openEye(ICE_EYE);
 		}
 	}
