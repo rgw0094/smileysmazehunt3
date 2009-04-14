@@ -6,6 +6,7 @@
  * Closing Cinematic
 
 === Graphics To Do ===
+ * Lovecraft's ice crusher
  * Barvinoid
  * Fenwar
  * The boxes on the controls screen
