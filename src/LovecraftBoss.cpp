@@ -54,8 +54,8 @@ extern SMH *smh;
 #define TENTACLE_DAMAGE 0.5
 #define FIREBALL_DAMAGE 1.0
 #define CRUSHER_DAMAGE 1.0
-#define NUM_TENTACLE_HITS_REQUIRED 1
-#define EYE_ATTACK_DURATION 10.0
+#define NUM_TENTACLE_HITS_REQUIRED 5
+#define EYE_ATTACK_DURATION 12.5
 #define WINDOW_TO_ATTACK 4.5
 
 LovecraftBoss::LovecraftBoss(int _gridX, int _gridY, int _groupID) {
@@ -64,6 +64,7 @@ LovecraftBoss::LovecraftBoss(int _gridX, int _gridY, int _groupID) {
 	y = _gridY * 64 + 32;
 	groupID = _groupID;
 	health = maxHealth = HEALTH;
+	aBooleanIndicatingThatTheLastEyeAttackWasFireForUseInForcingTheEyeAttacksToAlternateBetweenIceAndFire = false;
 
 	arenaCenterX = x;
 	arenaCenterY = y + (5.0*64.0);
@@ -301,17 +302,21 @@ void LovecraftBoss::updateCollision(float dt) {
 
 	//Eye Collision
 	if (eyeStatus.state != EYE_CLOSED) {
-		if (strcmp(eyeStatus.type.c_str(), LIGHTNING_EYE) == 0) {
-			if (smh->projectileManager->killProjectilesInBox(eyeCollisionBox, PROJECTILE_LIGHTNING_ORB) > 0) {
-				dealDamage(smh->player->getLightningOrbDamage());
+		if (strcmp(eyeStatus.type.c_str(), FIRE_EYE) == 0) {
+			//When the fire eye is active, ice does damage and fire heals
+			if (smh->player->iceBreathParticle->testCollision(eyeCollisionBox)) {
+				dealDamage(smh->player->getDamage() * 3.25 * dt);
 			}
-		} else if (strcmp(eyeStatus.type.c_str(), FIRE_EYE) == 0) {
 			if (smh->player->fireBreathParticle->testCollision(eyeCollisionBox)) {
-				dealDamage(smh->player->getFireBreathDamage() * dt);
+				healDamage(smh->player->getDamage() * 3.25 * dt);
 			}
 		} else if (strcmp(eyeStatus.type.c_str(), ICE_EYE) ==0) {
+			//When the ice eye is active, fire does damage and ice heals
+			if (smh->player->fireBreathParticle->testCollision(eyeCollisionBox)) {
+				dealDamage(smh->player->getFireBreathDamage() * .4 * dt);
+			}
 			if (smh->player->iceBreathParticle->testCollision(eyeCollisionBox)) {
-				dealDamage(smh->player->getDamage() * 3.0 * dt);
+				healDamage(smh->player->getFireBreathDamage() * .4 * dt);
 			}
 		}
 	}
@@ -372,6 +377,7 @@ void LovecraftBoss::updateTentacles(float dt)
 		if (i->state == TENTACLE_HIDDEN) {
 			if (smh->timePassedSince(i->timeCreated) > 1.0) {
 				i->state = TENTACLE_ENTERING;
+				smh->soundManager->playSound("snd_TentaclesExtend", 1.0);
 			}
 		} else if (i->state == TENTACLE_ENTERING)  {
 			i->tentacleVisiblePercent += 3.5 * dt;
@@ -423,6 +429,7 @@ void LovecraftBoss::updateCrushers(float dt) {
 			i->size += i->speed * dt;
 			if (i->size >= CRUSHER_MAX_SIZE) {
 				i->size = CRUSHER_MAX_SIZE;
+				smh->soundManager->playSound("snd_Crusher", 0.25);
 				i->extending = false;
 			}
 		}
@@ -454,7 +461,7 @@ void LovecraftBoss::updateCrushers(float dt) {
 
 void LovecraftBoss::updateFireballs(float dt) {
 	for (std::list<BigFireBall>::iterator i = fireballList.begin(); i != fireballList.end(); i++) {
-		i->y += 500.0 * dt;
+		i->y += i->speed * dt;
 		i->particle->MoveTo(smh->getScreenX(i->x), smh->getScreenY(i->y), true);
 		i->particle->Update(dt);
 		i->collisionBox->SetRadius(i->x, i->y, 30);
@@ -465,19 +472,25 @@ void LovecraftBoss::updateFireballs(float dt) {
 }
 
 void LovecraftBoss::updateFireAttack(float dt) {
-	if (smh->timePassedSince(attackState.lastAttackTime) > 0.55) {
-		float x = smh->player->x + smh->randomFloat(-200, 200);
-		float radius = smh->randomFloat(100.0, 200.0);
-		for (int i = 0; i < 2; i++) {
+	//Periodically spawn waves of fire balls
+	if (smh->timePassedSince(attackState.lastAttackTime) > 1.0) {
+		float offset = smh->randomFloat(0, 100);
+		float gap = smh->randomFloat(150.0, 250.0);
+		int num = 1500 / gap;
+		float speed = smh->randomFloat(600.0, 800.0);
+		for (int i = 0; i < num; i++) {
 			BigFireBall fireball;
 			fireball.y = smh->player->y - 500.0;
-			fireball.x = x + (i == 0 ? -radius : radius);
+			fireball.x = arenaCenterX - 700.0 + offset + gap*float(i);
+			fireball.speed = speed;
 			fireball.collisionBox = new hgeRect();
 			fireball.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("bigFireball")->info);
 			fireball.particle->FireAt(smh->getScreenX(fireball.x), smh->getScreenY(fireball.y));
 			fireballList.push_back(fireball);
 			attackState.lastAttackTime = smh->getGameTime();
 		}
+
+		smh->soundManager->playSound("snd_FirePassBy");
 	}
 }
 
@@ -505,14 +518,14 @@ void LovecraftBoss::updateIceAttack(float dt) {
 		//the player is standing near the top or bottom of the arena.
 		float range = bottomY - topY;
 		numToSpawn = min(numToSpawn, range / 150.0);
-		float speed = smh->randomFloat(700.0, 1100.0);
+		float speed = smh->randomFloat(670.0, 850.0);
 
 		for (int i = 0; i < numToSpawn; i++) {
 			spawnCrusher(topY + i * (range / numToSpawn), speed);
 		}
 
 		timeLastCrusherCreated = smh->getGameTime();
-		crusherCreationDelay = 0.5 + speed / 1024.0;
+		crusherCreationDelay = 1.25 + speed / (CRUSHER_MAX_SIZE*2.0);
 	}
 
 }
@@ -652,11 +665,13 @@ void LovecraftBoss::enterState(int newState) {
 
 		crusherCreationDelay = timeLastCrusherCreated = 0.0;
 		attackState.attackStarted = false;
-
-		if (smh->randomInt(0,1) == 0) {
-			openEye(FIRE_EYE);
-		} else {
+	
+		if (aBooleanIndicatingThatTheLastEyeAttackWasFireForUseInForcingTheEyeAttacksToAlternateBetweenIceAndFire) {
 			openEye(ICE_EYE);
+			aBooleanIndicatingThatTheLastEyeAttackWasFireForUseInForcingTheEyeAttacksToAlternateBetweenIceAndFire = false;
+		} else {
+			openEye(FIRE_EYE);
+			aBooleanIndicatingThatTheLastEyeAttackWasFireForUseInForcingTheEyeAttacksToAlternateBetweenIceAndFire = true;
 		}
 	}
 
@@ -694,6 +709,10 @@ void LovecraftBoss::dealDamage(float amount) {
 		smh->enemyGroupManager->notifyOfDeath(groupID);
 		smh->soundManager->fadeOutMusic();
 	}
+}
+
+void LovecraftBoss::healDamage(float amount) {
+	health = min(health + amount, maxHealth);
 }
 
 void LovecraftBoss::spawnTentacle(float duration, float x, float y, bool hasBandaid) 

@@ -30,6 +30,7 @@ struct AttackState {
 
 struct BigFireBall {
 	float x, y, timeCreated;
+	float speed;
 	hgeParticleSystem *particle;
 	hgeRect *collisionBox;
 };
@@ -87,6 +88,7 @@ private:
 	void enterState(int newState);
 	void spawnTentacle(float duration, float x, float y, bool hasBandaid);
 	void spawnCrusher(float y, float speed);
+	void healDamage(float amount);
 
 	float timeInState;
 	int state;
@@ -101,6 +103,7 @@ private:
 	float fadeAlpha;
 	float timeLastCrusherCreated;
 	float crusherCreationDelay;
+	bool aBooleanIndicatingThatTheLastEyeAttackWasFireForUseInForcingTheEyeAttacksToAlternateBetweenIceAndFire;
 
 	EyeStatus eyeStatus;
 	std::list<Tentacle> tentacleList;
