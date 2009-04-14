@@ -384,6 +384,9 @@ void ProjectileManager::update(float dt) {
 				}
 				smh->enemyManager->addEnemy(enemy,i->x/64,i->y/64,0.25,0.75,-1);
 			}
+			if (i->id == PROJECTILE_SLIME) {
+				smh->soundManager->playSound("snd_SlimeSplat",0.02);
+			}
 			delete i->collisionBox;
 			delete i->terrainCollisionBox;
 			i = theProjectiles.erase(i);

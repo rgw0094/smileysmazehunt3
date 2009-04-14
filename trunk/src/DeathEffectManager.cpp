@@ -27,6 +27,8 @@ void DeathEffectManager::beginEffect() {
 	active = true;
 	initLetters();
 	enterState(FADING_IN);
+	smh->soundManager->stopAbilityChannel();
+	smh->soundManager->stopEnvironmentChannel();
 	smh->soundManager->fadeOutMusic();
 	textAlpha = 0.0;
 }

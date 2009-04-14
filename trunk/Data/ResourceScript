@@ -1414,6 +1414,15 @@ Sprite windowArrowRight {
 ;***********************
 ;******** SOUNDS *******
 ;***********************
+Sound snd_SlimeSplat {
+ filename="SlimeSplat.mp3"
+}
+Sound snd_TentaclesExtend {
+ filename="TentaclesExtend.mp3"
+}
+Sound snd_Crusher {
+ filename="Crusher.mp3"
+}
 Sound snd_LovecraftHit1 {
  filename="LovecraftHit1.mp3"
 }

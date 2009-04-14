@@ -127,7 +127,7 @@ bool SMH::updateGame() {
 	
 	if (gameState == MENU) {
 
-		if (menu->update(dt) || hge->Input_KeyDown(HGEK_ESCAPE)) return true;
+		if (menu->update(dt)) return true;
 
 	} else if (gameState == GAME) {
 
