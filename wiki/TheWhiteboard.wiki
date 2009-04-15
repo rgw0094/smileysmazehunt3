@@ -17,6 +17,7 @@
  * Re-texture the sphinx
 
 === Bugs ===
+ * If you die while using the frisbee/hover its gay
  * The game crashes in candy mountain
  * The Bill Clinton hint screen no longer fades out.
  * Floaters jump when they hit a wall and they float too close to the ground (they actually go into the ground)
