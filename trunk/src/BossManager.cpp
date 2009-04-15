@@ -1,5 +1,6 @@
 #include "SmileyEngine.h"
 #include "boss.h"
+#include "FenwarBoss.h"
 #include "fireboss.h"
 #include "DesertBoss.h"
 #include "SnowBoss.h"
@@ -51,6 +52,8 @@ void BossManager::spawnBoss(int bossID, int groupID, int gridX, int gridY) {
 		newBoss.boss = new TutBoss(gridX, gridY, groupID);
 	} else if (bossID == LOVECRAFT_BOSS) {
 		newBoss.boss = new LovecraftBoss(gridX, gridY, groupID);
+	} else if (bossID == FENWAR_BOSS) {
+		newBoss.boss = new FenwarBoss(gridX, gridY, groupID);
 	} else {
 		//Unimplemented boss - exit the program
 		smh->log("FATAL ERROR: BossManager.spawnBoss() received invalid boss ID!!!");

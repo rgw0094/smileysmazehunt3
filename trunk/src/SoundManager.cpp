@@ -154,7 +154,6 @@ void SoundManager::playSound(const char* sound, float delay) {
 		play = true;
 	} else {
 		bool soundFound = false;
-		smh->hge->System_Log("checking previous sounds for %s (delay = %f)", sound, delay);
 		//Search the last played list and find the last time that the sound was played to check if the delay has passed yet
 		for (std::list<Sound>::iterator i = lastPlayTimes.begin(); i != lastPlayTimes.end(); i++) {
 			if (strcmp(i->name.c_str(), sound) == 0) {
@@ -167,7 +166,6 @@ void SoundManager::playSound(const char* sound, float delay) {
 		}
 		//Handle the case where the sound hasn't been played yet
 		if (!soundFound) {
-			smh->log("first time played");
 			play = true;
 			Sound newSound;
 			newSound.name = sound;

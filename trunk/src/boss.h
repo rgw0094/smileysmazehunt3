@@ -18,6 +18,7 @@
 #define LOVECRAFT_BOSS 248
 #define TUT_BOSS 249
 #define CONSERVATORY_BOSS 250
+#define FENWAR_BOSS 251
 
 extern SMH *smh;
 

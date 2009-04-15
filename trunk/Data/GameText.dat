@@ -461,6 +461,14 @@ NPC191Name = "Magnitogorsk"
 NPC191Pages = "1"
 NPC191-1 = "Melorakehlo dathath at'kianoilo sagngnast krnae gnthaosat :("
 
+;Fenwar
+NPC200Name = "Fenwar"
+NPC200Pages = "1"
+NPC200-1 = "Intro"
+NPC201Name = "Fenwar"
+NPC201Pages = "1"
+NPC201-1 = "Defeat"
+
 ;==============================================FENWAR ENCOUNTERS=====================================
 NPC240Name = "Fenwar"
 NPC240Pages = "5"

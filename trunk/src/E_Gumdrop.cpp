@@ -26,9 +26,7 @@ E_Gumdrop::E_Gumdrop(int id, int x, int y, int groupID) {
 
 	std::string burrowAnimationName;
 	burrowAnimationName = "burrowAnim" + Util::intToString(variable1);
-	smh->log(burrowAnimationName.c_str());
 	burrowAnimation = new hgeAnimation(*smh->resources->GetAnimation(burrowAnimationName.c_str()));
-	smh->log("Done loading burrow animation.");
 
 	burrowState = GUMDROP_UNBURROWED;
 	lastAttackTime = -10.0;

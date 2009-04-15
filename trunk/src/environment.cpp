@@ -379,7 +379,6 @@ void Environment::loadArea(int id, int from, bool playMusic) {
 
 			//128 - 239 are NPCs
 			} else if (enemy >= 128 && enemy < 240) {
-				smh->hge->System_Log("%d %d", enemy,  smh->saveManager->adviceManEncounterCompleted);
 				if (enemy != 128 + MONOCLE_MAN_NPC_ID || smh->saveManager->adviceManEncounterCompleted) {
 					smh->npcManager->addNPC(enemy-128,ids[col][row],col,row);
 				}

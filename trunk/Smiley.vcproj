@@ -196,6 +196,9 @@
 					RelativePath=".\src\DespairBoss.cpp">
 				</File>
 				<File
+					RelativePath=".\src\FenwarBoss.cpp">
+				</File>
+				<File
 					RelativePath=".\src\fireboss.cpp">
 				</File>
 				<File
@@ -231,6 +234,9 @@
 				</File>
 				<File
 					RelativePath=".\src\DespairBoss.h">
+				</File>
+				<File
+					RelativePath=".\src\FenwarBoss.h">
 				</File>
 				<File
 					RelativePath=".\src\fireboss.h">
