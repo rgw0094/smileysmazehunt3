@@ -430,8 +430,6 @@ void CandyBoss::updateRun(float dt)
 	setCollisionBox(collisionBox, x, y);
 	if (smh->environment->testCollision(collisionBox, canPass)) 
 	{
-		smh->log("stuck");
-		smh->hge->System_Log("stuck (%f, %f) (%f, %f) (%f, %f)", x, y, minX, minY, maxX, maxY);
 		if (x - CANDY_WIDTH/2.0 < minX) x += CANDY_RUN_SPEED * speedMultiplier * dt;
 		if (x + CANDY_WIDTH/2.0> maxX) x -= CANDY_RUN_SPEED * speedMultiplier * dt;
 		if (y - CANDY_HEIGHT/2.0< minY) y += CANDY_RUN_SPEED * speedMultiplier * dt;

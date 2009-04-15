@@ -15,8 +15,6 @@ extern SMH *smh;
 
 E_SadShooter::E_SadShooter(int id, int x, int y, int groupID) {
 
-	smh->log("Sad Shooter init");
-
 	//Call parent's init function
 	initEnemy(id, x, y, groupID);
 

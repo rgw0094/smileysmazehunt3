@@ -248,10 +248,6 @@ void Player::doMove(float dt) {
 	float xDist = dx * dt;
 	float yDist = dy * dt;
 
-	if (graduallyMoving) {
-		smh->hge->System_Log("%f %f", dx, dy);
-	}
-
 	if ((inShallowWater || inLava) && !springing && gui->getSelectedAbility() != WATER_BOOTS) {
 		xDist *= 0.5;
 		yDist *= 0.5;
