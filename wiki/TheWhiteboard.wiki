@@ -9,6 +9,7 @@
  * Lovecraft's ice crusher
  * Barvinoid
  * Fenwar
+ * Warps (they should at least be animated or something)
  * The boxes on the controls screen
  * Slime
  * Pit graphics for different areas
