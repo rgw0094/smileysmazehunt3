@@ -62,8 +62,8 @@ void FenwarBoss::doInactiveState(float dt) {
 	if (!startedIntroDialogue) {
 		if (smh->enemyGroupManager->groups[groupID].triggeredYet) {
 			smh->windowManager->openDialogueTextBox(-1, FENWAR_INTRO_TEXT);
+			startedIntroDialogue = true;
 		}
-		startedIntroDialogue = true;
 	}
 
 	//Activate the boss when the intro dialogue is closed

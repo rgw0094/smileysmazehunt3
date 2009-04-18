@@ -109,13 +109,13 @@ bool TitleScreen::update(float dt, float mouseX, float mouseY) {
 	if (controlActionGroup->update(dt) && state == EXITING_SCREEN) {
 		switch (clickedButton) {
 			case TS_PLAY_BUTTON:
-				smh->menu->setScreen(LOAD_SCREEN);
+				smh->menu->setScreen(MenuScreens::LOAD_SCREEN);
 				break;
 			case TS_OPTIONS_BUTTON:
-				smh->menu->setScreen(OPTIONS_SCREEN);
+				smh->menu->setScreen(MenuScreens::OPTIONS_SCREEN);
 				break;
 			case TS_CREDITS_BUTTON:
-				smh->menu->setScreen(CREDITS_SCREEN);
+				smh->menu->setScreen(MenuScreens::CREDITS_SCREEN);
 				break;
 			case TS_EXIT_BUTTON:
 				return true;

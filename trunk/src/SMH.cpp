@@ -238,6 +238,7 @@ void SMH::enterGameState(int newState) {
 
 	//If leaving the menu
 	if (gameState == MENU) {	
+		menu->closeScreen();
 		resources->Purge(RES_MENU);
 	}
 

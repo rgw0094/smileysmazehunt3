@@ -4,21 +4,14 @@
 
 extern SMH *smh;
 
-/**
- * Constructor
- */
 MainMenu::MainMenu() {
 	menuScreen = NULL;
 	smh->resources->GetFont("controls")->SetColor(ARGB(255,0,0,0));
-	open(TITLE_SCREEN);
+	open(MenuScreens::TITLE_SCREEN);
 }
 
-
-/**
- * Destructor
- */
 MainMenu::~MainMenu() {
-	if (menuScreen) delete menuScreen;
+	//Never gets deleted
 }
 
 /**
@@ -26,27 +19,41 @@ MainMenu::~MainMenu() {
  */
 void MainMenu::setScreen(int screen) {
 
+	if (currentScreen != MenuScreens::NO_SCREEN) {
+		delete menuScreen;
+	}
+
 	currentScreen = screen;
 
-	if (currentScreen == TITLE_SCREEN) {
+	if (currentScreen == MenuScreens::TITLE_SCREEN) {
 		menuScreen = new TitleScreen();
-	} else if (currentScreen == OPTIONS_SCREEN) {
+	} else if (currentScreen == MenuScreens::OPTIONS_SCREEN) {
 		menuScreen = new OptionsScreen();
-	} else if (currentScreen == LOAD_SCREEN) {
+	} else if (currentScreen == MenuScreens::LOAD_SCREEN) {
 		menuScreen = new SelectFileScreen();
-	} else if (currentScreen == CREDITS_SCREEN) {
+	} else if (currentScreen == MenuScreens::CREDITS_SCREEN) {
 		menuScreen = new CreditsScreen();
-	} else if (currentScreen == CINEMATIC_SCREEN) {
+	} else if (currentScreen == MenuScreens::CINEMATIC_SCREEN) {
 		menuScreen = new CinematicScreen();
 	}
 
 }
 
 /**
+ * If there is an open screen, closes it.
+ */
+void MainMenu::closeScreen() {
+	if (currentScreen != MenuScreens::NO_SCREEN) {
+		delete menuScreen;
+		currentScreen = MenuScreens::NO_SCREEN;
+	}
+}
+
+/**
  * Opens the loading screen to load the specified file.
  */
 void MainMenu::openLoadScreen(int file, bool fromLoadScreen) {
-	currentScreen = LOADING_SCREEN;
+	currentScreen = MenuScreens::LOADING_SCREEN;
 	menuScreen = new LoadingScreen(file, fromLoadScreen);
 }
 
@@ -88,8 +95,8 @@ void MainMenu::draw(float dt) {
 	menuScreen->draw(dt);
 
 	//Draw the mouse
-	if (smh->input->isMouseInWindow() && currentScreen != LOADING_SCREEN && currentScreen != CREDITS_SCREEN && 
-		currentScreen != CINEMATIC_SCREEN) 
+	if (smh->input->isMouseInWindow() && currentScreen != MenuScreens::LOADING_SCREEN && currentScreen != MenuScreens::CREDITS_SCREEN && 
+		currentScreen != MenuScreens::CINEMATIC_SCREEN) 
 	{
 		smh->drawSprite("mouseCursor", smh->input->getMouseX(), smh->input->getMouseY());
 	}

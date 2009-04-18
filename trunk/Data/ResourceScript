@@ -985,52 +985,102 @@ Sprite smileysHat {
 ;********************************************
 ;******** CREDITS (Resource Group 11) *******
 ;********************************************
+Texture creditsPhyrebozzTx {
+ filename="Graphics/fireboss.png"
+ resgroup=11
+}
 Sprite creditsPhyrebozz {
- texture="Graphics/fireboss.png"
+ texture=creditsPhyrebozzTx
  rect=0,0,97,157
  hotspot=46,79
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=11
 }
+Texture creditsPortlyPenguinTx {
+ filename="Graphics/penguin.png"
+ resgroup=11
+}
 Sprite creditsPortlyPenguin {
- texture="Graphics/penguin.png"
+ texture=creditsPortlyPenguinTx
  rect=0,0,128,128
  hotspot=64,64
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=11
 }
+Texture creditsGarmbornTx {
+ filename="Graphics/garmborn.png"
+ resgroup=11
+}
 Sprite creditsGarmborn {
- texture="Graphics/garmborn.png"
+ texture=creditsGarmbornTx
  rect=16,0,163,190
  hotspot=81,95
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=11
 }
+Texture creditsCornwallisTx {
+ filename="Graphics/cornwallis.png"
+ resgroup=11
+}
 Sprite creditsCornwallis {
- texture="Graphics/cornwallis.png"
+ texture=creditsCornwallisTx
  rect=0,0,108,158
  hotspot=54,78
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=11
 }
+Texture creditsCalypsoTx {
+ filename="Graphics/calypso.png"
+ resgroup=11
+}
 Sprite creditsCalypso {
- texture="Graphics/calypso.png"
+ texture=creditsCalypsoTx
  rect=0,0,160,160
  hotspot=80,80
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=11
 }
+Texture creditsBrianFungusTx {
+ filename="Graphics/brian.png"
+ resgroup=11
+}
 Sprite creditsBrianFungus {
- texture="Graphics/brian.png"
+ texture=creditsBrianFungusTx
  rect=0,0,115,105
  hotspot=57,52
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=11
 }
+Texture creditsBartliTx {
+ filename="Graphics/bartli.png"
+ resgroup=11
+}
 Sprite creditsBartli {
- texture="Graphics/bartli.png"
+ texture=creditsBartliTx
  rect=0,0,110,134
  hotspot=55,67
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=11
+}
+Texture creditsTutTx {
+ filename="Graphics/tut.png"
+ resgroup=11
+}
+Sprite creditsTut {
+ texture=creditsTutTx
+ rect=0,0,67,226
+ hotspot=34,113
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=11
+}
+Texture creditsLovecraftTx {
+ filename="Graphics/Lovecraft.png"
+ resgroup=11
+}
+Sprite creditsLovecraft {
+ texture=creditsLovecraftTx
+ rect=0,1,192,190
+ hotspot=96,96
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=11
 }

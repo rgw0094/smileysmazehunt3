@@ -49,6 +49,7 @@ void BitStream::close() {
 		while (!writeBit(false)); // fill out the last byte if necessary
 		outFile.write(outString.c_str(), outString.length());
 		outFile.close();
+		
 	}
 }
 

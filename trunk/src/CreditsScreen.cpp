@@ -8,7 +8,7 @@ extern SMH *smh;
 
 #define TITLE_START 300.0
 #define ENEMY_START 1300.0
-#define NUM_UNIQUE_BOSSES 7
+#define NUM_UNIQUE_BOSSES 10
 #define NUM_UNIQUE_NPCS 13
 
 CreditsScreen::CreditsScreen() {
@@ -20,13 +20,11 @@ CreditsScreen::CreditsScreen() {
 }
 
 CreditsScreen::~CreditsScreen() {
-
 	for (std::list<CreditsItem>::iterator i = enemyList.begin(); i != enemyList.end(); i++) {
 		delete i->graphic;
 	}
 
 	smh->resources->Purge(RES_CREDITS);
-
 }
 
 void CreditsScreen::draw(float dt) {
@@ -89,7 +87,7 @@ bool CreditsScreen::update(float dt, float mouseX, float mouseY) {
 
 	//Input
 	if (smh->hge->Input_KeyDown(HGEK_ENTER) || smh->hge->Input_KeyDown(HGEK_ESCAPE)) {
-		smh->menu->setScreen(TITLE_SCREEN);
+		smh->menu->setScreen(MenuScreens::TITLE_SCREEN);
 		smh->soundManager->playMusic("menuMusic");
 		return false;
 	}
@@ -155,6 +153,15 @@ void CreditsScreen::init() {
 		} else if (i == 6) {
 			newBoss.name = "Bartli";
 			newBoss.graphic = smh->resources->GetSprite("creditsBartli");
+		} else if (i == 7) {
+			newBoss.name = "King Tut";
+			newBoss.graphic = smh->resources->GetSprite("creditsTut");
+		} else if (i == 8) {
+			newBoss.name = "Magnitogorsk";
+			newBoss.graphic = smh->resources->GetSprite("creditsLovecraft");
+		} else if (i == 9) {
+			newBoss.name = "Lord Fenwar";
+			newBoss.graphic = smh->resources->GetSprite("fenwarDown");
 		}
 
 		if (i > 0) bossY += newBoss.graphic->GetHeight()/2 + 25.0 + 400.0;

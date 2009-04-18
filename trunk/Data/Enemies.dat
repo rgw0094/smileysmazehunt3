@@ -269,7 +269,6 @@ numEnemies="99"
 15ImmuneStun="T"
 
 ;Tentacle, small and green
-16Name=      "Small Green Tentacle"
 16GCol=      "6"
 16GRow=      "2"
 16OneGraphic="T"
@@ -285,7 +284,6 @@ numEnemies="99"
 16Variable1= "3"
 
 ;Tentacle, large and yellow/orange/red
-17Name=      "Huge Yellow Tentacle"
 17GCol=      "7"
 17GRow=      "2"
 17OneGraphic="T"
@@ -912,7 +910,6 @@ numEnemies="99"
 51Chases=    "T"
 
 ;Clockwise Turret, start UP *FAST SHOOTING*
-52Turret=    "Evil Turret"
 52GCol=      "8"
 52GRow=      "5"
 52EnemyType= "12"
@@ -1177,7 +1174,6 @@ numEnemies="99"
 63PType=     "6"
 
 ;Mummy Normal
-64Name=      "Mortifying Mummy"
 64GCol=      "4"
 64GRow=      "7"
 64EnemyType= "0"
@@ -1193,7 +1189,7 @@ numEnemies="99"
 64ImmuneLightning="T"
 
 ;Orange charger
-65Name=      "OrangeEye"
+65Name=      "Orange Eye"
 65GCol=      "8"
 65GRow=      "9"
 65NumFrames= "1"
@@ -1425,7 +1421,6 @@ numEnemies="99"
 78HasRanged= "F"
 
 ;Pumpkin, ranged, moves horizontal
-79Name=      "Mr. Pumpking"
 79GCol=      "0"
 79GRow=      "12"
 79EnemyType= "0"
@@ -1446,7 +1441,6 @@ numEnemies="99"
 79PHoming=   "F"
 
 ;Pumpkin, ranged, moves vertical
-80Name=      "Mr. Pumpking"
 80GCol=      "0"
 80GRow=      "12"
 80EnemyType= "0"
@@ -1467,7 +1461,6 @@ numEnemies="99"
 80PHoming=   "F"
 
 ;Pumpkin, hopping
-81Name=      "Mr. Pumpking"
 81GCol=      "0"
 81GRow=      "12"
 81EnemyType= "16"
@@ -1483,7 +1476,6 @@ numEnemies="99"
 81HasRanged= "F"
 
 ;Pumpkin, flail
-82Name=      "Mr. Pumpking"
 82GCol=      "0"
 82GRow=      "12"
 82EnemyType= "10"
@@ -1580,6 +1572,7 @@ numEnemies="99"
 86PType=     "15"
 
 ;Blue alien guy
+87Name=      "Blue Alien Guy"
 87GCol=      "8"
 87GRow=      "13"
 87NumFrames= "2"
@@ -1608,6 +1601,7 @@ numEnemies="99"
 88Chases=    "T"
 
 ;Beaker
+89Name=      "Beaker"
 89GCol=      "0"
 89GRow=      "13"
 89NumFrames= "2"
@@ -1622,6 +1616,7 @@ numEnemies="99"
 89Chases=    "F"
 
 ;Cone
+90Name=      "Evil Cone"
 90GCol=      "8"
 90GRow=      "12"
 90NumFrames= "2"

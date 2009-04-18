@@ -10,14 +10,6 @@ class Button;
 class ControlActionGroup;
 class DifficultyPrompt;
 
-//Menu States
-#define TITLE_SCREEN 0
-#define LOAD_SCREEN 1
-#define OPTIONS_SCREEN 2
-#define LOADING_SCREEN 3
-#define CREDITS_SCREEN 4
-#define CINEMATIC_SCREEN 5
-
 //Screen States
 #define ENTERING_SCREEN 0
 #define IN_SCREEN 1
@@ -25,12 +17,24 @@ class DifficultyPrompt;
 
 #define BUTTON_EFFECT_DURATION 0.15
 
+struct MenuScreens {
+	static const int NO_SCREEN = 10;
+	static const int TITLE_SCREEN = 0;
+	static const int LOAD_SCREEN = 1;
+	static const int OPTIONS_SCREEN = 2;
+	static const int LOADING_SCREEN = 3;
+	static const int CREDITS_SCREEN = 4;
+	static const int CINEMATIC_SCREEN = 5;
+};
+
 //------------------------------------------------------
 //------------------MENU SCREEN-------------------------
 //------------------------------------------------------
 class MenuScreen {
 
 public:
+
+	virtual ~MenuScreen() { }
 
 	virtual void draw(float dt) { };
 	virtual bool update(float dt, float mouseX, float mouseY) { return false; };
@@ -55,6 +59,7 @@ public:
 	void open(int _state);
 	void setScreen(int screen);
 	void openLoadScreen(int file, bool fromLoadScreen);
+	void closeScreen();
 
 	//Variables
 	MenuScreen *menuScreen;
