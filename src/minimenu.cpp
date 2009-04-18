@@ -110,7 +110,7 @@ bool MiniMenu::update(float dt) {
 					smh->windowManager->openWindow(new OptionsWindow());
 					return true;
 				case MINIMENU_YES:
-					smh->menu->open(TITLE_SCREEN);
+					smh->menu->open(MenuScreens::TITLE_SCREEN);
 					smh->saveManager->incrementTimePlayed(smh->saveManager->currentSave, smh->getGameTime());
 					smh->saveManager->saveFileInfo();
 					return false;

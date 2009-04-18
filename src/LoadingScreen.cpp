@@ -51,7 +51,7 @@ bool LoadingScreen::update(float dt, float mouseX, float mouseY) {
 			smh->environment->loadArea(smh->saveManager->currentArea, smh->saveManager->currentArea, false);
 			smh->saveManager->save();
 			smh->resources->Precache(RES_CINEMATIC);
-			smh->menu->setScreen(CINEMATIC_SCREEN);
+			smh->menu->setScreen(MenuScreens::CINEMATIC_SCREEN);
 		} else {
 			//The loadArea method places smiley at the start point of the level. So we need to remember the coordinates
 			//that Smiley was saved at and then move him there after the area loads

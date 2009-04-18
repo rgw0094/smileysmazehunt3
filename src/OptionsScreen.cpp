@@ -31,7 +31,7 @@ bool OptionsScreen::update(float dt, float mouseX, float mouseY) {
 	if (state == EXITING_SCREEN) {
 		optionsWindow->setY(optionsWindow->getY() - 1800 * dt);
 		if (optionsWindow->getY() <= -512.0) {
-			smh->menu->setScreen(TITLE_SCREEN);
+			smh->menu->setScreen(MenuScreens::TITLE_SCREEN);
 		}
 	}
 

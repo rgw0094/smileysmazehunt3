@@ -95,7 +95,7 @@ bool SelectFileScreen::update(float dt, float mouseX, float mouseY) {
 			//Done exiting screen - perform action based on what button was clicked
 			switch (clickedButton) {
 				case SFS_BACK_BUTTON:
-					smh->menu->setScreen(TITLE_SCREEN);
+					smh->menu->setScreen(MenuScreens::TITLE_SCREEN);
 					return false;
 				case SFS_START_BUTTON:
 					smh->menu->openLoadScreen(selectedFile, true);

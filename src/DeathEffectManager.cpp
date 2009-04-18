@@ -79,7 +79,7 @@ void DeathEffectManager::update(float dt) {
 
 		if (smh->hge->Input_KeyDown(HGEK_ENTER)) {
 			active = false;
-			smh->menu->open(TITLE_SCREEN);
+			smh->menu->open(MenuScreens::TITLE_SCREEN);
 		}
 	}
 }
