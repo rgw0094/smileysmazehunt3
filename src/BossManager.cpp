@@ -12,6 +12,7 @@
 #include "TutBoss.h"
 #include "EnemyFramework.h"
 #include "LovecraftBoss.h"
+#include "ConservatoryBoss.h"
 
 extern SMH *smh;
 
@@ -52,6 +53,8 @@ void BossManager::spawnBoss(int bossID, int groupID, int gridX, int gridY) {
 		newBoss.boss = new TutBoss(gridX, gridY, groupID);
 	} else if (bossID == LOVECRAFT_BOSS) {
 		newBoss.boss = new LovecraftBoss(gridX, gridY, groupID);
+	} else if (bossID == CONSERVATORY_BOSS) {
+		newBoss.boss = new ConservatoryBoss(gridX, gridY, groupID);
 	} else if (bossID == FENWAR_BOSS) {
 		newBoss.boss = new FenwarBoss(gridX, gridY, groupID);
 	} else {
