@@ -469,6 +469,17 @@ NPC201Name = "Fenwar"
 NPC201Pages = "1"
 NPC201-1 = "Defeat"
 
+;Barvinoid
+NPC210Name = "Big Barvinoid"
+NPC210Pages = "3"
+NPC210-1 = "The train man shall not have his way."
+NPC210-2 = "The gardens will survive."
+NPC210-3 = "I will piss off the train man more than my rival, Alphanoid."
+NPC211Name = "Big Barvinoid"
+NPC211Pages = "2"
+NPC211-1 = "Smiley! How could you do this to me? Now the Alphanoid will have his way!"
+NPC211-2 = "Don't you know? You... are.... the... train.... man's.... grrrugg..."
+
 ;==============================================FENWAR ENCOUNTERS=====================================
 NPC240Name = "Fenwar"
 NPC240Pages = "5"

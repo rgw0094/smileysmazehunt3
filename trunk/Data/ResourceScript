@@ -2038,7 +2038,36 @@ Sprite LovecraftIceBlock {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=108
 }
- 
+
+;*****************************
+;***** BIG BARVINOID BOSS ****
+;***** Res group 109 *********
+;*****************************
+Texture barvinoidTx {
+ filename="Graphics/Barvinoid.png"
+ resgroup=109
+}
+Sprite barvinoidSprite {
+ texture=barvinoidTx
+ rect=0,0,283,355
+ hotspot=141,289
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=109
+}
+Sprite barvinoidRightEyeSprite {
+ texture=barvinoidTx
+ rect=0,355,54,51
+ hotspot=133,273
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=109
+}
+Sprite barvinoidLeftEyeSprite {
+ texture=barvinoidTx
+ rect=54,355,54,51
+ hotspot=-80,273
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=109
+}
 ;*****************************
 ;******** PROJECTILES ********
 ;*****************************

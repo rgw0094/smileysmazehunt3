@@ -86,6 +86,7 @@ class PopupMessageManager;
 #define RES_BARTLI 106
 #define RES_KINGTUT 107
 #define RES_LOVECRAFT 108
+#define RES_BARVINOID 109
 #define RES_FENWAR 110
 
 #define NUM_BOSSES 12
