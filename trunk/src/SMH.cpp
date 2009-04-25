@@ -136,7 +136,7 @@ bool SMH::updateGame() {
 		console->update(dt);
 
 		//Toggle options/exit
-		if (!deathEffectManager->isActive() && hge->Input_KeyDown(HGEK_ESCAPE)) {
+		if (!deathEffectManager->isActive() && !windowManager->isOpenWindow() && hge->Input_KeyDown(HGEK_ESCAPE)) {
 			windowManager->openWindow(new MiniMenu(MINIMENU_EXIT));
 		}
 

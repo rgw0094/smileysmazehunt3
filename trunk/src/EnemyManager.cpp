@@ -23,8 +23,7 @@ EnemyManager::EnemyManager() {
  * Destructor
  */
 EnemyManager::~EnemyManager() {
-	reset();
-	if (deathParticles) delete deathParticles;
+	//Never deleted
 }
 
 bool SortEnemiesPredicate(const EnemyStruct &lhs, const EnemyStruct &rhs) {
