@@ -354,7 +354,7 @@ void Environment::loadArea(int id, int from, bool playMusic) {
 			if (enemy == 255) {
 
 				if (!smh->saveManager->isTileChanged(col, row)) {
-					smh->fenwarManager->addFenwarEncounter(col, row, ids[col][row]);
+					//smh->fenwarManager->addFenwarEncounter(col, row, ids[col][row]);
 				}
 
 			//240-256 are bosses

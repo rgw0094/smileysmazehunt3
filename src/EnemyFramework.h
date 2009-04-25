@@ -83,6 +83,8 @@ class EnemyState {
 
 public:
 
+	virtual ~EnemyState() { }
+
 	//methods
 	virtual void enterState() = 0;
 	virtual void update(float dt) = 0;
@@ -100,6 +102,15 @@ public:
 class BaseEnemy {
 
 public:
+
+	virtual ~BaseEnemy() {
+		if (currentState) delete currentState;
+		delete collisionBox;
+		delete futureCollisionBox;
+		for (int i = 0; i < 4; i++) {
+			delete graphic[i];
+		}
+	}
 
 	//Methods that need to be overridden
 	virtual void draw(float dt) = 0;

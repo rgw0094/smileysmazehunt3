@@ -15,11 +15,8 @@ TapestryManager::TapestryManager() {
 
 }
 
-/**
- * Destructor
- */
 TapestryManager::~TapestryManager() {
-	reset();
+	//Will never be deleted
 }
 
 /**
@@ -27,12 +24,11 @@ TapestryManager::~TapestryManager() {
  */
 void TapestryManager::addTapestry(int gridX, int gridY, int id) {
 
-	//Create the new tapestry item
 	Tapestry newTapestry;
 	newTapestry.x = gridX * 64.0;
 	newTapestry.y = gridY * 64.0;
 
-	//Set texture - single square tapestries can just use the 
+	//Set texture
 	switch (id) {
 
 		case EVIL_TAPESTRY:
@@ -53,9 +49,7 @@ void TapestryManager::addTapestry(int gridX, int gridY, int id) {
 	newTapestry.distortion->SetBlendMode(BLEND_COLORADD | BLEND_ALPHABLEND | BLEND_ZWRITE);
 	newTapestry.distortion->Clear(0xFF000000);
 
-	//Add it to the back of the list
 	tapestryList.push_back(newTapestry);
-
 }
 
 /**
@@ -93,6 +87,7 @@ void TapestryManager::update(float dt) {
 void TapestryManager::reset() {
 	std::list<Tapestry>::iterator i;
 	for (i = tapestryList.begin(); i != tapestryList.end(); i++) {
+		
 		delete i->distortion;
 		i = tapestryList.erase(i);
 	}
