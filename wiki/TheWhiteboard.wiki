@@ -18,7 +18,6 @@
  * Re-texture the sphinx
 
 === Bugs ===
- * The game crashes in candy mountain
  * Floaters jump when they hit a wall and they float too close to the ground (they actually go into the ground)
  * There are randomly item particles in places where there shouldn't be
  * Bouncing spikey enemies that I put to appear in line with each other in game sometimes are not in line when testing, making it a lot harder to get by them than planned. (this is impossible to fix)
