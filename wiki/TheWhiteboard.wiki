@@ -20,7 +20,6 @@
 === Bugs ===
  * If you die while using the frisbee/hover its gay
  * The game crashes in candy mountain
- * The Bill Clinton hint screen no longer fades out.
  * Floaters jump when they hit a wall and they float too close to the ground (they actually go into the ground)
  * There are randomly item particles in places where there shouldn't be
  * Bouncing spikey enemies that I put to appear in line with each other in game sometimes are not in line when testing, making it a lot harder to get by them than planned. (this is impossible to fix)
@@ -49,6 +48,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fixed the Bill Clinton fade out but||5/29/09||RGW||
 ||Magnitogorsk (Lovecraftian boss)||4/13/09||RGW||
 ||Fixed the loading effect||4/12/09||RGW||
 ||Enemy movements toward Smiley are slightly randomized, thus they don't overlap as bad||3/21/09||ETI||
