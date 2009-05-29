@@ -18,7 +18,6 @@
  * Re-texture the sphinx
 
 === Bugs ===
- * If you die while using the frisbee/hover its gay
  * The game crashes in candy mountain
  * Floaters jump when they hit a wall and they float too close to the ground (they actually go into the ground)
  * There are randomly item particles in places where there shouldn't be
