@@ -48,6 +48,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||All player effects are reset when you die so the death effect doesn't look gay||5/29/09||RGW||
 ||Fixed the Bill Clinton fade out but||5/29/09||RGW||
 ||Magnitogorsk (Lovecraftian boss)||4/13/09||RGW||
 ||Fixed the loading effect||4/12/09||RGW||
