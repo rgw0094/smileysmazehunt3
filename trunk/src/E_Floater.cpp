@@ -43,21 +43,15 @@ void E_Floater::update(float dt) {
 	angle += angleVel * dt;
 
 	//Update floating shit
-	shadowOffset = 35.0 + 12.0 * cos(smh->getGameTime() * 2.0);
+	shadowOffset = 45.0 + 10.0 * cos(smh->getGameTime() * 2.0);
 	projectileYOffset = shadowOffset;
 	collisionBox->SetRadius(x,y-shadowOffset,radius);
 	
-	//Update position
-	if (!stunned) {
-		dx = speed * cos(angle);
-		dy = speed * sin(angle);
-	}
-
-	boolean changeDir = false;
+	dx = speed * cos(angle);
+	dy = speed * sin(angle);
 
 	//Change angle coefficient periodically
 	if (smh->timePassedSince(lastDirChange) > dirChangeDelay) {
-
 		angleCoefficient = smh->randomFloat(50.0, 100.0);
 		if (smh->randomInt(0,1) == 1) angleCoefficient *= -1;
 
@@ -66,11 +60,18 @@ void E_Floater::update(float dt) {
 	}
 
 	//Change direction if the enemy is going to hit a wall next frame
-	futureCollisionBox->SetRadius(max(4.0, x + dx*dt), max(4.0, y + dy*dt), 28.0f);
-	if (smh->environment->enemyCollision(futureCollisionBox,this,dt)) {
-		//Bounce 180 degrees off the wall
-		angle += PI;
-	}
+	bool hitWall = false;
+	do {
+		futureCollisionBox->SetRadius(x + dx*dt, y + dy*dt, radius);
+		if (smh->environment->testCollision(futureCollisionBox, canPass)) {
+			angle += PI/2.0;
+			dx = speed * cos(angle);
+			dy = speed * sin(angle);
+			hitWall = true;
+		} else {
+			hitWall = false;
+		}
+	} while (hitWall);
 		
 	//Collision with player
 	if (smh->player->collisionCircle->testBox(collisionBox)) {
