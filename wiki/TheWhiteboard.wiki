@@ -18,7 +18,6 @@
  * Re-texture the sphinx
 
 === Bugs ===
- * Floaters jump when they hit a wall and they float too close to the ground (they actually go into the ground)
  * There are randomly item particles in places where there shouldn't be
  * Bouncing spikey enemies that I put to appear in line with each other in game sometimes are not in line when testing, making it a lot harder to get by them than planned. (this is impossible to fix)
  * Spikey enemies start in the wrong spot sometimes. Ex: the mass of spikey enemies in Egypt, sometimes one of them will move down first and then will bounce horizontally in the wrong spot.
@@ -46,6 +45,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fixed floater pathing||5/29/09||RGW||
 ||All player effects are reset when you die so the death effect doesn't look gay||5/29/09||RGW||
 ||Fixed the Bill Clinton fade out but||5/29/09||RGW||
 ||Magnitogorsk (Lovecraftian boss)||4/13/09||RGW||
