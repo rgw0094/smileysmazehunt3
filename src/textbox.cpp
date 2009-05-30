@@ -339,10 +339,8 @@ bool TextBox::doClose() {
 		return true;
 	}
 
-	if (!fadingOut) {
-		//Return false to tell the window manager to close this window
-		return false;
-	}
+	//If we are fading out return true to tell the window manager to not close the window yet.
+	return fadingOut;
 }
 
 /**

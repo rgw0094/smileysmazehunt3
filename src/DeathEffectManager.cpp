@@ -1,5 +1,6 @@
 #include "SmileyEngine.h"
 #include "MainMenu.h"
+#include "Player.h"
 
 extern SMH *smh;
 
@@ -30,6 +31,7 @@ void DeathEffectManager::beginEffect() {
 	smh->soundManager->stopAbilityChannel();
 	smh->soundManager->stopEnvironmentChannel();
 	smh->soundManager->fadeOutMusic();
+	smh->player->reset();
 	textAlpha = 0.0;
 }
 
