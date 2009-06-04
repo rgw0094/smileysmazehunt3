@@ -30,9 +30,9 @@ extern SMH *smh;
 #define LEFT_EYE 0
 #define RIGHT_EYE 1
 
-#define EYE_ATTACK_MAX_INTERVAL 1.5
-#define EYE_ATTACK_INTERVAL_FACTOR 0.9 //what to multiply the interval by after each attack
-#define EYE_ATTACK_MIN_INTERVAL 0.4
+#define EYE_ATTACK_MAX_INTERVAL 5.0
+#define EYE_ATTACK_INTERVAL_FACTOR 0.93 //what to multiply the interval by after each attack
+#define EYE_ATTACK_MIN_INTERVAL 2.1
 
 ConservatoryBoss::ConservatoryBoss(int _gridX,int _gridY,int _groupID) {
 	gridX=_gridX;
@@ -68,7 +68,7 @@ ConservatoryBoss::ConservatoryBoss(int _gridX,int _gridY,int _groupID) {
 	placeCollisionBoxes();
 
 	//Init eye attack stuff
-	for (int eye = 0; i < 1; i++) {
+	for (int eye = 0; i <= 1; i++) {
 		eyeFlashes[eye].alpha = 0.0;
 		eyeFlashes[eye].red = eyeFlashes[eye].green = eyeFlashes[eye].blue = 255.0;
 		eyeFlashes[eye].eyeFlashing = false;
@@ -126,6 +126,7 @@ bool ConservatoryBoss::update(float dt) {
 	if (state == BARVINOID_INACTIVE && startedIntroDialogue && !smh->windowManager->isTextBoxOpen()) {
 		enterState(BARVINOID_EYE_ATTACK);
 		smh->soundManager->playMusic("bossMusic");
+		lastEyeAttackTime = smh->getGameTime();
 	}
 
 	//Battle stuff
@@ -204,28 +205,12 @@ void ConservatoryBoss::updateEyeGlow(int eye) {
 
 	float timePassed = smh->timePassedSince(eyeFlashes[eye].timeStartedFlash);	
 	
-	//from 0 to 0.1 seconds, go from WHITE-TRANSPARENT to WHITE-OPAQUE
-	if (timePassed <= 0.1) {
+	//from 0 to 4.0 seconds, do an ever-increasing-in-speed cosine function to flash faster and faster
+	if (timePassed <= 4.0) {
 		eyeFlashes[eye].red = eyeFlashes[eye].green = eyeFlashes[eye].blue = 255.0;
-		eyeFlashes[eye].alpha = 255.0*timePassed/0.1;
-		if (eyeFlashes[eye].alpha < 0) eyeFlashes[eye].alpha = 0; if (eyeFlashes[eye].alpha > 255.0) eyeFlashes[eye].alpha = 255.0;
-    
-	//from >0.1 seconds to 0.2 seconds, go from WHITE-OPAQUE to WHITE-TRANSPARENT
-	} else if (timePassed <= 0.2) {
-		eyeFlashes[eye].alpha = 255.0 - 255.0*(timePassed-0.1)/0.1;
-		if (eyeFlashes[eye].alpha < 0) eyeFlashes[eye].alpha = 0; if (eyeFlashes[eye].alpha > 255.0) eyeFlashes[eye].alpha = 255.0;
-	
-	//from >0.2 seconds to 0.4 seconds, go from WHITE-TRANSPARENT to BLUE-OPAQUE. Go to blue (in 0.1 seconds) and stay there for 0.1 seconds
-	} else if (timePassed < 0.4) {
-		eyeFlashes[eye].red = 100.0; eyeFlashes[eye].green = 100.0; eyeFlashes[eye].blue = 255.0;
-		eyeFlashes[eye].alpha = 255.0*(timePassed-0.2)/0.1; //NOTE dividing by 0.1 when this time period lasts 0.2 seconds -- this way you stay at blue for 0.1 seconds
-		if (eyeFlashes[eye].alpha < 0) eyeFlashes[eye].alpha = 0; if (eyeFlashes[eye].alpha > 255.0) eyeFlashes[eye].alpha = 255.0;
-	
-	//from >0.4 seconds to 0.5 seconds, return to TRANSPARENT
-	} else if (timePassed < 0.5) {
-		eyeFlashes[eye].alpha = 255.0 - 255.0*(timePassed-0.4)/0.1;
-		if (eyeFlashes[eye].alpha < 0) eyeFlashes[eye].alpha = 0; if (eyeFlashes[eye].alpha > 255.0) eyeFlashes[eye].alpha = 255.0;
-	
+		eyeFlashes[eye].alpha = 255.0*(1.0-cos(4.33*timePassed*timePassed))/2.0; //I got the parameters for this using http://www.walterzorn.com/grapher/grapher_e.htm to plot any graph I want!
+		if (eyeFlashes[eye].alpha < 0.0) eyeFlashes[eye].alpha = 0.0; if (eyeFlashes[eye].alpha > 255.0) eyeFlashes[eye].alpha = 255.0;
+		
 	//Once we reach 0.5 seconds, the flashing is done
 	} else {
 		eyeFlashes[eye].red = eyeFlashes[eye].green = eyeFlashes[eye].blue = 255.0;
