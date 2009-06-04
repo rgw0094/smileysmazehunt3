@@ -10,6 +10,7 @@ struct EyeFlash {
 	float red,green,blue,alpha;
 	bool eyeFlashing;
 	float timeStartedFlash;
+	float x,y,dx,dy; //these are variables for the BULLS-EYE that tracks Smiley
 };
 
 class ConservatoryBoss : public Boss {
