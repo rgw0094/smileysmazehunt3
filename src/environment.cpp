@@ -354,7 +354,7 @@ void Environment::loadArea(int id, int from, bool playMusic) {
 			if (enemy == 255) {
 
 				if (!smh->saveManager->isTileChanged(col, row)) {
-					//smh->fenwarManager->addFenwarEncounter(col, row, ids[col][row]);
+					smh->fenwarManager->addFenwarEncounter(col, row, ids[col][row]);
 				}
 
 			//240-256 are bosses
@@ -1255,7 +1255,6 @@ void Environment::removeParticle(int x, int y) {
  *	radius		radius of the object taking the path
  *
  */
-
 bool Environment::validPath(int x1, int y1, int x2, int y2, int radius, bool canPass[256]) {
 	//First get the velocities of the path
 	float angle = Util::getAngleBetween(x1,y1,x2,y2);

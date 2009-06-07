@@ -31,7 +31,7 @@ void Console::draw(float dt) {
 	lineNum = 0;
 	write("Key   Effect             Toggled", NA);
 	write("----  ------             -------", NA);
-	write("I     Invincibility         ", smh->player->invincible ? YES : NO);
+	write("F6    Invincibility         ", smh->player->invincible ? YES : NO);
 	write("D     Debug Mode            ", smh->isDebugOn() ? YES : NO);
 	write("U     Uber Mode             ", smh->player->uber ? YES : NO);
 	write("H     Hover (hold)          ", smh->player->hoveringYOffset > 0.0 ? YES : NO);
@@ -62,7 +62,7 @@ void Console::update(float dt) {
 	if (smh->getGameState() == GAME) {
 
 		//Toggle invincibility
-		if (smh->hge->Input_KeyDown(HGEK_I)) {
+		if (smh->hge->Input_KeyDown(HGEK_F6)) {
 			smh->player->invincible = !smh->player->invincible;
 		}
 
