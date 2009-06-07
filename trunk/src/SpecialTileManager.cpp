@@ -41,6 +41,7 @@ void SpecialTileManager::reset() {
 	resetSillyPads();
 	resetIceBlocks();
 	resetTimedTiles();
+	resetWarps();
 }
 
 /**
@@ -52,6 +53,7 @@ void SpecialTileManager::draw(float dt) {
 	drawSillyPads(dt);
 	drawIceBlocks(dt);
 	drawFlames(dt);
+	drawWarps(dt);
 }
 
 /**
@@ -63,6 +65,7 @@ void SpecialTileManager::update(float dt) {
 	updateSillyPads(dt);
 	updateFlames(dt);
 	updateIceBlocks(dt);
+	updateWarps(dt);
 }
 
 //////////// Ice Block Functions /////////////////
@@ -485,3 +488,47 @@ void SpecialTileManager::resetMushrooms() {
 	}
 	theMushrooms.clear();
 }
+
+//////////// Warp Functions //////////////
+
+void SpecialTileManager::addWarp(int gridX, int gridY, int warpTile) 
+{
+	Warp newWarp;
+
+	newWarp.gridX = gridX;
+	newWarp.gridY = gridY;
+	newWarp.angle = 0.0;
+	newWarp.warpTile = warpTile;
+
+	warpList.push_back(newWarp);
+}
+	
+void SpecialTileManager::updateWarps(float dt) 
+{
+	for (std::list<Warp>::iterator i = warpList.begin(); i != warpList.end(); i++) 
+	{
+		i->angle -= 2.0 * PI * dt;
+	}
+}
+
+void SpecialTileManager::drawWarps(float dt) 
+{
+	for (std::list<Warp>::iterator i = warpList.begin(); i != warpList.end(); i++) 
+	{
+		smh->resources->GetAnimation("walkLayer")->SetFrame(i->warpTile);
+		smh->resources->GetAnimation("walkLayer")->SetHotSpot(32.0,32.0);
+		smh->resources->GetAnimation("walkLayer")->RenderEx
+			(smh->getScreenX(i->gridX*64.0+32.0), smh->getScreenY(i->gridY*64.0+32.0), i->angle);
+		smh->resources->GetAnimation("walkLayer")->SetHotSpot(0.0,0.0);
+	}
+}
+
+void SpecialTileManager::resetWarps() 
+{
+	//Warps have no objects to delete
+	warpList.clear();
+}
+
+
+
+

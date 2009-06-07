@@ -44,6 +44,12 @@ struct TimedTile {
 	float duration, timeCreated, alpha;
 };
 
+struct Warp {
+	int gridX, gridY;
+	int warpTile;
+	float angle;
+};
+
 class SpecialTileManager {
 
 public:
@@ -85,13 +91,19 @@ public:
 	void drawIceBlocks(float dt);
 	void resetIceBlocks();
 
+	void addWarp(int gridX, int gridY, int warpTile);
+	void updateWarps(float dt);
+	void drawWarps(float dt);
+	void resetWarps();
+
 	//Variables		
 	std::list<Flame> flameList;
 	std::list<SillyPad> sillyPadList;
-	std::list<Mushroom> theMushrooms; //Linked list containing the mushrooms
+	std::list<Mushroom> theMushrooms;
 	std::list<IceBlock> iceBlockList;
 	std::list<TimedTile> timedTileList;
-	
+	std::list<Warp> warpList;
+
 	hgeRect *collisionBox;	//general purpose collision box
 
 };
