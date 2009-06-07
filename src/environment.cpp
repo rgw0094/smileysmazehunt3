@@ -273,6 +273,11 @@ void Environment::loadArea(int id, int from, bool playMusic) {
 				fountain = new Fountain(col, row);
 			}
 			
+			//Warp (don't add hidden warps! (id 990))
+			if (Util::isWarp(collision[col][row]) && variable[col][row] != 990) {
+				specialTileManager->addWarp(col, row, collision[col][row]);
+			}
+
 			//Flames
 			if (collision[col][row] == FLAME) {
 				specialTileManager->addFlame(col, row);
@@ -528,9 +533,8 @@ void Environment::draw(float dt) {
 					theCollision != UNWALKABLE_PROJECTILE && theCollision != FAKE_PIT &&
 					theCollision != FLAME && theCollision != NO_WALK_PIT &&
 					theCollision != FIRE_DESTROY && theCollision != FAKE_COLLISION && 
-					theCollision != FOUNTAIN && 
-					!(Util::isWarp(theCollision) && 
-					variable[i + xGridOffset][j + yGridOffset] == 990)) {
+					theCollision != FOUNTAIN && !Util::isWarp(theCollision))
+				{
 					
 					//Water animation
 					if (theCollision == SHALLOW_WATER) {
