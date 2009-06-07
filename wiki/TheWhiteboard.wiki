@@ -4,10 +4,8 @@
  * Barvinoid
  * Fenwar
  * Closing Cinematic
- * Rotate warps
  * Make enemy blocks not go away until you get the loot
  * Double digit upgrades don't fit in the inventory
-
 
 === Graphics To Do ===
  * Lovecraft's ice crusher
