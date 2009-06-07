@@ -4,23 +4,31 @@
  * Barvinoid
  * Fenwar
  * Closing Cinematic
+ * Rotate warps
+ * Make enemy blocks not go away until you get the loot
+ * Double digit upgrades don't fit in the inventory
+
 
 === Graphics To Do ===
  * Lovecraft's ice crusher
  * Barvinoid
  * Fenwar
- * Warps (they should at least be animated or something, or maybe there can be a spiral that is rotated PROGRAMMATICALLY)
  * The boxes on the controls screen
  * Slime
  * Pit graphics for different areas
  * More projectile graphics (snowmen throw snowballs, squirrels throw nuts ETCETERA)
  * Ability loot (the thing that appears when you kill a boss) - it should probably have a particle behind it too
  * Re-texture the sphinx
+ * Smilet
+ * Door on Sphinx
+ * Grotesque close up Fenwar with tongue
+ * Ending sequence
 
 === Bugs ===
  * There are randomly item particles in places where there shouldn't be
  * Bouncing spikey enemies that I put to appear in line with each other in game sometimes are not in line when testing, making it a lot harder to get by them than planned. (this is impossible to fix)
  * Spikey enemies start in the wrong spot sometimes. Ex: the mass of spikey enemies in Egypt, sometimes one of them will move down first and then will bounce horizontally in the wrong spot.
+ * Gem #'s are huge at start
 
 === Terry's comments ===
  * Put a fence around the barns so you know you can't go in them.
