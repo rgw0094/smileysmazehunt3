@@ -29,6 +29,7 @@
  * Bouncing spikey enemies that I put to appear in line with each other in game sometimes are not in line when testing, making it a lot harder to get by them than planned. (this is impossible to fix)
  * Spikey enemies start in the wrong spot sometimes. Ex: the mass of spikey enemies in Egypt, sometimes one of them will move down first and then will bounce horizontally in the wrong spot.
  * Gem #'s are huge at start
+ * Portly's ice spawning on Smiley freezes you forever.
 
 === Terry's comments ===
  * Put a fence around the barns so you know you can't go in them.
