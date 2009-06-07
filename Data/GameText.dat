@@ -323,6 +323,18 @@ NPC18Pages = "1"
 NPC18-1 = "Do dank dungeons desire dutiful detergent dolloping?"
 
 
+
+
+;CASTLE.SMH
+NPC22Name = "Bobbo"
+NPC22Pages = "5"
+NPC22-1 = "Whatcha lookin' at?  Never seen a smilet before?  Name's Bob, but my true pals call me Bobbo."
+NPC22-2 = "Smilets don't talk to larger folk; we're actually instinctively scared of you.  But I'm in quite a pickle right now."
+NPC22-3 = "It seems Fenwar that has captured my entire extended family and hid them all over his castle."
+NPC22-4 = "The thing is, smilets are always to scared to venture out alone, but all of us have been separated!"
+NPC22-5 = "If we could only gather on some faced-flower and dance around it in blissful harmony... you see, that is what we smilets enjoy."
+
+
 ;==============================================BOSSES=====================================
 ;Lord Phyrebawz
 NPC100Name = "Fenwar"
