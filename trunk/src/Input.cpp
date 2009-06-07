@@ -399,7 +399,7 @@ void SmileyInput::loadInputs() {
 	inputs[INPUT_AIM].code = smh->hge->Ini_GetInt("Controls","aim",HGEK_ALT);
 	inputs[INPUT_NEXT_ABILITY].code = smh->hge->Ini_GetInt("Controls","next",HGEK_X);
 	inputs[INPUT_PREVIOUS_ABILITY].code = smh->hge->Ini_GetInt("Controls","previous",HGEK_Z);
-	inputs[INPUT_PAUSE].code = smh->hge->Ini_GetInt("Controls","exit",HGEK_ESCAPE);
+	inputs[INPUT_PAUSE].code = smh->hge->Ini_GetInt("Controls","exit",HGEK_I);
 
 	//Load device for each input
 	inputs[INPUT_LEFT].device = smh->hge->Ini_GetInt("Controls","leftDevice", DEVICE_KEYBOARD);
