@@ -11,14 +11,10 @@
  * Lovecraft's ice crusher
  * Barvinoid
  * Fenwar
- * The boxes on the controls screen
  * Slime
  * Pit graphics for different areas
  * More projectile graphics (snowmen throw snowballs, squirrels throw nuts ETCETERA)
  * Ability loot (the thing that appears when you kill a boss) - it should probably have a particle behind it too
- * Re-texture the sphinx
- * Smilet
- * Door on Sphinx
  * Grotesque close up Fenwar with tongue
  * Ending sequence
 
