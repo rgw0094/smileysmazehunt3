@@ -8,14 +8,10 @@
  * Double digit upgrades don't fit in the inventory
 
 === Graphics To Do ===
- * Lovecraft's ice crusher
  * Barvinoid
  * Fenwar
  * Slime
- * Pit graphics for different areas
  * More projectile graphics (snowmen throw snowballs, squirrels throw nuts ETCETERA)
- * Ability loot (the thing that appears when you kill a boss) - it should probably have a particle behind it too
- * Grotesque close up Fenwar with tongue
  * Ending sequence
 
 === Bugs ===
