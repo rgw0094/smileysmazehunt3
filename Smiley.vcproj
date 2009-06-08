@@ -180,90 +180,130 @@
 		<Filter
 			Name="Bosses"
 			Filter="">
+			<File
+				RelativePath=".\src\boss.h">
+			</File>
+			<File
+				RelativePath=".\src\BossManager.cpp">
+			</File>
 			<Filter
-				Name="Source"
+				Name="Phyrebozz Round 1"
 				Filter="">
-				<File
-					RelativePath=".\src\BossManager.cpp">
-				</File>
-				<File
-					RelativePath=".\src\CandyBoss.cpp">
-				</File>
-				<File
-					RelativePath=".\src\ConservatoryBoss.cpp">
-				</File>
-				<File
-					RelativePath=".\src\DesertBoss.cpp">
-				</File>
-				<File
-					RelativePath=".\src\DespairBoss.cpp">
-				</File>
-				<File
-					RelativePath=".\src\FenwarBoss.cpp">
-				</File>
 				<File
 					RelativePath=".\src\fireboss.cpp">
 				</File>
 				<File
-					RelativePath=".\src\fireboss2.cpp">
-				</File>
-				<File
-					RelativePath=".\src\ForestBoss.cpp">
-				</File>
-				<File
-					RelativePath=".\src\LovecraftBoss.cpp">
-				</File>
-				<File
-					RelativePath=".\src\MushroomBoss.cpp">
-				</File>
-				<File
-					RelativePath=".\src\SnowBoss.cpp">
-				</File>
-				<File
-					RelativePath=".\src\TutBoss.cpp">
+					RelativePath=".\src\fireboss.h">
 				</File>
 			</Filter>
 			<Filter
-				Name="Header"
+				Name="Phyrebozz Round 2"
 				Filter="">
 				<File
-					RelativePath=".\src\boss.h">
-				</File>
-				<File
-					RelativePath=".\src\CandyBoss.h">
-				</File>
-				<File
-					RelativePath=".\src\ConservatoryBoss.h">
-				</File>
-				<File
-					RelativePath=".\src\DesertBoss.h">
-				</File>
-				<File
-					RelativePath=".\src\DespairBoss.h">
-				</File>
-				<File
-					RelativePath=".\src\FenwarBoss.h">
-				</File>
-				<File
-					RelativePath=".\src\fireboss.h">
+					RelativePath=".\src\fireboss2.cpp">
 				</File>
 				<File
 					RelativePath=".\src\fireboss2.h">
 				</File>
+			</Filter>
+			<Filter
+				Name="Fenwar"
+				Filter="">
+				<File
+					RelativePath=".\src\FenwarBoss.cpp">
+				</File>
+				<File
+					RelativePath=".\src\FenwarBoss.h">
+				</File>
+			</Filter>
+			<Filter
+				Name="Garmborn"
+				Filter="">
+				<File
+					RelativePath=".\src\ForestBoss.cpp">
+				</File>
 				<File
 					RelativePath=".\src\ForestBoss.h">
 				</File>
+			</Filter>
+			<Filter
+				Name="King Tut"
+				Filter="">
 				<File
-					RelativePath=".\src\LovecraftBoss.h">
+					RelativePath=".\src\TutBoss.cpp">
+				</File>
+				<File
+					RelativePath=".\src\TutBoss.h">
+				</File>
+			</Filter>
+			<Filter
+				Name="Cornwallis"
+				Filter="">
+				<File
+					RelativePath=".\src\DesertBoss.cpp">
+				</File>
+				<File
+					RelativePath=".\src\DesertBoss.h">
+				</File>
+			</Filter>
+			<Filter
+				Name="Brian Fungus"
+				Filter="">
+				<File
+					RelativePath=".\src\MushroomBoss.cpp">
 				</File>
 				<File
 					RelativePath=".\src\MushroomBoss.h">
 				</File>
+			</Filter>
+			<Filter
+				Name="Magnitogorsk"
+				Filter="">
 				<File
-					RelativePath=".\src\SnowBoss.h">
+					RelativePath=".\src\LovecraftBoss.cpp">
 				</File>
 				<File
-					RelativePath=".\src\TutBoss.h">
+					RelativePath=".\src\LovecraftBoss.h">
+				</File>
+			</Filter>
+			<Filter
+				Name="Bartli"
+				Filter="">
+				<File
+					RelativePath=".\src\CandyBoss.cpp">
+				</File>
+				<File
+					RelativePath=".\src\CandyBoss.h">
+				</File>
+			</Filter>
+			<Filter
+				Name="Barvinoid"
+				Filter="">
+				<File
+					RelativePath=".\src\ConservatoryBoss.cpp">
+				</File>
+				<File
+					RelativePath=".\src\ConservatoryBoss.h">
+				</File>
+			</Filter>
+			<Filter
+				Name="Calypso"
+				Filter="">
+				<File
+					RelativePath=".\src\DespairBoss.cpp">
+				</File>
+				<File
+					RelativePath=".\src\DespairBoss.h">
+				</File>
+			</Filter>
+			<Filter
+				Name="Portly Penguin"
+				Filter="">
+				<File
+					RelativePath=".\src\SnowBoss.cpp">
+				</File>
+				<File
+					RelativePath=".\src\SnowBoss.h">
 				</File>
 			</Filter>
 		</Filter>

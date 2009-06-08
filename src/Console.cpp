@@ -55,10 +55,6 @@ void Console::update(float dt) {
 	//Toggle debug mode
 	if (smh->hge->Input_KeyDown(HGEK_D)) smh->toggleDebugMode();
 
-	if (smh->hge->Input_KeyDown(HGEK_G)) {
-		smh->player->setHealth(-1);
-	}
-
 	if (smh->getGameState() == GAME) {
 
 		//Toggle invincibility

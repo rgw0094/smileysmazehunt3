@@ -40,8 +40,11 @@ struct IceBlock {
 };
 
 struct TimedTile {
-	int gridX, gridY, newTile, oldTile;
-	float duration, timeCreated, alpha;
+	int gridX, gridY;
+	int newTerrain, oldTerrain;
+	int newCollision, oldCollision;
+	int newItemLayer, oldItemLayer;
+	float duration, timeCreated, alpha, fadeTime;
 };
 
 struct Warp {
@@ -62,12 +65,12 @@ public:
 	void update(float dt);
 	void reset();
 
-	void addTimedTile(int gridX, int gridY, int tile, float duration);
+	void addTimedTile(int gridX, int gridY, int newTerrain, int newCollision, int newItemLayer, float fadeTime);
+	void addTimedTile(int gridX, int gridY, int newCollision);
 	void updateTimedTiles(float dt);
 	void drawTimedTiles(float dt);
 	void resetTimedTiles();
 	bool isTimedTileAt(int gridX, int gridY);
-	bool isTimedTileAt(int gridX, int gridY, int tile);
 
 	void addMushroom(int _gridX,int _gridY, int _graphicsIndex);
 	void updateMushrooms(float dt);

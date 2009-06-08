@@ -11,9 +11,9 @@
 extern SMH *smh;
 
 #define ATTACK_RADIUS (PI / 3.0)
-#define NUM_COLLISION_POINTS 10
-#define TONGUE_LENGTH 70.0
-#define NUM_FRAMES 13
+#define NUM_COLLISION_POINTS 9
+#define TONGUE_LENGTH 65.0
+#define NUM_FRAMES 12
 
 //Tongue states
 #define STATE_EXTENDING 0

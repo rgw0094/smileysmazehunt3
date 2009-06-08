@@ -9,6 +9,7 @@
 #include "WindowFramework.h"
 #include "EnemyFramework.h"
 #include "ExplosionManager.h"
+#include "SpecialTileManager.h"
 
 extern SMH *smh;
 
@@ -314,7 +315,7 @@ void FireBossTwo::updateFireNova(float dt) {
 			for (int gridY = Util::getGridY(y) - radius; gridY <= Util::getGridY(y) + radius; gridY++) {
 				//Make sure distance is less than radius so that the lava is created as a circle
 				if (Util::distance(gridX, gridY, Util::getGridX(x), Util::getGridY(y)) <= radius) {
-					smh->environment->addTimedTile(gridX, gridY, WALK_LAVA, 99999.0);
+					smh->environment->specialTileManager->addTimedTile(gridX, gridY, WALK_LAVA);
 				}
 			}
 		}
@@ -326,20 +327,20 @@ void FireBossTwo::updateFireNova(float dt) {
 		
 		//two columns at -5x and +5x which are 5 tiles tall (-2y to +2y)
 		for (int gridY = Util::getGridY(y) - 2; gridY <= Util::getGridY(y) + 2; gridY++) {
-			smh->environment->addTimedTile(Util::getGridX(x) - 5, gridY, WALK_LAVA, 99999.0);
-			smh->environment->addTimedTile(Util::getGridX(x) + 5, gridY, WALK_LAVA, 99999.0);
+			smh->environment->specialTileManager->addTimedTile(Util::getGridX(x) - 5, gridY, WALK_LAVA);
+			smh->environment->specialTileManager->addTimedTile(Util::getGridX(x) + 5, gridY, WALK_LAVA);
 		}
 
 		//now fill in the corners
-		smh->environment->addTimedTile(Util::getGridX(x)-4, Util::getGridY(y)-3, WALK_LAVA, 99999.0);
-		smh->environment->addTimedTile(Util::getGridX(x)-4, Util::getGridY(y)+3, WALK_LAVA, 99999.0);
-		smh->environment->addTimedTile(Util::getGridX(x)+4, Util::getGridY(y)-3, WALK_LAVA, 99999.0);
-		smh->environment->addTimedTile(Util::getGridX(x)+4, Util::getGridY(y)+3, WALK_LAVA, 99999.0);
+		smh->environment->specialTileManager->addTimedTile(Util::getGridX(x)-4, Util::getGridY(y)-3, WALK_LAVA);
+		smh->environment->specialTileManager->addTimedTile(Util::getGridX(x)-4, Util::getGridY(y)+3, WALK_LAVA);
+		smh->environment->specialTileManager->addTimedTile(Util::getGridX(x)+4, Util::getGridY(y)-3, WALK_LAVA);
+		smh->environment->specialTileManager->addTimedTile(Util::getGridX(x)+4, Util::getGridY(y)+3, WALK_LAVA);
 
-		smh->environment->addTimedTile(Util::getGridX(x)-3, Util::getGridY(y)-4, WALK_LAVA, 99999.0);
-		smh->environment->addTimedTile(Util::getGridX(x)-3, Util::getGridY(y)+4, WALK_LAVA, 99999.0);
-		smh->environment->addTimedTile(Util::getGridX(x)+3, Util::getGridY(y)-4, WALK_LAVA, 99999.0);
-		smh->environment->addTimedTile(Util::getGridX(x)+3, Util::getGridY(y)+4, WALK_LAVA, 99999.0);
+		smh->environment->specialTileManager->addTimedTile(Util::getGridX(x)-3, Util::getGridY(y)-4, WALK_LAVA);
+		smh->environment->specialTileManager->addTimedTile(Util::getGridX(x)-3, Util::getGridY(y)+4, WALK_LAVA);
+		smh->environment->specialTileManager->addTimedTile(Util::getGridX(x)+3, Util::getGridY(y)-4, WALK_LAVA);
+		smh->environment->specialTileManager->addTimedTile(Util::getGridX(x)+3, Util::getGridY(y)+4, WALK_LAVA);
 		
 		addedExtraLavaSquares = true;
 	}

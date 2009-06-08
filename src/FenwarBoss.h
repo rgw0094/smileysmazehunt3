@@ -11,7 +11,8 @@ struct Point;
 class FenwarStates {
 public:
 	static const int INACTIVE = 0;
-	static const int STATE1 = 1;
+	static const int TERRAFORMING = 1;
+	static const int BATTLE = 2;
 	static const int DYING = 5;
 	static const int FADING = 6;
 };
@@ -35,16 +36,23 @@ public:
 private:
     	
 	void doInactiveState(float dt);
+	void doTerraformingState(float dt);
+	void doBattleState(float dt);
 	bool doDeathState(float dt);
 
+	//Helper methods
 	void enterState(int newState);
+	void terraformArena();
 
 	bool startedIntroDialogue;
 	int groupID;
 	float x, y;
+	int startGridX, startGridY;
 	int state;
 	float timeInState;
 	float fadeAlpha;
+	bool terraformedYet;
+	bool startedShakingYet;
 
 };
 

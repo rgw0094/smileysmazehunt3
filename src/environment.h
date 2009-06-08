@@ -72,9 +72,6 @@ public:
 	void placeSillyPad(int gridX, int gridY);
 	bool hasSillyPad(int gridX, int gridY);
 	bool destroySillyPad(int gridX, int gridY);
-	void addTimedTile(int gridX, int gridY, int tile, float duration);
-	bool isTimedTileAt(int gridX, int gridY);
-	bool isTimedTileAt(int gridX, int gridY, int tile);
 	void reset();
 	void updateAdviceMan(float dt);
 	bool isAdviceManActive();
@@ -83,6 +80,7 @@ public:
 	void removeParticle(int x,int y);
 	void removeAllParticles();
 	void addParticle(const char* particle, float x, float y);
+	bool shouldEnvironmentDrawCollision(int collision);
 
 	void killSwitchTimer(int gridX, int gridY);
 	void updateSwitchTimers(float dt);
@@ -104,10 +102,10 @@ public:
 	int offScreenRange;				//Number of tiles offscreen to draw
 
 	hgeSprite *itemLayer[512];
+	SpecialTileManager *specialTileManager;
 
 private:
 
-	SpecialTileManager *specialTileManager;
 	EvilWallManager *evilWallManager; //Evil walls which move and try to kill smiley
 	TapestryManager *tapestryManager;
 	Fountain *fountain;

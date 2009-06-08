@@ -80,6 +80,8 @@ public:
 	float springOffset;
 	float hoveringYOffset;
 	bool shrinkActive;
+	int startedFallingX;					//X position where the player started falling
+	int startedFallingY;					//Y position where the player started falling
 
 	//Constants
 	float angles[8];
@@ -122,8 +124,6 @@ private:
 	
 	float health, mana, 
 	float springVelocity;
-	int startedFallingX;					//X position where the player started falling
-	int startedFallingY;					//Y position where the player started falling
 	int enteredWaterX, enteredWaterY;		//Grid position the player was on before entering water
 	int enteredSpringX, enteredSpringY;
 	bool usingManaItem;
