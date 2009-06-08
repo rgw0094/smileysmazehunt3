@@ -475,11 +475,18 @@ NPC191-1 = "Melorakehlo dathath at'kianoilo sagngnast krnae gnthaosat :("
 
 ;Fenwar
 NPC200Name = "Fenwar"
-NPC200Pages = "1"
-NPC200-1 = "Intro"
+NPC200Pages = "3"
+NPC200-1 = "Excellent job, Smiley.  I'm afraid that even my most challenging puzzles and mightiest minions were no match for you."
+NPC200-2 = "The fact that I'm willing to praise you is a direct consequence of my absolute certainty that I will destroy you in a moment."
+NPC200-3 = "Prepare yourself.  This is going to hurt!"
 NPC201Name = "Fenwar"
-NPC201Pages = "1"
-NPC201-1 = "Defeat"
+NPC201Pages = "6"
+NPC201-1 = "Ugh... I'm almost gone.  This is the end... quite a disappointment."
+NPC201-2 = "I have but one request of you, Smiley.  Please let the people of this world to know my motive so that history may judge me justly."
+NPC201-3 = "I kidnapped your lover due to his recent findings proving that global cooling exists and threatens our planet."
+NPC201-4 = "Had these facts gone public, my multi-million dollar evil corporations would be taxed straight into bankruptcy."
+NPC201-5 = "I do not commit evil for the sake of commiting evil.  I am no such monster.  I just wanted an exhorbitant amount of money."
+NPC201-6 = "*COUGH*  It's all getting dark now..."
 
 ;Barvinoid
 NPC210Name = "Big Barvinoid"
