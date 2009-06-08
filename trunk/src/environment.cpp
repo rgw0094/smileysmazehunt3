@@ -526,16 +526,8 @@ void Environment::draw(float dt) {
 				}
 
 				//Collision
-				if (theCollision != WALKABLE && theCollision != UNWALKABLE && 
-					theCollision != ENEMY_NO_WALK && theCollision != PLAYER_START && 
-					theCollision != DIZZY_MUSHROOM_1 && theCollision != DIZZY_MUSHROOM_2 &&
-					theCollision != PLAYER_END && theCollision != PIT && 
-					theCollision != UNWALKABLE_PROJECTILE && theCollision != FAKE_PIT &&
-					theCollision != FLAME && theCollision != NO_WALK_PIT &&
-					theCollision != FIRE_DESTROY && theCollision != FAKE_COLLISION && 
-					theCollision != FOUNTAIN && !Util::isWarp(theCollision))
-				{
-					
+				if (shouldEnvironmentDrawCollision(theCollision))
+				{					
 					//Water animation
 					if (theCollision == SHALLOW_WATER) {
 						smh->resources->GetAnimation("water")->SetColor(ARGB(125,255,255,255));
@@ -1601,6 +1593,30 @@ bool Environment::testCollision(hgeRect *box, bool canPass[256], bool ignoreSill
 
 }
 
+/**
+ * Returns whether or not the environment should draw the collision sprite for the
+ * given collision type.
+ */
+bool Environment::shouldEnvironmentDrawCollision(int collision) 
+{
+	return collision != WALKABLE && 
+		   collision != UNWALKABLE && 
+		   collision != ENEMY_NO_WALK && 
+		   collision != PLAYER_START && 
+		   collision != DIZZY_MUSHROOM_1 && 
+		   collision != DIZZY_MUSHROOM_2 &&
+		   collision != PLAYER_END && 
+		   collision != PIT && 
+		   collision != UNWALKABLE_PROJECTILE && 
+		   collision != FAKE_PIT &&
+		   collision != FLAME && 
+		   collision != NO_WALK_PIT &&
+		   collision != FIRE_DESTROY && 
+		   collision != FAKE_COLLISION && 
+		   collision != FOUNTAIN && 
+		   !Util::isWarp(collision);
+}
+
 void Environment::removeAllParticles() {
 	for (std::list<ParticleStruct>::iterator i = particleList.begin(); i != particleList.end(); i++) {
 		i->particle->Stop();
@@ -1697,18 +1713,6 @@ bool Environment::hasSillyPad(int gridX, int gridY) {
 
 bool Environment::destroySillyPad(int gridX, int gridY) {
 	return specialTileManager->destroySillyPad(gridX, gridY);
-}
-
-void Environment::addTimedTile(int gridX, int gridY, int tile, float duration) {
-	specialTileManager->addTimedTile(gridX, gridY, tile, duration);
-}
-
-bool Environment::isTimedTileAt(int gridX, int gridY) {
-	return specialTileManager->isTimedTileAt(gridX, gridY);
-}
-
-bool Environment::isTimedTileAt(int gridX, int gridY, int tile) {
-	return specialTileManager->isTimedTileAt(gridX, gridY, tile);
 }
 
 void Environment::updateAdviceMan(float dt) {

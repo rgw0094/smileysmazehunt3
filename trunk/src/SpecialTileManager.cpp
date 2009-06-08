@@ -131,45 +131,87 @@ void SpecialTileManager::resetIceBlocks() {
 //////////// Timed Tile Functions ///////////////////
 
 /**
- * Add a timed tile.
+ * Permanantly transforms the square at (gridX, gridY) to have a new collision,
+ * but the same terrain and item layer.
  */
-void SpecialTileManager::addTimedTile(int gridX, int gridY, int tile, float duration) {
+void SpecialTileManager::addTimedTile(int gridX, int gridY, int newCollision) 
+{	
+	addTimedTile(gridX, gridY, smh->environment->terrain[gridX][gridY], newCollision, 
+		smh->environment->item[gridX][gridY], 1.0);
+}
 
-	if (isTimedTileAt(gridX, gridY, tile)) return;
+/**
+ * Permanantly transforms the square at (gridX, gridY) to have a new collision,
+ * terrain, and item layer.
+ */
+void SpecialTileManager::addTimedTile(int gridX, int gridY, int newTerrain, int newCollision, int newItemLayer, float fadeTime) 
+{
+	if (isTimedTileAt(gridX, gridY)) return;
 
-	TimedTile newTile;
-	newTile.gridX = gridX;
-	newTile.gridY = gridY;
-	newTile.newTile = tile;
-	newTile.oldTile = smh->environment->collision[gridX][gridY];
-	newTile.duration = duration;
-	newTile.timeCreated = smh->getGameTime();
-	newTile.alpha = 0.0;
+	TimedTile tile;
 
-	timedTileList.push_back(newTile);
+	tile.gridX = gridX;
+	tile.gridY = gridY;
+	tile.duration = 99999.0;
+	tile.fadeTime = fadeTime;
+	tile.timeCreated = smh->getGameTime();
+	tile.alpha = 0.0;
+
+	tile.newTerrain = newTerrain;
+	tile.oldTerrain = smh->environment->terrain[gridX][gridY];
+	tile.newCollision = newCollision;
+	tile.oldCollision = smh->environment->collision[gridX][gridY];
+	tile.newItemLayer = newItemLayer;
+	tile.oldItemLayer = smh->environment->item[gridX][gridY];
+
+	timedTileList.push_back(tile);
+
+	//Set the new tile stuff now, we will fade out the old stuff in the draw method
+	smh->environment->terrain[gridX][gridY] = newTerrain;
+	smh->environment->item[gridX][gridY] = newItemLayer;
+	if (newCollision == PIT) 
+		smh->environment->collision[gridX][gridY] = FAKE_PIT;
+	else
+		smh->environment->collision[gridX][gridY] = newCollision;
 
 }
 
 /**
  * Update all timed tiles.
  */
-void SpecialTileManager::updateTimedTiles(float dt) {
+void SpecialTileManager::updateTimedTiles(float dt) 
+{
 	std::list<TimedTile>::iterator i;
-	for(i = timedTileList.begin(); i != timedTileList.end(); i++) {
-		if (smh->timePassedSince(i->timeCreated) <= i->duration) {
+	for(i = timedTileList.begin(); i != timedTileList.end(); i++) 
+	{
+		if (smh->timePassedSince(i->timeCreated) <= i->duration) 
+		{
 			//Fading in
-			if (i->alpha < 255.0) {
-				i->alpha += 255.0 * dt;
-				if (i->alpha > 255.0) {
-					smh->environment->collision[i->gridX][i->gridY] = i->newTile;
+			if (i->alpha < 255.0) 
+			{
+				i->alpha += (255.0 / i->fadeTime) * dt;
+				
+				if (i->newCollision == PIT && i->alpha > 165.0) 
+					smh->environment->collision[i->gridX][i->gridY] = PIT;
+				
+				if (i->alpha > 255.0) 
+				{
 					i->alpha = 255.0;
 				}
 			}
-		} else {
+		} 
+		else 
+		{
 			//Fading out
-			if (i->alpha == 255.0) smh->environment->collision[i->gridX][i->gridY] = i->oldTile;
-			i->alpha -= 255.0 * dt;
-			if (i->alpha < 0.0) {
+			if (i->alpha == 255.0) 
+			{
+				//smh->environment->collision[i->gridX][i->gridY] = i->oldCollision;
+				//smh->environment->item[i->gridX][i->gridY] = i->oldItemLayer;
+				//smh->environment->terrain[i->gridX][i->gridY] = i->oldTerrain;
+			}
+			i->alpha -= (255.0 / i->fadeTime) * dt;
+			if (i->alpha < 0.0) 
+			{
 				i->alpha = 0.0;
 				i = timedTileList.erase(i);
 			}
@@ -180,20 +222,34 @@ void SpecialTileManager::updateTimedTiles(float dt) {
 /**
  * Draw all timed tiles.
  */
-void SpecialTileManager::drawTimedTiles(float dt) {
-	std::list<TimedTile>::iterator i;
-	for(i = timedTileList.begin(); i != timedTileList.end(); i++) {
-		if (i->alpha < 255.0) {
-			if (i->newTile == WALK_LAVA || i->newTile == NO_WALK_LAVA) {
-				smh->resources->GetAnimation("lava")->SetColor(ARGB(i->alpha, 255, 255, 255));
-				smh->resources->GetAnimation("lava")->Render(smh->getScreenX(i->gridX*64), smh->getScreenY(i->gridY*64));
-				smh->resources->GetAnimation("lava")->SetColor(ARGB(255, 255, 255, 255));
-			} else {
-				smh->resources->GetAnimation("walkLayer")->SetFrame(i->newTile);
-				smh->resources->GetAnimation("walkLayer")->SetColor(ARGB(i->alpha, 255, 255, 255));
-				smh->resources->GetAnimation("walkLayer")->Render(smh->getScreenX(i->gridX*64), smh->getScreenY(i->gridY*64));
+void SpecialTileManager::drawTimedTiles(float dt) 
+{
+	for(std::list<TimedTile>::iterator i = timedTileList.begin(); i != timedTileList.end(); i++) 
+	{
+		if (Util::distance(smh->player->gridX, smh->player->gridY, i->gridX, i->gridY) < 12 && i->alpha < 255.0) 
+		{
+			float x = smh->getScreenX(i->gridX*64);
+			float y = smh->getScreenY(i->gridY*64);
+
+			//Fade out old terrain
+			smh->resources->GetAnimation("mainLayer")->SetFrame(i->oldTerrain);
+			smh->resources->GetAnimation("mainLayer")->SetColor(ARGB(255.0 - i->alpha, 255, 255, 255));
+			smh->resources->GetAnimation("mainLayer")->Render(x, y);
+			smh->resources->GetAnimation("mainLayer")->SetColor(ARGB(255, 255, 255, 255));
+			
+			//Fade out old collision layer
+			if (smh->environment->shouldEnvironmentDrawCollision(i->oldCollision)) 
+			{
+				smh->resources->GetAnimation("walkLayer")->SetFrame(i->oldCollision);
+				smh->resources->GetAnimation("walkLayer")->SetColor(ARGB(255.0 - i->alpha, 255, 255, 255));
+				smh->resources->GetAnimation("walkLayer")->Render(x, y);
 				smh->resources->GetAnimation("walkLayer")->SetColor(ARGB(255, 255, 255, 255));
 			}
+
+			//Fade out old item layer
+			smh->environment->itemLayer[i->oldItemLayer]->SetColor(ARGB(255.0 - i->alpha, 255, 255, 255));
+			smh->environment->itemLayer[i->oldItemLayer]->Render(x, y);
+			smh->environment->itemLayer[i->oldItemLayer]->SetColor(ARGB(255, 255, 255, 255));
 		}
 	}
 }
@@ -219,18 +275,6 @@ bool SpecialTileManager::isTimedTileAt(int gridX, int gridY) {
 	}
 	return false;
 }
-
-/**
- * Returns whether or not there is a timed tile of a certain type at the specified location.
- */
-bool SpecialTileManager::isTimedTileAt(int gridX, int gridY, int tile) {
-	std::list<TimedTile>::iterator i;
-	for(i = timedTileList.begin(); i != timedTileList.end(); i++) {
-		if (i->gridX == gridX && i->gridY == gridY && i->newTile == tile) return true;
-	}
-	return false;
-}
-
 
 //////////// Silly Pad Functions ///////////////
 
