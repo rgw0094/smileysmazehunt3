@@ -12,7 +12,6 @@
  * Fenwar
  * Slime
  * More projectile graphics (snowmen throw snowballs, squirrels throw nuts ETCETERA)
- * Ending sequence
 
 === Bugs ===
  * There are randomly item particles in places where there shouldn't be
