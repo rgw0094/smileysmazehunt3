@@ -880,8 +880,8 @@ numEnemies="99"
 49ImmuneLightning="T"
 
 ;Protector
-50GCol=      "4"
-50GRow=      "3"
+50GCol=      "14"
+50GRow=      "4"
 50EnemyType= "0"
 50WanderType="3"
 50HP=        "99999"
@@ -1762,3 +1762,4 @@ numEnemies="99"
 98PSpeed=    "450"
 98PType=     "14"
 98PHoming=   "F"
+
