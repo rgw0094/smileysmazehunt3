@@ -39,6 +39,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Replaced fenwar with animated fenwar everywhere||6/8/09||RGW||
 ||Rotating warps||6/7/09||RGW||
 ||Fixed Fenwar encounters||6/7/09||RGW||
 ||Fixed floater pathing||5/29/09||RGW||
