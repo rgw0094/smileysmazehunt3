@@ -13,7 +13,7 @@
 
 FenwarBoss::FenwarBoss(int _gridX, int _gridY, int _groupID) 
 {
-	x = _gridX * 64 + 64;
+	x = _gridX * 64 + 32;
 	y = _gridY * 64 + 32;
 
 	startGridX = _gridX;
@@ -26,12 +26,17 @@ FenwarBoss::FenwarBoss(int _gridX, int _gridY, int _groupID)
 	terraformedYet = false;
 	startedShakingYet = false;
 
+	orbManager = new FenwarOrbs(this);
+
+	smh->resources->GetAnimation("fenwar")->Play();
+	smh->resources->GetAnimation("fenwar")->SetColor(ARGB(255,255,255,255));
+
 	enterState(FenwarStates::INACTIVE);
 }
 
 FenwarBoss::~FenwarBoss() 
 {
-	//TODO
+	delete orbManager;
 }
 
 //~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
@@ -40,7 +45,8 @@ FenwarBoss::~FenwarBoss()
 
 void FenwarBoss::draw(float dt) 
 {
-	smh->drawGlobalSprite("fenwarDown", x, y);
+	smh->resources->GetAnimation("fenwar")->Render(smh->getScreenX(x), smh->getScreenY(y));
+	smh->resources->GetAnimation("fenwarFace")->Render(smh->getScreenX(x), smh->getScreenY(y));
 }
 
 void FenwarBoss::drawAfterSmiley(float dt) 
@@ -55,6 +61,7 @@ void FenwarBoss::drawAfterSmiley(float dt)
 bool FenwarBoss::update(float dt) 
 {
 	timeInState += dt;
+	orbManager->update(dt);
 
 	switch (state) 
 	{
@@ -167,24 +174,62 @@ void FenwarBoss::terraformArena()
 	int r = 6;
 	int platformTerrain = smh->environment->terrain[startGridX][startGridY];
 
+	PlatformLocation p[9];
+
+	p[0].x = startGridX;		//center
+	p[0].y = startGridY;
+
+	p[1].x = startGridX;		//down
+	p[1].y = startGridY + r;
+
+	p[2].x = startGridX + r;	//down-right
+	p[2].y = startGridY + r;
+
+	p[3].x = startGridX + r;	//right
+	p[3].y = startGridY;
+
+	p[4].x = startGridX + r;	//up right
+	p[4].y = startGridY - r;
+
+	p[5].x = startGridX;		//up
+	p[5].y = startGridY - r;
+
+	p[6].x = startGridX - r;	//up left
+	p[6].y = startGridY - r;
+
+	p[7].x = startGridX - r;	//left
+	p[7].y = startGridY;
+
+	p[8].x = startGridX - r;	//down-left
+	p[8].y = startGridY + r;
+	
+	//Terraform a big area around fenwar
 	for (int i = startGridX - 40; i <= startGridX + 40; i++) 
 	{
 		for (int j = startGridY - 40; j <= startGridY + 40; j++) 
 		{
-			if (Util::distance(startGridX,		startGridY,		i, j) > 1 && //center
-				Util::distance(startGridX,		startGridY + r,	i, j) > 1 && //down
-				Util::distance(startGridX + r,	startGridY + r, i, j) > 1 && //down-right
-				Util::distance(startGridX + r,	startGridY,  	i, j) > 1 && //right
-				Util::distance(startGridX + r,	startGridY - r,	i, j) > 1 && //up-right
-				Util::distance(startGridX,		startGridY - r,	i, j) > 1 && //up
-				Util::distance(startGridX - r,	startGridY - r,	i, j) > 1 && //up-left
-				Util::distance(startGridX - r,	startGridY,		i, j) > 1 && //left
-				Util::distance(startGridX - r,	startGridY + r,	i, j) > 1)   //down-left
+			bool isPlatform = false;
+			for (int k = 0; k < 9; k++)
+			{
+				if (i == p[k].x && j == p[k].y)
+				{
+					//Put hover pads on the center of the platforms
+					smh->environment->specialTileManager->addTimedTile(i, j, platformTerrain, HOVER_PAD, 0, TERRAFORM_DURATION);
+					isPlatform = true;
+					continue;
+				} 
+				else if (Util::distance(p[k].x, p[k].y, i, j) <= 1) 
+				{
+					//Platform
+					smh->environment->specialTileManager->addTimedTile(i, j, platformTerrain, WALKABLE, 0, TERRAFORM_DURATION);
+					isPlatform = true;
+					continue;
+				}
+			}
+			//If this square isn't on a platform, turn it into a pit!
+			if (!isPlatform) 
 			{
 				smh->environment->specialTileManager->addTimedTile(i, j, platformTerrain, PIT, 0, TERRAFORM_DURATION);
-			} else 
-			{
-				smh->environment->specialTileManager->addTimedTile(i, j, platformTerrain, WALKABLE, 0, TERRAFORM_DURATION);
 			}
 		}
 	}

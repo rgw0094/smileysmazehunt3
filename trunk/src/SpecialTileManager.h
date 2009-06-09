@@ -67,6 +67,7 @@ public:
 
 	void addTimedTile(int gridX, int gridY, int newTerrain, int newCollision, int newItemLayer, float fadeTime);
 	void addTimedTile(int gridX, int gridY, int newCollision);
+	void removeTimedTile(int gridX, int gridY);
 	void updateTimedTiles(float dt);
 	void drawTimedTiles(float dt);
 	void resetTimedTiles();

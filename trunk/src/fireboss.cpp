@@ -87,7 +87,8 @@ void FireBoss::draw(float dt) {
 
 	//Draw FENWAR talking to the boss
 	if (showFenwar) {
-		smh->resources->GetSprite("fenwarDown")->Render(smh->getScreenX(startX*64-120), smh->getScreenY(startY*64));
+		smh->resources->GetAnimation("fenwar")->Render(smh->getScreenX(startX*64-120), smh->getScreenY(startY*64));
+		smh->resources->GetAnimation("fenwarFace")->Render(smh->getScreenX(startX*64-120), smh->getScreenY(startY*64));
 	}
 	if (fenwarLeave) {
 		fenwarWarp->MoveTo(smh->getScreenX(startX*64-120), smh->getScreenY(startY*64),true);
@@ -172,7 +173,7 @@ bool FireBoss::update(float dt) {
 	//Update fenwar warping out effect
 	if (fenwarLeave) {
 		fenwarAlpha -= 255.0f*dt;
-		smh->resources->GetSprite("fenwarDown")->SetColor(ARGB(alpha,255,255,255));
+		smh->resources->GetAnimation("fenwar")->SetColor(ARGB(alpha,255,255,255));
 		if (fenwarAlpha < 0.0f) showFenwar = false;
 		if (smh->getGameTime() > startedFenwarLeave + 2.0f) fenwarLeave = false;
 	}

@@ -213,21 +213,41 @@ Particle bigFireball {
  filename=bigFireball.psi
  sprite=particleGraphic13
 }
+
 ;********************************************
-;******** FENWAR (Resource Group 110) *******
+;************* FENWAR ENCOUNTER  ************
 ;********************************************
-Sprite fenwarDown {
- texture="Graphics/fenwar.png"
- rect=0,0,62,73
+Animation fenwar {
+ texture=general
+ rect=401,385,62,73
+ frames=6
+ fps=10.0
+ mode=FORWARD,LOOP
  hotspot=31,36
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=110
+}
+Animation fenwarFace {
+ texture=general
+ rect=491,461,50,48
+ frames=3
+ fps=4.0
+ mode=FORWARD,NOLOOP
+ hotspot=25,24
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 Particle fenwarwarp {
  filename=fenwarwarp.psi
  sprite=particleGraphic13
+}
+
+;********************************************
+;***** FENWAR BOSS (Resource Group 110) *****
+;********************************************
+Texture fenwarBossTx {
+ filename="Graphics/FenwarBoss.png"
  resgroup=110
 }
+
 
 ;*********************
 ;******** LOOT *******
