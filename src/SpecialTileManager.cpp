@@ -176,6 +176,14 @@ void SpecialTileManager::addTimedTile(int gridX, int gridY, int newTerrain, int 
 
 }
 
+void SpecialTileManager::removeTimedTile(int gridX, int gridY) 
+{
+	for(std::list<TimedTile>::iterator i = timedTileList.begin(); i != timedTileList.end(); i++) 
+	{
+		
+	}
+}
+
 /**
  * Update all timed tiles.
  */

@@ -176,6 +176,8 @@ bool SMH::updateGame() {
 			screenEffectsManager->update(dt);
 		}
 
+		smh->resources->GetAnimation("fenwar")->Update(dt);
+
 		//Keep track of the time that no windows are open.
 		if (!windowManager->isOpenWindow()) gameTime += dt;
 	

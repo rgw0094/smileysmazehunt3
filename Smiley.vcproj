@@ -215,6 +215,9 @@
 				<File
 					RelativePath=".\src\FenwarBoss.h">
 				</File>
+				<File
+					RelativePath=".\src\FenwarOrbs.cpp">
+				</File>
 			</Filter>
 			<Filter
 				Name="Garmborn"

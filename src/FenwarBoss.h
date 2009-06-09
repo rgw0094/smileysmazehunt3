@@ -3,12 +3,16 @@
 
 #include "boss.h"
 
+class FenwarOrbs;
 class hgeDistortionMesh;
 class hgeRect;
 
 struct Point;
 
-class FenwarStates {
+///////////////// FENWAR BOSS /////////////////
+
+class FenwarStates 
+{
 public:
 	static const int INACTIVE = 0;
 	static const int TERRAFORMING = 1;
@@ -17,13 +21,19 @@ public:
 	static const int FADING = 6;
 };
 
-class FenwarAttributes {
+class FenwarAttributes 
+{
 public:
 	static const int HEALTH = 15.0;
 };
 
-class FenwarBoss : public Boss {
+struct PlatformLocation
+{
+	int x, y;
+};
 
+class FenwarBoss : public Boss 
+{
 public:
 
 	FenwarBoss(int _gridX, int _gridY, int _groupID);
@@ -32,6 +42,8 @@ public:
 	void draw(float dt);
 	bool update(float dt);
 	void drawAfterSmiley(float dt);
+
+	int state;
 
 private:
     	
@@ -44,15 +56,44 @@ private:
 	void enterState(int newState);
 	void terraformArena();
 
+	FenwarOrbs *orbManager;
 	bool startedIntroDialogue;
 	int groupID;
 	float x, y;
 	int startGridX, startGridY;
-	int state;
 	float timeInState;
 	float fadeAlpha;
 	bool terraformedYet;
 	bool startedShakingYet;
+
+};
+
+///////////// FENWAR ORBS ////////////////
+
+struct FenwarOrb 
+{
+	float radius;
+	float distFromFenwar;
+	float angle;
+	bool isRedOrb;
+};
+
+class FenwarOrbs 
+{
+public:
+
+	FenwarOrbs(FenwarBoss *fenwar);
+	~FenwarOrbs();
+
+	void draw(float dt);
+	void update(float dt);
+
+	FenwarBoss *fenwar;
+	std::list<FenwarOrb> orbList;
+
+private:
+
+	void spawnOrb(float distFromFenwar, float angle, bool isRedOrb);
 
 };
 

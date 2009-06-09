@@ -54,12 +54,17 @@ void FenwarManager::update(float dt) {
 		if (!i->triggered) {
 			
 			//When the player gets close, trigger the encounter
-			if (Util::distance(i->x, i->y, smh->player->x, smh->player->y) < TRIGGER_DISTANCE) {
+			if (Util::distance(i->x, i->y, smh->player->x, smh->player->y) < TRIGGER_DISTANCE) 
+			{
 				i->triggered = true;
 				i->state = STATE_WARPING_IN;
 				i->timeEnteredState = smh->getGameTime();
 				smh->soundManager->playMusic("fenwarLietmotif");
 				particles->SpawnPS(&smh->resources->GetParticleSystem("fenwarwarp")->info, smh->getScreenX(i->x), smh->getScreenY(i->y));
+
+				smh->resources->GetAnimation("fenwar")->Play();
+				smh->resources->GetAnimation("fenwarFace")->SetFrame(0);
+				smh->resources->GetAnimation("fenwarFace")->Stop();
 			}
 		
 		//Has been triggered
@@ -110,8 +115,11 @@ void FenwarManager::draw(float dt) {
 	std::list<FenwarEncounter>::iterator i;
 	for(i = fenwarEncounterList.begin(); i != fenwarEncounterList.end(); i++) {
 
-		if (i->fenwarVisible) {
-			smh->resources->GetSprite("fenwarDown")->Render(smh->getScreenX(i->x), smh->getScreenY(i->y));
+		if (i->fenwarVisible) 
+		{
+			smh->resources->GetAnimation("fenwar")->SetColor(ARGB(255,255,255,255));
+			smh->resources->GetAnimation("fenwar")->Render(smh->getScreenX(i->x), smh->getScreenY(i->y));
+			smh->resources->GetAnimation("fenwarFace")->Render(smh->getScreenX(i->x), smh->getScreenY(i->y));
 		}
 
 	}
