@@ -21,6 +21,7 @@
  * Portly's ice spawning on Smiley freezes you forever.
  * The game randomly crashes when licking a Mortimer the Turnip
  * The enemy death sound is played randomly when no enemy is being killed
+ * Blue gems are now worth 8 but supposed to be worth 5
 
 == Progress ==
 ||*Item Goal*||*Level found*||*Boss*||*Level Completion*||Boss Completion||
