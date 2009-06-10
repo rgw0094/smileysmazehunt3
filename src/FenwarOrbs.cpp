@@ -9,10 +9,15 @@ FenwarOrbs::~FenwarOrbs()
 {
 }
 
+//~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+// Public Methods
+//~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+
 void FenwarOrbs::update(float dt)
 {
 	for (std::list<FenwarOrb>::iterator i = orbList.begin(); i != orbList.end(); i++) 
 	{
+		i->angle += PI * dt;
 	}
 }
 
@@ -20,8 +25,23 @@ void FenwarOrbs::draw(float dt)
 {
 	for (std::list<FenwarOrb>::iterator i = orbList.begin(); i != orbList.end(); i++) 
 	{
+		smh->resources->GetSprite("fenwarOrb")->Render(smh->getScreenX(i->x), smh->getScreenY(i->y));
 	}
 }
+
+void FenwarOrbs::spawnOrbs()
+{
+	float angle = 0;
+	for (int i = 0; i < 8; i++) 
+	{
+		spawnOrb(50.0, angle, false);
+		angle += PI / 4.0;
+	}
+}
+
+//~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+// Helper Methods
+//~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
 
 void FenwarOrbs::spawnOrb(float distFromFenwar, float angle, bool isRedOrb)
 {

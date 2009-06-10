@@ -473,6 +473,7 @@ public:
 	const char *getGameText(const char *text);
 	const char *getAreaName(int area);
 	float getDifficultyModifier(int difficulty);
+	int getNumEnemies();
 
 private:
 

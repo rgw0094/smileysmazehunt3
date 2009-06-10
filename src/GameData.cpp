@@ -76,6 +76,11 @@ int GameData::getNumTotalGemsInArea(int area, int gemType) {
 	return totalGemCounts[area][gemType];
 }
 
+int GameData::getNumEnemies()
+{
+	return atoi(enemyStringTable->GetString("numEnemies"));
+}
+
 float GameData::getDifficultyModifier(int difficulty) {
 	switch (difficulty) {
 		case VERY_EASY:
