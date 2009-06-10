@@ -44,6 +44,7 @@ public:
 	void drawAfterSmiley(float dt);
 
 	int state;
+	float x, y;
 
 private:
     	
@@ -59,7 +60,6 @@ private:
 	FenwarOrbs *orbManager;
 	bool startedIntroDialogue;
 	int groupID;
-	float x, y;
 	int startGridX, startGridY;
 	float timeInState;
 	float fadeAlpha;
