@@ -18,6 +18,9 @@ void FenwarOrbs::update(float dt)
 	for (std::list<FenwarOrb>::iterator i = orbList.begin(); i != orbList.end(); i++) 
 	{
 		i->angle += PI * dt;
+
+		i->x = fenwar->x + cos(i->angle) * i->distFromFenwar;
+		i->y = fenwar->y + sin(i->angle) * i->distFromFenwar;
 	}
 }
 
