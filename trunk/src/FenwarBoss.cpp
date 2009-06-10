@@ -159,6 +159,7 @@ bool FenwarBoss::doDeathState(float dt)
 	return false;
 }
 
+
 //~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
 // Helper Methods
 //~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
@@ -167,6 +168,11 @@ void FenwarBoss::enterState(int newState)
 {
 	state = newState;
 	timeInState = 0.0;
+
+	if (newState == FenwarStates::BATTLE) 
+	{
+		orbManager->spawnOrbs();
+	}
 }
 
 void FenwarBoss::terraformArena() 

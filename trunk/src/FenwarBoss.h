@@ -75,6 +75,7 @@ struct FenwarOrb
 	float radius;
 	float distFromFenwar;
 	float angle;
+	float x, y;
 	bool isRedOrb;
 };
 
@@ -87,6 +88,8 @@ public:
 
 	void draw(float dt);
 	void update(float dt);
+
+	void spawnOrbs();
 
 	FenwarBoss *fenwar;
 	std::list<FenwarOrb> orbList;

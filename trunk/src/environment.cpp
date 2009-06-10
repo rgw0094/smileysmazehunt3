@@ -371,7 +371,7 @@ void Environment::loadArea(int id, int from, bool playMusic) {
 				}
 
 			//1-127 are enemies
-			} else if (enemy > 0 && enemy < 128) {
+			} else if (enemy > 0 && enemy < smh->gameData->getNumEnemies()) {
 
 				if (ids[col][row] == ENEMYGROUP_ENEMY) {
 					//If this enemy is part of a group, notify the manager

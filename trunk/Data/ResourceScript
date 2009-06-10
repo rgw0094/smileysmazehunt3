@@ -247,7 +247,12 @@ Texture fenwarBossTx {
  filename="Graphics/FenwarBoss.png"
  resgroup=110
 }
-
+Sprite fenwarOrb {
+ texture=fenwarBossTx
+ rect=1,1,40,40
+ hotspot=20,20
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
 
 ;*********************
 ;******** LOOT *******
