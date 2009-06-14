@@ -213,6 +213,10 @@ Particle bigFireball {
  filename=bigFireball.psi
  sprite=particleGraphic13
 }
+Particle bigWhiteBarv {
+ filename=barv.psi
+ sprite=particleGraphic1
+}
 
 ;********************************************
 ;************* FENWAR ENCOUNTER  ************
@@ -2090,6 +2094,13 @@ Sprite barvinoidLeftEyeSprite {
  texture=barvinoidTx
  rect=54,355,54,51
  hotspot=-80,273
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=109
+}
+Sprite barvinoidMinionSprite {
+ texture=barvinoidTx
+ rect=117,367,39,45
+ hotspot=20,23
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=109
 }

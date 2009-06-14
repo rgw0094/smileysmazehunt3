@@ -108,6 +108,12 @@ void ProjectileManager::addProjectile(float x, float y, float speed, float angle
 		newProjectile.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("tutLightning")->info);
 		newProjectile.particle->Fire();
 	}
+
+	if (id == PROJECTILE_BARV_COMET) {
+		newProjectile.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("bigWhiteBarv")->info);
+		newProjectile.particle->Fire();
+	}
+
 	//Add it to the list
 	theProjectiles.push_back(newProjectile);
 
@@ -426,6 +432,13 @@ void ProjectileManager::draw(float dt) {
 			i->particle->Render();
 			projectileTypes[i->id].sprite->RenderEx(smh->getScreenX(i->x), smh->getScreenY(i->y), i->angle, 1.0f, 1.0f);			
 		
+		// Barvinoid comet
+		} else if (i->id == PROJECTILE_BARV_COMET) {
+			i->particle->Update(dt);
+			i->particle->MoveTo(smh->getScreenX(i->x), smh->getScreenY(i->y), true);
+			i->particle->Render();
+			projectileTypes[i->id].sprite->RenderEx(smh->getScreenX(i->x), smh->getScreenY(i->y), i->angle, 1.0f, 1.0f);
+		
 		//Figure 8 (width based on distance from its origin so it gets wider & skinnier as it travels)
 		} else if (i->id == PROJECTILE_FIGURE_8) {
 			float distanceFromOrigin = Util::distance(i->x,i->y,i->startX,i->startY);
@@ -649,5 +662,8 @@ void ProjectileManager::initProjectiles() {
 
 	projectileTypes[PROJECTILE_BOOMERANG].radius = 16;
 	projectileTypes[PROJECTILE_BOOMERANG].sprite = smh->resources->GetSprite("BoomerangProjectile");
+
+	projectileTypes[PROJECTILE_BARV_COMET].radius = 32;
+	projectileTypes[PROJECTILE_BARV_COMET].sprite = smh->resources->GetSprite("lightningOrbProjectile");
 
 }

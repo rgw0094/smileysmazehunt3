@@ -29,10 +29,22 @@ extern SMH *smh;
 //Eye attack stuff
 #define LEFT_EYE 0
 #define RIGHT_EYE 1
+#define COMET_SPEED 550.0
+#define COMET_DAMAGE 1.0
+
+//Minion stuff
+#define BARVINOID_MINION_SPEED 30
+#define BARVINOID_MINION_ROT_SPEED 0.2
 
 #define EYE_ATTACK_MAX_INTERVAL 5.0
 #define EYE_ATTACK_INTERVAL_FACTOR 0.93 //what to multiply the interval by after each attack
 #define EYE_ATTACK_MIN_INTERVAL 2.1
+
+//Grid of projectiles stuff
+#define DEFAULT_MASTER_PULSE_INTERVAL 4.0
+#define PROJECTILE_GRID_SPEED 150.0
+#define PROJECTILE_GRID_DAMAGE 0.25
+#define PROJECTILE_GRID_ID 0
 
 ConservatoryBoss::ConservatoryBoss(int _gridX,int _gridY,int _groupID) {
 	gridX=_gridX;
@@ -68,20 +80,34 @@ ConservatoryBoss::ConservatoryBoss(int _gridX,int _gridY,int _groupID) {
 	placeCollisionBoxes();
 
 	//Init eye attack stuff
-	for (int eye = 0; i <= 1; i++) {
+	for (int eye = 0; eye <= 1; eye++) {
 		eyeFlashes[eye].alpha = 0.0;
 		eyeFlashes[eye].red = eyeFlashes[eye].green = eyeFlashes[eye].blue = 255.0;
 		eyeFlashes[eye].eyeFlashing = false;
-		eyeFlashes[eye].timeStartedFlash = 0;
+		eyeFlashes[eye].timeStartedFlash = smh->getGameTime();
 	}
+
+	eyeFlashes[LEFT_EYE].x = -80;
+	eyeFlashes[LEFT_EYE].y = 273;
+	eyeFlashes[RIGHT_EYE].x = 133;
+	eyeFlashes[RIGHT_EYE].y = 273;
 
 	smh->resources->GetSprite("barvinoidRightEyeSprite")->SetColor(ARGB(eyeFlashes[RIGHT_EYE].alpha,eyeFlashes[RIGHT_EYE].red,eyeFlashes[RIGHT_EYE].green,eyeFlashes[RIGHT_EYE].blue));
 	smh->resources->GetSprite("barvinoidLeftEyeSprite")->SetColor(ARGB(eyeFlashes[LEFT_EYE].alpha,eyeFlashes[LEFT_EYE].red,eyeFlashes[LEFT_EYE].green,eyeFlashes[LEFT_EYE].blue));
 
 	lastEyeAttackTime = smh->getGameTime();
 	eyeAttackInterval = EYE_ATTACK_MAX_INTERVAL;
-	lastEyeToAttack = RIGHT_EYE;
+	lastEyeToAttack = LEFT_EYE;
 
+	//minion stuff
+	isMinionOut = false;
+	timeMinionBeganFloatingAround = 0.0;
+	timeMinionWentAway = smh->getGameTime();
+	minionAngle = 0.0;
+	//timeOfMinionLastShot = smh->getGameTime();
+
+	//grid of projectiles stuff
+	initGridOfProjectiles();
 }
 
 ConservatoryBoss::~ConservatoryBoss() {
@@ -110,6 +136,47 @@ void ConservatoryBoss::placeCollisionBoxes() {
 	collisionBoxes[2]->y2 = y - 92;	
 }
 
+void ConservatoryBoss::initGridOfProjectiles() {
+	int i;
+	float minX,maxX,pY;
+	float pX, minY, maxY;
+
+	timeOfLastMasterPulse = smh->getGameTime();
+	masterPulseInterval = DEFAULT_MASTER_PULSE_INTERVAL;
+
+	//ones that are at the top, shooting down
+	//y = -7
+	//x = from -6 to +6
+	minX = (gridX-6)*64+32;
+	maxX = (gridX+6)*64+32;
+	pY = (gridY-7)*64+32;
+	
+	for (i = 0; i <= 3; i++) {
+		projectileLauncher[i].x = minX + float(i)/3.0*(maxX-minX);
+		projectileLauncher[i].y = pY;
+		projectileLauncher[i].angle = 3.14159/2; //down
+		projectileLauncher[i].timingOffset = float(i) / 4.0;
+		projectileLauncher[i].hasFiredDuringThisPulse = true;
+	}
+
+	//ones that are at the bottom, shooting up
+	//y = +8
+	//x = from -4 to +4
+	minX = (gridX-4)*64+32;
+	maxX = (gridX+4)*64+32;
+	pY = (gridY+8)*64+32;
+	
+	for (i = 4; i <= 6; i++) {
+		int j = i-4; //j is like i, but is 0,1,2 instead of 4,5,6, so we can use it for location and timing calculations
+		projectileLauncher[i].x = minX + float(j)/2.0*(maxX-minX);
+		projectileLauncher[i].y = pY;
+		projectileLauncher[i].angle = 3*3.14159/2; //up
+		projectileLauncher[i].timingOffset = float(j) / 4.0  + 0.125;
+		projectileLauncher[i].hasFiredDuringThisPulse = true;
+	}
+
+}
+
 bool ConservatoryBoss::update(float dt) {
 	
 	//When smiley triggers the boss' enemy blocks start his dialogue.
@@ -127,6 +194,7 @@ bool ConservatoryBoss::update(float dt) {
 		enterState(BARVINOID_EYE_ATTACK);
 		smh->soundManager->playMusic("bossMusic");
 		lastEyeAttackTime = smh->getGameTime();
+		timeOfLastMasterPulse = smh->getGameTime();
 	}
 
 	//Battle stuff
@@ -151,6 +219,7 @@ bool ConservatoryBoss::update(float dt) {
 				break;
 		};
 
+	doGridOfProjectiles();
 
 	//return true only if the boss is dead and gone
 
@@ -182,7 +251,7 @@ void ConservatoryBoss::doEyeAttackState(float dt) {
 		//launch a new eye attack
 		if (lastEyeToAttack == LEFT_EYE) { //launch it in the right eye
 			lastEyeToAttack = RIGHT_EYE;
-		} else { // launche it in the left eye
+		} else { // launch it in the left eye
 			lastEyeToAttack = LEFT_EYE;
 		}
 		eyeFlashes[lastEyeToAttack].eyeFlashing = true;
@@ -194,10 +263,15 @@ void ConservatoryBoss::doEyeAttackState(float dt) {
 		lastEyeAttackTime = smh->getGameTime();
 	}
 
-	updateEyeGlow(RIGHT_EYE);
-	updateEyeGlow(LEFT_EYE);
+	if (eyeFlashes[RIGHT_EYE].eyeFlashing) updateEyeGlow(RIGHT_EYE);
+	if (eyeFlashes[LEFT_EYE].eyeFlashing) updateEyeGlow(LEFT_EYE);
+
+	std::string debugText;
+	debugText = "Barvinoid " + Util::intToString(eyeFlashes[RIGHT_EYE].eyeFlashing) + " " + Util::intToString(eyeFlashes[LEFT_EYE].eyeFlashing);
+	smh->setDebugText(debugText.c_str());
 	
 }
+
 
 void ConservatoryBoss::updateEyeGlow(int eye) {
 
@@ -216,12 +290,42 @@ void ConservatoryBoss::updateEyeGlow(int eye) {
 		eyeFlashes[eye].red = eyeFlashes[eye].green = eyeFlashes[eye].blue = 255.0;
 		eyeFlashes[eye].alpha = 0.0;
 		eyeFlashes[eye].eyeFlashing = false;
+
+		//shoot!
+		smh->projectileManager->addProjectile(x-eyeFlashes[eye].x,y-eyeFlashes[eye].y,COMET_SPEED,Util::getAngleBetween(x-eyeFlashes[eye].x,y-eyeFlashes[eye].y,smh->player->x,smh->player->y)+smh->randomFloat(-0.5,0.5),COMET_DAMAGE,true,true,PROJECTILE_BARV_COMET,true);
 	}
 
+	//make the eye flash
 	if (eye == RIGHT_EYE)
 		smh->resources->GetSprite("barvinoidRightEyeSprite")->SetColor(ARGB(eyeFlashes[eye].alpha,eyeFlashes[eye].red,eyeFlashes[eye].green,eyeFlashes[eye].blue));
 	else
 		smh->resources->GetSprite("barvinoidLeftEyeSprite")->SetColor(ARGB(eyeFlashes[eye].alpha,eyeFlashes[eye].red,eyeFlashes[eye].green,eyeFlashes[eye].blue));
+}
+
+/**
+ * This continuously updates the grid of projectiles
+ */
+void ConservatoryBoss::doGridOfProjectiles() {
+	int i;
+
+	if (smh->timePassedSince(timeOfLastMasterPulse) >= masterPulseInterval) {
+		//reset firing
+		for (i=0; i<16; i++) {
+			projectileLauncher[i].hasFiredDuringThisPulse = false;
+		}
+
+		timeOfLastMasterPulse = smh->getGameTime();
+	}
+
+	//check to see if the current projectile launcher should fire
+	for (i = 0; i <= 7; i++) {
+		if (!projectileLauncher[i].hasFiredDuringThisPulse &&
+			smh->timePassedSince(timeOfLastMasterPulse) >= projectileLauncher[i].timingOffset * masterPulseInterval) {
+
+			smh->projectileManager->addProjectile(projectileLauncher[i].x,projectileLauncher[i].y,PROJECTILE_GRID_SPEED,projectileLauncher[i].angle,PROJECTILE_GRID_DAMAGE,true,false,PROJECTILE_GRID_ID,true);
+			projectileLauncher[i].hasFiredDuringThisPulse = true;
+		}
+	}
 }
 
 /**
