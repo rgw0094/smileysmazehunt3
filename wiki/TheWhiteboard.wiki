@@ -11,7 +11,7 @@
 
 === Graphics To Do ===
  * Barvinoid
- * Fenwar
+ * Fenwar orbs (I think they should be an animation)
  * Slime
  * More projectile graphics (snowmen throw snowballs, squirrels throw nuts ETCETERA)
 
