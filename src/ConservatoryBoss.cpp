@@ -14,6 +14,10 @@ extern SMH *smh;
 //States
 #define BARVINOID_INACTIVE 0
 #define BARVINOID_EYE_ATTACK 1
+#define BARVINOID_HOPPING 2
+
+#define EYE_ATTACK_TIME 30.0
+#define NUM_HOPS 8
 
 //Attributes
 #define BARVINOID_HEALTH 100.0
@@ -24,17 +28,18 @@ extern SMH *smh;
 
 //Battle text ids in GameText.dat
 #define BARVINOID_INTROTEXT 210
-#define BARVINOID_DEFEATTEST 211
+#define BARVINOID_DEFEATTEXT 211
+
+//Minion stuff (the evil floating eyes)
+#define FLOATING_EYE_DESIRED_DISTANCE_MAX 170.0
+#define FLOATING_EYE_DESIRED_DISTANCE_ACTUAL 128.0
+#define FLOATING_EYE_SPEED 128.0
 
 //Eye attack stuff
 #define LEFT_EYE 0
 #define RIGHT_EYE 1
 #define COMET_SPEED 550.0
 #define COMET_DAMAGE 1.0
-
-//Minion stuff
-#define BARVINOID_MINION_SPEED 30
-#define BARVINOID_MINION_ROT_SPEED 0.2
 
 #define EYE_ATTACK_MAX_INTERVAL 5.0
 #define EYE_ATTACK_INTERVAL_FACTOR 0.93 //what to multiply the interval by after each attack
@@ -100,11 +105,8 @@ ConservatoryBoss::ConservatoryBoss(int _gridX,int _gridY,int _groupID) {
 	lastEyeToAttack = LEFT_EYE;
 
 	//minion stuff
-	isMinionOut = false;
-	timeMinionBeganFloatingAround = 0.0;
-	timeMinionWentAway = smh->getGameTime();
-	minionAngle = 0.0;
-	//timeOfMinionLastShot = smh->getGameTime();
+	circleRotate = 0.0;
+	numFloatingEyes=0;
 
 	//grid of projectiles stuff
 	initGridOfProjectiles();
@@ -177,6 +179,69 @@ void ConservatoryBoss::initGridOfProjectiles() {
 
 }
 
+void ConservatoryBoss::addFloatingEye() {
+	floatingEye newFloatingEye;
+
+	newFloatingEye.timeOfLastAttack = smh->getGameTime();
+	newFloatingEye.x = x;
+	newFloatingEye.y = y;
+
+	if (smh->player->isInvisible()) {
+		newFloatingEye.angleFacing = 3.14159/2;//smh->randomFloat(0.0,6.14);
+	} else {
+		newFloatingEye.angleFacing = Util::getAngleBetween(x,y,smh->player->x,smh->player->y);
+	}
+	
+	newFloatingEye.angleMoving = newFloatingEye.angleFacing;
+
+	theFloatingEyes.push_back(newFloatingEye);
+	
+	numFloatingEyes++;
+}
+
+void ConservatoryBoss::updateFloatingEyes(float dt) {
+	int j=0;
+
+	//These variables are used by each eye in succession
+	bool eyeMove;
+	float desiredX, desiredY;
+	float angleAroundSmiley; //each floating eye defines this -- this is so the floating eyes surround Smiley
+
+	circleRotate += dt/5.0;
+
+	std::list<floatingEye>::iterator i;
+
+	j=0;
+	for (i = theFloatingEyes.begin(); i != theFloatingEyes.end(); i++) {
+		eyeMove = true;
+		if (smh->player->isInvisible()) {
+			i->angleMoving = i->angleFacing;
+		} else { //is NOT invisible
+			angleAroundSmiley = float(j) * 2.0*float(PI)/float(numFloatingEyes) + circleRotate;
+			desiredX = smh->player->x + FLOATING_EYE_DESIRED_DISTANCE_ACTUAL * cos(angleAroundSmiley);
+			desiredY = smh->player->y + FLOATING_EYE_DESIRED_DISTANCE_ACTUAL * sin(angleAroundSmiley);
+
+			if (Util::distance(i->x,i->y,desiredX,desiredY) <= 10.0) eyeMove = false;
+			i->angleMoving = Util::getAngleBetween(i->x,i->y,desiredX,desiredY);
+			i->angleFacing = Util::getAngleBetween(i->x,i->y,smh->player->x,smh->player->y);
+		}
+		
+		if (eyeMove) {
+			i->x = i->x + FLOATING_EYE_SPEED*cos(i->angleMoving)*dt;
+			i->y = i->y + FLOATING_EYE_SPEED*sin(i->angleMoving)*dt;
+		}
+		j++;
+	} //next i
+}
+
+void ConservatoryBoss::drawFloatingEyes() {
+	std::list<floatingEye>::iterator i;
+
+	for (i = theFloatingEyes.begin(); i != theFloatingEyes.end(); i++) {
+		smh->resources->GetSprite("barvinoidMinionSprite")->RenderEx(smh->getScreenX(i->x),smh->getScreenY(i->y),i->angleFacing);
+	}
+}
+
 bool ConservatoryBoss::update(float dt) {
 	
 	//When smiley triggers the boss' enemy blocks start his dialogue.
@@ -195,6 +260,7 @@ bool ConservatoryBoss::update(float dt) {
 		smh->soundManager->playMusic("bossMusic");
 		lastEyeAttackTime = smh->getGameTime();
 		timeOfLastMasterPulse = smh->getGameTime();
+		lastHitByTongue = smh->getGameTime();
 	}
 
 	//Battle stuff
@@ -204,25 +270,35 @@ bool ConservatoryBoss::update(float dt) {
 	if (smh->player->getTongue()->testCollision(collisionBoxes[0]) ||
 		smh->player->getTongue()->testCollision(collisionBoxes[1]) ||
 		smh->player->getTongue()->testCollision(collisionBoxes[2])) {
-			//Barvinoid was hit by Smiley's tongue
+		
+		//Barvinoid was hit by Smiley's tongue
+		if (smh->timePassedSince(lastHitByTongue) >= 1.0) {
+			lastHitByTongue = smh->getGameTime();
+
+			health -= smh->player->getDamage();
+			addFloatingEye();
+		}
+
+
 	}
 
+	//Collision with SMiley
 	if (smh->player->collisionCircle->testBox(collisionBoxes[0]) ||
 		smh->player->collisionCircle->testBox(collisionBoxes[1]) ||
 		smh->player->collisionCircle->testBox(collisionBoxes[2])) {
 				smh->player->dealDamageAndKnockback(BARVINOID_COLLISION_DAMAGE, true, 350, x, y);
 	} //end if smiley collision
 
-		switch (state) {
-			case BARVINOID_EYE_ATTACK:
-				doEyeAttackState(dt);
-				break;
-		};
+	switch (state) {
+		case BARVINOID_EYE_ATTACK:
+			doEyeAttackState(dt);
+			break;
+	};
 
-	doGridOfProjectiles();
+    doGridOfProjectiles();
+	updateFloatingEyes(dt);
 
 	//return true only if the boss is dead and gone
-
 	return false;
 
 }
@@ -233,12 +309,14 @@ void ConservatoryBoss::draw(float dt) {
 	if (eyeFlashes[RIGHT_EYE].eyeFlashing) smh->resources->GetSprite("barvinoidRightEyeSprite")->Render(smh->getScreenX(x),smh->getScreenY(y));
 	if (eyeFlashes[LEFT_EYE].eyeFlashing) smh->resources->GetSprite("barvinoidLeftEyeSprite")->Render(smh->getScreenX(x),smh->getScreenY(y));
 
+	drawFloatingEyes();
+
 	//Debug mode stuff
 	if (smh->isDebugOn()) {
 		smh->drawCollisionBox(collisionBoxes[0], RED);
 		smh->drawCollisionBox(collisionBoxes[1], RED);
 		smh->drawCollisionBox(collisionBoxes[2], RED);
-	}
+	}	
 }
 
 void ConservatoryBoss::enterState(int _state) {

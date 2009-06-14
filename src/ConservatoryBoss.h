@@ -25,6 +25,12 @@ struct ProjectileLauncher {
 	bool hasFiredDuringThisPulse;
 };
 
+struct floatingEye {
+	float x,y;
+	float angleFacing, angleMoving;
+	float timeOfLastAttack;	
+};
+
 class ConservatoryBoss : public Boss {
 
 public:
@@ -39,6 +45,9 @@ public:
 	void placeCollisionBoxes();
 	void initGridOfProjectiles();
 	void doGridOfProjectiles();
+	void addFloatingEye();
+	void updateFloatingEyes(float dt);
+	void drawFloatingEyes();
 
 	//State methods
 	void doEyeAttackState(float dt);
@@ -65,16 +74,14 @@ public:
 	float eyeAttackInterval; //the interval between eye attacks decreases with each attack
 	int lastEyeToAttack;
 
-	//Minion variables
-	bool isMinionOut;
-	float timeMinionBeganFloatingAround;
-	float minionAngle;
-	float timeMinionWentAway;
-
 	//Grid of projectiles variables
 	float timeOfLastMasterPulse;
 	float masterPulseInterval;
 	ProjectileLauncher projectileLauncher[16];
+
+	std::list<floatingEye> theFloatingEyes;
+	int numFloatingEyes;
+	float circleRotate; //the whole circle of floating eyes rotates around Smiley
 	
 };
 

@@ -2099,8 +2099,8 @@ Sprite barvinoidLeftEyeSprite {
 }
 Sprite barvinoidMinionSprite {
  texture=barvinoidTx
- rect=117,367,39,45
- hotspot=20,23
+ rect=116,370,45,39
+ hotspot=23,20
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=109
 }
