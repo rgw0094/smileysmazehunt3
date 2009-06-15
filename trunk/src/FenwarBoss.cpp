@@ -4,12 +4,20 @@
 #include "EnemyFramework.h"
 #include "Environment.h"
 #include "SpecialTileManager.h"
+#include "ProjectileManager.h"
+#include "CollisionCircle.h"
 #include "Player.h"
 
 #define FENWAR_INTRO_TEXT 200
 #define FENWAR_DEFEAT_TEXT 201
 
+#define START_STATE FenwarStates::TERRAFORMING
+//#define START_STATE FenwarStates::BATTLE 
+
 #define TERRAFORM_DURATION 2.0
+#define FLASHING_DURATION 0.5
+#define FENWAR_WIDTH 31
+#define FENWAR_HEIGHT 36
 
 FenwarBoss::FenwarBoss(int _gridX, int _gridY, int _groupID) 
 {
@@ -25,8 +33,13 @@ FenwarBoss::FenwarBoss(int _gridX, int _gridY, int _groupID)
 	startedIntroDialogue = false;
 	terraformedYet = false;
 	startedShakingYet = false;
+	flashing = false;
+	floatingYOffset = 0.0;
+	collisionBox = new hgeRect();
+	collisionBox->SetRadius(x, y, 1);
 
 	orbManager = new FenwarOrbs(this);
+	bulletManager = new FenwarBullets(this);
 
 	smh->resources->GetAnimation("fenwar")->Play();
 	smh->resources->GetAnimation("fenwar")->SetColor(ARGB(255,255,255,255));
@@ -37,6 +50,9 @@ FenwarBoss::FenwarBoss(int _gridX, int _gridY, int _groupID)
 FenwarBoss::~FenwarBoss() 
 {
 	delete orbManager;
+	delete bulletManager;
+	delete collisionBox;
+	smh->resources->Purge(RES_FENWAR);
 }
 
 //~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
@@ -45,13 +61,38 @@ FenwarBoss::~FenwarBoss()
 
 void FenwarBoss::draw(float dt) 
 {
-	smh->resources->GetAnimation("fenwar")->Render(smh->getScreenX(x), smh->getScreenY(y));
-	smh->resources->GetAnimation("fenwarFace")->Render(smh->getScreenX(x), smh->getScreenY(y));
+	if (Util::distance(startGridX, startGridY, smh->player->gridX, smh->player->gridY) > 15) return;
+
+	smh->drawGlobalSprite("playerShadow", x, y + FENWAR_HEIGHT);
+
+	if (flashing) {
+		float flashAlpha = smh->getFlashingAlpha(FLASHING_DURATION / 4.0);
+		smh->resources->GetAnimation("fenwar")->SetColor(ARGB(flashAlpha, 255.0, 255.0, 255.0));
+		smh->resources->GetAnimation("fenwarFace")->SetColor(ARGB(flashAlpha, 255.0, 255.0, 255.0));
+	} else {
+		smh->resources->GetAnimation("fenwar")->SetColor(ARGB(fadeAlpha, 255.0, 255.0, 255.0));
+		smh->resources->GetAnimation("fenwarFace")->SetColor(ARGB(fadeAlpha, 255.0, 255.0, 255.0));
+	}
+
+	orbManager->drawBeforeFenwar(dt);
+	smh->resources->GetAnimation("fenwar")->Render(smh->getScreenX(x), smh->getScreenY(y - floatingYOffset));
+	smh->resources->GetAnimation("fenwarFace")->Render(smh->getScreenX(x), smh->getScreenY(y - floatingYOffset));
+	orbManager->drawAfterFenwar(dt);
+	bulletManager->draw(dt);
+
+	if (smh->isDebugOn())
+	{
+		smh->drawCollisionBox(collisionBox, RED);
+	}
+
+	if (state != FenwarStates::INACTIVE)
+	{
+		drawHealth("Lord Fenwar");
+	}
 }
 
 void FenwarBoss::drawAfterSmiley(float dt) 
 {
-
 }
 
 //~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
@@ -62,6 +103,7 @@ bool FenwarBoss::update(float dt)
 {
 	timeInState += dt;
 	orbManager->update(dt);
+	bulletManager->update(dt);
 
 	switch (state) 
 	{
@@ -80,7 +122,43 @@ bool FenwarBoss::update(float dt)
 			break;
 	}
 
+	if (flashing && smh->timePassedSince(timeStartedFlashing) > FLASHING_DURATION) flashing = false;
+
+	doCollision(dt);
+
 	return false;
+}
+
+void FenwarBoss::doCollision(float dt)
+{
+	collisionBox->Set(x - FENWAR_WIDTH / 2.0, 
+					  y - floatingYOffset - FENWAR_HEIGHT / 2.0,
+					  x + FENWAR_WIDTH / 2.0,
+					  y - floatingYOffset + FENWAR_HEIGHT / 2.0);
+
+	//Player collision
+	if (smh->player->collisionCircle->testBox(collisionBox))
+	{
+		smh->player->dealDamageAndKnockback(FenwarAttributes::COLLISION_DAMAGE, true, false, FenwarAttributes::COLLISION_KNOCKBACK, x, y);
+	}
+
+	//Tongue collision
+	if (smh->player->getTongue()->testCollision(collisionBox))
+	{
+		dealDamage(smh->player->getDamage());
+	}
+
+	//Lightning orb collision
+	if (smh->projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_LIGHTNING_ORB))
+	{
+		dealDamage(smh->player->getLightningOrbDamage());
+	}
+
+	//Frisbee collision
+	if (smh->projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_FRISBEE))
+	{
+		smh->soundManager->playSound("snd_HitInvulnerable");
+	}
 }
 
 void FenwarBoss::doInactiveState(float dt) 
@@ -98,7 +176,7 @@ void FenwarBoss::doInactiveState(float dt)
 	//Activate the boss when the intro dialogue is closed
 	if (startedIntroDialogue && !smh->windowManager->isTextBoxOpen()) 
 	{
-		enterState(FenwarStates::TERRAFORMING);
+		enterState(START_STATE);
 		smh->soundManager->playMusic("bossMusic");
 	}
 }
@@ -109,6 +187,16 @@ void FenwarBoss::doTerraformingState(float dt)
 	{
 		smh->screenEffectsManager->startShaking(99999.0, 2.5);
 		startedShakingYet = true;
+	}
+
+	//Fenwar starts floating while the ground shakes
+	if (startedShakingYet && floatingYOffset < 30.0)
+	{
+		floatingYOffset += 15.0 * dt;
+		if (floatingYOffset >= 30.0)
+		{
+			floatingYOffset = 30.0;
+		}
 	}
 
 	if (timeInState > 4.5 && !terraformedYet) 
@@ -130,7 +218,23 @@ void FenwarBoss::doTerraformingState(float dt)
 
 void FenwarBoss::doBattleState(float dt) 
 {
+	//Float up and down
+	floatingYOffset = 30.0 + 15 * sin(2.0 * timeInState);
 
+	//Periodically do a leet attack
+	if (smh->timePassedSince(lastAttackTime) > FenwarAttributes::ATTACK_DELAY)
+	{
+		int r = smh->randomInt(0, 1000);
+		if (r < 500)
+		{
+			bulletManager->shootBullet(Util::getAngleBetween(x, y, smh->player->x, smh->player->y));
+		}
+		else 
+		{
+			orbManager->doAttack();
+		}
+		lastAttackTime = smh->getGameTime();
+	}
 }
 
 bool FenwarBoss::doDeathState(float dt)
@@ -164,6 +268,23 @@ bool FenwarBoss::doDeathState(float dt)
 // Helper Methods
 //~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
 
+void FenwarBoss::dealDamage(float damage)
+{
+	if (!flashing) {
+		flashing = true;
+		timeStartedFlashing = smh->getGameTime();
+	}
+
+	health -= damage;
+
+	if (health <= 0.0)
+	{
+		health = 0.0;
+		flashing = false;
+		//TODO: death stuff
+	}
+}
+
 void FenwarBoss::enterState(int newState) 
 {
 	state = newState;
@@ -171,6 +292,7 @@ void FenwarBoss::enterState(int newState)
 
 	if (newState == FenwarStates::BATTLE) 
 	{
+		lastAttackTime = smh->getGameTime();
 		orbManager->spawnOrbs();
 	}
 }
@@ -214,28 +336,40 @@ void FenwarBoss::terraformArena()
 	{
 		for (int j = startGridY - 40; j <= startGridY + 40; j++) 
 		{
-			bool isPlatform = false;
-			for (int k = 0; k < 9; k++)
+			if (Util::distance(smh->player->gridX, smh->player->gridY, i, j) < 15 || Util::distance(startGridX, startGridY, i, j) < 10)
 			{
-				if (i == p[k].x && j == p[k].y)
+				bool isPlatform = false;
+				if (Util::distance(startGridX, startGridY, i, j) < 10)
 				{
-					//Put hover pads on the center of the platforms
-					smh->environment->specialTileManager->addTimedTile(i, j, platformTerrain, HOVER_PAD, 0, TERRAFORM_DURATION);
-					isPlatform = true;
-					continue;
-				} 
-				else if (Util::distance(p[k].x, p[k].y, i, j) <= 1) 
-				{
-					//Platform
-					smh->environment->specialTileManager->addTimedTile(i, j, platformTerrain, WALKABLE, 0, TERRAFORM_DURATION);
-					isPlatform = true;
-					continue;
+					for (int k = 0; k < 9; k++)
+					{
+						if (i == p[k].x && j == p[k].y)
+						{
+							//Put hover pads on the center of the platforms
+							smh->environment->specialTileManager->addTimedTile(i, j, platformTerrain, HOVER_PAD, 0, TERRAFORM_DURATION);
+							isPlatform = true;
+							continue;
+						} 
+						else if (Util::distance(p[k].x, p[k].y, i, j) <= 1) 
+						{
+							//Platform
+							smh->environment->specialTileManager->addTimedTile(i, j, platformTerrain, WALKABLE, 0, TERRAFORM_DURATION);
+							isPlatform = true;
+							continue;
+						}
+					}
 				}
-			}
-			//If this square isn't on a platform, turn it into a pit!
-			if (!isPlatform) 
+				//If this square isn't on a platform, turn it into a pit!
+				if (!isPlatform) 
+				{
+					smh->environment->specialTileManager->addTimedTile(i, j, platformTerrain, PIT, 0, TERRAFORM_DURATION);
+				}
+			} 
+			else 
 			{
-				smh->environment->specialTileManager->addTimedTile(i, j, platformTerrain, PIT, 0, TERRAFORM_DURATION);
+				smh->environment->collision[i][j] = PIT;
+				smh->environment->terrain[i][j] = platformTerrain;
+				smh->environment->item[i][j] = 0;
 			}
 		}
 	}

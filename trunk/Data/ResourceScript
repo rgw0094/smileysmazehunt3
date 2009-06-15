@@ -251,10 +251,22 @@ Texture fenwarBossTx {
  filename="Graphics/FenwarBoss.png"
  resgroup=110
 }
-Sprite fenwarOrb {
+Sprite redFenwarOrb {
  texture=fenwarBossTx
- rect=1,1,40,40
- hotspot=20,20
+ rect=1,1,60,60
+ hotspot=30,30
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite normalFenwarOrb {
+ texture=fenwarBossTx
+ rect=62,1,60,60
+ hotspot=30,30
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite fenwarBullet {
+ texture=fenwarBossTx
+ rect=127,1,20,20
+ hotspot=10,10
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 
