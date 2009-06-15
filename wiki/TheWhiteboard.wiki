@@ -40,7 +40,7 @@
 ||Tut's Mask||Tut's Tomb||King Tut||Done||Done||
 ||---||Serpentine Path||---||Done||---||
 ||Hover||Calypso's Conservatory||Barvinoid||Done||0%||
-||---||Castle of Evil||Fenwar||Done||35%||
+||---||Castle of Evil||Fenwar||Done||45%||
 
 ===Done===
 ||Item||Date||Done By||
