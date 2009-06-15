@@ -54,7 +54,7 @@ void E_DiagoShooter::draw(float dt) {
 	graphic[facing]->Render(screenX, screenY);
 
 	if (smh->isDebugOn()) {
-		smh->drawCollisionBox(collisionBox, RED);
+		smh->drawCollisionBox(collisionBox, Colors::RED);
 		//draws a line to the destinations
 		smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(xDestinationUpLeft),smh->getScreenY(yDestinationUpLeft),ARGB(128,255,0,0));
 		smh->hge->Gfx_RenderLine(smh->getScreenX(x),smh->getScreenY(y),smh->getScreenX(xDestinationUpRight),smh->getScreenY(yDestinationUpRight),ARGB(128,255,255,0));

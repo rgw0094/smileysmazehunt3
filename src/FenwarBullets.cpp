@@ -62,7 +62,7 @@ void FenwarBullets::draw(float dt)
 
 		if (smh->isDebugOn())
 		{
-			smh->drawCollisionBox(i->collisionBox, RED);
+			smh->drawCollisionBox(i->collisionBox, Colors::RED);
 		}
 	}
 }
@@ -70,6 +70,14 @@ void FenwarBullets::draw(float dt)
 void FenwarBullets::shootBullet(float angle)
 {
 	spawnBullet(fenwar->x, fenwar->y, angle, 0);
+}
+
+void FenwarBullets::killBullets()
+{
+	for (std::list<FenwarBullet>::iterator i = bulletList.begin(); i != bulletList.end(); i++)
+	{
+	}
+	bulletList.end();
 }
 
 //~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~

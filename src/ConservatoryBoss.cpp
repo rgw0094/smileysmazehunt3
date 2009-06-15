@@ -313,9 +313,9 @@ void ConservatoryBoss::draw(float dt) {
 
 	//Debug mode stuff
 	if (smh->isDebugOn()) {
-		smh->drawCollisionBox(collisionBoxes[0], RED);
-		smh->drawCollisionBox(collisionBoxes[1], RED);
-		smh->drawCollisionBox(collisionBoxes[2], RED);
+		smh->drawCollisionBox(collisionBoxes[0], Colors::RED);
+		smh->drawCollisionBox(collisionBoxes[1], Colors::RED);
+		smh->drawCollisionBox(collisionBoxes[2], Colors::RED);
 	}	
 }
 

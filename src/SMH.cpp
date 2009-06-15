@@ -129,6 +129,11 @@ bool SMH::updateGame() {
 
 		if (menu->update(dt)) return true;
 
+		if (hge->Input_KeyDown(HGEK_G))
+		{
+			menu->open(MenuScreens::CLOSING_CINEMATIC_SCREEN);
+		}
+
 	} else if (gameState == GAME) {
 
 		//Update the console
@@ -212,7 +217,7 @@ void SMH::drawGame() {
 		fenwarManager->draw(dt);
 		projectileManager->draw(dt);
 		environment->drawSwitchTimers(dt);
-		drawScreenColor(screenColor, screenColorAlpha);
+		if (screenColorAlpha > 0.0) drawScreenColor(screenColor, screenColorAlpha);
 		areaChanger->draw(dt);
 		player->drawGUI(dt);
 		windowManager->draw(dt);
@@ -306,14 +311,14 @@ float SMH::getScreenColorAlpha() {
 /////////////////////////////
 
 /**
- * Draw a collision box. The color options are RED, GREEN, or BLUE. If any other value is
+ * Draw a collision box. The color options are Colors::RED, Colors::GREEN, or Colors::BLUE. If any other value is
  * is specified it will default to black;
  */
 void SMH::drawCollisionBox(hgeRect *box, int color) {
 
-	int r = (color == RED) ? 255 : 0;
-	int g = (color == GREEN) ? 255 : 0;
-	int b = (color == BLUE) ? 255 : 0;
+	int r = (color == Colors::RED) ? 255 : 0;
+	int g = (color == Colors::GREEN) ? 255 : 0;
+	int b = (color == Colors::BLUE) ? 255 : 0;
 
 	int x1 = smh->getScreenX(box->x1);
 	int x2 = smh->getScreenX(box->x2);
@@ -411,34 +416,29 @@ float SMH::getFlashingAlpha(float n) {
 	return flashingAlpha;
 }
 
-void SMH::drawScreenColor(int color, float alpha) {
+void SMH::drawScreenColor(int color, float alpha) 
+{
 	if (alpha == 0.0) return;
 	
 	std::string sprite;
-	float r = 0.0;
-	float g = 0.0;
-	float b = 0.0;
 
-	if (color == RED) {
+	if (color == Colors::RED) {
 		sprite = "redSquare";
-		r = 255;
-	} else if (color == BLUE) {
+	} else if (color == Colors::BLUE) {
 		sprite = "blueSquare";
-		b = 255;
-	} else if (color == YELLOW) {
+	} else if (color == Colors::YELLOW) {
 		sprite = "yellowSquare";
-		g = 255;
-		b = 255;
-	} else if (color == BLACK) {
+	} else if (color == Colors::BLACK) {
 		sprite = "blackSquare";
-		r = 255;
-		g = 255;
-		b = 255;
+	} else if (color == Colors::WHITE) {
+		sprite = "whiteSquare";
 	}
 
-	resources->GetSprite(sprite.c_str())->SetColor(ARGB(alpha,r,g,b));
-	for (int i = 0; i < 16; i++) {
-		for (int j = 0; j < 12; j++) {
+	resources->GetSprite(sprite.c_str())->SetColor(ARGB(alpha,255,255,255));
+	for (int i = 0; i < 16; i++) 
+	{
+		for (int j = 0; j < 12; j++) 
+		{
 			resources->GetSprite(sprite.c_str())->Render(i*64,j*64);
 		}
 	}

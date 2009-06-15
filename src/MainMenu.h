@@ -25,6 +25,7 @@ struct MenuScreens {
 	static const int LOADING_SCREEN = 3;
 	static const int CREDITS_SCREEN = 4;
 	static const int CINEMATIC_SCREEN = 5;
+	static const int CLOSING_CINEMATIC_SCREEN = 6;
 };
 
 //------------------------------------------------------
@@ -70,6 +71,17 @@ public:
 //-------------------------------------------------------
 //------------------CINEMATICS SCREEN--------------------
 //-------------------------------------------------------
+
+class SceneStates
+{
+public:
+	static const int SCENE_SHOW_PICTURE = 0;
+	static const int SCENE_SHOW_TEXT = 1;
+	static const int SCENE_WAIT = 2;
+	static const int SCENE_FADE_TEXT = 3;
+	static const int SCENE_FADE_PICTURE = 4;
+};
+
 class CinematicScreen : public MenuScreen {
 
 public:
@@ -105,6 +117,43 @@ private:
 	bool inTransition;
 	float transitionScale;
 	float timeInTransition;
+
+};
+
+//-------------------------------------------------------
+//-------------CLOSING CINEMATICS SCREEN-----------------
+//-------------------------------------------------------
+
+class Scenes
+{
+public:
+	static const int NO_SCENE = -1;
+	static const int GROTESQUE_CLOSEUP = 0;
+};
+
+class ClosingCinematicScreen : public MenuScreen
+{
+public:
+
+	ClosingCinematicScreen();
+	~ClosingCinematicScreen();
+
+	//Draw methods
+	void draw(float dt);
+	bool update(float dt, float mouseX, float mouseY);
+
+private:
+
+	void enterScene(int newScene);
+	void cleanupCurrentScene();
+
+	int currentScene;
+	int sceneState;
+	float timeInScene;
+	HTEXTURE currentTexture;
+	hgeSprite *currentSprite;
+	float tongueAngle;
+	float tongueOffset;
 
 };
 

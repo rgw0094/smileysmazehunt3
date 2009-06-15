@@ -49,7 +49,7 @@ MiniMenu::~MiniMenu() {
 void MiniMenu::draw(float dt) {
 
 	//Shade the screen behind the menu
-	smh->drawScreenColor(BLACK, 100.0);
+	smh->drawScreenColor(Colors::BLACK, 100.0);
 
 	if (mode == MINIMENU_EXIT_PROMPT) {
 		smh->resources->GetFont("inventoryFnt")->printf(512.0, 200.0, HGETEXT_CENTER, "Are you sure you wish to exit?");

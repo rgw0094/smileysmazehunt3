@@ -167,6 +167,15 @@ void FenwarOrbs::drawOrb(std::list<FenwarOrb>::iterator orb)
 		}
 }
 
+void FenwarOrbs::killOrbs()
+{
+	for (std::list<FenwarOrb>::iterator i = orbList.begin(); i != orbList.end(); i++)
+	{
+		delete i->collisionCircle;
+	}
+	orbList.clear();
+}
+
 void FenwarOrbs::spawnOrbs()
 {
 	float angleOffset = 0;

@@ -19,7 +19,7 @@ WorldMap::~WorldMap() {
 
 void WorldMap::draw(float dt) {
 
-	smh->drawScreenColor(BLACK, 100.0);
+	smh->drawScreenColor(Colors::BLACK, 100.0);
 
 	smh->hge->Gfx_SetClipping(windowX + 30, windowY + 30, 600, 432);
 	for (int i = 0; i < 7; i++) {

@@ -7,12 +7,6 @@ extern SMH *smh;
 
 #define MAX_PICTURE_OFFSET -600.0
 
-//Scene states
-#define SCENE_SHOW_PICTURE 0
-#define SCENE_SHOW_TEXT 1
-#define SCENE_WAIT 2
-#define SCENE_FADE_TEXT 3
-#define SCENE_FADE_PICTURE 4
 
 #define FINAL_SCENE 6
 #define SCENE_ONE_MUSIC_LENGTH 26.57
@@ -35,7 +29,7 @@ CinematicScreen::~CinematicScreen() {
 
 void CinematicScreen::draw(float dt) {
 	
-	smh->drawScreenColor(BLACK, backgroundAlpha);
+	smh->drawScreenColor(Colors::BLACK, backgroundAlpha);
 
 	if (backgroundAlpha < 255.0) return;
 
@@ -94,35 +88,35 @@ bool CinematicScreen::update(float dt, float mouseX, float mouseY) {
 		musicTransitionedYet = true;
 	}
 
-	if (!musicFadeoutYet && scene == FINAL_SCENE && sceneState == SCENE_WAIT && timeInSceneState > 3.5) {
+	if (!musicFadeoutYet && scene == FINAL_SCENE && sceneState == SceneStates::SCENE_WAIT && timeInSceneState > 3.5) {
 		//Start fading out the music near the end of the final scene
 		smh->soundManager->fadeOutMusic();
 		musicFadeoutYet = true;
 	}
 
-	if (sceneState == SCENE_SHOW_PICTURE) {
+	if (sceneState == SceneStates::SCENE_SHOW_PICTURE) {
 		pictureOffset += 300.0 * dt;
 		if (pictureOffset >= 0) {
 			pictureOffset = 0.0;
-			enterSceneState(SCENE_SHOW_TEXT);
+			enterSceneState(SceneStates::SCENE_SHOW_TEXT);
 		}
-	} else if (sceneState == SCENE_SHOW_TEXT) {
+	} else if (sceneState == SceneStates::SCENE_SHOW_TEXT) {
 		textAlpha += 320 * dt;
 		if (textAlpha >= 255.0) {
 			textAlpha = 255.0;
-			enterSceneState(SCENE_WAIT);
+			enterSceneState(SceneStates::SCENE_WAIT);
 		}
-	} else if (sceneState == SCENE_WAIT) {	
+	} else if (sceneState == SceneStates::SCENE_WAIT) {	
 		if (timeInSceneState > sceneDuration) {
-			enterSceneState(SCENE_FADE_TEXT);
+			enterSceneState(SceneStates::SCENE_FADE_TEXT);
 		}
-	} else if (sceneState == SCENE_FADE_TEXT) {
+	} else if (sceneState == SceneStates::SCENE_FADE_TEXT) {
 		textAlpha -= 320 * dt;
 		if (textAlpha <= 0.0) {
 			textAlpha = 0.0;
-			enterSceneState(SCENE_FADE_PICTURE);
+			enterSceneState(SceneStates::SCENE_FADE_PICTURE);
 		}
-	} else if (sceneState == SCENE_FADE_PICTURE) {
+	} else if (sceneState == SceneStates::SCENE_FADE_PICTURE) {
 		pictureOffset -= 300.0 * dt;
 		if (pictureOffset <= MAX_PICTURE_OFFSET) {
 			pictureOffset = MAX_PICTURE_OFFSET;
@@ -169,7 +163,7 @@ void CinematicScreen::enterScene(int newScene) {
 		text = "It is now up to Smiley to uncover Fenwar's diabolical plan \nand rescue his lover! Undoubtedly, hours of puzzle- and \nadventure-based excitement await!";
 	}
 
-	enterSceneState(SCENE_SHOW_PICTURE);
+	enterSceneState(SceneStates::SCENE_SHOW_PICTURE);
 }
 
 /**
@@ -179,7 +173,7 @@ void CinematicScreen::enterSceneState(int newState) {
 	sceneState = newState;
 	timeInSceneState = 0.0;
 
-	if (scene == FINAL_SCENE && sceneState == SCENE_FADE_PICTURE) {
+	if (scene == FINAL_SCENE && sceneState == SceneStates::SCENE_FADE_PICTURE) {
 		startTransition();
 	}
 

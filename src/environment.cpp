@@ -683,7 +683,7 @@ void Environment::draw(float dt) {
 					} else {
 						setTerrainCollisionBox(collisionBox, collision[i][j], i, j);
 					}
-					if (!smh->player->canPass(collision[i][j]) || hasSillyPad(i,j)) smh->drawCollisionBox(collisionBox, GREEN);
+					if (!smh->player->canPass(collision[i][j]) || hasSillyPad(i,j)) smh->drawCollisionBox(collisionBox, Colors::GREEN);
 				}
 			}
 		}

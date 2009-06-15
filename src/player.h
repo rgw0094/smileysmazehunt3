@@ -91,6 +91,8 @@ public:
 	bool dontUpdate;
 	bool invincible;
 	bool uber;
+	bool abilitiesLocked;
+	bool tongueLocked;
 
 	CollisionCircle *collisionCircle;
 	WeaponParticleSystem *fireBreathParticle;

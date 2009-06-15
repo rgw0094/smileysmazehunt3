@@ -761,6 +761,18 @@ Sprite yellowSquare {
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
+Sprite whiteSquare {
+ texture=general
+ rect=320,128,64,64
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite hugeTongue {
+ texture=general
+ rect=21,660,524,227
+ hotspot=0,113
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
 Sprite stretchableBlackSquare {
  texture=general
  rect=897,65,62,62
