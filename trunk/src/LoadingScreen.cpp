@@ -25,7 +25,7 @@ LoadingScreen::~LoadingScreen() {
 void LoadingScreen::draw(float dt) {
 	
 	if (!fromLoadScreen) {
-		smh->drawScreenColor(BLACK, 255.0);
+		smh->drawScreenColor(Colors::BLACK, 255.0);
 	}
 
 	smh->resources->GetSprite("loadingText")->Render(512,384);

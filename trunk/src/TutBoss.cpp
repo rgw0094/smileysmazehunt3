@@ -339,7 +339,7 @@ void TutBoss::draw(float dt) {
 	}
 
 	if (smh->isDebugOn()) {
-		smh->drawCollisionBox(collisionBox,RED);
+		smh->drawCollisionBox(collisionBox,Colors::RED);
 	}
 
 	//Draw the health bar and lives

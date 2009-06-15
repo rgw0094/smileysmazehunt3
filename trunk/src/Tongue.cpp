@@ -149,7 +149,7 @@ void Tongue::draw(float dt) {
 				pointX = smh->player->x + smh->player->mouthXOffset[smh->player->facing] + (i+1)*(TONGUE_LENGTH / (NUM_COLLISION_POINTS-1)) * cos(testAngle);
 				pointY = smh->player->y + smh->player->mouthYOffset[smh->player->facing] + (i+1)*(TONGUE_LENGTH / (NUM_COLLISION_POINTS-1)) * sin(testAngle);
 				collisionBox->SetRadius(pointX, pointY, 5.0);
-				smh->drawCollisionBox(collisionBox, GREEN);
+				smh->drawCollisionBox(collisionBox, Colors::GREEN);
 			}
 		}
 

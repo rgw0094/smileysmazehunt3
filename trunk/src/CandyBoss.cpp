@@ -352,7 +352,7 @@ void CandyBoss::drawBartli()
 
 	drawBartletsAfterBartli();
 
-	if (smh->isDebugOn()) smh->drawCollisionBox(collisionBox,RED);
+	if (smh->isDebugOn()) smh->drawCollisionBox(collisionBox,Colors::RED);
 }
 
 /**
@@ -721,6 +721,6 @@ void CandyBoss::drawBartlet(std::list<Bartlet>::iterator i)
 	smh->resources->GetSprite("bartletRed")->SetColor(ARGB(fadeOutAlpha, 255, 255, 255));
 
 	if (smh->isDebugOn()) {
-		smh->drawCollisionBox(i->collisionBox, RED);
+		smh->drawCollisionBox(i->collisionBox, Colors::RED);
 	}
 }

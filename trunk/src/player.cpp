@@ -113,7 +113,7 @@ void Player::reset() {
 		onWarp = falling = breathingFire = inLava = inShallowWater = healing =
 		waterWalk = onWater = drowning = shrinkActive = sprinting = isHovering = 
 		cloaked = springing = usingCane = iceSliding = frozen = slimed = chargingFrisbee = 
-		inShrinkTunnel = immobile = invincible = uber = false;
+		inShrinkTunnel = immobile = invincible = uber = abilitiesLocked = tongueLocked = false;
 }
 
 /**
@@ -183,7 +183,7 @@ void Player::update(float dt) {
 	}
 	
 	//Do Attack
-	if (smh->input->keyPressed(INPUT_ATTACK) && !breathingFire && !frozen && !isHovering &&
+	if (smh->input->keyPressed(INPUT_ATTACK) && !tongueLocked && !breathingFire && !frozen && !isHovering &&
 			!falling && !springing && !cloaked && !shrinkActive && !drowning &
 			!reflectionShieldActive && !stunned && 
 			smh->getCurrentFrame() != smh->windowManager->frameLastWindowClosed) {			
@@ -464,7 +464,7 @@ void Player::drawGUI(float dt) {
 void Player::doAbility(float dt) {
 
 	//Base requirements for being allowed to use an ability
-	bool canUseAbility = !waterWalk && !falling && !springing && !frozen 
+	bool canUseAbility = !abilitiesLocked && !waterWalk && !falling && !springing && !frozen 
 		&& !drowning && !springing && hoveringYOffset == 0.0;
 
 	/////////////// Hover ////////////////
@@ -591,7 +591,7 @@ void Player::doAbility(float dt) {
 	}
 
 	/////////////////// Triggered Abilities ///////////////
-
+	
 	if (smh->input->keyPressed(INPUT_ABILITY) && canUseAbility) {
 
 		//Shoot lightning orbs

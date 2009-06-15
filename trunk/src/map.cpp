@@ -41,7 +41,7 @@ Map::~Map() { }
 void Map::draw(float dt) {
 
 	//Shade behind the map
-	smh->drawScreenColor(BLACK, 100.0);
+	smh->drawScreenColor(Colors::BLACK, 100.0);
 
 	int gridX = xOffset / squareSize;
 	int gridY = yOffset / squareSize;

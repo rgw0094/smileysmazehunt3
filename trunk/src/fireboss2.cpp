@@ -151,7 +151,7 @@ void FireBossTwo::draw(float dt) {
 	//Draw collision boxes if in debug mode
 	if (smh->isDebugOn()) {
 		for (int i = 0; i < 3; i++) {
-			smh->drawCollisionBox(collisionBoxes[i], RED);
+			smh->drawCollisionBox(collisionBoxes[i], Colors::RED);
 		}
 	}
 
@@ -739,7 +739,7 @@ void FireBossTwo::drawFireBallsBeforePhyrebozz(float dt) {
 		if (i->y <= y) {
 			i->particle->Render();
 			if (smh->isDebugOn()) {
-				smh->drawCollisionBox(i->collisionBox, RED);
+				smh->drawCollisionBox(i->collisionBox, Colors::RED);
 			}
 		}
 	}
@@ -755,7 +755,7 @@ void FireBossTwo::drawFireBallsAfterPhyrebozz(float dt) {
 		if (i->y > y) {
 			i->particle->Render();
 			if (smh->isDebugOn()) {
-				smh->drawCollisionBox(i->collisionBox, RED);
+				smh->drawCollisionBox(i->collisionBox, Colors::RED);
 			}
 		}
 	}
@@ -889,7 +889,7 @@ void FireBossTwo::drawFlameWalls(float dt) {
 		for (int j = 0; j < FLAME_WALL_NUM_PARTICLES; j++) {
 			if (i->fireBalls[j].alive) {
 				i->fireBalls[j].particle->Render();
-				if (smh->isDebugOn()) smh->drawCollisionBox(i->fireBalls[j].collisionBox, RED);
+				if (smh->isDebugOn()) smh->drawCollisionBox(i->fireBalls[j].collisionBox, Colors::RED);
 			}
 		}
 	}

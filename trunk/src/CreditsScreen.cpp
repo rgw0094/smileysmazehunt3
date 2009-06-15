@@ -29,7 +29,7 @@ CreditsScreen::~CreditsScreen() {
 
 void CreditsScreen::draw(float dt) {
 	
-	smh->drawScreenColor(BLACK, backgroundAlpha);
+	smh->drawScreenColor(Colors::BLACK, backgroundAlpha);
 	smh->resources->GetFont("titleFnt")->SetColor(ARGB(backgroundAlpha, 255.0, 255.0, 255.0));
 	smh->resources->GetFont("curlz")->SetColor(ARGB(backgroundAlpha, 255.0, 255.0, 255.0));
 

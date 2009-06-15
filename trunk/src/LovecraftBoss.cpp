@@ -150,8 +150,8 @@ void LovecraftBoss::draw(float dt) {
 	if (state != LS_INACTIVE) drawHealth("Magnitogorsk");
 
 	if (smh->isDebugOn()) {
-		smh->drawCollisionBox(eyeCollisionBox, RED);
-		smh->drawCollisionBox(bodyCollisionBox, RED);
+		smh->drawCollisionBox(eyeCollisionBox, Colors::RED);
+		smh->drawCollisionBox(bodyCollisionBox, Colors::RED);
 	}
 }
 
@@ -214,7 +214,7 @@ void LovecraftBoss::drawTentacles(float dt) {
 		smh->hge->Gfx_SetClipping();
 		
 		if (smh->isDebugOn()) {
-			smh->drawCollisionBox(i->collisionBox, RED);
+			smh->drawCollisionBox(i->collisionBox, Colors::RED);
 		}
 	}
 }
@@ -223,7 +223,7 @@ void LovecraftBoss::drawFireballs(float dt) {
 	for (std::list<BigFireBall>::iterator i = fireballList.begin(); i != fireballList.end(); i++) {
 		i->particle->Render();
 		if (smh->isDebugOn()) {
-			smh->drawCollisionBox(i->collisionBox, RED);
+			smh->drawCollisionBox(i->collisionBox, Colors::RED);
 		}
 	}
 }
@@ -240,8 +240,8 @@ void LovecraftBoss::drawCrushers(float dt) {
 		smh->resources->GetSprite("LovecraftIceBlock")->RenderEx(smh->getScreenX(i->rightX), smh->getScreenY(i->y), PI);
 
 		if (smh->isDebugOn()) {
-			smh->drawCollisionBox(i->leftCollisionBox, RED);
-			smh->drawCollisionBox(i->rightCollisionBox, RED);
+			smh->drawCollisionBox(i->leftCollisionBox, Colors::RED);
+			smh->drawCollisionBox(i->rightCollisionBox, Colors::RED);
 		}
 	}
 }
@@ -604,9 +604,9 @@ void LovecraftBoss::doEyeAttackState(float dt) {
 	
 	//Determine what color to shade the screen during the attack
 	int screenColor;
-	if (strcmp(eyeStatus.type.c_str(), LIGHTNING_EYE) == 0) screenColor = YELLOW;
-	else if (strcmp(eyeStatus.type.c_str(), FIRE_EYE) == 0) screenColor = RED;
-	else if (strcmp(eyeStatus.type.c_str(), ICE_EYE) ==0) screenColor = BLUE;
+	if (strcmp(eyeStatus.type.c_str(), LIGHTNING_EYE) == 0) screenColor = Colors::YELLOW;
+	else if (strcmp(eyeStatus.type.c_str(), FIRE_EYE) == 0) screenColor = Colors::RED;
+	else if (strcmp(eyeStatus.type.c_str(), ICE_EYE) ==0) screenColor = Colors::BLUE;
 
 	if (!attackState.attackStarted) {
 		//Before starting the attack, shade the screen the appropriate color based on the attack

@@ -19,14 +19,14 @@ public:
 	static const int INACTIVE = 0;
 	static const int TERRAFORMING = 1;
 	static const int BATTLE = 2;
-	static const int DYING = 5;
-	static const int FADING = 6;
+	static const int RETURN_TO_ARENA = 3;
+	static const int NEAR_DEATH = 4;
 };
 
 class FenwarAttributes 
 {
 public:
-	static const int HEALTH = 15.0;
+	static const int HEALTH = 1.0; // 15.0;
 	static const int COLLISION_DAMAGE = 3.0;
 	static const int COLLISION_KNOCKBACK = 150.0;
 	static const int ORB_COLLISION_DAMAGE = 2.0;
@@ -65,7 +65,8 @@ private:
 	void doInactiveState(float dt);
 	void doTerraformingState(float dt);
 	void doBattleState(float dt);
-	bool doDeathState(float dt);
+	void doReturnToArenaState(float dt);
+	bool doNearDeathState(float dt);
 
 	//Helper methods
 	void enterState(int newState);
@@ -79,13 +80,15 @@ private:
 	int groupID;
 	int startGridX, startGridY;
 	float timeInState;
-	float fadeAlpha;
 	bool terraformedYet;
 	bool startedShakingYet;
 	float timeStartedFlashing;
 	bool flashing;
 	float floatingYOffset;
+	float timeRelocated;
 	float lastAttackTime;
+	float fadeWhiteAlpha;
+	bool relocatedYet;
 };
 
 ///////////// FENWAR ORBS ////////////////
@@ -121,6 +124,7 @@ public:
 
 	void spawnOrbs();
 	void doAttack();
+	void killOrbs();
 	int getState();
 
 private:
@@ -163,6 +167,7 @@ public:
 	void update(float dt);
 	void draw(float dt);
 	void shootBullet(float angle);
+	void killBullets();
 
 private:
 

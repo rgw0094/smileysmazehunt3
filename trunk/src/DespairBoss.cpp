@@ -104,7 +104,7 @@ DespairBoss::~DespairBoss() {
 	smh->resources->Purge(RES_CALYPSO);
 	if (collisionBox) delete collisionBox;
 	if (damageCollisionBox) delete damageCollisionBox;
-	smh->drawScreenColor(BLACK, 0.0);
+	smh->drawScreenColor(Colors::BLACK, 0.0);
 	resetProjectiles();
 }
 
@@ -313,10 +313,10 @@ bool DespairBoss::update(float dt) {
 	//position to start circling smiley.
 	if (state == DESPAIRBOSS_ENTEREVIL) {
 		evilAlpha += 136.0*dt;
-		smh->drawScreenColor(BLACK, smh->getScreenColorAlpha() + 80.0*dt);
+		smh->drawScreenColor(Colors::BLACK, smh->getScreenColorAlpha() + 80.0*dt);
 		shieldAlpha -= 136.0*dt;
 		if (shieldAlpha < 0.0) shieldAlpha = 0.0;
-		if (smh->getScreenColorAlpha() > 150.0) smh->drawScreenColor(BLACK, 150.0);
+		if (smh->getScreenColorAlpha() > 150.0) smh->drawScreenColor(Colors::BLACK, 150.0);
 		if (evilAlpha > 255.0) evilAlpha = 255.0;
 
 		//Once the screen has darkened move in position to circle smiley
@@ -382,8 +382,8 @@ bool DespairBoss::update(float dt) {
 	//Exit evil mode - the screen brightens
 	if (state == DESPAIRBOSS_EXITEVIL) {
 		evilAlpha -= 136.0*dt;
-		smh->drawScreenColor(BLACK, smh->getScreenColorAlpha() - 80.0*dt);
-		if (smh->getScreenColorAlpha() < 0.0) smh->drawScreenColor(BLACK, 0.0);
+		smh->drawScreenColor(Colors::BLACK, smh->getScreenColorAlpha() - 80.0*dt);
+		if (smh->getScreenColorAlpha() < 0.0) smh->drawScreenColor(Colors::BLACK, 0.0);
 		if (evilAlpha < 0.0) evilAlpha = 0.0;
 
 		//After evil mode is over, return to Calypso's starting point
@@ -503,8 +503,8 @@ void DespairBoss::drawCalypso(float dt) {
 
 	//Debug mode - draw collision box
 	if (smh->isDebugOn()) {
-		smh->drawCollisionBox(collisionBox, RED);
-		smh->drawCollisionBox(damageCollisionBox, RED);
+		smh->drawCollisionBox(collisionBox, Colors::RED);
+		smh->drawCollisionBox(damageCollisionBox, Colors::RED);
 	}
 
 	//Draw the health bar
@@ -562,7 +562,7 @@ void DespairBoss::drawProjectiles(float dt) {
 		i->particle->Render();
 
 		//Debug mode - draw the collision Circle
-		if (smh->isDebugOn()) smh->drawCollisionBox(i->collisionBox, RED);
+		if (smh->isDebugOn()) smh->drawCollisionBox(i->collisionBox, Colors::RED);
 
 	}
 
@@ -695,7 +695,7 @@ void DespairBoss::setState(int newState) {
 		oldFloatingOffset = floatingOffset;
 	} else if (newState == DESPAIRBOSS_ENTEREVIL) {
 		dx = dy = 0.0;
-		smh->drawScreenColor(BLACK, 0.0);
+		smh->drawScreenColor(Colors::BLACK, 0.0);
 		smh->soundManager->playSound("snd_CalypsoEvil");
 	} else if (newState == DESPAIRBOSS_EVIL_CHARGING) {
 		chargeAngle = Util::getAngleBetween(x, y, smh->player->x, smh->player->y);

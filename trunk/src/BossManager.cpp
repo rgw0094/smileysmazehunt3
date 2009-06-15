@@ -73,11 +73,14 @@ void BossManager::spawnBoss(int bossID, int groupID, int gridX, int gridY) {
 /**
  * Update method called every frame.
  */
-void BossManager::update(float dt) {
-
+void BossManager::update(float dt)
+{
 	std::list<BossStruct>::iterator i;
-	for (i = bossList.begin(); i != bossList.end(); i++) {
-		if (i->boss->update(dt)) {
+	for (i = bossList.begin(); i != bossList.end(); i++) 
+	{
+		if (i->boss->update(dt)) 
+		{
+			smh->log("cunt");
 			delete i->boss;
 			i = bossList.erase(i);
 		}

@@ -128,7 +128,7 @@ void FireBoss::draw(float dt) {
 	//Draw collision boxes if in debug mode
 	if (smh->isDebugOn()) {
 		for (int i = 0; i < 3; i++) {
-			smh->drawCollisionBox(collisionBoxes[i], RED);
+			smh->drawCollisionBox(collisionBoxes[i], Colors::RED);
 		}
 	}
 
@@ -432,7 +432,7 @@ void FireBoss::drawOrbs(float dt) {
 	for (i = theOrbs.begin(); i != theOrbs.end(); i++) {
 		i->particle->Render();
 		if (smh->isDebugOn()) {
-			smh->drawCollisionBox(i->collisionBox, RED);
+			smh->drawCollisionBox(i->collisionBox, Colors::RED);
 		}
 	}
 }

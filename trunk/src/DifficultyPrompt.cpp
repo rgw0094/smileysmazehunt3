@@ -53,7 +53,7 @@ void DifficultyPrompt::draw(float dt) {
 
 	if (!visible) return;
 
-	smh->drawScreenColor(BLACK, 100.0);
+	smh->drawScreenColor(Colors::BLACK, 100.0);
 	smh->drawSprite("difficultyPromptBackground", DRAWX, DRAWY);
 
 	std::string s;
@@ -102,7 +102,7 @@ void DifficultyPrompt::draw(float dt) {
 		smh->drawSprite("okButton", DRAWX + 162.5, DRAWY + 120);
 	}
 
-	//smh->drawCollisionBox(okBox, RED);
-	//smh->drawCollisionBox(leftBox, RED);
-	//smh->drawCollisionBox(rightBox, RED);
+	//smh->drawCollisionBox(okBox, Colors::RED);
+	//smh->drawCollisionBox(leftBox, Colors::RED);
+	//smh->drawCollisionBox(rightBox, Colors::RED);
 }

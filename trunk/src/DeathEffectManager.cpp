@@ -93,7 +93,7 @@ void DeathEffectManager::draw(float dt) {
 
 	if (!active) return;
 
-	smh->drawScreenColor(RED, alpha);
+	smh->drawScreenColor(Colors::RED, alpha);
 	smh->resources->GetSprite("smileyWithoutHat")->RenderEx(510.0, 387.0, 0.0, smileyScale, smileyScale); 
 	smh->drawSprite("smileysHat", 510.0, 387.0 - 34.0*smileyScale);
 

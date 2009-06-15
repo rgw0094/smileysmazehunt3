@@ -539,6 +539,9 @@
 					RelativePath=".\src\CinematicScreen.cpp">
 				</File>
 				<File
+					RelativePath=".\src\ClosingCinematic.cpp">
+				</File>
+				<File
 					RelativePath=".\src\CreditsScreen.cpp">
 				</File>
 				<File

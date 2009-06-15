@@ -38,7 +38,7 @@ void E_AdjacentShooter::draw(float dt) {
 	graphic[facing]->Render(screenX, screenY);
 
 	if (smh->isDebugOn()) {
-		smh->drawCollisionBox(collisionBox, RED);
+		smh->drawCollisionBox(collisionBox, Colors::RED);
 	}
 }
 

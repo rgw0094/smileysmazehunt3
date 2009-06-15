@@ -157,13 +157,6 @@ class PopupMessageManager;
 #define HEALTH_ITEM 9
 #define MANA_ITEM 8
 
-//Colors
-#define RED 0
-#define YELLOW 1
-#define GREEN 2
-#define BLUE 3
-#define BLACK 4
-
 //Collision Layer
 #define NUM_COLLISION 36
 #define WALKABLE 0
@@ -254,6 +247,18 @@ class PopupMessageManager;
 //...
 #define PLAYER_START 224
 #define PLAYER_END 225
+
+//Colors
+class Colors
+{
+public:
+	static const int Colors::RED = 0;
+	static const int YELLOW = 1;
+	static const int GREEN = 2;
+	static const int BLUE = 3;
+	static const int BLACK = 4;
+	static const int WHITE = 5;
+};
 
 struct Point {
 	int x, y;

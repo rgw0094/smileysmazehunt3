@@ -24,7 +24,7 @@ void Console::draw(float dt) {
 
 	if (!active) return;
 
-	smh->drawScreenColor(BLACK, 75.0);
+	smh->drawScreenColor(Colors::BLACK, 75.0);
 
 	smh->resources->GetFont("consoleFnt")->printf(15, 5, HGETEXT_LEFT, "Console (Toggle with ~)");
 

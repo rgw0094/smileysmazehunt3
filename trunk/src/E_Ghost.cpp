@@ -72,7 +72,7 @@ void E_Ghost::draw(float dt) {
 	smh->resources->GetSprite("playerShadow")->SetColor(ARGB(75.0, 255, 255, 255));
 
 	if (smh->isDebugOn()) {
-		smh->drawCollisionBox(collisionBox, RED);
+		smh->drawCollisionBox(collisionBox, Colors::RED);
 	}
 
 }

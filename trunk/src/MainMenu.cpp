@@ -35,6 +35,8 @@ void MainMenu::setScreen(int screen) {
 		menuScreen = new CreditsScreen();
 	} else if (currentScreen == MenuScreens::CINEMATIC_SCREEN) {
 		menuScreen = new CinematicScreen();
+	} else if (currentScreen == MenuScreens::CLOSING_CINEMATIC_SCREEN) {
+		menuScreen = new ClosingCinematicScreen();
 	}
 
 }
@@ -89,14 +91,21 @@ bool MainMenu::update(float dt) {
 void MainMenu::draw(float dt) {
 
 	//Draw background
-	smh->drawSprite("menuBackground", 0,0);
+	if (currentScreen != MenuScreens::CLOSING_CINEMATIC_SCREEN && 
+		currentScreen != MenuScreens::CINEMATIC_SCREEN)
+	{
+		smh->drawSprite("menuBackground", 0,0);
+	}
 
 	//Draw the current screen
 	menuScreen->draw(dt);
 
 	//Draw the mouse
-	if (smh->input->isMouseInWindow() && currentScreen != MenuScreens::LOADING_SCREEN && currentScreen != MenuScreens::CREDITS_SCREEN && 
-		currentScreen != MenuScreens::CINEMATIC_SCREEN) 
+	if (smh->input->isMouseInWindow() && 
+		currentScreen != MenuScreens::LOADING_SCREEN && 
+		currentScreen != MenuScreens::CREDITS_SCREEN && 
+		currentScreen != MenuScreens::CINEMATIC_SCREEN &&
+		currentScreen != MenuScreens::CLOSING_CINEMATIC_SCREEN) 
 	{
 		smh->drawSprite("mouseCursor", smh->input->getMouseX(), smh->input->getMouseY());
 	}

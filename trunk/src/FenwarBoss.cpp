@@ -9,15 +9,19 @@
 #include "Player.h"
 
 #define FENWAR_INTRO_TEXT 200
-#define FENWAR_DEFEAT_TEXT 201
+#define FENWAR_NEAR_DEFEAT_TEXT 201
+#define FENWAR_DEFEAT_TEXT 202
 
 #define START_STATE FenwarStates::TERRAFORMING
 //#define START_STATE FenwarStates::BATTLE 
 
 #define TERRAFORM_DURATION 2.0
 #define FLASHING_DURATION 0.5
-#define FENWAR_WIDTH 31
-#define FENWAR_HEIGHT 36
+#define FENWAR_WIDTH 62
+#define FENWAR_HEIGHT 73
+
+#define FENWAR_DEATH_STAGE_X 98
+#define FENWAR_DEATH_STAGE_Y 33
 
 FenwarBoss::FenwarBoss(int _gridX, int _gridY, int _groupID) 
 {
@@ -29,7 +33,6 @@ FenwarBoss::FenwarBoss(int _gridX, int _gridY, int _groupID)
 
 	groupID = _groupID;
 	health = maxHealth = FenwarAttributes::HEALTH;
-	fadeAlpha = 255.0;
 	startedIntroDialogue = false;
 	terraformedYet = false;
 	startedShakingYet = false;
@@ -37,6 +40,8 @@ FenwarBoss::FenwarBoss(int _gridX, int _gridY, int _groupID)
 	floatingYOffset = 0.0;
 	collisionBox = new hgeRect();
 	collisionBox->SetRadius(x, y, 1);
+	timeRelocated = 999999999.0;
+	relocatedYet = false;
 
 	orbManager = new FenwarOrbs(this);
 	bulletManager = new FenwarBullets(this);
@@ -49,6 +54,8 @@ FenwarBoss::FenwarBoss(int _gridX, int _gridY, int _groupID)
 
 FenwarBoss::~FenwarBoss() 
 {
+	smh->screenEffectsManager->stopEffect();
+
 	delete orbManager;
 	delete bulletManager;
 	delete collisionBox;
@@ -61,18 +68,19 @@ FenwarBoss::~FenwarBoss()
 
 void FenwarBoss::draw(float dt) 
 {
-	if (Util::distance(startGridX, startGridY, smh->player->gridX, smh->player->gridY) > 15) return;
+	smh->drawGlobalSprite("playerShadow", x, y + FENWAR_HEIGHT/2.0);
 
-	smh->drawGlobalSprite("playerShadow", x, y + FENWAR_HEIGHT);
-
-	if (flashing) {
-		float flashAlpha = smh->getFlashingAlpha(FLASHING_DURATION / 4.0);
-		smh->resources->GetAnimation("fenwar")->SetColor(ARGB(flashAlpha, 255.0, 255.0, 255.0));
-		smh->resources->GetAnimation("fenwarFace")->SetColor(ARGB(flashAlpha, 255.0, 255.0, 255.0));
-	} else {
-		smh->resources->GetAnimation("fenwar")->SetColor(ARGB(fadeAlpha, 255.0, 255.0, 255.0));
-		smh->resources->GetAnimation("fenwarFace")->SetColor(ARGB(fadeAlpha, 255.0, 255.0, 255.0));
+	float flashAlpha;
+	if (flashing) 
+	{
+		flashAlpha = smh->getFlashingAlpha(FLASHING_DURATION / 4.0);
+	} 
+	else
+	{
+		flashAlpha = 255.0;
 	}
+	smh->resources->GetAnimation("fenwar")->SetColor(ARGB(flashAlpha, 255.0, 255.0, 255.0));
+	smh->resources->GetAnimation("fenwarFace")->SetColor(ARGB(flashAlpha, 255.0, 255.0, 255.0));
 
 	orbManager->drawBeforeFenwar(dt);
 	smh->resources->GetAnimation("fenwar")->Render(smh->getScreenX(x), smh->getScreenY(y - floatingYOffset));
@@ -82,7 +90,7 @@ void FenwarBoss::draw(float dt)
 
 	if (smh->isDebugOn())
 	{
-		smh->drawCollisionBox(collisionBox, RED);
+		smh->drawCollisionBox(collisionBox, Colors::RED);
 	}
 
 	if (state != FenwarStates::INACTIVE)
@@ -102,8 +110,6 @@ void FenwarBoss::drawAfterSmiley(float dt)
 bool FenwarBoss::update(float dt) 
 {
 	timeInState += dt;
-	orbManager->update(dt);
-	bulletManager->update(dt);
 
 	switch (state) 
 	{
@@ -116,14 +122,18 @@ bool FenwarBoss::update(float dt)
 		case FenwarStates::BATTLE:
 			doBattleState(dt);
 			break;
-		case FenwarStates::DYING:
-		case FenwarStates::FADING:
-			if (doDeathState(dt)) return true;
+		case FenwarStates::RETURN_TO_ARENA:
+			doReturnToArenaState(dt);
+			break;
+		case FenwarStates::NEAR_DEATH:
+			if (doNearDeathState(dt)) return true;
 			break;
 	}
 
 	if (flashing && smh->timePassedSince(timeStartedFlashing) > FLASHING_DURATION) flashing = false;
 
+	orbManager->update(dt);
+	bulletManager->update(dt);
 	doCollision(dt);
 
 	return false;
@@ -151,7 +161,10 @@ void FenwarBoss::doCollision(float dt)
 	//Lightning orb collision
 	if (smh->projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_LIGHTNING_ORB))
 	{
-		dealDamage(smh->player->getLightningOrbDamage());
+		if (state == FenwarStates::BATTLE)
+		{
+			dealDamage(smh->player->getLightningOrbDamage());
+		}
 	}
 
 	//Frisbee collision
@@ -186,6 +199,9 @@ void FenwarBoss::doTerraformingState(float dt)
 	if (timeInState > 0.5 && !startedShakingYet) 
 	{
 		smh->screenEffectsManager->startShaking(99999.0, 2.5);
+		//The player can't use his tongue or abilities while the screen is shaking
+		smh->player->abilitiesLocked = true;
+		smh->player->tongueLocked = true;
 		startedShakingYet = true;
 	}
 
@@ -212,6 +228,8 @@ void FenwarBoss::doTerraformingState(float dt)
 	if (timeInState > 6.0 + TERRAFORM_DURATION)
 	{
 		smh->screenEffectsManager->stopEffect();
+		smh->player->abilitiesLocked = false;
+		smh->player->tongueLocked = false;
 		enterState(FenwarStates::BATTLE);
 	}
 }
@@ -237,28 +255,49 @@ void FenwarBoss::doBattleState(float dt)
 	}
 }
 
-bool FenwarBoss::doDeathState(float dt)
-{	
-	//After being defeated, wait for the text box to be closed
-	if (state == FenwarStates::DYING && !smh->windowManager->isTextBoxOpen()) 
+void FenwarBoss::doReturnToArenaState(float dt)
+{
+	//After they close the near defeat text box, fade the screen to white
+	if (!relocatedYet && !smh->windowManager->isTextBoxOpen() && fadeWhiteAlpha < 255.0)
 	{
-		enterState(FenwarStates::FADING);
-	}
-
-	//After defeat and the text box is closed, fade away
-	if (state == FenwarStates::FADING) 
-	{
-		fadeAlpha -= 155.0 * dt;
-		
-		//When done fading away, go to the ending cinematic
-		if (fadeAlpha < 0.0) 
+		fadeWhiteAlpha += 155.0 * dt;
+		smh->setScreenColor(Colors::WHITE, fadeWhiteAlpha);
+		if (fadeWhiteAlpha >= 255.0)
 		{
-			fadeAlpha = 0.0;
-
-			//TODO: go to cinematic or something
-			return true;
+			fadeWhiteAlpha = 255.0;
 		}
 	}
+
+	//Move smiley to the copy of the original arena that wasn't terraformed
+	if (!relocatedYet && fadeWhiteAlpha == 255.0)
+	{
+		timeRelocated = smh->getGameTime();
+		relocatedYet = true;
+		smh->player->reset();
+		smh->player->moveTo(FENWAR_DEATH_STAGE_X, FENWAR_DEATH_STAGE_Y + 2);
+		smh->player->facing = UP;
+		x = FENWAR_DEATH_STAGE_X * 64.0 + 32.0;
+		y = FENWAR_DEATH_STAGE_Y * 64.0 + 32.0;
+		floatingYOffset = 0.0;
+	}
+
+	//Now fade out from white
+	if (smh->timePassedSince(timeRelocated) > 2.0)
+	{
+		fadeWhiteAlpha -= 155.0 * dt;
+		smh->setScreenColor(Colors::WHITE, fadeWhiteAlpha);
+		if (fadeWhiteAlpha <= 0.0)
+		{
+			smh->setScreenColor(Colors::WHITE, 0.0);
+			smh->windowManager->openDialogueTextBox(-1, FENWAR_DEFEAT_TEXT);
+			enterState(FenwarStates::NEAR_DEATH);
+		}
+	}
+}
+
+bool FenwarBoss::doNearDeathState(float dt)
+{	
+	//Wait to be licked then return true
 
 	return false;
 }
@@ -280,8 +319,13 @@ void FenwarBoss::dealDamage(float damage)
 	if (health <= 0.0)
 	{
 		health = 0.0;
+		fadeWhiteAlpha = 0;
 		flashing = false;
-		//TODO: death stuff
+		smh->screenEffectsManager->stopEffect();
+		orbManager->killOrbs();
+		bulletManager->killBullets();
+		enterState(FenwarStates::RETURN_TO_ARENA);
+		smh->windowManager->openDialogueTextBox(-1, FENWAR_NEAR_DEFEAT_TEXT);	
 	}
 }
 
