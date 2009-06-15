@@ -216,6 +216,9 @@
 					RelativePath=".\src\FenwarBoss.h">
 				</File>
 				<File
+					RelativePath=".\src\FenwarBullets.cpp">
+				</File>
+				<File
 					RelativePath=".\src\FenwarOrbs.cpp">
 				</File>
 			</Filter>
