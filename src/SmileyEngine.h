@@ -643,6 +643,7 @@ public:
 	void playSound(const char* sound);
 	void playSound(const char* sound, float delay);
 	void playSwitchSound(int gridX, int gridY, bool alwaysPlaySound);
+	std::string getCurrentSongName();
 	int getMusicVolume();
 	int getSoundVolume();
 

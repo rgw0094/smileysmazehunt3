@@ -38,6 +38,11 @@ void SoundManager::playMusic(char *music) {
 
 }
 
+std::string SoundManager::getCurrentSongName()
+{
+	return currentMusic;
+}
+
 /**
  * Plays the music for the specified area.
  */
