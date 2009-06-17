@@ -145,15 +145,23 @@ public:
 private:
 
 	void enterScene(int newScene);
+	void enterSceneState(int newState);
 	void cleanupCurrentScene();
 
 	int currentScene;
 	int sceneState;
 	float timeInScene;
+	float timeInSceneState;
+	float sceneDuration;
 	HTEXTURE currentTexture;
 	hgeSprite *currentSprite;
 	float tongueAngle;
 	float tongueOffset;
+	float fadeAlpha;
+	float pictureOffset;
+	float textAlpha;
+	bool musicStartedYet;
+	std::string text;
 
 };
 

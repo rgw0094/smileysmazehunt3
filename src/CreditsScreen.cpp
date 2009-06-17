@@ -161,7 +161,7 @@ void CreditsScreen::init() {
 			newBoss.graphic = smh->resources->GetSprite("creditsLovecraft");
 		} else if (i == 9) {
 			newBoss.name = "Lord Fenwar";
-			newBoss.graphic = smh->resources->GetSprite("fenwarDown");
+			newBoss.graphic = smh->resources->GetSprite("fenwarSpr");
 		}
 
 		if (i > 0) bossY += newBoss.graphic->GetHeight()/2 + 25.0 + 400.0;

@@ -230,6 +230,12 @@ Animation fenwar {
  hotspot=31,36
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
+Sprite fenwarSpr {
+ texture=general
+ rect=129,581,62,73
+ hotspot=32,36
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
 Animation fenwarFace {
  texture=general
  rect=491,461,50,48
