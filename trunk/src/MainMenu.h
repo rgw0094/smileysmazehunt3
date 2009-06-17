@@ -80,6 +80,7 @@ public:
 	static const int SCENE_WAIT = 2;
 	static const int SCENE_FADE_TEXT = 3;
 	static const int SCENE_FADE_PICTURE = 4;
+	static const int SCENE_TRANSITION_TO_CREDITS = 5;
 };
 
 class CinematicScreen : public MenuScreen {
@@ -129,6 +130,7 @@ class Scenes
 public:
 	static const int NO_SCENE = -1;
 	static const int GROTESQUE_CLOSEUP = 0;
+	static const int FINAL_SCENE = 15;
 };
 
 class ClosingCinematicScreen : public MenuScreen
@@ -157,7 +159,8 @@ private:
 	hgeSprite *currentSprite;
 	float tongueAngle;
 	float tongueOffset;
-	float fadeAlpha;
+	float fadeInAlpha;
+	float fadeOutAlpha;
 	float pictureOffset;
 	float textAlpha;
 	bool musicStartedYet;

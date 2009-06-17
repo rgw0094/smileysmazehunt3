@@ -37,10 +37,11 @@ void ClosingCinematicScreen::draw(float dt)
 		}
 	} 
 
-	smh->drawScreenColor(Colors::BLACK, fadeAlpha);
+	smh->drawScreenColor(Colors::BLACK, fadeInAlpha);
 
 	if (currentScene > 0)
 	{
+		currentSprite->SetColor(ARGB(fadeOutAlpha, 255, 255, 255));
 		currentSprite->Render(512.0 - 220.0, 284.0 - 170.0 + pictureOffset);
 
 		smh->resources->GetFont("inventoryFnt")->SetColor(ARGB(textAlpha, 255.0, 255.0, 255.0));
@@ -51,6 +52,11 @@ void ClosingCinematicScreen::draw(float dt)
 
 bool ClosingCinematicScreen::update(float dt, float mouseX, float mouseY)
 {
+	if (smh->hge->Input_KeyDown(HGEK_H))
+	{
+		enterScene(currentScene + 1);
+	}
+
 	timeInScene += dt;
 	timeInSceneState += dt;
 
@@ -63,10 +69,10 @@ bool ClosingCinematicScreen::update(float dt, float mouseX, float mouseY)
 				musicStartedYet = true;
 				smh->soundManager->playMusic("creditsMusic");
 			}
-			fadeAlpha += 50.0 * dt;
-			if (fadeAlpha >= 255.0)
+			fadeInAlpha += 50.0 * dt;
+			if (fadeInAlpha >= 255.0)
 			{
-				fadeAlpha = 255.0;
+				fadeInAlpha = 255.0;
 			}
 		}
 		if (timeInScene > 14.0)
@@ -74,6 +80,30 @@ bool ClosingCinematicScreen::update(float dt, float mouseX, float mouseY)
 			enterScene(currentScene + 1);
 		}
 	} 
+	else if (currentScene == Scenes::FINAL_SCENE)
+	{
+		if (sceneState == SceneStates::SCENE_SHOW_PICTURE) {
+			pictureOffset += 300.0 * dt;
+			if (pictureOffset >= 0) {
+				pictureOffset = 0.0;
+				enterSceneState(SceneStates::SCENE_SHOW_TEXT);
+			}
+		} else if (sceneState == SceneStates::SCENE_SHOW_TEXT) {
+			textAlpha += 320 * dt;
+			if (textAlpha >= 255.0) {
+				textAlpha = 255.0;
+				enterSceneState(SceneStates::SCENE_TRANSITION_TO_CREDITS);
+			}
+		} else if (sceneState == SceneStates::SCENE_TRANSITION_TO_CREDITS) {
+			fadeOutAlpha -= 100.0 * dt;
+			textAlpha -= 100.0 * dt;
+			if (fadeOutAlpha < 0.0)
+			{
+				fadeOutAlpha = 0.0;
+				smh->menu->setScreen(MenuScreens::CREDITS_SCREEN);
+			}
+		}
+	}
 	else
 	{
 		if (sceneState == SceneStates::SCENE_SHOW_PICTURE) {
@@ -129,12 +159,15 @@ void ClosingCinematicScreen::enterScene(int newScene)
 	cleanupCurrentScene();
 	currentScene = newScene;
 	timeInScene = 0.0;
+	pictureOffset = MAX_PICTURE_OFFSET;
+	textAlpha = 0.0;
+	fadeInAlpha = fadeOutAlpha = 255.0;
 
 	if (currentScene == Scenes::GROTESQUE_CLOSEUP)
 	{
 		tongueAngle = PI/5.0;
 		tongueOffset = 800.0;
-		fadeAlpha = 0.0;
+		fadeInAlpha = 0.0;
 		currentTexture = smh->hge->Texture_Load("Graphics/grotesque.png");
 		currentSprite = new hgeSprite(currentTexture, 0, 0, 1024, 768);
 	} 
@@ -151,7 +184,7 @@ void ClosingCinematicScreen::enterScene(int newScene)
 		else if (currentScene == 2)
 			text = "Because of Smiley's heroics, his companion was able to \nsave the planet from global cooling.";
 		else if (currentScene == 3) 
-			text = "Smiley became a hero in everyone's eyes, and immediately \nended all hostility in the world towards homosexuals";
+			text = "Smiley became a hero in everyone's eyes, and immediately \nended all hostility in the world towards homosexuals.";
 		else if (currentScene == 4)
 			text = "What became of everyone else, you ask?";
 		else if (currentScene == 5) 

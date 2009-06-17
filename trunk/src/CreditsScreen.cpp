@@ -15,8 +15,12 @@ CreditsScreen::CreditsScreen() {
 	offset = 0.0;
 	backgroundAlpha = 0.0;
 	resourcesCachedYet = false;
-	smh->soundManager->playMusic("creditsMusic");
 	timeActive = 0.0;
+
+	if (strcmp(smh->soundManager->getCurrentSongName().c_str(), "creditsMusic") != 0)
+	{
+		smh->soundManager->playMusic("creditsMusic");
+	}
 }
 
 CreditsScreen::~CreditsScreen() {
