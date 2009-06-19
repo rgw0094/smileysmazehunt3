@@ -6,7 +6,7 @@ extern SMH *smh;
 
 #define SPEED 150.0
 
-#define TITLE_START 300.0
+#define TITLE_START 170.0
 #define ENEMY_START 1300.0
 #define NUM_UNIQUE_BOSSES 10
 #define NUM_UNIQUE_NPCS 13
@@ -33,13 +33,30 @@ CreditsScreen::~CreditsScreen() {
 
 void CreditsScreen::draw(float dt) {
 	
-	smh->drawScreenColor(Colors::BLACK, backgroundAlpha);
+	smh->drawScreenColor(Colors::BLACK, 255.0);
 	smh->resources->GetFont("titleFnt")->SetColor(ARGB(backgroundAlpha, 255.0, 255.0, 255.0));
 	smh->resources->GetFont("curlz")->SetColor(ARGB(backgroundAlpha, 255.0, 255.0, 255.0));
 
 	//Title and credits
-	smh->resources->GetFont("titleFnt")->printf(512.0,TITLE_START - offset,HGETEXT_CENTER,"Smiley's Maze Hunt");
-	smh->resources->GetFont("curlz")->printf(512.0,TITLE_START + 100.0 - offset,HGETEXT_CENTER,"Created By:\nRob Walsh\nErik Interval\n Ryan Manion");
+	smh->resources->GetFont("titleFnt")->printf(512.0,TITLE_START - offset,HGETEXT_CENTER,"Credits");
+
+	smh->resources->GetFont("curlz")->SetScale(1.0);
+
+	smh->resources->GetFont("curlz")->printf(341.0,TITLE_START + 120.0 - offset,
+		HGETEXT_CENTER,"Programming");
+	smh->resources->GetFont("curlz")->printf(682.0,TITLE_START + 120.0 - offset,
+		HGETEXT_CENTER,"Levels + Art");
+	smh->resources->GetFont("curlz")->printf(512.0,TITLE_START + 250.0 - offset,
+		HGETEXT_CENTER,"Music");
+
+	smh->resources->GetFont("curlz")->SetScale(0.7);
+
+	smh->resources->GetFont("curlz")->printf(341.0,TITLE_START + 160.0 - offset,
+		HGETEXT_CENTER,"Rob Walsh\nErik Interval");
+	smh->resources->GetFont("curlz")->printf(682.0,TITLE_START + 160.0 - offset,
+		HGETEXT_CENTER,"Ryan Manion\nErik Interval");
+	smh->resources->GetFont("curlz")->printf(512.0,TITLE_START + 290.0 - offset,
+		HGETEXT_CENTER,"www.modarchive.com");
 
 	if (!resourcesCachedYet) return;
 
@@ -69,13 +86,14 @@ void CreditsScreen::draw(float dt) {
 
 bool CreditsScreen::update(float dt, float mouseX, float mouseY) {
 	
+	timeActive += dt;
+
 	//Fade in and don't do anything else until done fading in
-	if (backgroundAlpha < 255.0) {
-		backgroundAlpha = min(255.0, backgroundAlpha + 255.0 * dt);
+	if (timeActive > 1.0 && backgroundAlpha < 255.0) 
+	{
+		backgroundAlpha = min(255.0, backgroundAlpha + 155.0 * dt);
 		return false;
 	}
-
-	timeActive += dt;
 
 	//Cache all the graphics while the title and authors are stationary
 	if (!resourcesCachedYet) {
@@ -85,7 +103,7 @@ bool CreditsScreen::update(float dt, float mouseX, float mouseY) {
 	}
 
 	//The screen slowly scrolls down
-	if (timeActive > 2.0 && offset + 350 < endY) {
+	if (timeActive > 7.5 && offset + 350 < endY) {
 		offset += SPEED * dt;
 	}
 
