@@ -294,11 +294,10 @@ public:
 //-----------------------------------------------------
 //------------------TITLE SCREEN-----------------------
 //-----------------------------------------------------
-#define TS_NUM_BUTTONS 4
+#define TS_NUM_BUTTONS 3
 #define TS_EXIT_BUTTON 0
 #define TS_OPTIONS_BUTTON 1
-#define TS_CREDITS_BUTTON 2
-#define TS_PLAY_BUTTON 3
+#define TS_PLAY_BUTTON 2
 
 #define SMILEY_TITLE_COMING_AT_YOU 0
 #define SMILEY_TITLE_GOING_BACK 1

@@ -339,6 +339,11 @@ void FenwarBoss::enterState(int newState)
 		lastAttackTime = smh->getGameTime();
 		orbManager->spawnOrbs();
 	}
+
+	if (newState == FenwarStates::RETURN_TO_ARENA)
+	{
+		smh->soundManager->fadeOutMusic();
+	}
 }
 
 void FenwarBoss::terraformArena() 

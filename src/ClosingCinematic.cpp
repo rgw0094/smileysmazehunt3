@@ -95,12 +95,14 @@ bool ClosingCinematicScreen::update(float dt, float mouseX, float mouseY)
 				enterSceneState(SceneStates::SCENE_TRANSITION_TO_CREDITS);
 			}
 		} else if (sceneState == SceneStates::SCENE_TRANSITION_TO_CREDITS) {
-			fadeOutAlpha -= 100.0 * dt;
-			textAlpha -= 100.0 * dt;
-			if (fadeOutAlpha < 0.0)
-			{
-				fadeOutAlpha = 0.0;
-				smh->menu->setScreen(MenuScreens::CREDITS_SCREEN);
+			if (timeInSceneState > 4.5) {
+				fadeOutAlpha -= 100.0 * dt;
+				textAlpha -= 100.0 * dt;
+				if (fadeOutAlpha < 0.0)
+				{
+					fadeOutAlpha = 0.0;
+					smh->menu->setScreen(MenuScreens::CREDITS_SCREEN);
+				}
 			}
 		}
 	}

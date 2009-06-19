@@ -6,6 +6,8 @@
 
 extern SMH *smh;
 
+#define BUTTON_Y_OFFSET 125.0
+
 /**
  * Constructor
  */ 
@@ -13,10 +15,10 @@ TitleScreen::TitleScreen() {
 
 	enterState(IN_SCREEN);
 
-	buttons[TS_EXIT_BUTTON] = new Button(4.8, 785.0, "Exit");
-	buttons[TS_OPTIONS_BUTTON] = new Button(259.6, 785.0, "Options");
-	buttons[TS_CREDITS_BUTTON] = new Button(514.4, 785.0, "Credits");
-	buttons[TS_PLAY_BUTTON] = new Button(769.2, 785.0, "Play");
+	//The buttons start off the screen, the control action group will move them up
+	buttons[TS_EXIT_BUTTON] = new Button(67.0, 785.0, "Exit");
+	buttons[TS_OPTIONS_BUTTON] = new Button(387.0, 785.0, "Options");
+	buttons[TS_PLAY_BUTTON] = new Button(707.0, 785.0, "Play");
 
 	smileyTitleX = 528;
 	smileyTitleY = 118;
@@ -29,7 +31,7 @@ TitleScreen::TitleScreen() {
 		controlActionGroup->addControl(buttons[i]);
 	}
 
-	controlActionGroup->beginAction(CASCADING_MOVE, 0.0, -100.0, BUTTON_EFFECT_DURATION);
+	controlActionGroup->beginAction(CASCADING_MOVE, 0.0, -BUTTON_Y_OFFSET, BUTTON_EFFECT_DURATION);
 }
 
 /**
@@ -60,8 +62,6 @@ void TitleScreen::draw(float dt) {
 
 	//Draw title
 	smh->resources->GetSprite("smileyTitle")->RenderEx(smileyTitleX,smileyTitleY,0.0,smileyTitleSize,smileyTitleSize);
-    
-
 }
 
 /**
@@ -75,7 +75,7 @@ bool TitleScreen::update(float dt, float mouseX, float mouseY) {
 		if (buttons[i]->isClicked()) {
 			clickedButton = i;
 			enterState(EXITING_SCREEN);
-			controlActionGroup->beginAction(CASCADING_MOVE, 0.0, 100.0, BUTTON_EFFECT_DURATION);
+			controlActionGroup->beginAction(CASCADING_MOVE, 0.0, BUTTON_Y_OFFSET, BUTTON_EFFECT_DURATION);
 			smileyTitleState = SMILEY_TITLE_EXITING;
 		}
 	}
@@ -113,9 +113,6 @@ bool TitleScreen::update(float dt, float mouseX, float mouseY) {
 				break;
 			case TS_OPTIONS_BUTTON:
 				smh->menu->setScreen(MenuScreens::OPTIONS_SCREEN);
-				break;
-			case TS_CREDITS_BUTTON:
-				smh->menu->setScreen(MenuScreens::CREDITS_SCREEN);
 				break;
 			case TS_EXIT_BUTTON:
 				return true;

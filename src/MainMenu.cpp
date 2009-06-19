@@ -92,9 +92,16 @@ void MainMenu::draw(float dt) {
 
 	//Draw background
 	if (currentScreen != MenuScreens::CLOSING_CINEMATIC_SCREEN && 
-		currentScreen != MenuScreens::CINEMATIC_SCREEN)
+		currentScreen != MenuScreens::CINEMATIC_SCREEN &&
+		currentScreen != MenuScreens::CREDITS_SCREEN)
 	{
 		smh->drawSprite("menuBackground", 0,0);
+
+		//smh->resources->GetFont("curlz")->SetColor(ARGB(255, 0, 0, 0));
+		smh->resources->GetFont("controls")->SetScale(0.9);
+		smh->resources->GetFont("controls")->printf(1015.0, 740.0, HGETEXT_RIGHT, "www.smileysmazehunt.com");
+		smh->resources->GetFont("controls")->SetScale(1.0);
+		//smh->resources->GetFont("curlz")->SetColor(ARGB(255, 255, 255, 255));
 	}
 
 	//Draw the current screen
