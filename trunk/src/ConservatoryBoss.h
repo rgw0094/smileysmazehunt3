@@ -45,9 +45,11 @@ public:
 	void placeCollisionBoxes();
 	void initGridOfProjectiles();
 	void doGridOfProjectiles();
-	void addFloatingEye();
+	void addFloatingEye(float addX, float addY);
 	void updateFloatingEyes(float dt);
 	void drawFloatingEyes();
+	void updateMouthAnim(float dt);
+	void drawMouthAnim();
 
 	//State methods
 	void doEyeAttackState(float dt);
@@ -79,10 +81,13 @@ public:
 	float masterPulseInterval;
 	ProjectileLauncher projectileLauncher[16];
 
+	//Floating eye variables
 	std::list<floatingEye> theFloatingEyes;
 	int numFloatingEyes;
 	float circleRotate; //the whole circle of floating eyes rotates around Smiley
-	
+	float lastFloatingEyeTime; //floating eyes appear every so often, so this keeps track of when the last one appeared
+	int mouthState; //Not active; opening; staying open; closing
+	float beginMouthStayOpenTime; //when did the mouth open all the way?
 };
 
 #endif

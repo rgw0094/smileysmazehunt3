@@ -34,6 +34,15 @@ extern SMH *smh;
 #define FLOATING_EYE_DESIRED_DISTANCE_MAX 170.0
 #define FLOATING_EYE_DESIRED_DISTANCE_ACTUAL 128.0
 #define FLOATING_EYE_SPEED 128.0
+#define FLOATING_EYE_TIME_INTERVAL 5.0//25.0
+
+//Mouth animation stuff
+#define MOUTH_STATE_INACTIVE 0
+#define MOUTH_STATE_OPENING 1
+#define MOUTH_STATE_STAYING_OPEN 2
+#define MOUTH_STATE_CLOSING 3
+#define MOUTH_STAY_OPEN_TIME 1.0
+#define MOUTH_Y_OFFSET 110
 
 //Eye attack stuff
 #define LEFT_EYE 0
@@ -44,6 +53,8 @@ extern SMH *smh;
 #define EYE_ATTACK_MAX_INTERVAL 5.0
 #define EYE_ATTACK_INTERVAL_FACTOR 0.93 //what to multiply the interval by after each attack
 #define EYE_ATTACK_MIN_INTERVAL 2.1
+
+
 
 //Grid of projectiles stuff
 #define DEFAULT_MASTER_PULSE_INTERVAL 4.0
@@ -107,6 +118,8 @@ ConservatoryBoss::ConservatoryBoss(int _gridX,int _gridY,int _groupID) {
 	//minion stuff
 	circleRotate = 0.0;
 	numFloatingEyes=0;
+	mouthState = MOUTH_STATE_INACTIVE;
+	lastFloatingEyeTime = smh->getGameTime();
 
 	//grid of projectiles stuff
 	initGridOfProjectiles();
@@ -118,8 +131,6 @@ ConservatoryBoss::~ConservatoryBoss() {
 	delete collisionBoxes[2];
 	smh->resources->Purge(RES_BARVINOID);
 }
-
-
 
 void ConservatoryBoss::placeCollisionBoxes() {
 	collisionBoxes[0]->x1 = x - 114;
@@ -179,12 +190,12 @@ void ConservatoryBoss::initGridOfProjectiles() {
 
 }
 
-void ConservatoryBoss::addFloatingEye() {
+void ConservatoryBoss::addFloatingEye(float addX, float addY) {
 	floatingEye newFloatingEye;
 
 	newFloatingEye.timeOfLastAttack = smh->getGameTime();
-	newFloatingEye.x = x;
-	newFloatingEye.y = y;
+	newFloatingEye.x = addX;
+	newFloatingEye.y = addY;
 
 	if (smh->player->isInvisible()) {
 		newFloatingEye.angleFacing = 3.14159/2;//smh->randomFloat(0.0,6.14);
@@ -261,6 +272,7 @@ bool ConservatoryBoss::update(float dt) {
 		lastEyeAttackTime = smh->getGameTime();
 		timeOfLastMasterPulse = smh->getGameTime();
 		lastHitByTongue = smh->getGameTime();
+		lastFloatingEyeTime = smh->getGameTime();
 	}
 
 	//Battle stuff
@@ -276,17 +288,14 @@ bool ConservatoryBoss::update(float dt) {
 			lastHitByTongue = smh->getGameTime();
 
 			health -= smh->player->getDamage();
-			addFloatingEye();
 		}
-
-
 	}
 
-	//Collision with SMiley
+	//Collision with Smiley
 	if (smh->player->collisionCircle->testBox(collisionBoxes[0]) ||
 		smh->player->collisionCircle->testBox(collisionBoxes[1]) ||
 		smh->player->collisionCircle->testBox(collisionBoxes[2])) {
-				smh->player->dealDamageAndKnockback(BARVINOID_COLLISION_DAMAGE, true, 350, x, y);
+				smh->player->dealDamageAndKnockback(BARVINOID_COLLISION_DAMAGE, true, 200, x, y);
 	} //end if smiley collision
 
 	switch (state) {
@@ -297,6 +306,7 @@ bool ConservatoryBoss::update(float dt) {
 
     doGridOfProjectiles();
 	updateFloatingEyes(dt);
+	updateMouthAnim(dt);
 
 	//return true only if the boss is dead and gone
 	return false;
@@ -309,7 +319,9 @@ void ConservatoryBoss::draw(float dt) {
 	if (eyeFlashes[RIGHT_EYE].eyeFlashing) smh->resources->GetSprite("barvinoidRightEyeSprite")->Render(smh->getScreenX(x),smh->getScreenY(y));
 	if (eyeFlashes[LEFT_EYE].eyeFlashing) smh->resources->GetSprite("barvinoidLeftEyeSprite")->Render(smh->getScreenX(x),smh->getScreenY(y));
 
+	drawMouthAnim();
 	drawFloatingEyes();
+	
 
 	//Debug mode stuff
 	if (smh->isDebugOn()) {
@@ -350,6 +362,63 @@ void ConservatoryBoss::doEyeAttackState(float dt) {
 	
 }
 
+void ConservatoryBoss::drawMouthAnim() {
+	if (mouthState != MOUTH_STATE_INACTIVE) {
+		smh->resources->GetAnimation("barvinoidMouth")->Render(smh->getScreenX(x),smh->getScreenY(y-MOUTH_Y_OFFSET));
+
+		//if mouth is "staying open", render a floating eye appearing from it
+		if (mouthState == MOUTH_STATE_STAYING_OPEN) {
+			float size = smh->timePassedSince(beginMouthStayOpenTime) / MOUTH_STAY_OPEN_TIME;
+			if (size < 0.1) size = 0.1;
+			if (size > 1.0) size = 1.0;
+			smh->resources->GetSprite("barvinoidMinionSprite")->RenderEx(smh->getScreenX(x),smh->getScreenY(y-MOUTH_Y_OFFSET),3.14159/2,size,size);
+		}
+	}
+}
+
+void ConservatoryBoss::updateMouthAnim(float dt) {
+	smh->resources->GetAnimation("barvinoidMouth")->Update(dt);
+
+	//Inactive, see if it's time to start to open
+	if (mouthState == MOUTH_STATE_INACTIVE) {
+		if (smh->timePassedSince(lastFloatingEyeTime) >= FLOATING_EYE_TIME_INTERVAL) {
+			mouthState = MOUTH_STATE_OPENING;
+			smh->resources->GetAnimation("barvinoidMouth")->SetMode(HGEANIM_FWD | HGEANIM_NOLOOP);
+			smh->resources->GetAnimation("barvinoidMouth")->SetFrame(0);
+			smh->resources->GetAnimation("barvinoidMouth")->Play();
+			lastFloatingEyeTime = smh->getGameTime();
+		}
+	}
+
+	//Opening, see if it's time to 'stay open'
+	if (mouthState == MOUTH_STATE_OPENING) {
+		//if current frame >= total frames - 1
+		if (smh->resources->GetAnimation("barvinoidMouth")->GetFrame() >= smh->resources->GetAnimation("barvinoidMouth")->GetFrames()-1) {
+			mouthState = MOUTH_STATE_STAYING_OPEN;
+			smh->resources->GetAnimation("barvinoidMouth")->Stop();
+			beginMouthStayOpenTime = smh->getGameTime();
+		}
+	}
+
+	//Staying open, see if it's time to spawn a floating eye and start closing
+	if (mouthState == MOUTH_STATE_STAYING_OPEN) {
+		if (smh->timePassedSince(beginMouthStayOpenTime) >= MOUTH_STAY_OPEN_TIME) {
+			mouthState = MOUTH_STATE_CLOSING;
+			smh->resources->GetAnimation("barvinoidMouth")->SetMode(HGEANIM_REV | HGEANIM_NOLOOP);
+			smh->resources->GetAnimation("barvinoidMouth")->Play();
+			addFloatingEye(x,y-MOUTH_Y_OFFSET);
+		}
+	}
+
+	//Closing, see if it's time to become inactive
+	if (mouthState == MOUTH_STATE_CLOSING) {
+		//if current frame == 0
+		if (smh->resources->GetAnimation("barvinoidMouth")->GetFrame() == 0) {
+			mouthState = MOUTH_STATE_INACTIVE;
+			smh->resources->GetAnimation("barvinoidMouth")->Stop();
+		}
+	}
+}
 
 void ConservatoryBoss::updateEyeGlow(int eye) {
 

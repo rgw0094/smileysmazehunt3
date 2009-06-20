@@ -2115,25 +2115,42 @@ Sprite barvinoidSprite {
 }
 Sprite barvinoidRightEyeSprite {
  texture=barvinoidTx
- rect=0,355,54,51
+ rect=283,0,54,51
  hotspot=133,273
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=109
 }
 Sprite barvinoidLeftEyeSprite {
  texture=barvinoidTx
- rect=54,355,54,51
+ rect=283,52,54,51
  hotspot=-80,273
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=109
 }
 Sprite barvinoidMinionSprite {
  texture=barvinoidTx
- rect=116,370,45,39
+ rect=283,103,45,39
  hotspot=23,20
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=109
 }
+Sprite barvinoidShadow {
+ texture=barvinoidTx
+ rect=0,356,261,148
+ hotspot=130,74
+ resgroup=109
+}
+Animation barvinoidMouth {
+ texture=animations
+ rect=0,768,67,60
+ fps=10.0
+ frames=9
+ hotspot=31,30
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=109
+ mode=NOLOOP
+}
+
 ;*****************************
 ;******** PROJECTILES ********
 ;*****************************
