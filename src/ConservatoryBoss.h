@@ -53,21 +53,21 @@ public:
 	void updateMouthAnim(float dt);
 	void drawMouthAnim();
 	void updateEyeGlow(int eye);
+	void testCollisions(float dt);
+	void purgeFloatingEyes();
 
 	//State methods
 	void doEyeAttackState(float dt);
 	void doHoppingState(float dt);
 	void doHoppingToCenterState(float dt);
 	void doHop(float dt, float destinationX, float destinationY);
-	
-	
+		
 	//Variables
 	int gridX, gridY;
 	float x, y;
 	float xLoot,yLoot;
 	int state;
 	bool startedIntroDialogue;
-	bool startedDrowningDialogue;
 	float lastHitByTongue;
 	float timeEnteredState;
 	float timeEnteredGSS;
@@ -75,6 +75,8 @@ public:
 	bool barvinoidCanPass[256];
 	bool droppedLoot;
 	bool shouldDrawAfterSmiley;
+	bool startedComplainDialogue;
+	bool startedDeathDialogue;
 
 	//hopping variables
 	float timeStartedHop;
