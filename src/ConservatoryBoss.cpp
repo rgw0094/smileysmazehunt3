@@ -89,6 +89,7 @@ ConservatoryBoss::ConservatoryBoss(int _gridX,int _gridY,int _groupID) {
 	health = maxHealth = BARVINOID_HEALTH/smh->gameData->getDifficultyModifier(smh->saveManager->difficulty);
 	droppedLoot=false;
 	
+	shouldDrawAfterSmiley = false;
 	
 	//init collision
 	for (int i=0;i<256;i++) {
@@ -239,6 +240,7 @@ void ConservatoryBoss::updateFloatingEyes(float dt) {
 
 		if (smh->player->isInvisible()) {
 			i->angleMoving = i->angleFacing;
+			eyeMove = false;
 		} else { //is NOT invisible
 			angleAroundSmiley = float(j) * 2.0*float(PI)/float(numFloatingEyes) + circleRotate;
 			desiredX = smh->player->x + FLOATING_EYE_DESIRED_DISTANCE_ACTUAL * cos(angleAroundSmiley);
@@ -285,6 +287,10 @@ void ConservatoryBoss::drawFloatingEyes() {
 }
 
 bool ConservatoryBoss::update(float dt) {
+
+	//See if Barvinoid should be drawn after Smiley or not
+
+	if (smh->player->y < y || hopY != 0.0) shouldDrawAfterSmiley = true; else shouldDrawAfterSmiley = false;
 	
 	//When smiley triggers the boss' enemy blocks start his dialogue.
 	if (state == BARVINOID_INACTIVE && !startedIntroDialogue) {
@@ -351,25 +357,7 @@ bool ConservatoryBoss::update(float dt) {
 }
 
 void ConservatoryBoss::draw(float dt) {
-	
-	//Draw shadow
-	if (state == BARVINOID_HOPPING || state == BARVINOID_HOPPING_TO_CENTER) {
-		smh->resources->GetSprite("barvinoidShadow")->Render(smh->getScreenX(x),smh->getScreenY(y));
-	}
-	
-	//Draw barvinoid
-	smh->resources->GetSprite("barvinoidSprite")->Render(smh->getScreenX(x),smh->getScreenY(y)+hopY);
-	
-	//Draw eyes flashing
-	if (state == BARVINOID_EYE_ATTACK) {
-		if (eyeFlashes[RIGHT_EYE].eyeFlashing) smh->resources->GetSprite("barvinoidRightEyeSprite")->Render(smh->getScreenX(x),smh->getScreenY(y));
-		if (eyeFlashes[LEFT_EYE].eyeFlashing) smh->resources->GetSprite("barvinoidLeftEyeSprite")->Render(smh->getScreenX(x),smh->getScreenY(y));
-	}
-	
-
-	drawMouthAnim();
-	drawFloatingEyes();
-	
+	if (!shouldDrawAfterSmiley) drawBarvinoid();
 
 	//Debug mode stuff
 	if (smh->isDebugOn()) {
@@ -384,6 +372,30 @@ void ConservatoryBoss::draw(float dt) {
 	}
 }
 
+void ConservatoryBoss::drawAfterSmiley(float dt) {
+	if (shouldDrawAfterSmiley) drawBarvinoid();
+
+	drawFloatingEyes();
+}
+
+void ConservatoryBoss::drawBarvinoid() {
+	//Draw shadow
+	if (state == BARVINOID_HOPPING || state == BARVINOID_HOPPING_TO_CENTER) {
+		smh->resources->GetSprite("barvinoidShadow")->Render(smh->getScreenX(x),smh->getScreenY(y));
+	}
+	
+	//Draw barvinoid
+	smh->resources->GetSprite("barvinoidSprite")->Render(smh->getScreenX(x),smh->getScreenY(y)+hopY);
+	
+	//Draw eyes flashing
+	if (state == BARVINOID_EYE_ATTACK) {
+		if (eyeFlashes[RIGHT_EYE].eyeFlashing) smh->resources->GetSprite("barvinoidRightEyeSprite")->Render(smh->getScreenX(x),smh->getScreenY(y)+hopY);
+		if (eyeFlashes[LEFT_EYE].eyeFlashing) smh->resources->GetSprite("barvinoidLeftEyeSprite")->Render(smh->getScreenX(x),smh->getScreenY(y)+hopY);
+	}
+
+	drawMouthAnim();
+}
+
 void ConservatoryBoss::enterState(int _state) {
 	state=_state;
 	timeEnteredState=smh->getGameTime();
@@ -395,6 +407,8 @@ void ConservatoryBoss::doEyeAttackState(float dt) {
 	if (smh->timePassedSince(timeEnteredState) >= EYE_ATTACK_TIME) {
 		enterState(BARVINOID_HOPPING);
 		timeStartedHop = smh->getGameTime(); //we can't just use timeEnteredState for this, since there are 2 states that hop, and I want them to use the same initial time
+		eyeFlashes[LEFT_EYE].eyeFlashing = eyeFlashes[RIGHT_EYE].eyeFlashing = false;
+		eyeFlashes[LEFT_EYE].timeStartedFlash = eyeFlashes[RIGHT_EYE].timeStartedFlash = smh->getGameTime();
 	}
 
 	if (smh->timePassedSince(lastEyeAttackTime) >= eyeAttackInterval) {
@@ -433,7 +447,7 @@ void ConservatoryBoss::drawMouthAnim() {
 			float size = smh->timePassedSince(beginMouthStayOpenTime) / MOUTH_STAY_OPEN_TIME;
 			if (size < 0.1) size = 0.1;
 			if (size > 1.0) size = 1.0;
-			smh->resources->GetSprite("barvinoidMinionSprite")->RenderEx(smh->getScreenX(x),smh->getScreenY(y-MOUTH_Y_OFFSET),3.14159/2,size,size);
+			smh->resources->GetSprite("barvinoidMinionSprite")->RenderEx(smh->getScreenX(x),smh->getScreenY(y-MOUTH_Y_OFFSET+hopY),3.14159/2,size,size);
 		}
 	}
 }

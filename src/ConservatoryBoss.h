@@ -39,6 +39,8 @@ public:
 
 	//methods
 	void draw(float dt);
+	void drawBarvinoid();
+	void drawAfterSmiley(float dt);
 	bool update(float dt);
 	void enterState(int _state);
 	void finish();
@@ -72,6 +74,7 @@ public:
 	hgeRect *collisionBoxes[3];
 	bool barvinoidCanPass[256];
 	bool droppedLoot;
+	bool shouldDrawAfterSmiley;
 
 	//hopping variables
 	float timeStartedHop;
