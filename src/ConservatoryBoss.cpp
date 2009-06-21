@@ -34,7 +34,7 @@ extern SMH *smh;
 #define FLOATING_EYE_DESIRED_DISTANCE_MAX 170.0
 #define FLOATING_EYE_DESIRED_DISTANCE_ACTUAL 128.0
 #define FLOATING_EYE_SPEED 128.0
-#define FLOATING_EYE_TIME_INTERVAL 5.0//25.0
+#define FLOATING_EYE_TIME_INTERVAL 25.0
 
 //Mouth animation stuff
 #define MOUTH_STATE_INACTIVE 0
@@ -329,6 +329,11 @@ void ConservatoryBoss::draw(float dt) {
 		smh->drawCollisionBox(collisionBoxes[1], Colors::RED);
 		smh->drawCollisionBox(collisionBoxes[2], Colors::RED);
 	}	
+
+	//Draw the health bar and lives
+	if (state != BARVINOID_INACTIVE) {
+		drawHealth("Barvinoid");
+	}
 }
 
 void ConservatoryBoss::enterState(int _state) {
@@ -359,6 +364,8 @@ void ConservatoryBoss::doEyeAttackState(float dt) {
 	std::string debugText;
 	debugText = "Barvinoid " + Util::intToString(eyeFlashes[RIGHT_EYE].eyeFlashing) + " " + Util::intToString(eyeFlashes[LEFT_EYE].eyeFlashing);
 	smh->setDebugText(debugText.c_str());
+
+	
 	
 }
 
