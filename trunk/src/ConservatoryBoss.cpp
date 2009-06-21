@@ -16,6 +16,8 @@ extern SMH *smh;
 #define BARVINOID_EYE_ATTACK 1
 #define BARVINOID_HOPPING 2
 #define BARVINOID_HOPPING_TO_CENTER 3
+#define BARVINOID_FADING 4
+#define BARVINOID_DEAD 5
 
 #define EYE_ATTACK_TIME 40.0
 #define HOP_TIME 30.0
@@ -29,7 +31,8 @@ extern SMH *smh;
 
 //Battle text ids in GameText.dat
 #define BARVINOID_INTROTEXT 210
-#define BARVINOID_DEFEATTEXT 211
+#define BARVINOID_COMPLAINTEXT 211
+#define BARVINOID_DEFEATTEXT 212
 
 //Minion stuff (the evil floating eyes)
 #define FLOATING_EYE_DESIRED_DISTANCE_MAX 170.0
@@ -40,6 +43,7 @@ extern SMH *smh;
 //Floating eye's bullet
 #define FLOATING_EYE_SHOT_SPEED 1300.0
 #define FLOATING_EYE_SHOT_DAMAGE 0.5
+#define FLOATING_EYE_PROJECTILE_DAMAGE_TO_BARV 18.0
 
 //Mouth animation stuff
 #define MOUTH_STATE_INACTIVE 0
@@ -84,10 +88,12 @@ ConservatoryBoss::ConservatoryBoss(int _gridX,int _gridY,int _groupID) {
 
 	state = BARVINOID_INACTIVE;
 	startedIntroDialogue = false;
-	startedDrowningDialogue = false;
+	startedComplainDialogue = false;
+	startedDeathDialogue = false;
 
 	health = maxHealth = BARVINOID_HEALTH/smh->gameData->getDifficultyModifier(smh->saveManager->difficulty);
 	droppedLoot=false;
+	
 	
 	shouldDrawAfterSmiley = false;
 	
@@ -142,6 +148,7 @@ ConservatoryBoss::~ConservatoryBoss() {
 	delete collisionBoxes[1];
 	delete collisionBoxes[2];
 	smh->resources->Purge(RES_BARVINOID);
+	purgeFloatingEyes();
 }
 
 void ConservatoryBoss::placeCollisionBoxes() {
@@ -267,6 +274,13 @@ void ConservatoryBoss::updateFloatingEyes(float dt) {
 	} //next i
 }
 
+void ConservatoryBoss::purgeFloatingEyes() {
+	std::list<floatingEye>::iterator i;
+	for (i = theFloatingEyes.begin(); i != theFloatingEyes.end(); i++) {
+		i = theFloatingEyes.erase(i);
+	}
+}
+
 void ConservatoryBoss::drawFloatingEyes() {
 	std::list<floatingEye>::iterator i;
 
@@ -287,6 +301,9 @@ void ConservatoryBoss::drawFloatingEyes() {
 }
 
 bool ConservatoryBoss::update(float dt) {
+
+	//if dead, then return true
+	if (state == BARVINOID_DEAD) return true;
 
 	//See if Barvinoid should be drawn after Smiley or not
 
@@ -314,27 +331,10 @@ bool ConservatoryBoss::update(float dt) {
 
 	//Battle stuff
 	placeCollisionBoxes();
+
+	//Test collisions
+	testCollisions(dt);
 	
-	//Check collision with Smiley's tongue
-	if (smh->player->getTongue()->testCollision(collisionBoxes[0]) ||
-		smh->player->getTongue()->testCollision(collisionBoxes[1]) ||
-		smh->player->getTongue()->testCollision(collisionBoxes[2])) {
-		
-		//Barvinoid was hit by Smiley's tongue
-		if (smh->timePassedSince(lastHitByTongue) >= 1.0) {
-			lastHitByTongue = smh->getGameTime();
-
-			health -= smh->player->getDamage();
-		}
-	}
-
-	//Collision with Smiley
-	if (smh->player->collisionCircle->testBox(collisionBoxes[0]) ||
-		smh->player->collisionCircle->testBox(collisionBoxes[1]) ||
-		smh->player->collisionCircle->testBox(collisionBoxes[2])) {
-				smh->player->dealDamageAndKnockback(BARVINOID_COLLISION_DAMAGE, true, 200, x, y);
-	} //end if smiley collision
-
 	switch (state) {
 		case BARVINOID_EYE_ATTACK:
 			doEyeAttackState(dt);
@@ -347,15 +347,78 @@ bool ConservatoryBoss::update(float dt) {
 			break;
 	};
 
+	if (state == BARVINOID_FADING) {
+		if (smh->timePassedSince(timeEnteredState) >= 1.0) {
+			enterState(BARVINOID_DEAD);
+			//Play level music
+			smh->soundManager->playMusic("conservatoryMusic");	
+		}
+	}
+
     doGridOfProjectiles();
 	updateFloatingEyes(dt);
 	updateMouthAnim(dt);
+
+	if (health <= 0.0) {
+		finish();
+	}
 
 	//return true only if the boss is dead and gone
 	return false;
 
 }
 
+void ConservatoryBoss::testCollisions(float dt) {
+	//Collision with Smiley's tongue
+	if (smh->player->getTongue()->testCollision(collisionBoxes[0]) ||
+	smh->player->getTongue()->testCollision(collisionBoxes[1]) ||
+	smh->player->getTongue()->testCollision(collisionBoxes[2])) {
+		
+		//Barvinoid was hit by Smiley's tongue
+		if (smh->timePassedSince(lastHitByTongue) >= 1.0) {
+			lastHitByTongue = smh->getGameTime();
+
+			health -= smh->player->getDamage();
+		}
+	}
+
+	//Collision with fire breath
+	if (smh->player->fireBreathParticle->testCollision(collisionBoxes[0]) || 
+	smh->player->fireBreathParticle->testCollision(collisionBoxes[1]) ||
+	smh->player->fireBreathParticle->testCollision(collisionBoxes[2])) {
+		//Barvinoid was hit by fire breath
+		health -= smh->player->getFireBreathDamage()*dt;
+	}
+
+	//Collision with orb
+	if (smh->projectileManager->killProjectilesInBox(collisionBoxes[0],PROJECTILE_LIGHTNING_ORB,false,true) || 
+	smh->projectileManager->killProjectilesInBox(collisionBoxes[0],PROJECTILE_LIGHTNING_ORB,false,true) || 
+	smh->projectileManager->killProjectilesInBox(collisionBoxes[0],PROJECTILE_LIGHTNING_ORB,false,true)) {
+		//Barvinoid was hit by lightning orb
+		health -= smh->player->getLightningOrbDamage();
+	}
+	//Collision with Smiley
+	if (smh->player->collisionCircle->testBox(collisionBoxes[0]) ||
+	smh->player->collisionCircle->testBox(collisionBoxes[1]) ||
+	smh->player->collisionCircle->testBox(collisionBoxes[2])) {
+				smh->player->dealDamageAndKnockback(BARVINOID_COLLISION_DAMAGE, true, 200, x, y);
+	} //end if smiley collision
+
+	//Collision with the floating eye's projectiles
+	if (smh->projectileManager->killProjectilesInBox(collisionBoxes[0],PROJECTILE_BARV_YELLOW,true,true) || 
+	smh->projectileManager->killProjectilesInBox(collisionBoxes[0],PROJECTILE_BARV_YELLOW,true,true) || 
+	smh->projectileManager->killProjectilesInBox(collisionBoxes[0],PROJECTILE_BARV_YELLOW,true,true)) {
+
+		//Do a lot of damage to Barvinoid
+		health -= FLOATING_EYE_PROJECTILE_DAMAGE_TO_BARV;
+
+		//Have him complain about your tactics
+		if (!startedComplainDialogue) {
+			startedComplainDialogue = true;
+			smh->windowManager->openDialogueTextBox(-1, BARVINOID_COMPLAINTEXT);
+		}
+	}
+}
 void ConservatoryBoss::draw(float dt) {
 	if (!shouldDrawAfterSmiley) drawBarvinoid();
 
@@ -384,8 +447,16 @@ void ConservatoryBoss::drawBarvinoid() {
 		smh->resources->GetSprite("barvinoidShadow")->Render(smh->getScreenX(x),smh->getScreenY(y));
 	}
 	
+	if (state == BARVINOID_FADING) {
+		float alpha = 255.0-(smh->timePassedSince(timeEnteredState)*255.0);
+		if (alpha >= 255.0) alpha = 255.0;
+		if (alpha <= 0.0) alpha = 0.0;
+		//Set alpha to fade Barvinoid away
+		smh->resources->GetSprite("barvinoidSprite")->SetColor(ARGB(alpha,255,255,255));
+	}
+
 	//Draw barvinoid
-	smh->resources->GetSprite("barvinoidSprite")->Render(smh->getScreenX(x),smh->getScreenY(y)+hopY);
+	if (state != BARVINOID_DEAD) smh->resources->GetSprite("barvinoidSprite")->Render(smh->getScreenX(x),smh->getScreenY(y)+hopY);
 	
 	//Draw eyes flashing
 	if (state == BARVINOID_EYE_ATTACK) {
@@ -577,6 +648,8 @@ void ConservatoryBoss::doHoppingToCenterState(float dt) {
 		x = xLoot;
 		y = yLoot;
 		hopY = 0.0;
+		lastEyeAttackTime = smh->getGameTime();
+		eyeAttackInterval = EYE_ATTACK_MAX_INTERVAL;
 		enterState(BARVINOID_EYE_ATTACK);
 	} else {
 		doHop(dt,xLoot,yLoot);
@@ -596,17 +669,45 @@ void ConservatoryBoss::doHop(float dt, float destinationX, float destinationY) {
 	}
 
 	if (hopY < 0.0) { //move toward destination if in the air
-		float angleToDestination = Util::getAngleBetween(x,y,destinationX,destinationY);
-
-		x += BARV_SPEED*cos(angleToDestination)*dt;
-		y += BARV_SPEED*sin(angleToDestination)*dt;
+		if (x != destinationX && y != destinationY) {
+			float angleToDestination = Util::getAngleBetween(x,y,destinationX,destinationY);
+			x += BARV_SPEED*cos(angleToDestination)*dt;
+			y += BARV_SPEED*sin(angleToDestination)*dt;
+		}
 	}
 
 }
 
 /**
- * Called right before deleting the conservatory boss. 
+ * Sets into motion the death sequence
  */
 void ConservatoryBoss::finish() {
+	//Give death speech
+	if (!startedDeathDialogue) {
+		smh->windowManager->openDialogueTextBox(-1, BARVINOID_DEFEATTEXT);
+		startedDeathDialogue = true;
+	}
+
 	
+	if (!droppedLoot) {
+		//Get rid of projectiles
+		smh->projectileManager->killProjectiles(PROJECTILE_BARV_COMET);
+		smh->projectileManager->killProjectiles(PROJECTILE_BARV_YELLOW);
+		smh->projectileManager->killProjectiles(PROJECTILE_GRID_ID);
+
+		//Fade away
+		enterState(BARVINOID_FADING);
+		
+		//drop loot
+		smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, HOVER);
+
+		//fade away music
+		smh->soundManager->fadeOutMusic();
+
+		//report the death
+		smh->saveManager->killBoss(CONSERVATORY_BOSS);
+		smh->enemyGroupManager->notifyOfDeath(groupID);
+
+		droppedLoot = true;
+	}
 }
