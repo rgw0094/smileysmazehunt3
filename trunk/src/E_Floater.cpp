@@ -61,6 +61,7 @@ void E_Floater::update(float dt) {
 
 	//Change direction if the enemy is going to hit a wall next frame
 	bool hitWall = false;
+	int safetyCheck = 0;
 	do {
 		futureCollisionBox->SetRadius(x + dx*dt, y + dy*dt, radius);
 		if (smh->environment->testCollision(futureCollisionBox, canPass)) {
@@ -71,7 +72,8 @@ void E_Floater::update(float dt) {
 		} else {
 			hitWall = false;
 		}
-	} while (hitWall);
+		safetyCheck++;
+	} while (hitWall && safetyCheck < 4);
 		
 	//Collision with player
 	if (smh->player->collisionCircle->testBox(collisionBox)) {
