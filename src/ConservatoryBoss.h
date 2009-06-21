@@ -50,10 +50,14 @@ public:
 	void drawFloatingEyes();
 	void updateMouthAnim(float dt);
 	void drawMouthAnim();
+	void updateEyeGlow(int eye);
 
 	//State methods
 	void doEyeAttackState(float dt);
-	void updateEyeGlow(int eye);
+	void doHoppingState(float dt);
+	void doHoppingToCenterState(float dt);
+	void doHop(float dt, float destinationX, float destinationY);
+	
 	
 	//Variables
 	int gridX, gridY;
@@ -68,6 +72,10 @@ public:
 	hgeRect *collisionBoxes[3];
 	bool barvinoidCanPass[256];
 	bool droppedLoot;
+
+	//hopping variables
+	float timeStartedHop;
+	float hopY;
 	
 	//Eye attack variables
 	EyeFlash eyeFlashes[2];
