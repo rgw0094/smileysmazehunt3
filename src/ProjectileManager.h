@@ -9,7 +9,7 @@ class hgeRect;
 class hgeSprite;
 
 //Projectile Types
-#define NUM_PROJECTILES 17
+#define NUM_PROJECTILES 18
 #define PROJECTILE_ALL -1
 #define PROJECTILE_1 0
 #define PROJECTILE_FRISBEE 1
@@ -28,6 +28,7 @@ class hgeSprite;
 #define PROJECTILE_ORANGE 14
 #define PROJECTILE_BOOMERANG 15
 #define PROJECTILE_BARV_COMET 16
+#define PROJECTILE_BARV_YELLOW 17
 
 #define LIGHTNING_ORB_SPEED 650.0
 
