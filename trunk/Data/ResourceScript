@@ -217,6 +217,10 @@ Particle bigWhiteBarv {
  filename=barv.psi
  sprite=particleGraphic1
 }
+Particle smallYellowBarv {
+ filename=barvFloatEyeBeam.psi
+ sprite=particleGraphic1
+}
 
 ;********************************************
 ;************* FENWAR ENCOUNTER  ************
@@ -2149,6 +2153,13 @@ Animation barvinoidMouth {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=109
  mode=NOLOOP
+}
+Sprite floatingEyeShot {
+ texture=barvinoidTx
+ rect=283,142,64,64
+ hotspot=32,32
+ resgroup=109
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 
 ;*****************************

@@ -114,6 +114,11 @@ void ProjectileManager::addProjectile(float x, float y, float speed, float angle
 		newProjectile.particle->Fire();
 	}
 
+	if (id == PROJECTILE_BARV_YELLOW) {
+		newProjectile.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("smallYellowBarv")->info);
+		newProjectile.particle->Fire();
+	}
+
 	//Add it to the list
 	theProjectiles.push_back(newProjectile);
 
@@ -438,6 +443,13 @@ void ProjectileManager::draw(float dt) {
 			i->particle->MoveTo(smh->getScreenX(i->x), smh->getScreenY(i->y), true);
 			i->particle->Render();
 			projectileTypes[i->id].sprite->RenderEx(smh->getScreenX(i->x), smh->getScreenY(i->y), i->angle, 1.0f, 1.0f);
+
+		// Barvinoid yellow sphere
+		} else if (i->id == PROJECTILE_BARV_YELLOW) {
+			i->particle->Update(dt);
+			i->particle->MoveTo(smh->getScreenX(i->x), smh->getScreenY(i->y), true);
+			i->particle->Render();
+			projectileTypes[i->id].sprite->RenderEx(smh->getScreenX(i->x), smh->getScreenY(i->y), i->angle, 1.0f, 1.0f);
 		
 		//Figure 8 (width based on distance from its origin so it gets wider & skinnier as it travels)
 		} else if (i->id == PROJECTILE_FIGURE_8) {
@@ -665,5 +677,8 @@ void ProjectileManager::initProjectiles() {
 
 	projectileTypes[PROJECTILE_BARV_COMET].radius = 32;
 	projectileTypes[PROJECTILE_BARV_COMET].sprite = smh->resources->GetSprite("lightningOrbProjectile");
+
+	projectileTypes[PROJECTILE_BARV_YELLOW].radius = 30;
+	projectileTypes[PROJECTILE_BARV_YELLOW].sprite = smh->resources->GetSprite("floatingEyeShot");
 
 }

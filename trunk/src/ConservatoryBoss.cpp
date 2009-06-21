@@ -35,6 +35,10 @@ extern SMH *smh;
 #define FLOATING_EYE_DESIRED_DISTANCE_ACTUAL 128.0
 #define FLOATING_EYE_SPEED 128.0
 #define FLOATING_EYE_TIME_INTERVAL 25.0
+#define FLOATING_EYE_ATTACK_INTERVAL 23.0
+//Floating eye's bullet
+#define FLOATING_EYE_SHOT_SPEED 1300.0
+#define FLOATING_EYE_SHOT_DAMAGE 0.5
 
 //Mouth animation stuff
 #define MOUTH_STATE_INACTIVE 0
@@ -44,21 +48,19 @@ extern SMH *smh;
 #define MOUTH_STAY_OPEN_TIME 1.0
 #define MOUTH_Y_OFFSET 110
 
-//Eye attack stuff
+//Eye attack stuff (eyes of Barvinoid, not floating eyes)
 #define LEFT_EYE 0
 #define RIGHT_EYE 1
-#define COMET_SPEED 550.0
+#define COMET_SPEED 600.0
 #define COMET_DAMAGE 1.0
 
 #define EYE_ATTACK_MAX_INTERVAL 5.0
 #define EYE_ATTACK_INTERVAL_FACTOR 0.93 //what to multiply the interval by after each attack
 #define EYE_ATTACK_MIN_INTERVAL 2.1
 
-
-
 //Grid of projectiles stuff
-#define DEFAULT_MASTER_PULSE_INTERVAL 4.0
-#define PROJECTILE_GRID_SPEED 150.0
+#define DEFAULT_MASTER_PULSE_INTERVAL 5.0
+#define PROJECTILE_GRID_SPEED 160.0
 #define PROJECTILE_GRID_DAMAGE 0.25
 #define PROJECTILE_GRID_ID 0
 
@@ -225,6 +227,7 @@ void ConservatoryBoss::updateFloatingEyes(float dt) {
 	j=0;
 	for (i = theFloatingEyes.begin(); i != theFloatingEyes.end(); i++) {
 		eyeMove = true;
+
 		if (smh->player->isInvisible()) {
 			i->angleMoving = i->angleFacing;
 		} else { //is NOT invisible
@@ -241,6 +244,14 @@ void ConservatoryBoss::updateFloatingEyes(float dt) {
 			i->x = i->x + FLOATING_EYE_SPEED*cos(i->angleMoving)*dt;
 			i->y = i->y + FLOATING_EYE_SPEED*sin(i->angleMoving)*dt;
 		}
+
+		//Shooting stuff
+		if (smh->timePassedSince(i->timeOfLastAttack) >= FLOATING_EYE_ATTACK_INTERVAL) {
+			i->timeOfLastAttack = smh->getGameTime();
+			smh->projectileManager->addProjectile(i->x+16*cos(i->angleFacing),i->y+16*sin(i->angleFacing),FLOATING_EYE_SHOT_SPEED,i->angleFacing,FLOATING_EYE_SHOT_DAMAGE,true,false,PROJECTILE_BARV_YELLOW,true);
+		}
+
+
 		j++;
 	} //next i
 }
@@ -249,7 +260,18 @@ void ConservatoryBoss::drawFloatingEyes() {
 	std::list<floatingEye>::iterator i;
 
 	for (i = theFloatingEyes.begin(); i != theFloatingEyes.end(); i++) {
-		smh->resources->GetSprite("barvinoidMinionSprite")->RenderEx(smh->getScreenX(i->x),smh->getScreenY(i->y),i->angleFacing);
+		if (FLOATING_EYE_ATTACK_INTERVAL - smh->timePassedSince(i->timeOfLastAttack) <= 3.0) {
+			float t = FLOATING_EYE_ATTACK_INTERVAL - smh->timePassedSince(i->timeOfLastAttack);
+			t /= 3.0;
+			if (t < 0.0) t = 0.0;
+			if (t > 1.0) t = 1.0;
+			t *= 255.0;
+			smh->resources->GetSprite("barvinoidMinionSprite")->SetColor(ARGB(255,t,t,t));
+			smh->resources->GetSprite("barvinoidMinionSprite")->RenderEx(smh->getScreenX(i->x),smh->getScreenY(i->y),i->angleFacing);
+			smh->resources->GetSprite("barvinoidMinionSprite")->SetColor(ARGB(255,255,255,255));
+		} else {
+            smh->resources->GetSprite("barvinoidMinionSprite")->RenderEx(smh->getScreenX(i->x),smh->getScreenY(i->y),i->angleFacing);
+		}
 	}
 }
 
