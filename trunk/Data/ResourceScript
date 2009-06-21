@@ -2140,9 +2140,10 @@ Sprite barvinoidMinionSprite {
 }
 Sprite barvinoidShadow {
  texture=barvinoidTx
- rect=0,356,261,148
- hotspot=130,74
+ rect=0,356,244,148
+ hotspot=119,81
  resgroup=109
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 Animation barvinoidMouth {
  texture=animations

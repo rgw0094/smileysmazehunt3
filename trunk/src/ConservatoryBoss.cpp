@@ -15,9 +15,10 @@ extern SMH *smh;
 #define BARVINOID_INACTIVE 0
 #define BARVINOID_EYE_ATTACK 1
 #define BARVINOID_HOPPING 2
+#define BARVINOID_HOPPING_TO_CENTER 3
 
-#define EYE_ATTACK_TIME 30.0
-#define NUM_HOPS 8
+#define EYE_ATTACK_TIME 40.0
+#define HOP_TIME 30.0
 
 //Attributes
 #define BARVINOID_HEALTH 100.0
@@ -63,6 +64,11 @@ extern SMH *smh;
 #define PROJECTILE_GRID_SPEED 160.0
 #define PROJECTILE_GRID_DAMAGE 0.25
 #define PROJECTILE_GRID_ID 0
+
+//Hopping stuff
+#define HOP_HEIGHT 200.0
+#define HOP_PERIOD 0.5
+#define BARV_SPEED 360.0
 
 ConservatoryBoss::ConservatoryBoss(int _gridX,int _gridY,int _groupID) {
 	gridX=_gridX;
@@ -123,6 +129,9 @@ ConservatoryBoss::ConservatoryBoss(int _gridX,int _gridY,int _groupID) {
 	mouthState = MOUTH_STATE_INACTIVE;
 	lastFloatingEyeTime = smh->getGameTime();
 
+	//hopping stuff
+	hopY = 0.0;
+
 	//grid of projectiles stuff
 	initGridOfProjectiles();
 }
@@ -137,18 +146,18 @@ ConservatoryBoss::~ConservatoryBoss() {
 void ConservatoryBoss::placeCollisionBoxes() {
 	collisionBoxes[0]->x1 = x - 114;
 	collisionBoxes[0]->x2 = x + 114;
-	collisionBoxes[0]->y1 = y - 39;
-	collisionBoxes[0]->y2 = y + 57;
+	collisionBoxes[0]->y1 = y - 39 + hopY;
+	collisionBoxes[0]->y2 = y + 57 + hopY;
 
 	collisionBoxes[1]->x1 = x - 101;
 	collisionBoxes[1]->x2 = x + 101;
-	collisionBoxes[1]->y1 = y - 91;
-	collisionBoxes[1]->y2 = y - 40;
+	collisionBoxes[1]->y1 = y - 91 + hopY;
+	collisionBoxes[1]->y2 = y - 40 + hopY;
 
 	collisionBoxes[2]->x1 = x - 74;
 	collisionBoxes[2]->x2 = x + 74;
-	collisionBoxes[2]->y1 = y - 142;
-	collisionBoxes[2]->y2 = y - 92;	
+	collisionBoxes[2]->y1 = y - 142 + hopY;
+	collisionBoxes[2]->y2 = y - 92 + hopY;	
 }
 
 void ConservatoryBoss::initGridOfProjectiles() {
@@ -324,6 +333,12 @@ bool ConservatoryBoss::update(float dt) {
 		case BARVINOID_EYE_ATTACK:
 			doEyeAttackState(dt);
 			break;
+		case BARVINOID_HOPPING:
+			doHoppingState(dt);
+			break;
+		case BARVINOID_HOPPING_TO_CENTER:
+			doHoppingToCenterState(dt);
+			break;
 	};
 
     doGridOfProjectiles();
@@ -337,9 +352,20 @@ bool ConservatoryBoss::update(float dt) {
 
 void ConservatoryBoss::draw(float dt) {
 	
-	smh->resources->GetSprite("barvinoidSprite")->Render(smh->getScreenX(x),smh->getScreenY(y));
-	if (eyeFlashes[RIGHT_EYE].eyeFlashing) smh->resources->GetSprite("barvinoidRightEyeSprite")->Render(smh->getScreenX(x),smh->getScreenY(y));
-	if (eyeFlashes[LEFT_EYE].eyeFlashing) smh->resources->GetSprite("barvinoidLeftEyeSprite")->Render(smh->getScreenX(x),smh->getScreenY(y));
+	//Draw shadow
+	if (state == BARVINOID_HOPPING || state == BARVINOID_HOPPING_TO_CENTER) {
+		smh->resources->GetSprite("barvinoidShadow")->Render(smh->getScreenX(x),smh->getScreenY(y));
+	}
+	
+	//Draw barvinoid
+	smh->resources->GetSprite("barvinoidSprite")->Render(smh->getScreenX(x),smh->getScreenY(y)+hopY);
+	
+	//Draw eyes flashing
+	if (state == BARVINOID_EYE_ATTACK) {
+		if (eyeFlashes[RIGHT_EYE].eyeFlashing) smh->resources->GetSprite("barvinoidRightEyeSprite")->Render(smh->getScreenX(x),smh->getScreenY(y));
+		if (eyeFlashes[LEFT_EYE].eyeFlashing) smh->resources->GetSprite("barvinoidLeftEyeSprite")->Render(smh->getScreenX(x),smh->getScreenY(y));
+	}
+	
 
 	drawMouthAnim();
 	drawFloatingEyes();
@@ -364,6 +390,13 @@ void ConservatoryBoss::enterState(int _state) {
 }
 
 void ConservatoryBoss::doEyeAttackState(float dt) {
+
+	//first check to see if we should get out of this eye attack state (and into the hopping state)
+	if (smh->timePassedSince(timeEnteredState) >= EYE_ATTACK_TIME) {
+		enterState(BARVINOID_HOPPING);
+		timeStartedHop = smh->getGameTime(); //we can't just use timeEnteredState for this, since there are 2 states that hop, and I want them to use the same initial time
+	}
+
 	if (smh->timePassedSince(lastEyeAttackTime) >= eyeAttackInterval) {
 		//launch a new eye attack
 		if (lastEyeToAttack == LEFT_EYE) { //launch it in the right eye
@@ -502,6 +535,59 @@ void ConservatoryBoss::doGridOfProjectiles() {
 			projectileLauncher[i].hasFiredDuringThisPulse = true;
 		}
 	}
+}
+
+/**
+ * doHoppingState just calls doHop, with the destination being Smiley's location
+ */
+void ConservatoryBoss::doHoppingState(float dt) {	
+    //if we've hopped quite enough, then hop to center
+	if (smh->timePassedSince(timeEnteredState) >= HOP_TIME) {
+		enterState(BARVINOID_HOPPING_TO_CENTER);
+	}
+
+	if (smh->player->isInvisible()) {
+		doHop(dt,x,y); //can't see Smiley, so hop in place
+	} else {
+		doHop(dt,smh->player->x,smh->player->y);
+	}
+}
+
+/**
+ * doHoppingToCenterState just calls doHop, with the destination being the original x and y
+ * xLoot and yLoot correspond to the original x and y positions of Barvinoid
+ */
+void ConservatoryBoss::doHoppingToCenterState(float dt) {
+	//if we're at the center, enter the 'eye attack' state
+	if (abs(x-xLoot) <= 3.0 && abs(y-yLoot) <= 3.0 && hopY == 0.0) {
+		x = xLoot;
+		y = yLoot;
+		hopY = 0.0;
+		enterState(BARVINOID_EYE_ATTACK);
+	} else {
+		doHop(dt,xLoot,yLoot);
+	}
+}
+
+/**
+ * doHop -- hops toward the destination
+ */
+void ConservatoryBoss::doHop(float dt, float destinationX, float destinationY) {
+	float t = smh->timePassedSince(timeStartedHop);
+	float sine = sin(t/HOP_PERIOD);
+	hopY = -HOP_HEIGHT*sine;
+	if (hopY > 0.0) hopY = 0.0;
+	if (hopY < -HOP_HEIGHT*.7) { //this makes it look like he's hovering
+		hopY = -HOP_HEIGHT*.7 + 4.0*sin(t*8.0);
+	}
+
+	if (hopY < 0.0) { //move toward destination if in the air
+		float angleToDestination = Util::getAngleBetween(x,y,destinationX,destinationY);
+
+		x += BARV_SPEED*cos(angleToDestination)*dt;
+		y += BARV_SPEED*sin(angleToDestination)*dt;
+	}
+
 }
 
 /**
