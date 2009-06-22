@@ -164,6 +164,7 @@ private:
 	float pictureOffset;
 	float textAlpha;
 	bool musicStartedYet;
+	bool slurpedYet;
 	std::string text;
 
 };
