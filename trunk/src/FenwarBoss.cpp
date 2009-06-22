@@ -7,6 +7,7 @@
 #include "ProjectileManager.h"
 #include "CollisionCircle.h"
 #include "Player.h"
+#include "MainMenu.h"
 
 #define FENWAR_INTRO_TEXT 200
 #define FENWAR_NEAR_DEFEAT_TEXT 201
@@ -318,14 +319,23 @@ void FenwarBoss::dealDamage(float damage)
 
 	if (health <= 0.0)
 	{
-		health = 0.0;
-		fadeWhiteAlpha = 0;
-		flashing = false;
-		smh->screenEffectsManager->stopEffect();
-		orbManager->killOrbs();
-		bulletManager->killBullets();
-		enterState(FenwarStates::RETURN_TO_ARENA);
-		smh->windowManager->openDialogueTextBox(-1, FENWAR_NEAR_DEFEAT_TEXT);	
+		if (state != FenwarStates::NEAR_DEATH)
+		{
+			//Initial "death"
+			health = 0.0;
+			fadeWhiteAlpha = 0;
+			flashing = false;
+			smh->screenEffectsManager->stopEffect();
+			orbManager->killOrbs();
+			bulletManager->killBullets();
+			enterState(FenwarStates::RETURN_TO_ARENA);
+			smh->windowManager->openDialogueTextBox(-1, FENWAR_NEAR_DEFEAT_TEXT);	
+		} 
+		else
+		{
+			//Final blow to transition to the cinematic
+			smh->menu->open(MenuScreens::CLOSING_CINEMATIC_SCREEN);
+		}
 	}
 }
 
@@ -343,6 +353,13 @@ void FenwarBoss::enterState(int newState)
 	if (newState == FenwarStates::RETURN_TO_ARENA)
 	{
 		smh->soundManager->fadeOutMusic();
+		smh->player->dontUpdate = true;
+	}
+
+	if (newState == FenwarStates::NEAR_DEATH)
+	{
+		smh->player->dontUpdate = false;
+		smh->player->abilitiesLocked = true;
 	}
 }
 

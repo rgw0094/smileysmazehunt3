@@ -11,6 +11,7 @@ ClosingCinematicScreen::ClosingCinematicScreen()
 	pictureOffset = MAX_PICTURE_OFFSET;
 	textAlpha = 0.0;
 	musicStartedYet = false;
+	slurpedYet = false;
 
 	smh->soundManager->stopMusic();
 
@@ -31,8 +32,11 @@ void ClosingCinematicScreen::draw(float dt)
 
 		if (timeInScene > 1.5)
 		{
-			tongueAngle -= 1.7 * dt;
-			tongueOffset -= 900.0 * dt;
+			tongueAngle -= 1.3 * dt;
+			tongueOffset -= 550.0 * dt;
+
+			//tongueAngle -= 1.7 * dt;
+			//tongueOffset -= 900.0 * dt;
 			smh->resources->GetSprite("hugeTongue")->RenderEx(-100, tongueOffset, tongueAngle, 1.0, 1.0);
 		}
 	} 
@@ -62,6 +66,12 @@ bool ClosingCinematicScreen::update(float dt, float mouseX, float mouseY)
 
 	if (currentScene == Scenes::GROTESQUE_CLOSEUP)
 	{
+		if (timeInScene > 1.0 && !slurpedYet)
+		{
+			smh->soundManager->playSound("snd_FenwarSlurp");
+			slurpedYet = true;
+		}
+
 		if (timeInScene > 4.5)
 		{
 			if (!musicStartedYet)
