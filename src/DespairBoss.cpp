@@ -247,7 +247,7 @@ bool DespairBoss::update(float dt) {
 			PROJECTILE_LIGHTNING_ORB) * 20.0;
 
 		//The absorbed energy slowly dissipates
-		shieldAlpha -= 2.5 * dt;
+		if (state == DESPAIRBOSS_BATTLE) shieldAlpha -= 2.5 * dt;
 		if (shieldAlpha < 0.0) shieldAlpha = 0.0;
 
 		//The shield reflects frisbees
