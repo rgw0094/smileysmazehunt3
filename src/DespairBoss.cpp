@@ -47,6 +47,7 @@ extern SMH *smh;
 #define DESPAIRBOSS_EXITEVIL 8
 #define DESPAIRBOSS_FRIENDLY 10
 #define DESPAIRBOSS_FADING 11
+#define DESPAIRBOSS_DEAD 12
 
 //Projectile types
 #define NUM_PROJECTILES 2
@@ -113,6 +114,8 @@ DespairBoss::~DespairBoss() {
  */
 bool DespairBoss::update(float dt) {
 
+	if (state == DESPAIRBOSS_DEAD) return true;
+
 	shouldDrawAfterSmiley = smh->player->y < y + 60.0 && 
 		(smh->player->x > x-60 && smh->player->x < x+60) && !isInEvilMode();
 
@@ -146,7 +149,7 @@ bool DespairBoss::update(float dt) {
 		flashingAlpha = 255.0;
 	}
 
-	//When smiley triggers the boss' enemy block start his dialogue.
+	//When smiley triggers the boss' enemy block, start his dialogue.
 	if (state == DESPAIRBOSS_INACTIVE && !startedIntroDialogue) {
 		if (smh->enemyGroupManager->groups[groupID].triggeredYet) {
 			smh->windowManager->openDialogueTextBox(-1, DESPAIRBOSS_INTROTEXT);
@@ -432,6 +435,7 @@ bool DespairBoss::update(float dt) {
 		
 		//When done fading away, drop the loot
 		if (fadeAlpha < 0.0) {
+			setState(DESPAIRBOSS_DEAD);
 			fadeAlpha = 0.0;
 			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, REFLECTION_SHIELD);
 			smh->soundManager->playMusic("realmOfDespairMusic");
@@ -452,6 +456,8 @@ bool DespairBoss::update(float dt) {
  */ 
 void DespairBoss::draw(float dt) {
 	if (!shouldDrawAfterSmiley) drawCalypso(dt);
+	std::string randomText = "Calypso " + Util::intToString(int(x)) + "," + Util::intToString(int(y)) + ": startY=" + Util::intToString(int(startY));
+	smh->setDebugText(randomText);
 }
 
 /** 
