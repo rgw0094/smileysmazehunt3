@@ -9,7 +9,6 @@ class hgeColor;
 class hgeParticleSystem;
 class hgeParticleManager;
 
-
 #define NUM_STUN_STARS 5
 
 //Attributes
@@ -24,6 +23,7 @@ struct CalypsoProjectile {
 	bool hasNovaed;
 	float novaRadius;
 	float deathTime;
+	bool iceActive; //this variable prevents the ice nova from dealing damage to Smiley every frame
 };
 
 class DespairBoss : public Boss {

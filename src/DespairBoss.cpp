@@ -14,13 +14,13 @@
 extern SMH *smh;
 
 //Attributes
-#define HEALTH 10.0
+#define HEALTH 17.0
 #define PROJECTILE_DELAY 1.5
 #define FREEZE_DURATION 0.8
 #define STUN_DURATION 5.0
 
-#define ICE_DAMAGE 0.25
-#define FIRE_DAMAGE 0.4
+#define ICE_DAMAGE 0.50
+#define FIRE_DAMAGE 1.0
 #define LIGHTNING_DAMAGE 0.25
 #define COLLISION_DAMAGE 0.3
 #define LASER_DAMAGE 0.3
@@ -67,6 +67,7 @@ DespairBoss::DespairBoss(int _gridX, int _gridY, int _groupID) {
 	gridY = _gridY;
 	x = gridX*64 + 32;
 	y = gridY*64 + 32;
+	dx = dy = 0.0;
 	startX = x;
 	startY = y;
 	collisionBox = new hgeRect(x,y,x+1,y+1);
@@ -96,6 +97,8 @@ DespairBoss::DespairBoss(int _gridX, int _gridY, int _groupID) {
 		stunStarAngles[i] = (float)i * ((2.0*PI) / (float)NUM_STUN_STARS);
 	}
 
+	smh->log("Calypso initializing");
+
 }
 
 /**
@@ -113,6 +116,8 @@ DespairBoss::~DespairBoss() {
  * Updates Calypso
  */
 bool DespairBoss::update(float dt) {
+
+	if (dt > 1.0) dt = 1.0;
 
 	if (state == DESPAIRBOSS_DEAD) return true;
 
@@ -138,16 +143,18 @@ bool DespairBoss::update(float dt) {
 	//Do flashing
 	if (smh->timePassedSince(lastHitByTongue) < FLASHING_DURATION) {
 		float n = FLASHING_DURATION / 4.0;
-		float x = smh->timePassedSince(lastHitByTongue);
-		while (x > n) x -= n;
-		if (x < n/2.0) {
-			flashingAlpha = 100.0 + (310.0 * x) / n;
+		float t = smh->timePassedSince(lastHitByTongue);
+		while (t > n) t -= n;
+		if (t < n/2.0) {
+			flashingAlpha = 100.0 + (310.0 * t) / n;
 		} else {
-			flashingAlpha = 255.0 - 155.0 * (x - n/2.0);
+			flashingAlpha = 255.0 - 155.0 * (t - n/2.0);
 		}
 	} else {
 		flashingAlpha = 255.0;
 	}
+
+	
 
 	//When smiley triggers the boss' enemy block, start his dialogue.
 	if (state == DESPAIRBOSS_INACTIVE && !startedIntroDialogue) {
@@ -159,19 +166,23 @@ bool DespairBoss::update(float dt) {
 		}
 	}
 
+	
+
 	//Activate the boss when the intro dialogue is closed
 	if (state == DESPAIRBOSS_INACTIVE && startedIntroDialogue && !smh->windowManager->isTextBoxOpen()) {
 		setState(DESPAIRBOSS_BATTLE);
 		smh->soundManager->playMusic("bossMusic");
+		lastEvilTime = smh->getGameTime();
 	}
 
+	
 	//In "battle" stage Calypso hovers back and forth and shoots shit at you.
 	//It is from this stage that he launches into other attacks.
 	if (state == DESPAIRBOSS_BATTLE) {
 
 		//Move back and forth horizontally
 		dx = 200.0 * cos(hoveringTime);
-		
+
 		//Move vertically to stay close to smiley
 		if (y > smh->player->y - 250.0) {
 			y -= 100.0*dt;
@@ -183,7 +194,7 @@ bool DespairBoss::update(float dt) {
 			dy = 0;
 		}
 
-		//Spawn projectiles periodically
+        //Spawn projectiles periodically
 		if (smh->timePassedSince(lastProjectileTime) > PROJECTILE_DELAY) {
 			int projectileType, numProjectiles;
 			float speed, angle;
@@ -218,6 +229,8 @@ bool DespairBoss::update(float dt) {
 			lastProjectileTime = smh->getGameTime();
 		}
 
+		
+
 		//Evil mode
 		if (smh->timePassedSince(lastEvilTime) > EVIL_DELAY) {
 			setState(DESPAIRBOSS_ENTEREVIL);
@@ -251,8 +264,8 @@ bool DespairBoss::update(float dt) {
 			//Shoot lightning orbs in all directions
 			for (int i = 0; i < 14; i++) {
 				angle = float(i)*(2.0*PI/14.0);
-				smh->projectileManager->addProjectile(x + 90.0 * cos(angle), y + 90.0 * sin(angle), 
-					300, angle, LIGHTNING_DAMAGE, true, false,PROJECTILE_LIGHTNING_ORB, true);
+				//smh->projectileManager->addProjectile(x + 90.0 * cos(angle), y + 90.0 * sin(angle), 
+				//	300, angle, LIGHTNING_DAMAGE, true, false,PROJECTILE_LIGHTNING_ORB, true);
 			}
 
 		}
@@ -443,6 +456,8 @@ bool DespairBoss::update(float dt) {
 		}
 	}
 
+	
+
 	x += dx*dt;
 	y += dy*dt;
 
@@ -542,6 +557,7 @@ void DespairBoss::addProjectile(int type, float x, float y, float angle, float s
 			newProjectile.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("iceOrb")->info);
 			newProjectile.timeUntilNova = Util::distance(x, y, smh->player->x, smh->player->y) / ICE_SPEED;
 			newProjectile.hasNovaed = false;
+			newProjectile.iceActive = true;
 			break;
 		case PROJECTILE_FIRE:
 			newProjectile.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("fireOrb")->info);
@@ -636,11 +652,13 @@ void DespairBoss::updateProjectiles(float dt) {
 			deleteProjectile = true;
 			switch (i->type) {
 				case PROJECTILE_ICE:
+					if (!i->iceActive) break;
 					smh->player->dealDamage(ICE_DAMAGE, false);
 					smh->setDebugText("Smiley hit by Calypso's ice");
 					smh->player->freeze(FREEZE_DURATION);
-					//Don't delete the ice nova if it hits Smiley.
+					//Don't delete the ice nova if it hits Smiley -- deleting it makes the nova look gay. We do need to inactivate the nova, though, so it doesn't deal amy more damage to Smiley (or else it will deal damage every frame and kill Smiley in < 1 second)
 					deleteProjectile = false;
+					i->iceActive = false;
 					if (!i->hasNovaed) {
 						//If the ice orb hasn't novaed yet it should when it hits Smiley
 						i->hasNovaed = true;
@@ -693,7 +711,7 @@ void DespairBoss::setState(int newState) {
 
 	//Entering state stuff
 	if (newState == DESPAIRBOSS_BATTLE) {
-		lastEvilTime = smh->getGameTime();
+		if (state != DESPAIRBOSS_STUNRECOVERY) lastEvilTime = smh->getGameTime();
 		leftHandParticle->Fire();
 		rightHandParticle->Fire();
 		chargeCounter = 0;
