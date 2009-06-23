@@ -14,7 +14,7 @@
 extern SMH *smh;
 
 //Attributes
-#define HEALTH 17.0
+#define HEALTH 13.0
 #define PROJECTILE_DELAY 1.5
 #define FREEZE_DURATION 0.8
 #define STUN_DURATION 5.0
