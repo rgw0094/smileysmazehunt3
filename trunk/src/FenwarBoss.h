@@ -5,6 +5,7 @@
 
 class FenwarOrbs;
 class FenwarBullets;
+class FenwarBombs;
 class hgeDistortionMesh;
 class hgeRect;
 class CollisionCircle;
@@ -37,6 +38,8 @@ public:
 	static const int ORB_COUNT = 12;
 	static const int BULLET_DAMAGE = 1.5;
 	static const int BULLET_SPEED = 400.0;
+	static const int BOMB_DAMAGE = 2.0;
+	static const int BOMB_DELAY = 4.0;
 	static const int ATTACK_DELAY = 10.0;
 };
 
@@ -58,6 +61,7 @@ public:
 
 	int state;
 	float x, y;
+	PlatformLocation platformLocations[9];
 
 private:
     	
@@ -71,10 +75,12 @@ private:
 	//Helper methods
 	void enterState(int newState);
 	void terraformArena();
+	void initPlatformPoints();
 	void dealDamage(float damage);
 
 	FenwarOrbs *orbManager;
 	FenwarBullets *bulletManager;
+	FenwarBombs *bombManager;
 	hgeRect *collisionBox;
 	bool startedIntroDialogue;
 	int groupID;
@@ -87,6 +93,7 @@ private:
 	float floatingYOffset;
 	float timeRelocated;
 	float lastAttackTime;
+	float lastBombTime;
 	float fadeWhiteAlpha;
 	bool relocatedYet;
 };
@@ -175,6 +182,35 @@ private:
 
 	FenwarBoss *fenwar;
 	std::list<FenwarBullet> bulletList;
+
+};
+
+///////////// FENWAR BULLETS ////////////////
+
+struct FenwarBomb
+{
+	float x, y, yOffset;
+	float timeLaunched;
+	float timeToTravel;
+	float dx, dy;
+};
+
+class FenwarBombs
+{
+public:
+
+	FenwarBombs(FenwarBoss *fenwar);
+	~FenwarBombs();
+
+	void update(float dt);
+	void draw(float dt);
+	void throwBomb();
+
+private:
+
+	FenwarBoss *fenwar;
+	std::list<FenwarBomb> bombList;
+	
 
 };
 

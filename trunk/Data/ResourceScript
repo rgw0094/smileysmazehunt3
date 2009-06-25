@@ -279,6 +279,12 @@ Sprite fenwarBullet {
  hotspot=10,10
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
+Sprite fenwarBomb {
+ texture=fenwarBossTx
+ rect=2,63,36,48
+ hotspot=18,24
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
 
 ;*********************
 ;******** LOOT *******

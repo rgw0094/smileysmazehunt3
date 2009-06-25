@@ -46,9 +46,12 @@ FenwarBoss::FenwarBoss(int _gridX, int _gridY, int _groupID)
 
 	orbManager = new FenwarOrbs(this);
 	bulletManager = new FenwarBullets(this);
+	bombManager = new FenwarBombs(this);
 
 	smh->resources->GetAnimation("fenwar")->Play();
 	smh->resources->GetAnimation("fenwar")->SetColor(ARGB(255,255,255,255));
+
+	initPlatformPoints();
 
 	enterState(FenwarStates::INACTIVE);
 }
@@ -59,7 +62,9 @@ FenwarBoss::~FenwarBoss()
 
 	delete orbManager;
 	delete bulletManager;
+	delete bombManager;
 	delete collisionBox;
+
 	smh->resources->Purge(RES_FENWAR);
 }
 
@@ -88,6 +93,7 @@ void FenwarBoss::draw(float dt)
 	smh->resources->GetAnimation("fenwarFace")->Render(smh->getScreenX(x), smh->getScreenY(y - floatingYOffset));
 	orbManager->drawAfterFenwar(dt);
 	bulletManager->draw(dt);
+	bombManager->draw(dt);
 
 	if (smh->isDebugOn())
 	{
@@ -135,6 +141,7 @@ bool FenwarBoss::update(float dt)
 
 	orbManager->update(dt);
 	bulletManager->update(dt);
+	bombManager->update(dt);
 	doCollision(dt);
 
 	return false;
@@ -254,6 +261,12 @@ void FenwarBoss::doBattleState(float dt)
 		}
 		lastAttackTime = smh->getGameTime();
 	}
+
+	if (smh->timePassedSince(lastBombTime) > FenwarAttributes::BOMB_DELAY)
+	{
+		bombManager->throwBomb();
+		lastBombTime = smh->getGameTime();
+	}
 }
 
 void FenwarBoss::doReturnToArenaState(float dt)
@@ -347,6 +360,7 @@ void FenwarBoss::enterState(int newState)
 	if (newState == FenwarStates::BATTLE) 
 	{
 		lastAttackTime = smh->getGameTime();
+		lastBombTime = smh->getGameTime();
 		orbManager->spawnOrbs();
 	}
 
@@ -365,37 +379,7 @@ void FenwarBoss::enterState(int newState)
 
 void FenwarBoss::terraformArena() 
 {
-	int r = 6;
 	int platformTerrain = smh->environment->terrain[startGridX][startGridY];
-
-	PlatformLocation p[9];
-
-	p[0].x = startGridX;		//center
-	p[0].y = startGridY;
-
-	p[1].x = startGridX;		//down
-	p[1].y = startGridY + r;
-
-	p[2].x = startGridX + r;	//down-right
-	p[2].y = startGridY + r;
-
-	p[3].x = startGridX + r;	//right
-	p[3].y = startGridY;
-
-	p[4].x = startGridX + r;	//up right
-	p[4].y = startGridY - r;
-
-	p[5].x = startGridX;		//up
-	p[5].y = startGridY - r;
-
-	p[6].x = startGridX - r;	//up left
-	p[6].y = startGridY - r;
-
-	p[7].x = startGridX - r;	//left
-	p[7].y = startGridY;
-
-	p[8].x = startGridX - r;	//down-left
-	p[8].y = startGridY + r;
 	
 	//Terraform a big area around fenwar
 	for (int i = startGridX - 40; i <= startGridX + 40; i++) 
@@ -409,14 +393,14 @@ void FenwarBoss::terraformArena()
 				{
 					for (int k = 0; k < 9; k++)
 					{
-						if (i == p[k].x && j == p[k].y)
+						if (i == platformLocations[k].x && j == platformLocations[k].y)
 						{
 							//Put hover pads on the center of the platforms
 							smh->environment->specialTileManager->addTimedTile(i, j, platformTerrain, HOVER_PAD, 0, TERRAFORM_DURATION);
 							isPlatform = true;
 							continue;
 						} 
-						else if (Util::distance(p[k].x, p[k].y, i, j) <= 1) 
+						else if (Util::distance(platformLocations[k].x, platformLocations[k].y, i, j) <= 1) 
 						{
 							//Platform
 							smh->environment->specialTileManager->addTimedTile(i, j, platformTerrain, WALKABLE, 0, TERRAFORM_DURATION);
@@ -441,4 +425,35 @@ void FenwarBoss::terraformArena()
 	}
 }
 
+void FenwarBoss::initPlatformPoints()
+{
+	int r = 6;
+
+	platformLocations[0].x = startGridX;		//center
+	platformLocations[0].y = startGridY;
+
+	platformLocations[1].x = startGridX;		//down
+	platformLocations[1].y = startGridY + r;
+
+	platformLocations[2].x = startGridX + r;	//down-right
+	platformLocations[2].y = startGridY + r;
+
+	platformLocations[3].x = startGridX + r;	//right
+	platformLocations[3].y = startGridY;
+
+	platformLocations[4].x = startGridX + r;	//up right
+	platformLocations[4].y = startGridY - r;
+
+	platformLocations[5].x = startGridX;		//up
+	platformLocations[5].y = startGridY - r;
+
+	platformLocations[6].x = startGridX - r;	//up left
+	platformLocations[6].y = startGridY - r;
+
+	platformLocations[7].x = startGridX - r;	//left
+	platformLocations[7].y = startGridY;
+
+	platformLocations[8].x = startGridX - r;	//down-left
+	platformLocations[8].y = startGridY + r;
+}
 
