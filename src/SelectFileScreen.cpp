@@ -206,8 +206,8 @@ void SelectFileScreen::draw(float dt) {
 			smh->resources->GetFont("inventoryFnt")->printf(saveBoxes[i].x + 70.0, saveBoxes[i].y + 5, 
 				HGETEXT_LEFT, smh->saveManager->isFileEmpty(i) ? "- Empty -" : "Save File %d", i+1);
 			smh->resources->GetFont("description")->printf(saveBoxes[i].x + 70.0, saveBoxes[i].y + 50.0, 
-				HGETEXT_LEFT, smh->saveManager->isFileEmpty(i) ? "0:00:00" :
-				"%s", getTimeString(smh->saveManager->getTimePlayed(i)));
+				HGETEXT_LEFT, smh->saveManager->isFileEmpty(i) ? "0:00:00" : 
+				Util::getTimeString(smh->saveManager->getTimePlayed(i)).c_str());
 		}
 	}
 
@@ -219,45 +219,4 @@ void SelectFileScreen::draw(float dt) {
 	if (difficultyPrompt->visible) {
 		difficultyPrompt->draw(dt);
 	}
-}
-
-/**
- * Sets time to a string in the format HH:MM:SS for the specified number of seconds
- */ 
-const char *SelectFileScreen::getTimeString(int time) {
-
-	std::string timeString;
-
-	char hours[3];
-	char minutes[2];
-	char seconds[2];
-	char temp[2];
-
-	//Get number of hours, minutes, seconds
-	itoa((time - (time % 3600)) / 3600, hours, 10);
-	time -= 3600*atoi(hours);
-	itoa((time - (time % 60)) / 60, minutes, 10);
-	time -= 60*atoi(minutes);
-	itoa(time, seconds, 10);
-
-	if (strlen(minutes) == 1) {
-		strcpy(temp, minutes);
-		strcpy(minutes,"0");
-		strcat(minutes, temp);
-	}
-
-	if (strlen(seconds) == 1) {
-		strcpy(temp, seconds);
-		strcpy(seconds,"0");
-		strcat(seconds, temp);
-	}
-
-	//Build the time string
-	timeString = hours;
-	timeString += ":";
-	timeString += minutes;
-	timeString += ":";
-	timeString += seconds;
-	
-	return timeString.c_str();
 }

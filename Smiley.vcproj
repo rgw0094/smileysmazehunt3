@@ -210,6 +210,9 @@
 				Name="Fenwar"
 				Filter="">
 				<File
+					RelativePath=".\src\FenwarBombs.cpp">
+				</File>
+				<File
 					RelativePath=".\src\FenwarBoss.cpp">
 				</File>
 				<File
