@@ -344,8 +344,12 @@ bool EnemyManager::hitEnemiesWithProjectile(hgeRect *collisionBox, float damage,
 	//Loop through the enemies
 	std::list<EnemyStruct>::iterator i;
 	for (i = enemyList.begin(); i != enemyList.end(); i++) {
+
+		//If the enemy is NOT a turret, and the bullet IS a turret bullet, then the projectile passes through the enemy			
+		if (smh->gameData->getEnemyInfo(i->enemy->id).enemyType != ENEMY_TURRET && type == PROJECTILE_TURRET_CANNONBALL) {
+				//do nothing, this way the turret's cannonball passes through the enemy of interest
 		//Check collision
-		if (i->enemy->collisionBox->Intersect(collisionBox)) {
+		} else if (i->enemy->collisionBox->Intersect(collisionBox)) {		
 
 			//Notify the enemy of what type of projectile it was hit with
 			i->enemy->hitWithProjectile(type);
