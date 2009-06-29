@@ -801,6 +801,8 @@ void Player::doWarps() {
 					} else {
 						x = 64.0 * i + 64.0/2;
 						y = 64.0 * j + 64.0/2;
+						dx = 0.0; //I added these in cause one time, when an arrow pushed me onto a warp, I was pushed slightly into the wall after the warp. Hopefully this fixes that.
+						dy = 0.0; 
 					}
 					return;
 				}
