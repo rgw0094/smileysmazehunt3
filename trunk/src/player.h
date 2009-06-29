@@ -28,6 +28,7 @@ public:
 
 	void draw(float dt);
 	void drawGUI(float dt);
+	void drawJesusBeam();
 	void update(float dt);
 	void updateGUI(float dt);
 	void moveTo(int gridX, int gridY);

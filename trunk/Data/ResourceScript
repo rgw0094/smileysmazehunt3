@@ -1453,6 +1453,12 @@ Sprite smileysFace {
  hotspot=30,36
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
+Sprite jesusBeam {
+ texture=general
+ rect=832,64,62,421
+ hotspot=30,387
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
 
 ;**************************
 ;******** INVENTORY *******
