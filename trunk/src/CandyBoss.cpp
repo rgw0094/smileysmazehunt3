@@ -39,16 +39,16 @@ extern SMH *smh;
 //Attributes
 #define CANDY_WIDTH 106.0
 #define CANDY_HEIGHT 128.0
-#define CANDY_RUN_SPEED 800.0
-#define CANDY_JUMP_DELAY 1.00
+#define CANDY_RUN_SPEED 750.0
+#define CANDY_JUMP_DELAY 1.30
 #define COLLISION_DAMAGE 0.7
 #define SHOCKWAVE_STUN_DURATION 1.5
-#define BARTLET_DAMAGE 0.7
-#define THROWN_CANDY_DAMAGE 0.75
+#define BARTLET_DAMAGE 0.5
+#define THROWN_CANDY_DAMAGE 0.50
 #define FLASHING_DURATION 0.75
 
-#define THROWING_CANDY_STATE_DURATION 8.0
-#define RUN_STATE_DURATION 8.0
+#define THROWING_CANDY_STATE_DURATION 7.0
+#define RUN_STATE_DURATION 7.0
 #define REST_STATE_DURATION 5.0
 #define SHRINKING_DURATION 1.0
 
@@ -199,7 +199,7 @@ bool CandyBoss::update(float dt) {
 		//Stage 3a - jumping
 		if (state == CANDY_STATE_JUMPING) {
 			updateJumping(dt);
-			if (numJumps >= 7) {
+			if (numJumps >= 6) {
 				jumping = false;
 				enterState(CANDY_STATE_RESTING);
 			}
@@ -304,7 +304,7 @@ bool CandyBoss::update(float dt) {
 			shrinking = true;
 			spawnedBartletYet = false;
 			timeStartedShrink = smh->getGameTime();
-			speedMultiplier += .1;
+			speedMultiplier += .08;
 			health = maxHealth;
 		}
 	}
@@ -482,7 +482,7 @@ void CandyBoss::updateJumping(float dt) {
 			jumpDistance += smh->randomFloat(-100.0, 100.0);
 		}		
 	
-		timeToJump = 0.5 * (1.0 / speedMultiplier);
+		timeToJump = 0.67 * (1.0 / speedMultiplier);
 		jumpSpeed = jumpDistance / timeToJump;
 		timeJumping = 0.0;
 
