@@ -333,6 +333,22 @@ void Player::doMove(float dt) {
 }
 
 /**
+ * Draws the Jesus beam when the sandals are active.
+ * This is called by smh's draw function, after everything else, so that the beam from heaven is drawn on top of everything.
+ * (Note that the GUI and other similar things are drawn after the light from heaven)
+ */
+void Player::drawJesusBeam() {
+	if (waterWalk) {
+		//the alpha is based on how much longer Smiley can walk on water
+		//Note that it goes to 128 rather than 255. That's cause I think the 255 is too noticeable and thus looks like shit.
+		float jAlpha = 128.0*smh->timePassedSince(startedWaterWalk)/JESUS_SANDLE_TIME;
+		jAlpha = 128.0 - jAlpha; //so it goes from 128 to 0 rather than from 0 to 128. This way it "fades out" as Smiley walks on water.
+		smh->resources->GetSprite("jesusBeam")->SetColor(ARGB(jAlpha,255,255,255));
+		smh->resources->GetSprite("jesusBeam")->Render(smh->getScreenX(x),smh->getScreenY(y));
+	}
+}
+
+/**
  * Draw the player and associated objects.
  */
 void Player::draw(float dt) {

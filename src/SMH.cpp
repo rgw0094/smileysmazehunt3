@@ -216,6 +216,7 @@ void SMH::drawGame() {
 		explosionManager->draw(dt);
 		fenwarManager->draw(dt);
 		projectileManager->draw(dt);
+		player->drawJesusBeam();
 		environment->drawSwitchTimers(dt);
 		if (screenColorAlpha > 0.0) drawScreenColor(screenColor, screenColorAlpha);
 		areaChanger->draw(dt);
