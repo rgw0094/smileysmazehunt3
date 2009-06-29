@@ -2239,11 +2239,10 @@ Sprite tutProjectileMummy {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 Sprite CandyProjectile {
- texture="Graphics/Bartli.png"
- rect=132,172,58,45
+ texture=general
+ rect=196,144,58,45
  hotspot=29,22
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
- resgroup=106
 }
 Sprite Figure8Projectile {
  texture=projectileTx
