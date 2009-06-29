@@ -189,6 +189,7 @@ bool FireBossTwo::update(float dt) {
 
 	//Activate the boss when the intro dialogue is closed
 	if (state == FIREBOSS_INACTIVE && startedIntroDialogue && !smh->windowManager->isTextBoxOpen()) {
+		smh->log("Fireboss activate boss when intro dialogue is closed");
 		setState(FIREBOSS_FIRST_BATTLE);
 		smh->soundManager->playSound("snd_fireBossDie");
 		smh->soundManager->playMusic("bossMusic");
