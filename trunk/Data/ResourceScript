@@ -2070,7 +2070,7 @@ Sprite KingTutLightningWedge {
 ;****************************
 Texture LovecraftTx {
  filename="Graphics/Lovecraft.png"
- resgroup=105
+ resgroup=108
 }
 Animation LightningEye {
  texture=LovecraftTx
