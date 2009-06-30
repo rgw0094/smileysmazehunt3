@@ -49,7 +49,7 @@ extern SMH *smh;
 #define CRUSHER_MAX_SIZE (7.0*64.0)
 
 //Attributes
-#define HEALTH 12.0
+#define HEALTH 24.0
 #define COLLISION_DAMAGE 2.0
 #define TENTACLE_DAMAGE 0.5
 #define FIREBALL_DAMAGE 1.0
@@ -231,7 +231,7 @@ void LovecraftBoss::drawFireballs(float dt) {
 void LovecraftBoss::drawCrushers(float dt) {
 	for (std::list<Crusher>::iterator i = crusherList.begin(); i != crusherList.end(); i++) {
 		
-		smh->resources->GetSprite("LovecraftIceBlock")->SetTextureRect(0, 329, i->size, 60.0);
+		smh->resources->GetSprite("LovecraftIceBlock")->SetTextureRect(0, 329, i->size, 60.0,true);
 
 		//Draw the left crusher
 		smh->resources->GetSprite("LovecraftIceBlock")->Render(smh->getScreenX(i->leftX), smh->getScreenY(i->y));
