@@ -424,7 +424,6 @@ void Player::draw(float dt) {
 		collisionCircle->draw();
 		//worm->draw();
 	}
-
 }
 
 /**

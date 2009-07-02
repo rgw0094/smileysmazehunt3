@@ -1541,6 +1541,9 @@ Sprite windowArrowRight {
 Sound snd_FenwarSlurp {
  filename="FenwarSlurp.mp3"
 }
+Sound snd_RumbleLoop {
+ filename="RumbleLoop.mp3"
+}
 Sound snd_SlimeSplat {
  filename="SlimeSplat.mp3"
 }

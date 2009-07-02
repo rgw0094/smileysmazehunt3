@@ -189,6 +189,7 @@ void FenwarBoss::doInactiveState(float dt)
 	{
 		if (smh->enemyGroupManager->groups[groupID].triggeredYet) 
 		{
+			smh->soundManager->fadeOutMusic();
 			smh->windowManager->openDialogueTextBox(-1, FENWAR_INTRO_TEXT);
 			startedIntroDialogue = true;
 		}
@@ -198,7 +199,6 @@ void FenwarBoss::doInactiveState(float dt)
 	if (startedIntroDialogue && !smh->windowManager->isTextBoxOpen()) 
 	{
 		enterState(START_STATE);
-		smh->soundManager->playMusic("bossMusic");
 	}
 }
 
@@ -288,6 +288,7 @@ void FenwarBoss::doReturnToArenaState(float dt)
 		timeRelocated = smh->getGameTime();
 		relocatedYet = true;
 		smh->player->reset();
+		smh->player->dontUpdate = true;
 		smh->player->moveTo(FENWAR_DEATH_STAGE_X, FENWAR_DEATH_STAGE_Y + 2);
 		smh->player->facing = UP;
 		x = FENWAR_DEATH_STAGE_X * 64.0 + 32.0;
@@ -354,23 +355,33 @@ void FenwarBoss::dealDamage(float damage)
 
 void FenwarBoss::enterState(int newState) 
 {
+	//Exit state stuff
+	if (state == FenwarStates::TERRAFORMING)
+	{
+		smh->soundManager->stopEnvironmentChannel();
+		smh->soundManager->playMusic("bossMusic");
+	}
+
 	state = newState;
 	timeInState = 0.0;
 
+	//Enter state stuff
+	if (newState == FenwarStates::TERRAFORMING)
+	{
+		smh->soundManager->playEnvironmentEffect("snd_RumbleLoop", true);
+	}
 	if (newState == FenwarStates::BATTLE) 
 	{
 		lastAttackTime = smh->getGameTime();
 		lastBombTime = smh->getGameTime();
 		orbManager->spawnOrbs();
 	}
-
-	if (newState == FenwarStates::RETURN_TO_ARENA)
+	else if (newState == FenwarStates::RETURN_TO_ARENA)
 	{
 		smh->soundManager->fadeOutMusic();
 		smh->player->dontUpdate = true;
 	}
-
-	if (newState == FenwarStates::NEAR_DEATH)
+	else if (newState == FenwarStates::NEAR_DEATH)
 	{
 		smh->player->dontUpdate = false;
 		smh->player->abilitiesLocked = true;
