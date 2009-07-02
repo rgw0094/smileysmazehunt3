@@ -14,6 +14,7 @@
  * Calypso boss
  * Mushroom boss
  * Evil wall rumbling
+ * Hopping enemies should make a sound when they hop
 
 === Graphics To Do ===
  * Barvinoid
