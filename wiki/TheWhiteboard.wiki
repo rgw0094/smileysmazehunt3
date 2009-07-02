@@ -16,7 +16,6 @@
  * More projectile graphics (snowmen throw snowballs, squirrels throw nuts ETCETERA)
 
 === Bugs ===
- * The credits crash
  * There are randomly item particles in places where there shouldn't be
  * Right-Left Spikey enemies sometimes will spawn and move downwards super fast until they hit a wall and the start moving right-left.
  * Gem #'s are huge at start
