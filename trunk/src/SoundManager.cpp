@@ -6,20 +6,17 @@ extern SMH *smh;
 //The minimum time that must pass between switch sounds so that it doesn't sound like hell
 #define SWITCH_SOUND_DELAY 0.5
 
-/** 
- * Constructor
- */
-SoundManager::SoundManager() {
+SoundManager::SoundManager() 
+{
 	//Music volume starts at what it was when app was closed last
 	setMusicVolume(smh->hge->Ini_GetInt("Options", "musicVolume", 100));
 	setSoundVolume(smh->hge->Ini_GetInt("Options", "soundVolume", 100));
 }
 
-/**
- * Destructor
- */
-SoundManager::~SoundManager() {
 
+SoundManager::~SoundManager() 
+{
+	//Should never be deleted
 }
 
 
