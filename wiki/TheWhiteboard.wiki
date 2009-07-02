@@ -9,6 +9,12 @@
  * Draw pits based on current area
  * Completion percentage
 
+=== Sounds To Add ===
+ * Walking bombs explosion
+ * Calypso boss
+ * Mushroom boss
+ * Evil wall rumbling
+
 === Graphics To Do ===
  * Barvinoid
  * Fenwar orbs (I think they should be an animation)
