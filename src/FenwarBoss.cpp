@@ -100,7 +100,7 @@ void FenwarBoss::draw(float dt)
 		smh->drawCollisionBox(collisionBox, Colors::RED);
 	}
 
-	if (state != FenwarStates::INACTIVE)
+	if (state != FenwarStates::INACTIVE && state != FenwarStates::NEAR_DEATH)
 	{
 		drawHealth("Lord Fenwar");
 	}
@@ -324,6 +324,13 @@ bool FenwarBoss::doNearDeathState(float dt)
 
 void FenwarBoss::dealDamage(float damage)
 {
+	//Fenwar is invincible until you kill his orbs!!!
+	if (orbManager->numOrbsAlive() > 0)
+	{
+		smh->soundManager->playSound("snd_HitInvulnerable");
+		return;
+	}
+
 	if (!flashing) {
 		flashing = true;
 		timeStartedFlashing = smh->getGameTime();

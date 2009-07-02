@@ -52,20 +52,12 @@ void FenwarOrbs::update(float dt)
 		//Lightning orb collision
 		if (smh->projectileManager->killProjectilesInCircle(i->x, i->y, ORB_RADIUS * scale, PROJECTILE_LIGHTNING_ORB))
 		{
-			//If this is a red orb it can be damaged
-			if (i->isRedOrb)
+			i->health -= smh->player->getLightningOrbDamage();
+			if (i->health <= 0.0)
 			{
-				i->health -= smh->player->getLightningOrbDamage();
-				if (i->health <= 0.0)
-				{
-					delete i->collisionCircle;
-					i = orbList.erase(i);
-					continue;
-				}
-			} 
-			else
-			{
-				smh->soundManager->playSound("snd_HitInvulnerable");
+				delete i->collisionCircle;
+				i = orbList.erase(i);
+				continue;
 			}
 		}
 	}
@@ -152,19 +144,12 @@ void FenwarOrbs::drawAfterFenwar(float dt)
 
 void FenwarOrbs::drawOrb(std::list<FenwarOrb>::iterator orb)
 {
-	if (orb->isRedOrb)
-		{
-			smh->resources->GetSprite("redFenwarOrb")->RenderEx(smh->getScreenX(orb->x), smh->getScreenY(orb->y), 0.0, scale, scale);
-		} 
-		else
-		{
-			smh->resources->GetSprite("normalFenwarOrb")->RenderEx(smh->getScreenX(orb->x), smh->getScreenY(orb->y), 0.0, scale, scale);
-		}
+	smh->resources->GetSprite("fenwarOrb")->RenderEx(smh->getScreenX(orb->x), smh->getScreenY(orb->y), 0.0, scale, scale);
 
-		if (smh->isDebugOn())
-		{
-			orb->collisionCircle->draw();
-		}
+	if (smh->isDebugOn())
+	{
+		orb->collisionCircle->draw();
+	}
 }
 
 void FenwarOrbs::killOrbs()
@@ -181,7 +166,12 @@ void FenwarOrbs::spawnOrbs()
 	float angleOffset = 0;
 	for (int i = 0; i < FenwarAttributes::ORB_COUNT; i++) 
 	{
-		spawnOrb(i % 4 == 0);
+		FenwarOrb newOrb;
+
+		newOrb.collisionCircle = new CollisionCircle();
+		newOrb.health = FenwarAttributes::ORB_HEALTH;
+
+		orbList.push_back(newOrb);
 	}
 
 	distFromFenwar = 0.0;
@@ -197,6 +187,11 @@ int FenwarOrbs::getState()
 	return state;
 }
 
+int FenwarOrbs::numOrbsAlive()
+{
+	return orbList.size();
+}
+
 void FenwarOrbs::doAttack()
 {
 	enterState(OrbStates::SLOWING_DOWN);
@@ -210,15 +205,4 @@ void FenwarOrbs::enterState(int newState)
 {
 	state = newState;
 	timeInState = 0.0;
-}
-
-void FenwarOrbs::spawnOrb(bool isRedOrb)
-{
-	FenwarOrb newOrb;
-
-	newOrb.isRedOrb = isRedOrb;
-	newOrb.collisionCircle = new CollisionCircle();
-	newOrb.health = FenwarAttributes::ORB_HEALTH;
-
-	orbList.push_back(newOrb);
 }
