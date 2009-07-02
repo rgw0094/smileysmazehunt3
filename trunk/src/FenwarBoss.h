@@ -35,7 +35,7 @@ public:
 	static const int ORB_SPIN_SPEED = 3.5;
 	static const int ORB_HEALTH = 2.0;
 	static const int ORB_ATTACK_DURATION = 3.15;
-	static const int ORB_COUNT = 12;
+	static const int ORB_COUNT = 8;
 	static const int BULLET_DAMAGE = 1.5;
 	static const int BULLET_SPEED = 400.0;
 	static const int BOMB_DAMAGE = 2.0;
@@ -103,7 +103,6 @@ private:
 struct FenwarOrb 
 {
 	float x, y;
-	bool isRedOrb;
 	float health;
 	CollisionCircle *collisionCircle;
 };
@@ -133,11 +132,11 @@ public:
 	void doAttack();
 	void killOrbs();
 	int getState();
+	int numOrbsAlive();
 
 private:
 
 	void drawOrb(std::list<FenwarOrb>::iterator orb);
-	void spawnOrb(bool isRedOrb);
 	void updateState(float dt);
 	void enterState(int newState);
 
