@@ -107,7 +107,7 @@ void Inventory::draw(float dt) {
 	}	
 
 	//Upgrades
-	smh->resources->GetFont("inventoryFnt")->SetScale(0.9);
+	smh->resources->GetFont("inventoryFnt")->SetScale(0.75);
 	smh->resources->GetSprite("moneyIcon")->Render(INVENTORY_X_OFFSET+348,INVENTORY_Y_OFFSET + 295);
 	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET+398,INVENTORY_Y_OFFSET + 302,HGETEXT_LEFT,"%d",smh->saveManager->money);
 	for (int i = 0; i < 3; i++) {
