@@ -20,111 +20,122 @@ extern SMH *smh;
  */
 void BaseEnemy::initEnemy(int _id, int _gridX, int _gridY, int _groupID) {
 		
-	currentState = NULL;
+	try
+	{
+		currentState = NULL;
 
-	//Set basic values
-	id = _id;
-	groupID = _groupID;
-	gridX = _gridX;
-	gridY = _gridY;
-	startX = gridX;
-	startY = gridY;
-	x = gridX * 64 + 32;
-	y = gridY * 64 + 32;
-	collisionBox = new hgeRect();
-	futureCollisionBox = new hgeRect();
-	lastHitByWeapon = -100.0;
-	facing = DOWN;
-	frozen = false;
-	stunned = false;
-	dying = false;
-	dealsCollisionDamage = true;
-	flashing = false;
+		//Set basic values
+		id = _id;
+		groupID = _groupID;
+		gridX = _gridX;
+		gridY = _gridY;
+		startX = gridX;
+		startY = gridY;
+		x = gridX * 64 + 32;
+		y = gridY * 64 + 32;
+		collisionBox = new hgeRect();
+		futureCollisionBox = new hgeRect();
+		lastHitByWeapon = -100.0;
+		facing = DOWN;
+		frozen = false;
+		stunned = false;
+		dying = false;
+		dealsCollisionDamage = true;
+		flashing = false;
 
-	//Load enemy info
-	enemyType = smh->gameData->getEnemyInfo(id).enemyType;
-	wanderType = smh->gameData->getEnemyInfo(id).wanderType;
-	health = maxHealth = (float)smh->gameData->getEnemyInfo(id).hp / 100.0;
-	damage = (float)smh->gameData->getEnemyInfo(id).damage / 100.0;
-	radius = smh->gameData->getEnemyInfo(id).radius;
-	speed = smh->gameData->getEnemyInfo(id).speed;
-	immuneToTongue = smh->gameData->getEnemyInfo(id).immuneToTongue;
-	immuneToFire = smh->gameData->getEnemyInfo(id).immuneToFire;
-	immuneToStun = smh->gameData->getEnemyInfo(id).immuneToStun;
-	immuneToLightning = smh->gameData->getEnemyInfo(id).immuneToLightning;
-	chases = smh->gameData->getEnemyInfo(id).chases;
-	variable1 = smh->gameData->getEnemyInfo(id).variable1;
-	variable2 = smh->gameData->getEnemyInfo(id).variable2;
-	variable3 = smh->gameData->getEnemyInfo(id).variable3;
-	hasRangedAttack = smh->gameData->getEnemyInfo(id).hasRangedAttack;
-	if (hasRangedAttack) {
-		rangedType = smh->gameData->getEnemyInfo(id).rangedType;	
-		weaponRange = smh->gameData->getEnemyInfo(id).range;
-		rangedAttackDelay = (float)smh->gameData->getEnemyInfo(id).delay/(float)1000.0;
-		projectileSpeed = smh->gameData->getEnemyInfo(id).projectileSpeed; //Here is a float-to-int conversion
-		projectileDamage = smh->gameData->getEnemyInfo(id).projectileDamage;
-		projectileYOffset = 0;
+		//Load enemy info
+		enemyType = smh->gameData->getEnemyInfo(id).enemyType;
+		wanderType = smh->gameData->getEnemyInfo(id).wanderType;
+		health = maxHealth = (float)smh->gameData->getEnemyInfo(id).hp / 100.0;
+		damage = (float)smh->gameData->getEnemyInfo(id).damage / 100.0;
+		radius = smh->gameData->getEnemyInfo(id).radius;
+		speed = smh->gameData->getEnemyInfo(id).speed;
+		immuneToTongue = smh->gameData->getEnemyInfo(id).immuneToTongue;
+		immuneToFire = smh->gameData->getEnemyInfo(id).immuneToFire;
+		immuneToStun = smh->gameData->getEnemyInfo(id).immuneToStun;
+		immuneToLightning = smh->gameData->getEnemyInfo(id).immuneToLightning;
+		chases = smh->gameData->getEnemyInfo(id).chases;
+		variable1 = smh->gameData->getEnemyInfo(id).variable1;
+		variable2 = smh->gameData->getEnemyInfo(id).variable2;
+		variable3 = smh->gameData->getEnemyInfo(id).variable3;
+		hasRangedAttack = smh->gameData->getEnemyInfo(id).hasRangedAttack;
+		if (hasRangedAttack) {
+			rangedType = smh->gameData->getEnemyInfo(id).rangedType;	
+			weaponRange = smh->gameData->getEnemyInfo(id).range;
+			rangedAttackDelay = (float)smh->gameData->getEnemyInfo(id).delay/(float)1000.0;
+			projectileSpeed = smh->gameData->getEnemyInfo(id).projectileSpeed; //Here is a float-to-int conversion
+			projectileDamage = smh->gameData->getEnemyInfo(id).projectileDamage;
+			projectileYOffset = 0;
+		}
+
+		//Set pathing shit
+		for (int i = 0; i < 256; i++) canPass[i] = false;
+		canPass[WALKABLE] = smh->gameData->getEnemyInfo(id).land;
+		canPass[SLIME] = smh->gameData->getEnemyInfo(id).slime;
+		canPass[WALK_LAVA] = smh->gameData->getEnemyInfo(id).lava;
+		canPass[DIZZY_MUSHROOM_1] = canPass[DIZZY_MUSHROOM_2] = smh->gameData->getEnemyInfo(id).mushrooms;
+		canPass[SHALLOW_WATER] = smh->gameData->getEnemyInfo(id).shallowWater;
+		canPass[SHALLOW_GREEN_WATER] = smh->gameData->getEnemyInfo(id).shallowWater;
+		canPass[DEEP_WATER] = smh->gameData->getEnemyInfo(id).deepWater;
+		canPass[GREEN_WATER] = smh->gameData->getEnemyInfo(id).deepWater;
+		canPass[LEFT_ARROW] = true;
+		canPass[RIGHT_ARROW] = true;
+		canPass[UP_ARROW] = true;
+		canPass[DOWN_ARROW] = true;
+		canPass[PLAYER_START] = true;
+		canPass[PLAYER_END] = true;
+		canPass[WHITE_CYLINDER_DOWN] = true;
+		canPass[YELLOW_CYLINDER_DOWN] = true;
+		canPass[GREEN_CYLINDER_DOWN] = true;
+		canPass[BLUE_CYLINDER_DOWN] = true;
+		canPass[BROWN_CYLINDER_DOWN] = true;
+		canPass[SILVER_CYLINDER_DOWN] = true;
+
+		//Initialize stun star angles
+		for (int i = 0; i < NUM_STUN_STARS; i++) {
+			stunStarAngles[i] = (float)i * ((2.0*PI) / (float)NUM_STUN_STARS);
+		}
+
+		//Load graphics - each one has a 1 border transparent pixel layer around it except
+		// for batlet caves because the graphics need to be put next to each other
+		int borderSize = (smh->gameData->getEnemyInfo(id).enemyType == ENEMY_BATLET_DIST ? 0 : 1);
+		int size = (smh->gameData->getEnemyInfo(id).enemyType == ENEMY_BATLET_DIST ? 64 : 62);
+		graphic[LEFT] = new hgeAnimation(smh->resources->GetTexture("enemies"), 
+			smh->gameData->getEnemyInfo(id).numFrames, 3, 
+			smh->gameData->getEnemyInfo(id).gCol*64+borderSize, 
+			smh->gameData->getEnemyInfo(id).gRow*64+borderSize, size, size);
+		graphic[LEFT]->Play();
+		graphic[RIGHT] = new hgeAnimation(smh->resources->GetTexture("enemies"), 
+			smh->gameData->getEnemyInfo(id).numFrames, 3, 
+			smh->gameData->getEnemyInfo(id).gCol*64 + 64 * (smh->gameData->getEnemyInfo(id).hasOneGraphic ? 0 : smh->gameData->getEnemyInfo(id).numFrames)+borderSize, 
+			smh->gameData->getEnemyInfo(id).gRow*64+borderSize, size, size);
+		graphic[RIGHT]->Play();
+		graphic[UP] = new hgeAnimation(smh->resources->GetTexture("enemies"), 
+			smh->gameData->getEnemyInfo(id).numFrames, 3, 
+			smh->gameData->getEnemyInfo(id).gCol*64 + 2 * 64 * (smh->gameData->getEnemyInfo(id).hasOneGraphic ? 0 : smh->gameData->getEnemyInfo(id).numFrames)+borderSize, 
+			smh->gameData->getEnemyInfo(id).gRow*64+borderSize, size, size);
+		graphic[UP]->Play();
+		graphic[DOWN] = new hgeAnimation(smh->resources->GetTexture("enemies"), 
+			smh->gameData->getEnemyInfo(id).numFrames, 3, 
+			smh->gameData->getEnemyInfo(id).gCol*64 + 3 * 64 * (smh->gameData->getEnemyInfo(id).hasOneGraphic ? 0 : smh->gameData->getEnemyInfo(id).numFrames)+borderSize,
+			smh->gameData->getEnemyInfo(id).gRow*64+borderSize, size, size);
+		graphic[DOWN]->Play();
+
+		//Set graphic hot spots
+		for (int i = 0; i < 4; i++) graphic[i]->SetHotSpot(32,32);
+
+		//Set collision box
+		collisionBox->SetRadius(x, y, radius);
+
+	} 
+	catch(System::Exception *ex) 
+	{
+		smh->hge->System_Log("-- Exception caught while initializing an enemy!");
+		smh->hge->System_Log("EnemyID: %d, Location: (%d,%d), GroupID: %d", _id, _gridX, _gridY, _groupID);
+		smh->hge->System_Log("Stack trace:");
+		smh->hge->System_Log("%s", ex->ToString());
+		exit(1);
 	}
-
-	//Set pathing shit
-	for (int i = 0; i < 256; i++) canPass[i] = false;
-	canPass[WALKABLE] = smh->gameData->getEnemyInfo(id).land;
-	canPass[SLIME] = smh->gameData->getEnemyInfo(id).slime;
-	canPass[WALK_LAVA] = smh->gameData->getEnemyInfo(id).lava;
-	canPass[DIZZY_MUSHROOM_1] = canPass[DIZZY_MUSHROOM_2] = smh->gameData->getEnemyInfo(id).mushrooms;
-	canPass[SHALLOW_WATER] = smh->gameData->getEnemyInfo(id).shallowWater;
-	canPass[SHALLOW_GREEN_WATER] = smh->gameData->getEnemyInfo(id).shallowWater;
-	canPass[DEEP_WATER] = smh->gameData->getEnemyInfo(id).deepWater;
-	canPass[GREEN_WATER] = smh->gameData->getEnemyInfo(id).deepWater;
-	canPass[LEFT_ARROW] = true;
-	canPass[RIGHT_ARROW] = true;
-	canPass[UP_ARROW] = true;
-	canPass[DOWN_ARROW] = true;
-	canPass[PLAYER_START] = true;
-	canPass[PLAYER_END] = true;
-	canPass[WHITE_CYLINDER_DOWN] = true;
-	canPass[YELLOW_CYLINDER_DOWN] = true;
-	canPass[GREEN_CYLINDER_DOWN] = true;
-	canPass[BLUE_CYLINDER_DOWN] = true;
-	canPass[BROWN_CYLINDER_DOWN] = true;
-	canPass[SILVER_CYLINDER_DOWN] = true;
-
-	//Initialize stun star angles
-	for (int i = 0; i < NUM_STUN_STARS; i++) {
-		stunStarAngles[i] = (float)i * ((2.0*PI) / (float)NUM_STUN_STARS);
-	}
-
-	//Load graphics - each one has a 1 border transparent pixel layer around it except
-	// for batlet caves because the graphics need to be put next to each other
-	int borderSize = (smh->gameData->getEnemyInfo(id).enemyType == ENEMY_BATLET_DIST ? 0 : 1);
-	int size = (smh->gameData->getEnemyInfo(id).enemyType == ENEMY_BATLET_DIST ? 64 : 62);
-	graphic[LEFT] = new hgeAnimation(smh->resources->GetTexture("enemies"), 
-		smh->gameData->getEnemyInfo(id).numFrames, 3, 
-		smh->gameData->getEnemyInfo(id).gCol*64+borderSize, 
-		smh->gameData->getEnemyInfo(id).gRow*64+borderSize, size, size);
-	graphic[LEFT]->Play();
-	graphic[RIGHT] = new hgeAnimation(smh->resources->GetTexture("enemies"), 
-		smh->gameData->getEnemyInfo(id).numFrames, 3, 
-		smh->gameData->getEnemyInfo(id).gCol*64 + 64 * (smh->gameData->getEnemyInfo(id).hasOneGraphic ? 0 : smh->gameData->getEnemyInfo(id).numFrames)+borderSize, 
-		smh->gameData->getEnemyInfo(id).gRow*64+borderSize, size, size);
-	graphic[RIGHT]->Play();
-	graphic[UP] = new hgeAnimation(smh->resources->GetTexture("enemies"), 
-		smh->gameData->getEnemyInfo(id).numFrames, 3, 
-		smh->gameData->getEnemyInfo(id).gCol*64 + 2 * 64 * (smh->gameData->getEnemyInfo(id).hasOneGraphic ? 0 : smh->gameData->getEnemyInfo(id).numFrames)+borderSize, 
-		smh->gameData->getEnemyInfo(id).gRow*64+borderSize, size, size);
-	graphic[UP]->Play();
-	graphic[DOWN] = new hgeAnimation(smh->resources->GetTexture("enemies"), 
-		smh->gameData->getEnemyInfo(id).numFrames, 3, 
-		smh->gameData->getEnemyInfo(id).gCol*64 + 3 * 64 * (smh->gameData->getEnemyInfo(id).hasOneGraphic ? 0 : smh->gameData->getEnemyInfo(id).numFrames)+borderSize,
-		smh->gameData->getEnemyInfo(id).gRow*64+borderSize, size, size);
-	graphic[DOWN]->Play();
-
-	//Set graphic hot spots
-	for (int i = 0; i < 4; i++) graphic[i]->SetHotSpot(32,32);
-
-	//Set collision box
-	collisionBox->SetRadius(x, y, radius);
-
 }
 
 

@@ -252,7 +252,6 @@ void SMH::enterGameState(int newState) {
 
 	//If leaving game state
 	if (gameState == GAME) {
-		saveManager->saveTimePlayed();
 		screenEffectsManager->stopEffect();
 	}
 

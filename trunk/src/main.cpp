@@ -12,17 +12,6 @@ bool RenderFunc() {
 	return false;
 }
 
-bool ExitFunc() {
-
-	//If they manually close the program while the game is active we still
-	//want to count their time played!
-	if (smh->getGameState() == GAME) {
-		smh->saveManager->saveTimePlayed();
-	}
- 
-	return true;
-}
-
 /**
  * Application entry point.
  */
@@ -34,7 +23,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	hge->System_SetState(HGE_LOGFILE, "SmileyLog.txt");
 	hge->System_SetState(HGE_FRAMEFUNC, FrameFunc);
 	hge->System_SetState(HGE_RENDERFUNC, RenderFunc);
-	hge->System_SetState(HGE_EXITFUNC, ExitFunc);
 	hge->System_SetState(HGE_TITLE, "Smiley's Maze Hunt");
 	hge->System_SetState(HGE_WINDOWED, true);
 	hge->System_SetState(HGE_SCREENWIDTH, SCREEN_WIDTH);
