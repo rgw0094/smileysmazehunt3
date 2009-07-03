@@ -51,6 +51,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Time saved stat is now actually correct.||7/03/09||RGW||
 ||Completion percentage||7/03/09||RGW||
 ||Closing cinematic||6/16/09||RGW||
 ||Replaced fenwar with animated fenwar everywhere||6/8/09||RGW||
