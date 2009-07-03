@@ -510,6 +510,14 @@ struct SaveFile {
 	int completion;
 };
 
+class GemValues 
+{
+public:
+	static const int SmallGemValue = 1;
+	static const int MediumGemValue = 3;
+	static const int LargeGemValue = 5;
+};
+
 class SaveManager {
 
 public:
@@ -522,14 +530,12 @@ public:
 	void load(int fileNumber);
 	void save();
 	void deleteFile(int fileNumber);
-	void saveTimePlayed();
 	void startNewGame(int fileNumber);
 	void saveFileInfo();
 	void loadFileInfo();
 	bool isFileEmpty(int file);
 	int getTimePlayed(int file);
 	int getCompletion(int file);
-	void incrementTimePlayed(int file, int amount);
 	void change(int gridX, int gridY);
 	bool isTileChanged(int gridX, int gridY);
 	float getDamageModifier();
@@ -563,7 +569,9 @@ public:
 	int money;	
 
 private:
-	
+
+	int calculateCompletionPercentage();
+
 	ChangeManager *changeManager;
 
 	SaveFile files[4];

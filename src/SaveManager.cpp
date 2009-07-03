@@ -303,6 +303,15 @@ void SaveManager::save() {
 	//Close the file!
 	output->close();
 	delete output;
+
+	//Update the completion % in the file summaries
+	files[currentSave].completion = calculateCompletionPercentage();
+	saveFileInfo();
+
+	//Update the time saved in the file summaries
+	files[currentSave].timePlayed += smh->getRealTime() - timeFileLoaded;
+	timeFileLoaded = smh->getRealTime();
+	saveFileInfo();
 }
 
 /**
@@ -422,19 +431,8 @@ void SaveManager::loadFileInfo() {
 /**
  * Returns the current hint number based on what boss has been killed.
  */
-int SaveManager::getCurrentHint() {
-
-#define FIRE_BOSS 240
-#define DESERT_BOSS 241
-#define SNOW_BOSS 242
-#define FOREST_BOSS 243
-#define MUSHROOM_BOSS 244
-#define DESPAIR_BOSS 245
-#define FIRE_BOSS2 246
-#define CANDY_BOSS 247
-#define LOVECRAFT_BOSS 248
-#define TUT_BOSS 249
-
+int SaveManager::getCurrentHint() 
+{
 	if (isBossKilled(CONSERVATORY_BOSS)) {
 		return 11;
 	} else if (isBossKilled(TUT_BOSS)) {
@@ -460,17 +458,32 @@ int SaveManager::getCurrentHint() {
 	} else {
 		return 0;
 	}
-
 }
 
 /**
- * Increments the current save file's time played by the amount of time that has passed
- * since the file was loaded. This is called when the player returns to the main menu or
- * if they manually close the program while still in game state.
+ * Calculates the save percentage for the currently open save file.
+ * Each dollar is worth .15%, each boss kill is 5.708%.
  */
-void SaveManager::saveTimePlayed() {
-	files[currentSave].timePlayed += smh->getRealTime() - timeFileLoaded;
-	saveFileInfo();
+int SaveManager::calculateCompletionPercentage()
+{
+	float p = 0;
+
+	for (int area = 0; area < NUM_AREAS; area++)
+	{
+		p += (float)numGems[area][0] * (float)GemValues::SmallGemValue * 0.15;
+		p += (float)numGems[area][1] * (float)GemValues::MediumGemValue * 0.15;
+		p += (float)numGems[area][2] * (float)GemValues::LargeGemValue* 0.15;
+	}
+
+	for (int boss = 0; boss < 12; boss++)
+	{
+		if (killedBoss[boss])
+		{
+			p += 5.708;
+		}
+	}
+
+	return (int)p;
 }
 
 /**
@@ -492,13 +505,6 @@ int SaveManager::getTimePlayed(int file) {
  */
 int SaveManager::getCompletion(int file) {
 	return files[file].completion;
-}
-
-/** 
- * Adds the specified time to the timePlayed for the specified save file.
- */
-void SaveManager::incrementTimePlayed(int file, int amount) {
-	files[file].timePlayed += amount;
 }
 
 float SaveManager::getDamageModifier() {

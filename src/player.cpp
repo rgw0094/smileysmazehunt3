@@ -1143,9 +1143,9 @@ void Player::doItems() {
 	} else if (item == SMALL_GEM || item == MEDIUM_GEM || item == LARGE_GEM) {
 		smh->soundManager->playSound("snd_gem");
 		smh->saveManager->numGems[smh->saveManager->currentArea][item-SMALL_GEM]++;
-		if (item == SMALL_GEM) smh->saveManager->money += 1;
-		else if (item == MEDIUM_GEM) smh->saveManager->money += 3;
-		else if (item == LARGE_GEM) smh->saveManager->money += 8;
+		if (item == SMALL_GEM) smh->saveManager->money += GemValues::SmallGemValue;
+		else if (item == MEDIUM_GEM) smh->saveManager->money += GemValues::MediumGemValue;
+		else if (item == LARGE_GEM) smh->saveManager->money += GemValues::LargeGemValue;
 		gatheredItem = true;
 	} else if (item == HEALTH_ITEM) {
 		if (getHealth() != getMaxHealth()) {

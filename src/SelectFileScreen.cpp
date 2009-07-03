@@ -185,10 +185,11 @@ void SelectFileScreen::draw(float dt) {
 	smh->resources->GetSprite("smileysFace")->Render(smileyX, smileyY);
 
 	//Draw save boxes
-	for (int i = 0; i < 4; i++) {
-		if (selectedFile == i && deletePromptActive) {
-
-			//Draw delete prompt
+	for (int i = 0; i < 4; i++) 
+	{
+		//Delete prompt
+		if (selectedFile == i && deletePromptActive) 
+		{
 			smh->resources->GetSprite("menuSpeechBubble")->Render(saveBoxes[i].x + 30, saveBoxes[i].y - 2.0);
 			smh->resources->GetFont("curlz")->SetColor(ARGB(255,0,0,0));
 			smh->resources->GetFont("curlz")->SetScale(1.0f);
@@ -200,14 +201,37 @@ void SelectFileScreen::draw(float dt) {
 			smh->resources->GetFont("description")->SetColor(mouseOverNo ? ARGB(255,255,0,0) : ARGB(255,255,255,255));
 			smh->resources->GetFont("description")->printf(saveBoxes[i].x + 205.0, saveBoxes[i].y + 65.0, HGETEXT_CENTER, "No");
 			smh->resources->GetFont("description")->SetColor(ARGB(255,255,255,255));
+		} 
+		else //Normal save file info
+		{
+			smh->resources->GetFont("description")->SetScale(0.8);
 
-		} else {
-			//Draw normal file info
+			if (selectedFile == i)
+			{
+				smh->resources->GetFont("description")->SetColor(ARGB(255, 100, 255, 255));
+				smh->resources->GetFont("inventoryFnt")->SetColor(ARGB(255, 100, 255, 255));
+			}
+
+			//File name
 			smh->resources->GetFont("inventoryFnt")->printf(saveBoxes[i].x + 70.0, saveBoxes[i].y + 5, 
 				HGETEXT_LEFT, smh->saveManager->isFileEmpty(i) ? "- Empty -" : "Save File %d", i+1);
-			smh->resources->GetFont("description")->printf(saveBoxes[i].x + 70.0, saveBoxes[i].y + 50.0, 
-				HGETEXT_LEFT, smh->saveManager->isFileEmpty(i) ? "0:00:00" : 
+
+			//Time played
+			smh->resources->GetFont("description")->printf(saveBoxes[i].x + 70.0, saveBoxes[i].y + 50.0,
+				HGETEXT_LEFT, "Time Played: ");
+			smh->resources->GetFont("description")->printf(saveBoxes[i].x + 250.0, saveBoxes[i].y + 50.0, 
+				HGETEXT_RIGHT, smh->saveManager->isFileEmpty(i) ? "0:00:00" : 
 				Util::getTimeString(smh->saveManager->getTimePlayed(i)).c_str());
+
+			//Completion percentage
+			smh->resources->GetFont("description")->printf(saveBoxes[i].x + 70.0, saveBoxes[i].y + 75.0,
+				HGETEXT_LEFT, "Complete: ");
+			smh->resources->GetFont("description")->printf(saveBoxes[i].x + 250.0, saveBoxes[i].y + 75.0, 
+				HGETEXT_RIGHT, "%s%%", Util::intToString(smh->saveManager->getCompletion(i)).c_str());
+
+			smh->resources->GetFont("description")->SetScale(1.0);
+			smh->resources->GetFont("description")->SetColor(ARGB(255, 255, 255, 255));
+			smh->resources->GetFont("inventoryFnt")->SetColor(ARGB(255, 255, 255, 255));
 		}
 	}
 
