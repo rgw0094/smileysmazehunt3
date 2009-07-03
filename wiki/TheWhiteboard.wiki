@@ -19,7 +19,7 @@
  * Explosion manager explosions
 
 === Graphics To Do ===
- * Barvinoid
+ * A background for the key display in the lower left corner of the screen because you can't read the numbers over certain terrain.
  * Fenwar orbs (I think they should be an animation)
  * Slime
  * More projectile graphics (snowmen throw snowballs, squirrels throw nuts ETCETERA)
