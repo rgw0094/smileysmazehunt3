@@ -3,7 +3,6 @@
  * Make some sort of graphical effect for enemies spawning from the enemy spawners.
  * Barvinoid
  * Fenwar
- * Closing Cinematic
  * Make enemy blocks not go away until you get the loot
  * Double digit upgrades don't fit in the inventory
  * Draw pits based on current area
