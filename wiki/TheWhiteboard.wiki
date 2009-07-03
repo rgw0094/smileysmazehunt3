@@ -26,8 +26,7 @@
  * Right-Left Spikey enemies sometimes will spawn and move downwards super fast until they hit a wall and the start moving right-left.
  * Gem #'s are huge at start
  * Portly's ice spawning on Smiley freezes you forever.
- * The game randomly crashes when licking a Mortimer the Turnip
- * The enemy death sound is played randomly when no enemy is being killed
+ * The enemy death sound is played randomly when no enemy is being killed (this is because turrets are killing enemies)
  * Blue gems are now worth 8 but supposed to be worth 5
 
 == Progress ==
