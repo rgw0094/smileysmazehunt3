@@ -1,4 +1,5 @@
 === Programming To Do ===
+ * Make hoppers use A* to determine distance from smiley so that they don't try to hop through walls to get to him because it looks like the dickens.
  * Make it so turrets can't kill enemies
  * Make some sort of graphical effect for enemies spawning from the enemy spawners.
  * Barvinoid
