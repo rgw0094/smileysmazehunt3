@@ -7,7 +7,6 @@
  * Make enemy blocks not go away until you get the loot
  * Double digit upgrades don't fit in the inventory
  * Draw pits based on current area
- * Completion percentage
 
 === Sounds To Add ===
  * Walking bombs explosion
