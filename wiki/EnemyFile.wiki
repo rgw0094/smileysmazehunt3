@@ -59,6 +59,7 @@
 ||18||Adjacent shooter||
 ||19||Botonoid||
 ||20||Diago Shooter (ex: Cone)||
+||21||Fenwar's Evil Spider-Eye||
 
 ----
 = Directions =
