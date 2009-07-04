@@ -152,7 +152,7 @@ void CinematicScreen::enterScene(int newScene) {
 		text = "But one fateful day while his lover was out picking \nflowers, disaster struck...";
 		sceneDuration = 3.4;
 	} else if (scene == 4){ 
-		text = "The terrible and mighty Lord Fenwar's tyranny befell \nanother unforunate victim.";
+		text = "The terrible and mighty Lord Fenwar's tyranny befell \nanother unfortunate victim.";
 		sceneDuration = 3.4;
 		smh->soundManager->playMusic("fenwarLietmotif");
 	} else if (scene == 5) {
