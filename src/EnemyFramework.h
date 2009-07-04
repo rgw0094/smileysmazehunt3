@@ -57,6 +57,7 @@ class hgeRect;
 #define ENEMY_ADJACENT_SHOOTER 18
 #define ENEMY_BOTONOID 19 //different from ranged enemies b/c they fire projectiles randomly
 #define ENEMY_DIAGO_SHOOTER 20
+#define ENEMY_FENWAR_EYE_SPIDER 21
 
 //Stuff on ID layer
 #define ENEMYGROUP_TRIGGER 996
@@ -880,6 +881,31 @@ private:
 	void renderDiagoAStarGrid();
 	void renderBaseEnemyAStarGrid();
 	
+};
+
+class E_FenwarEyeSpider : public BaseEnemy {
+
+public:
+	E_FenwarEyeSpider(int id, int x, int y, int groupID, int CenterX, int CenterY); //need to pass in centerX and centerY so it knows where it is in relation to the "grid" of hover pads
+	~E_FenwarEyeSpider();
+
+	//methods
+	void draw(float dt);
+	void update(float dt);
+
+private:
+	int centerX, centerY; //these denote the center tile of the 3x3 grid of Hover pads (see Fenwar's arena).
+
+	float timeOfLastJump;
+	float jumpTimeIntervalMin; //this is taken from var1
+	float jumpTimeIntervalMax; //this is taken from var2
+	float currentJumpTimeInterval;
+	float hopYOffset;
+	bool hopping;
+
+	int state;
+	int position; //Where is it in relation to the center (NORTHWEST, NORTH, etc.)
+	bool onCornerPosition;
 };
 
 #endif
