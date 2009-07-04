@@ -81,7 +81,7 @@ void Map::drawSquare(int i , int j, int drawX, int drawY) {
 	bool isHiddenWarp = Util::isWarp(c) && smh->environment->variable[i][j] == 990;
 	bool drawNoCollision = 
 		smh->player->canPass(c) || isHiddenWarp || Util::isCylinderUp(c) || Util::isCylinderSwitchLeft(c) ||
-		Util::isCylinderSwitchRight(c) || c == SIGN;
+		Util::isCylinderSwitchRight(c) || c==SIGN || c==FAKE_COLLISION;
 
 	//Basic map tiles
 	if (c == WALK_LAVA || c == NO_WALK_LAVA) {
