@@ -1,8 +1,6 @@
 === Programming To Do ===
  * Make hoppers use A-star to determine distance from smiley so that they don't try to hop through walls to get to him because it looks like the dickens.
- * Make it so turrets can't kill enemies
  * Make some sort of graphical effect for enemies spawning from the enemy spawners.
- * Barvinoid
  * Fenwar
  * Make enemy blocks not go away until you get the loot
  * Draw pits based on current area
@@ -27,7 +25,6 @@
  * Right-Left Spikey enemies sometimes will spawn and move downwards super fast until they hit a wall and the start moving right-left.
  * Gem #'s are huge at start
  * Portly's ice spawning on Smiley freezes you forever.
- * The enemy death sound is played randomly when no enemy is being killed (this is because turrets are killing enemies)
 
 == Progress ==
 ||*Item Goal*||*Level found*||*Boss*||*Level Completion*||Boss Completion||
@@ -50,6 +47,10 @@
 ||Item||Date||Done By||
 ||Time saved stat is now actually correct.||7/03/09||RGW||
 ||Completion percentage||7/03/09||RGW||
+||Fixed glitch: dying in shallow water now stops the "wading" sound||7/1/09||ETI||
+||There are now no places where you can go diagonally across ice (I hope)||6/30/09||ETI||
+||Turrets now don't kill enemies||6/30/09||ETI||
+||Barvinoid||6/24/09||ETI||
 ||Closing cinematic||6/16/09||RGW||
 ||Replaced fenwar with animated fenwar everywhere||6/8/09||RGW||
 ||Rotating warps||6/7/09||RGW||
