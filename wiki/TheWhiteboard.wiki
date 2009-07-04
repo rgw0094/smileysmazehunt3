@@ -1,4 +1,5 @@
 === Programming To Do ===
+ * Make buzzards not chase you indefinitely
  * Make hoppers use A-star to determine distance from smiley so that they don't try to hop through walls to get to him because it looks like the dickens.
  * Make some sort of graphical effect for enemies spawning from the enemy spawners.
  * Fenwar
