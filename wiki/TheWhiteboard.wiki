@@ -25,6 +25,7 @@
  * Right-Left Spikey enemies sometimes will spawn and move downwards super fast until they hit a wall and the start moving right-left.
  * Gem #'s are huge at start
  * Portly's ice spawning on Smiley freezes you forever.
+ * Deep water on the minimap (both blue and green) is not displayed correctly.
 
 == Progress ==
 ||*Item Goal*||*Level found*||*Boss*||*Level Completion*||Boss Completion||
