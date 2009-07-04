@@ -14,7 +14,7 @@
  * Explosion manager explosions
 
 === Graphics To Do ===
- * A background for the key display in the lower left corner of the screen because you can't read the numbers over certain terrain.
+ * Keys background (in lower corner of screen)
  * Fenwar orbs (I think they should be an animation)
  * Slime
  * More projectile graphics (snowmen throw snowballs, squirrels throw nuts ETCETERA)
@@ -46,6 +46,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fixed the key display sometimes not showing up and added a background||7/4/09||RGW||
 ||Time saved stat is now actually correct.||7/03/09||RGW||
 ||Completion percentage||7/03/09||RGW||
 ||Fixed glitch: dying in shallow water now stops the "wading" sound||7/1/09||ETI||
