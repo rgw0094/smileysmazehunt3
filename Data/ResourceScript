@@ -1413,6 +1413,12 @@ Sprite bossHealthBar {
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
+Sprite keyBackground {
+ texture=UserInterfaceTx
+ rect=742,751,276,54
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
 
 ;***********************
 ;******** PLAYER *******
