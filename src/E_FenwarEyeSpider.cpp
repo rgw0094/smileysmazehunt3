@@ -12,13 +12,16 @@ extern SMH *smh;
 #define MAX_DISTANCE_TO_HOP_TOWARD_SMILEY 500.0
 
 /** 
- * Constructor
+ * Constructors
  */
+E_FenwarEyeSpider::E_FenwarEyeSpider(int id, int x, int y, int groupID) {
+	E_FenwarEyeSpider(id, x, y, groupID, 12, 19); //in the debug level, the center of the "arena" is at 12,19
+}
+
 E_FenwarEyeSpider::E_FenwarEyeSpider(int id, int x, int y, int groupID, int CenterX, int CenterY) {
 	
 	//Call parent initialization routine
 	initEnemy(id, x, y, groupID);
-
 	
 	//Set initial state
 	facing = DOWN;

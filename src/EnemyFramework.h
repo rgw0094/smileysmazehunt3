@@ -885,6 +885,7 @@ private:
 class E_FenwarEyeSpider : public BaseEnemy {
 
 public:
+	E_FenwarEyeSpider(int id, int x, int y, int groupID);
 	E_FenwarEyeSpider(int id, int x, int y, int groupID, int CenterX, int CenterY); //need to pass in centerX and centerY so it knows where it is in relation to the "grid" of hover pads
 	~E_FenwarEyeSpider();
 
@@ -896,8 +897,8 @@ private:
 	int centerX, centerY; //these denote the center tile of the 3x3 grid of Hover pads (see Fenwar's arena).
 
 	float timeOfLastJump;
-	float jumpTimeIntervalMin; //this is taken from var1
-	float jumpTimeIntervalMax; //this is taken from var2
+	float jumpTimeIntervalMin;
+	float jumpTimeIntervalMax;
 	float currentJumpTimeInterval;
 	float hopYOffset;
 	bool hopping;
