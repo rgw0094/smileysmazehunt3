@@ -133,7 +133,6 @@ public:
 	bool inChaseRange(int range);
 	void doAStar();
 	void doAStar(int destinationX, int destinationY, int updateRadius);
-	int AStarDistance(int destinationX, int destinationY);
 	bool verifyDiagonal(int curX, int curY, int neighborX, int neighborY);
 	bool canShootPlayer();
 	bool canShootPlayer(float angle);
