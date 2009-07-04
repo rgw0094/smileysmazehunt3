@@ -26,6 +26,7 @@
  * Gem #'s are huge at start
  * Portly's ice spawning on Smiley freezes you forever.
  * Deep water on the minimap (both blue and green) is not displayed correctly.
+ * The "blue screen" of Magnitogorsk is seemingly drawing the deep green water graphic tiled over the whole screen
 
 == Progress ==
 ||*Item Goal*||*Level found*||*Boss*||*Level Completion*||Boss Completion||
