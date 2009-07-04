@@ -221,7 +221,10 @@ void GUI::draw() {
 	}
 
 	//Draw keys
-	if (Util::getKeyIndex(smh->saveManager->currentArea) != -1) {
+	if (Util::getKeyIndex(smh->saveManager->currentArea) != -1) 
+	{
+		smh->drawSprite("keyBackground", 748.0, 714.0);
+
 		int keyXOffset = 763.0;
 		int keyYOffset = 724.0;
 		for (int i = 0; i < 4; i++) {
