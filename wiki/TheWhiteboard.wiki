@@ -50,6 +50,7 @@
 ||Time saved stat is now actually correct.||7/03/09||RGW||
 ||Completion percentage||7/03/09||RGW||
 ||Fixed glitch: dying in shallow water now stops the "wading" sound||7/1/09||ETI||
+||Jesus' Sandals now have a "light from above" graphical effect when used||6/30/09||ETI||
 ||There are now no places where you can go diagonally across ice (I hope)||6/30/09||ETI||
 ||Turrets now don't kill enemies||6/30/09||ETI||
 ||Barvinoid||6/24/09||ETI||
