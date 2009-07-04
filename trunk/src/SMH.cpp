@@ -29,214 +29,252 @@ SMH::~SMH() { }
 /**
  * Creates the game objects. Note that order is important!
  */
-void SMH::init() {
+void SMH::init() 
+{
+	try
+	{
+		log("-------------------------------------");
+		log("---Initializing Smiley's Maze Hunt---");
+		log("-------------------------------------");
 
-	log("-------------------------------------");
-	log("---Initializing Smiley's Maze Hunt---");
-	log("-------------------------------------");
+		log("Creating ResourceManager");
+		resources = new hgeResourceManager("Data/ResourceScript");
+		hge->Resource_AttachPack("Data/Sounds.zip");
+		hge->Resource_AttachPack("Data/Fonts.zip");
+		hge->Resource_AttachPack("Data/GameData.zip");
 
-	log("Creating ResourceManager");
-	resources = new hgeResourceManager("Data/ResourceScript");
-	hge->Resource_AttachPack("Data/Sounds.zip");
-	hge->Resource_AttachPack("Data/Fonts.zip");
-	hge->Resource_AttachPack("Data/GameData.zip");
+		log("Creating Console");
+		console = new Console();
 
-	log("Creating Console");
-	console = new Console();
+		log("Creating PopupMessageManager");
+		popupMessageManager = new PopupMessageManager();
 
-	log("Creating PopupMessageManager");
-	popupMessageManager = new PopupMessageManager();
+		log("Creating SaveManager");
+		saveManager = new SaveManager();
 
-	log("Creating SaveManager");
-	saveManager = new SaveManager();
+		log("Creating Player");
+		player = new Player();
 
-	log("Creating Player");
-	player = new Player();
+		log("Creating Enemy Manager");
+		enemyManager = new EnemyManager();
 
-	log("Creating Enemy Manager");
-	enemyManager = new EnemyManager();
+		log("Creating Input");
+		input = new SmileyInput();
 
-	log("Creating Input");
-	input = new SmileyInput();
+		log("Creating GameData");
+		gameData = new GameData();
 
-	log("Creating GameData");
-	gameData = new GameData();
+		log("Creating NPCManager");
+		npcManager = new NPCManager();
 
-	log("Creating NPCManager");
-	npcManager = new NPCManager();
+		log("Creating SoundManager");
+		soundManager = new SoundManager();
 
-	log("Creating SoundManager");
-	soundManager = new SoundManager();
+		log("Creating MainMenu");
+		menu = new MainMenu();
 
-	log("Creating MainMenu");
-	menu = new MainMenu();
+		log("Creating WindowManager");
+		windowManager = new WindowManager();
 
-	log("Creating WindowManager");
-	windowManager = new WindowManager();
+		log("Creating EnemyGroupManager");
+		enemyGroupManager = new EnemyGroupManager();
 
-	log("Creating EnemyGroupManager");
-	enemyGroupManager = new EnemyGroupManager();
+		log("Creating AreaChanger");
+		areaChanger = new AreaChanger();
+			
+		log("Creating LootManager");
+		lootManager = new LootManager();
+			
+		log("Creating ProjectileManager");
+		projectileManager = new ProjectileManager();		
 
-	log("Creating AreaChanger");
-	areaChanger = new AreaChanger();
+		log("Creating BossManager");
+		bossManager = new BossManager();
+
+		log("Creating FenwarManager");
+		fenwarManager = new FenwarManager();
+
+		log("Creating ScreenEffectManager");
+		screenEffectsManager = new ScreenEffectsManager();
+
+		log("Creating ExplosionManager");
+		explosionManager = new ExplosionManager();
+
+		log("Creating DeathEffectManager");
+		deathEffectManager = new DeathEffectManager();
+
+		//Create Environment last
+		log("Creating Environment");
+		environment = new Environment();
+
+		log("-------Initialization Complete-------");
+	}
+	catch(System::Exception *ex) 
+	{
+		hge->System_Log("----FATAL ERROR IN RENDER FUNC-----");
+		hge->System_Log("%s", ex->ToString());
 		
-	log("Creating LootManager");
-	lootManager = new LootManager();
-		
-	log("Creating ProjectileManager");
-	projectileManager = new ProjectileManager();		
-
-	log("Creating BossManager");
-	bossManager = new BossManager();
-
-	log("Creating FenwarManager");
-	fenwarManager = new FenwarManager();
-
-	log("Creating ScreenEffectManager");
-	screenEffectsManager = new ScreenEffectsManager();
-
-	log("Creating ExplosionManager");
-	explosionManager = new ExplosionManager();
-
-	log("Creating DeathEffectManager");
-	deathEffectManager = new DeathEffectManager();
-
-	//Create Environment last
-	log("Creating Environment");
-	environment = new Environment();
-
-	log("-------Initialization Complete-------");
+		MessageBox(NULL, "A fatal error has occured while intializing Smiley's Maze Hunt.\nYou may check the log for more information.", "Error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+		exit(1);
+	}
 }
 
 /**
  * This is called each frame to update the game. Returns true if the
  * game is finished and the program should exit.
  */
-bool SMH::updateGame() {
+bool SMH::updateGame() 
+{
+	try
+	{
+		float dt = min(0.1, hge->Timer_GetDelta());
 
-	float dt = min(0.1, hge->Timer_GetDelta());
-
-	timeInState += dt;
-	frameCounter++;
-	input->UpdateInput();
-	
-	//Input for taking screenshots
-	if (hge->Input_KeyDown(HGEK_F9)) {
-		hge->System_Snapshot();
-	}
-	
-	if (gameState == MENU) {
-
-		if (menu->update(dt)) return true;
-
-		if (hge->Input_KeyDown(HGEK_G))
-		{
-			menu->open(MenuScreens::CLOSING_CINEMATIC_SCREEN);
+		timeInState += dt;
+		frameCounter++;
+		input->UpdateInput();
+		
+		//Input for taking screenshots
+		if (hge->Input_KeyDown(HGEK_F9)) {
+			hge->System_Snapshot();
 		}
+		
+		if (gameState == MENU) {
 
-	} else if (gameState == GAME) {
+			if (menu->update(dt)) return true;
 
-		//Update the console
-		if (smh->hge->Input_KeyDown(HGEK_GRAVE)) console->toggle();
-		console->update(dt);
-
-		//Toggle options/exit
-		if (!deathEffectManager->isActive() && !windowManager->isOpenWindow() && hge->Input_KeyDown(HGEK_ESCAPE)) {
-			windowManager->openWindow(new MiniMenu(MINIMENU_EXIT));
-		}
-
-		//Close game menu
-		bool menuClosedThisFrame = false;
-		if (input->keyPressed(INPUT_PAUSE) && windowManager->isGameMenuOpen()) {
-			windowManager->closeWindow();
-			menuClosedThisFrame = true;
-		}
-
-		windowManager->update(dt);
-		areaChanger->update(dt);
-		enemyGroupManager->update(dt);
-		fenwarManager->update(dt);
-		environment->updateAdviceMan(dt);
-		player->updateGUI(dt);
-		deathEffectManager->update(dt);
-		popupMessageManager->update(dt);
-
-		if (!windowManager->isOpenWindow() && !areaChanger->isChangingArea() && !fenwarManager->isEncounterActive() && 
-			!environment->isAdviceManActive() && !deathEffectManager->isActive())
-		{
-
-			//Open game menu
-			if (input->keyPressed(INPUT_PAUSE) && !windowManager->isOpenWindow() && !menuClosedThisFrame) {
-				windowManager->openGameMenu();
+			if (hge->Input_KeyDown(HGEK_G))
+			{
+				menu->open(MenuScreens::CLOSING_CINEMATIC_SCREEN);
 			}
 
-			player->update(dt);
-			explosionManager->update(dt);
-			environment->update(dt);
-			bossManager->update(dt);
-			enemyManager->update(dt);
-			lootManager->update(dt);
-			projectileManager->update(dt);
-			npcManager->update(dt);
-			screenEffectsManager->update(dt);
+		} else if (gameState == GAME) {
+
+			//Update the console
+			if (smh->hge->Input_KeyDown(HGEK_GRAVE)) console->toggle();
+			console->update(dt);
+
+			//Toggle options/exit
+			if (!deathEffectManager->isActive() && !windowManager->isOpenWindow() && hge->Input_KeyDown(HGEK_ESCAPE)) {
+				windowManager->openWindow(new MiniMenu(MINIMENU_EXIT));
+			}
+
+			//Close game menu
+			bool menuClosedThisFrame = false;
+			if (input->keyPressed(INPUT_PAUSE) && windowManager->isGameMenuOpen()) {
+				windowManager->closeWindow();
+				menuClosedThisFrame = true;
+			}
+
+			windowManager->update(dt);
+			areaChanger->update(dt);
+			enemyGroupManager->update(dt);
+			fenwarManager->update(dt);
+			environment->updateAdviceMan(dt);
+			player->updateGUI(dt);
+			deathEffectManager->update(dt);
+			popupMessageManager->update(dt);
+
+			if (!windowManager->isOpenWindow() && !areaChanger->isChangingArea() && !fenwarManager->isEncounterActive() && 
+				!environment->isAdviceManActive() && !deathEffectManager->isActive())
+			{
+
+				//Open game menu
+				if (input->keyPressed(INPUT_PAUSE) && !windowManager->isOpenWindow() && !menuClosedThisFrame) {
+					windowManager->openGameMenu();
+				}
+
+				player->update(dt);
+				explosionManager->update(dt);
+				environment->update(dt);
+				bossManager->update(dt);
+				enemyManager->update(dt);
+				lootManager->update(dt);
+				projectileManager->update(dt);
+				npcManager->update(dt);
+				screenEffectsManager->update(dt);
+			}
+
+			smh->resources->GetAnimation("fenwar")->Update(dt);
+
+			//Keep track of the time that no windows are open.
+			if (!windowManager->isOpenWindow()) gameTime += dt;
+		
 		}
+	}
+	catch(System::Exception *ex) 
+	{
+		hge->System_Log("----FATAL ERROR IN UPDATE FUNC-----");
+		hge->System_Log("%s", ex->ToString());
+		int result = MessageBox(NULL, "An error has occured. You may check the log for more information. Do you wish to attempt to continue?", "Error", MB_YESNO | MB_ICONERROR | MB_SYSTEMMODAL);
 
-		smh->resources->GetAnimation("fenwar")->Update(dt);
-
-		//Keep track of the time that no windows are open.
-		if (!windowManager->isOpenWindow()) gameTime += dt;
-	
+		if (result == IDNO)
+		{
+			exit(1);
+		}
 	}
 
 	return false;
-
 }
 
 /**
  * This is called each frame to perform all rendering for the current frame.
  */
-void SMH::drawGame() {
+void SMH::drawGame() 
+{
+	try
+	{
+		float dt = hge->Timer_GetDelta();
 
-	float dt = hge->Timer_GetDelta();
+		screenEffectsManager->applyEffect();
+		hge->Gfx_BeginScene();
 
-	screenEffectsManager->applyEffect();
-	hge->Gfx_BeginScene();
+		if (getGameState() == MENU) {
+			menu->draw(dt);
+		} else {
+			environment->draw(dt);
+			lootManager->draw(dt);
+			enemyManager->draw(dt);
+			npcManager->draw(dt);
+			bossManager->drawBeforeSmiley(dt);
+			if (!deathEffectManager->isActive()) player->draw(dt);
+			environment->drawAfterSmiley(dt);
+			bossManager->drawAfterSmiley(dt);
+			explosionManager->draw(dt);
+			fenwarManager->draw(dt);
+			projectileManager->draw(dt);
+			player->drawJesusBeam();
+			environment->drawSwitchTimers(dt);
+			if (screenColorAlpha > 0.0) drawScreenColor(screenColor, screenColorAlpha);
+			areaChanger->draw(dt);
+			player->drawGUI(dt);
+			windowManager->draw(dt);
+			deathEffectManager->draw(dt);
+			console->draw(dt);
+			popupMessageManager->draw(dt);
+		}
 
-	if (getGameState() == MENU) {
-		menu->draw(dt);
-	} else {
-		environment->draw(dt);
-		lootManager->draw(dt);
-		enemyManager->draw(dt);
-		npcManager->draw(dt);
-		bossManager->drawBeforeSmiley(dt);
-		if (!deathEffectManager->isActive()) player->draw(dt);
-		environment->drawAfterSmiley(dt);
-		bossManager->drawAfterSmiley(dt);
-		explosionManager->draw(dt);
-		fenwarManager->draw(dt);
-		projectileManager->draw(dt);
-		player->drawJesusBeam();
-		environment->drawSwitchTimers(dt);
-		if (screenColorAlpha > 0.0) drawScreenColor(screenColor, screenColorAlpha);
-		areaChanger->draw(dt);
-		player->drawGUI(dt);
-		windowManager->draw(dt);
-		deathEffectManager->draw(dt);
-		console->draw(dt);
-		popupMessageManager->draw(dt);
+		if (isDebugOn()) {
+			//Grid co-ords and fps
+			resources->GetFont("consoleFnt")->printf(1000,5,HGETEXT_RIGHT,"(%d,%d)  FPS: %d", 
+				player->gridX, player->gridY, hge->Timer_GetFPS());
+
+			//Debug text
+			resources->GetFont("consoleFnt")->printf(10,700,HGETEXT_LEFT,debugText.c_str());
+		}
+
+		hge->Gfx_EndScene();
 	}
+	catch(System::Exception *ex) 
+	{
+		hge->System_Log("----FATAL ERROR IN RENDER FUNC-----");
+		hge->System_Log("%s", ex->ToString());
+		int result = MessageBox(NULL, "An error has occured. You may check the log for more information. Do you wish to attempt to continue?", "Error", MB_YESNO | MB_ICONERROR | MB_SYSTEMMODAL);
 
-	if (isDebugOn()) {
-		//Grid co-ords and fps
-		resources->GetFont("consoleFnt")->printf(1000,5,HGETEXT_RIGHT,"(%d,%d)  FPS: %d", 
-			player->gridX, player->gridY, hge->Timer_GetFPS());
-
-		//Debug text
-		resources->GetFont("consoleFnt")->printf(10,700,HGETEXT_LEFT,debugText.c_str());
+		if (result == IDNO)
+		{
+			exit(1);
+		}
 	}
-
-	hge->Gfx_EndScene();
 }
 	
 /**

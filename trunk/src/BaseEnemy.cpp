@@ -134,7 +134,8 @@ void BaseEnemy::initEnemy(int _id, int _gridX, int _gridY, int _groupID) {
 		smh->hge->System_Log("EnemyID: %d, Location: (%d,%d), GroupID: %d", _id, _gridX, _gridY, _groupID);
 		smh->hge->System_Log("Stack trace:");
 		smh->hge->System_Log("%s", ex->ToString());
-		exit(1);
+		smh->hge->System_Log("-- End Exception");
+		throw ex;
 	}
 }
 
@@ -258,11 +259,6 @@ void BaseEnemy::move(float dt) {
  */
 void BaseEnemy::doAStar() {
 	doAStar(smh->player->gridX, smh->player->gridY, 10);
-}
-
-int BaseEnemy::AStarDistance(int destinationX, int destinationY) {
-	doAStar(destinationX, destinationY, 10);
-	return mapPath[gridX][gridY];
 }
 
 void BaseEnemy::doAStar(int destinationX, int destinationY, int updateRadius) {

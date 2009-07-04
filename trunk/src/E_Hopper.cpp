@@ -9,7 +9,7 @@
 extern SMH *smh;
 
 
-#define MAX_DISTANCE_TO_HOP_TOWARD_SMILEY 500.0
+#define MAX_DISTANCE_TO_HOP_TOWARD_SMILEY 8.0
 
 /** 
  * Constructor
@@ -52,7 +52,8 @@ void E_Hopper::update(float dt) {
 
 		if (chases) {
 			//Hop towards Smiley
-			if (distanceFromPlayer() < MAX_DISTANCE_TO_HOP_TOWARD_SMILEY) {
+			doAStar();
+			if (mapPath[smh->player->gridX][smh->player->gridY] < MAX_DISTANCE_TO_HOP_TOWARD_SMILEY) {
                 hopAngle = Util::getAngleBetween(x, y, smh->player->x, smh->player->y);
 				hopDistance = smh->randomFloat(125.0, 300.0);
 			} else {

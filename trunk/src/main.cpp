@@ -32,24 +32,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	hge->System_SetState(HGE_SHOWSPLASH, false);
 	hge->System_SetState(HGE_ICON, MAKEINTRESOURCE (IDI_ICON1));
 
-	if(hge->System_Initiate()) {
+	if(hge->System_Initiate()) 
+	{
+		smh = new SMH(hge);
+		smh->init();
 
-		try {
-			
-			smh = new SMH(hge);
-			smh->init();
-
-			//Start HGE. When this function returns it means the program is exiting.
-			hge->System_Start();
-
-		} catch(System::Exception *ex) {
-			hge->System_Log("----FATAL ERROR----------");
-			hge->System_Log("%s", ex->ToString());
-			MessageBox(NULL, "A fatal error has occurred and the program must exit. \nCheck Smiley.log for more information. \nIt sure would be nice to display the message here but C++ sucks ass", "Error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-			exit(1);
-		}
-
-	} else {
+		//Start HGE. When this function returns it means the program is exiting.
+		hge->System_Start();
+	} 
+	else 
+	{
 		MessageBox(NULL, hge->System_GetErrorMessage(), "Error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 	}
 
