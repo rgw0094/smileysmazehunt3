@@ -113,7 +113,8 @@ void Player::reset() {
 		onWarp = falling = breathingFire = inLava = inShallowWater = healing =
 		waterWalk = onWater = drowning = shrinkActive = sprinting = isHovering = 
 		cloaked = springing = usingCane = iceSliding = frozen = slimed = chargingFrisbee = 
-		inShrinkTunnel = immobile = invincible = uber = abilitiesLocked = tongueLocked = false;
+		inShrinkTunnel = immobile = invincible = uber = abilitiesLocked = 
+		tongueLocked = jesusSoundPlaying = false;
 }
 
 /**
@@ -206,6 +207,7 @@ void Player::update(float dt) {
 	doAbility(dt);
 	doItems();
 	doWater();
+	updateJesusSound();
 
 	//Die
 	if (health <= 0.0 && smh->getGameState() == GAME) {
@@ -239,6 +241,18 @@ void Player::updateLocation() {
 		throw new System::Exception("Player went out of bounds");
 	}
 }
+
+/**
+ * Updates the sound of the holy choir
+ * (starts it if you just walked onto water; stops it if you are off of water or you're drowning)
+ */
+void Player::updateJesusSound() {
+	if (jesusSoundPlaying && !onWater) //stop the sound
+		smh->soundManager->playEnvironmentEffect("snd_Jesus", true);
+	else if (!jesusSoundPlaying && onWater) //start the sound
+		smh->soundManager->stopEnvironmentChannel();
+}
+
 
 /**
  * Does movement for this frame based on current dx/dy.
@@ -1151,6 +1165,8 @@ void Player::doItems() {
 		if (getHealth() != getMaxHealth()) {
 			setHealth(getHealth() + 1.0);
 			gatheredItem = true;
+			//Play sound effect
+			smh->soundManager->playSound("snd_Health");
 		} else {
 			smh->popupMessageManager->showFullHealth();
 		}
@@ -1158,6 +1174,8 @@ void Player::doItems() {
 		if (getMana() != getMaxMana()) {
 			setMana(getMana() + MANA_PER_ITEM);
 			gatheredItem = true;
+			//Play sound effect
+			smh->soundManager->playSound("snd_Mana");
 		} else {
 			smh->popupMessageManager->showFullMana();
 		}

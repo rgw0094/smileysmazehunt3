@@ -1,6 +1,6 @@
 [HGESTRINGTABLE]
 
-numEnemies="99"
+numEnemies="103"
 
 ;Croc
 0Name=      "Crazy Croc"
@@ -1765,6 +1765,45 @@ numEnemies="99"
 98PSpeed=    "450"
 98PType=     "14"
 98PHoming=   "F"
+
+;Blank placefiller
+99GCol="0"
+99GRow="0"
+99EnemyType="0"
+99WanderType="0"
+99HP="100"
+99Damage="10"
+99Radius="28"
+99Speed="100"
+99Land="T"
+99SWater="T"
+99Chases="F"
+
+;Blank placefiller
+100GCol="0"
+100GRow="0"
+100EnemyType="0"
+100WanderType="0"
+100HP="100"
+100Damage="10"
+100Radius="28"
+100Speed="100"
+100Land="T"
+100SWater="T"
+100Chases="F"
+
+;Blank placefiller
+101GCol="0"
+101GRow="0"
+101EnemyType="0"
+101WanderType="0"
+101HP="100"
+101Damage="10"
+101Radius="28"
+101Speed="100"
+101Land="T"
+101SWater="T"
+101Chases="F"
 
 ;Beaker placefiller so the castle doesn't freeze
 102Name=      "Ent"

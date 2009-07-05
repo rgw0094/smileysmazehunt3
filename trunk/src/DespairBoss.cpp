@@ -551,7 +551,7 @@ void DespairBoss::addProjectile(int type, float x, float y, float angle, float s
 	newProjectile.collisionBox = new hgeRect();
 	newProjectile.collisionBox->SetRadius(newProjectile.x, newProjectile.y,10);
 	newProjectile.timeCreated = smh->getGameTime();
-
+	
 	switch (type) {
 		case PROJECTILE_ICE:
 			newProjectile.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("iceOrb")->info);
@@ -561,6 +561,8 @@ void DespairBoss::addProjectile(int type, float x, float y, float angle, float s
 			break;
 		case PROJECTILE_FIRE:
 			newProjectile.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("fireOrb")->info);
+		default:
+			newProjectile.particle = NULL;
 	}
 	
 	newProjectile.particle->FireAt(newProjectile.x, newProjectile.y);

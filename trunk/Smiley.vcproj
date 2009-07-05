@@ -71,7 +71,7 @@
 				PreprocessorDefinitions="WIN32;NDEBUG"
 				MinimalRebuild="FALSE"
 				RuntimeLibrary="0"
-				WarningLevel="0"
+				WarningLevel="4"
 				DebugInformationFormat="3"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -359,6 +359,12 @@
 				Filter="">
 				<File
 					RelativePath=".\src\AdviceMan.cpp">
+					<FileConfiguration
+						Name="Release|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							WarningLevel="0"/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\environment.cpp">

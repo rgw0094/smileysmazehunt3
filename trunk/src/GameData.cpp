@@ -94,6 +94,8 @@ float GameData::getDifficultyModifier(int difficulty) {
 		case VERY_HARD:
 			return 0.5;
 	}
+
+	return 1.0;
 }
 
 ////////// Private functions //////////////////

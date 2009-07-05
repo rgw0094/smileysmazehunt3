@@ -289,6 +289,7 @@ bool WeaponParticleSystem::testCollision(hgeRect *collisionBox) {
 		if (collides) return true;
 		par++;
 	}
+	return false;
 }
 
 /**
@@ -302,4 +303,5 @@ bool WeaponParticleSystem::testCollision(CollisionCircle *collisionCircle) {
 		if (collides) return true;
 		par++;
 	}
+	return false;
 }

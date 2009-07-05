@@ -243,7 +243,7 @@ void SmileletManager::checkForNearbyFlower() {
 //Check the four tiles adjacent to the player for a SMILELET FLOWER
 	int gX,gY;
 	bool foundFlower=false;
-	int dir;
+	int dir=UP;
 
 	gX = smh->player->gridX;
 	gY = smh->player->gridY;

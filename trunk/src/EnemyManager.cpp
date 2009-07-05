@@ -41,6 +41,7 @@ void EnemyManager::addEnemy(int id, int x, int y, float spawnHealthChance, float
 	newEnemy.spawnManaChance = spawnManaChance;
 
 	switch (smh->gameData->getEnemyInfo(id).enemyType) {
+		/*
 		case ENEMY_EVIL_EYE:
 			newEnemy.enemy = new E_EvilEye(id, x, y, groupID);
 			newEnemy.spawnHealthChance = 0.0;
@@ -106,6 +107,7 @@ void EnemyManager::addEnemy(int id, int x, int y, float spawnHealthChance, float
 		case ENEMY_FENWAR_EYE_SPIDER:
 			newEnemy.enemy = new E_FenwarEyeSpider(id, x, y, groupID);
 			break;
+		*/
    		default:
 			newEnemy.enemy = new DefaultEnemy(id, x, y, groupID);
 			break;
@@ -221,6 +223,7 @@ bool EnemyManager::testCollision(hgeRect *collisionBox) {
 			return true;
 		}
 	}
+	return false;
 }
 
 /**
@@ -238,6 +241,7 @@ bool EnemyManager::testCollisionExcludingTurrets(hgeRect *collisionBox) {
 			}
 		}
 	}
+	return false;
 }
 
 /**
@@ -256,6 +260,7 @@ bool EnemyManager::testCollisionCertainEnemies(hgeRect *collisionBox, int enemyI
 		}
 			
 	}
+	return false;
 }
 
 /**
@@ -270,6 +275,7 @@ bool EnemyManager::collidesWithFrozenEnemy(CollisionCircle *circle) {
 			return true;
 		}
 	}
+	return false;
 }
 
 /**

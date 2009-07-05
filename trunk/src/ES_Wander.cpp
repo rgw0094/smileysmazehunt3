@@ -134,6 +134,9 @@ int ES_Wander::getNewDirection() {
 			collision = smh->environment->collision[owner->gridX][owner->gridY-1];
 		} else if (newDir == WANDER_DOWN) {
 			collision = smh->environment->collision[owner->gridX][owner->gridY+1];
+		} else {
+			collision = smh->environment->collision[owner->gridX][owner->gridY];
+			smh->log("ES_Wander.cpp. Enemy did not set a wander direction.");
 		}
 		newDirFound = (newDir != currentAction && owner->canPass[collision]);
 		count++;

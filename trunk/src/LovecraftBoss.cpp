@@ -607,6 +607,7 @@ void LovecraftBoss::doEyeAttackState(float dt) {
 	if (strcmp(eyeStatus.type.c_str(), LIGHTNING_EYE) == 0) screenColor = Colors::YELLOW;
 	else if (strcmp(eyeStatus.type.c_str(), FIRE_EYE) == 0) screenColor = Colors::RED;
 	else if (strcmp(eyeStatus.type.c_str(), ICE_EYE) ==0) screenColor = Colors::BLUE;
+	else screenColor = Colors::BLACK; // just in case something went wrong with eyeStatus.type.c_str()
 
 	if (!attackState.attackStarted) {
 		//Before starting the attack, shade the screen the appropriate color based on the attack

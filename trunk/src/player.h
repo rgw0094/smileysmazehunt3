@@ -121,11 +121,12 @@ private:
 	void updateSmileyColor(float dt);
 	bool doGayMovementFix(int xDist, int yDist);
 	void checkForIceGlitch();
+	void updateJesusSound();
 
 	Tongue *tongue;
 	Worm *worm;
 	
-	float health, mana, 
+	float health, mana;
 	float springVelocity;
 	int enteredWaterX, enteredWaterY;		//Grid position the player was on before entering water
 	int enteredSpringX, enteredSpringY;
@@ -195,6 +196,7 @@ private:
 	bool slimed;
 	bool chargingFrisbee;
 	bool graduallyMoving;
+	bool jesusSoundPlaying;
 };
 
 //----------------------------------------------------------------
