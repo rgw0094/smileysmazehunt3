@@ -25,7 +25,7 @@
  * Gem #'s are huge at start
  * Portly's ice spawning on Smiley freezes you forever.
  * Deep water on the minimap (both blue and green) is not displayed correctly.
- * The "blue screen" of Magnitogorsk is seemingly drawing the deep green water graphic tiled over the whole screen
+ * Smiley randomly dies at Magnitogorsk
 
 == Progress ==
 ||*Item Goal*||*Level found*||*Boss*||*Level Completion*||Boss Completion||
@@ -46,6 +46,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Resolved the Jesus beam/deep water on minimap graphical glitch that I created||7/4/09||ETI||
 ||Fixed the key display sometimes not showing up and added a background||7/4/09||RGW||
 ||Time saved stat is now actually correct.||7/03/09||RGW||
 ||Completion percentage||7/03/09||RGW||
