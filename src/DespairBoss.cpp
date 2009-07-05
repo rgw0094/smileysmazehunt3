@@ -50,7 +50,6 @@ extern SMH *smh;
 #define DESPAIRBOSS_DEAD 12
 
 //Projectile types
-#define NUM_PROJECTILES 2
 #define PROJECTILE_FIRE 0
 #define PROJECTILE_ICE 1
 

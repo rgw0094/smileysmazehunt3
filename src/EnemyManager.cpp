@@ -410,11 +410,23 @@ void EnemyManager::playHitSoundEffect() {
 /**
  * Deletes all the managed enemies
  */
-void EnemyManager::reset() {
+void EnemyManager::reset() 
+{
 	std::list<EnemyStruct>::iterator i;
-	for (i = enemyList.begin(); i != enemyList.end(); i++) {
-		delete i->enemy;
-		i = enemyList.erase(i);
+	for (i = enemyList.begin(); i != enemyList.end(); i++) 
+	{
+		int enemyType = i->enemy->enemyType;
+		try
+		{
+			delete i->enemy;
+			i = enemyList.erase(i);
+		} 
+		catch (System::Exception *ex)
+		{
+			smh->hge->System_Log("Exception caught deleting enemy type %d", enemyType);
+			smh->hge->System_Log("%s", ex->ToString());
+		}
+
 	}
 	enemyList.clear();
 }

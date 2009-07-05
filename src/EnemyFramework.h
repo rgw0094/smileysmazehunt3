@@ -104,10 +104,11 @@ class BaseEnemy {
 
 public:
 
-	virtual ~BaseEnemy() {
-		if (currentState) delete currentState;
-		delete collisionBox;
-		delete futureCollisionBox;
+	virtual ~BaseEnemy()
+	{
+		if (currentState != NULL) delete currentState;
+		if (collisionBox != NULL) delete collisionBox;
+		if (futureCollisionBox != NULL) delete futureCollisionBox;
 		for (int i = 0; i < 4; i++) {
 			delete graphic[i];
 		}
@@ -129,6 +130,7 @@ public:
 	//Methods that can't be overridden
 	void baseUpdate(float dt);
 	void baseDraw(float dt);
+	void baseCleanup();
 	void move(float dt);
 	bool inChaseRange(int range);
 	void doAStar();

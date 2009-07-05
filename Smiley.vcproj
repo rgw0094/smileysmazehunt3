@@ -71,7 +71,7 @@
 				PreprocessorDefinitions="WIN32;NDEBUG"
 				MinimalRebuild="FALSE"
 				RuntimeLibrary="0"
-				WarningLevel="4"
+				WarningLevel="1"
 				DebugInformationFormat="3"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -81,6 +81,7 @@
 				OutputFile="SmileysMazeHunt3.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"
+				GenerateMapFile="TRUE"
 				MapLines="TRUE"/>
 			<Tool
 				Name="VCMIDLTool"/>

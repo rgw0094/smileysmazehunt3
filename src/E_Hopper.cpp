@@ -8,14 +8,8 @@
 
 extern SMH *smh;
 
-
-#define MAX_DISTANCE_TO_HOP_TOWARD_SMILEY 8.0
-
-/** 
- * Constructor
- */
-E_Hopper::E_Hopper(int id, int x, int y, int groupID) {
-	
+E_Hopper::E_Hopper(int id, int x, int y, int groupID)
+{
 	//Call parent initialization routine
 	initEnemy(id, x, y, groupID);
 
@@ -35,35 +29,40 @@ E_Hopper::E_Hopper(int id, int x, int y, int groupID) {
 	graphic[3]->SetSpeed(0.5);
 }
 
-/**
- * Destructor
- */
-E_Hopper::~E_Hopper() {
-
+E_Hopper::~E_Hopper()
+{
 }
 
-void E_Hopper::update(float dt) {
-
-	if (!hopping && smh->timePassedSince(timeStoppedHop) > 1.0) {
-		
+void E_Hopper::update(float dt) 
+{
+	if (!hopping && smh->timePassedSince(timeStoppedHop) > 1.0) 
+	{
 		//Start next hop
 		hopping = true;
 		timeStartedHop = smh->getGameTime();
 
-		if (chases) {
+		if (chases) 
+		{
 			//Hop towards Smiley
 			doAStar();
-			if (mapPath[smh->player->gridX][smh->player->gridY] < MAX_DISTANCE_TO_HOP_TOWARD_SMILEY) {
+			if (Util::distance(x, y, smh->player->x, smh->player->y) < 500 && 
+				mapPath[smh->player->gridX][smh->player->gridY] < 6)
+			{
                 hopAngle = Util::getAngleBetween(x, y, smh->player->x, smh->player->y);
 				hopDistance = smh->randomFloat(125.0, 300.0);
-			} else {
+			} 
+			else 
+			{
 				hopAngle = smh->hge->Random_Float(0,2.0*PI);
 				hopDistance = distanceFromPlayer();
 				if (hopDistance > 300.0) hopDistance = 300.0;
 			}	
-		} else {
+		} 
+		else 
+		{
 			//Find a random angle and distance to hop that won't result in running into a wall
-			do {
+			do 
+			{
 				hopDistance = smh->randomFloat(125.0, 300.0);
 				hopAngle = smh->randomFloat(0.0, 2.0*PI);
 			} while(!smh->environment->validPath(x, y, x + hopDistance * cos(hopAngle), y + hopDistance * sin(hopAngle), 28, canPass));
@@ -72,25 +71,27 @@ void E_Hopper::update(float dt) {
 		timeToHop = hopDistance / float(speed);
 		dx = speed * cos(hopAngle);
 		dy = speed * sin(hopAngle);
-
 	}
 
-	if (hopping) {
-		
+	if (hopping)
+	{		
 		hopYOffset = (hopDistance / 3.0) * sin((smh->timePassedSince(timeStartedHop)/timeToHop) * PI);
 		collisionBox->SetRadius(x, y - hopYOffset, radius);
 		
-		if (smh->timePassedSince(timeStartedHop) > timeToHop) {
+		if (smh->timePassedSince(timeStartedHop) > timeToHop) 
+		{
 			hopping = false;
 			timeStoppedHop = smh->getGameTime();
 			dx = dy = hopYOffset = 0.0;
 		}
-	} else { //if not hopping, face smiley
+	} 
+	else 
+	{
+		//if not hopping, face smiley
         setFacingPlayer();
 	}
 
 	move(dt);
-
 }
 
 void E_Hopper::draw(float dt) {
