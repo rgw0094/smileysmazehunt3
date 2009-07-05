@@ -64,7 +64,7 @@ void E_Tentacle::draw(float dt) {
 
 void E_Tentacle::update(float dt) {
 	int i;
-/**
+
 	if (knockback) {
 		if (smh->timePassedSince(beginKnockbackTime) >= TENTACLE_IMMUNE_TIME) {
 			knockback=false;
@@ -113,8 +113,6 @@ void E_Tentacle::update(float dt) {
 		timeOfLastGrowl = smh->getGameTime();
 		smh->soundManager->playSound("snd_fireWorm");
 	}
-*/
-
 }
 
 /**
