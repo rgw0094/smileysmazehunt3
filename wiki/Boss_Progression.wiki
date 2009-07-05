@@ -1,5 +1,5 @@
 ||*Item Goal*||*Level found*||*Boss*||
-||Smiley's Cane||Fountain||---||Done||---||
+||Smiley's Cane||Fountain||
 ||Fire Breath||Smolder Hollow||Lord Phyrebawz||
 ||Frisbee||Sessaria Snowplains||Portly Penguin||
 ||Sprint boots||Forest of Fundoria||Garmborn||
