@@ -1,9 +1,9 @@
 ||*Item Goal*||*Level found*||*Boss*||
-||Smiley's Cane||Fountain||
+||Smiley's Cane||Fountain||---||
 ||Fire Breath||Smolder Hollow||Lord Phyrebawz||
 ||Frisbee||Sessaria Snowplains||Portly Penguin||
 ||Sprint boots||Forest of Fundoria||Garmborn||
-||Orbs||Dunes of Salabia||Cornwallis||Done||
+||Orbs||Dunes of Salabia||Cornwallis||
 ||Reflection Shield||Realm of Despair||Calypso||
 ||Silly Pads||Mushroom Kingdom||Brian Fungus||
 ||Jesus' Sandals||Pools of the Dead||Lord Phyrebawz 2||
