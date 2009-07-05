@@ -10,7 +10,6 @@
  * Mushroom boss
  * Evil wall rumbling
  * Hopping enemies should make a sound when they hop
- * Collecting health/mana items
  * Explosion manager explosions
 
 === Graphics To Do ===
