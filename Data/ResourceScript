@@ -1742,6 +1742,15 @@ Sound snd_purchaseUpgrade {
 Sound snd_ReflectionShield {
  filename="ReflectionShield.mp3"
 }
+Sound snd_Mana {
+ filename="Mana.mp3"
+}
+Sound snd_Health {
+ filename="Health.mp3"
+}
+Sound snd_Jesus {
+ filename="Jesus.mp3"
+}
 
 ;************************************************
 ;******** CORNWALLIS (Resource group 103 ********

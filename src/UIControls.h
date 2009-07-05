@@ -78,7 +78,7 @@ private:
 struct ControlStruct {
 	BaseControl *control;
 	bool started, finished;
-	float startX, float startY;
+	float startX, startY;
 	float timeStartedAction;
 };
 

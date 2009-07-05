@@ -71,6 +71,10 @@ void E_Turret::update(float dt) {
 				xOffset=radius+16;
 				yOffset=0;
 				break;
+			default:
+				angle=0;
+				xOffset=0;
+				yOffset=0;
 		}
 		smh->projectileManager->addProjectile(xTurret+xOffset,yTurret+yOffset,projectileSpeed,angle,projectileDamage,true,projectileHoming,rangedType,true);
 	}

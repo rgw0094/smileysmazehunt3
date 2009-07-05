@@ -350,6 +350,7 @@ bool SpecialTileManager::isSillyPadAt(int gridX, int gridY) {
 			return true;
 		}
 	}
+	return false;
 }
 
 /**

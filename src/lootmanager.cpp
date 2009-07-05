@@ -75,6 +75,8 @@ void LootManager::update(float dt) {
 			if (i->type == LOOT_HEALTH) {
 				if (smh->player->getHealth() != smh->player->getMaxHealth()) {
 					smh->player->setHealth(smh->player->getHealth() + 1.0);
+					//Play sound effect
+					smh->soundManager->playSound("snd_Health");
 					collected = true;
 				} else {
 					smh->popupMessageManager->showFullHealth();
@@ -84,6 +86,8 @@ void LootManager::update(float dt) {
 					smh->player->setMana(smh->player->getMana() + 20.0);
 					if (smh->player->getMana() > smh->player->getMaxMana()) smh->player->setMana(smh->player->getMaxMana());
 					collected = true;
+					//Play sound effect
+					smh->soundManager->playSound("snd_Mana");
 				} else {
 					smh->popupMessageManager->showFullMana();
 				}

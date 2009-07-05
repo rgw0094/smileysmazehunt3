@@ -715,7 +715,8 @@ private:
 // boolean states at each square.
 //----------------------------------------------------------------
 struct Change {
-	int x,int y;
+	int x;
+	int y;
 	int area;
 };
 
