@@ -1,6 +1,5 @@
 === Programming To Do ===
  * Make buzzards not chase you indefinitely
- * Make hoppers use A-star to determine distance from smiley so that they don't try to hop through walls to get to him because it looks like the dickens.
  * Make some sort of graphical effect for enemies spawning from the enemy spawners.
  * Fenwar
 
@@ -27,25 +26,10 @@
  * Deep water on the minimap (both blue and green) is not displayed correctly.
  * Smiley randomly dies at Magnitogorsk
 
-== Progress ==
-||*Item Goal*||*Level found*||*Boss*||*Level Completion*||Boss Completion||
-||Smiley's Cane||Fountain||---||Done||---||
-||Fire Breath||Smolder Hollow||Lord Phyrebawz||Done||Done||
-||Frisbee||Sessaria Snowplains||Portly Penguin||Done||Done||
-||Sprint boots||Forest of Fundoria||Garmborn||Done||Done||
-||Orbs||Dunes of Salabia||Cornwallis||Done||Done||
-||Reflection Shield||Realm of Despair||Calypso||Done||Done||
-||Silly Pads||Mushroom Kingdom||Brian Fungus||Done||Done||
-||Jesus' Sandals||Pools of the Dead||Lord Phyrebawz 2||90%||Done||
-||Ice Breath||Candy Mountain||Bartli||Done||Done||
-||Shrink||Swamp||Lovecraft||Done||Done||
-||Tut's Mask||Tut's Tomb||King Tut||Done||Done||
-||---||Serpentine Path||---||Done||---||
-||Hover||Calypso's Conservatory||Barvinoid||Done||0%||
-||---||Castle of Evil||Fenwar||Done||60%||
-
 ===Done===
 ||Item||Date||Done By||
+||Made hoppers use A* so they don't try to hop through walls to get to you||7/5/09||RGW||
+||Fixed the crash bug when deleting tentacle enemies||7/5/09||RGW||
 ||Resolved the Jesus beam/deep water on minimap graphical glitch that I created||7/4/09||ETI||
 ||Fixed the key display sometimes not showing up and added a background||7/4/09||RGW||
 ||Time saved stat is now actually correct.||7/03/09||RGW||
