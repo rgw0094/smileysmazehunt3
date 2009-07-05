@@ -331,9 +331,6 @@ void Environment::loadArea(int id, int from, bool playMusic) {
 				if (newItem >= 16 && newItem < 32) {
 					tapestryManager->addTapestry(col, row, newItem);
 				} else {
-					if (newItem > 0 && newItem < 16) {
-						addParticle("itemParticle", col*64+32, row*64+32);
-					}
 					item[col][row] = newItem;
 				}
 			}
@@ -1224,7 +1221,6 @@ int Environment::checkItem(int x, int y) {
 int Environment::removeItem(int x, int y) {
 	int retVal = item[x][y];
 	item[x][y] = NONE;
-	removeParticle(x,y);
 	smh->saveManager->change(x, y);	
 	return retVal;
 }
@@ -1623,6 +1619,7 @@ void Environment::removeAllParticles() {
 		delete i->particle;
 		i = particleList.erase(i);
 	}
+	particleList.clear();
 }
 
 void Environment::addParticle(const char* particleName, float x, float y) {
