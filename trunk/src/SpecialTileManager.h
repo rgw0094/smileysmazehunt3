@@ -29,12 +29,12 @@ struct Flame {
 };
 
 struct SillyPad {
-	int gridX, int gridY;
+	int gridX, gridY;
 	float timePlaced;
 };
 
 struct IceBlock {
-	int gridX, int gridY;
+	int gridX, gridY;
 	bool hasBeenMelted;
 	float timeMelted;
 };

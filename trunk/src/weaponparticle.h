@@ -9,7 +9,6 @@
 
 class CollisionCircle;
 
-#define MAX_PARTICLES	750
 #define PARTICLE_FIRE_BREATH 0
 #define PARTICLE_ICE_BREATH 1
 #define PARTICLE_FIRE_NOVA 2

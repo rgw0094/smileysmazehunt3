@@ -24,7 +24,7 @@ struct FireBall {
 };
 
 struct FlameWall {
-	int x, y, int direction;
+	int x, y, direction;
 	float seperation;
 	FireBall fireBalls[FLAME_WALL_NUM_PARTICLES];
 };

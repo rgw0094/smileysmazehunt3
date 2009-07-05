@@ -20,8 +20,6 @@ extern SMH *smh;
 #define TENTACLE_IMMUNE_TIME 0.350
 #define TENTACLE_KNOCKBACK_VEL 5.0
 
-
-
 E_Tentacle::E_Tentacle(int id, int x, int y, int groupID) {
 
 	//Call parent's init function
@@ -35,17 +33,13 @@ E_Tentacle::E_Tentacle(int id, int x, int y, int groupID) {
 		tentacleNodes[i].position.y=y*64+32+i*this->radius;
 		tentacleNodes[i].angle=angleToSmiley;		
 	}
-	angle=angleToSmiley;
+	angle=angleToSmiley = 0.0;
 	angleVel=0;
 
 	timeOfLastGrowl=smh->getGameTime()-TIME_BETWEEN_GROWLS*2;
-
-	collisionBox = new hgeRect;
-	   
 }
 
 E_Tentacle::~E_Tentacle() {	
-    if (collisionBox) delete collisionBox;
 }
 
 void E_Tentacle::draw(float dt) {
@@ -70,7 +64,7 @@ void E_Tentacle::draw(float dt) {
 
 void E_Tentacle::update(float dt) {
 	int i;
-
+/**
 	if (knockback) {
 		if (smh->timePassedSince(beginKnockbackTime) >= TENTACLE_IMMUNE_TIME) {
 			knockback=false;
@@ -119,7 +113,7 @@ void E_Tentacle::update(float dt) {
 		timeOfLastGrowl = smh->getGameTime();
 		smh->soundManager->playSound("snd_fireWorm");
 	}
-
+*/
 
 }
 

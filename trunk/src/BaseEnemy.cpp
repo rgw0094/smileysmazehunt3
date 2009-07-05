@@ -513,6 +513,23 @@ void BaseEnemy::baseUpdate(float dt) {
 }
 
 /**
+ * Performs cleanup required by every enemy. This should be called from each
+ * enemy's destructor. It can't be done in a base destructor becuase C++
+ * is a terrible, archaic language.
+ */
+void BaseEnemy::baseCleanup()
+{
+	if (currentState != NULL) delete currentState;
+	if (collisionBox != NULL) delete collisionBox;
+	if (futureCollisionBox != NULL) delete futureCollisionBox;
+	
+	for (int i = 0; i < 4; i++) 
+	{
+		delete graphic[i];
+	}
+}
+
+/**
  * Draw method called by the EnemyManager every frame. This method contains
  * draw logic that must be done by every enemy in the framework and should never
  * need to be overrode!!!!

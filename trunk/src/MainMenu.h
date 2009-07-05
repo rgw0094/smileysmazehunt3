@@ -173,7 +173,7 @@ private:
 //------------------CREDITS SCREEN-----------------------
 //-------------------------------------------------------
 struct CreditsItem {
-	float x, float y;
+	float x, y;
 	std::string name;
 	hgeSprite *graphic;
 };
