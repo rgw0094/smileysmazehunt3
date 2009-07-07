@@ -155,7 +155,7 @@ bool SMH::updateGame()
 
 			//Toggle options/exit
 			if (!deathEffectManager->isActive() && !windowManager->isOpenWindow() && hge->Input_KeyDown(HGEK_ESCAPE)) {
-				windowManager->openWindow(new MiniMenu(MINIMENU_EXIT));
+				windowManager->openMiniMenu(MiniMenuMode::MINIMENU_EXIT);
 			}
 
 			//Close game menu

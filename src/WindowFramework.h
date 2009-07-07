@@ -42,22 +42,26 @@ public:
 	//General methods
 	void draw(float dt);
 	void update(float dt);
-	void openWindow(BaseWindow *newWindow);
 	void closeWindow();
 	bool isOpenWindow();
+	bool isTextBoxOpen();
 
 	//Game menu methods
 	void openGameMenu();
 	void openGameMenu(int menu);
 	bool isGameMenuOpen();
 
-	//Text box methods
+	void openMiniMenu(int screen);
+	void openOptionsWindow();
+	void openShop();
+	void openAdviceWindow();
 	void openSignTextBox(int signId);
 	void openNewAbilityTextBox(int whichAbility);
 	void openDialogueTextBox(int _npcID, int _textID);
 	void openHintTextBox();
 	void openAdviceTextBox(int advice);
-	bool isTextBoxOpen();
+
+	
 
 	//Variable
 	int frameLastWindowClosed;
@@ -67,13 +71,23 @@ private:
 
 	bool gameMenuOpen;
 	int currentMenuWindow;
-	BaseWindow *activeWindow;
+	std::auto_ptr<BaseWindow> activeWindow;
 
 };
 
 //----------------------------------------------------------------
 //------------------TEXT BOX--------------------------------------
 //----------------------------------------------------------------
+class TextBoxTypes
+{
+public:
+	static const int SIGN_TYPE = 0;
+	static const int DIALOG_TYPE = 1;
+	static const int HINT_TYPE = 2;
+	static const int ABILITY_TYPE = 3;
+	static const int ADVICE_TYPE = 4;
+};
+
 class TextBox : public BaseWindow {
 
 public:
@@ -224,9 +238,14 @@ private:
 #define MINIMENU_NO 5
 
 //Mode
-#define MINIMENU_EXIT 0
-#define MINIMENU_SAVEGAME 1
-#define MINIMENU_EXIT_PROMPT 2
+class MiniMenuMode
+{
+public:
+	static const int MINIMENU_EXIT = 0;
+	static const int MINIMENU_SAVEGAME = 1;
+	static const int MINIMENU_EXIT_PROMPT = 2;
+};
+
 
 struct ButtonStruct {
 	Button *button;

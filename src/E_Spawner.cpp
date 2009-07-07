@@ -72,8 +72,8 @@ void E_Spawner::update(float dt) {
 
 	if (smh->timePassedSince(timeOfLastSpawn) >= TIME_BETWEEN_SPAWNS &&
 		Util::distance(x,y,smh->player->x,smh->player->y) <= MAX_DISTANCE_FROM_SMILEY_TO_SPAWN &&
-		smh->environment->validPath(x, y, smh->player->x, smh->player->y, 13, canPass)) {
-	
+		smh->environment->validPath(x, y, smh->player->x, smh->player->y, 13, canPass)) 
+	{
 		spawnEnemy();
 	}
 
@@ -153,8 +153,11 @@ void E_Spawner::spawnEnemy() {
 	debugText = "E_Spawner.cpp spawned enemy at";
 	smh->setDebugText(debugText);
 	
+	smh->hge->System_Log("%d", groupID);
+
 	smh->enemyManager->addEnemy(enemy,Util::getGridX(x),Util::getGridY(y),0.15,0.15,groupID);
 	smh->enemyGroupManager->addEnemy(groupID);
+
 	timeOfLastSpawn = smh->getGameTime();
 }
 

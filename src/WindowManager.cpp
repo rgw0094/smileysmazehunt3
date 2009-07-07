@@ -4,84 +4,85 @@
 
 extern SMH *smh;
 
-/**
- * Constructor.
- */
-WindowManager::WindowManager() {
+WindowManager::WindowManager() 
+{
 	textBoxOpen = false;
-	activeWindow = NULL;
 	frameLastWindowClosed = 0;
 	gameMenuOpen = false;
 	currentMenuWindow = INVENTORY;
 }
 
-/**
- * Destructor.
- */
-WindowManager::~WindowManager() { }
+WindowManager::~WindowManager() 
+{
+}
 
 /**
  * Opens the game menu to the menu window that was last open.
  */
-void WindowManager::openGameMenu() {
+void WindowManager::openGameMenu() 
+{
 	openGameMenu(currentMenuWindow);
 }
 
 /**
  * Opens the game menu to the specified menu window.
  */
-void WindowManager::openGameMenu(int whichWindow) {
-	switch (whichWindow) {
-		case INVENTORY:
-			openWindow(new Inventory());
-			break;
-		case AREA_MAP:
-			openWindow(new Map());
-			break;
-		case WORLD_MAP:
-			openWindow(new WorldMap());
-			break;
+void WindowManager::openGameMenu(int whichWindow) 
+{
+	if (whichWindow == INVENTORY)
+	{
+		Inventory *inventory = new Inventory();
+		activeWindow.reset(inventory);		
+	} 
+	else if (whichWindow == AREA_MAP)
+	{
+		Map *map = new Map();
+		activeWindow.reset(map);
 	}
+	else if (whichWindow == WORLD_MAP)
+	{
+		WorldMap *worldMap = new WorldMap();
+		activeWindow.reset(worldMap);
+	}
+
 	gameMenuOpen = true;
 }
 
 /**
  * Returns whether or not the game menu is open
  */
-bool WindowManager::isGameMenuOpen() {
+bool WindowManager::isGameMenuOpen() 
+{
 	return gameMenuOpen;
-}
-
-/**
- * Opens a new window. If another window is already open, it is closed first.
- */
-void WindowManager::openWindow(BaseWindow *newWindow) {
-	if (isOpenWindow()) {
-		closeWindow();
-	}
-	activeWindow = newWindow;
 }
 
 /**
  * If there is currently a window open, closes it.
  */
-void WindowManager::closeWindow() {
+void WindowManager::closeWindow() 
+{
 	gameMenuOpen = false;
 	textBoxOpen = false;
-	if (activeWindow) delete activeWindow;
-	activeWindow = 0;
+	
+	if (activeWindow.get() != 0)
+	{
+		activeWindow.release();
+	}
 }
 
 /**
  * Called every frame to draw the windows
  */
-void WindowManager::draw(float dt) {
-	if (activeWindow) {
+void WindowManager::draw(float dt) 
+{
+	if (activeWindow.get() != NULL)
+	{
 		activeWindow->draw(dt);
 	}
 
 	//Draw flashing arrows for the menu windows
-	if (gameMenuOpen) {
+	if (gameMenuOpen) 
+	{
 		float flashingAlpha = 255.0;
 		float n = 0.6;
 		float x = smh->getRealTime();
@@ -124,66 +125,102 @@ void WindowManager::update(float dt) {
 	}
 
 	//If the active window returns false, close it
-	if (activeWindow && !activeWindow->update(dt)) closeWindow();
+	if (activeWindow.get() != NULL && !activeWindow->update(dt)) closeWindow();
 }
 
 /**
  * Returns whether or not there is currently an open window.
  */
-bool WindowManager::isOpenWindow() {
-	return (activeWindow || textBoxOpen || gameMenuOpen);
+bool WindowManager::isOpenWindow() 
+{
+	return (activeWindow.get() != NULL || textBoxOpen || gameMenuOpen);
+}
+
+void WindowManager::openMiniMenu(int mode)
+{
+	MiniMenu *miniMenu = new MiniMenu(mode);
+	activeWindow.reset(miniMenu);
+}
+
+void WindowManager::openOptionsWindow()
+{
+	OptionsWindow *optionsWindow = new OptionsWindow();
+	activeWindow.reset(optionsWindow);
+}
+
+void WindowManager::openShop()
+{
+	Shop *shop = new Shop();
+	activeWindow.reset(shop);
+}
+
+void WindowManager::openAdviceWindow()
+{
+	AdviceWindow *adviceWindow = new AdviceWindow();
+	activeWindow.reset(adviceWindow);
 }
 
 /**
  * Opens a standard text box.
  */
-void WindowManager::openSignTextBox(int signId) {
+void WindowManager::openSignTextBox(int signId) 
+{
 	TextBox *textBox = new TextBox();
 	textBox->setSign(signId);
-	openWindow(textBox);
+
+	activeWindow.reset(textBox);
 	textBoxOpen = true;
 }
 
 /**
  * Opens a text box to inform the user they got a new ability.
  */
-void WindowManager::openNewAbilityTextBox(int whichAbility) {
+void WindowManager::openNewAbilityTextBox(int whichAbility) 
+{
 	TextBox *textBox = new TextBox();
 	textBox->setNewAbility(whichAbility);
-	openWindow(textBox);
+
+	activeWindow.reset(new TextBox());
 	textBoxOpen = true;
 }
 
 /**
  * Opens a text box for dialogue.
  */
-void WindowManager::openDialogueTextBox(int _npcID, int _textID) {
+void WindowManager::openDialogueTextBox(int _npcID, int _textID)
+{
 	TextBox *textBox = new TextBox();
 	textBox->setDialogue(_npcID, _textID);
-	openWindow(textBox);
+
+	activeWindow.reset(textBox);
 	textBoxOpen = true;
 }
 
 /**
  * Opens a text box to display hints.
  */
-void WindowManager::openHintTextBox() {
+void WindowManager::openHintTextBox() 
+{
 	TextBox *textBox = new TextBox();
 	textBox->setHint();
-	openWindow(textBox);
+
+	activeWindow.reset(textBox);
 	textBoxOpen = true;
 }
 
-void WindowManager::openAdviceTextBox(int advice) {
+void WindowManager::openAdviceTextBox(int advice) 
+{
 	TextBox *textBox = new TextBox();
 	textBox->setAdvice(advice);
-	openWindow(textBox);
+
+	activeWindow.reset(textBox);
 	textBoxOpen = true;
 }
 
 /**
  * Returns whether or not the text box is currently open.
  */
-bool WindowManager::isTextBoxOpen() {
+bool WindowManager::isTextBoxOpen() 
+{
 	return textBoxOpen;
 }
