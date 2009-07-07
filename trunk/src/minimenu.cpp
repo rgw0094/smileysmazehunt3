@@ -100,7 +100,7 @@ bool MiniMenu::update(float dt) {
 				case MINIMENU_CANCEL:
 					return false;
 				case MINIMENU_QUIT:
-					smh->windowManager->openMiniMenu(MiniMenuMode::MINIMENU_EXIT);
+					smh->windowManager->openMiniMenu(MiniMenuMode::MINIMENU_EXIT_PROMPT);
 					return true;
 				case MINIMENU_SAVE:
 					smh->saveManager->save();
