@@ -46,6 +46,7 @@ struct Crusher {
 	float leftX, rightX;
 	bool extending;
 	float timeCreated;
+	float timeExtended;
 	hgeRect *leftCollisionBox;
 	hgeRect *rightCollisionBox;
 };
@@ -93,6 +94,7 @@ private:
 	float timeInState;
 	int state;
 	bool startedIntroDialogue;
+	bool startedHealDialogue;
 	int groupID;
 	float x, y;
 	float arenaCenterX, arenaCenterY;

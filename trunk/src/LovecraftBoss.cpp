@@ -35,7 +35,8 @@ extern SMH *smh;
 #define ICE_EYE "IceEye"
 
 #define LOVECRAFT_INTRO_TEXT 190
-#define LOVECRAFT_DEFEAT_TEXT 191
+#define LOVECRAFT_HEAL_TEXT 191
+#define LOVECRAFT_DEFEAT_TEXT 192
 
 #define TENTACLE_MESH_X_GRANULARITY 4
 #define TENTACLE_MESH_Y_GRANULARITY 8
@@ -49,15 +50,17 @@ extern SMH *smh;
 #define CRUSHER_MAX_SIZE (7.0*64.0)
 
 //Attributes
-#define HEALTH 10.0
-#define COLLISION_DAMAGE 2.0
-#define TENTACLE_DAMAGE 0.5
-#define FIREBALL_DAMAGE 2.0
-#define CRUSHER_DAMAGE 1.0
+#define HEALTH 17.0
+#define COLLISION_DAMAGE 1.0
+#define TENTACLE_DAMAGE 0.25
+#define FIREBALL_DAMAGE 0.75
+#define CRUSHER_DAMAGE 0.5
 #define NUM_TENTACLE_HITS_REQUIRED 5
 #define EYE_ATTACK_DURATION 12.5
-#define WINDOW_TO_ATTACK 4.5
-#define FIREBALL_LIFE_TIME 1.0
+#define WINDOW_TO_ATTACK 4.6
+#define FIREBALL_LIFE_TIME 3.0
+
+#define CRUSHER_REMAIN_TIME 1.0
 
 LovecraftBoss::LovecraftBoss(int _gridX, int _gridY, int _groupID) {
 	
@@ -85,6 +88,7 @@ LovecraftBoss::LovecraftBoss(int _gridX, int _gridY, int _groupID) {
 	eyeStatus.state = EYE_CLOSED;
 	fadeAlpha = 255.0;
 	startedIntroDialogue = false;
+	startedHealDialogue = false;
 
 	bodyDistortionMesh = new hgeDistortionMesh(BODY_MESH_GRANULARITY, BODY_MESH_GRANULARITY);
 	bodyDistortionMesh->SetTexture(smh->resources->GetTexture("LovecraftTx"));
@@ -314,10 +318,10 @@ void LovecraftBoss::updateCollision(float dt) {
 		} else if (strcmp(eyeStatus.type.c_str(), ICE_EYE) ==0) {
 			//When the ice eye is active, fire does damage and ice heals
 			if (smh->player->fireBreathParticle->testCollision(eyeCollisionBox)) {
-				dealDamage(smh->player->getFireBreathDamage() * .4 * dt);
+				dealDamage(smh->player->getFireBreathDamage() * .32 * dt);
 			}
 			if (smh->player->iceBreathParticle->testCollision(eyeCollisionBox)) {
-				healDamage(smh->player->getFireBreathDamage() * .4 * dt);
+				healDamage(smh->player->getFireBreathDamage() * .32 * dt);
 			}
 		}
 	}
@@ -432,12 +436,13 @@ void LovecraftBoss::updateCrushers(float dt) {
 				i->size = CRUSHER_MAX_SIZE;
 				smh->soundManager->playSound("snd_Crusher", 0.25);
 				i->extending = false;
+				i->timeExtended = smh->getGameTime();
 			}
 		}
 
 		//Contract
 		if (!i->extending) {
-			i->size -= i->speed * dt;
+			if (smh->timePassedSince(i->timeExtended) >= CRUSHER_REMAIN_TIME) i->size -= i->speed * dt;
 			//Delete the crusher after it has finished contracting
 			if (i->size < 0.0) {
 				i = crusherList.erase(i);
@@ -481,9 +486,9 @@ void LovecraftBoss::updateFireAttack(float dt) {
 	//Periodically spawn waves of fire balls
 	if (smh->timePassedSince(attackState.lastAttackTime) > 1.0) {
 		float offset = smh->randomFloat(0, 100);
-		float gap = smh->randomFloat(175.0, 250.0);
+		float gap = smh->randomFloat(180.0, 270.0);
 		int num = 1500 / gap;
-		float speed = smh->randomFloat(450.0, 700.0);
+		float speed = smh->randomFloat(620.0, 800.0);
 		for (int i = 0; i < num; i++) {
 			BigFireBall fireball;
 			fireball.y = smh->player->y - 500.0;
@@ -581,7 +586,11 @@ void LovecraftBoss::doTentacleState(float dt) {
 			float dist = smh->randomFloat(25.0, 100.0);
 			spawnTentacle(2.75, tentaclePoints[i].x + dist*cos(angle), tentaclePoints[i].y + dist*sin(angle), i == tentacleWithBandaid);		
 		}
-	}	
+	}
+
+	//During tentacle state, Magnitogorsk heals himself slowly.
+	health += 0.25*dt;
+	if (health > HEALTH) health = HEALTH;
 }
 
 bool LovecraftBoss::doDeathState(float dt) {
@@ -667,6 +676,10 @@ void LovecraftBoss::enterState(int newState) {
 	if (state == LS_TENTACLES) {
 		lastTentacleSpawnTime = -10.0;
 		numTentacleHits = 0;
+		if (health < HEALTH && !startedHealDialogue) {
+			startedHealDialogue = true;
+			smh->windowManager->openDialogueTextBox(-1, LOVECRAFT_HEAL_TEXT);	
+		}
 	}
 
 	if (state == LS_EYE_ATTACK) {
@@ -759,6 +772,7 @@ void LovecraftBoss::spawnCrusher(float y, float speed) {
 	newCrusher.speed = speed;
 	newCrusher.timeCreated = smh->getGameTime();
 	newCrusher.extending = true;
+	newCrusher.timeExtended = 0.0;
 	crusherList.push_back(newCrusher);
 }
 
