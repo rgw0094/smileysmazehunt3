@@ -32,7 +32,10 @@ void EnemyGroupManager::resetGroups() {
 /**
  * Adds an enemy to an enemy group
  */
-void EnemyGroupManager::addEnemy(int whichGroup) {
+void EnemyGroupManager::addEnemy(int whichGroup)
+{
+	if (whichGroup < 0 || whichGroup > MAX_GROUPS-1) return;
+
 	groups[whichGroup].active = true;
 	groups[whichGroup].numEnemies++;
 }

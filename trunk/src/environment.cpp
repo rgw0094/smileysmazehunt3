@@ -1532,13 +1532,18 @@ bool Environment::hitSigns(Tongue *tongue) {
 /**
  * Opens the save menu if tongue collides with a save shrine
  */
-bool Environment::hitSaveShrine(Tongue *tongue) {
-	for (int i = smh->player->gridX - 2; i <= smh->player->gridX + 2; i++) {
-		for (int j = smh->player->gridY - 2; j <= smh->player->gridY + 2; j++) {
-			if (isInBounds(i,j) && collision[i][j] == SAVE_SHRINE) {
+bool Environment::hitSaveShrine(Tongue *tongue) 
+{
+	for (int i = smh->player->gridX - 2; i <= smh->player->gridX + 2; i++) 
+	{
+		for (int j = smh->player->gridY - 2; j <= smh->player->gridY + 2; j++) 
+		{
+			if (isInBounds(i,j) && collision[i][j] == SAVE_SHRINE) 
+			{
 				collisionBox->SetRadius(i*64+32,j*64+32,24);
-				if (tongue->testCollision(collisionBox)) {
-					smh->windowManager->openWindow(new MiniMenu(MINIMENU_SAVEGAME));
+				if (tongue->testCollision(collisionBox)) 
+				{
+					smh->windowManager->openMiniMenu(MiniMenuMode::MINIMENU_SAVEGAME);
 					return true;
 				}
 			}

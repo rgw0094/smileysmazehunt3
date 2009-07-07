@@ -11,13 +11,6 @@
 
 extern SMH *smh;
 
-//Dialog box types
-#define TYPE_SIGN 0
-#define TYPE_DIALOG 1
-#define TYPE_HINT 2
-#define TYPE_ABILITY 3
-#define TYPE_ADVICE 4
-
 #define PSYCHEDELIC_GRANULARITY 16
 
 /** 
@@ -59,7 +52,7 @@ void TextBox::init() {
  */
 void TextBox::setDialogue(int _npcID, int _textID) {
 
-	textBoxType = TYPE_DIALOG;
+	textBoxType = TextBoxTypes::DIALOG_TYPE;
 	init();
 
 	npcID = _npcID;
@@ -86,7 +79,7 @@ void TextBox::setDialogue(int _npcID, int _textID) {
  */
 void TextBox::setHint() {
 	
-	textBoxType = TYPE_HINT;
+	textBoxType = TextBoxTypes::HINT_TYPE;
 	init();
 
 	smh->soundManager->playMusic("hintMusic");
@@ -120,7 +113,7 @@ void TextBox::setHint() {
  * Opens the text box to tell the user they received a new ability.
  */
 void TextBox::setNewAbility(int _ability) {
-	textBoxType = TYPE_ABILITY;
+	textBoxType = TextBoxTypes::ABILITY_TYPE;
 	init();
 	currentPage = 1;
 	numPages = 1;
@@ -128,7 +121,8 @@ void TextBox::setNewAbility(int _ability) {
 }
 
 void TextBox::setAdvice(int _advice) {
-	textBoxType = TYPE_ADVICE;
+
+	textBoxType = TextBoxTypes::ADVICE_TYPE;
 	init();
 	currentPage = 1;
 	advice = _advice;
@@ -145,7 +139,7 @@ void TextBox::setAdvice(int _advice) {
  */
 void TextBox::setSign(int signId) {
 
-	textBoxType = TYPE_SIGN;
+	textBoxType = TextBoxTypes::SIGN_TYPE;
 	init();
 	numPages = currentPage = 1;
 
@@ -163,7 +157,7 @@ void TextBox::setSign(int signId) {
 void TextBox::draw(float dt) {
 	
 	//Hint box
-	if (textBoxType == TYPE_HINT) {
+	if (textBoxType == TextBoxTypes::HINT_TYPE) {
 
 		distortion->Render(-15,-15);
 		smh->resources->GetAnimation("player")->SetFrame(DOWN);
@@ -181,7 +175,7 @@ void TextBox::draw(float dt) {
 		smh->resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, smh->gameData->getGameText(paramString.c_str()));
 
 	//Dialog box
-	} else if (textBoxType == TYPE_DIALOG) {
+	} else if (textBoxType == TextBoxTypes::DIALOG_TYPE) {
 		
 		smh->resources->GetSprite("textBox")->Render(x,y);
 
@@ -205,20 +199,20 @@ void TextBox::draw(float dt) {
 		smh->resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, smh->gameData->getGameText(paramString.c_str()));
 
 	//New ability
-	} else if (textBoxType == TYPE_ABILITY) {
+	} else if (textBoxType == TextBoxTypes::ABILITY_TYPE) {
 		smh->resources->GetSprite("textBox")->Render(x,y);
 		smh->resources->GetAnimation("abilities")->SetFrame(ability);
 		smh->resources->GetAnimation("abilities")->Render(x+212,y+42);
 		smh->resources->GetFont("textBoxFnt")->printfb(x + 20, y + 15 + 64, 360, 200 - 64, HGETEXT_CENTER, getAbilityText(ability).c_str());
 
-	} else if (textBoxType == TYPE_ADVICE) {
+	} else if (textBoxType == TextBoxTypes::ADVICE_TYPE) {
 		smh->resources->GetSprite("textBox")->Render(x,y);
 		smh->resources->GetSprite("adviceManDown")->Render(x+212,y+52);
 		smh->resources->GetFont("textBoxFnt")->SetScale(0.75);
 		smh->resources->GetFont("textBoxFnt")->printfb(x + 20, y + 25 + 64, 360, 200 - 64, HGETEXT_CENTER, getAdviceText(advice, currentPage).c_str());
 		smh->resources->GetFont("textBoxFnt")->SetScale(1.0);
 
-	} else if (textBoxType == TYPE_SIGN) {
+	} else if (textBoxType == TextBoxTypes::SIGN_TYPE) {
 		smh->resources->GetSprite("textBox")->Render(x,y);
 		smh->resources->GetFont("textBoxFnt")->printfb(x + 20, y + 20, 360, 210, HGETEXT_CENTER, "%s", text);
 	}
@@ -263,7 +257,7 @@ bool TextBox::update(float dt) {
 	smh->resources->GetSprite("arrowIcon")->SetColor(ARGB(255,alpha,alpha,alpha));
 
 	//Update psychedelic background for hints
-	if (textBoxType == TYPE_HINT && !fadingOut) {
+	if (textBoxType == TextBoxTypes::HINT_TYPE && !fadingOut) {
 		if (fadeAlpha < 255.0) {
 			fadeAlpha += 130.0 * dt;
 			if (fadeAlpha > 255.0) fadeAlpha = 255.0;
@@ -295,7 +289,7 @@ bool TextBox::update(float dt) {
 
 	//Keep updating smiley's cane particle while the hint box is up so that it doesn't just
 	//sit there unanimated because it looks gay.
-	if (textBoxType == TYPE_HINT) {
+	if (textBoxType == TextBoxTypes::HINT_TYPE) {
 		smh->resources->GetParticleSystem("smileysCane")->Update(dt);
 	}
 
@@ -304,30 +298,37 @@ bool TextBox::update(float dt) {
 }
 
 // Returns false if the window should close (meaning a new window wasnt opened as a result of this method)
-bool TextBox::doClose() {
+bool TextBox::doClose() 
+{
 	//Close the text box
 	smh->windowManager->frameLastWindowClosed = smh->getCurrentFrame();
 			
 	//If this is spierdyke, open the shop
-	if (textBoxType == TYPE_DIALOG) {
-		if (textID == SPIERDYKE_TEXT_ID) {
-			smh->windowManager->openWindow(new Shop());
+	if (textBoxType == TextBoxTypes::DIALOG_TYPE) 
+	{
+		if (textID == SPIERDYKE_TEXT_ID) 
+		{
+			smh->windowManager->openShop();
 			return true; //Don't tell manager to close window
-		} else if (textID == MONOCLE_MAN_TEXT_ID) {
-			smh->windowManager->openWindow(new AdviceWindow());
+		} 
+		else if (textID == MONOCLE_MAN_TEXT_ID) 
+		{
+			smh->windowManager->openAdviceWindow();
 			return true; //Don't tell manager to close window
-		} else if (textID == BILL_CLINTON_TEXT_ID && !smh->saveManager->hasAbility[CANE]) {
+		} 
+		else if (textID == BILL_CLINTON_TEXT_ID && !smh->saveManager->hasAbility[CANE]) 
+		{
 			smh->saveManager->hasAbility[CANE] = true;
 			setNewAbility(CANE);
 			return true;
 		}		
 	
 	//Close hint box by fading out psychedelic background
-	} else if (textBoxType == TYPE_HINT) {
+	} else if (textBoxType == TextBoxTypes::HINT_TYPE) {
 		fadingOut = true;
 	
 	//Some new abilities create new available advice
-	} else if (textBoxType == TYPE_ABILITY) {
+	} else if (textBoxType == TextBoxTypes::ABILITY_TYPE) {
 		if (ability == CANE) {
 			smh->popupMessageManager->showNewAdvice(AdviceTypes::ADVICE_INVENTORY);
 		} else if (ability == FRISBEE) {
@@ -335,8 +336,8 @@ bool TextBox::doClose() {
 		}
 
 	//After closing advice, go back to the advice menu
-	} else if (textBoxType == TYPE_ADVICE) {
-		smh->windowManager->openWindow(new AdviceWindow());
+	} else if (textBoxType == TextBoxTypes::ADVICE_TYPE) {
+		smh->windowManager->openAdviceWindow();
 		return true;
 	}
 
