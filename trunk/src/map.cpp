@@ -88,10 +88,10 @@ void Map::drawSquare(int i , int j, int drawX, int drawY) {
 		smh->drawSprite("miniMapRedSquare", drawX, drawY);
 	} else if (c == PIT || c == NO_WALK_PIT || c == FAKE_PIT) {
 		smh->drawSprite("miniMapBlackSquare", drawX, drawY);
-	} else if (drawNoCollision && !isHiddenWarp) {
-		smh->drawSprite("miniMapNoCollision", drawX, drawY);
 	} else if (smh->environment->isDeepWaterAt(i, j)) {
 		smh->drawSprite("miniMapBlueSquare", drawX, drawY);
+	} else if (drawNoCollision && !isHiddenWarp) {
+		smh->drawSprite("miniMapNoCollision", drawX, drawY);
 	} else {
 		smh->drawSprite("miniMapCollision", drawX, drawY);
 	}
