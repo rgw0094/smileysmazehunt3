@@ -27,6 +27,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fixed deadly array index out of bounds possibility with EnemyGroupManager||7/06/09||RGW||
 ||Made hoppers use A-star so they don't try to hop through walls to get to you||7/5/09||RGW||
 ||Fixed the crash bug when deleting tentacle enemies||7/5/09||RGW||
 ||Resolved the Jesus beam/deep water on minimap graphical glitch that I created||7/4/09||ETI||
