@@ -3,6 +3,7 @@
  * Make buzzards not chase you indefinitely
  * Graphical effect for enemies spawning from the enemy spawners. (similar to bartlets)
  * Fenwar
+ * Make it so projectiles from bosses can't be reflected (except Mushboom) or silly padded (except Phyrebawz2)
 
 === Sounds To Add ===
  * Walking bombs explosion
