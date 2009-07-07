@@ -24,10 +24,12 @@
  * Right-Left Spikey enemies sometimes will spawn and move downwards super fast until they hit a wall and the start moving right-left.
  * Gem #'s are huge at start
  * Portly's ice spawning on Smiley freezes you forever.
- * Smiley randomly dies at Magnitogorsk
+ * When you get Shrink (after beating Magnitogorsk), the text doesn't display.
+ * 3 minimap glitches: fake walls aren't dark brown on minimap; deep water doesn't appear when wearing sandals; no collision appears when hopping on a spring
 
 ===Done===
 ||Item||Date||Done By||
+||Balanced Magnitogorsk and fixed his "random death" glitch||7/6/09||ETI||
 ||Fixed deadly array index out of bounds possibility with EnemyGroupManager||7/06/09||RGW||
 ||Made hoppers use A-star so they don't try to hop through walls to get to you||7/5/09||RGW||
 ||Fixed the crash bug when deleting tentacle enemies||7/5/09||RGW||
