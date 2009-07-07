@@ -265,7 +265,7 @@ private:
 };
 
 //----------------------------------------------------------------
-//------------------ WORM ----------------------------------------
+//------------------ TONGUE --------------------------------------
 //----------------------------------------------------------------
 class Tongue {
 
@@ -280,6 +280,8 @@ public:
 	bool testCollision(hgeRect *collisionBox);
 	bool testCollision(CollisionCircle *collisionCircle);
 	bool isAttacking();
+
+	bool dontPlaySound;
 
 private:
 

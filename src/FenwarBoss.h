@@ -204,12 +204,14 @@ public:
 	void update(float dt);
 	void draw(float dt);
 	void throwBomb();
+	void throwAllBombs();
 
 private:
 
+	void addBomb(int platform);
+
 	FenwarBoss *fenwar;
 	std::list<FenwarBomb> bombList;
-	
 
 };
 
