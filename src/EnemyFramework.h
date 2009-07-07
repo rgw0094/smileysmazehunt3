@@ -795,6 +795,7 @@ public:
 
 private:
 	void spawnEnemy();
+	void updateSpawn(float dt);
 
 	//Can spawn up to 3 enemy types
 	//The chance to spawn them is defined as 45%, 35%, 20%
@@ -804,6 +805,10 @@ private:
 
 	//Variables to keep track of SPAWNING
 	float timeOfLastSpawn;
+	
+	int spawnState; //either not spawning, small enemy is falling, or enemy is growing to size
+	float newEnemySize, newEnemyY;
+	int newEnemyID;
 
 	//Variables of floating
 	float angleCoefficient;
