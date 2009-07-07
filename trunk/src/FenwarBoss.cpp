@@ -100,7 +100,8 @@ void FenwarBoss::draw(float dt)
 		smh->drawCollisionBox(collisionBox, Colors::RED);
 	}
 
-	if (state != FenwarStates::INACTIVE && state != FenwarStates::NEAR_DEATH)
+	if (state != FenwarStates::INACTIVE && state != FenwarStates::NEAR_DEATH &&
+		state != FenwarStates::RETURN_TO_ARENA)
 	{
 		drawHealth("Lord Fenwar");
 	}
@@ -264,7 +265,15 @@ void FenwarBoss::doBattleState(float dt)
 
 	if (smh->timePassedSince(lastBombTime) > FenwarAttributes::BOMB_DELAY)
 	{
-		bombManager->throwBomb();
+		if (smh->randomInt(0, 100000) < 75000)
+		{
+			bombManager->throwBomb();
+		}
+		else 
+		{
+			bombManager->throwAllBombs();
+		}
+		
 		lastBombTime = smh->getGameTime();
 	}
 }
@@ -392,6 +401,7 @@ void FenwarBoss::enterState(int newState)
 	{
 		smh->player->dontUpdate = false;
 		smh->player->abilitiesLocked = true;
+		smh->player->getTongue()->dontPlaySound = true;
 	}
 }
 

@@ -10,31 +10,24 @@ FenwarBombs::~FenwarBombs()
 {
 }
 
+/** 
+ * Throws a bomb to a random platform.
+ */
 void FenwarBombs::throwBomb()
 {
-	FenwarBomb bomb;
-	bomb.x = fenwar->x;
-	bomb.y = fenwar->y;
-	bomb.timeToTravel = smh->randomFloat(1.0, 1.5);
-	bomb.timeLaunched = smh->getGameTime();
-	bomb.yOffset = 0.0;
-
-	//Choose a random platform to which to throw
-	int r = smh->randomInt(1, 8);
-	float targetX = fenwar->platformLocations[r].x * 64.0 + 32.0;
-	float targetY = fenwar->platformLocations[r].y * 64.0 + 32.0;
-
-	//Calculate shit to set up the bomb's path
-	float angle = Util::getAngleBetween(targetX, targetY, bomb.x, bomb.y);
-	float distance = Util::distance(bomb.x, bomb.y, targetX, targetY);
-	float speed = distance / bomb.timeToTravel;
-
-	bomb.dx = speed * cos(angle);
-	bomb.dy = speed * sin(angle);
-
-	bombList.push_back(bomb);
+	addBomb(smh->randomInt(1, 8));
 }
 
+/**
+ * Throws a bomb onto every platform.
+ */
+void FenwarBombs::throwAllBombs()
+{
+	for (int i = 1; i <= 8; i++)
+	{
+		addBomb(i);
+	}
+}
 
 void FenwarBombs::update(float dt)
 {
@@ -71,5 +64,27 @@ void FenwarBombs::draw(float dt)
 	}
 }
 
+void FenwarBombs::addBomb(int platform)
+{
+	FenwarBomb bomb;
+	bomb.x = fenwar->x;
+	bomb.y = fenwar->y;
+	bomb.timeToTravel = smh->randomFloat(1.0, 1.5);
+	bomb.timeLaunched = smh->getGameTime();
+	bomb.yOffset = 0.0;
 
+	//Choose a random platform to which to throw
+	
+	float targetX = fenwar->platformLocations[platform].x * 64.0 + 32.0;
+	float targetY = fenwar->platformLocations[platform].y * 64.0 + 32.0;
 
+	//Calculate shit to set up the bomb's path
+	float angle = Util::getAngleBetween(targetX, targetY, bomb.x, bomb.y);
+	float distance = Util::distance(bomb.x, bomb.y, targetX, targetY);
+	float speed = distance / bomb.timeToTravel;
+
+	bomb.dx = speed * cos(angle);
+	bomb.dy = speed * sin(angle);
+
+	bombList.push_back(bomb);
+}

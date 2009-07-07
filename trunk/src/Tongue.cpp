@@ -28,6 +28,7 @@ Tongue::Tongue() {
 	timeStartedAttack = -10.0;
 	smh->resources->GetAnimation("smileyTongue")->Play();
 	collisionBox = new hgeRect();
+	dontPlaySound = false;
 }
 
 /**
@@ -110,8 +111,12 @@ void Tongue::update(float dt) {
 
 }
 
-void Tongue::playSound() {
-	switch (smh->hge->Random_Int(1,5)) {
+void Tongue::playSound() 
+{
+	if (dontPlaySound) return;
+
+	switch (smh->hge->Random_Int(1,5)) 
+	{
 		case 1:
 			smh->soundManager->playSound("snd_Lick1");
 			break;
