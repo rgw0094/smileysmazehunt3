@@ -49,14 +49,15 @@ extern SMH *smh;
 #define CRUSHER_MAX_SIZE (7.0*64.0)
 
 //Attributes
-#define HEALTH 24.0
+#define HEALTH 10.0
 #define COLLISION_DAMAGE 2.0
 #define TENTACLE_DAMAGE 0.5
-#define FIREBALL_DAMAGE 1.0
+#define FIREBALL_DAMAGE 2.0
 #define CRUSHER_DAMAGE 1.0
 #define NUM_TENTACLE_HITS_REQUIRED 5
 #define EYE_ATTACK_DURATION 12.5
 #define WINDOW_TO_ATTACK 4.5
+#define FIREBALL_LIFE_TIME 1.0
 
 LovecraftBoss::LovecraftBoss(int _gridX, int _gridY, int _groupID) {
 	
@@ -468,6 +469,11 @@ void LovecraftBoss::updateFireballs(float dt) {
 		if (smh->player->collisionCircle->testBox(i->collisionBox)) {
 			smh->player->dealDamage(FIREBALL_DAMAGE, true);
 		}
+		if (smh->timePassedSince(i->timeCreated) >= FIREBALL_LIFE_TIME) {
+			delete i->particle;
+			delete i->collisionBox;
+			i = fireballList.erase(i);
+		}
 	}
 }
 
@@ -475,9 +481,9 @@ void LovecraftBoss::updateFireAttack(float dt) {
 	//Periodically spawn waves of fire balls
 	if (smh->timePassedSince(attackState.lastAttackTime) > 1.0) {
 		float offset = smh->randomFloat(0, 100);
-		float gap = smh->randomFloat(150.0, 250.0);
+		float gap = smh->randomFloat(175.0, 250.0);
 		int num = 1500 / gap;
-		float speed = smh->randomFloat(600.0, 800.0);
+		float speed = smh->randomFloat(450.0, 700.0);
 		for (int i = 0; i < num; i++) {
 			BigFireBall fireball;
 			fireball.y = smh->player->y - 500.0;
@@ -486,6 +492,7 @@ void LovecraftBoss::updateFireAttack(float dt) {
 			fireball.collisionBox = new hgeRect();
 			fireball.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("bigFireball")->info);
 			fireball.particle->FireAt(smh->getScreenX(fireball.x), smh->getScreenY(fireball.y));
+			fireball.timeCreated = smh->getGameTime();
 			fireballList.push_back(fireball);
 			attackState.lastAttackTime = smh->getGameTime();
 		}
@@ -518,7 +525,7 @@ void LovecraftBoss::updateIceAttack(float dt) {
 		//the player is standing near the top or bottom of the arena.
 		float range = bottomY - topY;
 		numToSpawn = min(numToSpawn, range / 150.0);
-		float speed = smh->randomFloat(670.0, 850.0);
+		float speed = smh->randomFloat(560.0, 700.0);
 
 		for (int i = 0; i < numToSpawn; i++) {
 			spawnCrusher(topY + i * (range / numToSpawn), speed);
