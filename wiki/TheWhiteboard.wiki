@@ -8,6 +8,7 @@
  * Walking bombs explosion
  * Calypso boss
  * Mushroom boss
+ * Barli
  * Evil wall rumbling
  * Hopping enemies should make a sound when they hop
  * Explosion manager explosions
