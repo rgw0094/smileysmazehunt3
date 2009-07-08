@@ -174,7 +174,7 @@ void E_Spawner::spawnEnemy() {
 	std::string debugText;
 	debugText = "E_Spawner.cpp begins to spawn enemy at";
 	smh->setDebugText(debugText);
-	
+
 	smh->hge->System_Log("%d", groupID);
 }
 

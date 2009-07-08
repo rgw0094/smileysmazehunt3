@@ -28,6 +28,8 @@ extern SMH *smh;
 #define CANE_TIME 1.5
 #define MAX_FRISBEE_POWER 2.8
 
+#define MANA_REGEN_DELAY 4.0
+
 /**
  * Constructor
  */
@@ -41,6 +43,7 @@ Player::Player() {
 	collisionCircle = new CollisionCircle();
 
 	usingManaItem = false;
+	timeLastUsedMana = 0.0;
 
 	//Load Particles
 	fireBreathParticle = new WeaponParticleSystem("firebreath.psi", smh->resources->GetSprite("particleGraphic1"), PARTICLE_FIRE_BREATH);
@@ -107,6 +110,8 @@ void Player::reset() {
 	frisbeePower = 0.0;
 	timeStoppedBreathingFire = 0.0;
 	dx = dy = 0.0;
+	timeLastUsedMana = 0.0;
+	usingManaItem = false;
 
 	//State variables
 	reflectionShieldActive = flashing = knockback = sliding = stunned = graduallyMoving =
@@ -195,7 +200,7 @@ void Player::update(float dt) {
 	worm->update();
 
 	//Update health and mana
-	if (!usingManaItem) mana += (getMaxMana() * 1.2 * MANA_REGENERATE_RATE/100) * dt;
+	if (!usingManaItem && smh->timePassedSince(timeLastUsedMana) >= MANA_REGEN_DELAY) mana += (getMaxMana() * 1.2 * MANA_REGENERATE_RATE/100) * dt;
 	if (mana < 0.0f) mana = 0.0f;
 	if (mana > getMaxMana()) mana = getMaxMana();
 	if (health > getMaxHealth()) health = getMaxHealth();
@@ -537,6 +542,7 @@ void Player::doAbility(float dt) {
 		}
 		mana -= smh->gameData->getAbilityInfo(REFLECTION_SHIELD).manaCost*dt;
 		usingManaItem = true;
+		timeLastUsedMana = smh->getGameTime();
 	} else if (reflectionShieldActive) {
 		reflectionShieldActive = false;
 		smh->soundManager->stopAbilityChannel();
@@ -554,6 +560,7 @@ void Player::doAbility(float dt) {
 		}
 		mana -= smh->gameData->getAbilityInfo(TUTS_MASK).manaCost*dt;
 		usingManaItem = true;
+		timeLastUsedMana = smh->getGameTime();
 	} else if (cloaked) {
 		cloaked = false;
 		smh->soundManager->playSound("snd_EndTut");
@@ -601,6 +608,7 @@ void Player::doAbility(float dt) {
 
 		mana -= smh->gameData->getAbilityInfo(FIRE_BREATH).manaCost*dt;
 		usingManaItem = true;
+		timeLastUsedMana = smh->getGameTime();
 
 		//Start breathing fire
 		if (!breathingFire) {
@@ -628,6 +636,7 @@ void Player::doAbility(float dt) {
 			smh->timePassedSince(lastOrb) > smh->environment->getSwitchDelay()) 
 		{
 			mana -= smh->gameData->getAbilityInfo(LIGHTNING_ORB).manaCost;
+			timeLastUsedMana = smh->getGameTime();
 			lastOrb = smh->getGameTime();
 			smh->soundManager->playSound("snd_LightningOrb");
 			smh->projectileManager->addProjectile(x, y, 700.0, angles[facing]-.5*PI, getLightningOrbDamage(), false, false,PROJECTILE_LIGHTNING_ORB, true);
@@ -644,11 +653,13 @@ void Player::doAbility(float dt) {
 		if (gui->getSelectedAbility() == SILLY_PAD && mana >= smh->gameData->getAbilityInfo(SILLY_PAD).manaCost) {
 			smh->environment->placeSillyPad(gridX, gridY);
 			mana -= smh->gameData->getAbilityInfo(SILLY_PAD).manaCost;
+			timeLastUsedMana = smh->getGameTime();
 		}
 
 		//Start Ice Breath
 		if (gui->getSelectedAbility() == ICE_BREATH && smh->timePassedSince(startedIceBreath) > 1.5 && mana >= smh->gameData->getAbilityInfo(ICE_BREATH).manaCost) {
 			mana -= smh->gameData->getAbilityInfo(ICE_BREATH).manaCost;
+			timeLastUsedMana = smh->getGameTime();
 			smh->soundManager->playSound("snd_iceBreath");
 			startedIceBreath = smh->getGameTime();
 			iceBreathParticle->FireAt(smh->getScreenX(x) + mouthXOffset[facing], smh->getScreenY(y) + mouthYOffset[facing]);
@@ -771,6 +782,7 @@ void Player::doAbility(float dt) {
 			usingCane = false;
 			facing = DOWN;
 			mana -= smh->gameData->getAbilityInfo(CANE).manaCost;
+			timeLastUsedMana = smh->getGameTime();
 			if (mana < 0) mana = 0;
 			smh->windowManager->openHintTextBox();
 		}
@@ -1176,6 +1188,7 @@ void Player::doItems() {
 			gatheredItem = true;
 			//Play sound effect
 			smh->soundManager->playSound("snd_Mana");
+			timeLastUsedMana = smh->getGameTime() - MANA_REGEN_DELAY;
 		} else {
 			smh->popupMessageManager->showFullMana();
 		}
@@ -1873,7 +1886,13 @@ bool Player::isInShrinkTunnel() {
 }
 
 void Player::setMana(float amount) {
+	if (amount > mana) {
+		//picked up a mana item, so cancel the mana regen delay
+		timeLastUsedMana = smh->getGameTime() - MANA_REGEN_DELAY;
+	}
+
 	mana = amount;
+	if (mana > getMaxMana()) mana = getMaxMana();
 }
 
 float Player::getMana() {
