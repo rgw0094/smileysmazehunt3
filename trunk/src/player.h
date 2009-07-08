@@ -167,6 +167,7 @@ private:
 	float timeStartedGraduallyMoving;
 	float timeToGraduallyMove;
 	float timeStoppedBreathingFire;
+	float timeLastUsedMana;
 
 	//State info
 	bool breathingFire;				//If using Fire Breath ability
