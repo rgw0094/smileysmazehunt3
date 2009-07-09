@@ -14,6 +14,7 @@
  * Explosion manager explosions
 
 === Graphics To Do ===
+ * Fenwar near death animation
  * Keys background (in lower corner of screen)
  * Fenwar orbs (I think they should be an animation)
  * Slime
