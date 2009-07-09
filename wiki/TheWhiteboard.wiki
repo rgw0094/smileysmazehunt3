@@ -1,5 +1,4 @@
 === Programming To Do ===
- * Maybe make some sort of death effect for the sad shooters because it looks like the dickens how they just diasapear when you kill them
  * Make buzzards not chase you indefinitely
  * Graphical effect for enemies spawning from the enemy spawners. (similar to bartlets)
  * Fenwar
