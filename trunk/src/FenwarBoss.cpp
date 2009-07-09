@@ -8,13 +8,14 @@
 #include "CollisionCircle.h"
 #include "Player.h"
 #include "MainMenu.h"
+#include "WeaponParticle.h"
 
 #define FENWAR_INTRO_TEXT 200
 #define FENWAR_NEAR_DEFEAT_TEXT 201
 #define FENWAR_DEFEAT_TEXT 202
 
 #define START_STATE FenwarStates::TERRAFORMING
-//#define START_STATE FenwarStates::BATTLE 
+//#define START_STATE FenwarStates::DROPPING_SPIDERS
 
 #define TERRAFORM_DURATION 2.0
 #define FLASHING_DURATION 0.5
@@ -37,6 +38,7 @@ FenwarBoss::FenwarBoss(int _gridX, int _gridY, int _groupID)
 	startedIntroDialogue = false;
 	terraformedYet = false;
 	startedShakingYet = false;
+
 	flashing = false;
 	floatingYOffset = 0.0;
 	collisionBox = new hgeRect();
@@ -130,6 +132,9 @@ bool FenwarBoss::update(float dt)
 		case FenwarStates::BATTLE:
 			doBattleState(dt);
 			break;
+		case FenwarStates::DROPPING_SPIDERS:
+			doDroppingSpidersState(dt);
+			break;
 		case FenwarStates::RETURN_TO_ARENA:
 			doReturnToArenaState(dt);
 			break;
@@ -165,6 +170,18 @@ void FenwarBoss::doCollision(float dt)
 	if (smh->player->getTongue()->testCollision(collisionBox))
 	{
 		dealDamage(smh->player->getDamage());
+	}
+
+	//Fire breath collision
+	if (smh->player->fireBreathParticle->testCollision(collisionBox))
+	{
+		dealDamage(smh->player->getFireBreathDamage() * dt);
+	}
+
+	//Frisbee collision
+	if (smh->projectileManager->reflectProjectilesInBox(collisionBox, PROJECTILE_FRISBEE))
+	{
+		smh->soundManager->playSound("snd_HitInvulnerable");
 	}
 
 	//Lightning orb collision
@@ -248,11 +265,10 @@ void FenwarBoss::doBattleState(float dt)
 	//Float up and down
 	floatingYOffset = 30.0 + 15 * sin(2.0 * timeInState);
 
-	//Periodically do a leet attack
 	if (smh->timePassedSince(lastAttackTime) > FenwarAttributes::ATTACK_DELAY)
 	{
-		int r = smh->randomInt(0, 1000);
-		if (r < 500)
+		int r = smh->randomInt(0, 100000);
+		if (r < 50000)
 		{
 			bulletManager->shootBullet(Util::getAngleBetween(x, y, smh->player->x, smh->player->y));
 		}
@@ -275,6 +291,44 @@ void FenwarBoss::doBattleState(float dt)
 		}
 		
 		lastBombTime = smh->getGameTime();
+	}
+
+	//After all the orbs are dead
+	if (orbManager->numOrbsAlive() == 0)
+	{
+		enterState(FenwarStates::DROPPING_SPIDERS);
+	}
+}
+
+void FenwarBoss::doDroppingSpidersState(float dt)
+{	
+	int platformX = platformLocations[targetPlatform].x * 64.0 + 32.0;
+	int platformY = platformLocations[targetPlatform].y * 64.0 + 32.0;
+	float angle = Util::getAngleBetween(x, y, platformX, platformY);
+	
+	x += FenwarAttributes::MOVE_TO_PLATFORM_SPEED * cos(angle) * dt;
+	y += FenwarAttributes::MOVE_TO_PLATFORM_SPEED * sin(angle) * dt;
+
+	//Fenwar has reached his target platform.
+	if (smh->timePassedSince(timeStartedMovingToPlatform) > timeToGetToPlatform)
+	{
+		x = platformX;
+		y = platformY;
+
+		//Spawn the spider	
+		smh->enemyManager->addEnemy(ENEMY_FENWAR_EYE_SPIDER, platformLocations[targetPlatform].x,
+			platformLocations[targetPlatform].y, 0.25, 0.25, -1);
+
+		if (numSpidersDropped == FenwarAttributes::NUM_SPIDERS_TO_SPAWN)
+		{
+			//If we have already dropped the max number of spiders, return to battle state
+			enterState(FenwarStates::BATTLE);
+		} 
+		else
+		{
+			//Otherwise, choose a new platform upon which to drop a spider
+			chooseRandomPlatformUponWhichToDropASpider();
+		}
 	}
 }
 
@@ -321,7 +375,13 @@ void FenwarBoss::doReturnToArenaState(float dt)
 
 bool FenwarBoss::doNearDeathState(float dt)
 {	
-	//Wait to be licked then return true
+	//Wait to be licked then return true so we are disposed of and 
+	//transition to the cinematic
+	if (smh->player->getTongue()->testCollision(collisionBox))
+	{
+		smh->menu->open(MenuScreens::CLOSING_CINEMATIC_SCREEN);
+		return true;
+	}
 
 	return false;
 }
@@ -330,6 +390,25 @@ bool FenwarBoss::doNearDeathState(float dt)
 //~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
 // Helper Methods
 //~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+
+int FenwarBoss::getPlatformClosestToSmiley()
+{
+	int platform = -1;
+	int minDistance = 9999999;
+	for (int i = 1; i < 9; i++)
+	{
+		int platformX = platformLocations[i].x * 64.0 + 32.0;
+		int platformY = platformLocations[i].y * 64.0 + 32.0;
+		int distance = Util::distance(platformX, platformY, smh->player->x, smh->player->y);
+
+		if (distance < minDistance)
+		{
+			minDistance = distance;
+			platform = i;
+		}
+	}
+	return platform;
+}
 
 void FenwarBoss::dealDamage(float damage)
 {
@@ -349,7 +428,7 @@ void FenwarBoss::dealDamage(float damage)
 
 	if (health <= 0.0)
 	{
-		if (state != FenwarStates::NEAR_DEATH)
+		if (state != FenwarStates::NEAR_DEATH && state != FenwarStates::RETURN_TO_ARENA)
 		{
 			//Initial "death"
 			health = 0.0;
@@ -361,11 +440,6 @@ void FenwarBoss::dealDamage(float damage)
 			enterState(FenwarStates::RETURN_TO_ARENA);
 			smh->windowManager->openDialogueTextBox(-1, FENWAR_NEAR_DEFEAT_TEXT);	
 		} 
-		else
-		{
-			//Final blow to transition to the cinematic
-			smh->menu->open(MenuScreens::CLOSING_CINEMATIC_SCREEN);
-		}
 	}
 }
 
@@ -386,11 +460,20 @@ void FenwarBoss::enterState(int newState)
 	{
 		smh->soundManager->playEnvironmentEffect("snd_RumbleLoop", true);
 	}
-	if (newState == FenwarStates::BATTLE) 
+	else if (newState == FenwarStates::BATTLE) 
 	{
 		lastAttackTime = smh->getGameTime();
 		lastBombTime = smh->getGameTime();
 		orbManager->spawnOrbs();
+	}
+	else if (newState == FenwarStates::DROPPING_SPIDERS)
+	{		
+		for (int i = 0; i < 9; i++)
+		{
+			platformsVisited[i] = false;
+		}
+		numSpidersDropped = 0;
+		chooseRandomPlatformUponWhichToDropASpider();
 	}
 	else if (newState == FenwarStates::RETURN_TO_ARENA)
 	{
@@ -403,6 +486,25 @@ void FenwarBoss::enterState(int newState)
 		smh->player->abilitiesLocked = true;
 		smh->player->getTongue()->dontPlaySound = true;
 	}
+}
+
+void FenwarBoss::chooseRandomPlatformUponWhichToDropASpider()
+{
+	//Choose a platform that hasn't been visited yet
+	do
+	{
+		targetPlatform = smh->randomInt(1, 8);
+	} 
+	while (platformsVisited[targetPlatform]);
+
+	platformsVisited[targetPlatform] = true;
+	numSpidersDropped++;
+
+	float platformX = platformLocations[targetPlatform].x * 64.0 + 32.0;
+	float platformY = platformLocations[targetPlatform].y * 64.0 + 32.0;
+
+	timeStartedMovingToPlatform = smh->getGameTime();
+	timeToGetToPlatform = Util::distance(x, y, platformX, platformY) / FenwarAttributes::MOVE_TO_PLATFORM_SPEED;
 }
 
 void FenwarBoss::terraformArena() 

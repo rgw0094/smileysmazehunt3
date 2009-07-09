@@ -90,6 +90,7 @@ void BaseEnemy::initEnemy(int _id, int _gridX, int _gridY, int _groupID) {
 		canPass[BLUE_CYLINDER_DOWN] = true;
 		canPass[BROWN_CYLINDER_DOWN] = true;
 		canPass[SILVER_CYLINDER_DOWN] = true;
+		canPass[HOVER_PAD] = true;
 
 		//Initialize stun star angles
 		for (int i = 0; i < NUM_STUN_STARS; i++) {

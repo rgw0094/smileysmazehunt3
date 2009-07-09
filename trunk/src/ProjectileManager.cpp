@@ -587,21 +587,26 @@ int ProjectileManager::killProjectilesInCircle(float x, float y, float radius, i
 
 /**
  * Reflects any projectiles that collide with the provided collision
- * box and are of the specified type.
+ * box and are of the specified type. Returns whether or not any
+ * projectiles were reflected.
  */
-bool ProjectileManager::reflectProjectilesInBox(hgeRect *collisionBox, int type) {
+bool ProjectileManager::reflectProjectilesInBox(hgeRect *collisionBox, int type) 
+{
 	bool retVal = false;
-	std::list<Projectile>::iterator i;
-	for (i = theProjectiles.begin(); i != theProjectiles.end(); i++) {
-		if (i->id == type && collisionBox->Intersect(i->collisionBox) && smh->timePassedSince(i->timeReflected) > 1.0) {
+	for (std::list<Projectile>::iterator i = theProjectiles.begin(); i != theProjectiles.end(); i++) 
+	{
+		if (i->id == type && collisionBox->Intersect(i->collisionBox) && 
+			smh->timePassedSince(i->timeReflected) > 1.0) 
+		{
 			reflectProjectile(i);
+			retVal = true;
 		}
 	}
 	return retVal;
 }
 
 /**
- * Reflects any projectiles that collide with the provided circle
+ * Reflects any projectiles that collide with the provided circle.
  * 
  * Parameters:
  *	x		- X coordinate of the center of the circle
@@ -611,12 +616,16 @@ bool ProjectileManager::reflectProjectilesInBox(hgeRect *collisionBox, int type)
  *
  * Returns: whether or not any projectiles were reflected
  */
-bool ProjectileManager::reflectProjectilesInCircle(float x, float y, float radius, int type) {
+bool ProjectileManager::reflectProjectilesInCircle(float x, float y, float radius, int type) 
+{
 	bool retVal = false;
-	std::list<Projectile>::iterator i;
-	for (i = theProjectiles.begin(); i != theProjectiles.end(); i++) {
-		if (i->id == type && Util::distance(i->x, i->y, x, y) < radius && smh->timePassedSince(i->timeReflected) > 1.0) {
+	for (std::list<Projectile>::iterator i = theProjectiles.begin(); i != theProjectiles.end(); i++) 
+	{
+		if (i->id == type && Util::distance(i->x, i->y, x, y) < radius && 
+			smh->timePassedSince(i->timeReflected) > 1.0) 
+		{
 			reflectProjectile(i);
+			retVal = true;
 		}
 	}
 	return retVal;

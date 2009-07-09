@@ -254,7 +254,8 @@ bool CandyBoss::update(float dt) {
 			hitThisFrame = true;
 		}
 		if (smh->player->fireBreathParticle->testCollision(collisionBox)) {
-			health -= smh->player->getFireBreathDamage() * dt;
+			//Scale down fire breath a bit otherwise its too strong
+			health -= smh->player->getFireBreathDamage() * 0.8 * dt;
 			hitThisFrame = true;
 		}
 		if (hitThisFrame && smh->timePassedSince(lastTimeHit) > FLASHING_DURATION) {

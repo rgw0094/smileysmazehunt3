@@ -34,7 +34,7 @@ bool SortEnemiesPredicate(const EnemyStruct &lhs, const EnemyStruct &rhs) {
 /**
  * Add an enemy to the list
  */
-void EnemyManager::addEnemy(int id, int x, int y, float spawnHealthChance, float spawnManaChance, int groupID) {
+void EnemyManager::addEnemy(int id, int gridX, int gridY, float spawnHealthChance, float spawnManaChance, int groupID) {
 
 	EnemyStruct newEnemy;
 	newEnemy.spawnHealthChance = spawnHealthChance;
@@ -43,72 +43,72 @@ void EnemyManager::addEnemy(int id, int x, int y, float spawnHealthChance, float
 	switch (smh->gameData->getEnemyInfo(id).enemyType) {
 		
 		case ENEMY_EVIL_EYE:
-			newEnemy.enemy = new E_EvilEye(id, x, y, groupID);
+			newEnemy.enemy = new E_EvilEye(id, gridX, gridY, groupID);
 			newEnemy.spawnHealthChance = 0.0;
 			newEnemy.spawnManaChance = 0.0;
 			break;
 		case ENEMY_GUMDROP:
-			newEnemy.enemy = new E_Gumdrop(id, x, y, groupID);
+			newEnemy.enemy = new E_Gumdrop(id, gridX, gridY, groupID);
 			break;
 		case ENEMY_BOMB_GENERATOR:
-			newEnemy.enemy = new E_BombGenerator(id, x, y, groupID);
+			newEnemy.enemy = new E_BombGenerator(id, gridX, gridY, groupID);
 			break;
 		case ENEMY_CHARGER:
-			newEnemy.enemy = new E_Charger(id, x, y, groupID);
+			newEnemy.enemy = new E_Charger(id, gridX, gridY, groupID);
 			break;
 		case ENEMY_CLOWNCRAB:
-			newEnemy.enemy = new E_ChainClown(id, x, y, groupID);
+			newEnemy.enemy = new E_ChainClown(id, gridX, gridY, groupID);
 			break;
 		case ENEMY_BATLET_DIST:
-			newEnemy.enemy = new E_BatletDist(id, x, y, groupID);
+			newEnemy.enemy = new E_BatletDist(id, gridX, gridY, groupID);
 			break;
 		case ENEMY_BUZZARD:
-			newEnemy.enemy = new E_Buzzard(id, x, y, groupID);
+			newEnemy.enemy = new E_Buzzard(id, gridX, gridY, groupID);
 			break;
 		case ENEMY_SAD_SHOOTER:
-			newEnemy.enemy = new E_SadShooter(id, x, y, groupID);
+			newEnemy.enemy = new E_SadShooter(id, gridX, gridY, groupID);
 			break;
 		case ENEMY_FLOATER:
-			newEnemy.enemy = new E_Floater(id, x, y, groupID);
+			newEnemy.enemy = new E_Floater(id, gridX, gridY, groupID);
 			break;
 		case ENEMY_FLAILER:
-			newEnemy.enemy = new E_Flailer(id, x, y, groupID);
+			newEnemy.enemy = new E_Flailer(id, gridX, gridY, groupID);
 			break;
 		case ENEMY_TENTACLE:
-			newEnemy.enemy = new E_Tentacle(id, x, y, groupID);
+			newEnemy.enemy = new E_Tentacle(id, gridX, gridY, groupID);
 			break;
 		case ENEMY_TURRET:
-			newEnemy.enemy = new E_Turret(id, x, y, groupID);
+			newEnemy.enemy = new E_Turret(id, gridX, gridY, groupID);
 			break;
 		case ENEMY_GHOST:
-			newEnemy.enemy = new E_Ghost(id, x, y, groupID);
+			newEnemy.enemy = new E_Ghost(id, gridX, gridY, groupID);
 			break;
 		case ENEMY_FAKE:
-			newEnemy.enemy = new E_Fake(id, x, y, groupID);
+			newEnemy.enemy = new E_Fake(id, gridX, gridY, groupID);
 			break;
 		case ENEMY_RANGED:
-			newEnemy.enemy = new E_Ranged(id, x, y, groupID);
+			newEnemy.enemy = new E_Ranged(id, gridX, gridY, groupID);
 			break;
 		case ENEMY_HOPPER:
-			newEnemy.enemy = new E_Hopper(id, x, y, groupID);
+			newEnemy.enemy = new E_Hopper(id, gridX, gridY, groupID);
 			break;
 		case ENEMY_SPAWNER:
-			newEnemy.enemy = new E_Spawner(id, x, y, groupID);
+			newEnemy.enemy = new E_Spawner(id, gridX, gridY, groupID);
 			break;
 		case ENEMY_ADJACENT_SHOOTER:
-			newEnemy.enemy = new E_AdjacentShooter(id, x, y, groupID);
+			newEnemy.enemy = new E_AdjacentShooter(id, gridX, gridY, groupID);
 			break;
 		case ENEMY_BOTONOID:
-			newEnemy.enemy = new E_Botonoid(id, x, y, groupID);
+			newEnemy.enemy = new E_Botonoid(id, gridX, gridY, groupID);
 			break;
 		case ENEMY_DIAGO_SHOOTER:
-			newEnemy.enemy = new E_DiagoShooter(id, x, y, groupID);
+			newEnemy.enemy = new E_DiagoShooter(id, gridX, gridY, groupID);
 			break;
 		case ENEMY_FENWAR_EYE_SPIDER:
-			newEnemy.enemy = new E_FenwarEyeSpider(id, x, y, groupID);
+			newEnemy.enemy = new E_FenwarEyeSpider(id, gridX, gridY, groupID);
 			break;
 		default:
-			newEnemy.enemy = new DefaultEnemy(id, x, y, groupID);
+			newEnemy.enemy = new DefaultEnemy(id, gridX, gridY, groupID);
 			break;
 	}
 	
