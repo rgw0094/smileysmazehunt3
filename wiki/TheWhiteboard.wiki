@@ -1,5 +1,4 @@
 === Programming To Do ===
- * Make buzzards not chase you indefinitely
  * Graphical effect for enemies spawning from the enemy spawners. (similar to bartlets)
  * Fenwar
  * Make it so projectiles from bosses can't be reflected (except Mushboom) or silly padded (except Phyrebawz2)
@@ -29,6 +28,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Buzzards stop chasing Smiley after a while||7/8/09||RGW||
 ||Sad shooter death effect||7/8/09||RGW||
 ||Balanced Magnitogorsk and fixed his "random death" glitch||7/6/09||ETI||
 ||Fixed deadly array index out of bounds possibility with EnemyGroupManager||7/06/09||RGW||
