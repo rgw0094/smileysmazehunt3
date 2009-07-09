@@ -126,6 +126,7 @@ public:
 	virtual void notifyTongueHit();
 	virtual bool doTongueCollision(Tongue* tongue, float damage);
 	virtual void doPlayerCollision();
+	virtual void notifyOfDeath();
 
 	//Methods that can't be overridden
 	void baseUpdate(float dt);
@@ -239,6 +240,7 @@ public:
 	void doAStar(BaseEnemy *enemy);
 	void reset();
 	bool hitEnemiesWithProjectile(hgeRect *collisionBox, float damage, int type, float stunPower);
+	void spawnDeathParticle(float x, float y);
 
 	//Variables
 	std::list<EnemyStruct> enemyList;
@@ -520,6 +522,8 @@ public:
 
 	void update(float dt);
 	void draw(float dt);
+	void notifyOfDeath();
+
 private:
 	
 	SadBlocker sadBlockers[30];

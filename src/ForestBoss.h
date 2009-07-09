@@ -31,7 +31,7 @@ class CollisionCircle;
 #define NUM_TREELET_LOCS 10
 
 struct TreeletLoc {
-	float x, float y;
+	float x, y;
 	bool occupied;
 	bool stunned;
 	bool fadingOut;

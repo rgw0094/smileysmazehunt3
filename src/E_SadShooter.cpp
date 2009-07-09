@@ -100,5 +100,16 @@ void E_SadShooter::update(float dt) {
 		smh->projectileManager->reflectProjectilesInBox(collisionBlocker,PROJECTILE_LIGHTNING_ORB);
 	
 	}
+}
 
+/**
+ * When the sad shooter dies we want to spawn additional death particles
+ * at each of its blockers
+ */
+void E_SadShooter::notifyOfDeath()
+{
+	for(int i=0;i<NUM_BLOCKERS;i++) 
+	{
+		smh->enemyManager->spawnDeathParticle(sadBlockers[i].x, sadBlockers[i].y);
+	}
 }

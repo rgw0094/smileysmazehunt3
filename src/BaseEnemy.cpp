@@ -573,6 +573,14 @@ void BaseEnemy::drawFrozen(float dt) {
 }
 
 /**
+ * This is called right before the enemy dies in case they need to do
+ * anything special.
+ */
+void BaseEnemy::notifyOfDeath()
+{
+}
+
+/**
  * Draws the stunned graphic effect for the enemy. This is called automatically every
  * frame by the framework. If an enemy needs something more specific than the default
  * functionality then it should overwrite this method.
