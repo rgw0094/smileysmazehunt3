@@ -488,19 +488,23 @@ private:
  * Buzzard (named Drumstick)
  */
 
-class E_Buzzard : public BaseEnemy {
-
+class E_Buzzard : public BaseEnemy 
+{
 public:
+
 	E_Buzzard(int id, int x, int y, int groupID);
 	~E_Buzzard();
 
 	void update(float dt);
 	void draw(float dt);
 private:
+
 	double beginFlapTime;
 	int buzzardState;
 	int xVelBuzz,yVelBuzz;
-
+	float initialX, initialY;
+	float timeToReturn;
+	float timeStartedReturning;
 };
 
 /**
