@@ -183,32 +183,42 @@ void EnemyManager::update(float dt) {
 
 }
 
-void EnemyManager::killEnemy(std::list<EnemyStruct>::iterator i) {
+void EnemyManager::spawnDeathParticle(float x, float y)
+{
+	deathParticles->SpawnPS(&smh->resources->GetParticleSystem("deathCloud")->info, x, y);
+}
 
-	//Notify enemy group
+void EnemyManager::killEnemy(std::list<EnemyStruct>::iterator i) 
+{
 	smh->enemyGroupManager->notifyOfDeath(i->enemy->groupID);
+	i->enemy->notifyOfDeath();
 
 	std::string debugText;
 	debugText = "Enemy type " + Util::intToString(i->enemy->id) + " died at " + Util::intToString(Util::getGridX(i->enemy->x)) + "," + Util::intToString(Util::getGridY(i->enemy->y));
 	smh->setDebugText(debugText);
 
-	if (i->enemy->frozen) {
+	if (i->enemy->frozen) 
+	{
 		smh->soundManager->playSound("snd_iceDie");
-	} else {
-		deathParticles->SpawnPS(&smh->resources->GetParticleSystem("deathCloud")->info, i->enemy->x, i->enemy->y);
+	} 
+	else 
+	{
+		spawnDeathParticle(i->enemy->x, i->enemy->y);
 		smh->soundManager->playSound("snd_enemyDeath");
 	}
 
 	//Spawn loot
 	randomLoot = smh->randomInt(0,10000);
-	if (randomLoot < 10000.0 * i->spawnHealthChance) {
+	if (randomLoot < 10000.0 * i->spawnHealthChance) 
+	{
 		smh->lootManager->addLoot(LOOT_HEALTH, i->enemy->x, i->enemy->y, -1);
-	} else if (randomLoot < 10000.0 * i->spawnHealthChance + 10000.0*i->spawnManaChance) {
+	} 
+	else if (randomLoot < 10000.0 * i->spawnHealthChance + 10000.0*i->spawnManaChance) 
+	{
 		smh->lootManager->addLoot(LOOT_MANA, i->enemy->x, i->enemy->y, -1);
 	}
 
 	smh->saveManager->numEnemiesKilled++;
-
 }
 
 /**
