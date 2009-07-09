@@ -163,7 +163,6 @@ void FenwarOrbs::killOrbs()
 
 void FenwarOrbs::spawnOrbs()
 {
-	return;
 	float angleOffset = 0;
 	for (int i = 0; i < FenwarAttributes::ORB_COUNT; i++) 
 	{
