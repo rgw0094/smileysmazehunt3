@@ -10,6 +10,7 @@
  * Calypso boss
  * Mushroom boss
  * Barli
+ * Fenwar
  * Evil wall rumbling
  * Hopping enemies should make a sound when they hop
  * Explosion manager explosions
