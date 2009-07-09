@@ -227,7 +227,7 @@ public:
 	//methods
 	void draw(float dt);
 	void update(float dt);
-	void addEnemy(int id, int x, int y, float spawnHealthChance, float spawnManaChance, int groupID);
+	void addEnemy(int id, int gridX, int gridY, float spawnHealthChance, float spawnManaChance, int groupID);
 	void killEnemies(int type);
 	void killEnemiesInBox(hgeRect *box, int type);
 	bool tongueCollision(Tongue *tongue, float damage);

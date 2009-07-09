@@ -20,14 +20,15 @@ public:
 	static const int INACTIVE = 0;
 	static const int TERRAFORMING = 1;
 	static const int BATTLE = 2;
-	static const int RETURN_TO_ARENA = 3;
-	static const int NEAR_DEATH = 4;
+	static const int DROPPING_SPIDERS = 3;
+	static const int RETURN_TO_ARENA = 4;
+	static const int NEAR_DEATH = 5;
 };
 
 class FenwarAttributes 
 {
 public:
-	static const int HEALTH = 1.0; // 15.0;
+	static const int HEALTH = 15.0;
 	static const int COLLISION_DAMAGE = 3.0;
 	static const int COLLISION_KNOCKBACK = 150.0;
 	static const int ORB_COLLISION_DAMAGE = 2.0;
@@ -41,6 +42,8 @@ public:
 	static const int BOMB_DAMAGE = 2.0;
 	static const int BOMB_DELAY = 4.0;
 	static const int ATTACK_DELAY = 10.0;
+	static const int MOVE_TO_PLATFORM_SPEED = 220;
+	static const int NUM_SPIDERS_TO_SPAWN = 3;
 };
 
 struct PlatformLocation
@@ -58,6 +61,7 @@ public:
 	void draw(float dt);
 	bool update(float dt);
 	void drawAfterSmiley(float dt);
+	int getPlatformClosestToSmiley();
 
 	int state;
 	float x, y;
@@ -69,6 +73,7 @@ private:
 	void doInactiveState(float dt);
 	void doTerraformingState(float dt);
 	void doBattleState(float dt);
+	void doDroppingSpidersState(float dt);
 	void doReturnToArenaState(float dt);
 	bool doNearDeathState(float dt);
 
@@ -77,7 +82,8 @@ private:
 	void terraformArena();
 	void initPlatformPoints();
 	void dealDamage(float damage);
-
+	void chooseRandomPlatformUponWhichToDropASpider();
+	
 	FenwarOrbs *orbManager;
 	FenwarBullets *bulletManager;
 	FenwarBombs *bombManager;
@@ -96,6 +102,13 @@ private:
 	float lastBombTime;
 	float fadeWhiteAlpha;
 	bool relocatedYet;
+
+	//Dropping spider mode shit
+	int targetPlatform;
+	float timeToGetToPlatform;
+	float timeStartedMovingToPlatform;
+	int numSpidersDropped;
+	bool platformsVisited[9];
 };
 
 ///////////// FENWAR ORBS ////////////////

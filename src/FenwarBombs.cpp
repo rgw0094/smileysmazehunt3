@@ -15,7 +15,8 @@ FenwarBombs::~FenwarBombs()
  */
 void FenwarBombs::throwBomb()
 {
-	addBomb(smh->randomInt(1, 8));
+	int platform = fenwar->getPlatformClosestToSmiley();
+	addBomb(platform);
 }
 
 /**
@@ -72,14 +73,12 @@ void FenwarBombs::addBomb(int platform)
 	bomb.timeToTravel = smh->randomFloat(1.0, 1.5);
 	bomb.timeLaunched = smh->getGameTime();
 	bomb.yOffset = 0.0;
-
-	//Choose a random platform to which to throw
 	
 	float targetX = fenwar->platformLocations[platform].x * 64.0 + 32.0;
 	float targetY = fenwar->platformLocations[platform].y * 64.0 + 32.0;
 
 	//Calculate shit to set up the bomb's path
-	float angle = Util::getAngleBetween(targetX, targetY, bomb.x, bomb.y);
+	float angle = Util::getAngleBetween(bomb.x, bomb.y, targetX, targetY);
 	float distance = Util::distance(bomb.x, bomb.y, targetX, targetY);
 	float speed = distance / bomb.timeToTravel;
 
