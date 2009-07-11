@@ -108,7 +108,7 @@ FireBossTwo::~FireBossTwo() {
 	resetFlameWalls();
 	resetFireBalls();
 	delete fireNova;
-	smh->resources->Purge(RES_PHYREBOZZ);
+	smh->resources->Purge(ResourceGroups::Phyrebozz);
 }
 
 

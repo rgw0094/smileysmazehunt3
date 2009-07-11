@@ -67,7 +67,7 @@ FenwarBoss::~FenwarBoss()
 	delete bombManager;
 	delete collisionBox;
 
-	smh->resources->Purge(RES_FENWAR);
+	smh->resources->Purge(ResourceGroups::Fenwar);
 }
 
 //~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~

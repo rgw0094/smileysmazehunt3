@@ -3,18 +3,22 @@
 
 extern SMH *smh;
 
-PopupMessageManager::PopupMessageManager() {
-
+PopupMessageManager::PopupMessageManager() 
+{
 }
 
-PopupMessageManager::~PopupMessageManager() {
+PopupMessageManager::~PopupMessageManager() 
+{
 	//should never be deleted
 }
 
-void PopupMessageManager::draw(float dt) {
-	if (smh->timePassedSince(timeMessageStarted) < messageDuration) {
+void PopupMessageManager::draw(float dt) 
+{
+	if (smh->timePassedSince(timeMessageStarted) < messageDuration) 
+	{
 		//Determine text alpha - fade out near the end
-		if (smh->timePassedSince(timeMessageStarted) > messageDuration * 0.75) {
+		if (smh->timePassedSince(timeMessageStarted) > messageDuration * 0.75) 
+		{
 			messageAlpha -= 255.0 * (1.0/(messageDuration * 0.25)) * dt;
 			if (messageAlpha < 0.0) messageAlpha = 0.0;
 		}
@@ -25,7 +29,8 @@ void PopupMessageManager::draw(float dt) {
 		smh->resources->GetFont("inventoryFnt")->SetColor(ARGB(255.0,255.0,255.0,255.0));
 		if (adviceManMessageActive) smh->resources->GetFont("inventoryFnt")->SetScale(1.0);
 
-		if (adviceManMessageActive) {
+		if (adviceManMessageActive) 
+		{
 			smh->resources->GetSprite("adviceManDown")->SetColor(ARGB(messageAlpha, 255, 255, 255));
 			smh->resources->GetSprite("adviceManDown")->RenderEx(80.0, 725.0, 0.0, 0.8, 0.8);
 			smh->resources->GetSprite("adviceManDown")->SetColor(ARGB(255, 255, 255, 255));
@@ -33,19 +38,23 @@ void PopupMessageManager::draw(float dt) {
 	}
 }
 
-void PopupMessageManager::update(float dt) {
-	if (adviceManMessageActive && smh->hge->Input_KeyDown(HGEK_N)) {
+void PopupMessageManager::update(float dt) 
+{
+	if (adviceManMessageActive && smh->hge->Input_KeyDown(HGEK_N)) 
+	{
 		smh->windowManager->openAdviceTextBox(advice);
 		timeMessageStarted = 0.0;
 	}
 }
 
-void PopupMessageManager::showFullHealth() {
+void PopupMessageManager::showFullHealth() 
+{
 	message = "Your health is already full!";
 	startMessage(1.5);
 }
 
-void PopupMessageManager::showFullMana() {
+void PopupMessageManager::showFullMana() 
+{
 	message = "Your mana is already full!";
 	startMessage(1.5);
 }
@@ -55,6 +64,7 @@ void PopupMessageManager::showNewAdvice(int _advice) {
 	startMessage(5.5);
 	adviceManMessageActive = true;
 	advice = _advice;
+	smh->soundManager->playSound("snd_HintMan");
 }
 
 void PopupMessageManager::showSaveConfirmation() {

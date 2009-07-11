@@ -255,13 +255,12 @@ void Player::updateJesusSound()
 {
 	if (!jesusSoundPlaying && waterWalk) 
 	{
-		//start the sound
 		smh->soundManager->playEnvironmentEffect("snd_Jesus", true);
 		jesusSoundPlaying = true;
 	}
-	else if (jesusSoundPlaying && (!waterWalk || drowning)) 
+
+	if (jesusSoundPlaying && (!waterWalk || drowning)) 
 	{
-		//stop the sound
 		smh->soundManager->stopEnvironmentChannel();
 		jesusSoundPlaying = false;
 	}
@@ -365,8 +364,10 @@ void Player::doMove(float dt) {
  * This is called by smh's draw function, after everything else, so that the beam from heaven is drawn on top of everything.
  * (Note that the GUI and other similar things are drawn after the light from heaven)
  */
-void Player::drawJesusBeam() {
-	if (waterWalk) {
+void Player::drawJesusBeam() 
+{
+	if (waterWalk) 
+	{
 		//the alpha is based on how much longer Smiley can walk on water
 		//Note that it goes to 128 rather than 255. That's cause I think the 255 is too noticeable and thus looks like shit.
 		float jAlpha = 128.0*smh->timePassedSince(startedWaterWalk)/JESUS_SANDLE_TIME;

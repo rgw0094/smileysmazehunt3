@@ -76,7 +76,7 @@ FireBoss::FireBoss(int gridX, int gridY, int _groupID) {
 FireBoss::~FireBoss() {
 	killOrbs();
 	delete fenwarWarp;
-	smh->resources->Purge(RES_PHYREBOZZ);
+	smh->resources->Purge(ResourceGroups::Phyrebozz);
 }
 
 

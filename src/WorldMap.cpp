@@ -7,14 +7,14 @@ extern SMH *smh;
 WorldMap::WorldMap() {
 	windowX = 182;
 	windowY = 138;
-	smh->resources->Precache(RES_WORLDMAP);
+	smh->resources->Precache(ResourceGroups::WorldMap);
 	fountainX = windowX + 250.0;
 	fountainY = windowY + 245.0;
 	selectedArea = smh->saveManager->currentArea;
 }
 
 WorldMap::~WorldMap() {
-	smh->resources->Purge(RES_WORLDMAP);
+	smh->resources->Purge(ResourceGroups::WorldMap);
 }
 
 void WorldMap::draw(float dt) {

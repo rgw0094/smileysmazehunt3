@@ -62,7 +62,7 @@ DesertBoss::DesertBoss(int _gridX, int _gridY, int _groupID) {
 DesertBoss::~DesertBoss() {
 	delete collisionBox;
 	delete sandClouds;
-	smh->resources->Purge(RES_CORNWALLIS);
+	smh->resources->Purge(ResourceGroups::Cornwallis);
 }
 
 /**

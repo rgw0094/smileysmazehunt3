@@ -73,21 +73,26 @@ class PopupMessageManager;
 #define PLAYER_HEIGHT 72
 
 //Resource Groups
-#define RES_MENU 10
-#define RES_CREDITS 11
-#define RES_CINEMATIC 12
-#define RES_WORLDMAP 13
-#define RES_PHYREBOZZ 100
-#define RES_PORTLYPENGUIN 101
-#define RES_GARMBORN 102
-#define RES_CORNWALLIS 103
-#define RES_MUSHBOOM 104
-#define RES_CALYPSO 105
-#define RES_BARTLI 106
-#define RES_KINGTUT 107
-#define RES_LOVECRAFT 108
-#define RES_BARVINOID 109
-#define RES_FENWAR 110
+class ResourceGroups
+{
+public:
+	static const int Menu = 10;
+	static const int Credits = 11;
+	static const int Cinematic= 12;
+	static const int WorldMap = 13;
+	static const int Sounds = 14;
+	static const int Phyrebozz = 100;
+	static const int PorlyPenguin = 101;
+	static const int Garmborn = 102;
+	static const int Cornwallis = 103;
+	static const int Mushboom = 104;
+	static const int Calypso = 105;
+	static const int Bartli = 106;
+	static const int KingTut = 107;
+	static const int Lovecraft = 108;
+	static const int Barvinoid = 109;
+	static const int Fenwar = 110;
+};
 
 #define NUM_BOSSES 12
 
@@ -667,6 +672,8 @@ private:
 	int previousMusicPosition;
 	int musicVolume;
 	int soundVolume;
+	bool abilityChannelActive;
+	bool environmentChannelActive;
 	float lastSwitchSoundTime;
 
 };

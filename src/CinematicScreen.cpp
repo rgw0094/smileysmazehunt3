@@ -11,7 +11,8 @@ extern SMH *smh;
 #define FINAL_SCENE 6
 #define SCENE_ONE_MUSIC_LENGTH 26.57
 
-CinematicScreen::CinematicScreen() {
+CinematicScreen::CinematicScreen() 
+{
 	backgroundAlpha = 0.0;
 	sceneState = -1;
 	pictureOffset = MAX_PICTURE_OFFSET;
@@ -23,8 +24,9 @@ CinematicScreen::CinematicScreen() {
 	transitionScale = 0.45;
 }
 
-CinematicScreen::~CinematicScreen() { 
-	smh->resources->Purge(RES_CINEMATIC);
+CinematicScreen::~CinematicScreen() {
+
+	smh->resources->Purge(ResourceGroups::Cinematic);
 }
 
 void CinematicScreen::draw(float dt) {
@@ -129,7 +131,7 @@ bool CinematicScreen::update(float dt, float mouseX, float mouseY) {
 	}
 
 	if (smh->hge->Input_KeyDown(HGEK_ENTER)) {
-		smh->resources->Purge(RES_CINEMATIC);	
+		smh->resources->Purge(ResourceGroups::Cinematic);	
 		smh->enterGameState(GAME);
 	}
 	return false;
@@ -208,7 +210,7 @@ bool CinematicScreen::updateTransition(float dt) {
 	transitionScale += 2.0 * dt;
 
 	if (timeInTransition > 1.5) {smh->enterGameState(GAME);
-		smh->resources->Purge(RES_CINEMATIC);	
+		smh->resources->Purge(ResourceGroups::Cinematic);	
 		smh->enterGameState(GAME);
 	}
 

@@ -107,6 +107,9 @@ void SMH::init()
 		log("Creating Environment");
 		environment = new Environment();
 
+		log("Precaching Resources");
+		resources->Precache(ResourceGroups::Sounds);
+
 		log("-------Initialization Complete-------");
 	}
 	catch(System::Exception *ex) 
@@ -285,7 +288,7 @@ void SMH::enterGameState(int newState) {
 	//If leaving the menu
 	if (gameState == MENU) {	
 		menu->closeScreen();
-		resources->Purge(RES_MENU);
+		resources->Purge(ResourceGroups::Menu);
 	}
 
 	//If leaving game state
