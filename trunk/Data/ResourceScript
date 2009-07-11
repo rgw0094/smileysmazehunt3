@@ -178,11 +178,11 @@ Particle fountain {
  sprite=particleGraphic2
 }
 Particle iceOrb {
- filename=iceOrb.psi
+ filename=iceorb.psi
  sprite=particleGraphic2
 }
 Particle fireOrb {
- filename=fireOrb.psi
+ filename=fireorb.psi
  sprite=particleGraphic2
 }
 Particle smileysCane {
