@@ -1830,6 +1830,10 @@ Sound snd_Hopping {
  filename="Hopping.mp3"
  resgroup=14
 }
+Sound snd_NewAbility {
+ filename="NewItem2.mp3"
+ resgroup=14
+}
 
 ;************************************************
 ;******** CORNWALLIS (Resource group 103 ********
