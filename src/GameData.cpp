@@ -22,7 +22,14 @@ GameData::~GameData() {
 
 }
 
-EnemyInfo GameData::getEnemyInfo(int enemyID) {
+EnemyInfo GameData::getEnemyInfo(int enemyID) 
+{
+	if (enemyID > MAX_ENEMIES-1)
+	{
+		std::string exceptionString = "GameData.getEnemyInfo(): Max enemy id is " + Util::intToString(MAX_ENEMIES) + ". Id received: " + Util::intToString(enemyID);
+		throw new System::Exception(new System::String(exceptionString.c_str()));
+	}
+	
 	return enemyInfo[enemyID];
 }
 

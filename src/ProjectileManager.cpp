@@ -61,7 +61,7 @@ int ProjectileManager::getProjectileRadius(int id)
 {
 	if (id > NUM_PROJECTILES-1)
 	{
-		std::string exceptionString = "ProjectileManager received invalid projectile id: " + Util::intToString(id);
+		std::string exceptionString = "ProjectileManager.getProjectileRadius() received invalid projectile id: " + Util::intToString(id);
 		throw new System::Exception(new System::String(exceptionString.c_str()));
 	}
 
