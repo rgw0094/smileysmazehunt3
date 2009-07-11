@@ -16,7 +16,6 @@
 === Graphics To Do ===
  * Fenwar near death animation
  * Keys background (in lower corner of screen)
- * Fenwar orbs (I think they should be an animation)
  * Slime
  * More projectile graphics (snowmen throw snowballs, squirrels throw nuts ETCETERA)
 
@@ -30,6 +29,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fenwar orb/bullet graphics||7/10/09||RMM||
 ||Fixed the Calypso crash||7/10/09||RGW||
 ||Sounds are now precached so you don't freeze for a split second when first loading some of the larger sounds||7/10/09||RGW||
 ||Made it so sound channels can't be started multiple times, fucking everything up||7/10/09||RGW||
