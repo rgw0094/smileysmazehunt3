@@ -29,7 +29,7 @@
 
 ===Done===
 ||Item||Date||Done By||
-||Sounds are now precached so you don't freeze for a split second when first loading some of the largert sounds||7/10/09||RGW||
+||Sounds are now precached so you don't freeze for a split second when first loading some of the larger sounds||7/10/09||RGW||
 ||Made it so sound channels can't be started multiple times, fucking everything up||7/10/09||RGW||
 ||Fenwar sans spiders||7/8/09||RGW||
 ||Buzzards stop chasing Smiley after a while||7/8/09||RGW||
