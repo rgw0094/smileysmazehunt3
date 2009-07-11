@@ -95,6 +95,7 @@ void LootManager::update(float dt) {
 				smh->saveManager->hasAbility[i->ability] = true;
 				smh->windowManager->openNewAbilityTextBox(i->ability);
 				collected = true;
+				smh->soundManager->playSound("snd_NewAbility");
 			}
 
 			if (collected) {
