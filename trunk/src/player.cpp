@@ -251,11 +251,20 @@ void Player::updateLocation() {
  * Updates the sound of the holy choir
  * (starts it if you just walked onto water; stops it if you are off of water or you're drowning)
  */
-void Player::updateJesusSound() {
-	if (jesusSoundPlaying && !onWater) //stop the sound
+void Player::updateJesusSound() 
+{
+	if (!jesusSoundPlaying && waterWalk) 
+	{
+		//start the sound
 		smh->soundManager->playEnvironmentEffect("snd_Jesus", true);
-	else if (!jesusSoundPlaying && onWater) //start the sound
+		jesusSoundPlaying = true;
+	}
+	else if (jesusSoundPlaying && (!waterWalk || drowning)) 
+	{
+		//stop the sound
 		smh->soundManager->stopEnvironmentChannel();
+		jesusSoundPlaying = false;
+	}
 }
 
 
