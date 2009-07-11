@@ -1,5 +1,6 @@
 === Programming To Do ===
  * Graphical effect for enemies spawning from the enemy spawners. (similar to bartlets)
+ * The rest of the monocle man advice topics
  * Fenwar spiders
  * Make it so projectiles from bosses can't be reflected (except Mushboom) or silly padded (except Phyrebawz2)
 
