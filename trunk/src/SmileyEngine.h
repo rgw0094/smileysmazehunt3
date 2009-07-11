@@ -437,6 +437,9 @@ public:
 //----------------------------------------------------------------
 // Provides a centralized location for retrieving all game data.
 //----------------------------------------------------------------
+
+#define MAX_ENEMIES 200
+
 /**
  * Stores info for each enemy id
  */ 
@@ -493,7 +496,7 @@ private:
 	void initializeGemCounts();
 
 	hgeStringTable *enemyStringTable;
-	EnemyInfo enemyInfo[99];
+	EnemyInfo enemyInfo[MAX_ENEMIES];
 	Ability abilities[16];
 	std::list<EnemyName> enemyNameList;
 	hgeStringTable *gameText;
