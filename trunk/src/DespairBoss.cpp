@@ -95,9 +95,6 @@ DespairBoss::DespairBoss(int _gridX, int _gridY, int _groupID) {
 	for (int i = 0; i < NUM_STUN_STARS; i++) {
 		stunStarAngles[i] = (float)i * ((2.0*PI) / (float)NUM_STUN_STARS);
 	}
-
-	smh->log("Calypso initializing");
-
 }
 
 /**
@@ -560,8 +557,11 @@ void DespairBoss::addProjectile(int type, float x, float y, float angle, float s
 			break;
 		case PROJECTILE_FIRE:
 			newProjectile.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("fireOrb")->info);
+			break;
 		default:
-			newProjectile.particle = NULL;
+			std::string exceptionString = "Calypso tried to spawn an invalid projectile type!";
+			throw new System::Exception(new System::String(exceptionString.c_str()));
+			break;
 	}
 	
 	newProjectile.particle->FireAt(newProjectile.x, newProjectile.y);
