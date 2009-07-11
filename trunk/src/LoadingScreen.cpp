@@ -45,14 +45,17 @@ bool LoadingScreen::update(float dt, float mouseX, float mouseY) {
 
 	//Make sure the load screen is up for at least a little bit so that it doesn't just flash up
 	//if the person's computer is too fast.
-	if (smh->getRealTime() - timeEnteredScreen > 1.0) {
-		
-		if (isNewGame) {
+	if (smh->getRealTime() - timeEnteredScreen > 1.0) 
+	{	
+		if (isNewGame) 
+		{
 			smh->environment->loadArea(smh->saveManager->currentArea, smh->saveManager->currentArea, false);
 			smh->saveManager->save();
-			smh->resources->Precache(RES_CINEMATIC);
+			smh->resources->Precache(ResourceGroups::Cinematic);
 			smh->menu->setScreen(MenuScreens::CINEMATIC_SCREEN);
-		} else {
+		} 
+		else 
+		{
 			//The loadArea method places smiley at the start point of the level. So we need to remember the coordinates
 			//that Smiley was saved at and then move him there after the area loads
 			int x = smh->saveManager->playerGridX;

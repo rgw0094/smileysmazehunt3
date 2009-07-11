@@ -147,7 +147,7 @@ ConservatoryBoss::~ConservatoryBoss() {
 	delete collisionBoxes[0];
 	delete collisionBoxes[1];
 	delete collisionBoxes[2];
-	smh->resources->Purge(RES_BARVINOID);
+	smh->resources->Purge(ResourceGroups::Barvinoid);
 	purgeFloatingEyes();
 }
 

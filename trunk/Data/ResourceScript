@@ -1540,216 +1540,295 @@ Sprite windowArrowRight {
 ;***********************
 Sound snd_FenwarSlurp {
  filename="FenwarSlurp.mp3"
+ resgroup=14
 }
 Sound snd_RumbleLoop {
  filename="RumbleLoop.mp3"
+ resgroup=14
 }
 Sound snd_SlimeSplat {
  filename="SlimeSplat.mp3"
+ resgroup=14
 }
 Sound snd_TentaclesExtend {
  filename="TentaclesExtend.mp3"
+ resgroup=14
 }
 Sound snd_Crusher {
  filename="Crusher.mp3"
+ resgroup=14
 }
 Sound snd_LovecraftHit1 {
  filename="LovecraftHit1.mp3"
+ resgroup=14
 }
 Sound snd_LovecraftHit2 {
  filename="LovecraftHit2.mp3"
+ resgroup=14
 }
 Sound snd_LovecraftHit3 {
  filename="LovecraftHit3.mp3"
+ resgroup=14
 }
 Sound snd_SwitchItem {
  filename="SwitchItem.mp3"
+ resgroup=14
 }
 Sound snd_ClockTick {
  filename="ClockTick.mp3"
+ resgroup=14
 }
 Sound snd_HitInvulnerable {
  filename="HitInvulnerable.mp3"
+ resgroup=14
 }
 Sound snd_TutCoffinOpen {
  filename="TutCoffinOpen.mp3"
+ resgroup=14
 }
 Sound snd_HitTut1 {
  filename="HitTut1.mp3"
+ resgroup=14
 }
 Sound snd_HitTut2 {
  filename="HitTut2.mp3"
+ resgroup=14
 }
 Sound snd_Falling {
  filename="Falling.mp3"
+ resgroup=14
 }
 Sound snd_TextBoxChange {
  filename="TextBoxChange.mp3"
+ resgroup=14
 }
 Sound snd_AreaChangeUp {
  filename="AreaChangeUp.mp3"
+ resgroup=14
 }
 Sound snd_AreaChangeDown {
  filename="AreaChangeDown.mp3"
+ resgroup=14
 }
 Sound snd_Lick1 {
  filename="Lick1.mp3"
+ resgroup=14
 }
 Sound snd_Lick2 {
  filename="Lick2.mp3"
+ resgroup=14
 }
 Sound snd_Lick3 {
  filename="Lick3.mp3"
+ resgroup=14
 }
 Sound snd_Lick4 {
  filename="Lick4.mp3"
+ resgroup=14
 }
 Sound snd_Lick5 {
  filename="Lick5.mp3"
+ resgroup=14
 }
 Sound snd_Hit1 {
  filename="Hit1.mp3"
+ resgroup=14
 }
 Sound snd_Hit2 {
  filename="Hit2.mp3"
+ resgroup=14
 }
 Sound snd_Hit3 {
  filename="Hit3.mp3"
+ resgroup=14
 }
 Sound snd_Hit4 {
  filename="Hit4.mp3"
+ resgroup=14
 }
 Sound snd_Hit5 {
  filename="Hit5.mp3"
+ resgroup=14
 }
 Sound snd_fireBreath {
  filename="FireBreath.wav"
+ resgroup=14
 }
 Sound snd_Error {
  filename="Error.mp3"
+ resgroup=14
 }
 Sound snd_Shrink {
  filename="Shrink.mp3"
+ resgroup=14
 }
 Sound snd_DeShrink {
  filename="DeShrink.mp3"
+ resgroup=14
 }
 Sound snd_StartTut {
  filename="StartTut.mp3"
+ resgroup=14
 }
 Sound snd_EndTut {
  filename="EndTut.mp3"
+ resgroup=14
 }
 Sound snd_MouseOver {
  filename="MouseOver.wav"
+ resgroup=14
 }
 Sound snd_ButtonClick {
  filename="ButtonClick.mp3"
+ resgroup=14
 }
 Sound snd_AbilitySelect {
  filename="AbilitySelect.mp3"
+ resgroup=14
 }
 Sound snd_AbilityDeSelect {
  filename="AbilityDeSelect.mp3"
+ resgroup=14
 }
 Sound snd_ChangeMenu {
  filename="ChangeMenu.mp3"
+ resgroup=14
 }
 Sound snd_LightningOrb {
  filename="LightningOrb.mp3"
+ resgroup=14
 }
 Sound snd_HitByFireball {
  filename="HitByFireball.mp3"
+ resgroup=14
 }
 Sound snd_FirePassBy {
  filename="FirePassBy.mp3"
+ resgroup=14
 }
 Sound snd_FrisbeeHitWall {
  filename="FrisbeeHitWall.mp3"
+ resgroup=14
 }
 Sound snd_splat {
  filename="splat.wav"
+ resgroup=14
 }
 Sound snd_lava {
  filename="Lava.wav"
+ resgroup=14
 }
 Sound snd_shallowWater {
  filename="ShallowWater.wav"
+ resgroup=14
 }
 Sound snd_switch {
  filename="switch.wav"
+ resgroup=14
 }
 Sound snd_spring {
  filename="spring.wav"
+ resgroup=14
 }
 Sound snd_iceDie {
  filename="ice_die.wav"
+ resgroup=14
 }
 Sound snd_warp {
  filename="warp.mp3"
+ resgroup=14
 }
 Sound snd_freeze {
  filename="freeze.wav"
+ resgroup=14
 }
 Sound snd_key {
  filename="key.wav"
+ resgroup=14
 }
 Sound snd_gem {
  filename="gem.wav"
+ resgroup=14
 }
 Sound snd_iceBreath {
  filename="icebreath.wav"
+ resgroup=14
 }
 Sound snd_drowning {
  filename="drowning.wav"
+ resgroup=14
 }
 Sound snd_sillyPad {
  filename="sillypad.wav"
+ resgroup=14
 }
 Sound snd_fireBossHit {
  filename="firebosshit.wav"
+ resgroup=14
 }
 Sound snd_fireBossDie {
  filename="firebossdie.wav"
+ resgroup=14
 }
 Sound snd_fireBossNova {
  filename="firebossnova.wav"
+ resgroup=14
 }
 Sound snd_garmbornHit {
  filename="garmbornRoar.mp3"
+ resgroup=14
 }
 Sound snd_treeletHit {
  filename="treeletRoar.wav"
+ resgroup=14
 }
 Sound snd_enemyDeath {
  filename="enemyDeath.wav"
+ resgroup=14
 }
 Sound snd_tongue {
  filename="tongue.wav"
+ resgroup=14
 }
 Sound snd_penguinSplash {
  filename="penguinsplash.wav"
+ resgroup=14
 }
 Sound snd_penguinStep {
  filename="penguinstep.wav"
+ resgroup=14
 }
 Sound snd_fireWorm {
  filename="fireworm.wav"
+ resgroup=14
 }
 Sound snd_purchaseUpgrade {
  filename="purchaseUpgrade.wav"
+ resgroup=14
 }
 Sound snd_ReflectionShield {
  filename="ReflectionShield.mp3"
+ resgroup=14
 }
 Sound snd_Mana {
  filename="Mana.mp3"
+ resgroup=14
 }
 Sound snd_Health {
  filename="Health.mp3"
+ resgroup=14
 }
 Sound snd_Jesus {
  filename="Jesus.mp3"
+ resgroup=14
+}
+Sound snd_HintMan {
+ filename="HintMan.mp3"
+ resgroup=14
+}
+Sound snd_Hopping {
+ filename="Hopping.mp3"
+ resgroup=14
 }
 
 ;************************************************

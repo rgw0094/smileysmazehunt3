@@ -40,6 +40,11 @@ void E_Hopper::update(float dt)
 		//Start next hop
 		hopping = true;
 		timeStartedHop = smh->getGameTime();
+		
+		if (Util::distance(x, y, smh->player->x, smh->player->y) < 500)
+		{
+			smh->soundManager->playSound("snd_Hopping");
+		}
 
 		if (chases) 
 		{
@@ -65,7 +70,8 @@ void E_Hopper::update(float dt)
 			{
 				hopDistance = smh->randomFloat(125.0, 300.0);
 				hopAngle = smh->randomFloat(0.0, 2.0*PI);
-			} while(!smh->environment->validPath(x, y, x + hopDistance * cos(hopAngle), y + hopDistance * sin(hopAngle), 28, canPass));
+			} 
+			while(!smh->environment->validPath(x, y, x + hopDistance * cos(hopAngle), y + hopDistance * sin(hopAngle), 28, canPass));
 		}
 
 		timeToHop = hopDistance / float(speed);
@@ -94,23 +100,27 @@ void E_Hopper::update(float dt)
 	move(dt);
 }
 
-void E_Hopper::draw(float dt) {
-	int i;
-
+void E_Hopper::draw(float dt) 
+{
 	smh->resources->GetSprite("playerShadow")->Render(screenX, screenY + 32.0);
 	
-	if (graphic[0]->GetFrames() > 1) { //animate by 'crouching down' just before a jump
+	if (graphic[0]->GetFrames() > 1) 
+	{
+		//animate by 'crouching down' just before a jump
 		if (!hopping && smh->timePassedSince(timeStoppedHop) > 0.7)
+		{
 			//Set frame to 'crouched' position -- as if ready to hop
-			for (i=0; i<4; i++) graphic[i]->SetFrame(1);
+			for (int i = 0; i < 4; i++) graphic[i]->SetFrame(1);
+		}
 		else
+		{
 			//Set frame to normal position
-			for (i=0; i<4; i++) graphic[i]->SetFrame(0);
+			for (int i = 0; i < 4; i++) graphic[i]->SetFrame(0);
+		}
 	}
 
 	//Render the graphic
 	graphic[facing]->Render(screenX, screenY - hopYOffset);
-
 }
 
 

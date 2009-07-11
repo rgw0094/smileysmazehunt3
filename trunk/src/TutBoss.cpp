@@ -141,7 +141,7 @@ TutBoss::~TutBoss() {
 	smh->enemyManager->killEnemiesInBox(collisionBox, FLAIL_MUMMY);
 	smh->enemyManager->killEnemiesInBox(collisionBox, CHARGER_MUMMY);
 	delete collisionBox;
-	smh->resources->Purge(RES_KINGTUT);
+	smh->resources->Purge(ResourceGroups::KingTut);
 }
 
 void TutBoss::doCollision(float dt) {

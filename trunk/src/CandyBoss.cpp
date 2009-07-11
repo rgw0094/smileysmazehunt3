@@ -101,7 +101,7 @@ CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 }
 
 CandyBoss::~CandyBoss() {
-	smh->resources->Purge(RES_BARTLI);
+	smh->resources->Purge(ResourceGroups::Bartli);
 	delete collisionBox;
 	delete futureCollisionBox;
 

@@ -45,7 +45,7 @@ ForestBoss::~ForestBoss() {
 	delete frisbeeReflectBox;
 	delete particles;
 	resetOwlets(false);
-	smh->resources->Purge(RES_GARMBORN);
+	smh->resources->Purge(ResourceGroups::Garmborn);
 }
 
 /**

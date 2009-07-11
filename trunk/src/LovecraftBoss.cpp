@@ -137,7 +137,7 @@ LovecraftBoss::~LovecraftBoss() {
 		i = crusherList.erase(i);
 	}
 
-	smh->resources->Purge(RES_LOVECRAFT);
+	smh->resources->Purge(ResourceGroups::Lovecraft);
 }
 
 //~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~

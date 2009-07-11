@@ -128,7 +128,7 @@ MushroomBoss::MushroomBoss(int _gridX,int _gridY,int _groupID) {
 MushroomBoss::~MushroomBoss() {
 	if (collisionRects[1]) delete collisionRects[1];
 	if (collisionRects[0]) delete collisionRects[0];
-	smh->resources->Purge(RES_MUSHBOOM);
+	smh->resources->Purge(ResourceGroups::Mushboom);
 }
 
 bool MushroomBoss::update(float dt) {

@@ -104,7 +104,7 @@ DespairBoss::DespairBoss(int _gridX, int _gridY, int _groupID) {
  * Destructor
  */
 DespairBoss::~DespairBoss() {
-	smh->resources->Purge(RES_CALYPSO);
+	smh->resources->Purge(ResourceGroups::Calypso);
 	if (collisionBox) delete collisionBox;
 	if (damageCollisionBox) delete damageCollisionBox;
 	smh->drawScreenColor(Colors::BLACK, 0.0);

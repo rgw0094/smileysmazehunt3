@@ -28,7 +28,7 @@ CreditsScreen::~CreditsScreen() {
 		delete i->graphic;
 	}
 
-	smh->resources->Purge(RES_CREDITS);
+	smh->resources->Purge(ResourceGroups::Credits);
 }
 
 void CreditsScreen::draw(float dt) {
@@ -97,7 +97,7 @@ bool CreditsScreen::update(float dt, float mouseX, float mouseY) {
 
 	//Cache all the graphics while the title and authors are stationary
 	if (!resourcesCachedYet) {
-		smh->resources->Precache(RES_CREDITS);
+		smh->resources->Precache(ResourceGroups::Credits);
 		init();
 		resourcesCachedYet = true;
 	}

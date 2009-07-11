@@ -57,7 +57,7 @@ SnowBoss::~SnowBoss() {
 	delete collisionBoxes[0];
 	delete collisionBoxes[1];
 	delete collisionBoxes[2];
-	smh->resources->Purge(RES_PORTLYPENGUIN);
+	smh->resources->Purge(ResourceGroups::PorlyPenguin);
 }
 
 

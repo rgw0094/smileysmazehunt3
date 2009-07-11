@@ -11,6 +11,9 @@ SoundManager::SoundManager()
 	//Music volume starts at what it was when app was closed last
 	setMusicVolume(smh->hge->Ini_GetInt("Options", "musicVolume", 100));
 	setSoundVolume(smh->hge->Ini_GetInt("Options", "soundVolume", 100));
+
+	abilityChannelActive = false;
+	environmentChannelActive = false;
 }
 
 
@@ -72,21 +75,24 @@ void SoundManager::playAreaMusic(int id) {
 /**
  * Stops the music immediately.
  */
-void SoundManager::stopMusic() {
+void SoundManager::stopMusic() 
+{
 	smh->hge->Channel_Stop(musicChannel);
 }
 
 /**
  * Stops the music by fading out.
  */
-void SoundManager::fadeOutMusic() {
+void SoundManager::fadeOutMusic() 
+{
 	smh->hge->Channel_SlideTo(musicChannel,3.0f,0,-101,-1.0f);
 }
 
 /** 
  * Sets a new music volume
  */
-void SoundManager::setMusicVolume(int newVolume) {
+void SoundManager::setMusicVolume(int newVolume) 
+{
 	musicVolume = newVolume;
 	if (musicVolume < 0) musicVolume = 0;
 	if (musicVolume > 100) musicVolume = 100;
@@ -97,7 +103,8 @@ void SoundManager::setMusicVolume(int newVolume) {
 /**
  * Sets a new sound volume.
  */
-void SoundManager::setSoundVolume(int newVolume) {
+void SoundManager::setSoundVolume(int newVolume) 
+{
 	soundVolume = newVolume;
 	if (soundVolume < 0) soundVolume = 0;
 	if (soundVolume > 100) soundVolume = 100;
@@ -108,19 +115,12 @@ void SoundManager::setSoundVolume(int newVolume) {
 /**
  * Returns to the last song played at the position where it stopped.
  */
-void SoundManager::playPreviousMusic() {
+void SoundManager::playPreviousMusic() 
+{
 	smh->hge->Channel_Stop(musicChannel);
 	musicChannel = smh->hge->Music_Play(smh->resources->GetMusic(previousMusic.c_str()),true,musicVolume);
 	smh->hge->Channel_SetPos(musicChannel, previousMusicPosition);
 	currentMusic = previousMusic;
-}
-
-void SoundManager::playEnvironmentEffect(char *effect, bool loop) {
-	environmentChannel = smh->hge->Effect_PlayEx(smh->resources->GetEffect(effect),100,0,1.0f,loop);
-}
-
-void SoundManager::stopEnvironmentChannel() {
-	smh->hge->Channel_Stop(environmentChannel);
 }
 
 /**
@@ -130,7 +130,8 @@ void SoundManager::stopEnvironmentChannel() {
  * This method can be called as much as you want but it will only play a sound at maximum every SWITCH_SOUND_DELAY
  * seconds to avoid it sounding like the dickens if a ton of switches are toggled at once.
  */
-void SoundManager::playSwitchSound(int gridX, int gridY, bool alwaysPlaySound) {
+void SoundManager::playSwitchSound(int gridX, int gridY, bool alwaysPlaySound) 
+{
 	if (smh->timePassedSince(lastSwitchSoundTime) > SWITCH_SOUND_DELAY) {
 		bool inRange = abs(gridX - smh->player->gridX) <= 8 && abs(gridY - smh->player->gridY) <= 6;
 		if (alwaysPlaySound || inRange) {
@@ -140,11 +141,36 @@ void SoundManager::playSwitchSound(int gridX, int gridY, bool alwaysPlaySound) {
 	}
 }
 
-void SoundManager::playAbilityEffect(char *effect, bool loop) {
-	abilityChannel = smh->hge->Effect_PlayEx(smh->resources->GetEffect(effect),100,0,1.0f,loop);
+void SoundManager::playEnvironmentEffect(char *effect, bool loop) 
+{
+	if (environmentChannelActive) return;
+	
+	environmentChannel = smh->hge->Effect_PlayEx(smh->resources->GetEffect(effect),100,0,1.0f,loop);
+	environmentChannelActive = true;
 }
 
-void SoundManager::playSound(const char* sound) {
+void SoundManager::stopEnvironmentChannel() 
+{
+	smh->hge->Channel_Stop(environmentChannel);
+	environmentChannelActive = false;
+}
+
+void SoundManager::playAbilityEffect(char *effect, bool loop) 
+{
+	if (abilityChannelActive) return;
+
+	abilityChannel = smh->hge->Effect_PlayEx(smh->resources->GetEffect(effect),100,0,1.0f,loop);
+	abilityChannelActive = true;
+}
+
+void SoundManager::stopAbilityChannel() 
+{
+	smh->hge->Channel_Stop(abilityChannel);
+	abilityChannelActive = false;
+}
+
+void SoundManager::playSound(const char* sound) 
+{
 	playSound(sound, 0.0);
 }
 
@@ -179,10 +205,6 @@ void SoundManager::playSound(const char* sound, float delay) {
 	if (play) {
 		smh->hge->Effect_Play(smh->resources->GetEffect(sound));
 	}
-}
-
-void SoundManager::stopAbilityChannel() {
-	smh->hge->Channel_Stop(abilityChannel);
 }
 
 int SoundManager::getMusicVolume() {
