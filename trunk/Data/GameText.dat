@@ -498,9 +498,9 @@ NPC202-5 = "*COUGH*  It's all getting dark now...go ahead Smiley...put me out of
 ;Barvinoid
 NPC210Name = "Barvinoid"
 NPC210Pages = "3"
-NPC210-1 = "The train man shall not have his way."
-NPC210-2 = "The gardens will survive."
-NPC210-3 = "I will piss off the train man more than my rival, Alphanoid."
+NPC210-1 = "Barvin-begone you barvin-bothersome weakling."
+NPC210-2 = "You surely are here to barvin-burgle my barvin-bush."
+NPC210-3 = "I will barvin-beat you now."
 NPC211Name = "Barvinoid"
 NPC211Pages = "3"
 NPC211-1 = "Oh, oh, oh! To touch and feel very good vegetables."
@@ -508,8 +508,8 @@ NPC211-2 = "I can't believe you are using such cheap tactics! Turning my own min
 NPC211-3 = "Winners never cheat, and cheaters never win!"
 NPC212Name = "Barvinoid"
 NPC212Pages = "2"
-NPC212-1 = "Smiley! How could you do this to me? Now the Alphanoid will have his way!"
-NPC212-2 = "Don't you know? You... are.... the... train.... man's.... grrrugg..."
+NPC212-1 = "This is barvin-baffling.  How could I barvin-be defeated."
+NPC212-2 = "Barvin-barvin-barvin-barvvvv......"
 
 ;==============================================FENWAR ENCOUNTERS=====================================
 NPC240Name = "Fenwar"
