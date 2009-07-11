@@ -57,7 +57,14 @@ void ProjectileManager::addProjectile(float x, float y, float speed, float angle
 	addProjectile(x, y, speed, angle, damage, hostile, homing, id, makesSmileyFlash, hasParabola, parabolaLength, parabolaDuration, parabolaHeight, 0.0);
 }
 
-int ProjectileManager::getProjectileRadius(int id) {
+int ProjectileManager::getProjectileRadius(int id) 
+{
+	if (id > NUM_PROJECTILES-1)
+	{
+		std::string exceptionString = "ProjectileManager received invalid projectile id: " + Util::intToString(id);
+		throw new System::Exception(new System::String(exceptionString.c_str()));
+	}
+
 	return projectileTypes[id].radius;
 }
 
