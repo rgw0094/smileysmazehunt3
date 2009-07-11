@@ -315,18 +315,18 @@ void FenwarBoss::doDroppingSpidersState(float dt)
 		x = platformX;
 		y = platformY;
 
-		//Spawn the spider	
-		smh->enemyManager->addEnemy(ENEMY_FENWAR_EYE_SPIDER, platformLocations[targetPlatform].x,
-			platformLocations[targetPlatform].y, 0.25, 0.25, -1);
-
-		if (numSpidersDropped == FenwarAttributes::NUM_SPIDERS_TO_SPAWN)
+		if (targetPlatform == 0)
 		{
-			//If we have already dropped the max number of spiders, return to battle state
+			//When we have dropped all our spiders and are back at the center platform, return
+			//to battle state.
 			enterState(FenwarStates::BATTLE);
-		} 
-		else
+		} else
 		{
-			//Otherwise, choose a new platform upon which to drop a spider
+			//Spawn the spider	
+			smh->enemyManager->addEnemy(ENEMY_FENWAR_EYE_SPIDER, platformLocations[targetPlatform].x,
+				platformLocations[targetPlatform].y, 0.25, 0.25, -1);
+
+			//Choose the next platform to go to
 			chooseRandomPlatformUponWhichToDropASpider();
 		}
 	}
@@ -491,11 +491,19 @@ void FenwarBoss::enterState(int newState)
 void FenwarBoss::chooseRandomPlatformUponWhichToDropASpider()
 {
 	//Choose a platform that hasn't been visited yet
-	do
+	if (numSpidersDropped == FenwarAttributes::NUM_SPIDERS_TO_SPAWN)
 	{
-		targetPlatform = smh->randomInt(1, 8);
+		//Once we have spawned enough sipders, return to the center of the arena
+		targetPlatform = 0;
 	} 
-	while (platformsVisited[targetPlatform]);
+	else
+	{
+		do
+		{
+			targetPlatform = smh->randomInt(1, 8);
+		} 
+		while (platformsVisited[targetPlatform]);
+	}
 
 	platformsVisited[targetPlatform] = true;
 	numSpidersDropped++;
