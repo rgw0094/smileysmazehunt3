@@ -75,12 +75,33 @@ void ExplosionManager::update(float dt) {
 // Private helper methods
 //~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
 
-void ExplosionManager::createExplosion(float x, float y, float size, float damage, float knockback, bool slime) {
-	
-	if (size < 0.0 || size > 1.0) {
+void ExplosionManager::playSound()
+{
+	int r = smh->randomInt(0, 2);
+
+	if (r == 0)
+	{
+		smh->soundManager->playSound("snd_Explosion1", 0.1);
+	}
+	else if (r == 1)
+	{
+		smh->soundManager->playSound("snd_Explosion2", 0.1);
+	}
+	else if (r == 2)
+	{
+		smh->soundManager->playSound("snd_Explosion3", 0.1);
+	}
+}
+
+void ExplosionManager::createExplosion(float x, float y, float size, float damage, float knockback, bool slime) 
+{	
+	if (size < 0.0 || size > 1.0) 
+	{
 		throw new System::Exception("Illegal Argument: size must be between 0.0 and 1.0");
 	}
 	
+	playSound();
+
 	Explosion explosion;
 	explosion.x = x;
 	explosion.y = y;
