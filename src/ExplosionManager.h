@@ -32,6 +32,7 @@ public:
 private:
 
 	void createExplosion(float x, float y, float size, float damage, float knockback, bool slime);
+	void playSound();
 
 	std::list<Explosion> explosionList;
 

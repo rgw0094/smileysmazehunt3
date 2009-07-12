@@ -1830,6 +1830,18 @@ Sound snd_NewAbility {
  filename="NewItem2.mp3"
  resgroup=14
 }
+Sound snd_Explosion1 {
+ filename="explosion1.wav"
+ resgroup=14
+}
+Sound snd_Explosion2 {
+ filename="explosion2.wav"
+ resgroup=14
+}
+Sound snd_Explosion3 {
+ filename="explosion3.mp3"
+ resgroup=14
+}
 
 ;************************************************
 ;******** CORNWALLIS (Resource group 103 ********
