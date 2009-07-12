@@ -5,13 +5,11 @@
  * Make it so projectiles from bosses can't be reflected (except Mushboom) or silly padded (except Phyrebawz2)
 
 === Sounds To Add ===
- * Walking bombs explosion
  * Calypso boss
  * Mushroom boss
  * Barli
  * Fenwar
  * Evil wall rumbling
- * Explosion manager explosions
 
 === Graphics To Do ===
  * Fenwar near death animation
