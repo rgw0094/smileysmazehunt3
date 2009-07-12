@@ -3,9 +3,11 @@
 #include "FenwarBoss.h"
 #include "Player.h"
 #include "ProjectileManager.h"
+#include "Environment.h"
 
 #define RING_RADIUS 150.0
 #define ORB_RADIUS 30.0
+#define FLASHING_DURATION 0.5
 
 FenwarOrbs::FenwarOrbs(FenwarBoss *_fenwar)
 {
@@ -34,6 +36,11 @@ void FenwarOrbs::update(float dt)
 	{
 		count++;
 
+		if (i->flashing && smh->timePassedSince(i->timeStartedFlashing) > FLASHING_DURATION)
+		{
+			i->flashing = false;
+		}
+
 		float angle = angleOffset + count * ((2.0*PI)/FenwarAttributes::ORB_COUNT);
 		i->x = fenwar->x + cos(angle) * distFromFenwar;
 		i->y = fenwar->y + sin(angle) * distFromFenwar;
@@ -53,8 +60,11 @@ void FenwarOrbs::update(float dt)
 		if (smh->projectileManager->killProjectilesInCircle(i->x, i->y, ORB_RADIUS * scale, PROJECTILE_LIGHTNING_ORB))
 		{
 			i->health -= smh->player->getLightningOrbDamage();
+			i->flashing = true;
+			i->timeStartedFlashing = smh->getGameTime();
 			if (i->health <= 0.0)
 			{
+				smh->environment->addParticle("deathCloud", i->x, i->y);
 				delete i->collisionCircle;
 				i = orbList.erase(i);
 				continue;
@@ -144,6 +154,17 @@ void FenwarOrbs::drawAfterFenwar(float dt)
 
 void FenwarOrbs::drawOrb(std::list<FenwarOrb>::iterator orb)
 {
+	float flashAlpha;
+	if (orb->flashing) 
+	{
+		flashAlpha = smh->getFlashingAlpha(FLASHING_DURATION / 4.0);
+	} 
+	else
+	{
+		flashAlpha = 255.0;
+	}
+
+	smh->resources->GetSprite("fenwarOrb")->SetColor(ARGB(flashAlpha, 255.0, 255.0, 255.0));
 	smh->resources->GetSprite("fenwarOrb")->RenderEx(smh->getScreenX(orb->x), smh->getScreenY(orb->y), 0.0, scale, scale);
 
 	if (smh->isDebugOn())
@@ -169,6 +190,7 @@ void FenwarOrbs::spawnOrbs()
 		FenwarOrb newOrb;
 
 		newOrb.collisionCircle = new CollisionCircle();
+		newOrb.flashing = false;
 		newOrb.health = FenwarAttributes::ORB_HEALTH;
 
 		orbList.push_back(newOrb);

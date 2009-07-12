@@ -102,6 +102,7 @@ private:
 	float lastBombTime;
 	float fadeWhiteAlpha;
 	bool relocatedYet;
+	float lastTimeHitWithTongue;
 
 	//Dropping spider mode shit
 	int targetPlatform;
@@ -117,6 +118,8 @@ struct FenwarOrb
 {
 	float x, y;
 	float health;
+	bool flashing;
+	float timeStartedFlashing;
 	CollisionCircle *collisionCircle;
 };
 
@@ -159,6 +162,7 @@ private:
 	float distFromFenwar;
 	float angleOffset;
 	float angularSpeed;
+
 
 	FenwarBoss *fenwar;
 	std::list<FenwarOrb> orbList;
