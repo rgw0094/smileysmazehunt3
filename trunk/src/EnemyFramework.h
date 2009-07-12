@@ -479,9 +479,6 @@ private:
 
 	double xClown,yClown;
 	double xClownVel,yClownVel;
-
-	hgeAnimation *crabWalkAnimation;
-	
 };
 
 /**

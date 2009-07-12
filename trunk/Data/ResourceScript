@@ -2483,15 +2483,6 @@ Sprite bombRedCircle {
  hotspot=96,96
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
-Animation crabWalk {
- texture=animations
- rect=640,320,64,64
- frames=2
- fps=3
- mode=LOOP
- hotspot=32,32
- blendmode=COLORMUL,ALPHABLEND,NOZWRITE
-}
 Sprite clownChainDot {
  texture=animations
  rect=960,64,16,16

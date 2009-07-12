@@ -11,38 +11,36 @@ extern SMH *smh;
 #define DAMPING_CONSTANT 0.001
 #define CLOWN_RADIUS 32.0
 
-E_ChainClown::E_ChainClown(int id, int x, int y, int groupID) {
-	
+E_ChainClown::E_ChainClown(int id, int x, int y, int groupID) 
+{	
 	//Call parent's init function
 	initEnemy(id, x, y, groupID);
 
 	//Always wandering
 	setState(new ES_Wander(this));
 
-	crabWalkAnimation = new hgeAnimation(*smh->resources->GetAnimation("crabWalk"));
-	crabWalkAnimation->SetFrame(0);
-	crabWalkAnimation->Play();
-
 	xClown=x*64+32;
 	yClown=y*64+32;
 	xClownVel=0.0;
 	yClownVel=0.0;
+}
 
+E_ChainClown::~E_ChainClown() 
+{
 }
 
 /**
  * Draws the crab, chain, and clown, in that order
  */
 
-void E_ChainClown::draw(float dt) {
+void E_ChainClown::draw(float dt) 
+{
 	float angle=0.0;
 	if (facing==0 || facing == 3) angle=3*PI/2;
-	crabWalkAnimation->RenderEx(screenX,screenY,angle);
+
 	graphic[facing]->Render(screenX,screenY);
 
-
 	//Draw dots of the chain
-
 	double xChain,yChain;
 
 	//Dot 1, closest to crab
@@ -63,22 +61,15 @@ void E_ChainClown::draw(float dt) {
 	smh->resources->GetSprite("clownHead")->Render(smh->getScreenX(xClown),smh->getScreenY(yClown));
 }
 
-
 /**
  * Updates
  */
-
-void E_ChainClown::update(float dt) {
-
-	crabWalkAnimation->Update(dt);
-
-	
+void E_ChainClown::update(float dt) 
+{
 	move(dt);
 
 	//Do clown head
-
 	double xDisplacement,xForce,yDisplacement,yForce;
-	
 
 	xDisplacement = xClown-x;
 	xForce = -CLOWN_SPRING_CONSTANT * xDisplacement - DAMPING_CONSTANT*xClownVel;
@@ -98,9 +89,4 @@ void E_ChainClown::update(float dt) {
 		yClownVel=-yClownVel;
 		smh->setDebugText("Smiley hit by evil clown's clown head, E_ChainClown.cpp");
 	}
-
-}
-
-E_ChainClown::~E_ChainClown() {
-	if (crabWalkAnimation) delete crabWalkAnimation;	
 }
