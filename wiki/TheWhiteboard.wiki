@@ -24,6 +24,8 @@
  * When you get Shrink (after beating Magnitogorsk), the text doesn't display.
  * 3 minimap glitches: fake walls aren't dark brown on minimap; deep water doesn't appear when wearing sandals; no collision appears when hopping on a spring
  * 119,156 at Tut: I got a timed switch to stay switched on the wrong side. I was hitting both of the switches in that area repeatedly and quickly when it happened.
+ * Game crashes when you get an item
+ * Shrink tunnels are glitchy. Especially check out TUT(143,185)
 
 ===Done===
 ||Item||Date||Done By||
