@@ -898,7 +898,7 @@ class E_FenwarEyeSpider : public BaseEnemy {
 
 public:
 	E_FenwarEyeSpider(int id, int x, int y, int groupID);
-	E_FenwarEyeSpider(int id, int x, int y, int groupID, int CenterX, int CenterY); //need to pass in centerX and centerY so it knows where it is in relation to the "grid" of hover pads
+	//E_FenwarEyeSpider(int id, int x, int y, int groupID, int CenterX, int CenterY); //need to pass in centerX and centerY so it knows where it is in relation to the "grid" of hover pads
 	~E_FenwarEyeSpider();
 
 	//methods
@@ -906,18 +906,33 @@ public:
 	void update(float dt);
 
 private:
+	//methods
+	void figureOutPosition();
+	void chooseNewDestination();
+
+	//variables
+
 	int centerX, centerY; //these denote the center tile of the 3x3 grid of Hover pads (see Fenwar's arena).
 
-	float timeOfLastJump;
+	float timeStartedHop, timeStoppedHop;
 	float jumpTimeIntervalMin;
 	float jumpTimeIntervalMax;
 	float currentJumpTimeInterval;
 	float hopYOffset;
 	bool hopping;
 
+	int destinationX, destinationY;
+	float destX, destY;
+	float timeToHop;
+	float hopDistance;
+	float hopAngle;
+
 	int state;
 	int position; //Where is it in relation to the center (NORTHWEST, NORTH, etc.)
-	bool onCornerPosition;
+	
+	bool falling;
+	float beganFalling;
+	float fallingRot, fallingScale;
 };
 
 #endif

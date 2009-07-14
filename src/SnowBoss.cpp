@@ -23,6 +23,10 @@ SnowBoss::SnowBoss(int _gridX,int _gridY,int _groupID) {
 
 	groupID = _groupID;
 
+	collisionBoxes[0] = new hgeRect();
+	collisionBoxes[1] = new hgeRect();
+	collisionBoxes[2] = new hgeRect();
+
 	placeCollisionBoxes();
 	setUpIceBlocks();
     
@@ -65,25 +69,25 @@ SnowBoss::~SnowBoss() {
 void SnowBoss::placeCollisionBoxes() {
 
 	if (state == SNOWBOSS_SLIDING) {
-		collisionBoxes[0] = new hgeRect(x-PENGUIN_WIDTH/2+20.0,
-										y-PENGUIN_HEIGHT/2+20.0,
-										x+PENGUIN_WIDTH/2-20.0,
-										y+PENGUIN_WIDTH/2-20.0);
+		collisionBoxes[0]->Set(x-PENGUIN_WIDTH/2+20.0,
+							   y-PENGUIN_HEIGHT/2+20.0,
+							   x+PENGUIN_WIDTH/2-20.0,
+							   y+PENGUIN_WIDTH/2-20.0);
 	} else {
-		collisionBoxes[0] = new hgeRect(x - 9.0,
-										y - PENGUIN_HEIGHT/2 + 3.0,
-										x + 9.0,
-										y - PENGUIN_HEIGHT/2 + 20.0);
+		collisionBoxes[0]->Set(x - 9.0,
+							   y - PENGUIN_HEIGHT/2 + 3.0,
+							   x + 9.0,
+							   y - PENGUIN_HEIGHT/2 + 20.0);
 	
-		collisionBoxes[1] = new hgeRect(x - 35.0,
-										y - PENGUIN_HEIGHT/2 + 20.0,
-										x + 35.0,
-										y);
+		collisionBoxes[1]->Set(x - 35.0,
+							   y - PENGUIN_HEIGHT/2 + 20.0,
+							   x + 35.0,
+							   y);
 		
-		collisionBoxes[2] = new hgeRect(x - PENGUIN_WIDTH/2   +5.0,
-										y ,
-										x + PENGUIN_WIDTH/2   -5.0,
-										y + PENGUIN_HEIGHT/2  -5.0);
+		collisionBoxes[2]->Set(x - PENGUIN_WIDTH/2   +5.0,
+							   y,
+							   x + PENGUIN_WIDTH/2   -5.0,
+							   y + PENGUIN_HEIGHT/2  -5.0);
 
 	}
 }
