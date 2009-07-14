@@ -550,6 +550,7 @@ public:
 	bool isBossKilled(int boss);
 	void explore(int gridX, int gridY);
 	bool isExplored(int gridX, int gridY);
+	int getTotalGemCount();
 	int getCurrentHint();
 
 	//Stats

@@ -80,8 +80,8 @@ bool AdviceWindow::update(float dt) {
 	return true;
 }
 
-void AdviceWindow::initAdviceOptions() {
-
+void AdviceWindow::initAdviceOptions() 
+{
 	for (int i = 0; i < AdviceTypes::NUM_ADVICE; i++) {
 		adviceOptions[i].x = i < 4 ? X_OFFSET + 30 : X_OFFSET + 215;
 		adviceOptions[i].y = Y_OFFSET + 80 + (i%4) * 40.0;
@@ -92,16 +92,22 @@ void AdviceWindow::initAdviceOptions() {
 	adviceOptions[AdviceTypes::ADVICE_FRISBEE].text = "Frisbee";
 	adviceOptions[AdviceTypes::ADVICE_INVENTORY].text = "Inventory";
 	adviceOptions[AdviceTypes::ADVICE_SAVING].text = "Saving";
+	adviceOptions[AdviceTypes::ADVICE_SHOP].text = "Shop";
 
 }
 
-bool AdviceWindow::isAdviceAvailable(int advice) {
+bool AdviceWindow::isAdviceAvailable(int advice) 
+{
 	switch (advice) {
 		case AdviceTypes::ADVICE_EXIT:
 		case AdviceTypes::ADVICE_SAVING:
 			return true;
 		case AdviceTypes::ADVICE_INVENTORY:
 			return smh->saveManager->hasAbility[CANE];
+		case AdviceTypes::ADVICE_FRISBEE:
+			return smh->saveManager->hasAbility[FRISBEE];
+		case AdviceTypes::ADVICE_SHOP:
+			return smh->saveManager->getTotalGemCount() > 0;
 		default:
 			return false;
 	}

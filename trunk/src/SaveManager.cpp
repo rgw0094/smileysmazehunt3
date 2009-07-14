@@ -507,6 +507,22 @@ int SaveManager::getCompletion(int file) {
 	return files[file].completion;
 }
 
+/**
+ * Returns the total number of gems smiley has found of all types across
+ * all areas.
+ */
+int SaveManager::getTotalGemCount()
+{
+	int total = 0;
+
+	for (int i = 0; i < NUM_AREAS; i++)
+	{
+		total += (numGems[i][0] + numGems[i][1] + numGems[i][2]);
+	}
+
+	return total;
+}
+
 float SaveManager::getDamageModifier() {
 	return (1.0 + float(numUpgrades[2]) * 0.2) * smh->gameData->getDifficultyModifier(difficulty);
 }
