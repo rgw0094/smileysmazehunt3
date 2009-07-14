@@ -122,11 +122,14 @@ void TextBox::setAdvice(int _advice)
 	currentPage = 1;
 	advice = _advice;
 
-	if (advice == AdviceTypes::ADVICE_INVENTORY) {
+	if (advice == AdviceTypes::ADVICE_INVENTORY)
 		numPages = 4;
-	} else {
+	else if (advice == AdviceTypes::ADVICE_FRISBEE)
+		numPages = 3;
+	else if (advice == AdviceTypes::ADVICE_SHOP)
+		numPages = 3;
+	else
 		numPages = 1;
-	}
 }
 
 /**
@@ -332,7 +335,7 @@ bool TextBox::doClose()
 		if (ability == CANE) {
 			smh->popupMessageManager->showNewAdvice(AdviceTypes::ADVICE_INVENTORY);
 		} else if (ability == FRISBEE) {
-
+			smh->popupMessageManager->showNewAdvice(AdviceTypes::ADVICE_FRISBEE);
 		}
 
 	//After closing advice, go back to the advice menu
@@ -396,8 +399,6 @@ std::string TextBox::getAbilityText(int ability) {
 			return "You found Jesus' Sandals. You can now walk on Water!";
 		case FRISBEE:
 			return "You got the Frisbee! You can now stun enemies and toggle far away switches.";
-							//Tap the Ability button (" + smh->input->getInputDescription(INPUT_ABILITY) + ") to throw the frisbee in order to toggle far away switches!";
-				//case 2: return "You can also charge up a powerful stun attack by holding the ability button before releasing it to launch the frisbee. The longer you charge up, the longer any enemies you hit will be stunned!";
 		case FIRE_BREATH:
 			return "You can now breath fire! Don't sneeze around a dry forest!";
 		case SPRINT_BOOTS:
@@ -431,6 +432,20 @@ std::string TextBox::getAdviceText(int advice, int page) {
 			}
 		case AdviceTypes::ADVICE_SAVING:
 			return "To save your game you must simply lick one of the many lollipops strewn throughout our land.";
+		case AdviceTypes::ADVICE_FRISBEE:
+			switch (page)
+			{
+				case 1: return "The frisbee can be used to stun enemies or to hit far away switches.";
+				case 2: return "To simply throw the frisbee to toggle a switch, tap the Ability button (" + smh->input->getInputDescription(INPUT_ABILITY) + ")";
+				case 3: return "You can also charge up a powerful stun attack by holding the ability button before releasing it to launch the frisbee. The longer you charge up, the longer any enemies you hit will be stunned!";
+			}
+		case AdviceTypes::ADVICE_SHOP:
+			switch (page)
+			{
+				case 1: return "You can trade the gems that you find with Captain Spierdyke for upgrades. The captain can be found near his ship in Smiley Town.";
+				case 2: return "There are three gems types you can find. Red gems are worth one smiley dollar, yellow gems are worth 3 smiley dollars, and blue gems are worth 5 smiley dollars!";
+				case 3: return "If Spierdyke of out of stock for one type of upgrade, try buying the remaining available upgrades first.";
+			}
 		default: return "advice";
 	}
 }

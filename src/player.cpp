@@ -1175,23 +1175,36 @@ void Player::setFacingStraight() {
 /** 
  * Collects any items in the player's current square.
  */
-void Player::doItems() {
-
+void Player::doItems() 
+{
 	int item = smh->environment->checkItem(gridX, gridY);
 	bool gatheredItem = false;
 
-	if (item == RED_KEY || item == GREEN_KEY || item == BLUE_KEY || item == YELLOW_KEY) {
+	if (item == RED_KEY || item == GREEN_KEY || item == BLUE_KEY || item == YELLOW_KEY) 
+	{
 		smh->soundManager->playSound("snd_key");
 		smh->saveManager->numKeys[Util::getKeyIndex(smh->saveManager->currentArea)][item-1]++;
 		gatheredItem = true;
-	} else if (item == SMALL_GEM || item == MEDIUM_GEM || item == LARGE_GEM) {
+	} 
+	else if (item == SMALL_GEM || item == MEDIUM_GEM || item == LARGE_GEM) 
+	{
 		smh->soundManager->playSound("snd_gem");
+
+		//If this is the first gem the player has collected, open up the
+		//shop advice.
+		if (smh->saveManager->getTotalGemCount() == 0)
+		{
+			smh->popupMessageManager->showNewAdvice(AdviceTypes::ADVICE_SHOP);
+		}
+
 		smh->saveManager->numGems[smh->saveManager->currentArea][item-SMALL_GEM]++;
 		if (item == SMALL_GEM) smh->saveManager->money += GemValues::SmallGemValue;
 		else if (item == MEDIUM_GEM) smh->saveManager->money += GemValues::MediumGemValue;
 		else if (item == LARGE_GEM) smh->saveManager->money += GemValues::LargeGemValue;
 		gatheredItem = true;
-	} else if (item == HEALTH_ITEM) {
+	} 
+	else if (item == HEALTH_ITEM) 
+	{
 		if (getHealth() != getMaxHealth()) {
 			setHealth(getHealth() + 1.0);
 			gatheredItem = true;
@@ -1200,7 +1213,9 @@ void Player::doItems() {
 		} else {
 			smh->popupMessageManager->showFullHealth();
 		}
-	} else if (item == MANA_ITEM) {
+	} 
+	else if (item == MANA_ITEM) 
+	{
 		if (getMana() != getMaxMana()) {
 			setMana(getMana() + MANA_PER_ITEM);
 			gatheredItem = true;
@@ -1212,7 +1227,8 @@ void Player::doItems() {
 		}
 	}
 	
-	if (gatheredItem) {
+	if (gatheredItem) 
+	{
 		smh->environment->removeItem(gridX, gridY);
 	}
 }

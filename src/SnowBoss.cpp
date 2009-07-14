@@ -89,7 +89,7 @@ void SnowBoss::placeCollisionBoxes() {
 }
 
 bool SnowBoss::update(float dt) {
-	
+
 	//When smiley triggers the boss' enemy blocks start his dialogue.
 	if (state == SNOWBOSS_INACTIVE && !startedIntroDialogue) {
 		if (smh->enemyGroupManager->groups[groupID].triggeredYet) {
