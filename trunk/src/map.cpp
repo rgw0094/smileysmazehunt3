@@ -38,8 +38,8 @@ Map::~Map() { }
 /**
  * Draw the map
  */
-void Map::draw(float dt) {
-
+void Map::draw(float dt) 
+{
 	//Shade behind the map
 	smh->drawScreenColor(Colors::BLACK, 100.0);
 
@@ -49,14 +49,16 @@ void Map::draw(float dt) {
 	smh->hge->Gfx_SetClipping(windowX, windowY, windowWidth, windowHeight);
 
 	//Draw the map tiles
-	for (int i = gridX; i < gridX + gridWidth+1; i++) {
-		for (int j = gridY; j < gridY + gridHeight+1; j++) {
-			
+	for (int i = gridX; i < gridX + gridWidth+1; i++) 
+	{
+		for (int j = gridY; j < gridY + gridHeight+1; j++) 
+		{	
 			//Calculate the top left corner of the square and its width
 			int drawX = windowX+(i-gridX)*squareSize - ((int)xOffset%squareSize);
 			int drawY = windowY+(j-gridY)*squareSize - ((int)yOffset%squareSize);
 			
-			if (smh->environment->isInBounds(i,j) && smh->saveManager->isExplored(i,j)) {
+			if (smh->environment->isInBounds(i,j) && smh->saveManager->isExplored(i,j)) 
+			{
 				drawSquare(i, j, drawX, drawY);
 			}
 			drawFogAt(i, j, drawX, drawY);
@@ -74,13 +76,13 @@ void Map::draw(float dt) {
 
 }
 
-void Map::drawSquare(int i , int j, int drawX, int drawY) {
-	
+void Map::drawSquare(int i , int j, int drawX, int drawY) 
+{	
 	int c = smh->environment->collision[i][j];
 
 	bool isHiddenWarp = Util::isWarp(c) && smh->environment->variable[i][j] == 990;
 	bool drawNoCollision = 
-		smh->player->canPass(c) || isHiddenWarp || Util::isCylinderUp(c) || Util::isCylinderSwitchLeft(c) ||
+		smh->player->canPass(c, false) || isHiddenWarp || Util::isCylinderUp(c) || Util::isCylinderSwitchLeft(c) ||
 		Util::isCylinderSwitchRight(c) || c==SIGN || c==FAKE_COLLISION;
 
 	//Basic map tiles
@@ -90,7 +92,7 @@ void Map::drawSquare(int i , int j, int drawX, int drawY) {
 		smh->drawSprite("miniMapBlackSquare", drawX, drawY);
 	} else if (smh->environment->isDeepWaterAt(i, j)) {
 		smh->drawSprite("miniMapBlueSquare", drawX, drawY);
-	} else if (drawNoCollision && !isHiddenWarp) {
+	} else if (drawNoCollision && !isHiddenWarp && c != FAKE_COLLISION) {
 		smh->drawSprite("miniMapNoCollision", drawX, drawY);
 	} else {
 		smh->drawSprite("miniMapCollision", drawX, drawY);

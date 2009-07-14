@@ -213,8 +213,8 @@ void Environment::loadArea(int id, int from, bool playMusic) {
 	areaFile.read(threeBuffer,1);	//read newline
 
 	//Set up screen size (64 is normal size)
-	screenWidth = SCREEN_WIDTH / 64.0;
-	screenHeight = SCREEN_HEIGHT / 64.0;
+	screenWidth = 1024.0 / 64.0;
+	screenHeight = 768.0 / 64.0;
 
 
 	//Load ID Layer
@@ -664,11 +664,11 @@ void Environment::draw(float dt) {
 
 		//Column lines
 		for (int i = 0; i <= screenWidth; i++) {
-			smh->hge->Gfx_RenderLine(i*64.0 - xOffset,0,i*64.0 - xOffset,SCREEN_HEIGHT);
+			smh->hge->Gfx_RenderLine(i*64.0 - xOffset,0,i*64.0 - xOffset,768.0);
 		}
 		//Row lines
 		for (int i = 0; i <= screenHeight; i++) {
-			smh->hge->Gfx_RenderLine(0,i*64.0 - yOffset,SCREEN_WIDTH,i*64.0 - yOffset);
+			smh->hge->Gfx_RenderLine(0,i*64.0 - yOffset,1024.0,i*64.0 - yOffset);
 		}
 		//Draw Terrain collision boxes
 		for (int i = smh->player->gridX - 2; i <= smh->player->gridX + 2; i++) {

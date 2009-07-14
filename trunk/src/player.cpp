@@ -1059,12 +1059,19 @@ void Player::doArrowPads(float dt) {
 }
 
 
+bool Player::canPass(int collision)
+{
+	return canPass(collision, true);
+}
+
 /**
  * Returns whether or not the player can pass through the specified collision type.
+ * If applyCurrentAbilities is true, the result will be modified based on any currently
+ * active abilities.
  */
-bool Player::canPass(int collision) {
-
-	if (springing) return true;
+bool Player::canPass(int collision, bool applyCurrentAbilities) 
+{
+	if (applyCurrentAbilities && springing) return true;
 
 	bool canPassWater = (((gui->getSelectedAbility() == WATER_BOOTS) && !drowning) || springing || isHovering || graduallyMoving) &&
 		smh->timePassedSince(timeStoppedBreathingFire) > 0.5;
@@ -1095,7 +1102,7 @@ bool Player::canPass(int collision) {
 		case BLUE_CYLINDER_DOWN: return true;
 		case BROWN_CYLINDER_DOWN: return true;
 		case SILVER_CYLINDER_DOWN: return true;
-		case UNWALKABLE: return false || springing;
+		case UNWALKABLE: return false || (applyCurrentAbilities && springing);
 		case HOVER_PAD: return true;
 		case SHALLOW_WATER: return true;
 		case SHALLOW_GREEN_WATER: return true;
@@ -1107,18 +1114,18 @@ bool Player::canPass(int collision) {
 		case NO_WALK_WATER: return false;
 		case GREEN_WATER: return canPassWater;
 		case SMILELET_FLOWER_HAPPY: return true;
-		case WHITE_SWITCH_LEFT: return false || springing;
-		case YELLOW_SWITCH_LEFT: return false || springing;
-		case GREEN_SWITCH_LEFT: return false || springing;
-		case BLUE_SWITCH_LEFT: return false || springing;
-		case BROWN_SWITCH_LEFT: return false || springing;
-		case SILVER_SWITCH_LEFT: return false || springing;
-		case WHITE_SWITCH_RIGHT: return false || springing;
-		case YELLOW_SWITCH_RIGHT: return false || springing;
-		case GREEN_SWITCH_RIGHT: return false || springing;
-		case BLUE_SWITCH_RIGHT: return false || springing;
-		case BROWN_SWITCH_RIGHT: return false || springing;
-		case SILVER_SWITCH_RIGHT: return false || springing;
+		case WHITE_SWITCH_LEFT: return false || (applyCurrentAbilities && springing);
+		case YELLOW_SWITCH_LEFT: return false || (applyCurrentAbilities && springing);
+		case GREEN_SWITCH_LEFT: return false || (applyCurrentAbilities && springing);
+		case BLUE_SWITCH_LEFT: return false || (applyCurrentAbilities && springing);
+		case BROWN_SWITCH_LEFT: return false || (applyCurrentAbilities && springing);
+		case SILVER_SWITCH_LEFT: return false || (applyCurrentAbilities && springing);
+		case WHITE_SWITCH_RIGHT: return false || (applyCurrentAbilities && springing);
+		case YELLOW_SWITCH_RIGHT: return false || (applyCurrentAbilities && springing);
+		case GREEN_SWITCH_RIGHT: return false || (applyCurrentAbilities && springing);
+		case BLUE_SWITCH_RIGHT: return false || (applyCurrentAbilities && springing);
+		case BROWN_SWITCH_RIGHT: return false || (applyCurrentAbilities && springing);
+		case SILVER_SWITCH_RIGHT: return false || (applyCurrentAbilities && springing);
 		case DIZZY_MUSHROOM_1: return true;
 		case DIZZY_MUSHROOM_2: return true;
 		case BOMB_PAD_UP: return true;
@@ -1827,6 +1834,11 @@ void Player::checkForIceGlitch() {
 
 bool Player::isInvisible() {
 	return cloaked;
+}
+
+bool Player::isSpringing()
+{
+	return springing;
 }
 
 bool Player::isReflectingProjectiles() {
