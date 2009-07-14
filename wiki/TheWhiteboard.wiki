@@ -13,7 +13,6 @@
 
 === Graphics To Do ===
  * Fenwar near death animation
- * Keys background (in lower corner of screen)
  * Slime
  * More projectile graphics (snowmen throw snowballs, squirrels throw nuts ETCETERA)
 
@@ -24,11 +23,11 @@
  * When you get Shrink (after beating Magnitogorsk), the text doesn't display.
  * 3 minimap glitches: fake walls aren't dark brown on minimap; deep water doesn't appear when wearing sandals; no collision appears when hopping on a spring
  * 119,156 at Tut: I got a timed switch to stay switched on the wrong side. I was hitting both of the switches in that area repeatedly and quickly when it happened.
- * Game crashes when you get an item
  * Shrink tunnels are glitchy. Especially check out TUT(143,185)
 
 ===Done===
 ||Item||Date||Done By||
+||Key background graphic||7/12/09||RMM||
 ||Fenwar orb/bullet graphics||7/10/09||RMM||
 ||Fixed the Calypso crash||7/10/09||RGW||
 ||Sounds are now precached so you don't freeze for a split second when first loading some of the larger sounds||7/10/09||RGW||
