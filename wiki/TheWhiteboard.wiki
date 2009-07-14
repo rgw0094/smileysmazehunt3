@@ -21,11 +21,11 @@
  * Gem #'s are huge at start
  * Portly's ice spawning on Smiley freezes you forever.
  * When you get Shrink (after beating Magnitogorsk), the text doesn't display.
- * 3 minimap glitches: fake walls aren't dark brown on minimap; deep water doesn't appear when wearing sandals; no collision appears when hopping on a spring
  * 119,156 at Tut: I got a timed switch to stay switched on the wrong side. I was hitting both of the switches in that area repeatedly and quickly when it happened.
 
 ===Done===
 ||Item||Date||Done By||
+||Fixed minimap bugs||7/13/09||RGW||
 ||Put in a gay hack to fix shrink tunnels||7/13/09||RGW||
 ||Key background graphic||7/12/09||RMM||
 ||Fenwar orb/bullet graphics||7/10/09||RMM||
