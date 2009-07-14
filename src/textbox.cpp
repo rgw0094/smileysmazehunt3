@@ -13,20 +13,16 @@ extern SMH *smh;
 
 #define PSYCHEDELIC_GRANULARITY 16
 
-/** 
- * Consutrctor
- */
-TextBox::TextBox() {
+TextBox::TextBox()
+{
 	x = 312;
 	y = 500;
 	alpha = 255;
 	increaseAlpha = false;
 }
 
-/**
- * Destructor
- */ 
-TextBox::~TextBox() { 
+TextBox::~TextBox() 
+{ 
 	if (distortion) delete distortion;
 	if (graphic) delete graphic;
 }
@@ -35,8 +31,8 @@ TextBox::~TextBox() {
 /**
  * Common initialization tasks when a text box is opened.
  */
-void TextBox::init() {
-
+void TextBox::init() 
+{
 	fadeAlpha = 255.0;
 	timePageOpened = smh->getRealTime();
 	fadingOut = false;
@@ -44,14 +40,13 @@ void TextBox::init() {
 	graphic = NULL;
 	smh->player->stopFireBreath();
 	smh->player->stopMovement();
-
 }
 
 /**
  * Intializes a text box for NPC dialogue
  */
-void TextBox::setDialogue(int _npcID, int _textID) {
-
+void TextBox::setDialogue(int _npcID, int _textID) 
+{
 	textBoxType = TextBoxTypes::DIALOG_TYPE;
 	init();
 
@@ -77,8 +72,8 @@ void TextBox::setDialogue(int _npcID, int _textID) {
 /**
  * Initialize the textbox for hints.
  */
-void TextBox::setHint() {
-	
+void TextBox::setHint() 
+{
 	textBoxType = TextBoxTypes::HINT_TYPE;
 	init();
 
@@ -106,13 +101,13 @@ void TextBox::setHint() {
 			distortion->SetColor(i, j, ARGB(fadeAlpha, 0, 0, 0));
 		}
 	}
-
 }
 
 /**
  * Opens the text box to tell the user they received a new ability.
  */
-void TextBox::setNewAbility(int _ability) {
+void TextBox::setNewAbility(int _ability) 
+{
 	textBoxType = TextBoxTypes::ABILITY_TYPE;
 	init();
 	currentPage = 1;
@@ -120,8 +115,8 @@ void TextBox::setNewAbility(int _ability) {
 	ability = _ability;
 }
 
-void TextBox::setAdvice(int _advice) {
-
+void TextBox::setAdvice(int _advice) 
+{
 	textBoxType = TextBoxTypes::ADVICE_TYPE;
 	init();
 	currentPage = 1;
@@ -137,8 +132,8 @@ void TextBox::setAdvice(int _advice) {
 /**
  * Intializes a text box for non-dialogue purposes.
  */
-void TextBox::setSign(int signId) {
-
+void TextBox::setSign(int signId) 
+{
 	textBoxType = TextBoxTypes::SIGN_TYPE;
 	init();
 	numPages = currentPage = 1;
@@ -147,18 +142,16 @@ void TextBox::setSign(int signId) {
 	paramString = "Sign";
 	paramString += Util::intToString(signId);
 	strcpy(text, smh->gameData->getGameText(paramString.c_str()));
-
 }
 
 
 /**
  * Draws the text box if it is open.
  */ 
-void TextBox::draw(float dt) {
-	
-	//Hint box
-	if (textBoxType == TextBoxTypes::HINT_TYPE) {
-
+void TextBox::draw(float dt) 
+{	
+	if (textBoxType == TextBoxTypes::HINT_TYPE) 
+	{
 		distortion->Render(-15,-15);
 		smh->resources->GetAnimation("player")->SetFrame(DOWN);
 		smh->resources->GetAnimation("player")->Render(512,384);
@@ -174,9 +167,10 @@ void TextBox::draw(float dt) {
 		paramString += Util::intToString(currentPage);
 		smh->resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, smh->gameData->getGameText(paramString.c_str()));
 
-	//Dialog box
-	} else if (textBoxType == TextBoxTypes::DIALOG_TYPE) {
-		
+	
+	} 
+	else if (textBoxType == TextBoxTypes::DIALOG_TYPE) 
+	{
 		smh->resources->GetSprite("textBox")->Render(x,y);
 
 		//Display the NPC's face and name. npcID -1 means don't draw anything!
@@ -197,42 +191,48 @@ void TextBox::draw(float dt) {
 		paramString += "-";
 		paramString += Util::intToString(currentPage);
 		smh->resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, smh->gameData->getGameText(paramString.c_str()));
-
-	//New ability
-	} else if (textBoxType == TextBoxTypes::ABILITY_TYPE) {
+	} 
+	else if (textBoxType == TextBoxTypes::ABILITY_TYPE) 
+	{
 		smh->resources->GetSprite("textBox")->Render(x,y);
 		smh->resources->GetAnimation("abilities")->SetFrame(ability);
 		smh->resources->GetAnimation("abilities")->Render(x+212,y+42);
+		smh->resources->GetFont("textBoxFnt")->SetColor(ARGB(255, 0, 0, 0));
 		smh->resources->GetFont("textBoxFnt")->printfb(x + 20, y + 15 + 64, 360, 200 - 64, HGETEXT_CENTER, getAbilityText(ability).c_str());
-
-	} else if (textBoxType == TextBoxTypes::ADVICE_TYPE) {
+	}
+	else if (textBoxType == TextBoxTypes::ADVICE_TYPE) 
+	{
 		smh->resources->GetSprite("textBox")->Render(x,y);
 		smh->resources->GetSprite("adviceManDown")->Render(x+212,y+52);
 		smh->resources->GetFont("textBoxFnt")->SetScale(0.75);
 		smh->resources->GetFont("textBoxFnt")->printfb(x + 20, y + 25 + 64, 360, 200 - 64, HGETEXT_CENTER, getAdviceText(advice, currentPage).c_str());
 		smh->resources->GetFont("textBoxFnt")->SetScale(1.0);
-
-	} else if (textBoxType == TextBoxTypes::SIGN_TYPE) {
+	} 
+	else if (textBoxType == TextBoxTypes::SIGN_TYPE) 
+	{
 		smh->resources->GetSprite("textBox")->Render(x,y);
 		smh->resources->GetFont("textBoxFnt")->printfb(x + 20, y + 20, 360, 210, HGETEXT_CENTER, "%s", text);
 	}
 
 	//Draw next page/OK icon
-	if (currentPage == numPages) {
+	if (currentPage == numPages) 
+	{
 		smh->resources->GetSprite("okIcon")->Render(x + 350, y + 220);
-	} else {
+	}
+	else
+	{
 		smh->resources->GetSprite("arrowIcon")->Render(x + 350, y + 220);
 	}
-
 }
 
 /**
  * Updates the text box if it is active
  */
-bool TextBox::update(float dt) {
-
+bool TextBox::update(float dt) 
+{
 	//Fade out effect
-	if (fadingOut) {
+	if (fadingOut) 
+	{
 		return doFadeOut(dt);
 	}
 
@@ -349,7 +349,12 @@ bool TextBox::doClose()
  * Updates alphas in order to fade out the hint screen. Returns true if done
  * fading out
  */
-bool TextBox::doFadeOut(float dt) {
+bool TextBox::doFadeOut(float dt) 
+{
+	if (textBoxType != TextBoxTypes::HINT_TYPE)
+	{
+		throw new System::Exception(new System::String("TextBox.doFadeOut() was called but we are not in hint mode. Something is fucked!"));
+	}
 
 	//Fade stuff out
 	if (fadeAlpha > 0.0) fadeAlpha -= 130.0 * dt;
@@ -415,8 +420,6 @@ std::string TextBox::getAbilityText(int ability) {
 }
 
 std::string TextBox::getAdviceText(int advice, int page) {
-
-	smh->hge->System_Log("%d %d", advice, page);
 
 	switch (advice) {
 		case AdviceTypes::ADVICE_INVENTORY:

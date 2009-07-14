@@ -92,6 +92,7 @@ void LootManager::update(float dt) {
 					smh->popupMessageManager->showFullMana();
 				}
 			} else if (i->type == LOOT_NEW_ABILITY) {
+				smh->hge->System_Log("new ability: %d", i->ability);
 				smh->saveManager->hasAbility[i->ability] = true;
 				smh->windowManager->openNewAbilityTextBox(i->ability);
 				collected = true;

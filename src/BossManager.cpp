@@ -80,7 +80,6 @@ void BossManager::update(float dt)
 	{
 		if (i->boss->update(dt)) 
 		{
-			smh->log("cunt");
 			delete i->boss;
 			i = bossList.erase(i);
 		}
