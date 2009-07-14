@@ -226,7 +226,8 @@ void Player::updateGUI(float dt) {
 	gui->update(dt);
 }
 
-void Player::updateLocation() {
+void Player::updateLocation() 
+{
 	lastGridX = gridX;
 	lastGridY = gridY;
 	if (smh->environment->collision[gridX][gridY] != ICE) {
@@ -312,7 +313,7 @@ void Player::doMove(float dt) {
 	if (doGayMovementFix(xDist, yDist)) return;
  
 	//Move left or right
-	if (xDist != 0.0) {
+	if (xDist != 0.0 && smh->environment->collision[gridX][gridY] != SHRINK_TUNNEL_VERTICAL) {
 		if (!smh->environment->playerCollision(x + xDist, y, dt)) {	
 			x += xDist;
 			smh->saveManager->pixelsTravelled += abs(xDist);
@@ -335,7 +336,7 @@ void Player::doMove(float dt) {
 	}
 
 	//Move up or down
-	if (yDist != 0.0) {
+	if (yDist != 0.0 && smh->environment->collision[gridX][gridY] != SHRINK_TUNNEL_HORIZONTAL) {
 		if (!smh->environment->playerCollision(x, y+yDist, dt)) {	
 			y += yDist;
 			smh->saveManager->pixelsTravelled += abs(yDist);
@@ -1296,8 +1297,8 @@ void Player::doWater() {
 /**
  * Updates dx/dy by listening for movement input from the player and other shit.
  */
-void Player::updateVelocities(float dt) {
-
+void Player::updateVelocities(float dt) 
+{
 	//For the following states, velocities are handled in their respective update methods
 	if (falling || inShrinkTunnel || iceSliding || sliding || springing || graduallyMoving) return;
 
@@ -1344,7 +1345,6 @@ void Player::updateVelocities(float dt) {
 			if (dy < MOVE_SPEED && !sliding) dy += accel*dt;
 		}
 	}
-
 }
 
 /**
@@ -1623,8 +1623,8 @@ void Player::doShrinkTunnels(float dt) {
 	int c = smh->environment->collision[gridX][gridY];
 
 	//Enter shrink tunnel
-	if (!inShrinkTunnel && !springing && !sliding && (c == SHRINK_TUNNEL_HORIZONTAL || c == SHRINK_TUNNEL_VERTICAL)) {
-		
+	if (!inShrinkTunnel && !springing && !sliding && (c == SHRINK_TUNNEL_HORIZONTAL || c == SHRINK_TUNNEL_VERTICAL)) 
+	{
 		timeEnteredShrinkTunnel = smh->getGameTime();
 		inShrinkTunnel = true;
 		dx = dy = 0;
@@ -1649,11 +1649,11 @@ void Player::doShrinkTunnels(float dt) {
 			dy = -SHRINK_TUNNEL_SPEED;
 			timeInShrinkTunnel = (64.0 + float(y) - (float(gridY)*64.0+32.0)) / SHRINK_TUNNEL_SPEED;
 		}
-
 	}
 
 	//Continue moving through shrink tunnel - move towards the center of the square
-	if (inShrinkTunnel) {
+	if (inShrinkTunnel) 
+	{
 		if (smh->environment->collision[gridX][gridY] == SHRINK_TUNNEL_VERTICAL) {
 			if (x < gridX*64+31) {
 				x += 80.0f*dt;
@@ -1670,10 +1670,10 @@ void Player::doShrinkTunnels(float dt) {
 	}
 
 	//Exit shrink tunnel
-	if (smh->timePassedSince(timeEnteredShrinkTunnel) > timeInShrinkTunnel) {
+	if (smh->timePassedSince(timeEnteredShrinkTunnel) > timeInShrinkTunnel) 
+	{
 		inShrinkTunnel = false;
 	}
-	
 
 }
 
