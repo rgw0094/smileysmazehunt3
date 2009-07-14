@@ -66,8 +66,6 @@ class PopupMessageManager;
 #define VERY_HARD 4
 
 //Gameplay values
-#define SCREEN_WIDTH 1024
-#define SCREEN_HEIGHT 768
 #define NUM_NPCS 99
 #define PLAYER_WIDTH 61
 #define PLAYER_HEIGHT 72

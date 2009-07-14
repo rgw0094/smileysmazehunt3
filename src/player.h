@@ -33,6 +33,7 @@ public:
 	void updateGUI(float dt);
 	void moveTo(int gridX, int gridY);
 	bool canPass(int collision);
+	bool canPass(int collision, bool applyCurrentAbilities);
 	void dealDamage(float damage, bool makesFlash);
 	void dealDamageAndKnockback(float damage, bool makesFlash, float knockbackDist, float knockbackerX, float knockbackerY);
 	void dealDamageAndKnockback(float damage, bool makesFlash, bool alwaysKnockback, float knockbackDist, float knockbackerX, float knockbackerY);
@@ -52,6 +53,7 @@ public:
 	bool isOnIce();
 	bool isShrunk();
 	bool isFlashing();
+	bool isSpringing();
 	bool isInShrinkTunnel();
 	void setHealth(float amount);
 	void setMana(float amount);
