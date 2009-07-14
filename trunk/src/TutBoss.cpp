@@ -98,8 +98,8 @@ extern SMH *smh;
 #define TUT_LIGHTNING_DAMAGE 1.0
 #define MUMMY_PROJECTILE_DAMAGE 1.0
 
-TutBoss::TutBoss(int _gridX,int _gridY,int _groupID) {
-	
+TutBoss::TutBoss(int _gridX,int _gridY,int _groupID) 
+{	
 	x = _gridX * 64 + 32;
 	y = _gridY * 64 + 32;
 	
@@ -124,6 +124,7 @@ TutBoss::TutBoss(int _gridX,int _gridY,int _groupID) {
 	lastMummySpawnTime = 0.0;
 	timeLastHitSoundPlayed = 0.0;
 	fadeAlpha = 255.0;
+	collisionBox = new hgeRect(1, 1, 1, 1);
 
 	a[0]=0.120;
 	b[0]=0.532;
@@ -135,8 +136,8 @@ TutBoss::TutBoss(int _gridX,int _gridY,int _groupID) {
 	b[2]=0.201;
 }
 
-TutBoss::~TutBoss() {
-	collisionBox->SetRadius(x, y, 1000);
+TutBoss::~TutBoss() 
+{
 	smh->enemyManager->killEnemiesInBox(collisionBox, RANGED_MUMMY);
 	smh->enemyManager->killEnemiesInBox(collisionBox, FLAIL_MUMMY);
 	smh->enemyManager->killEnemiesInBox(collisionBox, CHARGER_MUMMY);
@@ -147,10 +148,10 @@ TutBoss::~TutBoss() {
 void TutBoss::doCollision(float dt) {
 
 	//Update tut's collision box
-	collisionBox = new hgeRect(x-TUTBOSS_WIDTH/2-floatingHeight,
-								y-TUTBOSS_HEIGHT/2-floatingHeight,
-								x+TUTBOSS_WIDTH/2-floatingHeight,
-								y+TUTBOSS_HEIGHT/2-floatingHeight);
+	collisionBox->Set(x-TUTBOSS_WIDTH/2-floatingHeight,
+					  y-TUTBOSS_HEIGHT/2-floatingHeight,
+					  x+TUTBOSS_WIDTH/2-floatingHeight,
+					  y+TUTBOSS_HEIGHT/2-floatingHeight);
 
 	//Hurt the player if he runs into tut
 	if (smh->player->collisionCircle->testBox(collisionBox)) {
