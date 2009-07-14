@@ -180,7 +180,7 @@ void WindowManager::openNewAbilityTextBox(int whichAbility)
 	TextBox *textBox = new TextBox();
 	textBox->setNewAbility(whichAbility);
 
-	activeWindow.reset(new TextBox());
+	activeWindow.reset(textBox);
 	textBoxOpen = true;
 }
 
