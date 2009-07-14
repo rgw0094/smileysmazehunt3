@@ -67,6 +67,7 @@ void FenwarBombs::draw(float dt)
 
 void FenwarBombs::addBomb(int platform)
 {
+	return;
 	FenwarBomb bomb;
 	bomb.x = fenwar->x;
 	bomb.y = fenwar->y;

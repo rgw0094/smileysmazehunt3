@@ -25,6 +25,8 @@
 #define FENWAR_DEATH_STAGE_X 98
 #define FENWAR_DEATH_STAGE_Y 33
 
+#define FENWAR_ENEMY_DROP 91
+
 FenwarBoss::FenwarBoss(int _gridX, int _gridY, int _groupID) 
 {
 	x = _gridX * 64 + 32;
@@ -323,7 +325,7 @@ void FenwarBoss::doDroppingSpidersState(float dt)
 		} else
 		{
 			//Spawn the spider	
-			smh->enemyManager->addEnemy(ENEMY_FENWAR_EYE_SPIDER, platformLocations[targetPlatform].x,
+			smh->enemyManager->addEnemy(FENWAR_ENEMY_DROP, platformLocations[targetPlatform].x,
 				platformLocations[targetPlatform].y, 0.25, 0.25, -1);
 
 			//Choose the next platform to go to
