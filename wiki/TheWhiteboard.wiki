@@ -25,6 +25,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Added shop/frisbee advice||RGW||7/13/09||RGW||
 ||Fixed minimap bugs||7/13/09||RGW||
 ||Put in a gay hack to fix shrink tunnels||7/13/09||RGW||
 ||Key background graphic||7/12/09||RMM||
