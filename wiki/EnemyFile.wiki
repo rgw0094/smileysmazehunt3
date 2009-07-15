@@ -95,6 +95,11 @@
 ||12||Figure 8-type||
 ||13||Slime||
 ||14||Small orange dot||
+||15||Red boomerang shot by Botonoids||
+||16||Barvinoid's big white comet||
+||17||Barv's big yellow projectile||
+||18||Purple skull||
+||19||Acorn||
 
 ----
 = Enemies by Area =
