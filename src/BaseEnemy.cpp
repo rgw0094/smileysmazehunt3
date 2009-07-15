@@ -462,6 +462,27 @@ void BaseEnemy::setFacing() {
  * need to be overrode!!!!
  */
 void BaseEnemy::baseUpdate(float dt) {
+	if (isSpawning) {
+		//spawning, so update the spawn effect that until it's done
+		if (spawnState == ENEMY_SPAWNSTATE_FALLING) {
+			spawnY -= 100.0*dt;
+			if (spawnY <= 0.0) {
+				spawnY = 0.0;
+				spawnState = ENEMY_SPAWNSTATE_GROWING;
+			}
+		} else if (spawnState == ENEMY_SPAWNSTATE_GROWING) {
+			spawnSize += dt;
+			if (spawnSize >= 1.0) {
+				spawnSize = 1.0;
+				isSpawning = false;
+			}
+		} else { //who knows how the state could be 'else', but oh well.
+			isSpawning = false;
+		}
+		
+		//Don't want to update anything until the spawn effect is done
+		return;
+	}
 
 	//Update basic shit that every enemy needs
 	collisionBox->SetRadius(x, y, radius);
@@ -498,7 +519,7 @@ void BaseEnemy::baseUpdate(float dt) {
 
 	//Call the enemy's update method
 	update(dt);
-		
+	
 	//Do player collision
 	doPlayerCollision();
 
@@ -533,9 +554,14 @@ void BaseEnemy::baseCleanup()
 /**
  * Draw method called by the EnemyManager every frame. This method contains
  * draw logic that must be done by every enemy in the framework and should never
- * need to be overrode!!!!
+ * need to be overridden!!!!
  */
 void BaseEnemy::baseDraw(float dt) {
+	if (isSpawning) {
+		graphic[0]->RenderEx(smh->getScreenX(x),smh->getScreenY(y)-spawnY,0.0,spawnSize,spawnSize);
+		//graphic[0]->Render(100,100);
+		return;
+	}
 
 	//Call the enemy's draw function. If the enemy is currently flashing,
 	//skip calling it some frames to create the flashing effect.
@@ -552,7 +578,7 @@ void BaseEnemy::baseDraw(float dt) {
 	if (stunned) {
 		drawStunned(dt);
 	}
-
+	
 	//Debug mode stuff
 	drawDebug();
 }

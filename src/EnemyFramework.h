@@ -71,6 +71,9 @@ class hgeRect;
 //Location of enemy block graphic on the item layer
 #define ENEMYGROUP_BLOCKGRAPHIC 143
 
+#define ENEMY_SPAWNSTATE_FALLING 0
+#define ENEMY_SPAWNSTATE_GROWING 1
+
 //----------------------------------------------------------------
 //----------------------------------------------------------------
 //------------------ BASE CLASSES --------------------------------
@@ -148,6 +151,7 @@ public:
 	void setFacing();
 	void startFlashing();
 	void setState(EnemyState *newState);
+	bool isSpawning;
 
 	//Current state
 	EnemyState *currentState;
@@ -200,6 +204,11 @@ public:
 	bool dying;
 	bool flashing;
 
+	//Spawning shit
+	float beginSpawnTime;
+	int spawnState;
+	float spawnY, spawnSize;
+
 	//Graphics
 	hgeAnimation *graphic[4];
 
@@ -227,7 +236,7 @@ public:
 	//methods
 	void draw(float dt);
 	void update(float dt);
-	void addEnemy(int id, int gridX, int gridY, float spawnHealthChance, float spawnManaChance, int groupID);
+	void addEnemy(int id, int gridX, int gridY, float spawnHealthChance, float spawnManaChance, int groupID, bool useSpawningEffect);
 	void killEnemies(int type);
 	void killEnemiesInBox(hgeRect *box, int type);
 	bool tongueCollision(Tongue *tongue, float damage);
@@ -800,8 +809,7 @@ public:
 
 private:
 	void spawnEnemy();
-	void updateSpawn(float dt);
-
+	
 	//Can spawn up to 3 enemy types
 	//The chance to spawn them is defined as 45%, 35%, 20%
 	int enemyTypeToSpawn1;
@@ -811,8 +819,6 @@ private:
 	//Variables to keep track of SPAWNING
 	float timeOfLastSpawn;
 	
-	int spawnState; //either not spawning, small enemy is falling, or enemy is growing to size
-	float newEnemySize, newEnemyY;
 	int newEnemyID;
 
 	//Variables of floating

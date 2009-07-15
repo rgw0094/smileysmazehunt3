@@ -8,13 +8,8 @@
 
 extern SMH *smh;
 
-#define TIME_BETWEEN_SPAWNS 8.0
+#define TIME_BETWEEN_SPAWNS 9.0
 #define MAX_DISTANCE_FROM_SMILEY_TO_SPAWN 400
-
-#define SPAWN_STATE_NOT_SPAWNING 0
-#define SPAWN_STATE_ENEMY_FALLING 1
-#define SPAWN_STATE_ENEMY_GROWING 2
-
 
 /**
  * Constructor
@@ -29,10 +24,7 @@ E_Spawner::E_Spawner(int id, int gridX, int gridY, int groupID) {
 
 	facing = DOWN;
 	timeOfLastSpawn = -10.0;
-	spawnState = SPAWN_STATE_NOT_SPAWNING;
-	newEnemySize = 0.2;
-	newEnemyY = 0.0;
-
+	
 	//Framework values
 	chases = false;
 	hasRangedAttack = false;
@@ -61,10 +53,7 @@ E_Spawner::~E_Spawner() {
  * Draws the spawner.
  */
 void E_Spawner::draw(float dt) {
-	if (spawnState != SPAWN_STATE_NOT_SPAWNING) {
-		graphic[facing]->RenderEx(smh->getScreenX(x),smh->getScreenY(y) - newEnemyY,0.0,newEnemySize,newEnemySize);
-	}
-
+	
 	graphic[facing]->Update(dt);
 	graphic[facing]->Render(screenX, screenY - shadowOffset);
 	smh->resources->GetSprite("playerShadow")->Render(screenX, screenY);
@@ -83,14 +72,10 @@ void E_Spawner::update(float dt) {
 
 	if (smh->timePassedSince(timeOfLastSpawn) >= TIME_BETWEEN_SPAWNS &&
 		Util::distance(x,y,smh->player->x,smh->player->y) <= MAX_DISTANCE_FROM_SMILEY_TO_SPAWN &&
-		smh->environment->validPath(x, y, smh->player->x, smh->player->y, 13, canPass) &&
-		spawnState == SPAWN_STATE_NOT_SPAWNING) 
+		smh->environment->validPath(x, y, smh->player->x, smh->player->y, 13, canPass))
 	{
 		spawnEnemy();
 	}
-
-	//Update spawning
-	updateSpawn(dt);
 
 	//Update angle
 	angleVel = angleCoefficient * cos(smh->getGameTime()) * dt;
@@ -143,10 +128,9 @@ void E_Spawner::update(float dt) {
 		setState(new ES_Wander(this));
 	}
 
-	//Don't move while spawning an enemy
-	if (spawnState != SPAWN_STATE_NOT_SPAWNING) {
-		dx=dy=0.0;
-	}	
+	//If just recently spawned an enemy, don't move for a little while.
+	if (smh->timePassedSince(timeOfLastSpawn) <= 0.8) {dx = dy = 0.0;}
+
 	move(dt);
 }
 
@@ -167,42 +151,19 @@ void E_Spawner::spawnEnemy() {
 		newEnemyID = enemyTypeToSpawn3;
 	}
 
-	newEnemySize = 0.32;
-	newEnemyY = shadowOffset;
-	spawnState = SPAWN_STATE_ENEMY_FALLING;
-	
+	smh->enemyManager->addEnemy(newEnemyID,Util::getGridX(x),Util::getGridY(y),0.15,0.15,groupID, true);
+	if (groupID != -1) smh->enemyGroupManager->addEnemy(groupID);
+
+	timeOfLastSpawn = smh->getGameTime();
+
 	std::string debugText;
-	debugText = "E_Spawner.cpp begins to spawn enemy at";
+	debugText = "E_Spawner.cpp spawns enemy.";
 	smh->setDebugText(debugText);
 
 	smh->hge->System_Log("%d", groupID);
 }
 
-/**
- * Updates the spawning (enemy falling to ground, enemy growing)
- */
-void E_Spawner::updateSpawn(float dt) {
-	if (spawnState == SPAWN_STATE_NOT_SPAWNING) {
-		return;
-	} else if (spawnState == SPAWN_STATE_ENEMY_FALLING) {
-		newEnemyY -= dt*40.0;
-		if (newEnemyY <= 0.0) {
-			newEnemyY = 0.0;
-			spawnState = SPAWN_STATE_ENEMY_GROWING;
-		}
-	} else { //enemy_growing
-		newEnemySize += dt;
-		if (newEnemySize >= 1.0) {
-			newEnemySize = 1.0;
-			spawnState = SPAWN_STATE_NOT_SPAWNING;
 
-			smh->enemyManager->addEnemy(newEnemyID,Util::getGridX(x),Util::getGridY(y),0.15,0.15,groupID);
-			smh->enemyGroupManager->addEnemy(groupID);
-
-			timeOfLastSpawn = smh->getGameTime();
-		}
-	}
-}
 
 
 

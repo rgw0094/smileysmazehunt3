@@ -121,7 +121,7 @@ void EnemyGroupManager::triggerGroup(int whichGroup) {
 				if (smh->environment->enemyLayer[i][j] != -1 &&
 					smh->environment->ids[i][j] == ENEMYGROUP_ENEMY_POPUP &&
 					smh->environment->variable[i][j] == whichGroup) {
-						smh->enemyManager->addEnemy(smh->environment->enemyLayer[i][j], i, j, 0.25, 0.25, whichGroup);
+						smh->enemyManager->addEnemy(smh->environment->enemyLayer[i][j], i, j, 0.25, 0.25, whichGroup, false);
 						addEnemy(smh->environment->variable[i][j]);
 						smh->environment->addParticle("treeletSpawn", i*64+32, j*64+32);
 					}

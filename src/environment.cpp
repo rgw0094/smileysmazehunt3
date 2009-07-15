@@ -376,7 +376,7 @@ void Environment::loadArea(int id, int from, bool playMusic) {
 				}
 				if (ids[col][row] != ENEMYGROUP_ENEMY_POPUP) {
 					//Don't spawn popup enemies yet
-					smh->enemyManager->addEnemy(enemy-1,col,row, .2, .2, variable[col][row]);
+					smh->enemyManager->addEnemy(enemy-1,col,row, .2, .2, variable[col][row], false);
 				}
 
 			//128 - 239 are NPCs

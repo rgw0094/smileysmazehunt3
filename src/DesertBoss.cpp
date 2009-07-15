@@ -460,7 +460,7 @@ void DesertBoss::spawnCactlet() {
 
 	} while (abs(Util::distance(cactletGridX, cactletGridY, smh->player->gridX, smh->player->gridY)) < 3);
 
-	smh->enemyManager->addEnemy(CACTLET_ENEMYID, cactletGridX,cactletGridY,0.0,0.5, -1);
+	smh->enemyManager->addEnemy(CACTLET_ENEMYID, cactletGridX,cactletGridY,0.0,0.5, -1, false);
 
 	//Spawn a sand cloud
 	sandClouds->SpawnPS(&smh->resources->GetParticleSystem("sandCloud")->info,
