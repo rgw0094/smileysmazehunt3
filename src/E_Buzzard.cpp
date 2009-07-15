@@ -61,7 +61,11 @@ void E_Buzzard::update(float dt)
 
 	if (buzzardState == BUZZARD_FLYING) 
 	{
-		if (!stunned) 
+		if (smh->player->isInvisible()) {
+			if (abs(dx)<0.001 && abs(dy)<0.001) buzzardState = BUZZARD_RETURN_TO_START;
+		}
+
+		if (!stunned && !smh->player->isInvisible()) 
 		{
 			if (smh->player->x > x) 
 			{
@@ -97,7 +101,7 @@ void E_Buzzard::update(float dt)
 		x += xVelBuzz*dt;
 		y += yVelBuzz*dt;
 
-		//If the buzzard gets too far away from his starting point and Siley is off screen, 
+		//If the buzzard gets too far away from his starting point and Smiley is off screen, 
 		//stop chasing Smiley and return to his start point and resume waiting.
 		if (Util::distance(x, y, initialX, initialY) > BUZZARD_MAX_CHASE_RANGE &&
 			Util::distance(x, y, smh->player->x, smh->player->y > 600))
