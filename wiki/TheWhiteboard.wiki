@@ -3,6 +3,7 @@
  * The rest of the monocle man advice topics
  * Fenwar spiders
  * Make it so projectiles from bosses can't be reflected (except Mushboom) or silly padded (except Phyrebawz2)
+ * Make squirrels throw nuts (the graphic is in projectiles.png)
 
 === Sounds To Add ===
  * Calypso boss
@@ -14,7 +15,6 @@
 === Graphics To Do ===
  * Fenwar near death animation
  * Slime
- * More projectile graphics (snowmen throw snowballs, squirrels throw nuts ETCETERA)
 
 === Other ===
  * In the castle, it'd probably be possible to use the first 5 Smilelets in the water-smilelet puzzle to the left of the entry hall. You could use Silly pads to block the Ents' shots, thus protecting the Smilelets.
