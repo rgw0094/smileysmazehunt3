@@ -27,6 +27,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Finished spawn effect||7/14/09||ETI||
 ||Fenwar Spider-Eyes||7/13/09||ETI||
 ||Added shop/frisbee advice||7/13/09||RGW||
 ||Fixed minimap bugs||7/13/09||RGW||
