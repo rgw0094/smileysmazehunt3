@@ -3,6 +3,7 @@
  * The rest of the monocle man advice topics
  * Make it so projectiles from bosses can't be reflected (except Mushboom) or silly padded (except Phyrebawz2)
  * Make squirrels throw nuts (the graphic is in projectiles.png)
+ * Opening loading screen
 
 === Sounds To Add ===
  * Calypso boss
