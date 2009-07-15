@@ -221,6 +221,10 @@ Particle smallYellowBarv {
  filename=barvFloatEyeBeam.psi
  sprite=particleGraphic1
 }
+Particle skullProjectileParticle {
+ filename=skullproj.psi
+ sprite=particleGraphic11
+}
 
 ;********************************************
 ;************* FENWAR ENCOUNTER  ************
@@ -2375,6 +2379,18 @@ Sprite BoomerangProjectile {
  texture=projectileTx
  rect=32,214,32,32
  hotspot=16,16
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite SkullProjectile {
+ texture=projectileTx
+ rect=25,247,23,30
+ hotspot=11,15
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
+Sprite AcornProjectile {
+ texture=projectileTx
+ rect=1,247,21,23
+ hotspot=10,11
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
 
