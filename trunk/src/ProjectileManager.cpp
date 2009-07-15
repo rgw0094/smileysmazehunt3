@@ -387,7 +387,7 @@ void ProjectileManager::update(float dt) {
 		if (deleteProjectile) {
 			//if it was a mushroom, and it is hostile, spawn an enemy mushroomlet
 			if (i->id == PROJECTILE_MINI_MUSHROOM && i->hostile) {
-				smh->enemyManager->addEnemy(MINI_MUSHROOM_ENEMYID,i->x/64,i->y/64,0.25,0.75,-1);
+				smh->enemyManager->addEnemy(MINI_MUSHROOM_ENEMYID,i->x/64,i->y/64,0.25,0.75,-1, false);
 			}
 			//if it was a mummy, spawn a random mummy to spawn
 			if (i->id == PROJECTILE_TUT_MUMMY) {
@@ -400,7 +400,7 @@ void ProjectileManager::update(float dt) {
 				} else {
 					enemy = RANGED_MUMMY;
 				}
-				smh->enemyManager->addEnemy(enemy,i->x/64,i->y/64,0.25,0.75,-1);
+				smh->enemyManager->addEnemy(enemy,i->x/64,i->y/64,0.25,0.75,-1, false);
 			}
 			if (i->id == PROJECTILE_SLIME) {
 				smh->soundManager->playSound("snd_SlimeSplat",0.02);

@@ -326,7 +326,7 @@ void FenwarBoss::doDroppingSpidersState(float dt)
 		{
 			//Spawn the spider	
 			smh->enemyManager->addEnemy(FENWAR_ENEMY_DROP, platformLocations[targetPlatform].x,
-				platformLocations[targetPlatform].y, 0.25, 0.25, -1);
+				platformLocations[targetPlatform].y, 0.25, 0.25, -1, false);
 
 			//Choose the next platform to go to
 			chooseRandomPlatformUponWhichToDropASpider();

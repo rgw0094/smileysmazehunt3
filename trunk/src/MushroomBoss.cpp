@@ -276,7 +276,7 @@ void MushroomBoss::doMiniMushrooms(float dt) {
 }
 
 void MushroomBoss::spawnMiniMushroom() {
-	smh->enemyManager->addEnemy(MINI_MUSHROOM_ENEMYID, Util::getGridX(x),Util::getGridY(y),0.1,0.6, -1);
+	smh->enemyManager->addEnemy(MINI_MUSHROOM_ENEMYID, Util::getGridX(x),Util::getGridY(y),0.1,0.6, -1, false);
 }
 
 void MushroomBoss::spawnMiniMushroomProjectile() {

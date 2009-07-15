@@ -34,9 +34,10 @@ bool SortEnemiesPredicate(const EnemyStruct &lhs, const EnemyStruct &rhs) {
 /**
  * Add an enemy to the list
  */
-void EnemyManager::addEnemy(int id, int gridX, int gridY, float spawnHealthChance, float spawnManaChance, int groupID) {
+void EnemyManager::addEnemy(int id, int gridX, int gridY, float spawnHealthChance, float spawnManaChance, int groupID, bool useSpawningEffect) {
 
 	EnemyStruct newEnemy;
+
 	newEnemy.spawnHealthChance = spawnHealthChance;
 	newEnemy.spawnManaChance = spawnManaChance;
 
@@ -110,6 +111,16 @@ void EnemyManager::addEnemy(int id, int gridX, int gridY, float spawnHealthChanc
 		default:
 			newEnemy.enemy = new DefaultEnemy(id, gridX, gridY, groupID);
 			break;
+	}
+
+	if (useSpawningEffect) {
+		newEnemy.enemy->isSpawning = true;
+		newEnemy.enemy->spawnState = ENEMY_SPAWNSTATE_FALLING;
+		newEnemy.enemy->spawnSize = 0.4;	
+		newEnemy.enemy->spawnY = 45.0; //how high above the ground the enemy spawns
+		newEnemy.enemy->beginSpawnTime = smh->getGameTime();
+	} else {
+		newEnemy.enemy->isSpawning = false;
 	}
 	
 	enemyList.push_back(newEnemy);
