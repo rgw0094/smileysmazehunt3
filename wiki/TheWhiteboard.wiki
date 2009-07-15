@@ -2,7 +2,6 @@
  * Graphical effect for enemies spawning from the enemy spawners. (similar to bartlets)
  * The rest of the monocle man advice topics
  * Make it so projectiles from bosses can't be reflected (except Mushboom) or silly padded (except Phyrebawz2)
- * Make squirrels throw nuts (the graphic is in projectiles.png)
  * Opening loading screen
 
 === Sounds To Add ===
@@ -24,6 +23,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Added skull and acorn projectiles||7/14/09||ETI||
 ||Finished spawn effect||7/14/09||ETI||
 ||Added water to parts of the castle to prevent you from using Smilelets for the wrong flower||7/14/09||ETI||
 ||Fenwar Spider-Eyes||7/13/09||ETI||
