@@ -126,6 +126,11 @@ void ProjectileManager::addProjectile(float x, float y, float speed, float angle
 		newProjectile.particle->Fire();
 	}
 
+	if (id == PROJECTILE_SKULL) {
+		newProjectile.particle = new hgeParticleSystem(&smh->resources->GetParticleSystem("skullProjectileParticle")->info);
+		newProjectile.particle->Fire();
+	}
+
 	//Add it to the list
 	theProjectiles.push_back(newProjectile);
 
@@ -463,7 +468,19 @@ void ProjectileManager::draw(float dt) {
 			float distanceFromOrigin = Util::distance(i->x,i->y,i->startX,i->startY);
 			float width = sin(distanceFromOrigin/30.0); //from -1 to 1
 			projectileTypes[i->id].sprite->RenderEx(smh->getScreenX(i->x),smh->getScreenY(i->y),i->angle,1.0,width);		
-			
+		
+		//Skull (always facing up, has particle effect)
+		}else if (i->id == PROJECTILE_SKULL) {
+			i->particle->Update(dt);
+			i->particle->MoveTo(smh->getScreenX(i->x), smh->getScreenY(i->y), true);
+			i->particle->Render();
+			projectileTypes[i->id].sprite->Render(smh->getScreenX(i->x), smh->getScreenY(i->y));
+
+		//Acorn (rotates)
+		} else if (i->id == PROJECTILE_ACORN) {
+			projectileTypes[i->id].sprite->RenderEx(smh->getScreenX(i->x), smh->getScreenY(i->y),10*i->timeAlive);
+
+
 		//Normal projectiles
 		} else {
 			projectileTypes[i->id].sprite->RenderEx(smh->getScreenX(i->x), smh->getScreenY(i->y - i->parabolaYOffset), i->hasParabola ? 0.0 : i->angle, 1.0f, 1.0f);
@@ -696,5 +713,11 @@ void ProjectileManager::initProjectiles() {
 
 	projectileTypes[PROJECTILE_BARV_YELLOW].radius = 30;
 	projectileTypes[PROJECTILE_BARV_YELLOW].sprite = smh->resources->GetSprite("floatingEyeShot");
+
+	projectileTypes[PROJECTILE_SKULL].radius = 27;
+	projectileTypes[PROJECTILE_SKULL].sprite = smh->resources->GetSprite("SkullProjectile");
+
+	projectileTypes[PROJECTILE_ACORN].radius = 22;
+	projectileTypes[PROJECTILE_ACORN].sprite = smh->resources->GetSprite("AcornProjectile");
 
 }
