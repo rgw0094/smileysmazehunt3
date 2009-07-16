@@ -588,9 +588,6 @@ void LovecraftBoss::doTentacleState(float dt) {
 		}
 	}
 
-	//During tentacle state, Magnitogorsk heals himself slowly.
-	health += 0.25*dt;
-	if (health > HEALTH) health = HEALTH;
 }
 
 bool LovecraftBoss::doDeathState(float dt) {
