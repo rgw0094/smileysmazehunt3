@@ -228,9 +228,9 @@ bool SnowBoss::update(float dt) {
 			xRightWater=gridX*64+9.0*64;
 			xLeftWater=gridX*64-8.0*64;
 
-			if (cos(slidingAngle) < 0) { //sliding left
+			if (x < xLoot) { //on left side of center, so slide left
 				slidingAngle=PI; //slide perfectly left
-			} else { //sliding right
+			} else { //on right side of center, so slide right
                 slidingAngle=0; //slide perfectly right
 			}
 
@@ -420,7 +420,7 @@ void SnowBoss::updateIceBlocks(float dt) {
 		}
 
 		//tests to see if the ICE NOVA hit the ice block
-		if (iceNova->testCollision(iceBlocks[i].collisionBox)) {
+		if (iceNova->testCollision(iceBlocks[i].collisionBox) && !smh->player->collisionCircle->testBox(iceBlocks[i].collisionBox)) {
 			if (iceBlocks[i].life < 0) iceBlocks[i].life = 0;
 			iceBlocks[i].life+=ICE_BLOCK_LIFE_REGENERATE*dt;
 			if (iceBlocks[i].life > ICE_BLOCK_MAX_LIFE) iceBlocks[i].life = ICE_BLOCK_MAX_LIFE;
