@@ -21,6 +21,9 @@
  * When you get Shrink (after beating Magnitogorsk), the text doesn't display.
  * 119,156 at Tut: I got a timed switch to stay switched on the wrong side. I was hitting both of the switches in that area repeatedly and quickly when it happened.
 
+=== Balance Issues ===
+ * None currently reported.
+
 ===Done===
 ||Item||Date||Done By||
 ||Added skull and acorn projectiles||7/14/09||ETI||
