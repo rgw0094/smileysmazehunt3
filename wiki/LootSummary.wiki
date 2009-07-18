@@ -5,7 +5,7 @@
 ||Area||R||Y||B||
 ||Fountain||8||1||1||
 ||Dunes of Salabia||7||3||1||
-||Forest of Fundoria||14||6||3||
+||Forest of Fundoria||17 (was 14)||5 (was 6)||3||
 ||Sessaria Snowplains||7||2||1||
 ||Realm of Despair||8||3||1||
 ||Serpentine Path||1||1||1||
