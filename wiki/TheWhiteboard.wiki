@@ -1,8 +1,10 @@
 === Programming To Do ===
- * Graphical effect for enemies spawning from the enemy spawners. (similar to bartlets)
  * The rest of the monocle man advice topics
  * Make it so projectiles from bosses can't be reflected (except Mushboom) or silly padded (except Phyrebawz2)
  * Opening loading screen
+ * Make it so that Calypso only shoots lasers while stationary.
+ * Have the key display only show up in levels where there are keys.
+ * Fix Barvinoid so you can't kill him accidentally.
 
 === Sounds To Add ===
  * Calypso boss
