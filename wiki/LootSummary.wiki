@@ -13,7 +13,7 @@
 ||Castle of Evil||3||3||4||
 ||Conservatory||4||1||1||
 ||Smolder Hollow||1||1||2||
-||Totals x value||61||69||80||
+||Totals x value||64||6||80||
 
 So total $ in the game comes out to 210 even.
 
