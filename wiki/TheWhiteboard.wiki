@@ -9,7 +9,7 @@
 === Sounds To Add ===
  * Calypso boss
  * Mushroom boss
- * Barli
+ * Bartli
  * Fenwar
  * Evil wall rumbling
 
