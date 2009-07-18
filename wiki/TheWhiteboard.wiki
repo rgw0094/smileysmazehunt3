@@ -22,6 +22,7 @@
  * Portly's ice spawning on Smiley freezes you forever.
  * When you get Shrink (after beating Magnitogorsk), the text doesn't display.
  * 119,156 at Tut: I got a timed switch to stay switched on the wrong side. I was hitting both of the switches in that area repeatedly and quickly when it happened.
+ * Orbs, when shot on the edge of a mirror, can hit the switch next to the one they're supposed to, thus breaking at least 1 puzzle. Will be resolved by not letting orbs bounce off the very edge of a switch.
 
 === Balance Issues ===
  * None currently reported.
