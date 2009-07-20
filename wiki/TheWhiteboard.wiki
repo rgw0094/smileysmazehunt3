@@ -3,7 +3,6 @@
  * Make it so projectiles from bosses can't be reflected (except Mushboom) or silly padded (except Phyrebawz2)
  * Opening loading screen
  * Make it so that Calypso only shoots lasers while stationary.
- * Have the key display only show up in levels where there are keys.
  * Fix Barvinoid so you can't kill him accidentally.
 
 === Sounds To Add ===
@@ -19,7 +18,6 @@
 === Bugs ===
  * Right-Left Spikey enemies sometimes will spawn and move downwards super fast until they hit a wall and the start moving right-left.
  * Gem #'s are huge at start
- * Portly's ice spawning on Smiley freezes you forever.
  * When you get Shrink (after beating Magnitogorsk), the text doesn't display.
  * 119,156 at Tut: I got a timed switch to stay switched on the wrong side. I was hitting both of the switches in that area repeatedly and quickly when it happened.
  * Orbs, when shot on the edge of a mirror, can hit the switch next to the one they're supposed to, thus breaking at least 1 puzzle. Will be resolved by not letting orbs bounce off the very edge of a switch.
