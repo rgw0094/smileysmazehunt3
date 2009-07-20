@@ -34,8 +34,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	if(hge->System_Initiate()) 
 	{
+		//Create the SMH engine
 		smh = new SMH(hge);
-		smh->init();
 
 		//Start HGE. When this function returns it means the program is exiting.
 		hge->System_Start();

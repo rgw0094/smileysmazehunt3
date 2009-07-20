@@ -13,8 +13,10 @@
 #include "Boss.h"
 #include "ExplosionManager.h"
 
-SMH::SMH(HGE *_hge) { 
+SMH::SMH(HGE *_hge) 
+{
 	hge = _hge;
+	initializedYet = false;
 	debugMode = false;
 	debugText = "";
 	screenColorAlpha = 0.0;
@@ -110,6 +112,10 @@ void SMH::init()
 		log("Precaching Resources");
 		resources->Precache(ResourceGroups::Sounds);
 
+		//Open the menu after everything is initialized so that the music doesn't start playing
+		//until the screen starts drawing.
+		menu->open(MenuScreens::TITLE_SCREEN);
+
 		log("-------Initialization Complete-------");
 	}
 	catch(System::Exception *ex) 
@@ -128,6 +134,13 @@ void SMH::init()
  */
 bool SMH::updateGame() 
 {
+	if (!initializedYet)
+	{
+		drawLoadScreen();
+		init();
+		initializedYet = true;
+	}
+
 	try
 	{
 		float dt = min(0.1, hge->Timer_GetDelta());
@@ -224,6 +237,9 @@ bool SMH::updateGame()
  */
 void SMH::drawGame() 
 {
+	if (!initializedYet)
+		return;
+
 	try
 	{
 		float dt = hge->Timer_GetDelta();
@@ -278,6 +294,21 @@ void SMH::drawGame()
 			exit(1);
 		}
 	}
+}
+
+void SMH::drawLoadScreen()
+{
+	hge->Gfx_BeginScene();
+
+	HTEXTURE loadTexture = hge->Texture_Load("Graphics/loading.png");
+	std::auto_ptr<hgeSprite> loadGraphic = std::auto_ptr<hgeSprite>(new hgeSprite(loadTexture, 0, 0, 200, 50));
+
+	loadGraphic->Render(815.0, 710.0);
+
+	hge->Gfx_EndScene();
+
+	hge->Texture_Free(loadTexture);
+	loadGraphic.release();
 }
 	
 /**
