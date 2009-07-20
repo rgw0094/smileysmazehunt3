@@ -4,13 +4,14 @@
 
 extern SMH *smh;
 
-MainMenu::MainMenu() {
+MainMenu::MainMenu() 
+{
 	menuScreen = NULL;
 	smh->resources->GetFont("controls")->SetColor(ARGB(255,0,0,0));
-	open(MenuScreens::TITLE_SCREEN);
 }
 
-MainMenu::~MainMenu() {
+MainMenu::~MainMenu() 
+{
 	//Never gets deleted
 }
 
@@ -97,11 +98,9 @@ void MainMenu::draw(float dt) {
 	{
 		smh->drawSprite("menuBackground", 0,0);
 
-		//smh->resources->GetFont("curlz")->SetColor(ARGB(255, 0, 0, 0));
 		smh->resources->GetFont("controls")->SetScale(0.9);
 		smh->resources->GetFont("controls")->printf(1015.0, 740.0, HGETEXT_RIGHT, "www.smileysmazehunt.com");
 		smh->resources->GetFont("controls")->SetScale(1.0);
-		//smh->resources->GetFont("curlz")->SetColor(ARGB(255, 255, 255, 255));
 	}
 
 	//Draw the current screen
@@ -122,10 +121,11 @@ void MainMenu::draw(float dt) {
 /**
  * Opens the menu
  */
-void MainMenu::open(int screen) {
+void MainMenu::open(int screen) 
+{
 	smh->soundManager->stopAbilityChannel();
 	smh->soundManager->stopEnvironmentChannel();
-	smh->soundManager->playMusic("menuMusic");
 	smh->enterGameState(MENU);
 	setScreen(screen);
+	smh->soundManager->playMusic("menuMusic");
 }

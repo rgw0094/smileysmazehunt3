@@ -342,6 +342,7 @@ public:
 private:
 
 	void doDebugInput(float dt);
+	void drawLoadScreen();
 
 	float gameTime;
 	float timeInState;
@@ -350,6 +351,7 @@ private:
 	bool debugMode;
 	int screenColor;
 	float screenColorAlpha;
+	bool initializedYet;
 	std::string debugText;
 
 };
@@ -1085,10 +1087,10 @@ public:
 	 * is used to determine which of these 5 areas to save the key to!! The number returned is the
 	 * [area] index of SaveManager.numKeys[area][key color] for the parent area.
 	 */
-	static int getKeyIndex(int area) {
-		switch (area) {
-			case OLDE_TOWNE:
-			case TUTS_TOMB:
+	static int getKeyIndex(int area) 
+	{
+		switch (area) 
+		{
 			case SMOLDER_HOLLOW:
 				return 0;
 				break;
