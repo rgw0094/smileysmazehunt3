@@ -84,8 +84,11 @@ extern SMH *smh;
 #define FESTATE_FLYING_TOWARD_SMILEY 3
 #define FESTATE_FLYING_AWAY 4
 
-#define FLOATING_EYE_ANGULAR_ACC 2.4;
-#define FLOATING_EYE_PIXELS_ELEVATED 64;
+#define FLOATING_EYE_ANGULAR_ACC 2.4
+#define FLOATING_EYE_PIXELS_ELEVATED 64
+#define FLOATING_EYE_RADIUS 40.0
+
+#define CROSSHAIR_AIM_SPEED 760.0
 
 ConservatoryBoss::ConservatoryBoss(int _gridX,int _gridY,int _groupID) {
 	gridX=_gridX;
@@ -230,6 +233,10 @@ void ConservatoryBoss::addFloatingEye(float addX, float addY) {
 	newFloatingEye.timeCreated = smh->getGameTime();
 	newFloatingEye.x = addX;
 	newFloatingEye.y = addY+FLOATING_EYE_PIXELS_ELEVATED;
+	newFloatingEye.aimX = addX;
+	newFloatingEye.aimY = addY;
+	newFloatingEye.xCrosshair = addX;
+	newFloatingEye.yCrosshair = addY - 1000;
 	newFloatingEye.yElevation = FLOATING_EYE_PIXELS_ELEVATED;
 	newFloatingEye.state = FESTATE_GO_TO_BOTTOM;
     newFloatingEye.collisionBox = new hgeRect();
@@ -310,11 +317,45 @@ void ConservatoryBoss::updateFloatingEyes(float dt) {
 			rotateFactor = dt*FLOATING_EYE_ANGULAR_ACC;
 			i->angleFacing += rotateDir * min(rotateFactor,abs(i->angleFacing-i->desiredAngleFacing));
 
+			i->collisionBox->x1 = i->x - FLOATING_EYE_RADIUS/2;
+			i->collisionBox->x2 = i->x + FLOATING_EYE_RADIUS/2;
+			i->collisionBox->y1 = i->y - FLOATING_EYE_RADIUS/2 - i->yElevation;
+			i->collisionBox->y2 = i->y + FLOATING_EYE_RADIUS/2 - i->yElevation;
+				
+			
 			//Tongue collision
 			if (smh->player->getTongue()->testCollision(i->collisionBox)) {
 				i->state = FESTATE_TARGETING_SMILEY;
+				i->timeStartedCountdown = smh->getGameTime();
 			}
 
+		} else if (i->state == FESTATE_TARGETING_SMILEY) {
+			if (!smh->player->isInvisible()) {
+				i->aimX = smh->player->x + 8*cos(smh->timePassedSince(i->timeCreated));
+				i->aimY = smh->player->y + 8*sin(smh->timePassedSince(i->timeCreated));
+			}
+
+			float angle = Util::getAngleBetween(i->xCrosshair,i->yCrosshair,i->aimX,i->aimY);
+
+			//dist is the minimum of the distance the crosshair will move in the next frame and the distance to smiley
+			//that way it doesn't overshoot its destination
+			float dist = min(Util::distance(i->xCrosshair,i->yCrosshair,i->aimX,i->aimY),CROSSHAIR_AIM_SPEED*dt);
+			
+			i->xCrosshair += dist*cos(angle);
+			i->yCrosshair += dist*sin(angle);
+
+			eyeMove=false;
+
+			//If Smiley is visible, make desiredAngle look to him
+			if (!smh->player->isInvisible()) {
+				i->desiredAngleFacing = Util::getAngleBetween(i->x,i->y,smh->player->x,smh->player->y);
+			}
+			
+			//Rotate the angleFacing to look toward desiredAngleFacign
+			int rotateDir = Util::rotateLeftOrRightForMinimumRotation(i->angleFacing,i->desiredAngleFacing);
+			float rotateFactor;
+			rotateFactor = dt*FLOATING_EYE_ANGULAR_ACC;
+			i->angleFacing += rotateDir * min(rotateFactor,abs(i->angleFacing-i->desiredAngleFacing));
 		}
 		
 		if (eyeMove) {
@@ -338,7 +379,20 @@ void ConservatoryBoss::drawFloatingEyes() {
 	std::list<floatingEye>::iterator i;
 
 	for (i = theFloatingEyes.begin(); i != theFloatingEyes.end(); i++) {
-		smh->resources->GetSprite("barvinoidMinionSprite")->RenderEx(smh->getScreenX(i->x),smh->getScreenY(i->y)-i->yElevation,i->angleFacing);
+		if (i->state == FESTATE_TARGETING_SMILEY) {
+			smh->resources->GetSprite("barvinoidMinionSprite")->SetColor(ARGB(255.0,255.0-smh->timePassedSince(i->timeStartedCountdown)*255.0/6.0,255.0-smh->timePassedSince(i->timeStartedCountdown)*255.0/6.0,255.0-smh->timePassedSince(i->timeStartedCountdown)*255.0/6.0));
+			smh->resources->GetSprite("barvinoidMinionSprite")->RenderEx(smh->getScreenX(i->x),smh->getScreenY(i->y)-i->yElevation,i->angleFacing);
+			smh->resources->GetSprite("barvinoidMinionSprite")->SetColor(ARGB(255.0,255.0,255.0,255.0));
+
+			smh->resources->GetSprite("crosshair")->Render(smh->getScreenX(i->xCrosshair),smh->getScreenY(i->yCrosshair));
+
+			int timeLeft = 5 - int(smh->timePassedSince(i->timeStartedCountdown));
+			if (timeLeft>0) smh->resources->GetFont("consoleFnt")->printf(smh->getScreenX(i->x),smh->getScreenY(i->y)-i->yElevation,HGETEXT_CENTER,"%d",timeLeft);
+		} else {
+			smh->resources->GetSprite("barvinoidMinionSprite")->RenderEx(smh->getScreenX(i->x),smh->getScreenY(i->y)-i->yElevation,i->angleFacing);
+		}
+
+		if (smh->isDebugOn()) smh->drawCollisionBox(i->collisionBox,Colors::RED);
 	}
 }
 
