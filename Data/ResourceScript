@@ -2284,6 +2284,13 @@ Animation barvinoidMouth {
  resgroup=109
  mode=NOLOOP
 }
+Sprite crosshair {
+ texture=barvinoidTx
+ rect=283,245,125,124
+ hotspot=64,64
+ resgroup=109
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
 Sprite floatingEyeShot {
  texture=barvinoidTx
  rect=283,142,64,64

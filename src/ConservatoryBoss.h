@@ -34,6 +34,10 @@ struct floatingEye {
 	int state;
 	float timeArrivedAtBottom;
 	hgeRect *collisionBox;
+
+	float xCrosshair,yCrosshair;
+	float aimX,aimY;
+	float timeStartedCountdown;
 };
 
 class ConservatoryBoss : public Boss {
