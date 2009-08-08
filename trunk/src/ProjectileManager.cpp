@@ -137,18 +137,6 @@ void ProjectileManager::addProjectile(float x, float y, float speed, float angle
 }
 
 /**
- * Figures out if a projectile should rotate CW or CCW to point to the target
- */
-int ProjectileManager::rotateLeftOrRightForMinimumRotation(float projectileAngle, float angleToTarget) {
-	float angleDifference = projectileAngle - angleToTarget;
-	while (angleDifference < 0) angleDifference += 2*PI;
-	while (angleDifference > 2*PI) angleDifference -= 2*PI;
-	if (angleDifference > PI) return 1;
-	return -1;
-}
-
-
-/**
  * Update all the projectiles
  */
 void ProjectileManager::update(float dt) {
@@ -267,7 +255,7 @@ void ProjectileManager::update(float dt) {
 		//Update homing projectiles
 		if (!deleteProjectile && i->homing) {
 			float angleToSmiley = Util::getAngleBetween(i->x,i->y,smh->player->x,smh->player->y);
-			int rotateDir = rotateLeftOrRightForMinimumRotation(i->angle,angleToSmiley);
+			int rotateDir = Util::rotateLeftOrRightForMinimumRotation(i->angle,angleToSmiley);
 			i->angle += rotateDir*1.7*dt;
 			i->dx = i->speed * cos(i->angle);
 			i->dy = i->speed * sin(i->angle);

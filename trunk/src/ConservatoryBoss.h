@@ -27,8 +27,13 @@ struct ProjectileLauncher {
 
 struct floatingEye {
 	float x,y;
-	float angleFacing, angleMoving;
-	float timeOfLastAttack;	
+	float yElevation;
+	float angleFacing, angleMoving, desiredAngleFacing;
+	float timeCreated;
+	float swayPeriod; //the floating eyes sway back and forth in place, each with a slightly different time period
+	int state;
+	float timeArrivedAtBottom;
+	hgeRect *collisionBox;
 };
 
 class ConservatoryBoss : public Boss {
@@ -50,6 +55,7 @@ public:
 	void addFloatingEye(float addX, float addY);
 	void updateFloatingEyes(float dt);
 	void drawFloatingEyes();
+	void drawFloatingEyeShadows();
 	void updateMouthAnim(float dt);
 	void drawMouthAnim();
 	void updateEyeGlow(int eye);
@@ -59,6 +65,9 @@ public:
 	//State methods
 	void doEyeAttackState(float dt);
 	void doHoppingState(float dt);
+	void doHoppingToEdgeState(float dt);
+	void doFloatingEyeReleaseState(float dt);
+	void doFloatingEyeState(float dt);
 	void doHoppingToCenterState(float dt);
 	void doHop(float dt, float destinationX, float destinationY);
 		
@@ -66,6 +75,7 @@ public:
 	int gridX, gridY;
 	float x, y;
 	float xLoot,yLoot;
+	float xUpperEdge,yUpperEdge;
 	int state;
 	bool startedIntroDialogue;
 	float lastHitByTongue;
@@ -97,8 +107,7 @@ public:
 	//Floating eye variables
 	std::list<floatingEye> theFloatingEyes;
 	int numFloatingEyes;
-	float circleRotate; //the whole circle of floating eyes rotates around Smiley
-	float lastFloatingEyeTime; //floating eyes appear every so often, so this keeps track of when the last one appeared
+	float lastFloatingEyeTime;
 	int mouthState; //Not active; opening; staying open; closing
 	float beginMouthStayOpenTime; //when did the mouth open all the way?
 };

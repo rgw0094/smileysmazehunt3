@@ -1076,6 +1076,17 @@ public:
 	}
 
 	/**
+	 * Returns which way (CW or CCW) to rotate
+	 */
+	static int rotateLeftOrRightForMinimumRotation(float from, float to) {
+		float angleDifference = from-to;
+		while (angleDifference < 0) angleDifference += 2*PI;
+		while (angleDifference > 2*PI) angleDifference -= 2*PI;
+		if (angleDifference > PI) return 1;
+		return -1;
+	}
+
+	/**
 	 * Returns whether or not a collision layer id is a warp.
 	 */
 	static bool isWarp(int id) {

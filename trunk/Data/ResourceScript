@@ -2260,6 +2260,13 @@ Sprite barvinoidMinionSprite {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=109
 }
+Sprite barvinoidMinionShadow {
+ texture=barvinoidTx
+ rect=283,206,45,39
+ hotspot=23,20
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=109
+}
 Sprite barvinoidShadow {
  texture=barvinoidTx
  rect=0,356,244,148

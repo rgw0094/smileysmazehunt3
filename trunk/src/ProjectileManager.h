@@ -100,8 +100,7 @@ public:
 	int killProjectilesInBox(hgeRect *collisionBox, int type, bool killHostile, bool killNonhostile);
 	int killProjectilesInCircle(float x, float y, float radius, int type);
 	int killProjectiles(int type);
-	int rotateLeftOrRightForMinimumRotation(float projectileAngle, float angleToTarget);
-
+	
 	void addFrisbee(float x, float y, float speed, float angle, float stunPower);
 	void addProjectile(float x, float y, float speed, float angle, float damage, bool hostile, bool homing,
 		int id, bool makesSmileyFlash);

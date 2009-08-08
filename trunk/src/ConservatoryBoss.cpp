@@ -15,12 +15,15 @@ extern SMH *smh;
 #define BARVINOID_INACTIVE 0
 #define BARVINOID_EYE_ATTACK 1
 #define BARVINOID_HOPPING 2
-#define BARVINOID_HOPPING_TO_CENTER 3
-#define BARVINOID_FADING 4
-#define BARVINOID_DEAD 5
+#define BARVINOID_HOPPING_TO_EDGE 3
+#define BARVINOID_FLOATING_EYE_RELEASE 4
+#define BARVINOID_FLOATING_EYE 5
+#define BARVINOID_HOPPING_TO_CENTER 6
+#define BARVINOID_FADING 7
+#define BARVINOID_DEAD 8
 
-#define EYE_ATTACK_TIME 40.0
-#define HOP_TIME 30.0
+#define EYE_ATTACK_TIME 4.0
+#define HOP_TIME 3.0
 
 //Attributes
 #define BARVINOID_HEALTH 100.0
@@ -35,8 +38,8 @@ extern SMH *smh;
 #define BARVINOID_DEFEATTEXT 212
 
 //Minion stuff (the evil floating eyes)
-#define FLOATING_EYE_DESIRED_DISTANCE_MAX 170.0
-#define FLOATING_EYE_DESIRED_DISTANCE_ACTUAL 128.0
+#define FLOATING_EYE_DESIRED_DISTANCE_MAX 64*8.0+20.0
+#define FLOATING_EYE_DESIRED_DISTANCE_ACTUAL 64*8.0
 #define FLOATING_EYE_SPEED 128.0
 #define FLOATING_EYE_TIME_INTERVAL 25.0
 #define FLOATING_EYE_ATTACK_INTERVAL 23.0
@@ -74,6 +77,16 @@ extern SMH *smh;
 #define HOP_PERIOD 0.5
 #define BARV_SPEED 360.0
 
+//Floating eye states
+#define FESTATE_GO_TO_BOTTOM 0
+#define FESTATE_AT_BOTTOM 1
+#define FESTATE_TARGETING_SMILEY 2
+#define FESTATE_FLYING_TOWARD_SMILEY 3
+#define FESTATE_FLYING_AWAY 4
+
+#define FLOATING_EYE_ANGULAR_ACC 2.4;
+#define FLOATING_EYE_PIXELS_ELEVATED 64;
+
 ConservatoryBoss::ConservatoryBoss(int _gridX,int _gridY,int _groupID) {
 	gridX=_gridX;
 	gridY=_gridY;
@@ -83,6 +96,9 @@ ConservatoryBoss::ConservatoryBoss(int _gridX,int _gridY,int _groupID) {
 	
 	xLoot=x;
 	yLoot=y;
+
+	xUpperEdge=x;
+	yUpperEdge=y-211.0;
 
 	groupID = _groupID;
 
@@ -131,7 +147,6 @@ ConservatoryBoss::ConservatoryBoss(int _gridX,int _gridY,int _groupID) {
 	lastEyeToAttack = LEFT_EYE;
 
 	//minion stuff
-	circleRotate = 0.0;
 	numFloatingEyes=0;
 	mouthState = MOUTH_STATE_INACTIVE;
 	lastFloatingEyeTime = smh->getGameTime();
@@ -212,9 +227,14 @@ void ConservatoryBoss::initGridOfProjectiles() {
 void ConservatoryBoss::addFloatingEye(float addX, float addY) {
 	floatingEye newFloatingEye;
 
-	newFloatingEye.timeOfLastAttack = smh->getGameTime();
+	newFloatingEye.timeCreated = smh->getGameTime();
 	newFloatingEye.x = addX;
-	newFloatingEye.y = addY;
+	newFloatingEye.y = addY+FLOATING_EYE_PIXELS_ELEVATED;
+	newFloatingEye.yElevation = FLOATING_EYE_PIXELS_ELEVATED;
+	newFloatingEye.state = FESTATE_GO_TO_BOTTOM;
+    newFloatingEye.collisionBox = new hgeRect();
+
+	newFloatingEye.swayPeriod = smh->randomFloat(0.8,1.2);
 
 	if (smh->player->isInvisible()) {
 		newFloatingEye.angleFacing = 3.14159/2;//smh->randomFloat(0.0,6.14);
@@ -232,43 +252,75 @@ void ConservatoryBoss::addFloatingEye(float addX, float addY) {
 void ConservatoryBoss::updateFloatingEyes(float dt) {
 	int j=0;
 
-	//These variables are used by each eye in succession
 	bool eyeMove;
 	float desiredX, desiredY;
-	float angleAroundSmiley; //each floating eye defines this -- this is so the floating eyes surround Smiley
-
-	circleRotate += dt/5.0;
-
+	float angleAroundCenter;
+	
 	std::list<floatingEye>::iterator i;
 
 	j=0;
 	for (i = theFloatingEyes.begin(); i != theFloatingEyes.end(); i++) {
 		eyeMove = true;
 
-		if (smh->player->isInvisible()) {
-			i->angleMoving = i->angleFacing;
-			eyeMove = false;
-		} else { //is NOT invisible
-			angleAroundSmiley = float(j) * 2.0*float(PI)/float(numFloatingEyes) + circleRotate;
-			desiredX = smh->player->x + FLOATING_EYE_DESIRED_DISTANCE_ACTUAL * cos(angleAroundSmiley);
-			desiredY = smh->player->y + FLOATING_EYE_DESIRED_DISTANCE_ACTUAL * sin(angleAroundSmiley);
+		if (i->state == FESTATE_GO_TO_BOTTOM) {
+			//Figure out where the floating eye wants to be
+			//This is the equation that spreads out the floating eyes based on "j" (with j being their unique index)
+			angleAroundCenter = 2.283185 - float(j)*0.356194;
+			
+			desiredX = x + FLOATING_EYE_DESIRED_DISTANCE_ACTUAL * cos(angleAroundCenter);
+			desiredY = y + FLOATING_EYE_DESIRED_DISTANCE_ACTUAL * sin(angleAroundCenter) + FLOATING_EYE_PIXELS_ELEVATED;
 
+			//Make them 'sway' in a figure 8 pattern (aka LEMNISCATE parametric equation)
+			float t = smh->timePassedSince(i->timeCreated) / i->swayPeriod;
+			desiredX += 40*cos(PI/4*t);
+			i->yElevation = 15*sin(PI/2*t) + FLOATING_EYE_PIXELS_ELEVATED;
+	
+			if (Util::distance(i->x,i->y,desiredX,desiredY) <= 10.0) {
+				eyeMove = false;
+				i->state = FESTATE_AT_BOTTOM;
+				i->timeArrivedAtBottom = smh->getGameTime();
+			}
+
+			i->desiredAngleFacing = i->angleFacing = i->angleMoving = Util::getAngleBetween(i->x,i->y,desiredX,desiredY);			 
+		} else if (i->state == FESTATE_AT_BOTTOM) {
+			//Figure out where the floating eye wants to be
+			//This is the equation that spreads out the floating eyes based on "j" (with j being their unique index)
+			angleAroundCenter = 2.283185 - float(j)*0.356194;
+			
+			desiredX = x + FLOATING_EYE_DESIRED_DISTANCE_ACTUAL * cos(angleAroundCenter);
+			desiredY = y + FLOATING_EYE_DESIRED_DISTANCE_ACTUAL * sin(angleAroundCenter) + FLOATING_EYE_PIXELS_ELEVATED;
+
+			//Make them 'sway' in a figure 8 pattern (aka LEMNISCATE parametric equation)
+			float t = smh->timePassedSince(i->timeCreated) / i->swayPeriod;
+			desiredX += 40*cos(PI/4*t);
+			i->yElevation = 15*sin(PI/2*t) + FLOATING_EYE_PIXELS_ELEVATED;
+
+			//Make the floating eye's angleMoving be toward its desired position
 			if (Util::distance(i->x,i->y,desiredX,desiredY) <= 10.0) eyeMove = false;
 			i->angleMoving = Util::getAngleBetween(i->x,i->y,desiredX,desiredY);
-			i->angleFacing = Util::getAngleBetween(i->x,i->y,smh->player->x,smh->player->y);
+			
+			//If Smiley is visible, make desiredAngle look to him
+			if (!smh->player->isInvisible()) {
+				i->desiredAngleFacing = Util::getAngleBetween(i->x,i->y,smh->player->x,smh->player->y);
+			}
+			
+			//Rotate the angleFacing to look toward desiredAngleFacign
+			int rotateDir = Util::rotateLeftOrRightForMinimumRotation(i->angleFacing,i->desiredAngleFacing);
+			float rotateFactor;
+			rotateFactor = dt*FLOATING_EYE_ANGULAR_ACC;
+			i->angleFacing += rotateDir * min(rotateFactor,abs(i->angleFacing-i->desiredAngleFacing));
+
+			//Tongue collision
+			if (smh->player->getTongue()->testCollision(i->collisionBox)) {
+				i->state = FESTATE_TARGETING_SMILEY;
+			}
+
 		}
 		
 		if (eyeMove) {
 			i->x = i->x + FLOATING_EYE_SPEED*cos(i->angleMoving)*dt;
 			i->y = i->y + FLOATING_EYE_SPEED*sin(i->angleMoving)*dt;
 		}
-
-		//Shooting stuff
-		if (smh->timePassedSince(i->timeOfLastAttack) >= FLOATING_EYE_ATTACK_INTERVAL) {
-			i->timeOfLastAttack = smh->getGameTime();
-			smh->projectileManager->addProjectile(i->x+16*cos(i->angleFacing),i->y+16*sin(i->angleFacing),FLOATING_EYE_SHOT_SPEED,i->angleFacing,FLOATING_EYE_SHOT_DAMAGE,true,false,PROJECTILE_BARV_YELLOW,true);
-		}
-
 
 		j++;
 	} //next i
@@ -277,6 +329,7 @@ void ConservatoryBoss::updateFloatingEyes(float dt) {
 void ConservatoryBoss::purgeFloatingEyes() {
 	std::list<floatingEye>::iterator i;
 	for (i = theFloatingEyes.begin(); i != theFloatingEyes.end(); i++) {
+		delete i->collisionBox;
 		i = theFloatingEyes.erase(i);
 	}
 }
@@ -285,21 +338,17 @@ void ConservatoryBoss::drawFloatingEyes() {
 	std::list<floatingEye>::iterator i;
 
 	for (i = theFloatingEyes.begin(); i != theFloatingEyes.end(); i++) {
-		if (FLOATING_EYE_ATTACK_INTERVAL - smh->timePassedSince(i->timeOfLastAttack) <= 3.0) {
-			float t = FLOATING_EYE_ATTACK_INTERVAL - smh->timePassedSince(i->timeOfLastAttack);
-			t /= 3.0;
-			if (t < 0.0) t = 0.0;
-			if (t > 1.0) t = 1.0;
-			t *= 255.0;
-			smh->resources->GetSprite("barvinoidMinionSprite")->SetColor(ARGB(255,t,t,t));
-			smh->resources->GetSprite("barvinoidMinionSprite")->RenderEx(smh->getScreenX(i->x),smh->getScreenY(i->y),i->angleFacing);
-			smh->resources->GetSprite("barvinoidMinionSprite")->SetColor(ARGB(255,255,255,255));
-		} else {
-            smh->resources->GetSprite("barvinoidMinionSprite")->RenderEx(smh->getScreenX(i->x),smh->getScreenY(i->y),i->angleFacing);
-		}
+		smh->resources->GetSprite("barvinoidMinionSprite")->RenderEx(smh->getScreenX(i->x),smh->getScreenY(i->y)-i->yElevation,i->angleFacing);
 	}
 }
 
+void ConservatoryBoss::drawFloatingEyeShadows() {
+	std::list<floatingEye>::iterator i;
+
+	for (i = theFloatingEyes.begin(); i != theFloatingEyes.end(); i++) {
+		smh->resources->GetSprite("barvinoidMinionShadow")->RenderEx(smh->getScreenX(i->x),smh->getScreenY(i->y),i->angleFacing);
+	}
+}
 bool ConservatoryBoss::update(float dt) {
 
 	//if dead, then return true
@@ -342,6 +391,15 @@ bool ConservatoryBoss::update(float dt) {
 		case BARVINOID_HOPPING:
 			doHoppingState(dt);
 			break;
+		case BARVINOID_HOPPING_TO_EDGE:
+			doHoppingToEdgeState(dt);
+			break;
+		case BARVINOID_FLOATING_EYE_RELEASE:
+			doFloatingEyeReleaseState(dt);
+			break;
+		case BARVINOID_FLOATING_EYE:
+			doFloatingEyeState(dt);
+			break;
 		case BARVINOID_HOPPING_TO_CENTER:
 			doHoppingToCenterState(dt);
 			break;
@@ -357,8 +415,7 @@ bool ConservatoryBoss::update(float dt) {
 
     doGridOfProjectiles();
 	updateFloatingEyes(dt);
-	updateMouthAnim(dt);
-
+	
 	if (health <= 0.0) {
 		finish();
 	}
@@ -420,6 +477,8 @@ void ConservatoryBoss::testCollisions(float dt) {
 	}
 }
 void ConservatoryBoss::draw(float dt) {
+	drawFloatingEyeShadows();
+
 	if (!shouldDrawAfterSmiley) drawBarvinoid();
 
 	//Debug mode stuff
@@ -443,7 +502,7 @@ void ConservatoryBoss::drawAfterSmiley(float dt) {
 
 void ConservatoryBoss::drawBarvinoid() {
 	//Draw shadow
-	if (state == BARVINOID_HOPPING || state == BARVINOID_HOPPING_TO_CENTER) {
+	if (state == BARVINOID_HOPPING || state == BARVINOID_HOPPING_TO_CENTER || state == BARVINOID_HOPPING_TO_EDGE) {
 		smh->resources->GetSprite("barvinoidShadow")->Render(smh->getScreenX(x),smh->getScreenY(y));
 	}
 	
@@ -503,7 +562,7 @@ void ConservatoryBoss::doEyeAttackState(float dt) {
 
 	std::string debugText;
 	debugText = "Barvinoid " + Util::intToString(eyeFlashes[RIGHT_EYE].eyeFlashing) + " " + Util::intToString(eyeFlashes[LEFT_EYE].eyeFlashing);
-	smh->setDebugText(debugText.c_str());
+	//smh->setDebugText(debugText.c_str());
 
 	
 	
@@ -526,15 +585,12 @@ void ConservatoryBoss::drawMouthAnim() {
 void ConservatoryBoss::updateMouthAnim(float dt) {
 	smh->resources->GetAnimation("barvinoidMouth")->Update(dt);
 
-	//Inactive, see if it's time to start to open
+	//Inactive, start to open
 	if (mouthState == MOUTH_STATE_INACTIVE) {
-		if (smh->timePassedSince(lastFloatingEyeTime) >= FLOATING_EYE_TIME_INTERVAL) {
-			mouthState = MOUTH_STATE_OPENING;
-			smh->resources->GetAnimation("barvinoidMouth")->SetMode(HGEANIM_FWD | HGEANIM_NOLOOP);
-			smh->resources->GetAnimation("barvinoidMouth")->SetFrame(0);
-			smh->resources->GetAnimation("barvinoidMouth")->Play();
-			lastFloatingEyeTime = smh->getGameTime();
-		}
+		mouthState = MOUTH_STATE_OPENING;
+		smh->resources->GetAnimation("barvinoidMouth")->SetMode(HGEANIM_FWD | HGEANIM_NOLOOP);
+		smh->resources->GetAnimation("barvinoidMouth")->SetFrame(0);
+		smh->resources->GetAnimation("barvinoidMouth")->Play();
 	}
 
 	//Opening, see if it's time to 'stay open'
@@ -547,13 +603,18 @@ void ConservatoryBoss::updateMouthAnim(float dt) {
 		}
 	}
 
-	//Staying open, see if it's time to spawn a floating eye and start closing
+	//Staying open
 	if (mouthState == MOUTH_STATE_STAYING_OPEN) {
-		if (smh->timePassedSince(beginMouthStayOpenTime) >= MOUTH_STAY_OPEN_TIME) {
+		//See if it's time to spawn a floating eye
+		if (smh->timePassedSince(lastFloatingEyeTime) >= MOUTH_STAY_OPEN_TIME) {
+			lastFloatingEyeTime = smh->getGameTime();
+			addFloatingEye(x,y-MOUTH_Y_OFFSET);
+		}
+		//See if it's time to close
+		if (numFloatingEyes >= 5) {
 			mouthState = MOUTH_STATE_CLOSING;
 			smh->resources->GetAnimation("barvinoidMouth")->SetMode(HGEANIM_REV | HGEANIM_NOLOOP);
 			smh->resources->GetAnimation("barvinoidMouth")->Play();
-			addFloatingEye(x,y-MOUTH_Y_OFFSET);
 		}
 	}
 
@@ -563,6 +624,7 @@ void ConservatoryBoss::updateMouthAnim(float dt) {
 		if (smh->resources->GetAnimation("barvinoidMouth")->GetFrame() == 0) {
 			mouthState = MOUTH_STATE_INACTIVE;
 			smh->resources->GetAnimation("barvinoidMouth")->Stop();
+			enterState(BARVINOID_FLOATING_EYE);
 		}
 	}
 }
@@ -628,7 +690,7 @@ void ConservatoryBoss::doGridOfProjectiles() {
 void ConservatoryBoss::doHoppingState(float dt) {	
     //if we've hopped quite enough, then hop to center
 	if (smh->timePassedSince(timeEnteredState) >= HOP_TIME) {
-		enterState(BARVINOID_HOPPING_TO_CENTER);
+		enterState(BARVINOID_HOPPING_TO_EDGE);
 	}
 
 	if (smh->player->isInvisible()) {
@@ -650,11 +712,48 @@ void ConservatoryBoss::doHoppingToCenterState(float dt) {
 		hopY = 0.0;
 		lastEyeAttackTime = smh->getGameTime();
 		eyeAttackInterval = EYE_ATTACK_MAX_INTERVAL;
-		enterState(BARVINOID_EYE_ATTACK);
+		enterState(BARVINOID_FLOATING_EYE_RELEASE);
 	} else {
 		doHop(dt,xLoot,yLoot);
 	}
 }
+
+
+/**
+ * This state calls doHop with the destination being near the top edge of the screen
+ * -Prepares him to release several floating eyes
+ */
+void ConservatoryBoss::doHoppingToEdgeState(float dt) {
+	//if we're at the center, enter the 'eye attack' state
+	if (abs(x-xUpperEdge) <= 3.0 && abs(y-yUpperEdge) <= 3.0 && hopY == 0.0) {
+		x = xUpperEdge;
+		y = yUpperEdge;
+		hopY = 0.0;
+		lastEyeAttackTime = smh->getGameTime();
+		eyeAttackInterval = EYE_ATTACK_MAX_INTERVAL;
+		enterState(BARVINOID_FLOATING_EYE_RELEASE);
+		numFloatingEyes=0;
+	} else {
+		doHop(dt,xUpperEdge,yUpperEdge);
+	}
+}
+
+/**
+ * During this state, barv opens his mouth and releases several floating acorn-like eyes, one at a time.
+ */
+void ConservatoryBoss::doFloatingEyeReleaseState(float dt) {
+	updateMouthAnim(dt);
+}
+
+/** 
+ * Barvinoid just sits there waiting.
+ * The floating eyes are at the bottom of the screen in an arc.
+ * If Smiley attacks one, a target goes onto Smiley, and he CANNOT get away unless he uses Tut's mask.
+ */
+void ConservatoryBoss::doFloatingEyeState(float dt) {
+	
+}
+
 
 /**
  * doHop -- hops toward the destination
@@ -669,10 +768,30 @@ void ConservatoryBoss::doHop(float dt, float destinationX, float destinationY) {
 	}
 
 	if (hopY < 0.0) { //move toward destination if in the air
-		if (x != destinationX && y != destinationY) {
+		if (x != destinationX || y != destinationY) {
 			float angleToDestination = Util::getAngleBetween(x,y,destinationX,destinationY);
-			x += BARV_SPEED*cos(angleToDestination)*dt;
-			y += BARV_SPEED*sin(angleToDestination)*dt;
+			
+			//Change x by the minimum of:
+			//  how far he could go that frame based on speed,
+			//  the distance from x to destinationX
+			float xChange = BARV_SPEED*cos(angleToDestination)*dt;
+			float xDiff = destinationX - x;
+			if (abs(xChange) < abs(xDiff)) {
+				x += xChange;
+			} else {
+				x += xDiff;
+			}
+
+			//Change y by the minimum of:
+			//  how far he could go that frame based on speed,
+			//  the distance from y to destinationY
+			float yChange = BARV_SPEED*sin(angleToDestination)*dt;
+			float yDiff = destinationY - y;
+			if (abs(yChange) < abs(yDiff)) {
+				y += yChange;
+			} else {
+				y += yDiff;
+			}
 		}
 	}
 
