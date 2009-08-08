@@ -44,6 +44,8 @@ private:
 	void setCollisionBox(hgeRect *box, float x, float y);
 	void startNextRound();
 	void openMouth(float duration);
+	void dealDamage(float amount);
+	void playHitSound();
 
 	void spawnNova(float x, float y);
 	void updateNovas(float dt);

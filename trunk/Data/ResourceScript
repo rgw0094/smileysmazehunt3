@@ -1774,14 +1774,6 @@ Sound snd_fireBossNova {
  filename="firebossnova.wav"
  resgroup=14
 }
-Sound snd_garmbornHit {
- filename="garmbornRoar.mp3"
- resgroup=14
-}
-Sound snd_treeletHit {
- filename="treeletRoar.wav"
- resgroup=14
-}
 Sound snd_enemyDeath {
  filename="enemyDeath.wav"
  resgroup=14
@@ -2055,7 +2047,14 @@ Animation owlet {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=102
 }
-
+Sound snd_garmbornHit {
+ filename="garmbornRoar.mp3"
+ resgroup=102
+}
+Sound snd_treeletHit {
+ filename="treeletRoar.wav"
+ resgroup=102
+}
 
 ;*********************************************
 ;******** CALYPSO (Resource Group 105) *******
@@ -2135,6 +2134,34 @@ Sprite bartletRed {
  rect=67,170,64,54
  hotspot=32,27
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=106
+}
+Sound snd_BartliRunning {
+ filename="BartliRunning.mp3"
+ resgroup=106
+}
+Sound snd_BartliJumpLand {
+ filename="BartliJumpLand.mp3"
+ resgroup=106
+}
+Sound snd_BartliBreathing {
+ filename="BartliBreathing.mp3"
+ resgroup=106
+}
+Sound snd_BartliHit1 {
+ filename="BartliHit1.mp3"
+ resgroup=106
+}
+Sound snd_BartliHit2 {
+ filename="BartliHit2.mp3"
+ resgroup=106
+}
+Sound snd_BartliHit3 {
+ filename="BartliHit3.mp3"
+ resgroup=106
+}
+Sound snd_BartletSpawn {
+ filename="BartletSpawn.mp3"
  resgroup=106
 }
 
