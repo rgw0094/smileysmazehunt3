@@ -1,13 +1,11 @@
 === Programming To Do ===
  * The rest of the monocle man advice topics
- * Make it so projectiles from bosses can't be reflected (except Mushboom) or silly padded (except Phyrebawz2)
  * Make it so that Calypso only shoots lasers while stationary.
  * Fix Barvinoid so you can't kill him accidentally.
 
 === Sounds To Add ===
  * Calypso boss
  * Mushroom boss
- * Bartli
  * Fenwar
  * Evil wall rumbling
 
@@ -26,6 +24,8 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Added sounds to Bartli battle||8/8/09||RGW||
+||Made parabola projectiles unreflectable||8/8/09||RGW||
 ||Opening loading screen||7/19/09||RGW||
 ||Added skull and acorn projectiles||7/14/09||ETI||
 ||Finished spawn effect||7/14/09||ETI||
