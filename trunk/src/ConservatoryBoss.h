@@ -114,6 +114,7 @@ public:
 	float lastFloatingEyeTime;
 	int mouthState; //Not active; opening; staying open; closing
 	float beginMouthStayOpenTime; //when did the mouth open all the way?
+	float smileyLastSeenAtX, smileyLastSeenAtY;
 };
 
 #endif

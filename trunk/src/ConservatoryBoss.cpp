@@ -8,6 +8,7 @@
 #include "CollisionCircle.h"
 #include "WindowFramework.h"
 #include "EnemyFramework.h"
+#include "ExplosionManager.h"
 
 extern SMH *smh;
 
@@ -41,6 +42,7 @@ extern SMH *smh;
 #define FLOATING_EYE_DESIRED_DISTANCE_MAX 64*8.0+20.0
 #define FLOATING_EYE_DESIRED_DISTANCE_ACTUAL 64*8.0
 #define FLOATING_EYE_SPEED 128.0
+#define FLOATING_EYE_FAST_SPEED 730.0
 #define FLOATING_EYE_TIME_INTERVAL 25.0
 #define FLOATING_EYE_ATTACK_INTERVAL 23.0
 //Floating eye's bullet
@@ -81,13 +83,19 @@ extern SMH *smh;
 #define FESTATE_GO_TO_BOTTOM 0
 #define FESTATE_AT_BOTTOM 1
 #define FESTATE_TARGETING_SMILEY 2
-#define FESTATE_FLYING_TOWARD_SMILEY 3
+#define FESTATE_FLYING_TOWARD_CROSSHAIR 3
 #define FESTATE_FLYING_AWAY 4
 
 #define FLOATING_EYE_ANGULAR_ACC 2.4
+#define FLOATING_EYE_FAST_ANGULAR_ACC 20.2
 #define FLOATING_EYE_PIXELS_ELEVATED 64
 #define FLOATING_EYE_RADIUS 40.0
 
+#define FLOATING_EYE_EXPLOSION_SIZE 1.0
+#define FLOATING_EYE_EXPLOSION_DAMAGE 2.0
+#define FLOATING_EYE_EXPLOSION_KNOCKBACK 300.0
+
+#define FLOATING_EYE_DAMAGE_TO_BARVINOID 11.5
 #define CROSSHAIR_AIM_SPEED 760.0
 
 ConservatoryBoss::ConservatoryBoss(int _gridX,int _gridY,int _groupID) {
@@ -101,7 +109,7 @@ ConservatoryBoss::ConservatoryBoss(int _gridX,int _gridY,int _groupID) {
 	yLoot=y;
 
 	xUpperEdge=x;
-	yUpperEdge=y-211.0;
+	yUpperEdge=y-400.0;
 
 	groupID = _groupID;
 
@@ -233,8 +241,8 @@ void ConservatoryBoss::addFloatingEye(float addX, float addY) {
 	newFloatingEye.timeCreated = smh->getGameTime();
 	newFloatingEye.x = addX;
 	newFloatingEye.y = addY+FLOATING_EYE_PIXELS_ELEVATED;
-	newFloatingEye.aimX = addX;
-	newFloatingEye.aimY = addY;
+	newFloatingEye.aimX = smileyLastSeenAtX;
+	newFloatingEye.aimY = smileyLastSeenAtY;
 	newFloatingEye.xCrosshair = addX;
 	newFloatingEye.yCrosshair = addY - 1000;
 	newFloatingEye.yElevation = FLOATING_EYE_PIXELS_ELEVATED;
@@ -289,6 +297,17 @@ void ConservatoryBoss::updateFloatingEyes(float dt) {
 			}
 
 			i->desiredAngleFacing = i->angleFacing = i->angleMoving = Util::getAngleBetween(i->x,i->y,desiredX,desiredY);			 
+
+			i->collisionBox->x1 = i->x - FLOATING_EYE_RADIUS/2;
+			i->collisionBox->x2 = i->x + FLOATING_EYE_RADIUS/2;
+			i->collisionBox->y1 = i->y - FLOATING_EYE_RADIUS/2 - i->yElevation;
+			i->collisionBox->y2 = i->y + FLOATING_EYE_RADIUS/2 - i->yElevation;
+				
+			//Tongue collision
+			if (smh->player->getTongue()->testCollision(i->collisionBox)) {
+				i->state = FESTATE_TARGETING_SMILEY;
+				i->timeStartedCountdown = smh->getGameTime();
+			}
 		} else if (i->state == FESTATE_AT_BOTTOM) {
 			//Figure out where the floating eye wants to be
 			//This is the equation that spreads out the floating eyes based on "j" (with j being their unique index)
@@ -322,7 +341,6 @@ void ConservatoryBoss::updateFloatingEyes(float dt) {
 			i->collisionBox->y1 = i->y - FLOATING_EYE_RADIUS/2 - i->yElevation;
 			i->collisionBox->y2 = i->y + FLOATING_EYE_RADIUS/2 - i->yElevation;
 				
-			
 			//Tongue collision
 			if (smh->player->getTongue()->testCollision(i->collisionBox)) {
 				i->state = FESTATE_TARGETING_SMILEY;
@@ -330,11 +348,10 @@ void ConservatoryBoss::updateFloatingEyes(float dt) {
 			}
 
 		} else if (i->state == FESTATE_TARGETING_SMILEY) {
-			if (!smh->player->isInvisible()) {
-				i->aimX = smh->player->x + 8*cos(smh->timePassedSince(i->timeCreated));
-				i->aimY = smh->player->y + 8*sin(smh->timePassedSince(i->timeCreated));
-			}
-
+			
+			i->aimX = smileyLastSeenAtX + 8*cos(smh->timePassedSince(i->timeCreated));
+			i->aimY = smileyLastSeenAtY + 8*sin(smh->timePassedSince(i->timeCreated));
+			
 			float angle = Util::getAngleBetween(i->xCrosshair,i->yCrosshair,i->aimX,i->aimY);
 
 			//dist is the minimum of the distance the crosshair will move in the next frame and the distance to smiley
@@ -344,18 +361,82 @@ void ConservatoryBoss::updateFloatingEyes(float dt) {
 			i->xCrosshair += dist*cos(angle);
 			i->yCrosshair += dist*sin(angle);
 
-			eyeMove=false;
-
-			//If Smiley is visible, make desiredAngle look to him
-			if (!smh->player->isInvisible()) {
-				i->desiredAngleFacing = Util::getAngleBetween(i->x,i->y,smh->player->x,smh->player->y);
-			}
+			//look at the crosshair
+			i->desiredAngleFacing = Util::getAngleBetween(i->x,i->y-i->yElevation,i->xCrosshair,i->yCrosshair);			
 			
-			//Rotate the angleFacing to look toward desiredAngleFacign
+			//Rotate the angleFacing to look toward desiredAngleFacing
 			int rotateDir = Util::rotateLeftOrRightForMinimumRotation(i->angleFacing,i->desiredAngleFacing);
 			float rotateFactor;
 			rotateFactor = dt*FLOATING_EYE_ANGULAR_ACC;
 			i->angleFacing += rotateDir * min(rotateFactor,abs(i->angleFacing-i->desiredAngleFacing));
+
+			eyeMove = false;
+			if (smh->timePassedSince(i->timeStartedCountdown) >= 5.0) { //countdown is over
+				i->state = FESTATE_FLYING_TOWARD_CROSSHAIR;
+			}
+		} else if (i->state == FESTATE_FLYING_TOWARD_CROSSHAIR) {
+			i->collisionBox->x1 = i->x - FLOATING_EYE_RADIUS/2;
+			i->collisionBox->x2 = i->x + FLOATING_EYE_RADIUS/2;
+			i->collisionBox->y1 = i->y - FLOATING_EYE_RADIUS/2 - i->yElevation;
+			i->collisionBox->y2 = i->y + FLOATING_EYE_RADIUS/2 - i->yElevation;
+
+			if (!smh->player->isInvisible()) {
+				i->aimX = smh->player->x + 8*cos(smh->timePassedSince(i->timeCreated));
+				i->aimY = smh->player->y + 8*sin(smh->timePassedSince(i->timeCreated));
+				
+				float angle = Util::getAngleBetween(i->xCrosshair,i->yCrosshair,i->aimX,i->aimY);
+
+				//dist is the minimum of the distance the crosshair will move in the next frame and the distance to smiley
+				//that way it doesn't overshoot its destination
+				float dist = min(Util::distance(i->xCrosshair,i->yCrosshair,i->aimX,i->aimY),CROSSHAIR_AIM_SPEED*dt);
+			
+				i->xCrosshair += dist*cos(angle);
+				i->yCrosshair += dist*sin(angle);
+	
+				//Rotate the angleFacing to look toward desiredAngleFacing
+				i->desiredAngleFacing = Util::getAngleBetween(i->x,i->y-i->yElevation,i->xCrosshair,i->yCrosshair);
+			}
+
+			int rotateDir = Util::rotateLeftOrRightForMinimumRotation(i->angleFacing,i->desiredAngleFacing);
+			float rotateFactor;
+			rotateFactor = dt*FLOATING_EYE_FAST_ANGULAR_ACC;
+			i->angleFacing += rotateDir * min(rotateFactor,abs(i->angleFacing-i->desiredAngleFacing));
+			i->angleMoving = i->angleFacing;
+
+			float distToCrosshair = Util::distance(i->x,i->y-i->yElevation,i->xCrosshair,i->yCrosshair);
+
+			float distToMove = min(distToCrosshair,FLOATING_EYE_FAST_SPEED*dt);
+
+			i->x = i->x + distToMove*cos(i->angleMoving);
+			i->y = i->y + distToMove*sin(i->angleMoving);
+
+			//Collision with player
+			if (smh->player->collisionCircle->testBox(i->collisionBox)) {
+				smh->explosionManager->addExplosion(i->x,i->y-i->yElevation,FLOATING_EYE_EXPLOSION_SIZE,FLOATING_EYE_EXPLOSION_DAMAGE,FLOATING_EYE_EXPLOSION_KNOCKBACK);
+				if (i->collisionBox) delete i->collisionBox;
+				i = theFloatingEyes.erase(i);
+				eyeMove = false;
+			//Collision with Barvinoid
+			} else if (collisionBoxes[0]->Intersect(i->collisionBox) || collisionBoxes[1]->Intersect(i->collisionBox) || collisionBoxes[2]->Intersect(i->collisionBox)) {
+				smh->explosionManager->addExplosion(i->x,i->y-i->yElevation,FLOATING_EYE_EXPLOSION_SIZE,FLOATING_EYE_EXPLOSION_DAMAGE,FLOATING_EYE_EXPLOSION_KNOCKBACK);
+				if (i->collisionBox) delete i->collisionBox;
+				i = theFloatingEyes.erase(i);
+				eyeMove = false;
+
+				health -= FLOATING_EYE_DAMAGE_TO_BARVINOID;
+				//Have him complain about your tactics
+				if (!startedComplainDialogue) {
+					startedComplainDialogue = true;
+					smh->windowManager->openDialogueTextBox(-1, BARVINOID_COMPLAINTEXT);
+				}
+			
+			//Collision with the wall
+			} else if (smh->environment->testCollision(i->collisionBox,barvinoidCanPass)) {
+				smh->explosionManager->addExplosion(i->x,i->y-i->yElevation,FLOATING_EYE_EXPLOSION_SIZE,FLOATING_EYE_EXPLOSION_DAMAGE,FLOATING_EYE_EXPLOSION_KNOCKBACK);
+				if (i->collisionBox) delete i->collisionBox;
+				i = theFloatingEyes.erase(i);
+				eyeMove = false;
+			}
 		}
 		
 		if (eyeMove) {
@@ -388,6 +469,13 @@ void ConservatoryBoss::drawFloatingEyes() {
 
 			int timeLeft = 5 - int(smh->timePassedSince(i->timeStartedCountdown));
 			if (timeLeft>0) smh->resources->GetFont("consoleFnt")->printf(smh->getScreenX(i->x),smh->getScreenY(i->y)-i->yElevation,HGETEXT_CENTER,"%d",timeLeft);
+		} else if (i->state == FESTATE_FLYING_TOWARD_CROSSHAIR) {
+			smh->resources->GetSprite("barvinoidMinionSprite")->SetColor(ARGB(255.0,0.0,0.0,0.0));
+			smh->resources->GetSprite("barvinoidMinionSprite")->RenderEx(smh->getScreenX(i->x),smh->getScreenY(i->y)-i->yElevation,i->angleFacing);
+			smh->resources->GetSprite("barvinoidMinionSprite")->SetColor(ARGB(255.0,255.0,255.0,255.0));
+
+			smh->resources->GetSprite("crosshair")->Render(smh->getScreenX(i->xCrosshair),smh->getScreenY(i->yCrosshair));
+
 		} else {
 			smh->resources->GetSprite("barvinoidMinionSprite")->RenderEx(smh->getScreenX(i->x),smh->getScreenY(i->y)-i->yElevation,i->angleFacing);
 		}
@@ -437,6 +525,11 @@ bool ConservatoryBoss::update(float dt) {
 
 	//Test collisions
 	testCollisions(dt);
+
+	if (!smh->player->isInvisible()) {
+		smileyLastSeenAtX = smh->player->x;
+		smileyLastSeenAtY = smh->player->y;
+	}
 	
 	switch (state) {
 		case BARVINOID_EYE_ATTACK:
