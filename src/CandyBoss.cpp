@@ -55,7 +55,8 @@ extern SMH *smh;
 #define HEALTH 4
 #define NUM_LIVES 7
 
-CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
+CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) 
+{
 	initialGridX = gridX = _gridX;
 	initialGridY = gridY = _gridY;
 	groupID = _groupID;
@@ -97,7 +98,6 @@ CandyBoss::CandyBoss(int _gridX, int _gridY, int _groupID) {
 	leftLegY = rightLegY = 0;
 	jumpYOffset = 0.0;
 	speedMultiplier = 1.0;
-
 }
 
 CandyBoss::~CandyBoss() {
@@ -158,8 +158,8 @@ bool CandyBoss::update(float dt) {
 		smh->soundManager->playMusic("bossMusic");
 	}
 
-	if (shrinking) {
-
+	if (shrinking) 
+	{
 		size -= (NUM_LIVES - numLives + 1) * .0225 * dt;
 		if (smh->timePassedSince(timeStartedShrink) > SHRINKING_DURATION) {
 			shrinking = false;
@@ -167,9 +167,9 @@ bool CandyBoss::update(float dt) {
 			spawnBartlet(x, y);
 			spawnedBartletYet = true;
 		}
-
-	} else {
-
+	}
+	else
+	{
 		timeInState += dt;
 
 		//Stage 1 - running
@@ -224,12 +224,16 @@ bool CandyBoss::update(float dt) {
 		}
 
 		//Player collision
-		if (jumpYOffset < 65.0) {
+		if (jumpYOffset < 65.0) 
+		{
 			setCollisionBox(collisionBox, x, y - jumpYOffset);
-		} else {
+		}
+		else
+		{
 			//Bartli can't collide with the player when she is in the air
 			setCollisionBox(collisionBox, -1.0, -1.0);
 		}
+
 		if (smh->player->collisionCircle->testBox(collisionBox)) {
 			if (state == CANDY_STATE_MULTI_JUMP) {
 				if (smh->timePassedSince(lastTimeHitSmiley) > 0.5 * (1.0 / speedMultiplier)) {
@@ -248,20 +252,17 @@ bool CandyBoss::update(float dt) {
 		updateLimbs(dt);
 			
 		//Take damage from stuff
-		bool hitThisFrame = false;
-		if (smh->player->getTongue()->testCollision(collisionBox) && smh->timePassedSince(lastTimeHit) > FLASHING_DURATION) {
-			health -= smh->player->getDamage();
-			hitThisFrame = true;
+		if (smh->player->getTongue()->testCollision(collisionBox) && smh->timePassedSince(lastTimeHit) > FLASHING_DURATION) 
+		{
+			dealDamage(smh->player->getDamage());
 		}
-		if (smh->player->fireBreathParticle->testCollision(collisionBox)) {
+		if (smh->player->fireBreathParticle->testCollision(collisionBox)) 
+		{
 			//Scale down fire breath a bit otherwise its too strong
-			health -= smh->player->getFireBreathDamage() * 0.8 * dt;
-			hitThisFrame = true;
+			dealDamage(smh->player->getFireBreathDamage() * 0.8 * dt);
 		}
-		if (hitThisFrame && smh->timePassedSince(lastTimeHit) > FLASHING_DURATION) {
-			lastTimeHit = smh->getGameTime();
-			openMouth(0.15);
-		}
+
+		//Immune to frisbees and lightning orbs
 		if (smh->projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_FRISBEE) > 0 ||
 			smh->projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_LIGHTNING_ORB) > 0)
 		{
@@ -361,38 +362,55 @@ void CandyBoss::drawBartli()
  */
 void CandyBoss::enterState(int _state) {
 
-	if (state == CANDY_STATE_MOVING_TO_CENTER) {
+	if (state == CANDY_STATE_MOVING_TO_CENTER) 
+	{
 		x = arenaCenterX;
 		y = arenaCenterY;
+	}
+
+	if (state == CANDY_STATE_RUNNING || state == CANDY_STATE_RESTING)
+	{
+		//Stop the running/breathing sound effects
+		smh->soundManager->stopEnvironmentChannel();
 	}
 
 	state = _state;
 	timeInState = 0.0;
 	restYOffset = jumpYOffset = 0.0;
 
-	if (state == CANDY_STATE_RUNNING) {
+	if (state == CANDY_STATE_RUNNING) 
+	{
 		//Start running in a random direction that doesn't result in Bartli immediately charging the player
 		//because there is no way to dodge it and that would be gay.
 		float angleBetween = Util::getAngleBetween(x, y, smh->player->x, smh->player->y);
 		do {
 			angle = smh->randomFloat(0.0, PI);
 		} while (angle > angleBetween - PI/4.0 && angle < angleBetween + PI/4.0);
+
+		//Start the running sound effect
+		smh->soundManager->playEnvironmentEffect("snd_BartliRunning", true);
 	}
 
-	if (state == CANDY_STATE_MOVING_TO_CENTER) {
+	if (state == CANDY_STATE_MOVING_TO_CENTER) 
+	{
 		timeToGetToCenter = Util::distance(x, y, arenaCenterX, arenaCenterY) / (CANDY_RUN_SPEED * speedMultiplier);
 		angle = Util::getAngleBetween(x, y, arenaCenterX, arenaCenterY);
 	}
 
-	if (state == CANDY_STATE_RESTING) {
+	if (state == CANDY_STATE_RESTING) 
+	{
 		restYOffset = 0.0;
 		if (isFirstTimeResting) {
 			smh->windowManager->openDialogueTextBox(-1, CANDY_REST_TEXT);
 			isFirstTimeResting = false;
 		}
+
+		//Start the breathing sound effect
+		smh->soundManager->playEnvironmentEffect("snd_BartliBreathing", true);
 	}
 
-	if (state == CANDY_STATE_THROWING_CANDY) {
+	if (state == CANDY_STATE_THROWING_CANDY) 
+	{
 		lastCandyThrowTime = smh->getGameTime();
 		candyThrowDelay = 0.5;
 	}
@@ -498,16 +516,20 @@ void CandyBoss::updateJumping(float dt) {
 		y += jumpSpeed * sin(angle) * dt;
 
 		//Done jumping
-		if (timeJumping > timeToJump) {
+		if (timeJumping > timeToJump) 
+		{
 			jumping = false;
 			timeStoppedJump = smh->getGameTime();
 			jumpYOffset = 0.0;
-			if (state == CANDY_STATE_JUMPING) {
+			if (state == CANDY_STATE_JUMPING) 
+			{
 				//When done jumping, make the screen shake and create a shock wave
 				smh->screenEffectsManager->startShaking(0.75, 2.5);			
 				smh->player->immobilize(0.5);
 				spawnNova(x, y);
 			}
+
+			smh->soundManager->playSound("snd_BartliJumpLand");
 		}
 
 	}
@@ -557,9 +579,34 @@ void CandyBoss::updateThrowingCandy(float dt)
 /**
  * Updates rest state.
  */
-void CandyBoss::updateResting(float dt) {
+void CandyBoss::updateResting(float dt) 
+{
 	restYOffset = 4.0 * sin(timeInState * 3.0);
 }
+
+void CandyBoss::dealDamage(float amount)
+{
+	health -= amount;
+
+	if (smh->timePassedSince(lastTimeHit) > FLASHING_DURATION) 
+	{
+		lastTimeHit = smh->getGameTime();
+		openMouth(0.15);
+	}
+
+	playHitSound();
+}
+
+void CandyBoss::playHitSound()
+{
+	int r = smh->randomInt(0, 1000000);
+	if (r < 333333)
+		smh->soundManager->playSound("snd_BartliHit1", 1.0);
+	else if (r < 666666)
+		smh->soundManager->playSound("snd_BartliHit2", 1.0);
+	else
+		smh->soundManager->playSound("snd_BartliHit3", 1.0);
+}	
 
 /**
  * Opens Bartli's mouth for the specified duration.
@@ -633,7 +680,8 @@ void CandyBoss::drawNovas(float dt) {
 
 /////////////////////////// Bartlets //////////////////////////
 
-void CandyBoss::spawnBartlet(float x, float y) {
+void CandyBoss::spawnBartlet(float x, float y) 
+{
 	Bartlet newBartlet;
 	newBartlet.x = x;
 	newBartlet.y = y;
@@ -649,6 +697,8 @@ void CandyBoss::spawnBartlet(float x, float y) {
 	newBartlet.size = 0.1;
 
 	bartletList.push_back(newBartlet);
+
+	smh->soundManager->playSound("snd_BartletSpawn");
 }
 
 /**

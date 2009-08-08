@@ -13,10 +13,10 @@ extern SMH *smh;
 #define MINI_MUSHROOM_ENEMYID 43
 
 #define ACC 350 //used for boomerang acceleration
-#define BOOMERANG_LIFE 4//how long before it self-destructs (necessary b/c boomerangs don't have collision to the terrain)
+#define BOOMERANG_LIFE 4 //how long before it self-destructs (necessary b/c boomerangs don't have collision to the terrain)
 
-ProjectileManager::ProjectileManager() {
-
+ProjectileManager::ProjectileManager() 
+{
 	initProjectiles();
 
 	//Set up which collision types projectiles can go through
@@ -34,19 +34,22 @@ ProjectileManager::ProjectileManager() {
 	canPass[FIRE_DESTROY] = false;
 	canPass[BOMBABLE_WALL] = false;
 	canPass[FLAME] = false;
-
 }
 
-ProjectileManager::~ProjectileManager() {
-
+ProjectileManager::~ProjectileManager() 
+{
+	//Should never be deleted
 }
 
 
-void ProjectileManager::addFrisbee(float x, float y, float speed, float angle, float stunPower) {
+void ProjectileManager::addFrisbee(float x, float y, float speed, float angle, float stunPower) 
+{
 	addProjectile(x, y, speed, angle, 0.0, false, false, PROJECTILE_FRISBEE, false, false, 0.0, 0.0, 0.0, stunPower);
 }
 
-void ProjectileManager::addProjectile(float x, float y, float speed, float angle, float damage, bool hostile, bool homing, int id, bool makesSmileyFlash) {
+void ProjectileManager::addProjectile(float x, float y, float speed, float angle, float damage, bool hostile, 
+									  bool homing, int id, bool makesSmileyFlash) 
+{
 	addProjectile(x, y, speed, angle, damage, hostile, homing, id, makesSmileyFlash, false, 0.0, 0.0, 0.0, 0.0);
 }
 
@@ -213,10 +216,16 @@ void ProjectileManager::update(float dt) {
 		}
 
 		//Do collision with Smiley
-		if (!deleteProjectile && i->hostile && smh->player->collisionCircle->testBox(i->collisionBox)) {
-			if (smh->player->isReflectingProjectiles()) {
+		if (!deleteProjectile && i->hostile && smh->player->collisionCircle->testBox(i->collisionBox)) 
+		{
+			//Test to see if the reflection shield is active. Never reflect parabola projectiles
+			//because it looks stupid.
+			if (smh->player->isReflectingProjectiles() && !i->hasParabola) 
+			{
 				reflectProjectile(i);
-			} else {
+			} 
+			else 
+			{
 				smh->player->dealDamage(i->damage, i->makesSmileyFlash);
 				std::string debugString;
 				debugString = "Smiley hit by projectile of type " + Util::intToString(i->id) + 
