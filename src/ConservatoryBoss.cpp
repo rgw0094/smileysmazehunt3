@@ -416,6 +416,7 @@ void ConservatoryBoss::updateFloatingEyes(float dt) {
 				if (i->collisionBox) delete i->collisionBox;
 				i = theFloatingEyes.erase(i);
 				eyeMove = false;
+				smh->player->dealDamage(FLOATING_EYE_EXPLOSION_DAMAGE,true);
 			//Collision with Barvinoid
 			} else if (collisionBoxes[0]->Intersect(i->collisionBox) || collisionBoxes[1]->Intersect(i->collisionBox) || collisionBoxes[2]->Intersect(i->collisionBox)) {
 				smh->explosionManager->addExplosion(i->x,i->y-i->yElevation,FLOATING_EYE_EXPLOSION_SIZE,FLOATING_EYE_EXPLOSION_DAMAGE,FLOATING_EYE_EXPLOSION_KNOCKBACK);
