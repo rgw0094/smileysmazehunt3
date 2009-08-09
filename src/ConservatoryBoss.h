@@ -38,6 +38,8 @@ struct floatingEye {
 	float xCrosshair,yCrosshair;
 	float aimX,aimY;
 	float timeStartedCountdown;
+
+	float timeOfLastShot;
 };
 
 class ConservatoryBoss : public Boss {
@@ -65,6 +67,7 @@ public:
 	void updateEyeGlow(int eye);
 	void testCollisions(float dt);
 	void purgeFloatingEyes();
+	void makeEyesFloatAway();
 
 	//State methods
 	void doEyeAttackState(float dt);
@@ -91,6 +94,11 @@ public:
 	bool shouldDrawAfterSmiley;
 	bool startedComplainDialogue;
 	bool startedDeathDialogue;
+
+	//These variables are used to implement a delay from the time he's hit by a floating eye to the time
+	//he complains about it. That way the explosion has time to be seen before the dialogue box comes up
+	float timeHitByFloatingEye;
+	bool hasBeenHitByFloatingEye;
 
 	//hopping variables
 	float timeStartedHop;
