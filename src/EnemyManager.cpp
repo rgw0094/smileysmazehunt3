@@ -17,6 +17,7 @@ extern SMH *smh;
  */
 EnemyManager::EnemyManager() { 
 	deathParticles = new hgeParticleManager();
+	toDrawImmunities=false;
 }
 
 /**
@@ -161,6 +162,14 @@ void EnemyManager::draw(float dt) {
 	std::list<EnemyStruct>::iterator i;
 	for (i = enemyList.begin(); i != enemyList.end(); i++) {
 		i->enemy->baseDraw(dt);
+	}
+
+	if (toDrawImmunities) {
+		
+		for (i = enemyList.begin(); i != enemyList.end(); i++) {
+			i->enemy->drawImmunities();
+		}
+		toDrawImmunities=false;
 	}
 
 	//Draw death effect
@@ -426,6 +435,14 @@ void EnemyManager::playHitSoundEffect() {
 			smh->soundManager->playSound("snd_Hit5");
 			break;
 	}
+}
+
+/**
+ * Calls the drawImmunities function in each enemy
+ */
+void EnemyManager::drawEnemyImmunities() {
+	toDrawImmunities=true;
+	
 }
 
 /**
