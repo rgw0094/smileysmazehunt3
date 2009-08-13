@@ -124,6 +124,7 @@ public:
 	//Methods that can be overridden
 	virtual void drawFrozen(float dt);
 	virtual void drawStunned(float dt);
+	virtual void drawImmunities();
 	virtual void drawDebug();
 	virtual void hitWithProjectile(int projectileType);
 	virtual void notifyTongueHit();
@@ -250,11 +251,14 @@ public:
 	void reset();
 	bool hitEnemiesWithProjectile(hgeRect *collisionBox, float damage, int type, float stunPower);
 	void spawnDeathParticle(float x, float y);
+	void drawEnemyImmunities();
 
 	//Variables
 	std::list<EnemyStruct> enemyList;
 	hgeParticleManager *deathParticles;
 	int randomLoot;
+
+	bool toDrawImmunities;
 
 private:
 

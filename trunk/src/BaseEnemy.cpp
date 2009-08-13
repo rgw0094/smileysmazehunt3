@@ -622,6 +622,43 @@ void BaseEnemy::drawStunned(float dt) {
 }
 
 /**
+ * This draws symbols near the enemy to show what the enemy is immune to.
+ * It is called by the EnemyManager method, drawEnemyImmunities. That is called if the player is currently selecting Clinton's Cane.
+ */
+void BaseEnemy::drawImmunities() {
+	float xDraw=-30;
+	float yDraw=30;
+
+	//is invincible, so don't draw any immunities
+	if (smh->gameData->getEnemyInfo(id).invincible) return;
+
+	if (smh->gameData->getEnemyInfo(id).immuneToTongue) {
+		smh->resources->GetAnimation("upgradeIcons")->SetFrame(2);
+		smh->resources->GetAnimation("upgradeIcons")->RenderEx(smh->getScreenX(x+xDraw-8),smh->getScreenY(y+yDraw-15),0.0,0.67,0.67);
+		xDraw += 30;
+	}
+	if (smh->gameData->getEnemyInfo(id).immuneToFire) {
+		smh->resources->GetAnimation("abilities")->SetFrame(1);
+		smh->resources->GetAnimation("abilities")->RenderEx(smh->getScreenX(x+xDraw),smh->getScreenY(y+yDraw),0.0,0.5,0.5);
+		xDraw += 30;
+	}
+	if (smh->gameData->getEnemyInfo(id).immuneToStun) {
+		smh->resources->GetAnimation("abilities")->SetFrame(2);
+		smh->resources->GetAnimation("abilities")->RenderEx(smh->getScreenX(x+xDraw),smh->getScreenY(y+yDraw),0.0,0.5,0.5);
+		xDraw += 30;
+	}
+	if (smh->gameData->getEnemyInfo(id).immuneToLightning) {
+		smh->resources->GetAnimation("abilities")->SetFrame(4);
+		smh->resources->GetAnimation("abilities")->RenderEx(smh->getScreenX(x+xDraw),smh->getScreenY(y+yDraw),0.0,0.5,0.5);
+		xDraw += 30;
+	}
+	if (smh->gameData->getEnemyInfo(id).immuneToFreeze) {
+		smh->resources->GetAnimation("abilities")->SetFrame(8);
+		smh->resources->GetAnimation("abilities")->RenderEx(smh->getScreenX(x+xDraw),smh->getScreenY(y+yDraw),0.0,0.5,0.5);
+		xDraw += 30;
+	}
+}
+/**
  * Basic projectile collision functionality. Enemies can override this
  * for something more specific.
  */

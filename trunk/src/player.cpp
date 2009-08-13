@@ -512,6 +512,11 @@ void Player::doAbility(float dt) {
 	bool canUseAbility = !abilitiesLocked && !waterWalk && !falling && !springing && !frozen 
 		&& !drowning && !springing && hoveringYOffset == 0.0;
 
+	//Draw enemy immunities if the cane is selected
+	if (gui->getSelectedAbility() == CANE) {
+		smh->enemyManager->drawEnemyImmunities();
+	}
+	
 	/////////////// Hover ////////////////
 	bool wasHovering = isHovering;
 	isHovering = ((isHovering || smh->environment->collision[gridX][gridY] == HOVER_PAD) &&
