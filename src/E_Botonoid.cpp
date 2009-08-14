@@ -50,7 +50,7 @@ void E_Botonoid::update(float dt) {
 
 	if (smh->timePassedSince(lastRangedAttack) >= rangedAttackDelay &&
 		Util::distance(x,y,smh->player->x,smh->player->y) <=  weaponRange) {
-			if (smh->randomFloat(0,1.00) <= dt) {
+			if (smh->randomFloat(0,1.00) <= dt && !frozen) {
 				//fire a projectile
 				if (hasRangedAttack) {
 					smh->projectileManager->addProjectile(x, y, projectileSpeed, smh->randomFloat(0,2*3.14159), projectileDamage,
