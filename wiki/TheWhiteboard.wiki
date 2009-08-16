@@ -21,6 +21,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Exiting the controls menu makes it so it is no longer "listening" for an input||8/16/09||ETI||
 ||Cane shows enemy immunities||8/13/09||ETI||
 ||Barvinoid is actually done||8/10/09||ETI||
 ||Added sounds to Bartli battle||8/8/09||RGW||
