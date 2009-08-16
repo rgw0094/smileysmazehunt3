@@ -1,8 +1,7 @@
 === Programming To Do ===
  * The rest of the monocle man advice topics
  * Make it so that Calypso only shoots lasers while stationary.
- * Fix Barvinoid so you can't kill him accidentally.
-
+ 
 === Sounds To Add ===
  * Calypso boss
  * Mushroom boss
