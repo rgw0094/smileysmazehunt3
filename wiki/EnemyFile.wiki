@@ -11,7 +11,7 @@
 ||Damage||Damage the enemy deals. 100 = 1 smiley face||any int||Y||
 ||Radius||Radius of collision box||any int||Y||
 ||Speed||Movement speed||any int||Y||
-||Slime||Can the enemy walk on slime?||T/F||Y||
+||Slime||Can the enemy walk on slime?||T/F||N||
 ||Land||Can the enemy walk on land?||T/F||N||
 ||Lava||Can the enemy walk on lava?||T/F||N||
 ||Mushrooms||Can the enemy walk on mushrooms?||T/F||N||
