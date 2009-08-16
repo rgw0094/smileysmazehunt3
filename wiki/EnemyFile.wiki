@@ -12,11 +12,11 @@
 ||Radius||Radius of collision box||any int||Y||
 ||Speed||Movement speed||any int||Y||
 ||Slime||Can the enemy walk on slime?||T/F||Y||
-||Land||Can the enemy walk on land?||T/F||Y||
-||Lava||Can the enemy walk on lava?||T/F||Y||
+||Land||Can the enemy walk on land?||T/F||N||
+||Lava||Can the enemy walk on lava?||T/F||N||
 ||Mushrooms||Can the enemy walk on mushrooms?||T/F||N||
-||SWater||Can the enemy walk on shallow water?||T/F||Y||
-||DWater||Can the enemy walk on deep water?||T/F||Y||
+||SWater||Can the enemy walk on shallow water?||T/F||N||
+||DWater||Can the enemy walk on deep water?||T/F||N||
 ||ImmuneTongue||If the enemy is immune to Smiley's tongue||T/F||N||
 ||ImmuneFire||If the enemy is immune to fire breath||T/F||N||
 ||ImmuneLightning||If the enemy is immune to lightning||T/F||N||
