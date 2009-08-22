@@ -75,6 +75,9 @@ bool OptionsWindow::update(float dt) {
 	//Update done button
 	doneButton->update(dt);
 	if (doneButton->isClicked()) {
+		//Make it so none of the buttons is in "Edit mode"
+		smh->input->setEditMode(-1);
+		
 		smh->input->saveInputs();
 		return false;
 	}
