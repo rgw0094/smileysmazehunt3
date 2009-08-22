@@ -278,7 +278,7 @@ bool FireBossTwo::update(float dt) {
 	if (state == FIREBOSS_FRIENDLY && !smh->windowManager->isTextBoxOpen()) {
 		//Drop fire breath
 		if (!droppedLoot) {
-			smh->lootManager->addLoot(LOOT_NEW_ABILITY, startX*64.0+32.0, (startY+5)*64.0+32.0, WATER_BOOTS);
+			smh->lootManager->addLoot(LOOT_NEW_ABILITY, startX*64.0+32.0, (startY+5)*64.0+32.0, WATER_BOOTS, groupID);
 			droppedLoot = true;
 		}
 
@@ -554,7 +554,6 @@ void FireBossTwo::die() {
 	facing = DOWN;
 	alpha = 255;
 	smh->saveManager->killBoss(FIRE_BOSS2);
-	smh->enemyGroupManager->notifyOfDeath(groupID);
 	smh->soundManager->fadeOutMusic();
 	resetFlameWalls();
 	resetFireBalls();

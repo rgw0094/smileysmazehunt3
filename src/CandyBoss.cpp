@@ -300,7 +300,6 @@ bool CandyBoss::update(float dt) {
 			enterState(CANDY_STATE_FRIENDLY);		
 			smh->windowManager->openDialogueTextBox(-1, CANDY_DEFEAT_TEXT);	
 			smh->saveManager->killBoss(CANDY_BOSS);
-			smh->enemyGroupManager->notifyOfDeath(groupID);
 			smh->soundManager->fadeOutMusic();
 		} else {
 			shrinking = true;
@@ -328,7 +327,7 @@ bool CandyBoss::update(float dt) {
 		if (fadeOutAlpha <= 0.0) {
 			fadeOutAlpha = 0.0;
 			smh->soundManager->playMusic("iceMusic");
-			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, ICE_BREATH);
+			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, ICE_BREATH, groupID);
 			return true;
 		}
 	}

@@ -1017,15 +1017,14 @@ void ConservatoryBoss::finish() {
 		enterState(BARVINOID_FADING);
 		
 		//drop loot
-		smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, HOVER);
+		smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, HOVER, groupID);
 
 		//fade away music
 		smh->soundManager->fadeOutMusic();
 
 		//report the death
 		smh->saveManager->killBoss(CONSERVATORY_BOSS);
-		smh->enemyGroupManager->notifyOfDeath(groupID);
-
+		
 		droppedLoot = true;
 	}
 }

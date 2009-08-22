@@ -5,6 +5,7 @@
 #include "WindowFramework.h"
 #include "environment.h"
 #include "hgesprite.h"
+#include "EnemyFramework.h"
 
 extern SMH *smh;
 
@@ -39,9 +40,23 @@ void LootManager::addLoot(int type, int x, int y, int ability) {
 	newLoot.x = x;
 	newLoot.y = y;
 	newLoot.ability = ability;
+	newLoot.groupID = -1;
 	theLoot.push_back(newLoot);
 }
 
+/**
+ * Add loot with a groupID attached
+ * Used by bosses, so that when the loot is picked up, the enemy blocks disappear
+ */
+void LootManager::addLoot(int type, int x, int y, int ability, int groupID) {
+	Loot newLoot;
+    newLoot.type = type;
+	newLoot.x = x;
+	newLoot.y = y;
+	newLoot.ability = ability;
+	newLoot.groupID = groupID;
+	theLoot.push_back(newLoot);
+}
 
 /**
  * Draw all the active loot
@@ -97,6 +112,16 @@ void LootManager::update(float dt) {
 				smh->windowManager->openNewAbilityTextBox(i->ability);
 				collected = true;
 				smh->soundManager->playSound("snd_NewAbility");
+
+				//If collecting fire breath, give new advice on Mana
+				if (i->ability == FIRE_BREATH) {
+					smh->popupMessageManager->showNewAdvice(AdviceTypes::ADVICE_MANA);
+				}
+
+				//if there is a groupID, notify of death for it
+				//this is used for bosses so their enemy blocks don't disappear until the loot is collected
+				if (i->groupID != -1) smh->enemyGroupManager->notifyOfDeath(i->groupID);
+
 			}
 
 			if (collected) {

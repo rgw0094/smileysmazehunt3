@@ -364,7 +364,6 @@ void TutBoss::dealDamage(float damage) {
 		flashing = false;
 		smh->windowManager->openDialogueTextBox(-1, TUTBOSS_DEFEATTEXT);	
 		smh->saveManager->killBoss(TUT_BOSS);
-		smh->enemyGroupManager->notifyOfDeath(groupID);
 		smh->soundManager->fadeOutMusic();
 	}
 }
@@ -610,7 +609,7 @@ bool TutBoss::doDeath(float dt) {
 		//When done fading away, drop the loot
 		if (fadeAlpha < 0.0) {
 			fadeAlpha = 0.0;
-			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, TUTS_MASK);
+			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, TUTS_MASK, groupID);
 			smh->soundManager->playAreaMusic(TUTS_TOMB);
 			return true;
 		}

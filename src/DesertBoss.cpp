@@ -241,8 +241,7 @@ bool DesertBoss::update(float dt) {
 		if (alpha < 0.0) {
 			alpha = 0.0;
 			smh->soundManager->playMusic("oldeTowneMusic");
-			smh->enemyGroupManager->notifyOfDeath(groupID);
-			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, LIGHTNING_ORB);
+			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, LIGHTNING_ORB, groupID);
 			smh->saveManager->killBoss(DESERT_BOSS);
 			return true;
 		}

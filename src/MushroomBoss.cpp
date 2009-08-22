@@ -178,10 +178,9 @@ bool MushroomBoss::update(float dt) {
 		alpha -= MUSHBOOM_FADE_SPEED*dt;
 		//Drop frisbee
 		if (!droppedLoot) {
-			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, SILLY_PAD);
+			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, SILLY_PAD, groupID);
 			droppedLoot = true;
 			smh->saveManager->killBoss(MUSHROOM_BOSS);
-			smh->enemyGroupManager->notifyOfDeath(groupID);
 			smh->soundManager->playMusic("forestMusic");
 		}
 		if (alpha < 0) {

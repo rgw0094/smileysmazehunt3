@@ -304,7 +304,6 @@ bool DespairBoss::update(float dt) {
 			setState(DESPAIRBOSS_FRIENDLY);		
 			smh->windowManager->openDialogueTextBox(-1, DESPAIRBOSS_DEFEATTEXT);	
 			smh->saveManager->killBoss(DESPAIR_BOSS);
-			smh->enemyGroupManager->notifyOfDeath(groupID);
 			smh->soundManager->fadeOutMusic();
 		}
 
@@ -446,7 +445,7 @@ bool DespairBoss::update(float dt) {
 		if (fadeAlpha < 0.0) {
 			setState(DESPAIRBOSS_DEAD);
 			fadeAlpha = 0.0;
-			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, REFLECTION_SHIELD);
+			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, REFLECTION_SHIELD, groupID);
 			smh->soundManager->playMusic("realmOfDespairMusic");
 			return true;
 		}

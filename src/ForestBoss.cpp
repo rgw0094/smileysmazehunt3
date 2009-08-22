@@ -143,9 +143,8 @@ bool ForestBoss::update(float dt) {
 		alpha -= 155.0*dt;
 		//When the forest boss is done fading out the boss sequence is finished
 		if (alpha < 0.0) {
-			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, SPRINT_BOOTS);
+			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, SPRINT_BOOTS, groupID);
 			smh->soundManager->playMusic("forestMusic");
-			smh->enemyGroupManager->notifyOfDeath(groupID);
 			smh->saveManager->killBoss(FOREST_BOSS);
 			return true; //Return true to delete the boss
 		}
