@@ -1102,7 +1102,7 @@ public:
 	{
 		switch (area) 
 		{
-			case SMOLDER_HOLLOW:
+			case OLDE_TOWNE:
 				return 0;
 				break;
 			case FOREST_OF_FUNGORIA:
