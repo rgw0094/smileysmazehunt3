@@ -357,7 +357,6 @@ numEnemies="103"
 21Lava=      "T"
 21SWater=    "T"
 21Chases=    "T"
-21ImmuneStun="T"
 
 ;Fangy Charger
 22GCol=      "0"
