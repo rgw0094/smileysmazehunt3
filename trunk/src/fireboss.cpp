@@ -322,7 +322,6 @@ bool FireBoss::update(float dt) {
 		facing = DOWN;
 		alpha = 255;
 		smh->saveManager->killBoss(FIRE_BOSS);
-		smh->enemyGroupManager->notifyOfDeath(groupID);
 		smh->soundManager->fadeOutMusic();
 	}
 	
@@ -330,7 +329,7 @@ bool FireBoss::update(float dt) {
 	if (state == FIREBOSS_FRIENDLY && !smh->windowManager->isTextBoxOpen()) {
 		//Drop fire breath
 		if (!droppedLoot) {
-			smh->lootManager->addLoot(LOOT_NEW_ABILITY, startX*64.0+32.0, startY*64.0+32.0, FIRE_BREATH);
+			smh->lootManager->addLoot(LOOT_NEW_ABILITY, startX*64.0+32.0, startY*64.0+32.0, FIRE_BREATH, groupID);
 			droppedLoot = true;
 		}
 		x += 200.0f*dt;

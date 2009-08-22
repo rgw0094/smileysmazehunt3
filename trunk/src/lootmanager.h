@@ -14,6 +14,7 @@ class hgeRect;
 struct Loot {
 	int type, x, y;
 	int ability;
+	int groupID;
 };
 
 class LootManager {
@@ -26,6 +27,7 @@ public:
 	void draw(float dt);
 	void update(float dt);
 	void addLoot(int id, int x, int y, int ability);
+	void addLoot(int id, int x, int y, int ability, int groupID);
 	void reset();
 
 	//Variables

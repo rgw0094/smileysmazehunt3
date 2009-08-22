@@ -162,11 +162,11 @@ class AdviceTypes {
 public:
 	static const int ADVICE_SAVING = 0;
 	static const int ADVICE_INVENTORY = 1;
-	static const int ADVICE_SHOP = 2;
-	static const int ADVICE_FRISBEE = 3;
-	static const int ADVICE_UNUSED2 = 4;
-	static const int ADVICE_UNUSED3 = 5;
-	static const int ADVICE_UNUSED4 = 6;
+	static const int ADVICE_MANA = 2;
+	static const int ADVICE_SHOP = 3;
+	static const int ADVICE_FRISBEE = 4;
+	static const int ADVICE_UNUSED1 = 5;
+	static const int ADVICE_UNUSED2 = 6;
 	static const int ADVICE_EXIT = 7;
 	static const int NUM_ADVICE = 8;
 };

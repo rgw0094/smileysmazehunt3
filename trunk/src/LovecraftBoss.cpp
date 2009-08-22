@@ -604,7 +604,7 @@ bool LovecraftBoss::doDeathState(float dt) {
 		//When done fading away, drop the loot
 		if (fadeAlpha < 0.0) {
 			fadeAlpha = 0.0;
-			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, SHRINK);
+			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, SHRINK, groupID);
 			smh->soundManager->playAreaMusic(FOREST_OF_FUNGORIA);
 			return true;
 		}
@@ -724,7 +724,6 @@ void LovecraftBoss::dealDamage(float amount) {
 		closeEye();
 		smh->windowManager->openDialogueTextBox(-1, LOVECRAFT_DEFEAT_TEXT);	
 		smh->saveManager->killBoss(LOVECRAFT_BOSS);
-		smh->enemyGroupManager->notifyOfDeath(groupID);
 		smh->soundManager->fadeOutMusic();
 	}
 }

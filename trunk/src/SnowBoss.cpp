@@ -315,10 +315,9 @@ bool SnowBoss::update(float dt) {
 		alpha -= SNOWBOSS_FADE_SPEED*dt;
 		//Drop frisbee
 		if (!droppedLoot) {
-			smh->lootManager->addLoot(LOOT_NEW_ABILITY, xLoot, yLoot, FRISBEE);
+			smh->lootManager->addLoot(LOOT_NEW_ABILITY, xLoot, yLoot, FRISBEE, groupID);
 			droppedLoot = true;
 			smh->saveManager->killBoss(SNOW_BOSS);
-			smh->enemyGroupManager->notifyOfDeath(groupID);
 			smh->soundManager->playMusic("iceMusic");
 		}
 		if (alpha < 0) {

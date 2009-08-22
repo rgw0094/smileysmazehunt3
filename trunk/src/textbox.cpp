@@ -432,6 +432,14 @@ std::string TextBox::getAdviceText(int advice, int page) {
 			}
 		case AdviceTypes::ADVICE_SAVING:
 			return "To save your game you must simply lick one of the many lollipops strewn throughout our land.";
+		case AdviceTypes::ADVICE_MANA:
+			switch (page)
+			{
+				case 1: return "Most items in the game require the use of magic power, called mana.";
+				case 2: return "Your mana is represented as a blue bar below your health. Using mana will deplete this bar.";
+				case 3: return "After a short delay of 4 seconds, your mana will begin to slowly recharge again until it is full.";
+				case 4: return "You can also collect a Mana Triange from a fallen enemy. This will grant you a small amount of mana, and bypass the 4 second delay.";
+			}
 		case AdviceTypes::ADVICE_FRISBEE:
 			switch (page)
 			{
