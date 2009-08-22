@@ -905,7 +905,11 @@ int Environment::collisionAt(float x, float y) {
 void Environment::unlockDoor(int gridX, int gridY) {
 	bool doorOpened = false;
 
+	//If we're not on a level with keys (and hence getKeyIndex = -1), don't open any doors
+	if (Util::getKeyIndex(smh->saveManager->currentArea) == -1) return;
+
 	//If this square is a door and the player has the key, unlock it
+	//The -1 after each key index is because in the item layer, item 0 is blank, and item 1 is red key -- but we want the key indices to start with 0.
 	if (collision[gridX][gridY] == RED_KEYHOLE && smh->saveManager->numKeys[Util::getKeyIndex(smh->saveManager->currentArea)][RED_KEY-1] > 0) {
 		collision[gridX][gridY] = WALKABLE;
 		smh->saveManager->numKeys[Util::getKeyIndex(smh->saveManager->currentArea)][RED_KEY-1]--;
