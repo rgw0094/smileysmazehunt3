@@ -901,7 +901,6 @@ int Environment::collisionAt(float x, float y) {
 
 }
 
-
 void Environment::unlockDoor(int gridX, int gridY) {
 	bool doorOpened = false;
 

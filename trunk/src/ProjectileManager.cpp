@@ -277,16 +277,46 @@ void ProjectileManager::update(float dt) {
 			//calculate when the orb should reflect, and what direction it
 			//should go when it does
 			int mirror = smh->environment->collisionAt(i->x, i->y);
+
+			int radius = projectileTypes[i->id].radius;
+		
+
+			//If the projectile is on the very edge of the tile, it can reflect and hit switches one square over.
+			//This fixes that by making it so it's a max of (radius+3) away from the edge
+
+            int mirrorGridX = i->x / (float)64.0;
+			int mirrorGridY = i->y / (float)64.0;
+
+			float reflectXToUse = i->x;
+			float reflectYToUse = i->y;
+
+			float offsetX = reflectXToUse - mirrorGridX*64;
+			float offsetY = reflectYToUse - mirrorGridY*64;
+
+			//moving up/down, so check its left-right position in the tile
+			if (i->facing == DOWN || i->facing == UP) {
+				if (offsetX > 64-(radius*2+3)) reflectXToUse = mirrorGridX*64+(64-(radius+3));
+				else if (offsetX < (radius*2+3)) reflectXToUse = mirrorGridX*64+(radius+3);                				
+			//moving left/right, so check its up-down position in the tile
+			} else {
+				if (offsetY > 64-(radius+3)) reflectYToUse = mirrorGridY*64+(64-(radius+3));
+				else if (offsetY < (radius+3)) reflectYToUse = mirrorGridY*64+(radius+3);                				
+			}
+
+			offsetX = reflectXToUse - mirrorGridX*64;
+			offsetY = reflectYToUse - mirrorGridY*64;
+			
 			if (i->changedGridSquare && (mirror == MIRROR_UP_LEFT || mirror == MIRROR_UP_RIGHT || mirror == MIRROR_DOWN_LEFT || mirror == MIRROR_DOWN_RIGHT)) {
 				i->waitingToReflect = true;		
 				if (mirror == MIRROR_UP_LEFT) {
 					if (i->facing == DOWN) {
-						i->reflectX = i->x;
-						i->reflectY = i->gridY*64 + 64 - (int)i->x % 64;
+						i->reflectX = reflectXToUse;
+						i->reflectY = i->gridY*64 + 64 - offsetX;
 						i->reflectDirection = LEFT;
+						smh->setDebugText("orb reflected, was moving down now moving left");
 					} else if (i->facing == RIGHT) {
-						i->reflectX = i->gridX*64 + 64 - (int)i->y % 64;
-						i->reflectY = i->y;
+						i->reflectX = i->gridX*64 + 64 - offsetY;
+						i->reflectY = reflectYToUse;
 						i->reflectDirection = UP;
 					} else if (i->facing == DOWN_RIGHT) {
 						i->reflectX = i->gridX*64 + (64 - (int)i->y % 64)/2;
@@ -298,12 +328,12 @@ void ProjectileManager::update(float dt) {
 					}
 				} else if (mirror == MIRROR_UP_RIGHT) {
 					if (i->facing == DOWN) {
-						i->reflectX = i->x;
-						i->reflectY = i->gridY*64 + (int)i->x % 64;
+						i->reflectX = reflectXToUse;
+						i->reflectY = i->gridY*64 + offsetX;
 						i->reflectDirection = RIGHT;
 					} else if (i->facing == LEFT) {
-						i->reflectX = i->gridX*64 + (int)i->y % 64;
-						i->reflectY = i->y;
+						i->reflectX = i->gridX*64 + offsetY;
+						i->reflectY = reflectYToUse;
 						i->reflectDirection = UP;
 					} else if (i->facing == DOWN_LEFT) {
 						i->reflectX = i->gridX*64 + ((int)i->y % 64)/2;
@@ -315,12 +345,12 @@ void ProjectileManager::update(float dt) {
 					}
 				} else if (mirror == MIRROR_DOWN_LEFT) {
 					if (i->facing == UP) {
-						i->reflectX = i->x;
-						i->reflectY = i->gridY*64 + (int)i->x % 64;
+						i->reflectX = reflectXToUse;
+						i->reflectY = i->gridY*64 + offsetX;
 						i->reflectDirection = LEFT;
 					} else if (i->facing == RIGHT) {
-						i->reflectX = i->gridX*64 + (int)i->y % 64;
-						i->reflectY = i->y;
+						i->reflectX = i->gridX*64 + offsetY;
+						i->reflectY = reflectYToUse;
 						i->reflectDirection = DOWN;
 					} else if (i->facing == UP_RIGHT) {
 						i->reflectX = i->gridX*64 + ((int)i->y % 64)/2;
@@ -332,12 +362,12 @@ void ProjectileManager::update(float dt) {
 					}
 				} else if (mirror == MIRROR_DOWN_RIGHT) {
 					if (i->facing == UP) {
-						i->reflectX = i->x;
-						i->reflectY = i->gridY*64 + 64 - (int)i->x % 64;
+						i->reflectX = reflectXToUse;
+						i->reflectY = i->gridY*64 + 64 - offsetX;
 						i->reflectDirection = RIGHT;
 					} else if (i->facing == LEFT) {
-						i->reflectX = i->gridX*64 + 64 - (int)i->y % 64;
-						i->reflectY = i->y;
+						i->reflectX = i->gridX*64 + 64 - offsetY;
+						i->reflectY = reflectYToUse;
 						i->reflectDirection = DOWN;
 					} else if (i->facing == UP_LEFT) {
 						i->reflectX = i->gridX*64 + (64 - (int)i->x % 64)/2;
