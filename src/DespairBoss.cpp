@@ -467,7 +467,7 @@ bool DespairBoss::update(float dt) {
 void DespairBoss::draw(float dt) {
 	if (!shouldDrawAfterSmiley) drawCalypso(dt);
 	std::string randomText = "Calypso " + Util::intToString(int(x)) + "," + Util::intToString(int(y)) + ": startY=" + Util::intToString(int(startY));
-	smh->setDebugText(randomText);
+	//smh->setDebugText(randomText);
 }
 
 /** 
