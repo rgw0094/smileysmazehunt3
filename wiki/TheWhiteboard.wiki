@@ -14,13 +14,13 @@
 === Bugs ===
  * Right-Left Spikey enemies sometimes will spawn and move downwards super fast until they hit a wall and the start moving right-left.
  * 119,156 at Tut: I got a timed switch to stay switched on the wrong side. I was hitting both of the switches in that area repeatedly and quickly when it happened.
- * Orbs, when shot on the edge of a mirror, can hit the switch next to the one they're supposed to, thus breaking at least 1 puzzle. Will be resolved by not letting orbs bounce off the very edge of a switch.
 
 === Balance Issues ===
  * None currently reported.
 
 ===Done===
 ||Item||Date||Done By||
+||Orbs shot onto edge of a mirror are slightly centered, so they don't hit switches 1 tile over||8/23/09||ETI||
 ||Exiting the controls menu makes it so it is no longer "listening" for an input||8/16/09||ETI||
 ||Cane shows enemy immunities||8/13/09||ETI||
 ||Barvinoid is actually done||8/10/09||ETI||
