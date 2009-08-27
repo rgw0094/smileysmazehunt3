@@ -19,6 +19,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Evil wall position and restart tiles are no longer draw on the ground||8/26/09||ETI||
 ||Smiley no longer swings his tongue as soon as you load the game||8/26/09||ETI||
 ||Barvinoid balanced||8/26/09||ETI||
 ||Explosion manager now resets when levels are loaded||8/26/09||ETI||
