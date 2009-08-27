@@ -28,6 +28,7 @@ public:
 	void draw(float dt);
 	void addExplosion(float x, float y, float size, float damage, float knockback);
 	void addSlimeExplosion(float x, float y, float size, float damage, float knockback);
+	void reset();
 
 private:
 

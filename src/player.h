@@ -46,6 +46,7 @@ public:
 	void stopFireBreath();
 	void stopMovement();
 	void graduallyMoveTo(float x, float y, float speed);
+	void resetTongue();
 
 	//Accessors/mutators
 	bool isInvisible();
@@ -283,6 +284,7 @@ public:
 	bool testCollision(hgeRect *collisionBox);
 	bool testCollision(CollisionCircle *collisionCircle);
 	bool isAttacking();
+	void resetAttack();
 
 	bool dontPlaySound;
 

@@ -43,6 +43,12 @@ void ExplosionManager::draw(float dt) {
 	}
 }
 
+void ExplosionManager::reset() {
+	for (std::list<Explosion>::iterator i = explosionList.begin(); i != explosionList.end(); i++) {
+		i = explosionList.erase(i);
+	}
+}
+
 /**
  * Updates all managed explosions.
  */

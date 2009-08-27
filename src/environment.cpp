@@ -17,6 +17,7 @@
 #include "FenwarManager.h"
 #include "AdviceMan.h"
 #include "WindowFramework.h"
+#include "ExplosionManager.h"
 
 #include <string>
 #include <sstream>
@@ -120,6 +121,7 @@ void Environment::reset() {
 	smh->lootManager->reset();
 	smh->npcManager->reset();
 	smh->enemyGroupManager->resetGroups();
+	smh->player->resetTongue();
 	tapestryManager->reset();
 	specialTileManager->reset();
 	evilWallManager->reset();
@@ -153,6 +155,8 @@ void Environment::reset() {
 	for (std::list<Timer>::iterator i = timerList.begin(); i != timerList.end(); i++) {
 		i = timerList.erase(i);
 	}
+
+	smh->explosionManager->reset();
 
 }
 

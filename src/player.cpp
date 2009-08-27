@@ -1376,6 +1376,15 @@ void Player::updateVelocities(float dt)
 }
 
 /**
+ * Resets the player's tongue to not be active.
+ * Before this was added, pressing the "action" button on the "load game" screen would cause Smiley
+ * to swing his tongue upon entering the level.
+ */
+void Player::resetTongue() {
+	tongue->resetAttack();
+}
+
+/**
  * Sets the player's facing direction based on what directional keys are pressed.
  */
 void Player::setFacingDirection() {

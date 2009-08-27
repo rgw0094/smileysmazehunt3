@@ -27,7 +27,7 @@ E_Botonoid::E_Botonoid(int id, int gridX, int gridY, int groupID) {
  * Destructor
  */
 E_Botonoid::~E_Botonoid() {
-	smh->explosionManager->addExplosion(x,y,1.0,1.0,true);
+	
 }
 
 
