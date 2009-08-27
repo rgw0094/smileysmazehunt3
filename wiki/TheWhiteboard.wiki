@@ -20,6 +20,11 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Smiley no longer swings his tongue as soon as you load the game||8/26/09||ETI||
+||Barvinoid balanced||8/26/09||ETI||
+||Explosion manager now resets when levels are loaded||8/26/09||ETI||
+||Botonoids explode now. Explosions kill botonoids. Chain reaction.||8/26/09||ETI||
+||Fixed glitch where left-right "evil circles" would sometimes move down||8/26/09||ETI||
 ||Orbs shot onto edge of a mirror are slightly centered, so they don't hit switches 1 tile over||8/23/09||ETI||
 ||Exiting the controls menu makes it so it is no longer "listening" for an input||8/16/09||ETI||
 ||Cane shows enemy immunities||8/13/09||ETI||
