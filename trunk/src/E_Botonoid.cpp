@@ -5,6 +5,7 @@
 #include "player.h"
 #include "environment.h"
 #include "CollisionCircle.h"
+#include "ExplosionManager.h"
 
 extern SMH *smh;
 
@@ -26,7 +27,7 @@ E_Botonoid::E_Botonoid(int id, int gridX, int gridY, int groupID) {
  * Destructor
  */
 E_Botonoid::~E_Botonoid() {
-
+	smh->explosionManager->addExplosion(x,y,1.0,1.0,true);
 }
 
 
@@ -36,7 +37,7 @@ E_Botonoid::~E_Botonoid() {
 void E_Botonoid::draw(float dt) {
 	graphic[facing]->Update(dt);
 	graphic[facing]->Render(screenX, screenY);
-
+	
 	if (smh->isDebugOn()) {
 		smh->drawCollisionBox(collisionBox, Colors::RED);
 	}
@@ -71,6 +72,7 @@ void E_Botonoid::update(float dt) {
 			") pos (" + Util::intToString((int)x) + "," + Util::intToString((int)y) + ")";
 		smh->setDebugText(debugText);
 	}
+
 
 	move(dt);
 }
