@@ -65,6 +65,7 @@ public:
 	void flipCylinderSwitch(int gridX, int gridY);
 	bool isDeepWaterAt(int x, int y);
 	bool isShallowWaterAt(int x, int y);
+	bool isReturnSpotAt(int x, int y);
 	bool isArrowAt(int x,int y);
 	bool isSadSmileletFlowerAt(int x,int y);
 	void bombWall(int x,int y);

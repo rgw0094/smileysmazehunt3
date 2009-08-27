@@ -1004,8 +1004,7 @@ void Player::doFalling(float dt) {
 	}
 
 	//Keep track of where the player was before he fell
-	if (!falling && smh->environment->collision[gridX][gridY] != PIT && smh->environment->collision[gridX][gridY] != UNWALKABLE
-		&& smh->environment->collision[gridX][gridY] != SPRING_PAD) 
+	if (smh->environment->isReturnSpotAt(gridX,gridY))
 	{
 		startedFallingX = gridX;
 		startedFallingY = gridY;
@@ -1315,7 +1314,7 @@ void Player::doWater() {
 	onWater = (hoveringYOffset == 0.0f) && smh->environment->isDeepWaterAt(baseGridX,baseGridY);
 
 	//Keep track of where the player was before entering deep water
-	if (!smh->environment->isDeepWaterAt(gridX, gridY) && !smh->environment->isArrowAt(gridX,gridY)) {
+	if (smh->environment->isReturnSpotAt(gridX,gridY)) {
 		enteredWaterX = gridX;
 		enteredWaterY = gridY;
 	}

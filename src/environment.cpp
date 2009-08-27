@@ -1681,6 +1681,20 @@ bool Environment::isDeepWaterAt(int x, int y) {
 }
 
 /**
+ * Returns whether this is a good spot to "return" to after drowning or falling
+ */
+bool Environment::isReturnSpotAt(int x, int y)
+{
+	return (collision[x][y] == WALKABLE || collision[x][y] == SHALLOW_WATER || collision[x][y] == WALK_LAVA ||
+			collision[x][y] == RED_WARP || collision[x][y] == BLUE_WARP || collision[x][y] == YELLOW_WARP || collision[x][y] == GREEN_WARP ||
+			collision[x][y] == SHALLOW_GREEN_WATER || collision[x][y] == BOMB_PAD_UP || collision[x][y] == BOMB_PAD_DOWN ||
+			collision[x][y] == HOVER_PAD || collision[x][y] == SUPER_SPRING || collision[x][y] == SMILELET ||
+			collision[x][y] == SMILELET_FLOWER_HAPPY || collision[x][y] == FAKE_COLLISION || collision[x][y] == PLAYER_START ||
+			(collision[x][y] >= WHITE_CYLINDER_DOWN && collision[x][y] <= SILVER_CYLINDER_DOWN) ||
+			(collision[x][y] >= EVIL_WALL_POSITION && collision[x][y] <= EVIL_WALL_RESTART));
+}
+
+/**
  * Returns whether or not there is a SMILELET FLOWER at grid (x,y)
  */
 bool Environment::isSadSmileletFlowerAt(int x,int y) {
