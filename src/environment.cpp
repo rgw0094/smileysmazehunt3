@@ -602,6 +602,11 @@ void Environment::draw(float dt) {
 						smh->resources->GetAnimation("savePoint")->Update(dt);
 						smh->resources->GetAnimation("savePoint")->Render(drawX, drawY);
 
+					//Don't draw the EVIL WALL position and restart tiles
+					} else if (theCollision == EVIL_WALL_POSITION || theCollision == EVIL_WALL_RESTART) {
+
+						//Don't draw anything
+
 					//Non-animated collision tiles
 					} else {
 
