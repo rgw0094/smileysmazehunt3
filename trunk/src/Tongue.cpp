@@ -169,6 +169,16 @@ bool Tongue::isAttacking() {
 }
 
 /**
+ * Resets the tongue's attack.
+ * This is called when loading a new level so that Smiley doesn't swing his tongue as soon as you enter (as can
+ * happen if you press "attack" on the "load game" button).
+ */
+void Tongue::resetAttack() {
+	attacking = false;
+	timeStartedAttack = smh->getGameTime();
+}
+
+/**
  * Returns whether or not a rectangle collides with the tongue.
  */
 bool Tongue::testCollision(hgeRect *collisionBox) {

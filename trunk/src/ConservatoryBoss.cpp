@@ -28,9 +28,9 @@ extern SMH *smh;
 #define FLOATING_EYE_TIME 30.0
 
 //Attributes
-#define BARVINOID_HEALTH 100.0
+#define BARVINOID_HEALTH 250.0
 #define BARVINOID_SPEED 20.0
-#define BARVINOID_COLLISION_DAMAGE 0.75
+#define BARVINOID_COLLISION_DAMAGE 1.0
 #define BARVINOID_WIDTH 128
 #define BARVINOID_HEIGHT 128
 
@@ -654,8 +654,8 @@ void ConservatoryBoss::testCollisions(float dt) {
 
 	//Collision with orb
 	if (smh->projectileManager->killProjectilesInBox(collisionBoxes[0],PROJECTILE_LIGHTNING_ORB,false,true) || 
-	smh->projectileManager->killProjectilesInBox(collisionBoxes[0],PROJECTILE_LIGHTNING_ORB,false,true) || 
-	smh->projectileManager->killProjectilesInBox(collisionBoxes[0],PROJECTILE_LIGHTNING_ORB,false,true)) {
+	smh->projectileManager->killProjectilesInBox(collisionBoxes[1],PROJECTILE_LIGHTNING_ORB,false,true) || 
+	smh->projectileManager->killProjectilesInBox(collisionBoxes[2],PROJECTILE_LIGHTNING_ORB,false,true)) {
 		//Barvinoid was hit by lightning orb
 		health -= smh->player->getLightningOrbDamage();
 		if (health < 0) health = 0;

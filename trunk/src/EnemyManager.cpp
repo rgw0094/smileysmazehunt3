@@ -244,6 +244,11 @@ void EnemyManager::killEnemy(std::list<EnemyStruct>::iterator i)
 		smh->soundManager->playSound("snd_enemyDeath");
 	}
 
+	if (smh->gameData->getEnemyInfo(i->enemy->id).enemyType == ENEMY_BOTONOID) {
+		//explode when botonoid dies
+		smh->explosionManager->addExplosion(i->enemy->x,i->enemy->y,1.0,1.0,true);
+	}
+
 	//Spawn loot
 	randomLoot = smh->randomInt(0,10000);
 	if (randomLoot < 10000.0 * i->spawnHealthChance) 
