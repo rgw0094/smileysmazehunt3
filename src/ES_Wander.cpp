@@ -76,24 +76,32 @@ void ES_Wander::update(float dt) {
 		//Set dx/dy based on new direction
 		switch (currentAction) {
 			case WANDER_LEFT:
-				owner->dx = -owner->speed;
-				owner->dy = 0;
-				owner->facing = LEFT;
+				if (owner->wanderType != WANDER_UP_DOWN) {
+					owner->dx = -owner->speed;
+					owner->dy = 0;
+					owner->facing = LEFT;
+				}
 				break;
 			case WANDER_RIGHT:
-				owner->dx = owner->speed;
-				owner->dy = 0;
-				owner->facing = RIGHT;
+				if (owner->wanderType != WANDER_UP_DOWN) {
+					owner->dx = owner->speed;
+					owner->dy = 0;
+					owner->facing = RIGHT;
+				}
 				break;
 			case WANDER_UP:
-				owner->dx = 0;
-				owner->dy = -owner->speed;
-				owner->facing = UP;
+				if (owner->wanderType != WANDER_LEFT_RIGHT) {
+					owner->dx = 0;
+					owner->dy = -owner->speed;
+					owner->facing = UP;
+				}
 				break;
 			case WANDER_DOWN:
-				owner->dx = 0;
-				owner->dy = owner->speed;
-				owner->facing = DOWN;
+				if (owner->wanderType != WANDER_LEFT_RIGHT) {
+					owner->dx = 0;
+					owner->dy = owner->speed;
+					owner->facing = DOWN;
+				}
 				break;
 		}
 
