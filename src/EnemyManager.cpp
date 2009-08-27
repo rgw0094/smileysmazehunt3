@@ -10,6 +10,8 @@
 #include "hgeparticle.h"
 #include "hgeresource.h"
 
+#include "ExplosionManager.h"
+
 extern SMH *smh;
 
 /**
@@ -150,6 +152,21 @@ void EnemyManager::killEnemiesInBox(hgeRect *box, int type) {
 			killEnemy(i);
 			delete i->enemy;
 			i = enemyList.erase(i);
+		}
+	}
+}
+
+/**
+ * Kills all enemies of the given type in the given box.
+ */ 
+void EnemyManager::killEnemiesInCircleAndCauseExplosion(CollisionCircle *circle, int type) {
+	for (std::list<EnemyStruct>::iterator i = enemyList.begin(); i != enemyList.end(); i++) {
+		if (circle->testBox(i->enemy->collisionBox) && i->enemy->id == type) {
+			smh->explosionManager->addExplosion(i->enemy->x,i->enemy->y,1.0,1.0,true);
+			killEnemy(i);
+			delete i->enemy;
+			i = enemyList.erase(i);
+			
 		}
 	}
 }

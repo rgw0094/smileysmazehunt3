@@ -2,6 +2,7 @@
 #include "SmileyEngine.h"
 #include "CollisionCircle.h"
 #include "Player.h"
+#include "EnemyFramework.h"
 
 extern SMH *smh;
 
@@ -64,6 +65,11 @@ void ExplosionManager::update(float dt) {
 			}
 			smh->setDebugText("Smiley hit by ExplosionManager");
 		}
+
+		//Check to see if it hit a botonoid
+		smh->enemyManager->killEnemiesInCircleAndCauseExplosion(i->collisionCircle,84);
+		smh->enemyManager->killEnemiesInCircleAndCauseExplosion(i->collisionCircle,85);
+		smh->enemyManager->killEnemiesInCircleAndCauseExplosion(i->collisionCircle,86);
 		
 		if (i->timeAlive > i->duration) {
 			i = explosionList.erase(i);

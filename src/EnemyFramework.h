@@ -240,6 +240,7 @@ public:
 	void addEnemy(int id, int gridX, int gridY, float spawnHealthChance, float spawnManaChance, int groupID, bool useSpawningEffect);
 	void killEnemies(int type);
 	void killEnemiesInBox(hgeRect *box, int type);
+	void killEnemiesInCircleAndCauseExplosion(CollisionCircle *circle, int type);
 	bool tongueCollision(Tongue *tongue, float damage);
 	void freezeEnemies(int x, int y);
 	void unFreezeEnemies(int x, int y);
