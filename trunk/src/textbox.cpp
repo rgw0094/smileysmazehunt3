@@ -416,7 +416,7 @@ std::string TextBox::getAbilityText(int ability) {
 		case TUTS_MASK:
 			return "You got Tut's Mask! Wearing it makes you invisible to enemies!";
 		case HOVER:
-			return "You got Hover! You can now fly as long as you take off on a hover pad (marked 'H')!";
+			return "You got Hover! Now you can use Hoverpads (marked 'H')!";
 	}
 }
 
