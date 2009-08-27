@@ -12,8 +12,7 @@
  * Fenwar near death animation
 
 === Bugs ===
- * Right-Left Spikey enemies sometimes will spawn and move downwards super fast until they hit a wall and the start moving right-left.
- * 119,156 at Tut: I got a timed switch to stay switched on the wrong side. I was hitting both of the switches in that area repeatedly and quickly when it happened.
+ * 119,156 at Tut: I got a timed switch to stay switched on the wrong side. I was hitting both of the switches in that area repeatedly and quickly when it happened. Update 8/26/09: Cannot reproduce this. Oh well -- if it happens in-game, the player is screwed.
 
 === Balance Issues ===
  * None currently reported.
@@ -26,6 +25,7 @@
 ||Botonoids explode now. Explosions kill botonoids. Chain reaction.||8/26/09||ETI||
 ||Fixed glitch where left-right "evil circles" would sometimes move down||8/26/09||ETI||
 ||Orbs shot onto edge of a mirror are slightly centered, so they don't hit switches 1 tile over||8/23/09||ETI||
+||Boss enemy blocks don't disappear until loot is picked up.||8/22/09||ETI||
 ||Exiting the controls menu makes it so it is no longer "listening" for an input||8/16/09||ETI||
 ||Cane shows enemy immunities||8/13/09||ETI||
 ||Barvinoid is actually done||8/10/09||ETI||
