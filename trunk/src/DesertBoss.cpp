@@ -243,6 +243,7 @@ bool DesertBoss::update(float dt) {
 			smh->soundManager->playMusic("oldeTowneMusic");
 			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, LIGHTNING_ORB, groupID);
 			smh->saveManager->killBoss(DESERT_BOSS);
+			smh->player->setHealth(smh->player->getMaxHealth());
 			return true;
 		}
 	}

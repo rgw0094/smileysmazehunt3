@@ -447,6 +447,7 @@ bool DespairBoss::update(float dt) {
 			fadeAlpha = 0.0;
 			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, REFLECTION_SHIELD, groupID);
 			smh->soundManager->playMusic("realmOfDespairMusic");
+			smh->player->setHealth(smh->player->getMaxHealth());
 			return true;
 		}
 	}

@@ -611,6 +611,7 @@ bool TutBoss::doDeath(float dt) {
 			fadeAlpha = 0.0;
 			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, TUTS_MASK, groupID);
 			smh->soundManager->playAreaMusic(TUTS_TOMB);
+			smh->player->setHealth(smh->player->getMaxHealth());
 			return true;
 		}
 	}

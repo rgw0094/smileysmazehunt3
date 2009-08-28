@@ -331,6 +331,7 @@ bool FireBoss::update(float dt) {
 		if (!droppedLoot) {
 			smh->lootManager->addLoot(LOOT_NEW_ABILITY, startX*64.0+32.0, startY*64.0+32.0, FIRE_BREATH, groupID);
 			droppedLoot = true;
+			smh->player->setHealth(smh->player->getMaxHealth());
 		}
 		x += 200.0f*dt;
 		y += 200.0f*dt;

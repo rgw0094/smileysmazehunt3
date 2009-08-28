@@ -823,6 +823,11 @@ void Player::doWarps() {
 			smh->soundManager->playSound("snd_warp");
 		}
 
+		//Make it so Smiley's not sliding or iceSliding or springing
+		sliding = false;
+		iceSliding = false;
+		springing = false;
+
 		//Find the other warp square
 		for (int i = 0; i < smh->environment->areaWidth; i++) {
 			for (int j = 0; j < smh->environment->areaHeight; j++) {
