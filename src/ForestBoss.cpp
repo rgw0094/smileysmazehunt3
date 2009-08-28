@@ -146,6 +146,7 @@ bool ForestBoss::update(float dt) {
 			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, SPRINT_BOOTS, groupID);
 			smh->soundManager->playMusic("forestMusic");
 			smh->saveManager->killBoss(FOREST_BOSS);
+			smh->player->setHealth(smh->player->getMaxHealth());
 			return true; //Return true to delete the boss
 		}
 	}

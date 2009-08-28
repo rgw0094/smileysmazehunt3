@@ -606,6 +606,7 @@ bool LovecraftBoss::doDeathState(float dt) {
 			fadeAlpha = 0.0;
 			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, SHRINK, groupID);
 			smh->soundManager->playAreaMusic(FOREST_OF_FUNGORIA);
+			smh->player->setHealth(smh->player->getMaxHealth());
 			return true;
 		}
 	}

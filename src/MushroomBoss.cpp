@@ -182,6 +182,7 @@ bool MushroomBoss::update(float dt) {
 			droppedLoot = true;
 			smh->saveManager->killBoss(MUSHROOM_BOSS);
 			smh->soundManager->playMusic("forestMusic");
+			smh->player->setHealth(smh->player->getMaxHealth());
 		}
 		if (alpha < 0) {
 			alpha = 0;  

@@ -280,6 +280,7 @@ bool FireBossTwo::update(float dt) {
 		if (!droppedLoot) {
 			smh->lootManager->addLoot(LOOT_NEW_ABILITY, startX*64.0+32.0, (startY+5)*64.0+32.0, WATER_BOOTS, groupID);
 			droppedLoot = true;
+			smh->player->setHealth(smh->player->getMaxHealth());
 		}
 
 		x += 200.0f*dt;

@@ -318,6 +318,7 @@ bool SnowBoss::update(float dt) {
 			smh->lootManager->addLoot(LOOT_NEW_ABILITY, xLoot, yLoot, FRISBEE, groupID);
 			droppedLoot = true;
 			smh->saveManager->killBoss(SNOW_BOSS);
+			smh->player->setHealth(smh->player->getMaxHealth());
 			smh->soundManager->playMusic("iceMusic");
 		}
 		if (alpha < 0) {

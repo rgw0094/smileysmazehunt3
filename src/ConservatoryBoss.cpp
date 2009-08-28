@@ -1019,6 +1019,9 @@ void ConservatoryBoss::finish() {
 		//drop loot
 		smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, HOVER, groupID);
 
+		//Give smiley max health
+		smh->player->setHealth(smh->player->getMaxHealth());
+
 		//fade away music
 		smh->soundManager->fadeOutMusic();
 

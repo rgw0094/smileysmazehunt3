@@ -328,6 +328,7 @@ bool CandyBoss::update(float dt) {
 			fadeOutAlpha = 0.0;
 			smh->soundManager->playMusic("iceMusic");
 			smh->lootManager->addLoot(LOOT_NEW_ABILITY, x, y, ICE_BREATH, groupID);
+			smh->player->setHealth(smh->player->getMaxHealth());
 			return true;
 		}
 	}
