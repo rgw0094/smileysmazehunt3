@@ -304,19 +304,35 @@ void FenwarBoss::doBattleState(float dt)
 
 void FenwarBoss::doDroppingSpidersState(float dt)
 {	
-	int platformX = platformLocations[targetPlatform].x * 64.0 + 32.0;
-	int platformY = platformLocations[targetPlatform].y * 64.0 + 32.0;
+	float platformX = platformLocations[targetPlatform].x * 64.0 + 32.0;
+	float platformY = platformLocations[targetPlatform].y * 64.0 + 32.0;
 	float angle = Util::getAngleBetween(x, y, platformX, platformY);
 	
-	x += FenwarAttributes::MOVE_TO_PLATFORM_SPEED * cos(angle) * dt;
-	y += FenwarAttributes::MOVE_TO_PLATFORM_SPEED * sin(angle) * dt;
+	float distanceToMoveX = FenwarAttributes::MOVE_TO_PLATFORM_SPEED * cos(angle) * dt;
+	float distanceToPlatformX = platformX - x;
+
+	if (abs(distanceToMoveX) < abs(distanceToPlatformX)) {
+		//move full distance he can
+		x += distanceToMoveX;
+	} else {
+		//he would reach and overshoot the platform this frame, so just make x = platformX
+		x = platformX;
+	}
+
+	float distanceToMoveY = FenwarAttributes::MOVE_TO_PLATFORM_SPEED * sin(angle) * dt;
+	float distanceToPlatformY = platformY - y;
+
+	if (abs(distanceToMoveY) < abs(distanceToPlatformY)) {
+		//move full distance he can
+		y += distanceToMoveY;
+	} else {
+		//he would reach and overshoot the platform this frame, so just make x = platformX
+		y = platformY;
+	}
 
 	//Fenwar has reached his target platform.
-	if (smh->timePassedSince(timeStartedMovingToPlatform) > timeToGetToPlatform)
+	if (abs(distanceToPlatformX) <= 3.0 && abs(distanceToPlatformY) <= 3.0)
 	{
-		x = platformX;
-		y = platformY;
-
 		if (targetPlatform == 0)
 		{
 			//When we have dropped all our spiders and are back at the center platform, return
@@ -326,7 +342,7 @@ void FenwarBoss::doDroppingSpidersState(float dt)
 		{
 			//Spawn the spider	
 			smh->enemyManager->addEnemy(FENWAR_ENEMY_DROP, platformLocations[targetPlatform].x,
-				platformLocations[targetPlatform].y, 0.25, 0.25, -1, false);
+				platformLocations[targetPlatform].y, 0.25, 0.25, -1, true);
 
 			//Choose the next platform to go to
 			chooseRandomPlatformUponWhichToDropASpider();
@@ -495,7 +511,7 @@ void FenwarBoss::chooseRandomPlatformUponWhichToDropASpider()
 	//Choose a platform that hasn't been visited yet
 	if (numSpidersDropped == FenwarAttributes::NUM_SPIDERS_TO_SPAWN)
 	{
-		//Once we have spawned enough sipders, return to the center of the arena
+		//Once we have spawned enough spiders, return to the center of the arena
 		targetPlatform = 0;
 	} 
 	else
