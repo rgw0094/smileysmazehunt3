@@ -16,6 +16,7 @@
  * Fenwar dies in one tongue swing
  * If you quit just after killing Fenwar, and the screen started to change to white, when you return to the game the screen is still white.
  * Killing orbs at Fenwar doesn't kill the one that was actually hit.
+ * Calypso's ice attack always hits you.
  * 119,156 at Tut: I got a timed switch to stay switched on the wrong side. I was hitting both of the switches in that area repeatedly and quickly when it happened. Update 8/26/09: Cannot reproduce this. Oh well -- if it happens in-game, the player is screwed.
 
 === Balance Issues ===
