@@ -2,11 +2,13 @@
  * Balance Fenwar
  * The rest of the monocle man advice topics
  * Make it so that Calypso only shoots lasers while stationary.
+ * Make hopping enemies not hit you when they are in the middle of the air
  
 === Sounds To Add ===
  * Calypso boss
  * Mushroom boss
  * Fenwar
+ * Open key door
  * Evil wall rumbling
 
 === Graphics To Do ===
