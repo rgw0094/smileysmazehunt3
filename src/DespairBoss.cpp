@@ -14,25 +14,26 @@
 extern SMH *smh;
 
 //Attributes
-#define HEALTH 13.0
-#define PROJECTILE_DELAY 1.5
+#define HEALTH 15.0
+#define PROJECTILE_DELAY 1.6
 #define FREEZE_DURATION 0.8
-#define STUN_DURATION 5.0
+#define STUN_DURATION 7.5
 
 #define ICE_DAMAGE 0.50
 #define FIRE_DAMAGE 1.0
 #define LIGHTNING_DAMAGE 0.25
-#define COLLISION_DAMAGE 0.3
-#define LASER_DAMAGE 0.3
+#define COLLISION_DAMAGE 0.25
+#define LASER_DAMAGE 0.25
 
-#define ICE_SPEED 800.0
+#define FIRE_SPEED 500.0
+#define ICE_SPEED 650.0
 
-#define EVIL_DELAY 14.0
-#define EVIL_NUM_CHARGES 7
-#define EVIL_CHARGE_ACCEL 2000.0
-#define EVIL_MAX_CHARGE_SPEED 1300.0
-#define LASER_DELAY 1.0
-#define LASER_SPEED 2100.0
+#define EVIL_DELAY 15.0
+#define EVIL_NUM_CHARGES 4
+#define EVIL_CHARGE_ACCEL 1500.0
+#define EVIL_MAX_CHARGE_SPEED 1000.0
+#define LASER_DELAY 1.3
+#define LASER_SPEED 1900.0
 #define FLASHING_DURATION 0.5
 
 //States
@@ -197,7 +198,7 @@ bool DespairBoss::update(float dt) {
 			if (smh->hge->Random_Int(0, 100000) < 60000) {
 				projectileType = PROJECTILE_FIRE;
 				numProjectiles = smh->hge->Random_Int(1,2);
-				speed = 600.0;
+				speed = FIRE_SPEED;
 			} else {
 				projectileType = PROJECTILE_ICE;
 				numProjectiles = 1;
@@ -338,6 +339,7 @@ bool DespairBoss::update(float dt) {
 
 	//Charging towards Smiley
 	if (state == DESPAIRBOSS_EVIL_CHARGING) {
+		smh->drawScreenColor(Colors::BLACK, 128.0);
 
 		dx += EVIL_CHARGE_ACCEL * cos(chargeAngle) * dt;
 		dy += EVIL_CHARGE_ACCEL * sin(chargeAngle) * dt;
@@ -621,6 +623,8 @@ void DespairBoss::updateProjectiles(float dt) {
 				i->dx = 0;
 				i->dy = 0;
 				i->deathTime = smh->getGameTime() + 1.0;
+				i->novaRadius = 2.0;
+				smh->setDebugText("Ice nova created");
 			}
 		}
 
@@ -644,19 +648,22 @@ void DespairBoss::updateProjectiles(float dt) {
 		}
 
 		//Check for end of ice nova
-		if (i->type == PROJECTILE_ICE && i->hasNovaed && smh->getGameTime() > i->deathTime) {
+		if (i->type == PROJECTILE_ICE && i->hasNovaed && smh->getGameTime() >= i->deathTime) {
 			deleteProjectile = true;
 		}
 
 		//Check for collision with smiley
-		if (!deleteProjectile && smh->player->collisionCircle->testBox(i->collisionBox)) {
+		bool active = true;
+		if (i->type == PROJECTILE_ICE) active = i->iceActive;
+
+		if (active &&!deleteProjectile && smh->player->collisionCircle->testBox(i->collisionBox)) {
 			deleteProjectile = true;
 			switch (i->type) {
 				case PROJECTILE_ICE:
-					if (!i->iceActive) break;
 					smh->player->dealDamage(ICE_DAMAGE, false);
 					smh->setDebugText("Smiley hit by Calypso's ice");
 					smh->player->freeze(FREEZE_DURATION);
+						
 					//Don't delete the ice nova if it hits Smiley -- deleting it makes the nova look gay. We do need to inactivate the nova, though, so it doesn't deal amy more damage to Smiley (or else it will deal damage every frame and kill Smiley in < 1 second)
 					deleteProjectile = false;
 					i->iceActive = false;
@@ -669,12 +676,16 @@ void DespairBoss::updateProjectiles(float dt) {
 						i->dx = 0;
 						i->dy = 0;
 						i->deathTime = smh->getGameTime() + 1.0;
+						i->novaRadius = 2.0;
+						smh->setDebugText("Dickens -- nova should have been created");
 					}
+				
 					break;
+					
 				case PROJECTILE_FIRE:
 					smh->explosionManager->addExplosion(i->x, i->y, 0.75, FIRE_DAMAGE, 0.0);
 					break;
-			}
+			};
 		}
 
 		if (deleteProjectile) {
