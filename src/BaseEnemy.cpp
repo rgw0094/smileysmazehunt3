@@ -709,7 +709,7 @@ void BaseEnemy::doPlayerCollision() {
 			//" at grid (" + Util::intToString(gridX) + "," + Util::intToString(gridY) +
 			//") pos (" + Util::intToString((int)x) + "," + Util::intToString((int)y) + ")";
 			" type " + Util::intToString((int)enemyType);
-		smh->setDebugText(debugText);
+		//smh->setDebugText(debugText);
 	}
 }
 

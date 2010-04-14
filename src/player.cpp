@@ -1576,8 +1576,11 @@ void Player::dealDamageAndKnockback(float damage, bool makesFlash, bool alwaysKn
 	if (!makesFlash || (makesFlash && !flashing)) {
 		if (!invincible) {
 			health -= (damage * (2.0 - smh->gameData->getDifficultyModifier(smh->saveManager->difficulty)));
-		}
+			
+		}		
+		gui->addDamageDisplay(health,damage);
 	}
+
 
 	float knockbackAngle = Util::getAngleBetween(knockbackerX, knockbackerY, x, y);
 	float knockbackX = (knockbackDist - Util::distance(knockbackerX, knockbackerY, x, y)) * cos(knockbackAngle);

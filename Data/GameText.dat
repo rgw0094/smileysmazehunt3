@@ -132,7 +132,7 @@ Sign18 = "\nAhead lies the temple of the sacred frisbee.  Tours are cancelled un
 Sign23 = "\n\nSome switches only work for a certain period of time..."
 Sign30 = "\nThis way to a mysterious warp to the Realm of Despair.  Enter at your own risk."
 Sign44 = "\nTwo Snowfangs, each wielding a flail, have blocked the passage. They reside southwest of here. Kill them to proceed!"
-Sign45 = "\nOnly those able to find the 3 hidden switches of Mount Frostbite may access the treasures at the peak."
+Sign45 = "\nOnly those able to find the 3 hidden switches of Candy Mountain may access the treasures at the peak."
 Sign46 = "\nTo the right: CERTAIN DEATH\n\nTo the left: save point"
 Sign47 = "\nThose who desire this green key must remain here forever.  Mwahahahah!\n\n-Fenwar"
 Sign48 = "\nThe purpose of this sign is to distract you from reaching the other side of that cylinder in time."
@@ -162,6 +162,7 @@ Sign38 = "\nTo the north lies the Serpentine Path, which leads to the Castle of 
 Sign40 = "Note to the workers: Please remove these springs when you get a chance. Doing so will hinder Smiley's progress permanently. \n-Lord Phyrebawz"
 Sign50 = "This puzzle is not for the faint-of-heart. It's just a gem, so skip it if you want!"
 Sign53 = "\n\nThe Pools of the Dead - home of Lord Phyrebawz."
+Sign75 = "Things aren't always what they seem."
 
 ;TUT.SMH
 Sign54 = "\n\nShine the light of your faith in Tut into the hall of mirrors to pass."
