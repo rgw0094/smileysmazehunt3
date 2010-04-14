@@ -231,7 +231,7 @@ void ProjectileManager::update(float dt) {
 				debugString = "Smiley hit by projectile of type " + Util::intToString(i->id) + 
 					" at pos (" + Util::intToString((int)i->x) + "," + Util::intToString((int)i->y) + 
 					") grid ("	+ Util::intToString(i->gridX) + "," + Util::intToString(i->gridY) +")";
-				smh->setDebugText(debugString.c_str());
+				//smh->setDebugText(debugString.c_str());
 				deleteProjectile = true;
 			}
 		}

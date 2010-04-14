@@ -23,9 +23,13 @@ GUI::GUI() {
 	availableAbilities[1].scale = 1.0;
 	availableAbilities[2].scale = SMALL_SCALE;
 
+	smileyDamageDisplay = new SmileyDamageDisplay();
+
 }
 
-GUI::~GUI() { }
+GUI::~GUI() {
+	delete smileyDamageDisplay;
+}
 
 /** 
  * Returns the selected ability. The selected ability is the one in the middle.
@@ -115,6 +119,57 @@ void GUI::toggleAvailableAbility(int ability) {
 	smh->soundManager->playSound("snd_Error");
 }
 
+float GUI::quarterSmileyize(float h) {
+	float healthInt = int(h);
+	float r = h - healthInt;
+	float returnValue;
+
+	if (r==0 || r==0.25 || r==0.5 || r==0.75) return h;
+
+	if (r >= 0.75) {returnValue = healthInt + 0.75; return returnValue;}
+	if (r >= 0.50) {returnValue = healthInt + 0.50; return returnValue;}
+	if (r >= 0.25) {returnValue = healthInt + 0.25; return returnValue;}
+	/*else*/		returnValue = healthInt + 0.00; return returnValue;
+}
+
+void GUI::addDamageDisplay(float health, float damage) {
+	std::string debugText;
+
+
+	//first, figure out the health display (how many quarter-smileys) prior to the damage
+	float healthPriorToDamage = health + damage;
+	//make it divisible by a quarter-smiley -- that way it is exactly the amount that was drawn on screen
+	healthPriorToDamage = quarterSmileyize(healthPriorToDamage); 
+	
+	//then, figure out the health display (how many quarter-smileys) after the damage
+	float healthAfterDamage = health;
+	//make it divisible by a quarter-smiley -- that way it is exactly the amount that was drawn on screen
+	healthAfterDamage = quarterSmileyize(healthAfterDamage); 
+	
+	//The difference tells you how much damage to show falling
+	float damageToFall =  healthPriorToDamage - healthAfterDamage;
+
+	//The last falling Smiley's damage level
+	float lastFallerDamage = damageToFall - int(damageToFall);
+
+	//How many Smiley faces will have to fall?
+	int numFacesToFall = int(damageToFall)+1; //ex: damage of 1.25 -- 2 Smileys fall. damage of 0.99 -- 1 Smiley falls
+
+	//Now center these Smiley faces on the end of the current life meter (defined as the last Smiley face with any piece present before Smiley was damaged)
+	int lastSmileyBeforeDamage = int(healthPriorToDamage+0.75);
+	
+	float drawX = (lastSmileyBeforeDamage <= 10) ? 120+lastSmileyBeforeDamage*35 : 120+(lastSmileyBeforeDamage-10)*35;
+	float drawY = (lastSmileyBeforeDamage <= 10) ? 25 : 70;
+
+	for (int i=0; i< numFacesToFall; i++) {
+		if (i==numFacesToFall-1) { //last falling Smiley, make its damage correct
+			smileyDamageDisplay->addSmileyDamageDisplayNode(drawX+i*35,drawY,smh->getGameTime(),lastFallerDamage);
+		} else { //not the last one, draw a full Smiley
+			smileyDamageDisplay->addSmileyDamageDisplayNode(drawX+i*35,drawY,smh->getGameTime(),1.00);
+		}
+	}
+}
+
 void GUI::update(float dt) {
 
 	int collisionAtPlayer = smh->environment->collision[smh->player->gridX][smh->player->gridY];
@@ -173,6 +228,7 @@ void GUI::update(float dt) {
 			}
 		}
 	}
+	smileyDamageDisplay->update();
 }
 
 void GUI::draw() {
@@ -219,6 +275,9 @@ void GUI::draw() {
 				availableAbilities[i].scale, availableAbilities[i].scale);
 		}
 	}
+
+	//Draw damage display
+	smileyDamageDisplay->draw();
 
 	//Draw keys
 	if (Util::getKeyIndex(smh->saveManager->currentArea) != -1) 
