@@ -92,10 +92,10 @@ extern SMH *smh;
 #define TUTBOSS_DEFEATTEXT 181
 
 //Balancing Attributes
-#define TUTBOSS_HEALTH 50.0
-#define TUTBOSS_SHOT_DAMAGE 1.2
+#define TUTBOSS_HEALTH 70.0
+#define TUTBOSS_SHOT_DAMAGE 1.0
 #define TUTBOSS_DAMAGE 1.0
-#define TUT_LIGHTNING_DAMAGE 1.0
+#define TUT_LIGHTNING_DAMAGE 1.75
 #define MUMMY_PROJECTILE_DAMAGE 1.0
 
 TutBoss::TutBoss(int _gridX,int _gridY,int _groupID) 
