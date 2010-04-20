@@ -60,6 +60,9 @@ extern SMH *smh;
 #define WINDOW_TO_ATTACK 4.6
 #define FIREBALL_LIFE_TIME 3.0
 
+//Healing
+#define HEAL_RATE 0.05
+
 #define CRUSHER_REMAIN_TIME 1.0
 
 LovecraftBoss::LovecraftBoss(int _gridX, int _gridY, int _groupID) {
@@ -587,6 +590,9 @@ void LovecraftBoss::doTentacleState(float dt) {
 			spawnTentacle(2.75, tentaclePoints[i].x + dist*cos(angle), tentaclePoints[i].y + dist*sin(angle), i == tentacleWithBandaid);		
 		}
 	}
+
+	health += dt*HEAL_RATE;
+	if (health > maxHealth) health = maxHealth;
 
 }
 
