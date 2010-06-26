@@ -50,7 +50,7 @@ void Console::draw(float dt) {
 void Console::update(float dt) {
 
 	//uncomment for release mode!
-	//if (!active) return;
+	if (!active) return;
 
 	//Toggle debug mode
 	if (smh->hge->Input_KeyDown(HGEK_D)) smh->toggleDebugMode();
