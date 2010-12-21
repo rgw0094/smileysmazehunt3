@@ -1,7 +1,6 @@
 === Programming To Do ===
  * Balance Fenwar
    * Make the red circle that you killed be the one that dies
-   * The yellow dot attack is pretty gay how it splits without warning. Make an indicator to show it is about to split.
    * Fenwar currently dies to 1 lick
  * The rest of the monocle man advice topics
  * Make it so that Calypso only shoots lasers while stationary.
@@ -29,6 +28,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fenwar's bullets now turn red just before they split||12/21/2010||ETI||
 ||Fixed glitch where if you hovered over deep water then over a pit, and fell into a pit, you'd spawn back and forth between the pit and the water till you died.||8/27/09||ETI||
 ||Evil wall position and restart tiles are no longer drawn on the ground||8/26/09||ETI||
 ||Smiley no longer swings his tongue as soon as you load the game||8/26/09||ETI||
