@@ -1,5 +1,8 @@
 === Programming To Do ===
  * Balance Fenwar
+   * Make the red circle that you killed be the one that dies
+   * The yellow dot attack is pretty gay how it splits without warning. Make an indicator to show it is about to split.
+   * Fenwar currently dies to 1 lick
  * The rest of the monocle man advice topics
  * Make it so that Calypso only shoots lasers while stationary.
  * Make hopping enemies not hit you when they are in the middle of the air
