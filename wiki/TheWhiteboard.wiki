@@ -1,6 +1,5 @@
 === Programming To Do ===
  * Balance Fenwar
-   * Fenwar currently dies to 1 lick
  * The rest of the monocle man advice topics
  * Make it so that Calypso only shoots lasers while stationary.
  * Make hopping enemies not hit you when they are in the middle of the air
@@ -26,6 +25,8 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fenwar now flashes when hit, except when hit by fire.||12/21/2010||ETI||
+||Fenwar is now stunned when his orbs are killed. This gives the player an opportunity to attack.||12/21/2010||ETI||
 ||When Smiley kills one of Fenwar's orbs, that one is the one that stays dead||12/21/2010||ETI||
 ||Fenwar's bullets now turn red just before they split||12/21/2010||ETI||
 ||Fixed glitch where if you hovered over deep water then over a pit, and fell into a pit, you'd spawn back and forth between the pit and the water till you died.||8/27/09||ETI||
