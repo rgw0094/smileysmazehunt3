@@ -55,6 +55,7 @@ void PopupMessageManager::showFullHealth()
 
 void PopupMessageManager::showFullMana() 
 {
+	if (adviceManMessageActive) return;
 	message = "Your mana is already full!";
 	startMessage(1.5);
 }
@@ -68,6 +69,7 @@ void PopupMessageManager::showNewAdvice(int _advice) {
 }
 
 void PopupMessageManager::showSaveConfirmation() {
+	if (adviceManMessageActive) return;
 	message = "Game File ";
 	message += Util::intToString(smh->saveManager->currentSave + 1);
 	message += " Saved!";
