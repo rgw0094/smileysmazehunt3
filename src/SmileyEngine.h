@@ -665,6 +665,7 @@ public:
 	std::string getCurrentSongName();
 	int getMusicVolume();
 	int getSoundVolume();
+	void ResetLoopingChannels();
 
 private:
 

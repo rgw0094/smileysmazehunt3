@@ -46,6 +46,7 @@ void EvilWallManager::activateEvilWall(int id) {
 	for(i = theEvilWalls.begin(); i != theEvilWalls.end(); i++) {
 		if (i->evilWall->evilWallID == id) {
 			i->evilWall->activate();
+			smh->soundManager->playEnvironmentEffect("snd_EvilWallLoop", true);
 		}		
 	}
 }
@@ -57,10 +58,10 @@ void EvilWallManager::deactivateEvilWalls() {
 	for(i = theEvilWalls.begin(); i != theEvilWalls.end(); i++) {
 		i->evilWall->deactivate();
 	}
+	 smh->soundManager->stopEnvironmentChannel();
 }
 
 void EvilWallManager::update(float dt) {
-	int numEvilWalls=0;
 	//Activate or deactivate evil walls
 	if (smh->environment->collision[smh->player->gridX][smh->player->gridY] == EVIL_WALL_TRIGGER) {
 		activateEvilWall(smh->environment->ids[smh->player->gridX][smh->player->gridY]);
@@ -71,14 +72,11 @@ void EvilWallManager::update(float dt) {
 
 	std::list<EvilWallStruct>::iterator i;
 	for(i = theEvilWalls.begin(); i != theEvilWalls.end(); i++) {
-		i->evilWall->update(dt);
-		if (i->evilWall->state == EVIL_WALL_STATE_MOVING) numEvilWalls++;
+		//update returns true if smiley collided with the wall
+		if (i->evilWall->update(dt)) deactivateEvilWalls();
 	}
 
-	if (numEvilWalls>0)
-		smh->soundManager->playEnvironmentEffect("snd_EvilWallLoop", true);
-	else
-		smh->soundManager->stopEnvironmentChannel();
+
 }
 
 void EvilWallManager::draw(float dt) {

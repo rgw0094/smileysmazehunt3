@@ -23,6 +23,11 @@ SoundManager::~SoundManager()
 	//Should never be deleted
 }
 
+void SoundManager::ResetLoopingChannels() {
+	stopAbilityChannel();
+	stopIceChannel();
+	stopEnvironmentChannel();
+}
 
 /**
  * Changes the music channel to play the specified song.
@@ -145,7 +150,8 @@ void SoundManager::playSwitchSound(int gridX, int gridY, bool alwaysPlaySound)
 void SoundManager::playEnvironmentEffect(char *effect, bool loop) 
 {
 	if (environmentChannelActive) return;
-	
+	if (smh->player->getHealth() <= 0.0) return;
+
 	environmentChannel = smh->hge->Effect_PlayEx(smh->resources->GetEffect(effect),100,0,1.0f,loop);
 	environmentChannelActive = true;
 }

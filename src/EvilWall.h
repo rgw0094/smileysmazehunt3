@@ -22,10 +22,10 @@ public:
 	//Methods
 	void activate();
 	void deactivate();
-	void update(float dt);
+	bool update(float dt); //returns true if smiley hit it
 	void draw(float dt);
 	void drawEvilWall();
-	void doCollision();
+	bool doCollision(); //returns true if smiley hit it
 
 	//Mutators
 	void setBeginWallPosition(int gridX, int gridY);
