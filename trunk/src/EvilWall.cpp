@@ -59,7 +59,8 @@ void EvilWall::deactivate() {
 	beginFadeTime = smh->getGameTime();
 }
 
-void EvilWall::update(float dt) {
+bool EvilWall::update(float dt) {
+	bool wallHitSmiley=false;
 	switch(state) {
 		case EVIL_WALL_STATE_APPEARING:
 			if (smh->timePassedSince(beginAppearTime) >= EVIL_WALL_APPEAR_TIME) {
@@ -68,7 +69,7 @@ void EvilWall::update(float dt) {
 				state = EVIL_WALL_STATE_MOVING;
 				beginWallMoveTime = smh->getGameTime();
 			}
-			doCollision();
+			wallHitSmiley=wallHitSmiley || doCollision();
 			break;
 		case EVIL_WALL_STATE_MOVING:
 			smh->resources->GetSprite("evilWall")->SetColor(ARGB(255,255,255,255));
@@ -78,7 +79,7 @@ void EvilWall::update(float dt) {
 			if (dir==UP) yPosition = (yBeginWall*64+32)- speed*smh->timePassedSince(beginWallMoveTime);
 			if (dir==DOWN) yPosition = (yBeginWall*64+32)+ speed*smh->timePassedSince(beginWallMoveTime);
 
-			doCollision();
+			wallHitSmiley = wallHitSmiley || doCollision();
 			break;
 		case EVIL_WALL_STATE_FADING:
 			if (smh->timePassedSince(beginFadeTime) >= EVIL_WALL_APPEAR_TIME) {
@@ -86,6 +87,7 @@ void EvilWall::update(float dt) {
 			}			
 			break;
 	};
+	return wallHitSmiley;
 }
 
 void EvilWall::draw(float dt) {
@@ -179,7 +181,7 @@ void EvilWall::drawEvilWall() {
 	}
 }
 
-void EvilWall::doCollision() {
+bool EvilWall::doCollision() {
 	int smileyGridX,smileyGridY;
 	
 	smileyGridX = smh->player->x/64;
@@ -218,7 +220,9 @@ void EvilWall::doCollision() {
 		smh->player->y = restartY*64+32;
 		smh->player->dealDamage(EVIL_WALL_DAMAGE,true);
 		smh->setDebugText("Smiley hit by EvilWall");
+		return true;
 	}
+	return false;
 }
 
 

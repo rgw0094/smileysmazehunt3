@@ -69,6 +69,8 @@ void AreaChanger::changeArea(int _destinationX, int _destinationY, int _destinat
 	loadingEffectScale = 3.0;
 	smh->soundManager->playSound("snd_AreaChangeUp");
 
+	smh->soundManager->ResetLoopingChannels();
+
 }
 
 /**

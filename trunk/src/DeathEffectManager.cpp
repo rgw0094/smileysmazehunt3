@@ -27,9 +27,8 @@ void DeathEffectManager::beginEffect() {
 	smileyScale = 1.0;
 	active = true;
 	initLetters();
+	smh->soundManager->ResetLoopingChannels();
 	enterState(FADING_IN);
-	smh->soundManager->stopAbilityChannel();
-	smh->soundManager->stopEnvironmentChannel();
 	smh->soundManager->fadeOutMusic();
 	smh->player->reset();
 	textAlpha = 0.0;

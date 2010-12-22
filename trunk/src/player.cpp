@@ -269,6 +269,8 @@ void Player::updateJesusSound()
 	{
 		smh->soundManager->stopEnvironmentChannel();
 		jesusSoundPlaying = false;
+		if (smh->environment->isShallowWaterAt(gridX,gridY)) smh->soundManager->playEnvironmentEffect("snd_shallowWater",true);
+		if (smh->environment->collision[gridX][gridY] == WALK_LAVA) smh->soundManager->playEnvironmentEffect("snd_lava",true);
 	}
 }
 
