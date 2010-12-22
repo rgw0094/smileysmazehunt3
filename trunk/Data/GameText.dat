@@ -422,7 +422,7 @@ NPC150Pages = "5"
 NPC150-1 = "Why hello there!  The name's Calypso.  I'm an evil floating wizard."
 NPC150-2 = "I'm actually not really that evil personally, but I have to follow my orders to perform evil deeds."
 NPC150-3 = "In fact, out of all of Fenwar's evil minions, I donate the largest portion of my salary to charity."
-NPC150-4 = "Where do I donate the most?  Why, to the Organ-Harvest-From-The-Poor Foundation!  We've saved so many people with actual lives worth living!"
+NPC150-4 = "Where do I donate the most?  Why, to the Organ Harvest From The Poor Foundation!  We've saved so many people with actual lives worth living!"
 NPC150-5 = "Now, let's proceed with the donations, you pathetic fool!"
 
 NPC151Name = "Calypso"
@@ -449,7 +449,7 @@ NPC162Pages = "4"
 NPC162-1 = "Gwwaaarrghhh (Dickens)."
 NPC162-2 = "At least after this defeat I'm not covered in slobber.  Well done."
 NPC162-3 = "I'm sure we will meet again, down below.  I know of your sinful ways, Smiley.  Jesus is not happy with you."
-NPC162-4 = "... GWWWWWWWWwwwwwwwaaarrrrrggggghhhhh..... "
+NPC162-4 = "'Till then..."
 
 
 ;Bartli
