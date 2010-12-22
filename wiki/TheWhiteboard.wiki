@@ -24,6 +24,8 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Hoppers are now drawn after Smiley if their Y is greater||12/22/10||ETI||
+||Hoppers don't hit Smiley when they're in the air.||12/22/10||ETI||
 ||Evil wall sound added||12/22/10||ETI||
 ||Smiley hops onto ice||12/21/10||ETI||
 ||Fenwar now displayed properly in Phyrebozz's lair||12/21/10||ETI||
