@@ -6,10 +6,9 @@
  * Calypso boss
  * Mushroom boss
  * Fenwar
- * Open key door
 
 === Graphics To Do ===
- * 
+ * Stained glass window reflections are flipped horizontally
 
 === Bugs ===
  * If you quit just after killing Fenwar, and the screen started to change to white, when you return to the game the screen is still white.
@@ -24,6 +23,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Added sounds for ice and unlocking doors||12/22/21||ETI||
 ||Hoppers are now drawn after Smiley if their Y is greater||12/22/10||ETI||
 ||Hoppers don't hit Smiley when they're in the air.||12/22/10||ETI||
 ||Evil wall sound added||12/22/10||ETI||
