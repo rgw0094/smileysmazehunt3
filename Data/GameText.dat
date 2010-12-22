@@ -497,6 +497,10 @@ NPC202-2 = "I kidnapped your lover due to his recent findings proving that globa
 NPC202-3 = "Had these facts gone public, my multi-million dollar evil corporations would be taxed straight into bankruptcy."
 NPC202-4 = "I do not commit evil for the sake of commiting evil.  I am no such monster.  I just wanted an exorbitant amount of money."
 NPC202-5 = "*COUGH*  It's all getting dark now...go ahead Smiley...put me out of my misery."
+NPC203Name = "Fenwar"
+NPC203Pages = "2"
+NPC203-1 = "What's the matter, Smiley, are you afraid to come near me?"
+NPC203-2 = "I'll have you know, the orbs don't do nearly the damage as... well, I shalln't tell."
 
 ;Barvinoid
 NPC210Name = "Barvinoid"
