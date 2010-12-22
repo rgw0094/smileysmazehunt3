@@ -1,6 +1,5 @@
 === Programming To Do ===
  * Balance Fenwar
-   * Make the red circle that you killed be the one that dies
    * Fenwar currently dies to 1 lick
  * The rest of the monocle man advice topics
  * Make it so that Calypso only shoots lasers while stationary.
@@ -19,7 +18,6 @@
 === Bugs ===
  * Fenwar dies in one tongue swing
  * If you quit just after killing Fenwar, and the screen started to change to white, when you return to the game the screen is still white.
- * Killing orbs at Fenwar doesn't kill the one that was actually hit.
  * Calypso's ice attack always hits you.
  * 119,156 at Tut: I got a timed switch to stay switched on the wrong side. I was hitting both of the switches in that area repeatedly and quickly when it happened. Update 8/26/09: Cannot reproduce this. Oh well -- if it happens in-game, the player is screwed.
 
@@ -28,6 +26,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||When Smiley kills one of Fenwar's orbs, that one is the one that stays dead||12/21/2010||ETI||
 ||Fenwar's bullets now turn red just before they split||12/21/2010||ETI||
 ||Fixed glitch where if you hovered over deep water then over a pit, and fell into a pit, you'd spawn back and forth between the pit and the water till you died.||8/27/09||ETI||
 ||Evil wall position and restart tiles are no longer drawn on the ground||8/26/09||ETI||
