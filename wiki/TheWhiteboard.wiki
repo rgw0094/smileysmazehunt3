@@ -8,7 +8,6 @@
  * Mushroom boss
  * Fenwar
  * Open key door
- * Evil wall rumbling
 
 === Graphics To Do ===
  * 
@@ -25,6 +24,10 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Evil wall sound added||12/22/10||ETI||
+||Smiley hops onto ice||12/21/10||ETI||
+||Fenwar now displayed properly in Phyrebozz's lair||12/21/10||ETI||
+||Small changes made to white text display||12/21/10||ETI
 ||Fenwar now flashes when hit, except when hit by fire.||12/21/2010||ETI||
 ||Fenwar is now stunned when his orbs are killed. This gives the player an opportunity to attack.||12/21/2010||ETI||
 ||When Smiley kills one of Fenwar's orbs, that one is the one that stays dead||12/21/2010||ETI||
