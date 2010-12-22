@@ -11,7 +11,7 @@
  * Evil wall rumbling
 
 === Graphics To Do ===
- * Fenwar near death animation
+ * 
 
 === Bugs ===
  * If you quit just after killing Fenwar, and the screen started to change to white, when you return to the game the screen is still white.
