@@ -107,6 +107,7 @@ private:
 	bool relocatedYet;
 	float lastTimeHitWithTongue;
 	float stunStarAngles[5];
+	bool tauntedAboutOrbs;
 
 	//Dropping spider mode shit
 	int targetPlatform;

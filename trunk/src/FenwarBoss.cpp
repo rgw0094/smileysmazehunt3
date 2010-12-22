@@ -13,6 +13,7 @@
 #define FENWAR_INTRO_TEXT 200
 #define FENWAR_NEAR_DEFEAT_TEXT 201
 #define FENWAR_DEFEAT_TEXT 202
+#define FENWAR_ORB_TAUNT_TEXT 203
 
 #define START_STATE FenwarStates::TERRAFORMING
 //#define START_STATE FenwarStates::DROPPING_SPIDERS
@@ -28,6 +29,9 @@
 #define FENWAR_ENEMY_DROP 91
 
 #define FENWAR_STUN_TIME 6.5
+
+
+
 
 FenwarBoss::FenwarBoss(int _gridX, int _gridY, int _groupID) 
 {
@@ -58,6 +62,8 @@ FenwarBoss::FenwarBoss(int _gridX, int _gridY, int _groupID)
 	smh->resources->GetAnimation("fenwar")->SetColor(ARGB(255,255,255,255));
 
 	initPlatformPoints();
+
+	tauntedAboutOrbs = false;
 
 	enterState(FenwarStates::INACTIVE);
 }
@@ -204,9 +210,13 @@ void FenwarBoss::doCollision(float dt)
 	//Lightning orb collision
 	if (smh->projectileManager->killProjectilesInBox(collisionBox, PROJECTILE_LIGHTNING_ORB))
 	{
-		if (state == FenwarStates::BATTLE)
+		if (state == FenwarStates::BATTLE || state==FenwarStates::STUNNED_AFTER_LOSING_ORBS || state == FenwarStates::RETURN_TO_ARENA || state == FenwarStates::DROPPING_SPIDERS)
 		{
-			dealDamage(smh->player->getLightningOrbDamage(),false);
+			dealDamage(smh->player->getLightningOrbDamage()/3,true);
+			if (!tauntedAboutOrbs && orbManager->numOrbsAlive() <= 0) {
+				smh->windowManager->openDialogueTextBox(-1, FENWAR_ORB_TAUNT_TEXT);
+				tauntedAboutOrbs = true;
+			}
 		}
 	}
 
