@@ -165,6 +165,7 @@ void SoundManager::stopEnvironmentChannel()
 void SoundManager::playAbilityEffect(char *effect, bool loop) 
 {
 	if (abilityChannelActive) return;
+	if (smh->player->getHealth() <= 0.0) return;
 
 	abilityChannel = smh->hge->Effect_PlayEx(smh->resources->GetEffect(effect),100,0,1.0f,loop);
 	abilityChannelActive = true;
@@ -179,6 +180,7 @@ void SoundManager::stopAbilityChannel()
 void SoundManager::playIceEffect(char *effect, bool loop) 
 {
 	if (iceChannelActive) return;
+	if (smh->player->getHealth() <= 0.0) return;
 	
 	iceChannel = smh->hge->Effect_PlayEx(smh->resources->GetEffect(effect),100,0,1.0f,loop);
 	iceChannelActive = true;
