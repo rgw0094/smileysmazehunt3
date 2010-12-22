@@ -6,7 +6,6 @@
 extern SMH *smh;
 
 EvilWallManager::EvilWallManager() {
-
 }
 
 EvilWallManager::~EvilWallManager() {
@@ -61,7 +60,7 @@ void EvilWallManager::deactivateEvilWalls() {
 }
 
 void EvilWallManager::update(float dt) {
-
+	int numEvilWalls=0;
 	//Activate or deactivate evil walls
 	if (smh->environment->collision[smh->player->gridX][smh->player->gridY] == EVIL_WALL_TRIGGER) {
 		activateEvilWall(smh->environment->ids[smh->player->gridX][smh->player->gridY]);
@@ -73,7 +72,13 @@ void EvilWallManager::update(float dt) {
 	std::list<EvilWallStruct>::iterator i;
 	for(i = theEvilWalls.begin(); i != theEvilWalls.end(); i++) {
 		i->evilWall->update(dt);
+		if (i->evilWall->state == EVIL_WALL_STATE_MOVING) numEvilWalls++;
 	}
+
+	if (numEvilWalls>0)
+		smh->soundManager->playEnvironmentEffect("snd_EvilWallLoop", true);
+	else
+		smh->soundManager->stopEnvironmentChannel();
 }
 
 void EvilWallManager::draw(float dt) {

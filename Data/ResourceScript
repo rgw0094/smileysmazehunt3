@@ -1608,6 +1608,10 @@ Sound snd_TextBoxChange {
  filename="TextBoxChange.mp3"
  resgroup=14
 }
+Sound snd_EvilWallLoop {
+ filename="Construction.mp3"
+ resgroup=14
+}
 Sound snd_AreaChangeUp {
  filename="AreaChangeUp.mp3"
  resgroup=14
