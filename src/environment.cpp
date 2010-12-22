@@ -936,8 +936,9 @@ void Environment::unlockDoor(int gridX, int gridY) {
 		doorOpened = true;
 	}
 
-	//Remember that this door was opened!
+	//Remember that this door was opened! Also, play a sound
 	if (doorOpened) {
+		smh->soundManager->playSound("snd_UnlockDoor");
 		smh->saveManager->change( gridX, gridY);
 	}
 

@@ -131,6 +131,7 @@ public:
 	virtual bool doTongueCollision(Tongue* tongue, float damage);
 	virtual void doPlayerCollision();
 	virtual void notifyOfDeath();
+	virtual void drawAfterSmiley(float dt);
 
 	//Methods that can't be overridden
 	void baseUpdate(float dt);
@@ -236,6 +237,7 @@ public:
 
 	//methods
 	void draw(float dt);
+	void drawAfterSmiley(float dt);
 	void update(float dt);
 	void addEnemy(int id, int gridX, int gridY, float spawnHealthChance, float spawnManaChance, int groupID, bool useSpawningEffect);
 	void killEnemies(int type);
@@ -789,6 +791,7 @@ public:
 
 	//methods
 	void draw(float dt);
+	void drawAfterSmiley(float dt);
 	void update(float dt);
 	bool doTongueCollision(Tongue *tongue, float damage);
 

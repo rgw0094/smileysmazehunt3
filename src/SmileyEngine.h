@@ -657,6 +657,8 @@ public:
 	void stopEnvironmentChannel();
 	void playAbilityEffect(char *effect, bool loop);
 	void stopAbilityChannel();
+	void playIceEffect(char *effect, bool loop);
+	void stopIceChannel();
 	void playSound(const char* sound);
 	void playSound(const char* sound, float delay);
 	void playSwitchSound(int gridX, int gridY, bool alwaysPlaySound);
@@ -669,7 +671,8 @@ private:
 	HCHANNEL musicChannel;
 	HCHANNEL abilityChannel;		//Audio channel for player ability sound effects
 	HCHANNEL environmentChannel;	//Audio channel for environment sound effects
-	
+	HCHANNEL iceChannel;			//Audio channel for ice sound effect
+
 	std::list<Sound> lastPlayTimes;
 	std::string currentMusic;
 	std::string previousMusic;
@@ -678,6 +681,7 @@ private:
 	int soundVolume;
 	bool abilityChannelActive;
 	bool environmentChannelActive;
+	bool iceChannelActive;
 	float lastSwitchSoundTime;
 
 };

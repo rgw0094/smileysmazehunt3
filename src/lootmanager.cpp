@@ -113,11 +113,6 @@ void LootManager::update(float dt) {
 				collected = true;
 				smh->soundManager->playSound("snd_NewAbility");
 
-				//If collecting fire breath, give new advice on Mana
-				if (i->ability == FIRE_BREATH) {
-					smh->popupMessageManager->showNewAdvice(AdviceTypes::ADVICE_MANA);
-				}
-
 				//if there is a groupID, notify of death for it
 				//this is used for bosses so their enemy blocks don't disappear until the loot is collected
 				if (i->groupID != -1) smh->enemyGroupManager->notifyOfDeath(i->groupID);

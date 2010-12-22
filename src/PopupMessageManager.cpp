@@ -5,6 +5,7 @@ extern SMH *smh;
 
 PopupMessageManager::PopupMessageManager() 
 {
+	adviceManMessageActive=false;
 }
 
 PopupMessageManager::~PopupMessageManager() 
@@ -20,7 +21,7 @@ void PopupMessageManager::draw(float dt)
 		if (smh->timePassedSince(timeMessageStarted) > messageDuration * 0.75) 
 		{
 			messageAlpha -= 255.0 * (1.0/(messageDuration * 0.25)) * dt;
-			if (messageAlpha < 0.0) messageAlpha = 0.0;
+			if (messageAlpha < 0.0) {messageAlpha = 0.0; adviceManMessageActive=false;}
 		}
 
 		if (adviceManMessageActive) smh->resources->GetFont("inventoryFnt")->SetScale(0.8);
@@ -44,6 +45,7 @@ void PopupMessageManager::update(float dt)
 	{
 		smh->windowManager->openAdviceTextBox(advice);
 		timeMessageStarted = 0.0;
+		adviceManMessageActive=false;
 	}
 }
 

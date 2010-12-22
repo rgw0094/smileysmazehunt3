@@ -258,6 +258,7 @@ void SMH::drawGame()
 			if (!deathEffectManager->isActive()) player->draw(dt);
 			environment->drawAfterSmiley(dt);
 			bossManager->drawAfterSmiley(dt);
+			enemyManager->drawAfterSmiley(dt);
 			explosionManager->draw(dt);
 			fenwarManager->draw(dt);
 			projectileManager->draw(dt);

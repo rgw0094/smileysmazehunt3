@@ -14,6 +14,7 @@ SoundManager::SoundManager()
 
 	abilityChannelActive = false;
 	environmentChannelActive = false;
+	iceChannelActive = false;
 }
 
 
@@ -167,6 +168,20 @@ void SoundManager::stopAbilityChannel()
 {
 	smh->hge->Channel_Stop(abilityChannel);
 	abilityChannelActive = false;
+}
+
+void SoundManager::playIceEffect(char *effect, bool loop) 
+{
+	if (iceChannelActive) return;
+	
+	iceChannel = smh->hge->Effect_PlayEx(smh->resources->GetEffect(effect),100,0,1.0f,loop);
+	iceChannelActive = true;
+}
+
+void SoundManager::stopIceChannel() 
+{
+	smh->hge->Channel_Stop(iceChannel);
+	iceChannelActive = false;
 }
 
 void SoundManager::playSound(const char* sound) 
