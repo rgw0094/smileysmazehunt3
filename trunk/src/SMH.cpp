@@ -266,10 +266,10 @@ void SMH::drawGame()
 			if (screenColorAlpha > 0.0) drawScreenColor(screenColor, screenColorAlpha);
 			areaChanger->draw(dt);
 			player->drawGUI(dt);
+			popupMessageManager->draw(dt);
 			windowManager->draw(dt);
 			deathEffectManager->draw(dt);
 			console->draw(dt);
-			popupMessageManager->draw(dt);
 		}
 
 		if (isDebugOn()) {
