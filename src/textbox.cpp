@@ -178,8 +178,8 @@ void TextBox::draw(float dt)
 
 		//Display the NPC's face and name. npcID -1 means don't draw anything!
 		if (npcID == 255) {
-			smh->resources->GetAnimation("fenwar")->Render(x+60, y+50);
-			smh->resources->GetAnimation("fenwarFace")->Render(x+60, y+50);
+			//smh->resources->GetAnimation("fenwar")->Render(x+60, y+50);
+			//smh->resources->GetAnimation("fenwarFace")->Render(x+60, y+50);
 		} else if (npcID != -1) {
 			graphic->Render(x+60-32, y+50-32);
 		}
