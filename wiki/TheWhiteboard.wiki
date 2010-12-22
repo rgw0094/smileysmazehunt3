@@ -1,6 +1,7 @@
 === Programming To Do ===
  * The rest of the monocle man advice topics
  * Make it so that Calypso only shoots lasers while stationary.
+ * Make a small delay in text boxes so you don't accidentally skip some text
  
 === Sounds To Add ===
  * Calypso boss
