@@ -103,6 +103,7 @@ void FenwarBoss::draw(float dt)
 	orbManager->drawBeforeFenwar(dt);
 	smh->resources->GetAnimation("fenwar")->Render(smh->getScreenX(x), smh->getScreenY(y - floatingYOffset));
 	smh->resources->GetAnimation("fenwarFace")->Render(smh->getScreenX(x), smh->getScreenY(y - floatingYOffset));
+
 	orbManager->drawAfterFenwar(dt);
 	bulletManager->draw(dt);
 	bombManager->draw(dt);
