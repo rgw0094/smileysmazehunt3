@@ -40,7 +40,7 @@ Hint4-6 = "You should use your lightning orbs to find a detour, then help me wit
 Hint4-7 = "Thanks a bunch, dog!"
 
 Hint5Pages = "6"
-Hint5-1 = "Dickens, Smiley, do you always need my help?"
+Hint5-1 = "Dang it, Smiley, do you always need my help?"
 Hint5-2 = "If I tell you where to go for every item, you'll never figure it out on your own!"
 Hint5-3 = "Alright, alright, stop your sobbing. Inside the Forest of Fundoria is a land of mushrooms!!"
 Hint5-4 = "Getting inside is tricky, however."
@@ -418,22 +418,39 @@ NPC141-3 = "I, defeated."
 
 ;Calypso
 NPC150Name = "Calypso"
-NPC150Pages = "1"
-NPC150-1 = "Dickens"
+NPC150Pages = "5"
+NPC150-1 = "Why hello there!  The name's Calypso.  I'm an evil floating wizard."
+NPC150-2 = "I'm actually not really that evil personally, but I have to follow my orders to perform evil deeds."
+NPC150-3 = "In fact, out of all of Fenwar's evil minions, I donate the largest portion of my salary to charity."
+NPC150-4 = "Where do I donate the most?  Why, to the Organ-Harvest-From-The-Poor Foundation!  We've saved so many people with actual lives worth living!"
+NPC150-5 = "Now, let's proceed with the donations, you pathetic fool!"
+
 NPC151Name = "Calypso"
-NPC151Pages = "1"
+NPC151Pages = "4"
 NPC151-1 = "Oh dear, I've been defeated."
+NPC151-2 = "Little Jonny needs a liver, but now will never get one."
+NPC151-3 = "I am grateful to not have to live the rest of my life with the guilt you must have!"
+NPC151-4 = "Anyways, I must now fade away into nothingness.  May little Jonny haunt you for eternity after his imminent impending death!"
 
 ;Phyrebozz Round 2
 NPC160Name = "Lord Phyrebawz"
-NPC160Pages = "1"
+NPC160Pages = "5"
 NPC160-1 = "You again! Dickens, dickens, dickens."
+NPC160-2 = "I was hoping it was another customer to check out the sandals of Jesus.  It's been a slow day."
+NPC160-3 = "But of course, it's Mr. Lick-a-lot here to try to tongue torture me to death.  I mean seriously, isn't that pretty gross?"
+NPC160-4 = "Anyways, I will not just give you these sandals.  They are making me too much money."
+NPC160-5 = "You are welcome to take them if you survive what's next..."
+
 NPC161Name = "Lord Phyrebawz"
 NPC161Pages = "1"
 NPC161-1 = "I see you have gotten stronger since our last battle Smiley. Unfortunately for you, I remembered my vitamins this morning!"
-NPC162Name = "Load Phyrebawz"
-NPC162Pages = "1"
+NPC162Name = "Lord Phyrebawz"
+NPC162Pages = "4"
 NPC162-1 = "Gwwaaarrghhh (Dickens)."
+NPC162-2 = "At least after this defeat I'm not covered in slobber.  Well done."
+NPC162-3 = "I'm sure we will meet again, down below.  I know of your sinful ways, Smiley.  Jesus is not happy with you."
+NPC162-4 = "... GWWWWWWWWwwwwwwwaaarrrrrggggghhhhh..... "
+
 
 ;Bartli
 NPC170Name = "Bartli"
