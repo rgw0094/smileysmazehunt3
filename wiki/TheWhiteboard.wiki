@@ -24,6 +24,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Environment sounds and fire breath now stop playing when Smiley dies||12/22/10||ETI||
 ||Added sounds for ice and unlocking doors||12/22/21||ETI||
 ||Hoppers are now drawn after Smiley if their Y is greater||12/22/10||ETI||
 ||Hoppers don't hit Smiley when they're in the air.||12/22/10||ETI||
