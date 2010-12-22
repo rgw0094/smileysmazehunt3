@@ -49,6 +49,7 @@ void PopupMessageManager::update(float dt)
 
 void PopupMessageManager::showFullHealth() 
 {
+	if (adviceManMessageActive) return;
 	message = "Your health is already full!";
 	startMessage(1.5);
 }
