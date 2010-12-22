@@ -273,6 +273,12 @@ Sprite fenwarBullet {
  hotspot=11,11
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
+Sprite fenwarBulletRed {
+ texture=general
+ rect=356,218,22,22
+ hotspot=11,11
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
 Sprite fenwarBomb {
  texture=general
  rect=390,200,36,48

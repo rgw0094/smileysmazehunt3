@@ -27,6 +27,8 @@
 
 #define FENWAR_ENEMY_DROP 91
 
+#define FENWAR_STUN_TIME 6.5
+
 FenwarBoss::FenwarBoss(int _gridX, int _gridY, int _groupID) 
 {
 	x = _gridX * 64 + 32;
@@ -99,6 +101,16 @@ void FenwarBoss::draw(float dt)
 	bulletManager->draw(dt);
 	bombManager->draw(dt);
 
+	//Stun effect
+	if (state == FenwarStates::STUNNED_AFTER_LOSING_ORBS) {
+		for (int n = 0; n < NUM_STUN_STARS; n++) {
+			stunStarAngles[n] += 1.5* PI * dt;
+			smh->resources->GetSprite("stunStar")->Render(
+				smh->getScreenX(x + cos(stunStarAngles[n])*25), 
+				smh->getScreenY(y + sin(stunStarAngles[n])*7) - 40.0 - floatingYOffset);
+		}
+	}
+
 	if (smh->isDebugOn())
 	{
 		smh->drawCollisionBox(collisionBox, Colors::RED);
@@ -133,6 +145,9 @@ bool FenwarBoss::update(float dt)
 			break;
 		case FenwarStates::BATTLE:
 			doBattleState(dt);
+			break;
+		case FenwarStates::STUNNED_AFTER_LOSING_ORBS:
+			doStunnedState(dt);
 			break;
 		case FenwarStates::DROPPING_SPIDERS:
 			doDroppingSpidersState(dt);
@@ -171,13 +186,13 @@ void FenwarBoss::doCollision(float dt)
 	//Tongue collision
 	if (smh->player->getTongue()->testCollision(collisionBox))
 	{
-		dealDamage(smh->player->getDamage());
+		dealDamage(smh->player->getDamage(),true);
 	}
 
 	//Fire breath collision
 	if (smh->player->fireBreathParticle->testCollision(collisionBox))
 	{
-		dealDamage(smh->player->getFireBreathDamage() * dt);
+		dealDamage(smh->player->getFireBreathDamage() * dt,false);
 	}
 
 	//Frisbee collision
@@ -191,7 +206,7 @@ void FenwarBoss::doCollision(float dt)
 	{
 		if (state == FenwarStates::BATTLE)
 		{
-			dealDamage(smh->player->getLightningOrbDamage());
+			dealDamage(smh->player->getLightningOrbDamage(),false);
 		}
 	}
 
@@ -298,7 +313,21 @@ void FenwarBoss::doBattleState(float dt)
 	//After all the orbs are dead
 	if (orbManager->numOrbsAlive() == 0)
 	{
-		enterState(FenwarStates::DROPPING_SPIDERS);
+		enterState(FenwarStates::STUNNED_AFTER_LOSING_ORBS);
+		
+	}
+}
+
+void FenwarBoss::doStunnedState(float dt) {
+	if (smh->timePassedSince(timeEnteredState) < FENWAR_STUN_TIME) {
+		floatingYOffset -= 30* dt;
+		if (floatingYOffset < 0.0) floatingYOffset = 0.0;
+	} else {
+		floatingYOffset += 30*dt;
+		if (floatingYOffset >= 30.0) {
+			enterState(FenwarStates::DROPPING_SPIDERS);
+			floatingYOffset = 30.0;
+		}
 	}
 }
 
@@ -428,7 +457,7 @@ int FenwarBoss::getPlatformClosestToSmiley()
 	return platform;
 }
 
-void FenwarBoss::dealDamage(float damage)
+void FenwarBoss::dealDamage(float damage, bool makesFlash)
 {
 	//Fenwar is invincible until you kill his orbs!!!
 	if (orbManager->numOrbsAlive() > 0)
@@ -438,12 +467,13 @@ void FenwarBoss::dealDamage(float damage)
 	}
 
 	if (!flashing) {
-		flashing = true;
-		timeStartedFlashing = smh->getGameTime();
+		health -= damage;
+		if (makesFlash) {
+			flashing = true;
+			timeStartedFlashing = smh->getGameTime();
+		}
 	}
-
-	health -= damage;
-
+	
 	if (health <= 0.0)
 	{
 		if (state != FenwarStates::NEAR_DEATH && state != FenwarStates::RETURN_TO_ARENA)
@@ -472,6 +502,7 @@ void FenwarBoss::enterState(int newState)
 
 	state = newState;
 	timeInState = 0.0;
+	timeEnteredState = smh->getGameTime();
 
 	//Enter state stuff
 	if (newState == FenwarStates::TERRAFORMING)
@@ -483,6 +514,16 @@ void FenwarBoss::enterState(int newState)
 		lastAttackTime = smh->getGameTime();
 		lastBombTime = smh->getGameTime();
 		orbManager->spawnOrbs();
+	}
+	else if (newState == FenwarStates::STUNNED_AFTER_LOSING_ORBS)
+	{
+		//make him flash since he was stunned
+		dealDamage(0,true);
+
+		//Initialize stun star angles
+		for (int i = 0; i < NUM_STUN_STARS; i++) {
+			stunStarAngles[i] = (float)i * ((2.0*PI) / (float)NUM_STUN_STARS);
+		}
 	}
 	else if (newState == FenwarStates::DROPPING_SPIDERS)
 	{		
@@ -549,9 +590,10 @@ void FenwarBoss::terraformArena()
 				{
 					for (int k = 0; k < 9; k++)
 					{
-						if (i == platformLocations[k].x && j == platformLocations[k].y)
+						if ( (i == platformLocations[k].x && j == platformLocations[k].y) ||
+						     (i == platformLocations[k].x && j == platformLocations[k].y +1 && k==0))
 						{
-							//Put hover pads on the center of the platforms
+							//Put hover pads on the center of the platforms, as well as making the bottom tile of the center platform a hover pad
 							smh->environment->specialTileManager->addTimedTile(i, j, platformTerrain, HOVER_PAD, 0, TERRAFORM_DURATION);
 							isPlatform = true;
 							continue;
