@@ -58,7 +58,22 @@ void FenwarBullets::draw(float dt)
 {
 	for (std::list<FenwarBullet>::iterator i = bulletList.begin(); i != bulletList.end(); i++)
 	{
-		smh->resources->GetSprite("fenwarBullet")->Render(smh->getScreenX(i->x), smh->getScreenY(i->y));
+		float percentToNextSplit = (smh->getGameTime() - i->timeOfLastSplit) / (i->nextSplitTime - i->timeOfLastSplit);
+		if (percentToNextSplit <= 0.80 || i->n >= 3) {
+			smh->resources->GetSprite("fenwarBullet")->Render(smh->getScreenX(i->x), smh->getScreenY(i->y));
+		}
+		else {
+			float subtractFromGreen=255.0*(percentToNextSplit - 0.80) * 5.0;
+			float green=255.0-subtractFromGreen;
+			if (green < 0.0) green=0.0;
+			if (green > 255.0) green=255.0;
+			
+			smh->resources->GetSprite("fenwarBullet")->SetColor(ARGB(255.0, 255.0, green, 255.0));
+			smh->resources->GetSprite("fenwarBullet")->Render(smh->getScreenX(i->x), smh->getScreenY(i->y));
+			smh->resources->GetSprite("fenwarBullet")->SetColor(ARGB(255.0,255.0,255.0,255.0));
+		}
+
+		
 
 		if (smh->isDebugOn())
 		{
@@ -76,6 +91,7 @@ void FenwarBullets::killBullets()
 {
 	for (std::list<FenwarBullet>::iterator i = bulletList.begin(); i != bulletList.end(); i++)
 	{
+		i=bulletList.erase(i);
 	}
 	bulletList.end();
 }
@@ -96,6 +112,7 @@ void FenwarBullets::spawnBullet(float x, float y, float angle, int n)
 	bullet.collisionBox = new hgeRect();
 	bullet.collisionBox->SetRadius(x, y, 10.0);
 	bullet.nextSplitTime = smh->getGameTime() + smh->randomFloat(1.0, 1.5);
+	bullet.timeOfLastSplit = smh->getGameTime();
 	
 	bulletList.push_back(bullet);
 }

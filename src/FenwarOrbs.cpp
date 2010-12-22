@@ -41,7 +41,7 @@ void FenwarOrbs::update(float dt)
 			i->flashing = false;
 		}
 
-		float angle = angleOffset + count * ((2.0*PI)/FenwarAttributes::ORB_COUNT);
+		float angle = angleOffset + i->orbNumber * ((2.0*PI)/FenwarAttributes::ORB_COUNT);
 		i->x = fenwar->x + cos(angle) * distFromFenwar;
 		i->y = fenwar->y + sin(angle) * distFromFenwar;
 
@@ -192,6 +192,8 @@ void FenwarOrbs::spawnOrbs()
 		newOrb.collisionCircle = new CollisionCircle();
 		newOrb.flashing = false;
 		newOrb.health = FenwarAttributes::ORB_HEALTH;
+
+		newOrb.orbNumber = i;
 
 		orbList.push_back(newOrb);
 	}

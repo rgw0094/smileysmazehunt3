@@ -20,9 +20,10 @@ public:
 	static const int INACTIVE = 0;
 	static const int TERRAFORMING = 1;
 	static const int BATTLE = 2;
-	static const int DROPPING_SPIDERS = 3;
-	static const int RETURN_TO_ARENA = 4;
-	static const int NEAR_DEATH = 5;
+	static const int STUNNED_AFTER_LOSING_ORBS = 3;
+	static const int DROPPING_SPIDERS = 4;
+	static const int RETURN_TO_ARENA = 5;
+	static const int NEAR_DEATH = 6;
 };
 
 class FenwarAttributes 
@@ -73,6 +74,7 @@ private:
 	void doInactiveState(float dt);
 	void doTerraformingState(float dt);
 	void doBattleState(float dt);
+	void doStunnedState(float dt);
 	void doDroppingSpidersState(float dt);
 	void doReturnToArenaState(float dt);
 	bool doNearDeathState(float dt);
@@ -81,7 +83,7 @@ private:
 	void enterState(int newState);
 	void terraformArena();
 	void initPlatformPoints();
-	void dealDamage(float damage);
+	void dealDamage(float damage, bool makesFlash);
 	void chooseRandomPlatformUponWhichToDropASpider();
 	
 	FenwarOrbs *orbManager;
@@ -95,6 +97,7 @@ private:
 	bool terraformedYet;
 	bool startedShakingYet;
 	float timeStartedFlashing;
+	float timeEnteredState;
 	bool flashing;
 	float floatingYOffset;
 	float timeRelocated;
@@ -103,6 +106,7 @@ private:
 	float fadeWhiteAlpha;
 	bool relocatedYet;
 	float lastTimeHitWithTongue;
+	float stunStarAngles[5];
 
 	//Dropping spider mode shit
 	int targetPlatform;
@@ -118,6 +122,7 @@ struct FenwarOrb
 {
 	float x, y;
 	float health;
+	int orbNumber; //this is what "number" in order in the circle it is
 	bool flashing;
 	float timeStartedFlashing;
 	CollisionCircle *collisionCircle;
@@ -176,6 +181,7 @@ struct FenwarBullet
 	float x, y;
 	float dx, dy;
 	float n;
+	float timeOfLastSplit;
 	float nextSplitTime;
 	hgeRect *collisionBox;
 };
@@ -201,7 +207,7 @@ private:
 
 };
 
-///////////// FENWAR BULLETS ////////////////
+///////////// FENWAR BOMBS ////////////////
 
 struct FenwarBomb
 {
