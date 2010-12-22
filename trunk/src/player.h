@@ -173,6 +173,11 @@ private:
 	float timeStoppedBreathingFire;
 	float timeLastUsedMana;
 
+	//Stuff for the "hop" onto ice
+	bool needToIceHop;
+	float timeStartedIceHop;
+	float iceHopOffset;
+
 	//State info
 	bool breathingFire;				//If using Fire Breath ability
 	bool breathingIce;				//If using Ice Breath ability

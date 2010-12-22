@@ -80,6 +80,11 @@ Player::Player() {
 	mouthXOffset[DOWN_RIGHT] = 10;
 	mouthYOffset[DOWN_RIGHT] = 10;
 
+	//"Hop" onto ice stuff
+	needToIceHop=false;
+	timeStartedIceHop=0.0;
+	iceHopOffset=0.0;
+
 }
 
 /**
@@ -411,7 +416,7 @@ void Player::draw(float dt) {
 		//Draw Smiley sprite
 		updateSmileyColor(dt);
 		smh->resources->GetAnimation("player")->SetFrame(facing);
-		smh->resources->GetAnimation("player")->RenderEx(512.0, 384.0 - hoveringYOffset - springOffset, 
+		smh->resources->GetAnimation("player")->RenderEx(512.0, 384.0 - hoveringYOffset - springOffset - iceHopOffset, 
 			rotation, scale * hoverScale * shrinkScale, scale * hoverScale * shrinkScale);
 
 		//Draw every other tongue after smiley
@@ -1334,6 +1339,7 @@ void Player::updateVelocities(float dt)
 	//For the following states, velocities are handled in their respective update methods
 	if (falling || inShrinkTunnel || iceSliding || sliding || springing || graduallyMoving) return;
 
+	
 	if (frozen || drowning || stunned || immobile) {
 		dx = dy = 0.0;
 		return;
@@ -1424,18 +1430,26 @@ void Player::startPuzzleIce() {
 			facing = RIGHT;
 			dx = MOVE_SPEED;
 			dy = 0;
+			needToIceHop=true;
+			timeStartedIceHop=smh->getGameTime();
 		} else if (lastGridX > gridX) {
 			facing = LEFT;
 			dx = -MOVE_SPEED;
 			dy = 0;
+			needToIceHop=true;
+			timeStartedIceHop=smh->getGameTime();
 		} else if (lastGridY < gridY) {
 			facing = DOWN;
 			dx = 0;
 			dy = MOVE_SPEED;
+			needToIceHop=true;
+			timeStartedIceHop=smh->getGameTime();
 		} else if (lastGridY > gridY) {
 			facing = UP;
 			dx = 0;
 			dy = -MOVE_SPEED;
+			needToIceHop=true;
+			timeStartedIceHop=smh->getGameTime();
 		} else { //there was no lastGridX or lastGridY, so let's go by "facing" (this happens when you jump onto ice)
 			switch (facing) {
 			case RIGHT:
@@ -1483,6 +1497,13 @@ void Player::doIce(float dt) {
 			if ((int)x % 64 < 32) x += 30.0f*dt;
 			if ((int)x % 64 > 32) x -= 30.0f*dt; 
 		}
+	}
+
+	//Ice hop
+	if (needToIceHop) {
+		float sinAngle = smh->timePassedSince(timeStartedIceHop)*20.0;
+		iceHopOffset = 10.0*sin(sinAngle);
+		if (sinAngle>=3.14159) {iceHopOffset=0.0; needToIceHop=false;}
 	}
 
 	//Stop puzzle ice
