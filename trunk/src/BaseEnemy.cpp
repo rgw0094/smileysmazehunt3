@@ -622,6 +622,14 @@ void BaseEnemy::drawStunned(float dt) {
 }
 
 /**
+ * Draws the enemy after Smiley, so he goes "underneath" enemies
+ * This needs to be over-ridden to actually do something
+ */
+void BaseEnemy::drawAfterSmiley(float dt) {
+	
+}
+
+/**
  * This draws symbols near the enemy to show what the enemy is immune to.
  * It is called by the EnemyManager method, drawEnemyImmunities. That is called if the player is currently selecting Clinton's Cane.
  */

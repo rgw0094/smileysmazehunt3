@@ -122,12 +122,15 @@ void TextBox::setAdvice(int _advice)
 	currentPage = 1;
 	advice = _advice;
 
+	//AdvicePages
 	if (advice == AdviceTypes::ADVICE_INVENTORY)
 		numPages = 4;
 	else if (advice == AdviceTypes::ADVICE_FRISBEE)
 		numPages = 3;
 	else if (advice == AdviceTypes::ADVICE_SHOP)
 		numPages = 3;
+	else if (advice == AdviceTypes::ADVICE_MANA)
+		numPages = 4;
 	else
 		numPages = 1;
 }
@@ -334,6 +337,15 @@ bool TextBox::doClose()
 	} else if (textBoxType == TextBoxTypes::ABILITY_TYPE) {
 		if (ability == CANE) {
 			smh->popupMessageManager->showNewAdvice(AdviceTypes::ADVICE_INVENTORY);
+		} else if (ability == FIRE_BREATH) {
+			if (smh->saveManager->hasAbility[CANE]) {
+				//If Smiley has the cane, then we've already seen the advice for inventory,
+				//so show advice for mana.
+				smh->popupMessageManager->showNewAdvice(AdviceTypes::ADVICE_MANA);
+			} else {
+				smh->popupMessageManager->showNewAdvice(AdviceTypes::ADVICE_INVENTORY);
+			}
+			smh->popupMessageManager->showNewAdvice(AdviceTypes::ADVICE_INVENTORY);
 		} else if (ability == FRISBEE) {
 			smh->popupMessageManager->showNewAdvice(AdviceTypes::ADVICE_FRISBEE);
 		}
@@ -438,7 +450,7 @@ std::string TextBox::getAdviceText(int advice, int page) {
 				case 1: return "Most items in the game require the use of magic power, called mana.";
 				case 2: return "Your mana is represented as a blue bar below your health. Using mana will deplete this bar.";
 				case 3: return "After a short delay of 4 seconds, your mana will begin to slowly recharge again until it is full.";
-				case 4: return "You can also collect a Mana Triange from a fallen enemy. This will grant you a small amount of mana, and bypass the 4 second delay.";
+				case 4: return "You can also collect a Mana Triangle from a fallen enemy. This will grant you a small amount of mana, and bypass the 4 second delay.";
 			}
 		case AdviceTypes::ADVICE_FRISBEE:
 			switch (page)

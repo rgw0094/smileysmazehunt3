@@ -21,6 +21,7 @@ E_Hopper::E_Hopper(int id, int x, int y, int groupID)
 	timeStoppedHop = smh->getGameTime();
 	hopYOffset = 0.0;
 	hopping = false;
+	dealsCollisionDamage=true;
 	dx = dy = 0.0;
 
 	graphic[0]->SetSpeed(0.5);
@@ -39,6 +40,7 @@ void E_Hopper::update(float dt)
 	{
 		//Start next hop
 		hopping = true;
+		dealsCollisionDamage=false; //so it won't hit Smiley mid-hop
 		timeStartedHop = smh->getGameTime();
 		
 		if (Util::distance(x, y, smh->player->x, smh->player->y) < 500)
@@ -87,6 +89,7 @@ void E_Hopper::update(float dt)
 		if (smh->timePassedSince(timeStartedHop) > timeToHop) 
 		{
 			hopping = false;
+			dealsCollisionDamage=true;
 			timeStoppedHop = smh->getGameTime();
 			dx = dy = hopYOffset = 0.0;
 		}
@@ -104,25 +107,48 @@ void E_Hopper::draw(float dt)
 {
 	smh->resources->GetSprite("playerShadow")->Render(screenX, screenY + 32.0);
 	
-	if (graphic[0]->GetFrames() > 1) 
-	{
-		//animate by 'crouching down' just before a jump
-		if (!hopping && smh->timePassedSince(timeStoppedHop) > 0.7)
+	if (y <= smh->player->y) {
+		if (graphic[0]->GetFrames() > 1) 
 		{
-			//Set frame to 'crouched' position -- as if ready to hop
-			for (int i = 0; i < 4; i++) graphic[i]->SetFrame(1);
+			//animate by 'crouching down' just before a jump
+			if (!hopping && smh->timePassedSince(timeStoppedHop) > 0.7)
+			{
+				//Set frame to 'crouched' position -- as if ready to hop
+				for (int i = 0; i < 4; i++) graphic[i]->SetFrame(1);
+			}
+			else
+			{
+				//Set frame to normal position
+				for (int i = 0; i < 4; i++) graphic[i]->SetFrame(0);
+			}
 		}
-		else
-		{
-			//Set frame to normal position
-			for (int i = 0; i < 4; i++) graphic[i]->SetFrame(0);
-		}
-	}
 
-	//Render the graphic
-	graphic[facing]->Render(screenX, screenY - hopYOffset);
+		//Render the graphic
+		graphic[facing]->Render(screenX, screenY - hopYOffset);
+	}
 }
 
+void E_Hopper::drawAfterSmiley(float dt) {
+	if (y > smh->player->y) {
+		if (graphic[0]->GetFrames() > 1) 
+		{
+			//animate by 'crouching down' just before a jump
+			if (!hopping && smh->timePassedSince(timeStoppedHop) > 0.7)
+			{
+				//Set frame to 'crouched' position -- as if ready to hop
+				for (int i = 0; i < 4; i++) graphic[i]->SetFrame(1);
+			}
+			else
+			{
+				//Set frame to normal position
+				for (int i = 0; i < 4; i++) graphic[i]->SetFrame(0);
+			}
+		}
+
+		//Render the graphic
+		graphic[facing]->Render(screenX, screenY - hopYOffset);
+	}
+}
 
 /**
  * Overrides the tongue collision method so that the hopper's hop can be

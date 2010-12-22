@@ -166,7 +166,7 @@ public:
 	static const int ADVICE_SHOP = 3;
 	static const int ADVICE_FRISBEE = 4;
 	static const int ADVICE_UNUSED1 = 5;
-	static const int ADVICE_UNUSED2 = 6;
+	static const int ADVICE_SMILELET = 6;
 	static const int ADVICE_EXIT = 7;
 	static const int NUM_ADVICE = 8;
 };
@@ -184,12 +184,14 @@ public:
 
 	void draw(float dt);
 	bool update(float dt);
+	
 
 private:
-
+	bool isAdviceAvailable(int advice);
+	
 	void initAdviceOptions();
 	void drawAdviceOptions(float dt);
-	bool isAdviceAvailable(int advice);
+	
 
 	int currentSelection;
 	AdviceOption adviceOptions[AdviceTypes::NUM_ADVICE];

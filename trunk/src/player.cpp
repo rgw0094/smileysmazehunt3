@@ -1432,24 +1432,28 @@ void Player::startPuzzleIce() {
 			dy = 0;
 			needToIceHop=true;
 			timeStartedIceHop=smh->getGameTime();
+			smh->soundManager->playSound("snd_HopOntoIce");
 		} else if (lastGridX > gridX) {
 			facing = LEFT;
 			dx = -MOVE_SPEED;
 			dy = 0;
 			needToIceHop=true;
 			timeStartedIceHop=smh->getGameTime();
+			smh->soundManager->playSound("snd_HopOntoIce");
 		} else if (lastGridY < gridY) {
 			facing = DOWN;
 			dx = 0;
 			dy = MOVE_SPEED;
 			needToIceHop=true;
 			timeStartedIceHop=smh->getGameTime();
+			smh->soundManager->playSound("snd_HopOntoIce");
 		} else if (lastGridY > gridY) {
 			facing = UP;
 			dx = 0;
 			dy = -MOVE_SPEED;
 			needToIceHop=true;
 			timeStartedIceHop=smh->getGameTime();
+			smh->soundManager->playSound("snd_HopOntoIce");
 		} else { //there was no lastGridX or lastGridY, so let's go by "facing" (this happens when you jump onto ice)
 			switch (facing) {
 			case RIGHT:
@@ -1474,10 +1478,12 @@ void Player::startPuzzleIce() {
 				x = lastNonIceGridX * 64 + 20;
 				y = lastNonIceGridY * 64 + 40;
 				iceSliding = false;
+				smh->soundManager->stopIceChannel();
 				break;
 			};
 		}
 		iceSliding = true;
+		smh->soundManager->playIceEffect("snd_SnowFootstep",true);
 	}
 }
 
@@ -1520,6 +1526,7 @@ void Player::doIce(float dt) {
 				(facing == DOWN && (int)y % 64 > 32)) {
 			dx = dy = 0;
 			iceSliding = false;
+			smh->soundManager->stopIceChannel();
 		}
 	}
 

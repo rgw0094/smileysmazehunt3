@@ -88,11 +88,15 @@ void AdviceWindow::initAdviceOptions()
 		adviceOptions[i].text = "---";
 	}
 
-	adviceOptions[AdviceTypes::ADVICE_EXIT].text = "Exit Advice";
-	adviceOptions[AdviceTypes::ADVICE_FRISBEE].text = "Frisbee";
-	adviceOptions[AdviceTypes::ADVICE_INVENTORY].text = "Inventory";
+	
 	adviceOptions[AdviceTypes::ADVICE_SAVING].text = "Saving";
+	adviceOptions[AdviceTypes::ADVICE_INVENTORY].text = "Inventory";
+	adviceOptions[AdviceTypes::ADVICE_MANA].text = "Mana";
 	adviceOptions[AdviceTypes::ADVICE_SHOP].text = "Shop";
+	adviceOptions[AdviceTypes::ADVICE_FRISBEE].text = "Frisbee";
+	//one more advice type goes here
+	adviceOptions[AdviceTypes::ADVICE_SMILELET].text = "Smilelets";
+	adviceOptions[AdviceTypes::ADVICE_EXIT].text = "Exit Advice";
 
 }
 
@@ -103,7 +107,9 @@ bool AdviceWindow::isAdviceAvailable(int advice)
 		case AdviceTypes::ADVICE_SAVING:
 			return true;
 		case AdviceTypes::ADVICE_INVENTORY:
-			return smh->saveManager->hasAbility[CANE];
+			return smh->saveManager->hasAbility[CANE] || smh->saveManager->hasAbility[FIRE_BREATH];
+		case AdviceTypes::ADVICE_MANA:
+			return smh->saveManager->hasAbility[FIRE_BREATH];
 		case AdviceTypes::ADVICE_FRISBEE:
 			return smh->saveManager->hasAbility[FRISBEE];
 		case AdviceTypes::ADVICE_SHOP:

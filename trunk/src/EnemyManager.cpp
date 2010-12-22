@@ -197,6 +197,21 @@ void EnemyManager::draw(float dt) {
 }
 
 /**
+ * Draws enemies after Smiley, if they have overridden the "drawAfterSmiley" function
+ */
+void EnemyManager::drawAfterSmiley(float dt) {
+
+	std::list<EnemyStruct>::iterator i;
+	for (i = enemyList.begin(); i != enemyList.end(); i++) {
+		//Call the enemy's draw function. If the enemy is currently flashing,
+		//skip calling it some frames to create the flashing effect.
+		if (!i->enemy->flashing || int(smh->getGameTime() * 100) % 10 > 5) {
+			i->enemy->drawAfterSmiley(dt);
+		}
+	}
+}
+
+/**
  * Update all the enemies in the list
  */
 void EnemyManager::update(float dt) {

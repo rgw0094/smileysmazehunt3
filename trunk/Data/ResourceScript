@@ -1560,8 +1560,20 @@ Sound snd_TentaclesExtend {
  filename="TentaclesExtend.mp3"
  resgroup=14
 }
+Sound snd_SnowFootstep {
+ filename="SnowFootstep.mp3"
+ resgroup=14
+}
+Sound snd_HopOntoIce {
+ filename="HopOntoIce.mp3"
+ resgroup=14
+}
 Sound snd_Crusher {
  filename="Crusher.mp3"
+ resgroup=14
+}
+Sound snd_UnlockDoor {
+ filename="DoorUnlock.wav"
  resgroup=14
 }
 Sound snd_LovecraftHit1 {
