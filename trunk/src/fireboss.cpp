@@ -46,11 +46,14 @@ FireBoss::FireBoss(int gridX, int gridY, int _groupID) {
 	flashing = increaseAlpha = false;
 	alpha = fenwarAlpha = 255;
 	floatY = 0.0f;
+	fenwarLeave = false;
 	showFenwar = true;
 	droppedLoot = false;
 
 	fireNova = new WeaponParticleSystem("firenova.psi", smh->resources->GetSprite("particleGraphic13"), PARTICLE_FIRE_NOVA);
 	fenwarWarp = new hgeParticleSystem(&smh->resources->GetParticleSystem("fenwarwarp")->info);
+
+	smh->resources->GetAnimation("fenwar")->Play();
 
 	//Set up valid locations
 	//Center
@@ -91,6 +94,7 @@ void FireBoss::draw(float dt) {
 		smh->resources->GetAnimation("fenwar")->Render(smh->getScreenX(startX*64-120), smh->getScreenY(startY*64));
 		smh->resources->GetAnimation("fenwarFace")->Render(smh->getScreenX(startX*64-120), smh->getScreenY(startY*64));
 	}
+
 	if (fenwarLeave) {
 		fenwarWarp->MoveTo(smh->getScreenX(startX*64-120), smh->getScreenY(startY*64),true);
 		fenwarWarp->Update(dt);
