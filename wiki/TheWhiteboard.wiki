@@ -2,6 +2,7 @@
  * The rest of the monocle man advice topics
  * Make it so that Calypso only shoots lasers while stationary.
  * Make a small delay in text boxes so you don't accidentally skip some text
+ * Tut is a bit too easy.  You can just mass flame breath him and kill him easily in 2 cycles.  I think that after you damage him a set amount (say like 25% or 20% of his total life) that he should close his casket up just to assure that the battle isn't trivial.  Also for Bartli we should do something similar.  I suggest that after she craps out a Bartlet that she immediately moves onto her next phase.
  
 === Sounds To Add ===
  * Calypso boss
@@ -10,6 +11,8 @@
 
 === Graphics To Do ===
  * Stained glass window reflections are flipped horizontally
+ * Balloons for the goblin guy
+ * Botonoid generator?
 
 === Bugs ===
  * If you quit just after killing Fenwar, and the screen started to change to white, when you return to the game the screen is still white.
