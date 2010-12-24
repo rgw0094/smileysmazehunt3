@@ -1674,7 +1674,6 @@ numEnemies="103"
 92Variable1= "84"
 92Variable2= "85"
 92Variable3= "86"
-92Invincible="T"
 
 ;Botonoid spawner 2
 93OneGraphic="T"
@@ -1693,7 +1692,6 @@ numEnemies="103"
 93Variable1= "85"
 93Variable2= "86"
 93Variable3= "84"
-93Invincible="T"
 
 ;Botonoid spawner 3
 94OneGraphic="T"
@@ -1712,7 +1710,6 @@ numEnemies="103"
 94Variable1= "86"
 94Variable2= "84"
 94Variable3= "85"
-94Invincible="T"
 
 ;Spider
 95Name=      "Lyster"

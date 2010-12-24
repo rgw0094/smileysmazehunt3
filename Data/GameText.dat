@@ -107,7 +107,8 @@ Sign64 = "\n\nGet off my lawn - \n\n Bill Clinton"
 Sign67 = "Find gems such as this to buy upgrades from Speirdyke in town.  Red gems are worth 1 Smiley dollar, yellow are worth 3, and blue are worth 5."
 Sign68 = "\nHave you talked to Bill Clinton yet?  He has a very important item that is critical to your quest."
 Sign69 = "By pressing and holding the aim key you can turn Smiley without moving him.  This becomes very useful, so don't forget it!"
-Sign75 = "This is one of the two secret switches of Treasure Isle." 
+Sign75 = "This is one of the two secret switches of Treasure Isle."
+Sign78 = "If you have less than 3 hearts left, the lollipop will fill your life up to 3.  This will be VERY helpful later on, so don't forget it!"
 
 ;OLDETOWNE.SMH
 Sign10 = "\n\nTo pass through this door, you will first need to find a red key"
