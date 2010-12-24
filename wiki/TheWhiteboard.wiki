@@ -7,6 +7,7 @@
  * After the boss fights are over, the bosses still damage you.  Also other external objects (flames in Phyrebawz2, projectiles in Barvinoid) will still exist and hurt you.
  * The Ents can still see Smiley when he has Tut's mask on.
  * I suppose we shouldn't call it Calypso's Conservatory anymore?
+ * The bosses during the credits would look better with all their appendages (Bartli's legs, Magnitogorsk's tentacles...)
 
  
 === Sounds To Add ===
