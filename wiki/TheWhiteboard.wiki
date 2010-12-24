@@ -2,8 +2,7 @@
  * The rest of the monocle man advice topics
  * Make it so that Calypso only shoots lasers while stationary.
  * Make a small delay in text boxes so you don't accidentally skip some text
- * Tut is a bit too easy.  You can just mass flame breath him and kill him easily in 2 cycles.  I think that after you damage him a set amount (say like 25% or 20% of his total life) that he should close his casket up just to assure that the battle isn't trivial.  Also for Bartli we should do something similar.  I suggest that after she craps out a Bartlet that she immediately moves onto her next phase.
- * Likewise for Barvinoid, after you shoot all of his projectiles at him he just sits there for a while before moving.  Just make him move as soon as the projectiles have all been shot.
+
  * After the boss fights are over, the bosses still damage you.  Also other external objects (flames in Phyrebawz2, projectiles in Barvinoid) will still exist and hurt you.
  * The Ents can still see Smiley when he has Tut's mask on.
  * I suppose we shouldn't call it Calypso's Conservatory anymore?
@@ -29,7 +28,8 @@
 
 
 === Balance Issues ===
- * None currently reported.
+ * Tut is a bit too easy.  You can just mass flame breath him and kill him easily in 2 cycles.  I think that after you damage him a set amount (say like 25% or 20% of his total life) that he should close his casket up just to assure that the battle isn't trivial.  Also for Bartli we should do something similar.  I suggest that after she craps out a Bartlet that she immediately moves onto her next phase.
+ * Likewise for Barvinoid, after you shoot all of his projectiles at him he just sits there for a while before moving.  Just make him move as soon as the projectiles have all been shot.
 
 ===Done===
 ||Item||Date||Done By||
