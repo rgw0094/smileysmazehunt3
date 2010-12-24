@@ -6,6 +6,7 @@
  * The Ents can still see Smiley when he has Tut's mask on.
  * I suppose we shouldn't call it Calypso's Conservatory anymore?
  * The bosses during the credits would look better with all their appendages (Bartli's legs, Magnitogorsk's tentacles...)
+ * Add the thud noises when you lick a boss.
 
  
 === Sounds To Add ===
