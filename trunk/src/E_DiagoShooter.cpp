@@ -85,7 +85,7 @@ void E_DiagoShooter::update(float dt) {
 
 	bool canShoot = false;
 
-	if (smh->timePassedSince(lastRangedAttack) >= rangedAttackDelay) {
+	if (smh->timePassedSince(lastRangedAttack) >= rangedAttackDelay && !stunned && !frozen) {
 		
 		float shootAngle;
 
