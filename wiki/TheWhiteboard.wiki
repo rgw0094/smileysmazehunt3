@@ -1,6 +1,5 @@
 === Programming To Do ===
  * The rest of the monocle man advice topics
- * Make it so that Calypso only shoots lasers while stationary.
  * Make a small delay in text boxes so you don't accidentally skip some text
  * After the boss fights are over, the bosses still damage you.  Also other external objects (flames in Phyrebawz2, projectiles in Barvinoid) will still exist and hurt you.
  * The Ents can still see Smiley when he has Tut's mask on.
@@ -33,6 +32,9 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Standardized spelling of Speirdyke||12/26/10||ETI||
+||Added Walkin' Bomb advice topic||12/26/10||ETI||
+||Calypso only shoots when stopped||12/26/10||ETI||
 ||Hopping enemies don't hop if stunned||12/26/10||ETI||
 ||Environment sounds and fire breath now stop playing when Smiley dies||12/22/10||ETI||
 ||Added sounds for ice and unlocking doors||12/22/21||ETI||
