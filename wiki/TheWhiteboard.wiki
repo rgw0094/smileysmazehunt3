@@ -17,9 +17,10 @@
 === Graphics To Do ===
 
 === Bugs ===
- * If you quit just after killing Fenwar, and the screen started to change to white, when you return to the game the screen is still white.
- * After killing Fenwar, the screen fades to white, then shows Fenwar and Smiley briefly, then fades back from white.
- * Calypso's ice attack always hits you.
+ * Screen color changes:
+   * If you quit just after killing Fenwar, and the screen started to change to white, when you return to the game the screen is still white.
+   * After killing Fenwar, the screen fades to white, then shows Fenwar and Smiley briefly, then fades back from white.
+   * Screen color changes don't work (ex: Calypso doesn't turn screen black)
  * When starting, some Smiley faces will drop from the health bar as if Smiley was just hit
  * 119,156 at Tut: I got a timed switch to stay switched on the wrong side. I was hitting both of the switches in that area repeatedly and quickly when it happened. Update 8/26/09: Cannot reproduce this. Oh well -- if it happens in-game, the player is screwed.
  * Time played display is messed up
