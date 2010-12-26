@@ -206,8 +206,8 @@ void ProjectileManager::update(float dt) {
 				}
 				deleteProjectile = true;
 			}
-		} else if (i->id == PROJECTILE_BOOMERANG) {
-			//Boomerang does not hit collision layer!! It goes through stuff
+		} else if (i->id == PROJECTILE_BOOMERANG || i->id == PROJECTILE_LASER) {
+			//Boomerang and Calypso's laser do not hit collision layer!! They go through stuff
 		} else {
 			//For all other projectiles test collision normally
 			if (!deleteProjectile && smh->environment->testCollision(i->terrainCollisionBox, canPass)) {

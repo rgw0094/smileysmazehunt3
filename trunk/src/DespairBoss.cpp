@@ -356,6 +356,8 @@ bool DespairBoss::update(float dt) {
 			chargeDecel = (vi*vi) / (2.0 * 200.0);
 			timeToCharge = 200.0 / (vi/2.0);
 			setState(DESPAIRBOSS_EVIL_STOPPING_CHARGE);
+
+			
 		}
 			
 	}
@@ -386,6 +388,19 @@ bool DespairBoss::update(float dt) {
 			} else {
 				//Charge again
 				setState(DESPAIRBOSS_EVIL_CHARGING);
+
+				//Just starting a charge, now fire a laser
+
+				float angle = Util::getAngleBetween(x, y, smh->player->x, smh->player->y) +
+					smh->randomFloat(-(PI/16.0), PI/16.0);
+				//Left eye
+				smh->projectileManager->addProjectile(x - 10 + 50*cos(angle), 
+					y - 60 + floatingOffset + 50*sin(angle), 
+					LASER_SPEED, angle, LASER_DAMAGE, true,false, PROJECTILE_LASER, true);
+				//Right eye
+				smh->projectileManager->addProjectile(x + 10 + 50*cos(angle), 
+					y - 60 + floatingOffset + 50*sin(angle),  
+					LASER_SPEED, angle, LASER_DAMAGE, true,false, PROJECTILE_LASER, true);
 			}
 			chargeCounter++;
 		}
@@ -415,22 +430,6 @@ bool DespairBoss::update(float dt) {
 	}
 
 	
-	//Periodically fire lasers while in evil mode
-	if (state == DESPAIRBOSS_EVIL_CHARGING || state == DESPAIRBOSS_EVIL_STOPPING_CHARGE || state == DESPAIRBOSS_EVIL_CHARGE_COOLDOWN) {
-		if (smh->timePassedSince(lastLaserTime) > LASER_DELAY) {
-			lastLaserTime = smh->getGameTime();
-			float angle = Util::getAngleBetween(x, y, smh->player->x, smh->player->y) +
-				smh->randomFloat(-(PI/16.0), PI/16.0);
-			//Left eye
-			smh->projectileManager->addProjectile(x - 10 + 50*cos(angle), 
-				y - 60 + floatingOffset + 50*sin(angle), 
-				LASER_SPEED, angle, LASER_DAMAGE, true,false, PROJECTILE_LASER, true);
-			//Right eye
-			smh->projectileManager->addProjectile(x + 10 + 50*cos(angle), 
-				y - 60 + floatingOffset + 50*sin(angle),  
-				LASER_SPEED, angle, LASER_DAMAGE, true,false, PROJECTILE_LASER, true);
-		}
-	}
 
 	///////// Death State stuff ///////////////
 
