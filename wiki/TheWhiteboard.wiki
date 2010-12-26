@@ -24,7 +24,6 @@
  * When starting, some Smiley faces will drop from the health bar as if Smiley was just hit
  * 119,156 at Tut: I got a timed switch to stay switched on the wrong side. I was hitting both of the switches in that area repeatedly and quickly when it happened. Update 8/26/09: Cannot reproduce this. Oh well -- if it happens in-game, the player is screwed.
  * Time played display is messed up
- * When you freeze hopping enemies they still hop.
  * Spikey guys can't move across spaces formerly consisting of the flame tiles that you put out with the ice breath (this occurs in the realm of despair)
 
 
@@ -34,6 +33,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Hopping enemies don't hop if stunned||12/26/10||ETI||
 ||Environment sounds and fire breath now stop playing when Smiley dies||12/22/10||ETI||
 ||Added sounds for ice and unlocking doors||12/22/21||ETI||
 ||Hoppers are now drawn after Smiley if their Y is greater||12/22/10||ETI||
