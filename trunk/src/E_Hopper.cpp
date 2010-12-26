@@ -36,7 +36,7 @@ E_Hopper::~E_Hopper()
 
 void E_Hopper::update(float dt) 
 {
-	if (stunned) timeStoppedHop = smh->getGameTime();
+	if (stunned || frozen) timeStoppedHop = smh->getGameTime();
 
 	if (!hopping && smh->timePassedSince(timeStoppedHop) > 1.0) 
 	{
