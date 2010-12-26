@@ -94,7 +94,7 @@ void AdviceWindow::initAdviceOptions()
 	adviceOptions[AdviceTypes::ADVICE_MANA].text = "Mana";
 	adviceOptions[AdviceTypes::ADVICE_SHOP].text = "Shop";
 	adviceOptions[AdviceTypes::ADVICE_FRISBEE].text = "Frisbee";
-	//one more advice type goes here
+	adviceOptions[AdviceTypes::ADVICE_BOMB].text = "Walkin' Bomb";
 	adviceOptions[AdviceTypes::ADVICE_SMILELET].text = "Smilelets";
 	adviceOptions[AdviceTypes::ADVICE_EXIT].text = "Exit Advice";
 
@@ -107,13 +107,17 @@ bool AdviceWindow::isAdviceAvailable(int advice)
 		case AdviceTypes::ADVICE_SAVING:
 			return true;
 		case AdviceTypes::ADVICE_INVENTORY:
-			return smh->saveManager->hasAbility[CANE] || smh->saveManager->hasAbility[FIRE_BREATH];
+			return (smh->saveManager->hasAbility[CANE] || smh->saveManager->hasAbility[FIRE_BREATH]);
 		case AdviceTypes::ADVICE_MANA:
 			return smh->saveManager->hasAbility[FIRE_BREATH];
 		case AdviceTypes::ADVICE_FRISBEE:
 			return smh->saveManager->hasAbility[FRISBEE];
 		case AdviceTypes::ADVICE_SHOP:
 			return smh->saveManager->getTotalGemCount() > 0;
+		case AdviceTypes::ADVICE_BOMB:
+			return smh->saveManager->hasAbility[SILLY_PAD];
+		case AdviceTypes::ADVICE_SMILELET:
+			return (smh->saveManager->hasAbility[TUTS_MASK] && smh->saveManager->hasVisitedArea[CASTLE_OF_EVIL]);
 		default:
 			return false;
 	}

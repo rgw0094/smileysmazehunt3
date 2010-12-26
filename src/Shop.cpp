@@ -35,7 +35,7 @@ void Shop::draw(float dt) {
 
 	//Uses the text box graphic
 	smh->resources->GetSprite("textBox")->Render(X_OFFSET, Y_OFFSET);
-	smh->resources->GetFont("textBoxNameFnt")->printf(X_OFFSET + 202, Y_OFFSET + 20, HGETEXT_CENTER, "Spierdyke's Shoppe");
+	smh->resources->GetFont("textBoxNameFnt")->printf(X_OFFSET + 202, Y_OFFSET + 20, HGETEXT_CENTER, "Speirdyke's Shoppe");
 
 	//Draw upgrade selections
 	for (int i = 0; i < 4; i ++) {

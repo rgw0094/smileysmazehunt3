@@ -165,7 +165,7 @@ public:
 	static const int ADVICE_MANA = 2;
 	static const int ADVICE_SHOP = 3;
 	static const int ADVICE_FRISBEE = 4;
-	static const int ADVICE_UNUSED1 = 5;
+	static const int ADVICE_BOMB = 5;
 	static const int ADVICE_SMILELET = 6;
 	static const int ADVICE_EXIT = 7;
 	static const int NUM_ADVICE = 8;

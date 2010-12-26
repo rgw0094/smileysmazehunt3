@@ -131,6 +131,8 @@ void TextBox::setAdvice(int _advice)
 		numPages = 3;
 	else if (advice == AdviceTypes::ADVICE_MANA)
 		numPages = 4;
+	else if (advice == AdviceTypes::ADVICE_BOMB)
+		numPages = 4;
 	else
 		numPages = 1;
 }
@@ -309,10 +311,10 @@ bool TextBox::doClose()
 	//Close the text box
 	smh->windowManager->frameLastWindowClosed = smh->getCurrentFrame();
 			
-	//If this is spierdyke, open the shop
+	//If this is speirdyke, open the shop
 	if (textBoxType == TextBoxTypes::DIALOG_TYPE) 
 	{
-		if (textID == SPIERDYKE_TEXT_ID) 
+		if (textID == SPEIRDYKE_TEXT_ID) 
 		{
 			smh->windowManager->openShop();
 			return true; //Don't tell manager to close window
@@ -348,6 +350,8 @@ bool TextBox::doClose()
 			smh->popupMessageManager->showNewAdvice(AdviceTypes::ADVICE_INVENTORY);
 		} else if (ability == FRISBEE) {
 			smh->popupMessageManager->showNewAdvice(AdviceTypes::ADVICE_FRISBEE);
+		} else if (ability == SILLY_PAD) {
+			smh->popupMessageManager->showNewAdvice(AdviceTypes::ADVICE_BOMB);
 		}
 
 	//After closing advice, go back to the advice menu
@@ -462,9 +466,17 @@ std::string TextBox::getAdviceText(int advice, int page) {
 		case AdviceTypes::ADVICE_SHOP:
 			switch (page)
 			{
-				case 1: return "You can trade the gems that you find with Captain Spierdyke for upgrades. The captain can be found near his ship in Smiley Town.";
+				case 1: return "You can trade the gems that you find with Captain Speirdyke for upgrades. The captain can be found near his ship in Smiley Town.";
 				case 2: return "There are three gems types you can find. Red gems are worth one smiley dollar, yellow gems are worth 3 smiley dollars, and blue gems are worth 5 smiley dollars!";
-				case 3: return "If Spierdyke of out of stock for one type of upgrade, try buying the remaining available upgrades first.";
+				case 3: return "If Speirdyke of out of stock for one type of upgrade, try buying the remaining available upgrades first.";
+			}
+		case AdviceTypes::ADVICE_BOMB:
+			switch (page)
+			{
+				case 1: return "Have you seen those piles of rocks around? You can destroy these with Walkin' Bombs.";
+				case 2: return "Release a Walkin' Bomb by stepping on the tile with his face on it.";
+				case 3: return "The Walkin' Bomb will continue to walk until he encounters an obstacle, then will turn LEFT and will walk as far as he can once again.";
+				case 4: return "You can guide the Walkin' Bomb by placing Silly Pads in front of him. Remember that he turns LEFT! Then, when you're ready for him to explode, simply step within his red circle of vision.";
 			}
 		default: return "advice";
 	}
