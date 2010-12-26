@@ -36,6 +36,8 @@ E_Hopper::~E_Hopper()
 
 void E_Hopper::update(float dt) 
 {
+	if (stunned) timeStoppedHop = smh->getGameTime();
+
 	if (!hopping && smh->timePassedSince(timeStoppedHop) > 1.0) 
 	{
 		//Start next hop
@@ -67,13 +69,14 @@ void E_Hopper::update(float dt)
 		} 
 		else 
 		{
-			//Find a random angle and distance to hop that won't result in running into a wall
-			do 
-			{
+			//Find a random angle and distance to hop 
+			//Took out the code that made it never run into a wall, as it could cause an infinite loop.
+			//do 
+			//{
 				hopDistance = smh->randomFloat(125.0, 300.0);
 				hopAngle = smh->randomFloat(0.0, 2.0*PI);
-			} 
-			while(!smh->environment->validPath(x, y, x + hopDistance * cos(hopAngle), y + hopDistance * sin(hopAngle), 28, canPass));
+			//} 
+			//while(!smh->environment->validPath(x, y, x + hopDistance * cos(hopAngle), y + hopDistance * sin(hopAngle), 28, canPass));
 		}
 
 		timeToHop = hopDistance / float(speed);
