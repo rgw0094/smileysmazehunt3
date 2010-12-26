@@ -91,7 +91,7 @@ void SaveManager::resetCurrentData() {
 	for (int i = 0; i < NUM_AREAS; i++) {
 		hasVisitedArea[i] = false;
 	}
-	hasVisitedArea[FOUNTAIN] = true;
+	hasVisitedArea[FOUNTAIN_AREA] = true;
 
 	money = 0;
 	adviceManEncounterCompleted = false;

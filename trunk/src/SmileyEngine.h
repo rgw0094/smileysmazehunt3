@@ -54,7 +54,7 @@ class PopupMessageManager;
 //NPCS
 #define MONOCLE_MAN_NPC_ID 13
 #define MONOCLE_MAN_TEXT_ID 902
-#define SPIERDYKE_TEXT_ID 5
+#define SPEIRDYKE_TEXT_ID 5
 #define BILL_CLINTON_TEXT_ID 8
 #define BILL_CLINTON_TEXT_ID2 19
 
@@ -80,7 +80,7 @@ public:
 	static const int WorldMap = 13;
 	static const int Sounds = 14;
 	static const int Phyrebozz = 100;
-	static const int PorlyPenguin = 101;
+	static const int PortlyPenguin = 101;
 	static const int Garmborn = 102;
 	static const int Cornwallis = 103;
 	static const int Mushboom = 104;
