@@ -8,6 +8,7 @@
  * Add the thud noises when you lick a boss.
  * Add new noises to the Brian Fungus / Fenwar / Calypso battles.
  * During the close-up gross licking of Fenwar when he dies, it plays the title theme but I think silence would make the moment more effective.
+ * Some of the gem totals in the map are incorrect (SEE LOOT SUMMARY)
  
 === Sounds To Add ===
 
