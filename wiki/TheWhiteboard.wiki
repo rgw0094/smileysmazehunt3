@@ -33,7 +33,7 @@
 
 ===Done===
 ||Item||Date||Done By||
-||Fixed the stain glass windows in all the game graphics||12/27/10||RMM||
+||Fixed the stained glass windows in all the game graphics||12/27/10||RMM||
 ||Added balloon and botonoid generator graphics||12/27/10||RMM||
 ||Added a bunch of sounds for Calypso/Brain Fungus/Fenwar battles||12/27/10||RMM||
 ||Fixed screen color fade bugs||12/26/10||ETI||
