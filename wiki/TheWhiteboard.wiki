@@ -4,8 +4,10 @@
  * After the boss fights are over, the bosses still damage you.  Also other external objects (flames in Phyrebawz2, projectiles in Barvinoid) will still exist and hurt you.
  * The Ents can still see Smiley when he has Tut's mask on.
  * I suppose we shouldn't call it Calypso's Conservatory anymore?
- * The bosses during the credits would look better with all their appendages (Bartli's legs, Magnitogorsk's tentacles...)
+ * The end credits have a bunch of things to fix:
+ Lord Phyrebawz is misspelled, buzzard has no wings, most of the enemies are looking left but would look better looking forward, Barvinioid is missing, Bartli/BrianFungus/Magnitogorsk are missing parts of their bodies.
  * Add the thud noises when you lick a boss.
+ * Add new noises to the Brian Fungus / Fenwar / Calypso battles.
 
  
 === Sounds To Add ===
