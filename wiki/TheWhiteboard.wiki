@@ -4,7 +4,7 @@
  * After the boss fights are over, the bosses still damage you.  Also other external objects (flames in Phyrebawz2, projectiles in Barvinoid) will still exist and hurt you.
  * The Ents can still see Smiley when he has Tut's mask on.
  * I suppose we shouldn't call it Calypso's Conservatory anymore?
- * The end credits have a bunch of things to fix: Lord Phyrebawz is misspelled, the Gayass Ghost, sentinels, and gumdrops are not in the game (but we could add the gumdrops?), Mr. Bigglesworth is actually called a Walkin'Bomb, buzzard has no wings, most of the enemies are looking left but would look better looking forward, Barvinioid is missing, Bartli/BrianFungus/Magnitogorsk are missing parts of their bodies.
+ * The end credits have a bunch of things to fix: Lord Phyrebawz is misspelled, the Gayass Ghost, sentinels, and gumdrops are not in the game (but we could add the gumdrops?), Mr. Bigglesworth is actually called a Walkin'-Bomb, buzzard has no wings, most of the enemies are looking left but would look better looking forward, Barvinioid is missing, Bartli/BrianFungus/Magnitogorsk are missing parts of their bodies.
  * Add the thud noises when you lick a boss.
  * Add new noises to the Brian Fungus / Fenwar / Calypso battles.
  * During the close-up gross licking of Fenwar when he dies, it plays the title theme but I think silence would make the moment more effective.
