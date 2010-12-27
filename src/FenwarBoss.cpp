@@ -53,6 +53,7 @@ FenwarBoss::FenwarBoss(int _gridX, int _gridY, int _groupID)
 	collisionBox->SetRadius(x, y, 1);
 	timeRelocated = 999999999.0;
 	relocatedYet = false;
+	hasBegunFadeToWhite=false;
 
 	orbManager = new FenwarOrbs(this);
 	bulletManager = new FenwarBullets(this);
@@ -392,19 +393,14 @@ void FenwarBoss::doDroppingSpidersState(float dt)
 
 void FenwarBoss::doReturnToArenaState(float dt)
 {
-	//After they close the near defeat text box, fade the screen to white
-	if (!relocatedYet && !smh->windowManager->isTextBoxOpen() && fadeWhiteAlpha < 255.0)
-	{
-		fadeWhiteAlpha += 155.0 * dt;
-		smh->setScreenColor(Colors::WHITE, fadeWhiteAlpha);
-		if (fadeWhiteAlpha >= 255.0)
-		{
-			fadeWhiteAlpha = 255.0;
-		}
+	//After the player closes the near death text box, fade the screen to white
+	if (!relocatedYet && !smh->windowManager->isTextBoxOpen() && !hasBegunFadeToWhite) {
+		hasBegunFadeToWhite=true;
+		smh->beginFadeScreenToColor(Colors::WHITE, 255.0);
 	}
-
+	
 	//Move smiley to the copy of the original arena that wasn't terraformed
-	if (!relocatedYet && fadeWhiteAlpha == 255.0)
+	if (!relocatedYet && smh->getScreenColorAlpha() >= 255.0)
 	{
 		timeRelocated = smh->getGameTime();
 		relocatedYet = true;
@@ -420,9 +416,9 @@ void FenwarBoss::doReturnToArenaState(float dt)
 	//Now fade out from white
 	if (smh->timePassedSince(timeRelocated) > 2.0)
 	{
-		fadeWhiteAlpha -= 155.0 * dt;
-		smh->setScreenColor(Colors::WHITE, fadeWhiteAlpha);
-		if (fadeWhiteAlpha <= 0.0)
+		smh->fadeScreenToNormal();
+		
+		if (smh->getScreenColorAlpha() <= 0.0)
 		{
 			smh->setScreenColor(Colors::WHITE, 0.0);
 			smh->windowManager->openDialogueTextBox(-1, FENWAR_DEFEAT_TEXT);
@@ -497,7 +493,8 @@ void FenwarBoss::dealDamage(float damage, bool makesFlash)
 			orbManager->killOrbs();
 			bulletManager->killBullets();
 			enterState(FenwarStates::RETURN_TO_ARENA);
-			smh->windowManager->openDialogueTextBox(-1, FENWAR_NEAR_DEFEAT_TEXT);	
+			smh->windowManager->openDialogueTextBox(-1, FENWAR_NEAR_DEFEAT_TEXT);
+			hasBegunFadeToWhite=false;
 		} 
 	}
 }

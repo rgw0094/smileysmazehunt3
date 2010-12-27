@@ -324,23 +324,16 @@ bool DespairBoss::update(float dt) {
 	//Entering evil mode - the screen darkens and Calypso gets in
 	//position to start circling smiley.
 	if (state == DESPAIRBOSS_ENTEREVIL) {
-		evilAlpha += 136.0*dt;
-		smh->drawScreenColor(Colors::BLACK, smh->getScreenColorAlpha() + 80.0*dt);
+		smh->beginFadeScreenToColor(Colors::BLACK, 150.0);
 		shieldAlpha -= 136.0*dt;
 		if (shieldAlpha < 0.0) shieldAlpha = 0.0;
-		if (smh->getScreenColorAlpha() > 150.0) smh->drawScreenColor(Colors::BLACK, 150.0);
-		if (evilAlpha > 255.0) evilAlpha = 255.0;
-
-		//Once the screen has darkened move in position to circle smiley
-		if (evilAlpha == 255.0) {
-			setState(DESPAIRBOSS_EVIL_CHARGING);
-		}
+		
+		//Now move in position to circle smiley
+		setState(DESPAIRBOSS_EVIL_CHARGING);
 	}
 
 	//Charging towards Smiley
 	if (state == DESPAIRBOSS_EVIL_CHARGING) {
-		smh->drawScreenColor(Colors::BLACK, 128.0);
-
 		dx += EVIL_CHARGE_ACCEL * cos(chargeAngle) * dt;
 		dy += EVIL_CHARGE_ACCEL * sin(chargeAngle) * dt;
 
@@ -385,6 +378,7 @@ bool DespairBoss::update(float dt) {
 				//This was the last charge
 				setState(DESPAIRBOSS_EXITEVIL);
 				dx = dy = 0.0;
+				smh->fadeScreenToNormal();
 			} else {
 				//Charge again
 				setState(DESPAIRBOSS_EVIL_CHARGING);

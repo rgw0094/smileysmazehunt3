@@ -115,6 +115,8 @@ private:
 	float timeStartedMovingToPlatform;
 	int numSpidersDropped;
 	bool platformsVisited[9];
+
+	bool hasBegunFadeToWhite;
 };
 
 ///////////// FENWAR ORBS ////////////////
