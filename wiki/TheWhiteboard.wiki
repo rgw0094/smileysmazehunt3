@@ -4,12 +4,16 @@
  * After the boss fights are over, the bosses still damage you.  Also other external objects (flames in Phyrebawz2, projectiles in Barvinoid) will still exist and hurt you.
  * The Ents can still see Smiley when he has Tut's mask on.
  * I suppose we shouldn't call it Calypso's Conservatory anymore?
- * The end credits have a bunch of things to fix: Lord Phyrebawz is misspelled, the Gayass Ghost, sentinels, and gumdrops are not in the game (but we could add the gumdrops?), Mr. Bigglesworth is actually called a Walkin'-Bomb, buzzard has no wings, most of the enemies are looking left but would look better looking forward, Barvinioid is missing, Bartli/BrianFungus/Magnitogorsk are missing parts of their bodies.
+ * The end credits have a bunch of things to fix: Lord Phyrebawz is misspelled, the Gayass Ghost, sentinels, and gumdrops are not in the game (but we could add the gumdrops?), Mr. Bigglesworth is actually called a Walkin'-Bomb, buzzard has no wings, most of the enemies are looking left but would look better looking forward, Barvinoid is missing, Bartli/BrianFungus/Magnitogorsk are missing parts of their bodies.
  * Add the thud noises when you lick a boss.
  * Add new noises to the Brian Fungus / Fenwar / Calypso battles.
  * During the close-up gross licking of Fenwar when he dies, it plays the title theme but I think silence would make the moment more effective.
  * Some of the gem totals in the map are incorrect (SEE LOOT SUMMARY)
  * Implement the goblin using a balloon instead of a clown head.
+ * In the inventory it says that orbs deal 0 damage.
+ * The damage of the fire/orbs never goes up in the inventory.  Also without some sort of comparison to how much damage the tongue deals, this number means nothing.  Likewise with the mana cost of the magic items displayed in the inventory - we need to display the total mana points Smiley has for it to be of any use.
+ * After picking up 1 mana pickup, your mana begins recharging instantly.  This is bad since then there is little incentive to ever pick up more than one since your mana will recharge anyways, and ends up giving you way too much mana.  Then running around owning everyone with orbs is too easy to do.
+
  
 === Sounds To Add ===
 
