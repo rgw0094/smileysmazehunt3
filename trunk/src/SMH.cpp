@@ -19,11 +19,16 @@ SMH::SMH(HGE *_hge)
 	initializedYet = false;
 	debugMode = false;
 	debugText = "";
-	screenColorAlpha = 0.0;
+	screenAlpha = 0.0;
 
 	//Game time and frame counter are only set once and carry over when "re-entering" game mode. 
 	gameTime = 0.0;
 	frameCounter = 0;
+
+	fading=false;
+	screenColor=Colors::BLACK;
+	screenAlpha=0.0;
+
 }
 
 SMH::~SMH() { }
@@ -210,7 +215,9 @@ bool SMH::updateGame()
 				screenEffectsManager->update(dt);
 			}
 
-			smh->resources->GetAnimation("fenwar")->Update(dt);
+            smh->resources->GetAnimation("fenwar")->Update(dt);
+			
+			updateScreenColor(dt);
 
 			//Keep track of the time that no windows are open.
 			if (!windowManager->isOpenWindow()) gameTime += dt;
@@ -264,7 +271,7 @@ void SMH::drawGame()
 			projectileManager->draw(dt);
 			player->drawJesusBeam();
 			environment->drawSwitchTimers(dt);
-			if (screenColorAlpha > 0.0) drawScreenColor(screenColor, screenColorAlpha);
+			if (screenAlpha > 0.0) drawScreenColor(screenColor, screenAlpha);
 			areaChanger->draw(dt);
 			player->drawGUI(dt);
 			popupMessageManager->draw(dt);
@@ -371,12 +378,12 @@ int SMH::getCurrentFrame() {
 
 void SMH::setScreenColor(int color, float alpha) {
 	screenColor = color;
-	screenColorAlpha = alpha;
-	if (screenColorAlpha < 0.0) screenColorAlpha = 0.0;
+	screenAlpha = alpha;
+	if (screenAlpha < 0.0) screenAlpha = 0.0;
 }
 
 float SMH::getScreenColorAlpha() {
-	return screenColorAlpha;
+	return screenAlpha;
 }
 
 /////////////////////////////
@@ -489,6 +496,18 @@ float SMH::getFlashingAlpha(float n) {
 	return flashingAlpha;
 }
 
+void SMH::beginFadeScreenToColor(int color, float alphaToFadeTo) {
+	fading=true;
+	screenColor=color;
+	screenAlpha=0.0;
+	screenAlphaToFadeTo = alphaToFadeTo;
+	if (alphaToFadeTo > 255.0) alphaToFadeTo=255.0;
+}
+
+void SMH::fadeScreenToNormal() {
+	fading=false;
+}
+
 void SMH::drawScreenColor(int color, float alpha) 
 {
 	if (alpha == 0.0) return;
@@ -514,5 +533,17 @@ void SMH::drawScreenColor(int color, float alpha)
 		{
 			resources->GetSprite(sprite.c_str())->Render(i*64,j*64);
 		}
+	}
+}
+
+void SMH::updateScreenColor(float dt) {
+	if (fading) {
+		screenAlpha += 150.0*dt;
+		if (screenAlpha > screenAlphaToFadeTo) screenAlpha = screenAlphaToFadeTo;
+	}
+
+	if (!fading) {
+		screenAlpha -= 150.0*dt;
+		if (screenAlpha < 0.0) screenAlpha = 0.0;
 	}
 }

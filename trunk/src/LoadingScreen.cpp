@@ -35,6 +35,9 @@ bool LoadingScreen::update(float dt, float mouseX, float mouseY) {
 	
 	//Perform the load
 	if (!startedLoadYet) {
+		//sometimes the screen is dark -- this is put here to ensure that does not happen
+		smh->drawScreenColor(Colors::BLACK,0.0);
+		smh->fadeScreenToNormal();
 		if (isNewGame) {
 			smh->saveManager->startNewGame(fileNumber);
 		} else {

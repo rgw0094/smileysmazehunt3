@@ -309,10 +309,12 @@ public:
 	void log(const char* text);
 	int randomInt(int min, int max);
 	float randomFloat(float min, float max);
-	void drawScreenColor(int color, float alpha);
+	void beginFadeScreenToColor(int color, float alphaToFadeTo);
+	void fadeScreenToNormal();
 	float timePassedSince(float time);
 	float getFlashingAlpha(float n);
 	void setDebugText(std::string);
+	void drawScreenColor(int color, float alpha);
 	
 	//Game objects
 	Console *console;
@@ -349,10 +351,16 @@ private:
 	int gameState;
 	int frameCounter;
 	bool debugMode;
-	int screenColor;
-	float screenColorAlpha;
+	
 	bool initializedYet;
 	std::string debugText;
+
+	//Screen color fade stuff
+	void updateScreenColor(float dt);
+    int screenColor;
+	float screenAlpha;
+	float screenAlphaToFadeTo;
+	bool fading;
 
 };
 
