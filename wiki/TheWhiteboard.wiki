@@ -26,7 +26,7 @@
  * Spikey guys can't move across spaces formerly consisting of the flame tiles that you put out with the ice breath (this occurs in the realm of despair)
  * When going from an arrow tile onto an ice tile, Smiley gets stuck until you try to move him.  I put a testing spot for this south of Smiley town.
  * A spider dropping blimp randomly disappeared.  It was on its way down in its oscillations and disappeared on what seemed to be its lowest point if that has any relevance.  Also I was just about to lick it and may have just licked it before it went away.  I couldn't reproduce this after many (30 or so) tries.
- * In the Castle of Evil, suddenly a lot of the enemies had small "ice breath" icons next to them.  In particular, the proennoks, beakers, blimps, and gators did, while the goblins, turrets, spiders, protectors, and spikey ball guys did not.  I wasn't use the ice breath (nor did I use it at all during the play) and also the icons went away when I paused the game.  I posted 3 SS's in the downloads section.
+ * In the Castle of Evil, suddenly a lot of the enemies had small "ice breath" icons next to them.  In particular, the proennoks, beakers, blimps, and gators did, while the goblins, turrets, spiders, protectors, and spikey ball guys did not.  I wasn't use the ice breath (nor did I use it at all during the play) and also the icons went away when I paused the game.  I posted 3 SS's in the downloads section.  Then once I equipped the ice breath and used it (I'm not sure which of the two caused this) everything went back to normal.
 
 
 
