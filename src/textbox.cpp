@@ -224,14 +224,16 @@ void TextBox::draw(float dt)
 		smh->resources->GetFont("textBoxFnt")->printfb(x + 20, y + 20, 360, 210, HGETEXT_CENTER, "%s", text);
 	}
 
-	//Draw next page/OK icon
-	if (currentPage == numPages) 
-	{
-		smh->resources->GetSprite("okIcon")->Render(x + 350, y + 220);
-	}
-	else
-	{
-		smh->resources->GetSprite("arrowIcon")->Render(x + 350, y + 220);
+	//Draw next page/OK icon if enough time has elapsed
+	if (currentPage > 1 || smh->getRealTime() - timePageOpened > TEXT_INPUT_DELAY) {
+		if (currentPage == numPages) 
+		{
+			smh->resources->GetSprite("okIcon")->Render(x + 350, y + 220);
+		}
+		else
+		{
+			smh->resources->GetSprite("arrowIcon")->Render(x + 350, y + 220);
+		}
 	}
 }
 
@@ -281,7 +283,8 @@ bool TextBox::update(float dt)
 	}
 
 	//Input to close the box or go to the next dialog page
-	if (smh->input->keyPressed(INPUT_ATTACK) && smh->getRealTime() - timePageOpened > 0.3) {
+	if (smh->input->keyPressed(INPUT_ATTACK) && 
+		(smh->getRealTime() - timePageOpened > TEXT_INPUT_DELAY || currentPage > 1) ) {
 		timePageOpened = smh->getRealTime();
 
 		//Last page - close the box

@@ -333,7 +333,7 @@ void Environment::loadArea(int id, int from, bool playMusic) {
 			int newItem = atoi(threeBuffer);
 			
 			//If health item or mana item, ignore the change manager so that they don't go away
-			if (newItem == HEALTH_ITEM || MANA_ITEM) {
+			if (newItem == HEALTH_ITEM || newItem == MANA_ITEM) {
 				item[col][row] = newItem;
 			} else {
 
