@@ -1,5 +1,4 @@
 === Programming To Do ===
- * The rest of the monocle man advice topics
  * Make a small delay in text boxes so you don't accidentally skip some text
  * After the boss fights are over, the bosses still damage you.  Also other external objects (flames in Phyrebawz2, projectiles in Barvinoid) will still exist and hurt you.
  * The Ents can still see Smiley when he has Tut's mask on.
@@ -44,6 +43,8 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Advice topics are now complete||12/30/10||ETI||
+||Health and mana pickups now respawn when re-entering an area||12/30/10||ETI||
 ||Fixed the stained glass windows in all the game graphics||12/27/10||RMM||
 ||Added balloon and botonoid generator graphics||12/27/10||RMM||
 ||Added a bunch of sounds for Calypso/Brain Fungus/Fenwar battles||12/27/10||RMM||
