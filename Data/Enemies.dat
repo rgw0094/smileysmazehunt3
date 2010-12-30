@@ -1370,6 +1370,7 @@ numEnemies="103"
 75Land=      "T"
 75SWater=    "T"
 75Chases=    "T"
+75ImmuneLightning = "T"
 
 ;Ice cream cone, charger
 76Name=     "Coldheart"
@@ -1384,6 +1385,7 @@ numEnemies="103"
 76Land=      "T"
 76SWater=    "T"
 76Chases=    "T"
+76ImmuneLightning = "T"
 
 ;Ice cream cone, ranged
 77Name=     "Evilheart"
@@ -1552,6 +1554,7 @@ numEnemies="103"
 85PDamage=   "50"
 85PSpeed=    "500"
 85PType=     "15"
+85ImmuneLightning = "T"
 
 ;Herbanoid
 86Name=      "Herbanoid"
@@ -1572,6 +1575,7 @@ numEnemies="103"
 86PDamage=   "50"
 86PSpeed=    "500"
 86PType=     "15"
+86ImmuneLightning = "T"
 
 ;Blue alien guy
 87Name=      "Blue Alien Guy"
@@ -1674,6 +1678,7 @@ numEnemies="103"
 92Variable1= "84"
 92Variable2= "85"
 92Variable3= "86"
+92ImmuneLightning = "T"
 
 ;Botonoid spawner 2
 93OneGraphic="T"
@@ -1692,6 +1697,7 @@ numEnemies="103"
 93Variable1= "85"
 93Variable2= "86"
 93Variable3= "84"
+93ImmuneLightning = "T"
 
 ;Botonoid spawner 3
 94OneGraphic="T"
@@ -1710,6 +1716,7 @@ numEnemies="103"
 94Variable1= "86"
 94Variable2= "84"
 94Variable3= "85"
+94ImmuneLightning = "T"
 
 ;Spider
 95Name=      "Lyster"
@@ -1747,6 +1754,7 @@ numEnemies="103"
 96Variable2= "95"
 96Variable3= "97"
 96ImmuneFreeze="T"
+96ImmuneLightning = "T"
 
 ;Green croc
 97Name=      "K. Greene"
