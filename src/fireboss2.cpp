@@ -915,6 +915,9 @@ void FireBossTwo::resetFlameWalls() {
 void FireBossTwo::launchFlames(bool allFlames) {
 	int facing, gridX, gridY;
 	bool flamesLaunched = false;
+
+	if (state == FIREBOSS_FRIENDLY) return;
+
 	for (int i = 0; i < 8; i++) {
 
 		facing = flameLaunchers[i].facing;
