@@ -331,11 +331,18 @@ void Environment::loadArea(int id, int from, bool playMusic) {
 		for (int col = 0; col < areaWidth; col++) {
 			areaFile.read(threeBuffer,3);
 			int newItem = atoi(threeBuffer);
-			if (!smh->saveManager->isTileChanged(col, row)) {
-				if (newItem >= 16 && newItem < 32) {
-					tapestryManager->addTapestry(col, row, newItem);
-				} else {
-					item[col][row] = newItem;
+			
+			//If health item or mana item, ignore the change manager so that they don't go away
+			if (newItem == HEALTH_ITEM || MANA_ITEM) {
+				item[col][row] = newItem;
+			} else {
+
+				if (!smh->saveManager->isTileChanged(col, row)) {
+					if (newItem >= 16 && newItem < 32) {
+						tapestryManager->addTapestry(col, row, newItem);
+					} else {
+						item[col][row] = newItem;
+					}
 				}
 			}
 		}
