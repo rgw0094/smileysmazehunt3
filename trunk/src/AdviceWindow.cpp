@@ -117,7 +117,7 @@ bool AdviceWindow::isAdviceAvailable(int advice)
 		case AdviceTypes::ADVICE_BOMB:
 			return smh->saveManager->hasAbility[SILLY_PAD];
 		case AdviceTypes::ADVICE_SMILELET:
-			return (smh->saveManager->hasAbility[TUTS_MASK] && smh->saveManager->hasVisitedArea[CASTLE_OF_EVIL]);
+			return (smh->saveManager->hasAbility[TUTS_MASK]);
 		default:
 			return false;
 	}
