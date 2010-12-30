@@ -13,6 +13,7 @@
  * The damage of the fire/orbs never goes up in the inventory.  Also without some sort of comparison to how much damage the tongue deals, this number means nothing.  Likewise with the mana cost of the magic items displayed in the inventory - we need to display the total mana points Smiley has for it to be of any use.
  * After picking up 1 mana pickup, your mana begins recharging instantly.  This is bad since then there is little incentive to ever pick up more than one since your mana will recharge anyways, and ends up giving you way too much mana.  Then running around owning everyone with orbs is too easy to do.
  * Phyrebawz's head when turned to the right isn't aligned correctly (you should see a line of white pixels.)
+ * Ice hop should center Smiley on tile
 
 === Sounds To Add ===
 
