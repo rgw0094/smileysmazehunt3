@@ -1,6 +1,4 @@
 === Programming To Do ===
- * After the boss fights are over, the bosses still damage you.  Also other external objects (flames in Phyrebawz2, projectiles in Barvinoid) will still exist and hurt you.
- * The Ents can still see Smiley when he has Tut's mask on.
  * I suppose we shouldn't call it Calypso's Conservatory anymore?
  * The end credits have a bunch of things to fix: Lord Phyrebawz is misspelled, the Gayass Ghost, sentinels, and gumdrops are not in the game (but we could add the gumdrops?), Mr. Bigglesworth is actually called a Walkin'-Bomb, buzzard has no wings, most of the enemies are looking left but would look better looking forward, Barvinoid is missing, Bartli/BrianFungus/Magnitogorsk are missing parts of their bodies.
  * Add the thud noises when you lick a boss.
@@ -12,6 +10,7 @@
  * The damage of the fire/orbs never goes up in the inventory.  Also without some sort of comparison to how much damage the tongue deals, this number means nothing.  Likewise with the mana cost of the magic items displayed in the inventory - we need to display the total mana points Smiley has for it to be of any use.
  * After picking up 1 mana pickup, your mana begins recharging instantly.  This is bad since then there is little incentive to ever pick up more than one since your mana will recharge anyways, and ends up giving you way too much mana.  Then running around owning everyone with orbs is too easy to do.
  * Ice hop should center Smiley on tile
+ * After the boss fights are over, the bosses still damage you.  Also other external objects (flames in Phyrebawz2, projectiles in Barvinoid) will still exist and hurt you.
 
 === Sounds To Add ===
 
@@ -42,6 +41,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Ents can no longer see Smiley when he's invisible||12/20/2010||ETI||
 ||Increased input delay in text boxes, and made it only apply to first page.||12/30/10||ETI||
 ||Advice topics are now complete||12/30/10||ETI||
 ||Health and mana pickups now respawn when re-entering an area||12/30/10||ETI||
