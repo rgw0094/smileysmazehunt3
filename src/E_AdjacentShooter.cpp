@@ -49,7 +49,8 @@ void E_AdjacentShooter::update(float dt) {
 	
 
 	if (smh->timePassedSince(lastRangedAttack) >= rangedAttackDelay &&
-		Util::distance(x,y,smh->player->x,smh->player->y) <=  weaponRange) {
+		Util::distance(x,y,smh->player->x,smh->player->y) <=  weaponRange && 
+		!smh->player->isInvisible() ) {
 	
 		//if smiley is in same x grid
 		if (gridX == smh->player->gridX) {
