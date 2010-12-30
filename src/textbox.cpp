@@ -133,6 +133,8 @@ void TextBox::setAdvice(int _advice)
 		numPages = 4;
 	else if (advice == AdviceTypes::ADVICE_BOMB)
 		numPages = 4;
+	else if (advice == AdviceTypes::ADVICE_SMILELET)
+		numPages = 4;
 	else
 		numPages = 1;
 }
@@ -352,6 +354,8 @@ bool TextBox::doClose()
 			smh->popupMessageManager->showNewAdvice(AdviceTypes::ADVICE_FRISBEE);
 		} else if (ability == SILLY_PAD) {
 			smh->popupMessageManager->showNewAdvice(AdviceTypes::ADVICE_BOMB);
+		} else if (ability == TUTS_MASK) {
+			smh->popupMessageManager->showNewAdvice(AdviceTypes::ADVICE_SMILELET);
 		}
 
 	//After closing advice, go back to the advice menu
@@ -477,6 +481,14 @@ std::string TextBox::getAdviceText(int advice, int page) {
 				case 2: return "Release a Walkin' Bomb by stepping on the tile with his face on it.";
 				case 3: return "The Walkin' Bomb will continue to walk until he encounters an obstacle, then will turn LEFT and will walk as far as he can once again.";
 				case 4: return "You can guide the Walkin' Bomb by placing Silly Pads in front of him. Remember that he turns LEFT! Then, when you're ready for him to explode, simply step within his red circle of vision.";
+			}
+		case AdviceTypes::ADVICE_SMILELET:
+			switch (page)
+			{
+				case 1: return "In the Castle of Evil, you may encounter tiny spherifaceous called Smilelets.";
+				case 2: return "These Smilelets are quite skittish, and will run away if either you or they get hit.";
+				case 3: return "In addition, they are afraid of normal sized spherifaceous, so make sure you use your newly found Shrink ability to earn their trust.";
+				case 4: return "If you get 5 Smilelets to a sad flower, they will make the flower happy, and this will let you proceed on with your quest for your lover!";
 			}
 		default: return "advice";
 	}
