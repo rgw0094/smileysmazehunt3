@@ -69,7 +69,7 @@ const char *GameData::getAreaName(int area) {
 	} else if (area == DEBUG_AREA) {
 		return "Debug Area";
 	} else if (area == CONSERVATORY) {
-		return "Calypso's Conservatory";
+		return "The Barvintory";
 	} else {
 		return "Dickens";
 	}

@@ -47,8 +47,8 @@ public:
 	void updateFireNova(float dt);
 
 	void addFireBall(float x, float y, float angle, float speed, bool homing, bool explodes);
-	void drawFireBallsBeforePhyrebozz(float dt);
-	void drawFireBallsAfterPhyrebozz(float dt);
+	void drawFireBallsBeforePhyrebawz(float dt);
+	void drawFireBallsAfterPhyrebawz(float dt);
 	void updateFireBalls(float dt);
 	void resetFireBalls();
 	

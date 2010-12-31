@@ -80,7 +80,7 @@ FireBoss::~FireBoss() {
 	killOrbs();
 	delete fireNova;
 	delete fenwarWarp;
-	smh->resources->Purge(ResourceGroups::Phyrebozz);
+	smh->resources->Purge(ResourceGroups::Phyrebawz);
 }
 
 
@@ -105,19 +105,19 @@ void FireBoss::draw(float dt) {
 	drawOrbs(dt);
 
 	//Draw the boss' main sprite
-	smh->resources->GetAnimation("phyrebozz")->SetFrame(facing);
-	smh->resources->GetAnimation("phyrebozz")->Render(smh->getScreenX(x),smh->getScreenY(y+floatY));
+	smh->resources->GetAnimation("Phyrebawz")->SetFrame(facing);
+	smh->resources->GetAnimation("Phyrebawz")->Render(smh->getScreenX(x),smh->getScreenY(y+floatY));
 
 	//Draw the boss' mouth
 	if (facing == DOWN) {
-		smh->resources->GetAnimation("phyrebozzDownMouth")->Update(dt);
-		smh->resources->GetAnimation("phyrebozzDownMouth")->Render(smh->getScreenX(x-(97/2)+34),smh->getScreenY(y-(158/2)+14+floatY));
+		smh->resources->GetAnimation("PhyrebawzDownMouth")->Update(dt);
+		smh->resources->GetAnimation("PhyrebawzDownMouth")->Render(smh->getScreenX(x-(97/2)+34),smh->getScreenY(y-(158/2)+14+floatY));
 	} else if (facing == LEFT) {
-		smh->resources->GetAnimation("phyrebozzLeftMouth")->Update(dt);
-		smh->resources->GetAnimation("phyrebozzLeftMouth")->Render(smh->getScreenX(x-(97/2)+36),smh->getScreenY(y-(158/2)+12+floatY));
+		smh->resources->GetAnimation("PhyrebawzLeftMouth")->Update(dt);
+		smh->resources->GetAnimation("PhyrebawzLeftMouth")->Render(smh->getScreenX(x-(97/2)+36),smh->getScreenY(y-(158/2)+12+floatY));
 	} else if (facing == RIGHT) {
-		smh->resources->GetAnimation("phyrebozzRightMouth")->Update(dt);
-		smh->resources->GetAnimation("phyrebozzRightMouth")->Render(smh->getScreenX(x-(97/2)+34),smh->getScreenY(y-(158/2)+12+floatY));
+		smh->resources->GetAnimation("PhyrebawzRightMouth")->Update(dt);
+		smh->resources->GetAnimation("PhyrebawzRightMouth")->Render(smh->getScreenX(x-(97/2)+34),smh->getScreenY(y-(158/2)+12+floatY));
 	}
 	
 	//Draw fire nova attack
@@ -201,10 +201,10 @@ bool FireBoss::update(float dt) {
 				increaseAlpha = true;
 			}
 		}
-		smh->resources->GetAnimation("phyrebozz")->SetColor(ARGB(255,alpha,alpha,alpha));
-		smh->resources->GetAnimation("phyrebozzDownMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
-		smh->resources->GetAnimation("phyrebozzRightMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
-		smh->resources->GetAnimation("phyrebozzLeftMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("Phyrebawz")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("PhyrebawzDownMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("PhyrebawzRightMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("PhyrebawzLeftMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
 	}
 
 	//Update orbs
@@ -277,9 +277,9 @@ bool FireBoss::update(float dt) {
 	if (state != FIREBOSS_FRIENDLY && !flashing) {
 		for (int i = 0; i < 3; i++) {
 			if (smh->player->getTongue()->testCollision(collisionBoxes[i]) && smh->timePassedSince(lastHitByTongue) >= 0.5) {
-				smh->resources->GetAnimation("phyrebozzDownMouth")->Play();
-				smh->resources->GetAnimation("phyrebozzLeftMouth")->Play();
-				smh->resources->GetAnimation("phyrebozzRightMouth")->Play();
+				smh->resources->GetAnimation("PhyrebawzDownMouth")->Play();
+				smh->resources->GetAnimation("PhyrebawzLeftMouth")->Play();
+				smh->resources->GetAnimation("PhyrebawzRightMouth")->Play();
 				lastHitByTongue = smh->getGameTime();
 				health -= smh->player->getDamage();
 				if (health > 0.0f) {
@@ -298,10 +298,10 @@ bool FireBoss::update(float dt) {
 	if (flashing && smh->timePassedSince(startedFlashing) > FLASH_DURATION) {
 		alpha = 255;
 		flashing = false;
-		smh->resources->GetAnimation("phyrebozz")->SetColor(ARGB(255,alpha,alpha,alpha));
-		smh->resources->GetAnimation("phyrebozzDownMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
-		smh->resources->GetAnimation("phyrebozzLeftMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
-		smh->resources->GetAnimation("phyrebozzRightMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("Phyrebawz")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("PhyrebawzDownMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("PhyrebawzLeftMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("PhyrebawzRightMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
 	}
 
 	//Check collision with Smiley
@@ -341,8 +341,8 @@ bool FireBoss::update(float dt) {
 		y += 200.0f*dt;
 		alpha -= 155.0f*dt;
 		facing = DOWN;
-		smh->resources->GetAnimation("phyrebozz")->SetColor(ARGB(alpha,255,255,255));
-		smh->resources->GetAnimation("phyrebozzDownMouth")->SetColor(ARGB(alpha,255,255,255));
+		smh->resources->GetAnimation("Phyrebawz")->SetColor(ARGB(alpha,255,255,255));
+		smh->resources->GetAnimation("PhyrebawzDownMouth")->SetColor(ARGB(alpha,255,255,255));
 
 		//Done running away
 		if (alpha < 0.0f) {

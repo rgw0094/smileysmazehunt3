@@ -108,7 +108,7 @@ FireBossTwo::~FireBossTwo() {
 	resetFlameWalls();
 	resetFireBalls();
 	delete fireNova;
-	smh->resources->Purge(ResourceGroups::Phyrebozz);
+	smh->resources->Purge(ResourceGroups::Phyrebawz);
 }
 
 
@@ -119,25 +119,25 @@ void FireBossTwo::draw(float dt) {
 
 	drawFlameLaunchers(dt);
 
-	drawFireBallsBeforePhyrebozz(dt);
+	drawFireBallsBeforePhyrebawz(dt);
 
 	//Draw the boss' main sprite
-	smh->resources->GetAnimation("phyrebozz")->SetFrame(facing);
-	smh->resources->GetAnimation("phyrebozz")->Render(smh->getScreenX(x),smh->getScreenY(y+floatY));
+	smh->resources->GetAnimation("Phyrebawz")->SetFrame(facing);
+	smh->resources->GetAnimation("Phyrebawz")->Render(smh->getScreenX(x),smh->getScreenY(y+floatY));
 
 	//Draw the boss' mouth
 	if (facing == DOWN) {
-		smh->resources->GetAnimation("phyrebozzDownMouth")->Update(dt);
-		smh->resources->GetAnimation("phyrebozzDownMouth")->Render(smh->getScreenX(x-(97/2)+34),smh->getScreenY(y-(158/2)+14+floatY));
+		smh->resources->GetAnimation("PhyrebawzDownMouth")->Update(dt);
+		smh->resources->GetAnimation("PhyrebawzDownMouth")->Render(smh->getScreenX(x-(97/2)+34),smh->getScreenY(y-(158/2)+14+floatY));
 	} else if (facing == LEFT) {
-		smh->resources->GetAnimation("phyrebozzLeftMouth")->Update(dt);
-		smh->resources->GetAnimation("phyrebozzLeftMouth")->Render(smh->getScreenX(x-(97/2)+36),smh->getScreenY(y-(158/2)+12+floatY));
+		smh->resources->GetAnimation("PhyrebawzLeftMouth")->Update(dt);
+		smh->resources->GetAnimation("PhyrebawzLeftMouth")->Render(smh->getScreenX(x-(97/2)+36),smh->getScreenY(y-(158/2)+12+floatY));
 	} else if (facing == RIGHT) {
-		smh->resources->GetAnimation("phyrebozzRightMouth")->Update(dt);
-		smh->resources->GetAnimation("phyrebozzRightMouth")->Render(smh->getScreenX(x-(97/2)+34),smh->getScreenY(y-(158/2)+12+floatY));
+		smh->resources->GetAnimation("PhyrebawzRightMouth")->Update(dt);
+		smh->resources->GetAnimation("PhyrebawzRightMouth")->Render(smh->getScreenX(x-(97/2)+34),smh->getScreenY(y-(158/2)+12+floatY));
 	}
 
-	drawFireBallsAfterPhyrebozz(dt);
+	drawFireBallsAfterPhyrebawz(dt);
 	
 	fireNova->MoveTo(smh->getScreenX(x), smh->getScreenY(y), true);
 	fireNova->Update(dt);
@@ -171,14 +171,14 @@ bool FireBossTwo::update(float dt) {
 
 	//When the player enters his chamber shut the doors and start the intro dialogue
 	if (state == FIREBOSS_INACTIVE && !startedIntroDialogue) {
-		//When Phyrebozz's group is triggered start the intro dialogue
+		//When Phyrebawz's group is triggered start the intro dialogue
 		if (smh->enemyGroupManager->groups[groupID].triggeredYet) {
 			smh->windowManager->openDialogueTextBox(-1, TEXT_FIREBOSS2_INTRO);
 			startedIntroDialogue = true;
 			smh->soundManager->fadeOutMusic();
 			facing = UP;
 		} else {
-			//Before Phyrebozz is triggered there is no need to update anything!
+			//Before Phyrebawz is triggered there is no need to update anything!
 			return false;
 		}
 
@@ -210,10 +210,10 @@ bool FireBossTwo::update(float dt) {
 				increaseAlpha = true;
 			}
 		}
-		smh->resources->GetAnimation("phyrebozz")->SetColor(ARGB(255,alpha,alpha,alpha));
-		smh->resources->GetAnimation("phyrebozzDownMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
-		smh->resources->GetAnimation("phyrebozzRightMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
-		smh->resources->GetAnimation("phyrebozzLeftMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("Phyrebawz")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("PhyrebawzDownMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("PhyrebawzRightMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("PhyrebawzLeftMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
 	}
 
 	updateFlameWalls(dt);
@@ -256,10 +256,10 @@ bool FireBossTwo::update(float dt) {
 	if (flashing && smh->timePassedSince(startedFlashing) > FLASH_DURATION) {
 		alpha = 255;
 		flashing = false;
-		smh->resources->GetAnimation("phyrebozz")->SetColor(ARGB(255,alpha,alpha,alpha));
-		smh->resources->GetAnimation("phyrebozzDownMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
-		smh->resources->GetAnimation("phyrebozzLeftMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
-		smh->resources->GetAnimation("phyrebozzRightMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("Phyrebawz")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("PhyrebawzDownMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("PhyrebawzLeftMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
+		smh->resources->GetAnimation("PhyrebawzRightMouth")->SetColor(ARGB(255,alpha,alpha,alpha));
 	}
 
 	//Check collision with Smiley
@@ -289,8 +289,8 @@ bool FireBossTwo::update(float dt) {
 
 		//Stuff fades out
 		alpha -= 155.0f*dt;
-		smh->resources->GetAnimation("phyrebozz")->SetColor(ARGB(alpha,255,255,255));
-		smh->resources->GetAnimation("phyrebozzDownMouth")->SetColor(ARGB(alpha,255,255,255));
+		smh->resources->GetAnimation("Phyrebawz")->SetColor(ARGB(alpha,255,255,255));
+		smh->resources->GetAnimation("PhyrebawzDownMouth")->SetColor(ARGB(alpha,255,255,255));
 		smh->resources->GetSprite("flameLauncher")->SetColor(ARGB(alpha,255.0,255.0,255.0));
 		
 
@@ -349,13 +349,13 @@ void FireBossTwo::updateFireNova(float dt) {
 }
 
 /**
- * Updates stuff based on phyrebozz' current state
+ * Updates stuff based on Phyrebawz' current state
  */
 bool FireBossTwo::updateState(float dt) {
 
 	//---First Battle--------------------------------
-	// When you first engage Phyrebozz he floats around and shoots homing orbs at
-	// Smiley that he needs to use the reflection shield to avoid. Once Phyrebozz
+	// When you first engage Phyrebawz he floats around and shoots homing orbs at
+	// Smiley that he needs to use the reflection shield to avoid. Once Phyrebawz
 	// takes enough damage he says his vitamins line and moves on to the next stage.
 	//-----------------------------------------------
 	if (state == FIREBOSS_FIRST_BATTLE) {
@@ -403,7 +403,7 @@ bool FireBossTwo::updateState(float dt) {
 	}
 
 	//---Battle State--------------------------------
-	// Phyrebozz floats over the lava and shoots shit at Smiley. From here he launches 
+	// Phyrebawz floats over the lava and shoots shit at Smiley. From here he launches 
 	// into other attacks.
 	//-----------------------------------------------
 	if (state == FIREBOSS_BATTLE) {
@@ -439,7 +439,7 @@ bool FireBossTwo::updateState(float dt) {
 	}
 
 	//---Leet Attack 1-------------------------------
-	// Phyrebozz launches a ring of equally spaced orbs which rotates with each launch.
+	// Phyrebawz launches a ring of equally spaced orbs which rotates with each launch.
 	//------------------------------------------------
 	if (state == FIREBOSS_LEET_ATTACK1) {
 
@@ -461,7 +461,7 @@ bool FireBossTwo::updateState(float dt) {
 	}
 
 	//---Leet Attack 2-----------------------------------
-	// Phyrebozz shoots a stream of fireballs at Smiley
+	// Phyrebawz shoots a stream of fireballs at Smiley
 	//---------------------------------------------------
 	if (state == FIREBOSS_LEET_ATTACK2) {
 		
@@ -490,7 +490,7 @@ bool FireBossTwo::updateState(float dt) {
 }
 
 /** 
- * Changes Phyrebozz' state. Handles state transition stuff.
+ * Changes Phyrebawz' state. Handles state transition stuff.
  */
 void FireBossTwo::setState(int newState) {
 	
@@ -519,9 +519,9 @@ void FireBossTwo::doDamage(float damage, bool makeFlash) {
 	
 	if (makeFlash && flashing) return;
 
-	smh->resources->GetAnimation("phyrebozzDownMouth")->Play();
-	smh->resources->GetAnimation("phyrebozzLeftMouth")->Play();
-	smh->resources->GetAnimation("phyrebozzRightMouth")->Play();
+	smh->resources->GetAnimation("PhyrebawzDownMouth")->Play();
+	smh->resources->GetAnimation("PhyrebawzLeftMouth")->Play();
+	smh->resources->GetAnimation("PhyrebawzRightMouth")->Play();
 	health -= damage;
 	
 	if (health < 0.0) {
@@ -537,7 +537,7 @@ void FireBossTwo::doDamage(float damage, bool makeFlash) {
 		smh->soundManager->playSound("snd_fireBossHit");
 	}
 
-	//After the initial phase of the battle, when phyrebozz gets hit, launch flames
+	//After the initial phase of the battle, when Phyrebawz gets hit, launch flames
 	if (state > FIREBOSS_FIRST_BATTLE) {
 		launchFlames(false);
 	}
@@ -545,7 +545,7 @@ void FireBossTwo::doDamage(float damage, bool makeFlash) {
 }
 
 /**
- * Called when Phyrebozz is killed.
+ * Called when Phyrebawz is killed.
  */
 void FireBossTwo::die() {
 	smh->soundManager->playSound("snd_fireBossDie");
@@ -562,7 +562,7 @@ void FireBossTwo::die() {
 
 
 /**
- * Starts phyrebozz moving toward a point at the specified speed.
+ * Starts Phyrebawz moving toward a point at the specified speed.
  */ 
 void FireBossTwo::startMoveToPoint(int _x, int _y, float speed) {
 	timeStartedMove = smh->getGameTime();
@@ -731,9 +731,9 @@ void FireBossTwo::updateFireBalls(float dt) {
 
 
 /**
- * Draw the fire balls that should appear behind phyrebozz.
+ * Draw the fire balls that should appear behind Phyrebawz.
  */
-void FireBossTwo::drawFireBallsBeforePhyrebozz(float dt) {
+void FireBossTwo::drawFireBallsBeforePhyrebawz(float dt) {
 	//Loop through the orbs
 	std::list<FireBall>::iterator i;
 	for (i = fireBallList.begin(); i != fireBallList.end(); i++) {
@@ -747,9 +747,9 @@ void FireBossTwo::drawFireBallsBeforePhyrebozz(float dt) {
 }
 
 /**
- * Draw the fire balls that should appear in front of phyrebozz.
+ * Draw the fire balls that should appear in front of Phyrebawz.
  */
-void FireBossTwo::drawFireBallsAfterPhyrebozz(float dt) {
+void FireBossTwo::drawFireBallsAfterPhyrebawz(float dt) {
 	//Loop through the orbs
 	std::list<FireBall>::iterator i;
 	for (i = fireBallList.begin(); i != fireBallList.end(); i++) {
