@@ -1054,12 +1054,12 @@ Sprite smileysHat {
 ;********************************************
 ;******** CREDITS (Resource Group 11) *******
 ;********************************************
-Texture creditsPhyrebozzTx {
+Texture creditsPhyrebawzTx {
  filename="Graphics/fireboss.png"
  resgroup=11
 }
-Sprite creditsPhyrebozz {
- texture=creditsPhyrebozzTx
+Sprite creditsPhyrebawz {
+ texture=creditsPhyrebawzTx
  rect=0,0,97,157
  hotspot=46,79
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
@@ -1904,14 +1904,14 @@ Sound snd_CornwallisGroundSpike {
 }
 
 ;**************************************************
-;****** LORD PHYREBOZZ (Resource Group 100) *******
+;****** LORD PHYREBAWZ (Resource Group 100) *******
 ;**************************************************
-Texture phyrebozzTx {
+Texture phyrebawzTx {
  filename="Graphics/fireboss.png"
  resgroup=100
 }
-Animation phyrebozz {
- texture=phyrebozzTx
+Animation phyrebawz {
+ texture=phyrebawzTx
  rect=0,0,97,158
  frames=4
  fps=20.0
@@ -1920,8 +1920,8 @@ Animation phyrebozz {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=100
 }
-Animation phyrebozzDownMouth {
- texture=phyrebozzTx
+Animation phyrebawzDownMouth {
+ texture=phyrebawzTx
  rect=0,158,32,17
  frames=4
  fps=12.0
@@ -1930,8 +1930,8 @@ Animation phyrebozzDownMouth {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=100
 }
-Animation phyrebozzLeftMouth {
- texture=phyrebozzTx
+Animation phyrebawzLeftMouth {
+ texture=phyrebawzTx
  rect=0,175,27,13
  frames=4
  fps=12.0
@@ -1940,8 +1940,8 @@ Animation phyrebozzLeftMouth {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=100
 }
-Animation phyrebozzRightMouth {
- texture=phyrebozzTx
+Animation phyrebawzRightMouth {
+ texture=phyrebawzTx
  rect=0,188,27,13
  frames=4
  fps=12.0
@@ -1951,7 +1951,7 @@ Animation phyrebozzRightMouth {
  resgroup=100
 }
 Sprite flameLauncher {
- texture=phyrebozzTx
+ texture=phyrebawzTx
  rect=129,158,64,64
  hotspot=32,32
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE

@@ -155,8 +155,8 @@ void CreditsScreen::init() {
 		newBoss.x = 512.0;
 
 		if (i == 0) {
-			newBoss.name = "Load Phyrebozz";
-			newBoss.graphic = smh->resources->GetSprite("creditsPhyrebozz");
+			newBoss.name = "Load Phyrebawz";
+			newBoss.graphic = smh->resources->GetSprite("creditsPhyrebawz");
 		} else if (i == 1) {
 			newBoss.name = "Portly Penguin";
 			newBoss.graphic = smh->resources->GetSprite("creditsPortlyPenguin");

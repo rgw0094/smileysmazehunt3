@@ -79,7 +79,7 @@ public:
 	static const int Cinematic= 12;
 	static const int WorldMap = 13;
 	static const int Sounds = 14;
-	static const int Phyrebozz = 100;
+	static const int Phyrebawz = 100;
 	static const int PortlyPenguin = 101;
 	static const int Garmborn = 102;
 	static const int Cornwallis = 103;
