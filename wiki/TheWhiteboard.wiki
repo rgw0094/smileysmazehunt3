@@ -40,7 +40,7 @@
 
 ===Done===
 ||Item||Date||Done By||
-||Ents can no longer see Smiley when he's invisible||12/20/10||ETI||
+||Ents can no longer see Smiley when he's invisible||12/30/10||ETI||
 ||Increased input delay in text boxes, and made it only apply to first page.||12/30/10||ETI||
 ||Advice topics are now complete||12/30/10||ETI||
 ||Health and mana pickups now respawn when re-entering an area||12/30/10||ETI||
