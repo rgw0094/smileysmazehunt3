@@ -648,7 +648,7 @@ NPC250-10 = "Now I'm going to go cry."
 ;==============================================OTHER SHIT=====================================
 NPC900Name = "Monocle Man"
 NPC900Pages = "1"
-NPC900-1 = "Hey! You there! (Press space to go to the next page!)"
+NPC900-1 = "Hey! You there! (Press attack(Space) to go to the next page!)"
 NPC901Name = "Monocle Man"
 NPC901Pages = "5"
 NPC901-1 = "Excuse me, I can't help but think that you are about to go on a great adventure."
