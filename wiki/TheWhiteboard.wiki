@@ -34,6 +34,7 @@
 * Calypso is way too hard. Some of his attacks are too frustrating to try to dodge
 * The ending of the Pools of the Dead is terrible. There needs to be way fewer enemies, or perhaps make those enemies have significantly less health. It was taking me like 10 hits per enemy to kill them.
 * Somewhere in the realm of despair 
+* The REFLECTION SHIELD costs way too much mana.
 
 === Suggestions from testers ===
  * Monocle man's advice goes away too quickly.  My dad was testing using a game pad so didn't even have the keyboard out, and by the time he got to press N the message was gone.  Could we just change it so that you press "Attack" instead?
