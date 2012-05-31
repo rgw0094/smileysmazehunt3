@@ -16,7 +16,7 @@
 
 === Graphics To Do ===
 
-* Hover icon for the inventory
+ * Hover icon for the inventory
 
 === Bugs ===
  * When starting, some Smiley faces will drop from the health bar as if Smiley was just hit
