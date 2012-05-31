@@ -10,6 +10,7 @@
  * After picking up 1 mana pickup, your mana begins recharging instantly.  This is bad since then there is little incentive to ever pick up more than one since your mana will recharge anyways, and ends up giving you way too much mana.  Then running around owning everyone with orbs is too easy to do.
  * Ice hop should center Smiley on tile
  * After the boss fights are over, the bosses still damage you.  Also other external objects (flames in Phyrebawz2, projectiles in Barvinoid) will still exist and hurt you.
+ * Add a little BLURB to the controls window to discretely let the user know they can use gamepads
 
 === Sounds To Add ===
 
