@@ -19,7 +19,6 @@
  * Hover icon for the inventory
 
 === Bugs ===
- * When loading in the Forest of Fungoria, Brian Fungus' mushrooms all blow up at once
  * When starting, some Smiley faces will drop from the health bar as if Smiley was just hit
  * 119,156 at Tut: I got a timed switch to stay switched on the wrong side. I was hitting both of the switches in that area repeatedly and quickly when it happened. Update 8/26/09: Cannot reproduce this. Oh well -- if it happens in-game, the player is screwed.
  * Time played display is messed up
@@ -55,6 +54,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fixed glitch where mushrooms in Brian Fungus' lair cause explosion sound at map load||6/1/12||ETI||
 ||Added some sounds to Brian Fungus||6/1/12||ETI||
 ||Ents can no longer see Smiley when he's invisible||12/30/10||ETI||
 ||Increased input delay in text boxes, and made it only apply to first page.||12/30/10||ETI||
