@@ -1,7 +1,7 @@
 === Programming To Do ===
  * The end credits have a bunch of things to fix: the Gayass Ghost, sentinels, and gumdrops are not in the game (but we could add the gumdrops?), Mr. Bigglesworth is actually called a Walkin'-Bomb, buzzard has no wings, most of the enemies are looking left but would look better looking forward, Barvinoid is missing, Bartli/BrianFungus/Magnitogorsk are missing parts of their bodies.
  * Add the thud noises when you lick a boss.
- * Add new noises to the Brian Fungus / Fenwar / Calypso battles.
+ * Add new noises to the Fenwar / Calypso battles.
  * During the close-up gross licking of Fenwar when he dies, it plays the title theme but I think silence would make the moment more effective.
  * Some of the gem totals in the map are incorrect (SEE LOOT SUMMARY)
  * Implement the goblin using a balloon instead of a clown head.
@@ -54,6 +54,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Added some sounds to Brian Fungus||6/1/12||ETI||
 ||Ents can no longer see Smiley when he's invisible||12/30/10||ETI||
 ||Increased input delay in text boxes, and made it only apply to first page.||12/30/10||ETI||
 ||Advice topics are now complete||12/30/10||ETI||
