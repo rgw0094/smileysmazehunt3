@@ -27,7 +27,14 @@
  * A spider dropping blimp randomly disappeared.  It was on its way down in its oscillations and disappeared on what seemed to be its lowest point if that has any relevance.  Also I was just about to lick it and may have just licked it before it went away.  I couldn't reproduce this after many (30 or so) tries.
  * In the Castle of Evil, suddenly a lot of the enemies had small "ice breath" icons next to them.  In particular, the proennoks, beakers, blimps, and gators did, while the goblins, turrets, spiders, protectors, and spikey ball guys did not.  I wasn't using the ice breath (nor did I use it at all during the play.)  Also, the icons went away when I opened the inventory, but would come back once I returned to the game.  I posted 3 SS's in the downloads section.  Then, once I equipped the ice breath and used it (I'm not sure which of the two caused this) everything went back to normal.
 
-
+=== Achievements to add ===
+ * Bare Minimum: Defeat Cornwallis without killing any Cactlets on normal or higher
+ * Can't Touch This: Defeat 50 enemies in a row without taking any damage
+ * You Only Live Once: Beat the game on normal or higher without dying
+ * Victory with an Asterisk: beat the game on easy or very easy difficulty
+ * Friend of Smiley: beat the game on normal difficulty
+ * Friends with Benefits: beat the game on hard difficulty
+ * Smiley Master: beat the game on very hard difficulty
 
 === Balance Issues ===
  * Tut is a bit too easy.  You can just mass flame breath him and kill him easily in 2 cycles.  I think that after you damage him a set amount (say like 25% or 20% of his total life) that he should close his casket up just to assure that the battle isn't trivial.  Also for Bartli we should do something similar.  I suggest that after she craps out a Bartlet that she immediately moves onto her next phase.
