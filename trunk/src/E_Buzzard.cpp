@@ -54,6 +54,13 @@ void E_Buzzard::draw(float dt) {
 
 void E_Buzzard::update(float dt) 
 {
+	//If we are being knocked back, let the base class handle movement!
+	if (knockback)
+	{
+		move(dt);
+		return;
+	}
+
 	if (distanceFromPlayer() <= BUZZARD_ATTACK_RANGE) 
 	{
 		buzzardState = BUZZARD_FLYING;
