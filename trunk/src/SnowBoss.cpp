@@ -251,6 +251,7 @@ bool SnowBoss::update(float dt) {
 		if (numFishLaunched >= NUM_FISH_VOLLEYS) {
 			numFishLaunched=0;
 			enterState(SNOWBOSS_BEGIN_SLIDING);
+			
 		}
 	} //end if throwing fish
 
@@ -263,6 +264,9 @@ bool SnowBoss::update(float dt) {
 			smh->lootManager->addLoot(LOOT_MANA,x,y,NULL);
 
 			enterState(SNOWBOSS_SLIDING);
+
+			//play a sound
+			smh->soundManager->playSound("snd_PortlySlide");
 		}
 	} //end if begin sliding
 	
@@ -339,6 +343,9 @@ bool SnowBoss::update(float dt) {
 			if (x < gridX*64) endX=x+192;
 
 			endY=y-64;
+
+			//Play a sound
+			smh->soundManager->playSound("snd_PortlyJumpOut");
 		}
 	} //end if underwater
 
@@ -355,6 +362,9 @@ bool SnowBoss::update(float dt) {
 			iceNova->MoveTo(smh->getScreenX(xNova),smh->getScreenY(yNova));
 			iceNova->Fire();
 			enterState(SNOWBOSS_WADDLING);
+			
+			//Play a sound for launching the nova
+			smh->soundManager->playSound("snd_FreezeShoot");
 		}
 
 	}

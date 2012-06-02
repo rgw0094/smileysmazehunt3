@@ -1872,7 +1872,20 @@ Sound snd_CalypsoWobble {
  filename="wobble.mp3"
  resgroup=14
 }
+Sound snd_SmileyFrozen {
+ filename="smileyfrozen.wav"
+ resgroup=14
+}
 
+Sound snd_PortlyJumpOut {
+ filename="portlyjumpout.mp3"
+ resgroup=14
+}
+
+Sound snd_PortlySlide {
+ filename="penguinslide.mp3"
+ resgroup=14
+}
 
 ;************************************************
 ;******** CORNWALLIS (Resource group 103 ********

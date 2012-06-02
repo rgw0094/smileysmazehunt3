@@ -271,6 +271,7 @@ bool FireBoss::update(float dt) {
 	if (state != FIREBOSS_FRIENDLY && state != FIREBOSS_INACTIVE && smh->timePassedSince(lastFireOrb) > FIREBALL_DELAY) {
 		addOrb(x,y-80+floatY);
 		lastFireOrb = smh->getGameTime();
+		smh->soundManager->playSound("snd_FlameShoot");
 	}
 
 	//Check collision with Smiley's tongue
