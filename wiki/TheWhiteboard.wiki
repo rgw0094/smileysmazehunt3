@@ -52,10 +52,10 @@
 === Suggestions from testers ===
  * Monocle man's advice goes away too quickly.  My dad was testing using a game pad so didn't even have the keyboard out, and by the time he got to press N the message was gone.  Could we just change it so that you press "Attack" instead?
  * Phyrebawz 1 is too hard.  I put some life in his battle area, which I think is an alright solution, but thought it was worth mentioning here.
- * Could we implement a continue option that doesn't force you to reload your game from the main menu?  After my dad died on Phyrebawz 40 times it became tiresome for him.
 
 ===Done===
 ||Item||Date||Done By||
+||Made the death effect a little QUICKER and when you hit enter it reloads your last save instead of going to the menu||6/2/12||RGW||
 ||Fixed gem totals on the world map||6/2/12||RGW||
 ||Made the cane activate instantly instead of arbitrarily having to use it for 3 seconds||6/1/12||RGW||
 ||Improved fire breath collision detection and made it knockback enemies close to Smiley||6/1/12||RGW||
