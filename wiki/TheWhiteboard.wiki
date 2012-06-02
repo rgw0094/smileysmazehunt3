@@ -20,7 +20,7 @@
  * Phyrebawz1 launching fire orbs (AA)
  * Phyrebawz2 launching fireballs (AA)
  * Portly Penguin when he launches himself at you
- * Portly Penguin when he hops out of the water
+ * Portly Penguin when he hops out of the water (portlyjumpout)
  * Portly Penguin when he releases his freezing ray (BB)
  * Bartli jumping (boing) 
  * Bartli landing (DD) (bartli hitting the ground)
