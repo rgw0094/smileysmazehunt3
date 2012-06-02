@@ -27,7 +27,7 @@
  * Bartli throwing candy (CC)
  * King Tut shooting lightning
  * King Tut firing beams of light
- * Barvinoid hovering (machine-like whimper or hiss)
+ * Barvinoid hovering
  * Barvinoid landing (DD)
  * Barvinoid opening/closing mouth
  * Barvinoid releasing enemies from mouth
