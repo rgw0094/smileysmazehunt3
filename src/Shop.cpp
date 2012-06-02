@@ -124,10 +124,16 @@ void Shop::purchaseItem(int item)
 		smh->saveManager->numUpgrades[item]++;
 		smh->soundManager->playSound("snd_purchaseUpgrade");
 
-		if (currentSelection == HEALTH) {
+		if (currentSelection == HEALTH) 
+		{
 			smh->player->setHealth(smh->player->getMaxHealth());
-		} else if (currentSelection == MANA) {
+		} else if (currentSelection == MANA) 
+		{
 			smh->player->setMana(smh->player->getMaxMana());
+		}
+		else if (currentSelection == DAMAGE)
+		{
+			smh->gameData->refreshAbilityData();
 		}
 	}
 }

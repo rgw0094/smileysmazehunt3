@@ -29,6 +29,9 @@ void WindowManager::openGameMenu()
  */
 void WindowManager::openGameMenu(int whichWindow) 
 {
+	//What a hack!
+	smh->gameData->refreshAbilityData();
+
 	if (whichWindow == INVENTORY)
 	{
 		Inventory *inventory = new Inventory();

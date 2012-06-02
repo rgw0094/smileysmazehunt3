@@ -15,7 +15,6 @@ class hgeRect;
 class Worm;
 class hgeRect;
 class GUI;
-class SmileyDamageDisplay;
 struct WormNode;
 
 //----------------------------------------------------------------
@@ -237,7 +236,6 @@ public:
 	int getAbilityInSlot(int slot);
 	void setAbilityInSlot(int ability, int slot);
 	void resetAbilities();
-	void addDamageDisplay(float health, float damage);
 
 private:
 
@@ -246,9 +244,6 @@ private:
 
 	AbilityStruct availableAbilities[3];
 	AbilityPoint abilityPoints[3];
-
-	SmileyDamageDisplay *smileyDamageDisplay;
-
 };
 
 //----------------------------------------------------------------
@@ -312,34 +307,6 @@ private:
 	//Used for calculating collision
 	float pointX, pointY, seperation, numPoints, testAngle;
 
-};
-
-//---------------------------------------------------------------
-//------------------- DAMAGE DISPLAY ----------------------------
-//----------------- Red Smiley faces falling from life bar ------
-//---------------------------------------------------------------
-struct SmileyDamageDisplayNode {
-	float x,y;
-	float timeBeganDisplay;
-	float damage;
-};
-
-class SmileyDamageDisplay {
-public:
-	SmileyDamageDisplay();
-	~SmileyDamageDisplay();
-
-	void update();
-	void draw();
-	void reset();
-	void addSmileyDamageDisplayNode(float x, float y, float timeBeganDisplay, float damage);
-
-private:
-	//Methods
-	
-	//Variables
-	std::list<SmileyDamageDisplayNode> theDamageDisplayNodes;
-	int numDisplaysActive;
 };
 
 #endif

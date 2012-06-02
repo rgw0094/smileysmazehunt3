@@ -27,8 +27,8 @@ Inventory::~Inventory() { }
 /**
  * Draw the inventory.
  */
-void Inventory::draw(float dt) {
-
+void Inventory::draw(float dt) 
+{
 	//Shade the screen behind the inventory
 	smh->drawScreenColor(Colors::BLACK, 100.0);
 
@@ -37,15 +37,20 @@ void Inventory::draw(float dt) {
 
 	//Ability grid
 	int drawX, drawY;
-	for (int i = 0; i < WIDTH; i++) {
-		for (int j = 0; j < HEIGHT; j++) {
-			if (smh->saveManager->hasAbility[j*4 + i]) {
+	for (int i = 0; i < WIDTH; i++) 
+	{
+		for (int j = 0; j < HEIGHT; j++) 
+		{
+			if (smh->saveManager->hasAbility[j*4 + i]) 
+			{
 				drawX = INVENTORY_X_OFFSET + 40 + i*SQUARE_SIZE + 32;
 				drawY = INVENTORY_Y_OFFSET + 40 + j*SQUARE_SIZE + 32;
 				smh->resources->GetAnimation("abilities")->SetFrame(j*4+i);
 				smh->resources->GetAnimation("abilities")->Render(drawX, drawY);
+				
 				//Draw the ability name and info if it is highlighted
-				if (cursorX == i && cursorY == j) {
+				if (cursorX == i && cursorY == j) 
+				{
 					smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET+170,INVENTORY_Y_OFFSET+275,HGETEXT_CENTER,"%s", smh->gameData->getAbilityInfo(j*4 + i).name);
 					smh->resources->GetFont("description")->printfb(
 						INVENTORY_X_OFFSET+40,	//box x
@@ -54,8 +59,10 @@ void Inventory::draw(float dt) {
 						HGETEXT_LEFT | HGETEXT_TOP, //Alignment
 						"%s", smh->gameData->getAbilityInfo(j*4 + i).description);
 				}
+				
 				//Draw a check if the ability is one of the ones selected to be available in the GUI
-				if (smh->player->gui->isAbilityAvailable(j*4 + i)) {
+				if (smh->player->gui->isAbilityAvailable(j*4 + i)) 
+				{
 					smh->resources->GetSprite("selectedAbilityCheck")->SetColor(ARGB(smh->getFlashingAlpha(0.6), 255.0, 255.0, 255.0));
 					smh->resources->GetSprite("selectedAbilityCheck")->Render(drawX - 27.0, drawY + 23.0);
 				}
@@ -121,14 +128,14 @@ void Inventory::draw(float dt) {
 	smh->resources->GetFont("inventoryFnt")->SetScale(0.55);
 	//Maximum mana
 	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 345, 
-		HGETEXT_LEFT, "Mana Multiplier: ");
+		HGETEXT_LEFT, "Total Mana: ");
 	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 345, 
-		HGETEXT_RIGHT, "%1.2f", smh->saveManager->getManaModifier());
+		HGETEXT_RIGHT, "%1.0f", smh->player->getMaxMana());
 	//Damage multiplier
 	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 369, 
-		HGETEXT_LEFT, "Damage Multiplier:");
+		HGETEXT_LEFT, "Tongue Damage:");
 	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 615, INVENTORY_Y_OFFSET + 369, 
-		HGETEXT_RIGHT, "%1.2f", smh->saveManager->getDamageModifier());
+		HGETEXT_RIGHT, "%1.0f", smh->player->getDamage() * 100);
 	//Number of licks
 	smh->resources->GetFont("inventoryFnt")->printf(INVENTORY_X_OFFSET + 355, INVENTORY_Y_OFFSET + 393,
 		HGETEXT_LEFT, "Number Of Licks:");

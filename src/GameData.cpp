@@ -13,7 +13,7 @@ extern SMH *smh;
 
 GameData::GameData() {
 	loadEnemyData();
-	loadAbilityData();
+	refreshAbilityData();
 	gameText = new hgeStringTable("Data/GameText.dat");
 	initializeGemCounts();
 }
@@ -73,7 +73,6 @@ const char *GameData::getAreaName(int area) {
 	} else {
 		return "Dickens";
 	}
-	
 }
 
 /**
@@ -91,29 +90,26 @@ int GameData::getNumEnemies()
 float GameData::getDifficultyModifier(int difficulty) {
 	switch (difficulty) {
 		case VERY_EASY:
-			return 1.5;
+			return 1.3;
 		case EASY:
-			return 1.25;
+			return 1.15;
 		case MEDIUM:
 			return 1.0;
 		case HARD:
-			return 0.75;
+			return 0.85;
 		case VERY_HARD:
-			return 0.5;
+			return 0.7;
 	}
 
 	return 1.0;
 }
 
-////////// Private functions //////////////////
-
-
-void GameData::loadAbilityData() {
+void GameData::refreshAbilityData() {
 
 	//Clinton's Cane
 	strcpy(abilities[CANE].name, "Cane Of Clinton");
 	strcpy(abilities[CANE].description, 
-		"Use for 3 seconds to communicate telepathically with Bill Clinton. \n\nMana Cost: 10");
+		"Use to communicate telepathically with Bill Clinton. \n\nMana Cost: 10");
 	abilities[CANE].type = ACTIVATED;
 	abilities[CANE].manaCost = 10;
 
@@ -135,7 +131,7 @@ void GameData::loadAbilityData() {
 	strcpy(abilities[FIRE_BREATH].description, 
 		"Allows you to breath deadly fire breath.\n\nMana Cost: 15/second\n");
 	strcat(abilities[FIRE_BREATH].description, "Damage: ");
-	strcat(abilities[FIRE_BREATH].description, Util::intToString(smh->player->getFireBreathDamage()).c_str());
+	strcat(abilities[FIRE_BREATH].description, Util::intToString(smh->player->getFireBreathDamage() * 100).c_str());
 	strcat(abilities[FIRE_BREATH].description, " per second.");
 	abilities[FIRE_BREATH].type = HOLD;
 	abilities[FIRE_BREATH].manaCost = 15;
@@ -166,7 +162,7 @@ void GameData::loadAbilityData() {
 	strcpy(abilities[LIGHTNING_ORB].description, 
 		"Shoots orbs of lightning. \n\n\nMana Cost: 5\n");
 	strcat(abilities[LIGHTNING_ORB].description, "Damage: ");
-	strcat(abilities[LIGHTNING_ORB].description, Util::intToString(smh->player->getLightningOrbDamage()).c_str());
+	strcat(abilities[LIGHTNING_ORB].description, Util::intToString(smh->player->getLightningOrbDamage() * 100).c_str());
 	abilities[LIGHTNING_ORB].type = ACTIVATED;
 	abilities[LIGHTNING_ORB].manaCost = 5;
 
@@ -196,6 +192,8 @@ void GameData::loadAbilityData() {
 	abilities[FRISBEE].type = ACTIVATED;
 	abilities[FRISBEE].manaCost = 0;
 }
+
+////////// Private functions //////////////////
 
 /**
  * Loads enemy data from file "Enemy.dat"
