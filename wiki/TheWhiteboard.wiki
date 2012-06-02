@@ -24,6 +24,13 @@
  * Portly Penguin when he releases his freezing ray (BB)
  * Bartli jumping
  * Bartli throwing candy (CC)
+ * King Tut shooting lightning
+ * King Tut firing beams of light
+ * Barvinoid hovering
+ * Barvinoid landing (BIG THUD)
+ * Barvinoid opening/closing mouth
+ * Barvinoid releasing enemies from mouth
+
 
 === Graphics To Do ===
 
