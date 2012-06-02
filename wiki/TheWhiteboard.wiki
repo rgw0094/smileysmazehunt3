@@ -54,8 +54,8 @@
 
 ===Done===
 ||Item||Date||Done By||
-||Made the damage/mana display in the inventory actually correct and useful|6/1/2012||RGW||
-||Added enemy health bars|6/1/2012||RGW||
+||Made the damage/mana display in the inventory actually correct and useful||6/1/2012||RGW||
+||Added enemy health bars||6/1/2012||RGW||
 ||Added sound of Calypso's laser||6/1/2012||ETI||
 ||Fixed Calypso's fire in hand not always displaying||6/1/2012||ETI||
 ||Fixed glitch where mushrooms in Brian Fungus' lair cause explosion sound at map load||6/1/12||ETI||
