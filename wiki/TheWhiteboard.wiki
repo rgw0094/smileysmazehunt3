@@ -14,10 +14,7 @@
  * Add a little BLURB to the controls window to discretely let the user know they can use gamepads
 
 === Sounds To Add ===
- * Cornwallis sounds:
-   * While shooting spines
-   * When cactlets are spawned 
-   * When he turns red
+ * Cornwallis spines shooting (suggestion: machine gun sound that loops)
 
 === Graphics To Do ===
 
