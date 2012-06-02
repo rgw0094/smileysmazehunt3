@@ -17,6 +17,7 @@
  * Calypso shooting ice from hand
  * Calypso being stunned
  * Smiley getting frozen
+ * Phyrebawz2 launching fireballs
 
 === Graphics To Do ===
 
