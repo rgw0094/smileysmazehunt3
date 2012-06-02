@@ -1902,6 +1902,26 @@ Sound snd_BartliRapid {
  resgroup=14
 }
 
+Sound snd_TutLaser {
+ filename="laser_zap.mp3"
+ resgroup=14
+}
+
+Sound snd_TutLightbeam {
+ filename="lightbeam.mp3"
+ resgroup=14
+}
+
+Sound snd_TutLightbeamIncreasing {
+ filename="lightbeamincreasing.mp3"
+ resgroup=14
+}
+
+Sound snd_TutLightbeamDecreasing {
+ filename="lightbeamdecreasing.mp3"
+ resgroup=14
+}
+
 ;************************************************
 ;******** CORNWALLIS (Resource group 103 ********
 ;************************************************

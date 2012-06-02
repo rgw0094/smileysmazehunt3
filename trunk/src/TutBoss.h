@@ -69,6 +69,7 @@ public:
 	int lightningRotateDir;
 	float changeInRotation;
 	int lightningNum;
+	float lastLightningDirectionChange;
 
 	//sarcophagus opening variables
 	float lidSize;
