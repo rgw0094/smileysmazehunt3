@@ -1887,6 +1887,21 @@ Sound snd_PortlySlide {
  resgroup=14
 }
 
+Sound snd_LandingThud {
+ filename="landingthud.mp3"
+ resgroup=14
+}
+
+Sound snd_Boing {
+ filename="Boing.mp3"
+ resgroup=14
+}
+
+Sound snd_BartliRapid {
+ filename="bartlirapid.mp3"
+ resgroup=14
+}
+
 ;************************************************
 ;******** CORNWALLIS (Resource group 103 ********
 ;************************************************
