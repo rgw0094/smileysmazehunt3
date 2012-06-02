@@ -36,15 +36,16 @@ void Console::draw(float dt) {
 	write("U     Uber Mode             ", smh->player->uber ? YES : NO);
 	write("H     Hover (hold)          ", smh->player->hoveringYOffset > 0.0 ? YES : NO);
 	write("", NA);
-	write("F1    Warp to debug area ", NA);
-	write("F2    All abilities      ", NA);
-	write("F3    5 of each key      ", NA);
-	write("F4    10 gems            ", NA);
-	write("F5    Full Health/Mana   ", NA);
-	write("NUM8  Move up 1 tile     ", NA);
-	write("NUM5  Move down 1 tile   ", NA);
-	write("NUM4  Move left 1 tile   ", NA);
-	write("NUM6  Move right 1 tile  ", NA);
+	write("F1    Warp to debug area  ", NA);
+	write("F2    All abilities       ", NA);
+	write("F3    5 of each key       ", NA);
+	write("F4    10 gems             ", NA);
+	write("F5    Full Health/Mana    ", NA);
+	write("F7    Warp to next lollipop", NA);
+	write("NUM8  Move up 1 tile      ", NA);
+	write("NUM5  Move down 1 tile    ", NA);
+	write("NUM4  Move left 1 tile    ", NA);
+	write("NUM6  Move right 1 tile   ", NA);
 }
 
 void Console::update(float dt) {
@@ -93,6 +94,76 @@ void Console::update(float dt) {
 		if (smh->hge->Input_KeyDown(HGEK_F5)) {
 			smh->player->setHealth(smh->player->getMaxHealth());
 			smh->player->setMana(smh->player->getMaxMana());
+		}
+
+		if (smh->hge->Input_KeyDown(HGEK_F7)) {
+			int curX = smh->player->gridX+1;
+			int curY = smh->player->gridY;
+
+			if (curX >= 256) {
+				curX = 0;
+				curY++;
+				if (curY >= 256) curY=0;			
+			}
+
+			bool exitloop=false;
+			do
+			{
+				//If we've found a save shrine that's >= 1 away from Smiley, put Smiley there.
+				//The reason it must be >= 1 away is so you don't get "stuck" on a lollipop if you spawned
+				//to its left or above it
+				int absdist = (abs(curX-smh->player->gridX) + abs(curY-smh->player->gridY));
+
+				if (smh->environment->collision[curX][curY] == SAVE_SHRINE && absdist >1)
+				{
+					//We don't want to put Smiley right on the lollipop, though. Put him on a nearby clear square
+								
+					//Try left
+					if (curX -1 >= 0) { //make sure it's in bounds
+						if (smh->environment->collision[curX-1][curY] == WALKABLE || smh->environment->collision[curX-1][curY] == SHALLOW_WATER) {
+							smh->player->moveTo(curX-1,curY);
+							exitloop=true;
+						}
+					}					
+					
+					//Try up
+					if (curY -1 >= 0) { //make sure it's in bounds
+						if (smh->environment->collision[curX][curY-1] == WALKABLE || smh->environment->collision[curX][curY-1] == SHALLOW_WATER) {
+							smh->player->moveTo(curX,curY-1);
+							exitloop=true;
+						}
+					}
+
+					//Try right
+					if (curX +1 <256) { //make sure it's in bounds
+						if (smh->environment->collision[curX+1][curY] == WALKABLE || smh->environment->collision[curX+1][curY] == SHALLOW_WATER) {
+							smh->player->moveTo(curX+1,curY);
+							exitloop=true;
+						}
+					}
+
+					//Now try down
+					if (curY +1 <256) { //make sure it's in bounds
+						if (smh->environment->collision[curX][curY+1] == WALKABLE || smh->environment->collision[curX][curY+1] == SHALLOW_WATER) {
+							smh->player->moveTo(curX,curY+1);
+							exitloop=true;
+						}
+					}
+				}
+
+				//If we've looped through the whole map, then that means there are no
+				//save shrines. Just give up and leave the player where he is.
+				if (curX == smh->player->gridX && curY == smh->player->gridY) exitloop=true;
+
+				//Now increment by one.
+				curX++;
+				if (curX >= 256) {
+					curX = 0;
+					curY++;
+					if (curY >= 256) curY=0;			
+				}
+			} while (!exitloop);
+
 		}
 
 		//Move smiley with num pad

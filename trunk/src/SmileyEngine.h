@@ -15,6 +15,7 @@
 #include <dinput.h>
 #include "resource.h"
 #include <list>
+#include "environment.h"
 
 class hgeStringTable;
 class HGE;

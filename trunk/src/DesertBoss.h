@@ -13,7 +13,7 @@ class hgeParticleSystem;
 #define DESERTBOSS_FRIENDLY 5
 #define DESERTBOSS_FADING 6
 
-//Attributes
+//Attributes. Note that flying spike damage is very low because each spike hits Smiley -- they don't cause him to flash
 #define HEALTH 185.0
 #define FLYING_SPIKE_DAMAGE 0.075
 #define GROUND_SPIKE_DAMAGE 0.5
