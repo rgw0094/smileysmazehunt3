@@ -12,9 +12,6 @@
  * Bartli gets blocked by silly pads. Make it so she runs them over and makes them disappear
 
 === Sounds To Add ===
- * Bartli jumping (boing) 
- * Bartli landing (DD) (bartli hitting the ground)
- * Bartli throwing candy (CC)
  * King Tut shooting lightning (laser_zap)
  * King Tut firing beams of light
  * Barvinoid hovering FOUND
