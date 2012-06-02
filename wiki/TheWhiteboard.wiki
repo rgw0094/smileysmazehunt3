@@ -12,12 +12,7 @@
  * Bartli gets blocked by silly pads. Make it so she runs them over and makes them disappear
 
 === Sounds To Add ===
- * Calypso shooting fireball from hand (AA) (flameshoot/shot)
- * Calypso shooting ice from hand (BB) (magic shot thing)
- * Calypso being stunned (calypsostun)
  * Smiley getting frozen (smiley frozen)
- * Phyrebawz1 launching fire orbs (AA)
- * Phyrebawz2 launching fireballs (AA)
  * Portly Penguin when he launches himself at you
  * Portly Penguin when he hops out of the water (portlyjumpout)
  * Portly Penguin when he releases his freezing ray (BB)
