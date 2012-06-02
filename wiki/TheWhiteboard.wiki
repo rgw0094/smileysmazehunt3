@@ -12,7 +12,7 @@
  * Bartli gets blocked by silly pads. Make it so she runs them over and makes them disappear
 
 === Sounds To Add ===
- * Cornwallis spines shooting (suggestion: machine gun sound that loops)
+ * Cornwallis spines shooting (suggestion: machine gun sound that loops) (CC)
  * Calypso shooting fireball from hand (AA)
  * Calypso shooting ice from hand (BB)
  * Calypso being stunned
@@ -23,7 +23,7 @@
  * Portly Penguin when he hops out of the water
  * Portly Penguin when he releases his freezing ray (BB)
  * Bartli jumping
- * Bartli throwing candy
+ * Bartli throwing candy (CC)
 
 === Graphics To Do ===
 
