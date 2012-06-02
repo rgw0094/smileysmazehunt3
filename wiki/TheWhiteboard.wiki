@@ -15,6 +15,11 @@
 
 === Sounds To Add ===
  * Cornwallis spines shooting (suggestion: machine gun sound that loops)
+ * Calypso shooting fireball from hand
+ * Calypso shooting ice from hand
+ * Calypso being hit by orb
+ * Calypso being stunned
+ * Smiley getting frozen
 
 === Graphics To Do ===
 
