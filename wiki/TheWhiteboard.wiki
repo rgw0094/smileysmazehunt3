@@ -9,6 +9,7 @@
  * Ice hop should center Smiley on tile
  * After the boss fights are over, the bosses still damage you.  Also other external objects (flames in Phyrebawz2, projectiles in Barvinoid) will still exist and hurt you.
  * Add a little BLURB to the controls window to discretely let the user know they can use gamepads
+ * Bartli gets blocked by silly pads. Make it so she runs them over and makes them disappear
 
 === Sounds To Add ===
  * Cornwallis spines shooting (suggestion: machine gun sound that loops)
