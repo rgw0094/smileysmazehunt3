@@ -6,8 +6,6 @@
  * During the close-up gross licking of Fenwar when he dies, it plays the title theme but I think silence would make the moment more effective.
  * Some of the gem totals in the map are incorrect (SEE LOOT SUMMARY)
  * Implement the goblin using a balloon instead of a clown head.
- * In the inventory it says that orbs deal 0 damage.
- * The damage of the fire/orbs never goes up in the inventory.  Also without some sort of comparison to how much damage the tongue deals, this number means nothing.  Likewise with the mana cost of the magic items displayed in the inventory - we need to display the total mana points Smiley has for it to be of any use.
  * After picking up 1 mana pickup, your mana begins recharging instantly.  This is bad since then there is little incentive to ever pick up more than one since your mana will recharge anyways, and ends up giving you way too much mana.  Then running around owning everyone with orbs is too easy to do.
  * Ice hop should center Smiley on tile
  * After the boss fights are over, the bosses still damage you.  Also other external objects (flames in Phyrebawz2, projectiles in Barvinoid) will still exist and hurt you.
@@ -46,18 +44,17 @@
  * Fenwar is way too easy.  We should make it so that he can throw bombs on the platform that he's on (to avoid being cheap and just standing next to him inside the orb ring.)  Like the above suggestions he should wake up from his stunned phase after a certain % of his life is taken away, because a fully powered up Smiley can easily win after 2 licking sessions.  Also maybe we could add some more things to dodge.  Some ideas I have:  Make the Fen-Eye's also shoot projectiles.  Make Fenwar shoot out circular nova flame attacks like Phyrebawz that you need to float over.  Crazy but perhaps lame idea: have him use all kinds of various attacks similar to old bosses (Cornwallis's spike spirals which you would now need to reflect, perhaps he could release batlets like Garmbourn, release heatseeking evil missiles like Barvinoid.)
  * Calypso is way too hard. Some of his attacks are too frustrating to try to dodge
  * The ending of the Pools of the Dead is terrible. There needs to be way fewer enemies, or perhaps make those enemies have significantly less health. It was taking me like 10 hits per enemy to kill them.
- * Somewhere in the realm of despair 
  * The REFLECTION SHIELD costs way too much mana.
 
 === Suggestions from testers ===
  * Monocle man's advice goes away too quickly.  My dad was testing using a game pad so didn't even have the keyboard out, and by the time he got to press N the message was gone.  Could we just change it so that you press "Attack" instead?
  * Phyrebawz 1 is too hard.  I put some life in his battle area, which I think is an alright solution, but thought it was worth mentioning here.
  * Could we implement a continue option that doesn't force you to reload your game from the main menu?  After my dad died on Phyrebawz 40 times it became tiresome for him.
- * In the inventory description of the cane, say something about how you need to hold the button down and not move so that they player isn't confused in how to use it.
  * Fire breath has a poor USER EXPERIENCE. It needs to have some knockback because otherwise enemies just walk right into you as you use it.
 
 ===Done===
 ||Item||Date||Done By||
+||Made the damage/mana display in the inventory actually correct and useful|6/1/2012||RGW||
 ||Added enemy health bars|6/1/2012||RGW||
 ||Added sound of Calypso's laser||6/1/2012||ETI||
 ||Fixed Calypso's fire in hand not always displaying||6/1/2012||ETI||
