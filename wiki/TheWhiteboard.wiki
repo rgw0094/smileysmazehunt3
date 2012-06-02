@@ -15,7 +15,7 @@
  * Cornwallis spines shooting (suggestion: machine gun sound that loops) (CC) (machine gun shot)
  * Calypso shooting fireball from hand (AA) (flameshoot/shot)
  * Calypso shooting ice from hand (BB) (magic shot thing)
- * Calypso being stunned 
+ * Calypso being stunned (calypsostun)
  * Smiley getting frozen (smiley frozen)
  * Phyrebawz1 launching fire orbs (AA)
  * Phyrebawz2 launching fireballs (AA)
