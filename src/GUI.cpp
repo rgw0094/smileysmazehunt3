@@ -135,6 +135,9 @@ float GUI::quarterSmileyize(float h) {
 void GUI::addDamageDisplay(float health, float damage) {
 	std::string debugText;
 
+	//return right away because the damage display looks stupid. I'll leave the code in
+	//in case we ever decide to re-implement it
+	return;
 
 	//first, figure out the health display (how many quarter-smileys) prior to the damage
 	float healthPriorToDamage = health + damage;

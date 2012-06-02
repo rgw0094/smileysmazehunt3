@@ -499,6 +499,8 @@ void DespairBoss::drawCalypso(float dt) {
 	leftHandParticle->MoveTo(smh->getScreenX(x - 70.0), smh->getScreenY(y - 65.0 + floatingOffset), true);
 	leftHandParticle->Update(dt);
 	leftHandParticle->Render();
+	if (state == DESPAIRBOSS_BATTLE) leftHandParticle->Fire(); //for some reason you have to fire this one or the projectile disappears
+
 	rightHandParticle->MoveTo(smh->getScreenX(x + 70.0), smh->getScreenY(y - 65.0 + floatingOffset), true);
 	rightHandParticle->Update(dt);
 	rightHandParticle->Render();
