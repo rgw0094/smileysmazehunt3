@@ -31,7 +31,7 @@
  * Barvinoid landing (DD) FOUND
  * Barvinoid opening/closing mouth FOUND
  * Barvinoid releasing enemies from mouth FOUND
- * Barvinoid shooting from his eye
+ * Barvinoid shooting from his eye FOUND
 
 
 === Graphics To Do ===
