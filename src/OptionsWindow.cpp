@@ -15,7 +15,7 @@ OptionsWindow::OptionsWindow() {
 	soundVolumeSlider->setValue(smh->soundManager->getSoundVolume());
 	musicVolumeSlider = new Slider(0, 0, 0, 100);
 	musicVolumeSlider->setValue(smh->soundManager->getMusicVolume());
-	doneButton = new Button(0, 0, "Save");
+	doneButton = new Button(0, 0, "Done");
 
 	setWindowPosition(182.0, 138.0);
 }
