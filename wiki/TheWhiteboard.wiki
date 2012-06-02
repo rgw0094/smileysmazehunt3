@@ -50,7 +50,6 @@
  * Could we implement a continue option that doesn't force you to reload your game from the main menu?  After my dad died on Phyrebawz 40 times it became tiresome for him.
  * In the inventory description of the cane, say something about how you need to hold the button down and not move so that they player isn't confused in how to use it.
  * Fire breath has a poor USER EXPERIENCE. It needs to have some knockback because otherwise enemies just walk right into you as you use it.
- * We should add HEALTH BARS to enemies after they take damage.
 
 ===Done===
 ||Item||Date||Done By||
