@@ -12,22 +12,23 @@
  * Bartli gets blocked by silly pads. Make it so she runs them over and makes them disappear
 
 === Sounds To Add ===
- * Cornwallis spines shooting (suggestion: machine gun sound that loops) (CC)
- * Calypso shooting fireball from hand (AA)
- * Calypso shooting ice from hand (BB)
- * Calypso being stunned
- * Smiley getting frozen
+ * Cornwallis spines shooting (suggestion: machine gun sound that loops) (CC) (machine gun shot)
+ * Calypso shooting fireball from hand (AA) (flameshoot/shot)
+ * Calypso shooting ice from hand (BB) (magic shot thing)
+ * Calypso being stunned 
+ * Smiley getting frozen (smiley frozen)
  * Phyrebawz1 launching fire orbs (AA)
  * Phyrebawz2 launching fireballs (AA)
  * Portly Penguin when he launches himself at you
  * Portly Penguin when he hops out of the water
  * Portly Penguin when he releases his freezing ray (BB)
- * Bartli jumping
+ * Bartli jumping (boing) 
+ * Bartli landing (DD) (bartli hitting the ground)
  * Bartli throwing candy (CC)
  * King Tut shooting lightning
  * King Tut firing beams of light
  * Barvinoid hovering (machine-like whimper or hiss)
- * Barvinoid landing (BIG THUD)
+ * Barvinoid landing (DD)
  * Barvinoid opening/closing mouth
  * Barvinoid releasing enemies from mouth
  * Barvinoid shooting from his eye
