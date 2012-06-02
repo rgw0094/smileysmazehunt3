@@ -21,8 +21,6 @@
 
 === Graphics To Do ===
 
- * Cane icon for the inventory
- * Fire floater graphic (in smolder hollow)
  * Gems
 
 === Bugs ===
