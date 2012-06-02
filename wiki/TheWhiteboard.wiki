@@ -21,6 +21,8 @@
  * Portly Penguin when he launches himself at you
  * Portly Penguin when he hops out of the water
  * Portly Penguin when he releases his freezing ray (BB)
+ * Bartli jumping
+ * Bartli throwing candy
 
 === Graphics To Do ===
 
