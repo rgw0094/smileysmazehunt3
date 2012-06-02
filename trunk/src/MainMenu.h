@@ -57,7 +57,7 @@ public:
 	//methods
 	void draw(float dt);
 	bool update(float dt);
-	void open(int _state);
+	void open(int _state, bool playMusic);
 	void setScreen(int screen);
 	void openLoadScreen(int file, bool fromLoadScreen);
 	void closeScreen();
