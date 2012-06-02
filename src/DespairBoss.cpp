@@ -199,10 +199,12 @@ bool DespairBoss::update(float dt) {
 				projectileType = PROJECTILE_FIRE;
 				numProjectiles = smh->hge->Random_Int(1,2);
 				speed = FIRE_SPEED;
+				smh->soundManager->playSound("snd_FlameShoot");
 			} else {
 				projectileType = PROJECTILE_ICE;
 				numProjectiles = 1;
 				speed = ICE_SPEED;
+				smh->soundManager->playSound("snd_FreezeShoot");
 			}
 
 			//Left hand - fire only
@@ -259,6 +261,7 @@ bool DespairBoss::update(float dt) {
 			float angle;
 			shieldAlpha = 0.0;
 			setState(DESPAIRBOSS_STUNNED);
+			smh->soundManager->playSound("snd_CalypsoWobble");
 			dx = dy = 0;
 
 			//Shoot lightning orbs in all directions
@@ -485,14 +488,16 @@ void DespairBoss::drawCalypso(float dt) {
 	smh->resources->GetSprite("playerShadow")->RenderEx(smh->getScreenX(x), smh->getScreenY(y) + 75.0, 0.0, 2.0, 2.0);
 	smh->resources->GetSprite("playerShadow")->SetColor(ARGB(75,255,255,255));
 	
-	smh->resources->GetSprite("calypso")->SetColor(ARGB(fadeAlpha, 255.0, flashingAlpha, flashingAlpha));
-	smh->resources->GetSprite("calypso")->Render(smh->getScreenX(x), smh->getScreenY(y) + floatingOffset);
-
+	
 	//Evil Calypso
 	if (isInEvilMode()) {
-		smh->resources->GetSprite("evilCalypso")->SetColor(ARGB(evilAlpha,255,255,255));
+		smh->resources->GetSprite("evilCalypso")->SetColor(ARGB(255,255,255,255));
 		smh->resources->GetSprite("evilCalypso")->Render(smh->getScreenX(x), smh->getScreenY(y) + floatingOffset);
 	} else {
+		//Draw him
+		smh->resources->GetSprite("calypso")->SetColor(ARGB(fadeAlpha, 255.0, flashingAlpha, flashingAlpha));
+		smh->resources->GetSprite("calypso")->Render(smh->getScreenX(x), smh->getScreenY(y) + floatingOffset);
+
 		//Draw his shield
 		smh->resources->GetSprite("calypsoShield")->SetColor(ARGB(shieldAlpha,255,255,255));
 		smh->resources->GetSprite("calypsoShield")->Render(smh->getScreenX(x), smh->getScreenY(y) + floatingOffset);
@@ -502,7 +507,7 @@ void DespairBoss::drawCalypso(float dt) {
 	leftHandParticle->MoveTo(smh->getScreenX(x - 70.0), smh->getScreenY(y - 65.0 + floatingOffset), true);
 	leftHandParticle->Update(dt);
 	leftHandParticle->Render();
-	if (state == DESPAIRBOSS_BATTLE) leftHandParticle->Fire(); //for some reason you have to fire this one or the projectile disappears
+	if (state == DESPAIRBOSS_BATTLE) leftHandParticle->Fire(); //for some reason you have to fire this one or the fireball disappears
 
 	rightHandParticle->MoveTo(smh->getScreenX(x + 70.0), smh->getScreenY(y - 65.0 + floatingOffset), true);
 	rightHandParticle->Update(dt);
@@ -644,7 +649,8 @@ void DespairBoss::updateProjectiles(float dt) {
 		//Check for collision with walls
 		if (smh->environment->collisionAt(i->x, i->y) == NO_WALK_PIT) {
 			deleteProjectile = true;
-			smh->explosionManager->addExplosion(i->x, i->y, 0.75, FIRE_DAMAGE, 0.0);
+			//got rid of the explosions cause you never see them and they sound stupid with no context
+			//smh->explosionManager->addExplosion(i->x, i->y, 0.75, FIRE_DAMAGE, 0.0);
 		}
 
 		//Check for end of ice nova

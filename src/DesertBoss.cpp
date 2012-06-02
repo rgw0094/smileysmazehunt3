@@ -145,7 +145,8 @@ bool DesertBoss::update(float dt) {
 					redness = 255.0;
 					//Enter the ground spike state and randomly choose which spikes
 					//will shoot up
-					enterState(DESERTBOSS_GROUND_SPIKES);					
+					enterState(DESERTBOSS_GROUND_SPIKES);
+
 					if (firstTimeLaunchingGroundSpikes) {
 						//Show battle text 1 before the first spike attack
 						groundSpikeState = GSS_TEXT;
@@ -179,7 +180,7 @@ bool DesertBoss::update(float dt) {
 			spikeRotVelocity += spikeRotAccel * dt;
 			if (spikeRotVelocity > .65*PI) spikeRotVelocity = .65*PI;
 
-			//Stop launching spikes after 3 seconds
+			//Stop launching spikes after 4 seconds
 			if (smh->timePassedSince(timeEnteredState) > 4.0) {
 				enterState(DESERTBOSS_IDLE);
 			}
@@ -488,6 +489,9 @@ void DesertBoss::enterState(int _state) {
 		for (int i = 0; i < NUM_SPIKE_STREAMS; i++) {
 			spikeAngles[i] = .25*PI + .5*PI*(float)i;
 		}
+
+		//Play sound
+		smh->soundManager->playSound("snd_CornwallisRapidFire");
 
 	}
 

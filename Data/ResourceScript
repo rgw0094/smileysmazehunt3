@@ -1860,10 +1860,18 @@ Sound snd_Explosion3 {
  filename="explosion3.mp3"
  resgroup=14
 }
-
-
-
-;Calypso sounds (well, some of them)
+Sound snd_FlameShoot {
+ filename="FlameShoot.mp3"
+ resgroup=14
+}
+Sound snd_FreezeShoot {
+ filename="freezeshoot.wav"
+ resgroup=14
+}
+Sound snd_CalypsoWobble {
+ filename="wobble.mp3"
+ resgroup=14
+}
 
 
 ;************************************************
@@ -1906,6 +1914,9 @@ Animation groundSpike {
 }
 Sound snd_CornwallisGroundSpike {
  filename="CornwallisGroundSpike.mp3"
+}
+Sound snd_CornwallisRapidFire {
+ filename="cactusrapidlong.mp3"
 }
 
 ;**************************************************
