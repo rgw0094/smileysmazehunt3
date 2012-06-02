@@ -120,7 +120,7 @@ void FireBossTwo::draw(float dt) {
 	drawFlameLaunchers(dt);
 
 	drawFireBallsBeforePhyrebawz(dt);
-
+	
 	//Draw the boss' main sprite
 	smh->resources->GetAnimation("Phyrebawz")->SetFrame(facing);
 	smh->resources->GetAnimation("Phyrebawz")->Render(smh->getScreenX(x),smh->getScreenY(y+floatY));

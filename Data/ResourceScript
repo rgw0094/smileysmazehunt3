@@ -1861,6 +1861,11 @@ Sound snd_Explosion3 {
  resgroup=14
 }
 
+
+
+;Calypso sounds (well, some of them)
+
+
 ;************************************************
 ;******** CORNWALLIS (Resource group 103 ********
 ;************************************************
@@ -1910,7 +1915,7 @@ Texture phyrebawzTx {
  filename="Graphics/fireboss.png"
  resgroup=100
 }
-Animation phyrebawz {
+Animation Phyrebawz {
  texture=phyrebawzTx
  rect=0,0,97,158
  frames=4
@@ -2031,6 +2036,16 @@ Sprite mushboomBombShadow {
  resgroup=104
 }
 
+Sound snd_mushBombLand {
+ filename="mushBombLand.mp3"
+}
+Sound snd_mushBombToss {
+ filename="mushBombToss.mp3"
+}
+Sound snd_mushLaunchMushlet {
+ filename="mushLaunchMushlet.mp3"
+}
+
 ;***********************************************
 ;******** GARMBORN (Resource group 102) ********
 ;***********************************************
@@ -2108,6 +2123,9 @@ Sprite calypsoShield {
 }
 Sound snd_CalypsoEvil {
  filename="calypsoEvil.wav"
+}
+Sound snd_CalypsoLaser {
+ filename="CalypsoLaser.mp3"
 }
 
 ;**************************************************

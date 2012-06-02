@@ -395,6 +395,8 @@ bool DespairBoss::update(float dt) {
 				smh->projectileManager->addProjectile(x + 10 + 50*cos(angle), 
 					y - 60 + floatingOffset + 50*sin(angle),  
 					LASER_SPEED, angle, LASER_DAMAGE, true,false, PROJECTILE_LASER, true);
+				//Play sound
+				smh->soundManager->playSound("snd_CalypsoLaser");
 			}
 			chargeCounter++;
 		}
