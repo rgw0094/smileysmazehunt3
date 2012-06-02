@@ -142,7 +142,6 @@ private:
 	//Time variables
 	float startedFlashing;
 	float startedKnockBack;
-	float timeStartedCane;
 	float startedSpringing;
 	float startedAttacking;
 	float stoppedAttacking;
@@ -196,7 +195,6 @@ private:
 	bool sprinting;					//If sprint boots are being used
 	bool isHovering;
 	bool cloaked;
-	bool usingCane;
 	bool inShrinkTunnel;
 	bool frozen;
 	bool stunned;
