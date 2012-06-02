@@ -185,6 +185,8 @@ bool CandyBoss::update(float dt) {
 			updateRun(dt);
 			if (timeInState >= timeToGetToCenter) {
 				enterState(CANDY_STATE_THROWING_CANDY);
+				//Play a sound
+				smh->soundManager->playSound("snd_BartliRapid");
 			}
 		}
 
@@ -491,6 +493,9 @@ void CandyBoss::updateJumping(float dt) {
 		jumping = true;
 		numJumps++;
 
+		//Play a sound if the last jump wasn't just completed
+		if (numJumps < 6) smh->soundManager->playSound("snd_Boing");
+
 		//Try to jump on smiley.
 		angle = Util::getAngleBetween(x, y, smh->player->x, smh->player->y);
 		jumpDistance = min(400.0, Util::distance(x, y, smh->player->x, smh->player->y));
@@ -528,7 +533,8 @@ void CandyBoss::updateJumping(float dt) {
 				smh->player->immobilize(0.5);
 				spawnNova(x, y);
 			}
-
+            
+			smh->soundManager->playSound("snd_LandingThud");
 			smh->soundManager->playSound("snd_BartliJumpLand");
 		}
 
