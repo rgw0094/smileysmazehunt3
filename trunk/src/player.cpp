@@ -1053,6 +1053,7 @@ void Player::doArrowPads(float dt) {
 			dy = 250;
 			timeToSlide = (64.0f - float(y) + (float(gridY)*64.0f+32.0f)) / 250.0f;
 		}
+		return;
 	}
 
 	//Continue sliding - move towards the center of the square
@@ -1603,51 +1604,55 @@ void Player::dealDamageAndKnockback(float damage, bool makesFlash, float knockba
  * @param knockbackerY  y location of the object that knocked smiley back
  */ 
 void Player::dealDamageAndKnockback(float damage, bool makesFlash, bool alwaysKnockback, float knockbackDist, 
-		float knockbackerX, float knockbackerY) {
-	
-	if (!makesFlash || (makesFlash && !flashing)) {
-		if (!invincible) {
-			health -= (damage * (2.0 - smh->gameData->getDifficultyModifier(smh->saveManager->difficulty)));
-			
+		float knockbackerX, float knockbackerY) 
+{	
+	if (!makesFlash || (makesFlash && !flashing)) 
+	{
+		if (!invincible) 
+		{
+			health -= (damage * (2.0 - smh->gameData->getDifficultyModifier(smh->saveManager->difficulty)));	
 		}		
-		gui->addDamageDisplay(health,damage);
 	}
-
 
 	float knockbackAngle = Util::getAngleBetween(knockbackerX, knockbackerY, x, y);
 	float knockbackX = (knockbackDist - Util::distance(knockbackerX, knockbackerY, x, y)) * cos(knockbackAngle);
 	float knockbackY = (knockbackDist - Util::distance(knockbackerX, knockbackerY, x, y)) * sin(knockbackAngle);
 
 	//Do knockback if not sliding etc.
-	if (knockbackDist > 0 && (!flashing || alwaysKnockback) && !iceSliding && !sliding && !springing && !falling) {
+	if (knockbackDist > 0 && (!flashing || alwaysKnockback) && !iceSliding && !sliding && !springing && !falling) 
+	{
 		dx = knockbackX / KNOCKBACK_DURATION;
 		dy = knockbackY / KNOCKBACK_DURATION;
 		knockback = true;
 		startedKnockBack = smh->getGameTime();
 	}
 
-	if (makesFlash && !flashing) {
+	if (makesFlash && !flashing) 
+	{
 		flashing = true;
 		startedFlashing = smh->getGameTime();
 	}
-
 }
 
-void Player::stopFireBreath() {
+void Player::stopFireBreath() 
+{
 	smh->soundManager->stopAbilityChannel();
 	breathingFire = false;
 	fireBreathParticle->Stop(false);
 }
 
-void Player::stopMovement() {
+void Player::stopMovement() 
+{
 	dx = dy = 0.0;
 }
 
 /**
  * Freezes the player for the specified duration.
  */
-void Player::freeze(float duration) {
-	if (!falling) {
+void Player::freeze(float duration) 
+{
+	if (!falling) 
+	{
 		frozen = true;
 		timeFrozen = smh->getGameTime();
 		freezeDuration = duration;

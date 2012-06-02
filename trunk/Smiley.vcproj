@@ -333,9 +333,6 @@
 					RelativePath=".\src\player.cpp">
 				</File>
 				<File
-					RelativePath=".\src\SmileyDamageDisplay.cpp">
-				</File>
-				<File
 					RelativePath=".\src\Tongue.cpp">
 				</File>
 				<File

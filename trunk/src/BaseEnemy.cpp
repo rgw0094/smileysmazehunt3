@@ -587,6 +587,7 @@ void BaseEnemy::baseDraw(float dt)
 	//Draw health bar
 	if (health < maxHealth)
 	{
+		smh->resources->GetSprite("blackSquare")->SetColor(ARGB(150,255,255,255));
 		smh->resources->GetSprite("blackSquare")->RenderStretch(
 				screenX - 30.0f, 
 				screenY - 38.0f, 

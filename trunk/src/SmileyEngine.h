@@ -495,11 +495,11 @@ public:
 	const char *getAreaName(int area);
 	float getDifficultyModifier(int difficulty);
 	int getNumEnemies();
+	void refreshAbilityData();
 
 private:
 
 	void loadEnemyData();
-	void loadAbilityData();
 	void addEnemyName(int id, std::string name);
 	void initializeGemCounts();
 
