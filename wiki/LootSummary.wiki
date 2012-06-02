@@ -3,11 +3,11 @@
 = LOOT =
 
 ||Area||R||Y||B||
-||Fountain||9 (Wrong in game)||1||1||
+||Fountain||9||1||1||
 ||Dunes of Salabia||7||3||1||
-||Forest of Fundoria||17 (Wrong in game)||6 (Wrong in game)||3||
+||Forest of Fundoria||17||6||3||
 ||Sessaria Snowplains||7||2||1||
-||Realm of Despair||9 (Wrong in game)||3||1||
+||Realm of Despair||9||3||1||
 ||Serpentine Path||1||1||1||
 ||Tut's Tomb||8||2||1||
 ||Castle of Evil||3||3||4||
