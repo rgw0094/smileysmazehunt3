@@ -126,6 +126,8 @@ TutBoss::TutBoss(int _gridX,int _gridY,int _groupID)
 	fadeAlpha = 255.0;
 	collisionBox = new hgeRect(1, 1, 1, 1);
 
+	lastLightningDirectionChange = -1; //-1 signifies it has not rotated yet
+
 	a[0]=0.120;
 	b[0]=0.532;
 
@@ -417,6 +419,9 @@ void TutBoss::fireLightning() {
 
 	smh->projectileManager->addProjectile(x,y,TUTBOSS_SHOT_SPEED,angleToSmiley,TUTBOSS_SHOT_DAMAGE,true,true,PROJECTILE_TUT_LIGHTNING,true);
 	timeOfLastShot = smh->getGameTime();
+
+	//Play a sound
+	smh->soundManager->playSound("snd_TutLaser");
 }
 
 void TutBoss::doHoveringAround(float dt) {
@@ -491,13 +496,25 @@ void TutBoss::doLightning(float dt) {
 			if (smh->timePassedSince(timeEnteredState) >= TUT_LIGHTNING_TIME_TO_APPEAR) {
 				timeEnteredState = smh->getGameTime();
 				lightningState = TUT_LIGHTNING_STATE_ROTATING;
-				lightningRotateDir = smh->hge->Random_Int(0,1);
+                lightningRotateDir = smh->hge->Random_Int(0,1);
 				smh->resources->GetSprite("KingTutLightningWedge")->SetColor(ARGB(255.0,255.0,255.0,255.0));
 				lightningNum = 0; // keeps track of how many series of lightning we've gone through
+				
+				//Play a sound
+				smh->soundManager->playSound("snd_TutLightbeam");
+				//Set the time of the last "rotation direction," which is used for playing the sound
+				lastLightningDirectionChange = smh->getGameTime();
    			}
 			break;
 		case TUT_LIGHTNING_STATE_ROTATING:
-			
+			//for playing the sound, we see if the "period" has passed
+			if (smh->timePassedSince(lastLightningDirectionChange) >= TUT_LIGHTNING_ROTATE_PERIOD) {
+				//Play a sound
+				smh->soundManager->playSound("snd_TutLightbeam");
+				//Set the time of the last "rotation direction," which is used for playing the sound
+				lastLightningDirectionChange = smh->getGameTime();
+			}
+
 			changeInRotation = TUT_LIGHTNING_ROTATE_SPEED * sin(smh->timePassedSince(timeEnteredState)/TUT_LIGHTNING_ROTATE_PERIOD*3.14159);
 			//changeInRotation = 0.0;
 			if (lightningRotateDir == TUT_LIGHTNING_ROTATE_CCW) {
@@ -510,6 +527,8 @@ void TutBoss::doLightning(float dt) {
 				timeEnteredState = smh->getGameTime();
 				lightningState = TUT_LIGHTNING_STATE_WIDENING;
 				lightningWidth = TUT_LIGHTNING_INITIAL_WIDTH;
+				//Play a sound
+				smh->soundManager->playSound("snd_TutLightbeamIncreasing");
 			}
 
 			break;
@@ -526,6 +545,8 @@ void TutBoss::doLightning(float dt) {
 			if (smh->timePassedSince(timeEnteredState) >= TUT_LIGHTNING_TIME_TO_WAIT) {
 				lightningState = TUT_LIGHTNING_STATE_NARROWING;
 				timeEnteredState = smh->getGameTime();
+				//Play a sound
+				smh->soundManager->playSound("snd_TutLightbeamDecreasing");
 			}
 			break;
 		case TUT_LIGHTNING_STATE_NARROWING:
