@@ -1,5 +1,4 @@
 === Programming To Do ===
- * Allow buzzards to be knocked back
  * The end credits have a bunch of things to fix: the Gayass Ghost, sentinels, and gumdrops are not in the game (but we could add the gumdrops?), Mr. Bigglesworth is actually called a Walkin'-Bomb, buzzard has no wings, most of the enemies are looking left but would look better looking forward, Barvinoid is missing, Bartli/BrianFungus/Magnitogorsk are missing parts of their bodies.
  * Add the thud noises when you lick a boss.
  * Add new noises to the Fenwar battle.
@@ -56,8 +55,9 @@
 
 ===Done===
 ||Item||Date||Done By||
-||Made the damage/mana display in the inventory actually correct and useful||6/1/2012||RGW||
-||Added enemy health bars||6/1/2012||RGW||
+||Made it so buzzards can be knocked back by the tongue||6/1/12||RGW||
+||Made the damage/mana display in the inventory actually correct and useful||6/1/12||RGW||
+||Added enemy health bars||6/1/12||RGW||
 ||Added sound of Calypso's laser||6/1/2012||ETI||
 ||Fixed Calypso's fire in hand not always displaying||6/1/2012||ETI||
 ||Fixed glitch where mushrooms in Brian Fungus' lair cause explosion sound at map load||6/1/12||ETI||
