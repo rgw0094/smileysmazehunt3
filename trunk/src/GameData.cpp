@@ -41,44 +41,45 @@ std::list<EnemyName> GameData::getEnemyNames() {
 	return enemyNameList;
 }
 
-const char *GameData::getGameText(const char *text) {
+const char *GameData::getGameText(const char *text) 
+{
 	return gameText->GetString(text);
 }
 
-const char *GameData::getAreaName(int area) {
-	
+const char *GameData::getAreaName(int area) 
+{	
 	//Set zone specific info
-	if (area == FOUNTAIN_AREA) {
+	if (area == FOUNTAIN_AREA)
 		return "Smiley Town";
-	} else if (area == OLDE_TOWNE) {
+	else if (area == OLDE_TOWNE)
 		return "Dunes of Salabia";
-	} else if (area == SMOLDER_HOLLOW) {
+	else if (area == SMOLDER_HOLLOW)
 		return "Smolder Hollow";
-	} else if (area == FOREST_OF_FUNGORIA) {
+	else if (area == FOREST_OF_FUNGORIA)
 		return "Forest of Fundoria";
-	} else if (area == SESSARIA_SNOWPLAINS) {
+	else if (area == SESSARIA_SNOWPLAINS)
 		return "Sessaria Snowplains";
-	} else if (area == TUTS_TOMB) {
+	else if (area == TUTS_TOMB)
 		return "Tut's Tomb";
-	} else if (area == WORLD_OF_DESPAIR) {
+	else if (area == WORLD_OF_DESPAIR)
 		return "Realm of Despair";
-	} else if (area == CASTLE_OF_EVIL) {
+	else if (area == CASTLE_OF_EVIL)
 		return "Castle Of Evil";
-	} else if (area == SERPENTINE_PATH) {
+	else if (area == SERPENTINE_PATH)
 		return "The Serpentine Path";
-	} else if (area == DEBUG_AREA) {
+	else if (area == DEBUG_AREA)
 		return "Debug Area";
-	} else if (area == CONSERVATORY) {
+	else if (area == CONSERVATORY)
 		return "The Barvintory";
-	} else {
+	else
 		return "Dickens";
-	}
 }
 
 /**
  * Returns the total number of gems of the given type there are to find in the given area.
  */
-int GameData::getNumTotalGemsInArea(int area, int gemType) {
+int GameData::getNumTotalGemsInArea(int area, int gemType) 
+{
 	return totalGemCounts[area][gemType];
 }
 
@@ -87,8 +88,10 @@ int GameData::getNumEnemies()
 	return atoi(enemyStringTable->GetString("numEnemies"));
 }
 
-float GameData::getDifficultyModifier(int difficulty) {
-	switch (difficulty) {
+float GameData::getDifficultyModifier(int difficulty) 
+{
+	switch (difficulty) 
+	{
 		case VERY_EASY:
 			return 1.3;
 		case EASY:
@@ -104,8 +107,8 @@ float GameData::getDifficultyModifier(int difficulty) {
 	return 1.0;
 }
 
-void GameData::refreshAbilityData() {
-
+void GameData::refreshAbilityData() 
+{
 	//Clinton's Cane
 	strcpy(abilities[CANE].name, "Cane Of Clinton");
 	strcpy(abilities[CANE].description, 
@@ -148,7 +151,7 @@ void GameData::refreshAbilityData() {
 	strcpy(abilities[REFLECTION_SHIELD].description, 
 		"Activate to deflect certain projectiles.\n\n\nMana Cost: 35/second");
 	abilities[REFLECTION_SHIELD].type = HOLD;
-	abilities[REFLECTION_SHIELD].manaCost = 35;
+	abilities[REFLECTION_SHIELD].manaCost = 15;
 
 	//Hover
 	strcpy(abilities[HOVER].name, "Hover");
@@ -198,8 +201,8 @@ void GameData::refreshAbilityData() {
 /**
  * Loads enemy data from file "Enemy.dat"
  */
-void GameData::loadEnemyData() {
-
+void GameData::loadEnemyData() 
+{
 	char num[2];
 	char param[68];
 	std::string varName;
@@ -207,13 +210,15 @@ void GameData::loadEnemyData() {
 	enemyStringTable = new hgeStringTable("Data/Enemies.dat");
 	int numEnemies = atoi(enemyStringTable->GetString("numEnemies"));
 
-	for (int i = 0; i < numEnemies; i++) {
+	for (int i = 0; i < numEnemies; i++) 
+	{
 		itoa(i, num, 10);
 
 		//Enemy name
 		varName = Util::intToString(i);
 		varName += "Name";
-		if (enemyStringTable->GetString(varName.c_str()) != 0) {
+		if (enemyStringTable->GetString(varName.c_str()) != 0) 
+		{
 			addEnemyName(i, enemyStringTable->GetString(varName.c_str()));
 		}
 
@@ -339,9 +344,11 @@ void GameData::loadEnemyData() {
 		varName = Util::intToString(i);
 		varName += "Invincible";
 		if (enemyStringTable->GetString(varName.c_str()) == 0) enemyInfo[i].invincible = false;
-		else {
+		else 
+		{
 			enemyInfo[i].invincible = (strcmp(enemyStringTable->GetString(varName.c_str()), "T") == 0);
-			if (enemyInfo[i].invincible) {
+			if (enemyInfo[i].invincible) 
+			{
 				enemyInfo[i].immuneToFire = enemyInfo[i].immuneToFreeze = enemyInfo[i].immuneToLightning = enemyInfo[i].immuneToStun = enemyInfo[i].immuneToTongue = true;
 			}
 		}
@@ -377,7 +384,8 @@ void GameData::loadEnemyData() {
 		else enemyInfo[i].chases = (strcmp(enemyStringTable->GetString(varName.c_str()), "T") == 0);
 		
 		//Load ranged info for ranged enemies
-		if (enemyInfo[i].hasRangedAttack) {
+		if (enemyInfo[i].hasRangedAttack) 
+		{
 			//Ranged Attack Type
 			varName = Util::intToString(i);
 			varName += "PType";
@@ -407,13 +415,12 @@ void GameData::loadEnemyData() {
 			else enemyInfo[i].projectileHoming = (strcmp(enemyStringTable->GetString(varName.c_str()), "T") == 0);
 			
 		}
-			
 	}
+}
 
-} // end loadEnemyData()
-
-void GameData::initializeGemCounts() {
-	totalGemCounts[FOUNTAIN_AREA][0] = 8;
+void GameData::initializeGemCounts() 
+{
+	totalGemCounts[FOUNTAIN_AREA][0] = 9;
 	totalGemCounts[FOUNTAIN_AREA][1] = 1;
 	totalGemCounts[FOUNTAIN_AREA][2] = 1;
 
@@ -421,7 +428,7 @@ void GameData::initializeGemCounts() {
 	totalGemCounts[OLDE_TOWNE][1] = 3;
 	totalGemCounts[OLDE_TOWNE][2] = 1;
 
-	totalGemCounts[FOREST_OF_FUNGORIA][0] = 14;
+	totalGemCounts[FOREST_OF_FUNGORIA][0] = 17;
 	totalGemCounts[FOREST_OF_FUNGORIA][1] = 6;
 	totalGemCounts[FOREST_OF_FUNGORIA][2] = 3;
 	
@@ -429,7 +436,7 @@ void GameData::initializeGemCounts() {
 	totalGemCounts[SESSARIA_SNOWPLAINS][1] = 2;
 	totalGemCounts[SESSARIA_SNOWPLAINS][2] = 1;
 
-	totalGemCounts[WORLD_OF_DESPAIR][0] = 8;
+	totalGemCounts[WORLD_OF_DESPAIR][0] = 9;
 	totalGemCounts[WORLD_OF_DESPAIR][1] = 3;
 	totalGemCounts[WORLD_OF_DESPAIR][2] = 1;
 
@@ -457,22 +464,24 @@ void GameData::initializeGemCounts() {
 /**
  * Adds an enemy name to the list of enemy names if it doesn't already exist.
  */
-void GameData::addEnemyName(int id, std::string name) {
-	
+void GameData::addEnemyName(int id, std::string name) 
+{
 	bool alreadyExists = false;
 	
 	std::list<EnemyName>::iterator i;
-	for (i = enemyNameList.begin(); i != enemyNameList.end(); i++) {
-		if (strcmp(name.c_str(), i->name.c_str()) == 0) {
+	for (i = enemyNameList.begin(); i != enemyNameList.end(); i++) 
+	{
+		if (strcmp(name.c_str(), i->name.c_str()) == 0) 
+		{
 			alreadyExists = true;
 		}
 	}
 
-	if (!alreadyExists) {
+	if (!alreadyExists) 
+	{
 		EnemyName enemyName;
 		enemyName.name = name;
 		enemyName.id = id;
 		enemyNameList.push_back(enemyName);
 	}
-
 }

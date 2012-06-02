@@ -7,34 +7,35 @@
 
 extern SMH *smh;
 
-LoadingScreen::LoadingScreen(int _fileNumber, bool _fromLoadScreen) {
-
+LoadingScreen::LoadingScreen(int _fileNumber, bool _fromLoadScreen) 
+{
 	fileNumber = _fileNumber;
 	timeEnteredScreen = smh->getRealTime();
 	startedLoadYet = false;
 	fromLoadScreen = _fromLoadScreen;
 	isNewGame = smh->saveManager->isFileEmpty(fileNumber);
 	smh->soundManager->fadeOutMusic();
-
 }
 
-LoadingScreen::~LoadingScreen() {
-
+LoadingScreen::~LoadingScreen()
+{
 }
 
-void LoadingScreen::draw(float dt) {
-	
-	if (!fromLoadScreen) {
+void LoadingScreen::draw(float dt) 
+{
+	if (!fromLoadScreen) 
+	{
 		smh->drawScreenColor(Colors::BLACK, 255.0);
 	}
 
 	smh->resources->GetSprite("loadingText")->Render(512,384);
 }
 
-bool LoadingScreen::update(float dt, float mouseX, float mouseY) {
-	
+bool LoadingScreen::update(float dt, float mouseX, float mouseY) 
+{	
 	//Perform the load
-	if (!startedLoadYet) {
+	if (!startedLoadYet) 
+	{
 		//sometimes the screen is dark -- this is put here to ensure that does not happen
 		smh->drawScreenColor(Colors::BLACK,0.0);
 		smh->fadeScreenToNormal();
