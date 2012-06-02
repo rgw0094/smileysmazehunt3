@@ -37,6 +37,8 @@
 === Graphics To Do ===
 
  * Cane icon for the inventory
+ * Fire floater graphic (in smolder hollow)
+ * Gem graphics
 
 === Bugs ===
  * 119,156 at Tut: I got a timed switch to stay switched on the wrong side. I was hitting both of the switches in that area repeatedly and quickly when it happened. Update 8/26/09: Cannot reproduce this. Oh well -- if it happens in-game, the player is screwed.
@@ -65,10 +67,10 @@
  * Monocle man's advice goes away too quickly.  My dad was testing using a game pad so didn't even have the keyboard out, and by the time he got to press N the message was gone.  Could we just change it so that you press "Attack" instead?
  * Phyrebawz 1 is too hard.  I put some life in his battle area, which I think is an alright solution, but thought it was worth mentioning here.
  * Could we implement a continue option that doesn't force you to reload your game from the main menu?  After my dad died on Phyrebawz 40 times it became tiresome for him.
- * Fire breath has a poor USER EXPERIENCE. It needs to have some knockback because otherwise enemies just walk right into you as you use it.
 
 ===Done===
 ||Item||Date||Done By||
+||Improved fire breath collision detection and made it knockback enemies close to Smiley||6/1/12||RGW||
 ||Made it so buzzards can be knocked back by the tongue||6/1/12||RGW||
 ||Made the damage/mana display in the inventory actually correct and useful||6/1/12||RGW||
 ||Added enemy health bars||6/1/12||RGW||
