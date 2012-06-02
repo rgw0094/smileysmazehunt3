@@ -21,7 +21,7 @@
 
 === Graphics To Do ===
 
- * Hover icon for the inventory
+ * Cane icon for the inventory
 
 === Bugs ===
  * 119,156 at Tut: I got a timed switch to stay switched on the wrong side. I was hitting both of the switches in that area repeatedly and quickly when it happened. Update 8/26/09: Cannot reproduce this. Oh well -- if it happens in-game, the player is screwed.
