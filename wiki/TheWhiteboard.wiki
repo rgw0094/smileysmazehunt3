@@ -2,7 +2,6 @@
  * The end credits have a bunch of things to fix: the Gayass Ghost, sentinels, and gumdrops are not in the game (but we could add the gumdrops?), Mr. Bigglesworth is actually called a Walkin'-Bomb, buzzard has no wings, most of the enemies are looking left but would look better looking forward, Barvinoid is missing, Bartli/BrianFungus/Magnitogorsk are missing parts of their bodies.
  * Add the thud noises when you lick a boss.
  * Add new noises to the Fenwar battle and change boss music
- * During the close-up gross licking of Fenwar when he dies, it plays the title theme but I think silence would make the moment more effective.
  * Implement the goblin using a balloon instead of a clown head.
  * After picking up 1 mana pickup, your mana begins recharging instantly.  This is bad since then there is little incentive to ever pick up more than one since your mana will recharge anyways, and ends up giving you way too much mana.  Then running around owning everyone with orbs is too easy to do.
  * Ice hop should center Smiley on tile
@@ -51,6 +50,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Made the menu music not start during the grotesque licking scene||6/2/12||RGW||
 ||Made the death effect a little QUICKER and when you hit enter it reloads your last save instead of going to the menu||6/2/12||RGW||
 ||Fixed gem totals on the world map||6/2/12||RGW||
 ||Made the cane activate instantly instead of arbitrarily having to use it for 3 seconds||6/1/12||RGW||
