@@ -12,10 +12,6 @@
  * Bartli gets blocked by silly pads. Make it so she runs them over and makes them disappear
 
 === Sounds To Add ===
- * Smiley getting frozen (smiley frozen)
- * Portly Penguin when he launches himself at you
- * Portly Penguin when he hops out of the water (portlyjumpout)
- * Portly Penguin when he releases his freezing ray (BB)
  * Bartli jumping (boing) 
  * Bartli landing (DD) (bartli hitting the ground)
  * Bartli throwing candy (CC)
