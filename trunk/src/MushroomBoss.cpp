@@ -283,6 +283,7 @@ void MushroomBoss::spawnMiniMushroomProjectile() {
 	smh->projectileManager->addProjectile(x,y,MINI_MUSHROOM_PROJECTILE_SPEED,
 			Util::getAngleBetween(x,y,smh->player->x,smh->player->y)+smh->randomFloat(-PI/32,PI/32),
 			MINI_MUSHROOM_PROJECTILE_DAMAGE,true,false,MINI_MUSHROOM_PROJECTILE_ID,true);
+	smh->soundManager->playSound("snd_mushLaunchMushlet");
 }
 
 void MushroomBoss::doSpiral(float dt) {
@@ -403,6 +404,10 @@ void MushroomBoss::doBombs(float dt) {
 				i->yBomb = i->y0 + i->dy;
 				i->yShadow = i->y0 + i->dy;
 
+				//if this is the first frame that we are ending parabola mode, play sound of bomb landing
+				if (i->inParabolaMode=true) { 
+					smh->soundManager->playSound("snd_mushBombLand");
+				}
 				i->inParabolaMode=false;
 			}
 		}
@@ -489,6 +494,9 @@ void MushroomBoss::addBomb(float _x,float _y) {
 	newBomb.yShadow = y0;
 
 	theBombs.push_back(newBomb);
+
+	//Play sound
+	smh->soundManager->playSound("snd_mushBombToss");
 }
 
 void MushroomBoss::initiateDeathSequence() {

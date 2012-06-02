@@ -459,7 +459,8 @@ void SpecialTileManager::resetFlames() {
 void SpecialTileManager::addMushroom(int _gridX, int _gridY, int _graphicsIndex) {
 	Mushroom newMushroom;
 
-	newMushroom.state = MUSHROOM_STATE_IDLING;
+	newMushroom.state = MUSHROOM_STATE_GROWING;
+	newMushroom.beginGrowTime = smh->getGameTime();
 
 	newMushroom.gridX = _gridX;
 	newMushroom.gridY = _gridY;
@@ -474,7 +475,6 @@ void SpecialTileManager::addMushroom(int _gridX, int _gridY, int _graphicsIndex)
 
 	theMushrooms.push_back(newMushroom);
 }
-
 
 void SpecialTileManager::drawMushrooms (float dt) {
 	std::list<Mushroom>::iterator i;

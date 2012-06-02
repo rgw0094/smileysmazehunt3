@@ -168,7 +168,7 @@ numEnemies="103"
 8ImmuneStun="T"
 
 ;Bomb generator bomb
-9Name=      "Mr. Bigglesworth"
+9Name=      "Walkin' Bomb"
 9GCol=      "8"
 9GRow=      "4"
 9EnemyType= "3"

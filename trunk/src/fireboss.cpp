@@ -171,7 +171,7 @@ bool FireBoss::update(float dt) {
 		startedFenwarLeave = smh->getGameTime();
 		fenwarWarp->Fire();
 		fenwarAlpha = 255.0f;
-		//Start boxx music
+		//Start boss music
 		smh->soundManager->playMusic("bossMusic");
 	}
 
