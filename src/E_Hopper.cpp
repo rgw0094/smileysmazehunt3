@@ -87,6 +87,7 @@ void E_Hopper::update(float dt)
 	if (hopping)
 	{		
 		hopYOffset = (hopDistance / 3.0) * sin((smh->timePassedSince(timeStartedHop)/timeToHop) * PI);
+		projectileYOffset = hopYOffset;
 		collisionBox->SetRadius(x, y - hopYOffset, radius);
 		
 		if (smh->timePassedSince(timeStartedHop) > timeToHop) 

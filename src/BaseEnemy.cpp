@@ -145,20 +145,31 @@ void BaseEnemy::initEnemy(int _id, int _gridX, int _gridY, int _groupID) {
  * Switches states and calls exitState() on the old state and enterState() 
  * on the new.
  */
-void BaseEnemy::setState(EnemyState *newState) {
-
+void BaseEnemy::setState(EnemyState *newState) 
+{
 	//Exit old state
-	if (currentState) {
+	if (currentState) 
+	{
 		currentState->exitState();
 		delete currentState;
 	}
 
 	//Enter new state
 	currentState = newState;
-	if (currentState) {
+	if (currentState) 
+	{
 		currentState->enterState();
 	}
+}
 
+/**
+ * Deals the specified damage to the enemy.
+ *
+ * @param damage	Damage to deal
+ */
+void BaseEnemy::dealDamage(float damage)
+{
+	health -= damage;
 }
 
 /**
@@ -171,18 +182,21 @@ void BaseEnemy::setState(EnemyState *newState) {
  * @param knockbackerY  y location of the object that knocked smiley back
  */ 
 void BaseEnemy::dealDamageAndKnockback(float damage, float knockbackDist,
-									float knockbackerX, float knockbackerY) {
+									float knockbackerX, float knockbackerY)
+{
+	dealDamage(damage);
 
-	health -= damage;
-	float knockbackAngle = Util::getAngleBetween(knockbackerX, knockbackerY, x, y);
-	
-	knockbackXDist = knockbackDist * cos(knockbackAngle);
-	knockbackYDist = knockbackDist * sin(knockbackAngle);
-	
-	knockbackTime = .2;
-	knockback = true;
-	startedKnockback = smh->getGameTime();
-
+	if (knockbackDist > 0.0)
+	{
+		float knockbackAngle = Util::getAngleBetween(knockbackerX, knockbackerY, x, y);
+		
+		knockbackXDist = knockbackDist * cos(knockbackAngle);
+		knockbackYDist = knockbackDist * sin(knockbackAngle);
+		
+		knockbackTime = .2;
+		knockback = true;
+		startedKnockback = smh->getGameTime();
+	}
 }
 
 /**
@@ -213,13 +227,10 @@ bool BaseEnemy::canShootPlayer(float fromX, float fromY, float angle) {
  * Returns the length of the straight line connecting the enemy to the
  * player's position.
  */
-int BaseEnemy::distanceFromPlayer() {
-	if (x == smh->player->x && y == smh->player->y) return 0;
-	int xDist = abs(x - smh->player->x);
-	int yDist = abs(y - smh->player->y);
-	return sqrt(float(xDist*xDist) + float(yDist*yDist));
+int BaseEnemy::distanceFromPlayer() 
+{
+	return Util::distance(smh->player->x, smh->player->y, x, y);
 }
-
 
 /**
  * Handles moving the enemy for this frame - checks collision and shit
@@ -258,12 +269,13 @@ void BaseEnemy::move(float dt) {
 /**
  * Calculate the mapPath array for an enemy
  */
-void BaseEnemy::doAStar() {
+void BaseEnemy::doAStar() 
+{
 	doAStar(smh->player->gridX, smh->player->gridY, 10);
 }
 
-void BaseEnemy::doAStar(int destinationX, int destinationY, int updateRadius) {
-
+void BaseEnemy::doAStar(int destinationX, int destinationY, int updateRadius) 
+{
 	boolean found;
 	int lowValue;
 
@@ -279,38 +291,53 @@ void BaseEnemy::doAStar(int destinationX, int destinationY, int updateRadius) {
 	int endY = (gridY >= smh->environment->areaHeight - updateRadius) ? smh->environment->areaHeight : gridY + updateRadius;
 
 	//Initialize mapPath array
-	for (int i = startX; i < endX; i++) {
-		for (int j = startY; j < endY; j++) {
+	for (int i = startX; i < endX; i++) 
+	{
+		for (int j = startY; j < endY; j++) 
+		{
 			//If the player is at (i,j), the distance from (i,j) is 0
-			if (i == destinationX && j == destinationY) {
+			if (i == destinationX && j == destinationY) 
+			{
 				mapPath[i][j] = 0;
 			//If (i,j) is inaccessible, set distance to 999
-			} else if (!canPass[smh->environment->collision[i][j]] || smh->environment->hasSillyPad(i, j)) {			
+			} 
+			else if (!canPass[smh->environment->collision[i][j]] || smh->environment->hasSillyPad(i, j)) 
+			{
 				mapPath[i][j] = 999;
 			//Otherwise put a -1
-			} else {
+			} 
+			else 
+			{
 				mapPath[i][j] = -1;
 			}
 		}
 	}
 
 	//Loop until no new positions are calculated
-	do {
+	do 
+	{
 		found = false;		//no position has been calculated yet
 		
 		//First check for tiles which can be mapped. Set these to markMap == true.
-		for (int i = startX; i < endX; i++) {
-			for (int j = startY; j < endY; j++) {	
+		for (int i = startX; i < endX; i++) 
+		{
+			for (int j = startY; j < endY; j++) 
+			{
 				markMap[i][j] = false;
 				//If (i,j) hasn't been calculated yet
-				if (mapPath[i][j] == -1) {
+				if (mapPath[i][j] == -1) 
+				{
 					//Scan neighbors
-					for (int ni = i-1; ni <= i+1; ni++) {
-						for (int nj = j-1; nj <= j+1; nj++) {
+					for (int ni = i-1; ni <= i+1; ni++) 
+					{
+						for (int nj = j-1; nj <= j+1; nj++) 
+						{
 							//Verify neighbor is on map and (ni,nj) != (i,j)
-							if (ni >= 0 && nj >= 0 && ni < smh->environment->areaWidth && nj <= smh->environment->areaHeight && !(ni == i && nj == j)) {
+							if (ni >= 0 && nj >= 0 && ni < smh->environment->areaWidth && nj <= smh->environment->areaHeight && !(ni == i && nj == j)) 
+							{
 								//Verify square hasn't been calculated yet and is accessible to this enemy
-								if (mapPath[ni][nj] >= 0 && mapPath[ni][nj] != 999) {
+								if (mapPath[ni][nj] >= 0 && mapPath[ni][nj] != 999) 
+								{
 									markMap[i][j] = true;	//this cell can be calculated
 									found = true;			//a calculatable cell has been found
 								}
@@ -321,37 +348,43 @@ void BaseEnemy::doAStar(int destinationX, int destinationY, int updateRadius) {
 			}
 		}
 
-
 		//Next scan all marked squares and calculate the distance.
-		for (int i = startX; i < endX; i++) {
-			for (int j = startY; j < endY; j++) {
-				if (markMap[i][j]) {
+		for (int i = startX; i < endX; i++) 
+		{
+			for (int j = startY; j < endY; j++) 
+			{
+				if (markMap[i][j]) 
+				{
 					lowValue = 999;
 					//Loop through neighbors
-					for (int ni = i-1; ni <= i+1; ni++) {
-						for (int nj = j-1; nj <= j+1; nj++) {
+					for (int ni = i-1; ni <= i+1; ni++) 
+					{
+						for (int nj = j-1; nj <= j+1; nj++) 
+						{
 							//Verify the neighbor is on the map
-							if (ni >= 0 && nj >= 0 && ni < smh->environment->areaWidth && nj < smh->environment->areaHeight && !(ni == i && nj == j)) {
+							if (ni >= 0 && nj >= 0 && ni < smh->environment->areaWidth && nj < smh->environment->areaHeight && !(ni == i && nj == j)) 
+							{
 								//Verify this square hasn't been calculated already
-								if (mapPath[ni][nj] >= 0) {
-									
+								if (mapPath[ni][nj] >= 0) 
+								{	
 									//If diagonal, make sure you can actually get there
 									bool diagonalOK=verifyDiagonal(i,j,ni,nj);
 									
 									//Assign the value to lowvalue if it is lower
-									if (mapPath[ni][nj] < lowValue && diagonalOK) {
+									if (mapPath[ni][nj] < lowValue && diagonalOK) 
+									{
 										lowValue = mapPath[ni][nj];
 									}
 								}
 							}
 						}
 					}
+
 					//Assign the lowest neighbor value +1 to the square
 					mapPath[i][j] = lowValue+1;
 				}
 			}
 		}
-
 	} while (found);
 }
 
@@ -360,7 +393,8 @@ void BaseEnemy::doAStar(int destinationX, int destinationY, int updateRadius) {
  * This functional is used by the A* algorithm to make sure that the algorithm doesn't try to make enemies
    run "between" 2 diagonal objects. If they did try to run through, they'd be stuck!
  */
-bool BaseEnemy::verifyDiagonal(int curX, int curY, int neighborX, int neighborY) {
+bool BaseEnemy::verifyDiagonal(int curX, int curY, int neighborX, int neighborY) 
+{
 	int diffX = neighborX - curX;
 	int diffY = neighborY - curY;
 
@@ -374,13 +408,13 @@ bool BaseEnemy::verifyDiagonal(int curX, int curY, int neighborX, int neighborY)
 
 	//Passed both conditions above, so return true
 	return true;
-	
 }
 
 /**
  * Sets the enemy to face the player no matter how far away he is.
  */
-void BaseEnemy::setFacingPlayer() {
+void BaseEnemy::setFacingPlayer() 
+{
 	setFacingPlayer(999999.0, DOWN);
 }
 
@@ -394,41 +428,47 @@ void BaseEnemy::setFacingPlayer() {
  *							maximumDistance away, or -1 to stay the current
  *							direction.
  */
-void BaseEnemy::setFacingPlayer(int maximumDistance, int defaultDirection) {
-
-	if (distanceFromPlayer() < maximumDistance) {
+void BaseEnemy::setFacingPlayer(int maximumDistance, int defaultDirection) 
+{
+	if (distanceFromPlayer() < maximumDistance) 
+	{
 		int xDist = smh->player->x - x;
 		int yDist = smh->player->y - y;
-		if (xDist < 0 && yDist < 0) {
+		if (xDist < 0 && yDist < 0) 
+		{
 			//Player up-left from enemy
-			if (abs(xDist) > abs(yDist)) {
+			if (abs(xDist) > abs(yDist)) 
 				facing = LEFT;
-			} else {
+			else 
 				facing = UP;
-			}
-		} else if (xDist > 0 && yDist < 0) {
+		} 
+		else if (xDist > 0 && yDist < 0) 
+		{
 			//Player up-right from enemy
-			if (abs(xDist) > abs(yDist)) {
+			if (abs(xDist) > abs(yDist))
 				facing = RIGHT;
-			} else {
+			else
 				facing = UP;
-			}
-		} else if (xDist < 0 && yDist > 0) {
+		} 
+		else if (xDist < 0 && yDist > 0) 
+		{
 			//Player  left-down from enemy
-			if (abs(xDist) > abs(yDist)) {
+			if (abs(xDist) > abs(yDist))
 				facing = LEFT;
-			} else {
+			else
 				facing = DOWN;
-			}
-		} else if (xDist > 0 && yDist > 0) {
+		} 
+		else if (xDist > 0 && yDist > 0) 
+		{
 			//Player right-down from enemy
-			if (abs(xDist) > abs(yDist)) {
+			if (abs(xDist) > abs(yDist))
 				facing = RIGHT;	
-			} else {
+			else
 				facing = DOWN;
-			}
 		}
-	} else {
+	} 
+	else 
+	{
 		facing = defaultDirection;
 	}
 }
@@ -436,7 +476,8 @@ void BaseEnemy::setFacingPlayer(int maximumDistance, int defaultDirection) {
 /** 
  * Make the enemy flash after being hit.
  */ 
-void BaseEnemy::startFlashing() {
+void BaseEnemy::startFlashing() 
+{
 	flashing = true;
 	timeStartedFlashing = smh->getGameTime();
 }
@@ -461,22 +502,32 @@ void BaseEnemy::setFacing() {
  * things that need to be done by every enemy in the framework and should never
  * need to be overrode!!!!
  */
-void BaseEnemy::baseUpdate(float dt) {
-	if (isSpawning) {
+void BaseEnemy::baseUpdate(float dt) 
+{
+	if (isSpawning) 
+	{
 		//spawning, so update the spawn effect that until it's done
-		if (spawnState == ENEMY_SPAWNSTATE_FALLING) {
+		if (spawnState == ENEMY_SPAWNSTATE_FALLING) 
+		{
 			spawnY -= 100.0*dt;
-			if (spawnY <= 0.0) {
+			if (spawnY <= 0.0) 
+			{
 				spawnY = 0.0;
 				spawnState = ENEMY_SPAWNSTATE_GROWING;
 			}
-		} else if (spawnState == ENEMY_SPAWNSTATE_GROWING) {
+		} 
+		else if (spawnState == ENEMY_SPAWNSTATE_GROWING) 
+		{
 			spawnSize += dt;
-			if (spawnSize >= 1.0) {
+			if (spawnSize >= 1.0) 
+			{
 				spawnSize = 1.0;
 				isSpawning = false;
 			}
-		} else { //who knows how the state could be 'else', but oh well.
+		} 
+		else 
+		{ 
+			//who knows how the state could be 'else', but oh well.
 			isSpawning = false;
 		}
 		
@@ -492,28 +543,30 @@ void BaseEnemy::baseUpdate(float dt) {
 	screenY = smh->getScreenY(y);
 
 	//Update statuses
-	if (stunned && smh->timePassedSince(startedStun) > stunLength) {
+	if (stunned && smh->timePassedSince(startedStun) > stunLength) 
 		stunned = false;
-	}
-	if (flashing && smh->timePassedSince(timeStartedFlashing) > ENEMY_FLASH_DURATION) {
+
+	if (flashing && smh->timePassedSince(timeStartedFlashing) > ENEMY_FLASH_DURATION) 
 		flashing = false;
-	}
-	if (knockback && smh->timePassedSince(startedKnockback) > knockbackTime) {
+
+	if (knockback && smh->timePassedSince(startedKnockback) > knockbackTime)
 		knockback = false;
-	}
-	if (frozen && smh->timePassedSince(timeFrozen) > ENEMY_FROZEN_DURATION) {
+
+	if (frozen && smh->timePassedSince(timeFrozen) > ENEMY_FROZEN_DURATION)
 		frozen = false;
-	}
 
 	//Update default animations
-	if (!frozen && !stunned && (abs(dx) > 0.0 || abs(dy) > 0.0)) {
-		for (int n = 0; n < 4; n++) {
+	if (!frozen && !stunned && (abs(dx) > 0.0 || abs(dy) > 0.0)) 
+	{
+		for (int n = 0; n < 4; n++) 
+		{
 			graphic[n]->Update(dt);
 		}
 	}
 
 	//Update the enemy's current state
-	if (currentState) {
+	if (currentState) 
+	{
 		currentState->update(dt);
 	}
 
@@ -524,14 +577,23 @@ void BaseEnemy::baseUpdate(float dt) {
 	doPlayerCollision();
 
 	//Fire breath collision
-	if (!immuneToFire) {
-		if (smh->player->fireBreathParticle->testCollision(collisionBox)) {
+	if (!immuneToFire) 
+	{
+		if (smh->player->fireBreathParticle->testCollision(collisionBox)) 
+		{
 			frozen = false;
-			dealDamageAndKnockback(smh->player->getFireBreathDamage()*dt, 
-				500.0*dt,smh->player->x, smh->player->y);
+
+			double damage = smh->player->getFireBreathDamage() * dt;
+			if (distanceFromPlayer() < 90)
+			{
+				dealDamageAndKnockback(damage, 30.0, smh->player->x, smh->player->y);
+			}
+			else
+			{
+				dealDamage(damage);
+			}
 		}
 	}
-
 }
 
 /**
@@ -587,17 +649,17 @@ void BaseEnemy::baseDraw(float dt)
 	//Draw health bar
 	if (health < maxHealth)
 	{
-		smh->resources->GetSprite("blackSquare")->SetColor(ARGB(150,255,255,255));
+		smh->resources->GetSprite("blackSquare")->SetColor(ARGB(100,255,255,255));
 		smh->resources->GetSprite("blackSquare")->RenderStretch(
 				screenX - 30.0f, 
-				screenY - 38.0f, 
+				screenY - 38.0f - projectileYOffset, 
 				screenX + 30.0f, 
-				screenY - 33.0f);
+				screenY - 33.0f - projectileYOffset);
 		smh->resources->GetSprite("bossHealthBar")->RenderStretch(
 				screenX - 30.0f, 
-				screenY - 38.0f, 
+				screenY - 38.0f - projectileYOffset, 
 				screenX - 30.0f + 60.0f * (health / maxHealth), 
-				screenY - 33.0f);
+				screenY - 33.0f - projectileYOffset);
 	}
 	
 	//Debug mode stuff

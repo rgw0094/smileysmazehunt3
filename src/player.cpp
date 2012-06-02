@@ -513,14 +513,15 @@ void Player::drawGUI(float dt) {
  * Some day there might be a leet framework, but for now there is just this
  * shitty method.
  */
-void Player::doAbility(float dt) {
-
+void Player::doAbility(float dt) 
+{
 	//Base requirements for being allowed to use an ability
 	bool canUseAbility = !abilitiesLocked && !waterWalk && !falling && !springing && !frozen 
 		&& !drowning && !springing && hoveringYOffset == 0.0;
 
 	//Draw enemy immunities if the cane is selected
-	if (gui->getSelectedAbility() == CANE) {
+	if (gui->getSelectedAbility() == CANE) 
+	{
 		smh->enemyManager->drawEnemyImmunities();
 	}
 	
@@ -1333,7 +1334,6 @@ void Player::doWater() {
 		enteredWaterX = gridX;
 		enteredWaterY = gridY;
 	}
-
 }
 
 /**
@@ -1343,9 +1343,9 @@ void Player::updateVelocities(float dt)
 {
 	//For the following states, velocities are handled in their respective update methods
 	if (falling || inShrinkTunnel || iceSliding || sliding || springing || graduallyMoving) return;
-
 	
-	if (frozen || drowning || stunned || immobile) {
+	if (frozen || drowning || stunned || immobile) 
+	{
 		dx = dy = 0.0;
 		return;
 	}
@@ -1354,13 +1354,15 @@ void Player::updateVelocities(float dt)
 	float accel = (smh->environment->collision[gridX][gridY] == SLIME && hoveringYOffset==0.0) ? SLIME_ACCEL : PLAYER_ACCEL; 
 
 	//Stop drifting when abs(dx) < accel
-	if (!iceSliding && !sliding && !springing) {
+	if (!iceSliding && !sliding && !springing) 
+	{
 		if (dx > -1.0*accel*dt && dx < accel*dt) dx = 0.0;
 		if (dy > -1.0*accel*dt && dy < accel*dt) dy = 0.0;
 	}
 
 	//Decelerate
-	if (!iceSliding && !sliding && !springing) {
+	if (!iceSliding && !sliding && !springing) 
+	{
 		if ((smh->input->keyDown(INPUT_AIM) && !iceSliding && !knockback) || (!smh->input->keyDown(INPUT_LEFT) && !smh->input->keyDown(INPUT_RIGHT) && !knockback))
 			if (dx > 0) dx -= accel*dt; 
 			else if (dx < 0) dx += accel*dt;
@@ -1370,21 +1372,26 @@ void Player::updateVelocities(float dt)
 	}
 
 	//Movement input
-	if (!smh->input->keyDown(INPUT_AIM) && !iceSliding && !sliding && !knockback && !springing) {
+	if (!smh->input->keyDown(INPUT_AIM) && !iceSliding && !sliding && !knockback && !springing) 
+	{
 		//Move Left
-		if (smh->input->keyDown(INPUT_LEFT)) {
+		if (smh->input->keyDown(INPUT_LEFT)) 
+		{
 			if (dx > -1*MOVE_SPEED && !sliding) dx -= accel*dt;
 		}
 		//Move Right
-		if (smh->input->keyDown(INPUT_RIGHT)) {
+		if (smh->input->keyDown(INPUT_RIGHT)) 
+		{
 			if (dx < MOVE_SPEED && !sliding) dx += accel*dt;
 		}
 		//Move Up
-		if (smh->input->keyDown(INPUT_UP)) {
+		if (smh->input->keyDown(INPUT_UP)) 
+		{
 			if (dy > -1*MOVE_SPEED && !sliding) dy -= accel*dt;
 		}
 		//Move Down
-		if (smh->input->keyDown(INPUT_DOWN)) {
+		if (smh->input->keyDown(INPUT_DOWN)) 
+		{
 			if (dy < MOVE_SPEED && !sliding) dy += accel*dt;
 		}
 	}
@@ -1395,33 +1402,32 @@ void Player::updateVelocities(float dt)
  * Before this was added, pressing the "action" button on the "load game" screen would cause Smiley
  * to swing his tongue upon entering the level.
  */
-void Player::resetTongue() {
+void Player::resetTongue() 
+{
 	tongue->resetAttack();
 }
 
 /**
  * Sets the player's facing direction based on what directional keys are pressed.
  */
-void Player::setFacingDirection() {
-	
-	if (!frozen && !drowning && !falling && !iceSliding && !knockback && !springing && smh->environment->collision[gridX][gridY] != SPRING_PAD && smh->environment->collision[gridX][gridY] != SUPER_SPRING) {
-			
+void Player::setFacingDirection() 
+{	
+	if (!frozen && !drowning && !falling && !iceSliding && !knockback && !springing && smh->environment->collision[gridX][gridY] != SPRING_PAD && smh->environment->collision[gridX][gridY] != SUPER_SPRING) 
+	{		
 		if (smh->input->keyDown(INPUT_LEFT)) facing = LEFT;
 		else if (smh->input->keyDown(INPUT_RIGHT)) facing = RIGHT;
 		else if (smh->input->keyDown(INPUT_UP)) facing = UP;
 		else if (smh->input->keyDown(INPUT_DOWN)) facing = DOWN;
 
 		//Diagonals
-		if (smh->input->keyDown(INPUT_LEFT) && smh->input->keyDown(INPUT_UP)) {
+		if (smh->input->keyDown(INPUT_LEFT) && smh->input->keyDown(INPUT_UP))
 			facing = UP_LEFT;
-		} else if (smh->input->keyDown(INPUT_RIGHT) && smh->input->keyDown(INPUT_UP)) {
+		else if (smh->input->keyDown(INPUT_RIGHT) && smh->input->keyDown(INPUT_UP))
 			facing=UP_RIGHT;
-		} else if (smh->input->keyDown(INPUT_LEFT) && smh->input->keyDown(INPUT_DOWN)) {
+		else if (smh->input->keyDown(INPUT_LEFT) && smh->input->keyDown(INPUT_DOWN))
 			facing = DOWN_LEFT;
-		} else if (smh->input->keyDown(INPUT_RIGHT) && smh->input->keyDown(INPUT_DOWN)) {
+		else if (smh->input->keyDown(INPUT_RIGHT) && smh->input->keyDown(INPUT_DOWN))
 			facing = DOWN_RIGHT;
-		}
-			
 	}
 }
 
@@ -1897,7 +1903,6 @@ void Player::checkForIceGlitch() {
 				iceSliding = false;
 				//if (smh->isDebugOn()) MessageBox(NULL,"Gay ice fix (moving diagonally).","Gay ice fix",MB_OK);
 			}
-			
 		}
 	}
 }

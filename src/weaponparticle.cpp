@@ -260,48 +260,74 @@ void WeaponParticleSystem::Stop(bool bKillParticles) {
 /**
  * Draw the particle system
  */
-void WeaponParticleSystem::Render() {
-
+void WeaponParticleSystem::Render() 
+{
 	int i;
 	DWORD col;
 	weaponParticle *par=particles;
 
 	col=info.sprite->GetColor();
 
-	for (i=0; i<nParticlesAlive; i++) {
+	for (i=0; i<nParticlesAlive; i++) 
+	{
 		info.sprite->SetColor(par->colColor.GetHWColor());
 		info.sprite->RenderEx(par->vecLocation.x+fTx, par->vecLocation.y+fTy, par->fSpin*par->fAge, par->fSize);
 		par++;
 	}
 
 	info.sprite->SetColor(col);
-
 }
 
 /**
  * Returns whether or not collisionBox collides with this weapon particle system.
  */
-bool WeaponParticleSystem::testCollision(hgeRect *collisionBox) {
+bool WeaponParticleSystem::testCollision(hgeRect *collisionBox) 
+{
 	weaponParticle *par=particles;
+	hgeRect *rect = new hgeRect();
 	
-	for (int i=0; i<nParticlesAlive; i++) {
-		bool collides = collisionBox->TestPoint(par->vecLocation.x + smh->environment->xGridOffset*64.0 + smh->environment->xOffset, par->vecLocation.y + smh->environment->yGridOffset*64.0 + smh->environment->yOffset);
-		if (collides) return true;
+	for (int i=0; i<nParticlesAlive; i++) 
+	{
+		rect->SetRadius(
+			par->vecLocation.x + smh->environment->xGridOffset*64.0 + smh->environment->xOffset, 
+			par->vecLocation.y + smh->environment->yGridOffset*64.0 + smh->environment->yOffset, 
+			info.sprite->GetWidth() / par->fSize);
+
+		if (collisionBox->Intersect(rect))
+		{
+			return true;
+		}
+
 		par++;
 	}
+
+	delete rect;
 	return false;
 }
 
 /**
  * Returns whether or not collisionCircle collides with this weapon particle system.
  */
-bool WeaponParticleSystem::testCollision(CollisionCircle *collisionCircle) {
+bool WeaponParticleSystem::testCollision(CollisionCircle *collisionCircle) 
+{
 	weaponParticle *par=particles;
+	hgeRect *rect = new hgeRect();
 	
-	for (int i=0; i<nParticlesAlive; i++) {
-		bool collides = collisionCircle->testPoint(par->vecLocation.x + smh->environment->xGridOffset*64.0 + smh->environment->xOffset, par->vecLocation.y + smh->environment->yGridOffset*64.0 + smh->environment->yOffset);
-		if (collides) return true;
+	for (int i=0; i<nParticlesAlive; i++) 
+	{
+		rect->SetRadius(
+			par->vecLocation.x + smh->environment->xGridOffset*64.0 + smh->environment->xOffset, 
+			par->vecLocation.y + smh->environment->yGridOffset*64.0 + smh->environment->yOffset, 
+			info.sprite->GetWidth() / par->fSize);
+
+		if (collisionCircle->testBox(rect))
+		{
+			return true;
+		}
+
 		par++;
 	}
+
+	delete rect;
 	return false;
 }

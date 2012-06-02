@@ -148,6 +148,7 @@ public:
 	int distanceFromPlayer();
 	void initEnemy(int _id, int _gridX, int _gridY, int _groupID);
 	void dealDamageAndKnockback(float damage, float knockbackDist, float knockbackerX, float knockbackerY);
+	void dealDamage(float damage);
 	void setFacingPlayer(int maximumDistance, int defaultDirection);
 	void setFacingPlayer();
 	void setFacing();
@@ -647,7 +648,6 @@ private:
 	float lastDirChange;
 	float dirChangeDelay;
 	float shadowOffset;
-
 };
 
 /**
