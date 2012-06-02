@@ -13,11 +13,12 @@
 
 === Sounds To Add ===
  * Cornwallis spines shooting (suggestion: machine gun sound that loops)
- * Calypso shooting fireball from hand
+ * Calypso shooting fireball from hand (AA)
  * Calypso shooting ice from hand
  * Calypso being stunned
  * Smiley getting frozen
- * Phyrebawz2 launching fireballs
+ * Phyrebawz1 launching fire orbs (AA)
+ * Phyrebawz2 launching fireballs (AA)
 
 === Graphics To Do ===
 
