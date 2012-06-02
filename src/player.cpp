@@ -122,7 +122,7 @@ void Player::reset() {
 	reflectionShieldActive = flashing = knockback = sliding = stunned = graduallyMoving =
 		onWarp = falling = breathingFire = inLava = inShallowWater = healing =
 		waterWalk = onWater = drowning = shrinkActive = sprinting = isHovering = 
-		cloaked = springing = usingCane = iceSliding = frozen = slimed = chargingFrisbee = 
+		cloaked = springing = iceSliding = frozen = slimed = chargingFrisbee = 
 		inShrinkTunnel = immobile = invincible = uber = abilitiesLocked = 
 		tongueLocked = jesusSoundPlaying = false;
 }
@@ -479,15 +479,6 @@ void Player::drawGUI(float dt) {
 			384.0 - 50.0 - hoveringYOffset);
 	}
 
-	//Cane bar
-	if (usingCane) {
-		smh->resources->GetSprite("bossHealthBar")->RenderStretch(
-			512.0 - 30.0, 
-			384.0 - 55.0 - hoveringYOffset, 
-			512.0 - 30.0 + 60.0 * (smh->timePassedSince(timeStartedCane) / CANE_TIME), 
-			384.0 - 50.0 - hoveringYOffset);
-	}
-
 	//Hover bar
 	if (isHovering) {
 		smh->resources->GetSprite("bossHealthBar")->RenderStretch(
@@ -655,8 +646,8 @@ void Player::doAbility(float dt)
 
 	/////////////////// Triggered Abilities ///////////////
 	
-	if (smh->input->keyPressed(INPUT_ABILITY) && canUseAbility) {
-
+	if (smh->input->keyPressed(INPUT_ABILITY) && canUseAbility) 
+	{
 		//Shoot lightning orbs
 		if (gui->getSelectedAbility() == LIGHTNING_ORB && mana >= smh->gameData->getAbilityInfo(LIGHTNING_ORB).manaCost &&
 			smh->timePassedSince(lastOrb) > smh->environment->getSwitchDelay()) 
@@ -668,11 +659,14 @@ void Player::doAbility(float dt)
 			smh->projectileManager->addProjectile(x, y, 700.0, angles[facing]-.5*PI, getLightningOrbDamage(), false, false,PROJECTILE_LIGHTNING_ORB, true);
 		}
 
-		//Start using cane
-		if (gui->getSelectedAbility() == CANE && !usingCane && mana >= smh->gameData->getAbilityInfo(CANE).manaCost) {
-			usingCane = true;
-			smh->resources->GetParticleSystem("smileysCane")->FireAt(smh->getScreenX(x), smh->getScreenY(y));
-			timeStartedCane = smh->getGameTime();			
+		//Summon Bill Clinton
+		if (gui->getSelectedAbility() == CANE && mana >= smh->gameData->getAbilityInfo(CANE).manaCost) 
+		{
+			facing = DOWN;
+			mana -= smh->gameData->getAbilityInfo(CANE).manaCost;
+			timeLastUsedMana = smh->getGameTime();
+			if (mana < 0) mana = 0;
+			smh->windowManager->openHintTextBox();
 		}
 
 		//Place Silly Pad
@@ -701,7 +695,6 @@ void Player::doAbility(float dt)
 				smh->soundManager->playSound("snd_DeShrink");
 			}
 		}
-
 	}
 
 	//Update particle systems
@@ -724,7 +717,6 @@ void Player::doAbility(float dt)
 		if (smh->timePassedSince(startedIceBreath) > 1.2) {
 			breathingIce = false;
 		}
-			
 	}
 	
 	////////////// Shrink //////////////
@@ -790,30 +782,6 @@ void Player::doAbility(float dt)
 		}
 		radius = DEFAULT_RADIUS * shrinkScale;
 	}
-
-	////////////// Smiley's Cane //////////////
-
-	smh->resources->GetParticleSystem("smileysCane")->Update(dt);
-	if (usingCane) {
-		//The cane usage gets interrupted if Smiley moves
-		if (!smh->input->keyDown(INPUT_ABILITY) || smh->input->keyDown(INPUT_LEFT) || 
-				smh->input->keyDown(INPUT_RIGHT) || smh->input->keyDown(INPUT_UP) || 
-				smh->input->keyDown(INPUT_DOWN) || dx > 0.0 || dy > 0.0) {
-			usingCane = false;
-			smh->resources->GetParticleSystem("smileysCane")->Stop(false);
-		}
-		//Summon Bill Clinton after using the cane for the required amount of time
-		if (smh->timePassedSince(timeStartedCane) > CANE_TIME) {
-			smh->resources->GetParticleSystem("smileysCane")->Stop(false);
-			usingCane = false;
-			facing = DOWN;
-			mana -= smh->gameData->getAbilityInfo(CANE).manaCost;
-			timeLastUsedMana = smh->getGameTime();
-			if (mana < 0) mana = 0;
-			smh->windowManager->openHintTextBox();
-		}
-	}
-
 }
 
 /**
