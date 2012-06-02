@@ -13,7 +13,7 @@ class Slider;
 #define AREA_MAP 1
 #define WORLD_MAP 2
 
-#define TEXT_INPUT_DELAY 1.65
+#define TEXT_INPUT_DELAY .5
 
 //----------------------------------------------------------------
 //------------------BASE WINDOW-----------------------------------
