@@ -556,8 +556,10 @@ void BaseEnemy::baseCleanup()
  * draw logic that must be done by every enemy in the framework and should never
  * need to be overridden!!!!
  */
-void BaseEnemy::baseDraw(float dt) {
-	if (isSpawning) {
+void BaseEnemy::baseDraw(float dt) 
+{
+	if (isSpawning) 
+	{
 		graphic[0]->RenderEx(smh->getScreenX(x),smh->getScreenY(y)-spawnY,0.0,spawnSize,spawnSize);
 		//graphic[0]->Render(100,100);
 		return;
@@ -565,18 +567,36 @@ void BaseEnemy::baseDraw(float dt) {
 
 	//Call the enemy's draw function. If the enemy is currently flashing,
 	//skip calling it some frames to create the flashing effect.
-	if (!flashing || int(smh->getGameTime() * 100) % 10 > 5) {
+	if (!flashing || int(smh->getGameTime() * 100) % 10 > 5) 
+	{
 		draw(dt);
 	}
 
 	//Draw the ice block over the enemy if its frozen
-	if (frozen) {
+	if (frozen) 
+	{
 		drawFrozen(dt);
 	}
 
 	//Stunned enemy
-	if (stunned) {
+	if (stunned) 
+	{
 		drawStunned(dt);
+	}
+
+	//Draw health bar
+	if (health < maxHealth)
+	{
+		smh->resources->GetSprite("blackSquare")->RenderStretch(
+				screenX - 30.0f, 
+				screenY - 38.0f, 
+				screenX + 30.0f, 
+				screenY - 33.0f);
+		smh->resources->GetSprite("bossHealthBar")->RenderStretch(
+				screenX - 30.0f, 
+				screenY - 38.0f, 
+				screenX - 30.0f + 60.0f * (health / maxHealth), 
+				screenY - 33.0f);
 	}
 	
 	//Debug mode stuff
