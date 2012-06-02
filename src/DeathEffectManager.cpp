@@ -10,19 +10,23 @@ extern SMH *smh;
 #define LETTERS_FALLING 2
 #define EFFECT_FINISHED 3
 
-DeathEffectManager::DeathEffectManager() {
+DeathEffectManager::DeathEffectManager() 
+{
 	active = false;
 }
 
-DeathEffectManager::~DeathEffectManager() {
+DeathEffectManager::~DeathEffectManager() 
+{
 	//this object is never deleted
 }
 
-bool DeathEffectManager::isActive() {
+bool DeathEffectManager::isActive() 
+{
 	return active;
 }
 
-void DeathEffectManager::beginEffect() {
+void DeathEffectManager::beginEffect() 
+{
 	alpha = 0.0;
 	smileyScale = 1.0;
 	active = true;
@@ -37,51 +41,69 @@ void DeathEffectManager::beginEffect() {
 /**
  * Updates the death screen
  */
-void DeathEffectManager::update(float dt) {
-
+void DeathEffectManager::update(float dt) 
+{
 	if (!active) return;
 
-	if (state == FADING_IN) {
+	if (state == FADING_IN) 
+	{
 		//The screen fades to red
-		alpha += 100.0 * dt;
-		if (alpha > 100.0) {
+		alpha += 150.0 * dt;
+		if (alpha > 100.0) 
+		{
 			alpha = 100.0;
 			enterState(HAT_FALLING);
 		}
-	} else if (state == HAT_FALLING) {
+	} else if (state == HAT_FALLING) 
+	{
 		//Then smiley shrinks and his hat falls to cover him
-		smileyScale -= 0.5 * dt;
-		if (smileyScale <= 0.0) {
+		smileyScale -= 0.6 * dt;
+		if (smileyScale <= 0.0) 
+		{
 			smileyScale = 0.0;
 			enterState(LETTERS_FALLING);
 			smh->soundManager->playMusic("deathMusic");
 		}
-	} else if (state == LETTERS_FALLING) {
-		for (int i = 0; i < 8; i++) {
-			if (!letters[i].startedYet) {
-				if (smh->getRealTime() - timeEnteredState > 1.0 +  float(i)*0.35) {
+	} else if (state == LETTERS_FALLING) 
+	{
+		for (int i = 0; i < 8; i++) 
+		{
+			if (!letters[i].startedYet) 
+			{
+				if (smh->getRealTime() - timeEnteredState > 0.1 +  float(i)*0.25) 
+				{
 					letters[i].startedYet = true;
 				}
-			} else {
-				letters[i].yOffset += 700.0 * dt;
-				if (letters[i].yOffset >= 0.0) {
+			} 
+			else 
+			{
+				letters[i].yOffset += 900.0 * dt;
+				if (letters[i].yOffset >= 0.0) 
+				{
 					letters[i].yOffset = 0.0;
-					if (i == 7) {
+					if (i == 7) 
+					{
 						enterState(EFFECT_FINISHED);
 					}
 				}
 			}
 		}
-	} else if (state == EFFECT_FINISHED) {
-
-		if (textAlpha < 255.0) {
+	} 
+	else if (state == EFFECT_FINISHED) 
+	{
+		if (textAlpha < 255.0) 
+		{
 			textAlpha += min(255.0, textAlpha + 255.0 * dt);
 		}
 
-		if (smh->hge->Input_KeyDown(HGEK_ENTER)) {
+		if (smh->hge->Input_KeyDown(HGEK_ENTER)) 
+		{
 			active = false;
-			smh->menu->open(MenuScreens::TITLE_SCREEN);
 			smh->soundManager->stopEnvironmentChannel();
+
+			//Reload from their last save point
+			smh->enterGameState(MENU);
+			smh->menu->openLoadScreen(smh->saveManager->currentSave, true);
 		}
 	}
 }
@@ -89,33 +111,37 @@ void DeathEffectManager::update(float dt) {
 /**
  * Draws the death screen
  */
-void DeathEffectManager::draw(float dt) {
-
+void DeathEffectManager::draw(float dt) 
+{
 	if (!active) return;
 
 	smh->drawScreenColor(Colors::RED, alpha);
 	smh->resources->GetSprite("smileyWithoutHat")->RenderEx(510.0, 387.0, 0.0, smileyScale, smileyScale); 
 	smh->drawSprite("smileysHat", 510.0, 387.0 - 34.0*smileyScale);
 
-	for (int i = 0; i < 8; i++) {
+	for (int i = 0; i < 8; i++) 
+	{
 		letters[i].sprite->Render(512.0, 220.0 + letters[i].yOffset);
 	}
 
-	if (state == EFFECT_FINISHED) {
+	if (state == EFFECT_FINISHED) 
+	{
 		float n = 8 * sin(smh->getRealTime() * 2.5);
 		smh->resources->GetFont("inventoryFnt")->SetColor(ARGB(textAlpha, 255, 255, 255));
 		smh->resources->GetFont("inventoryFnt")->printf(512.0, 650.0 + n, HGETEXT_CENTER, "Press Enter To Continue");
 	}
-
 }
 
-void DeathEffectManager::enterState(int newState) {
+void DeathEffectManager::enterState(int newState) 
+{
 	state = newState;
 	timeEnteredState = smh->getRealTime();
 }
 
-void DeathEffectManager::initLetters() {
-	for (int i = 0; i < 8; i++) {
+void DeathEffectManager::initLetters() 
+{
+	for (int i = 0; i < 8; i++) 
+	{
 		letters[i].yOffset = -500;
 		letters[i].startedYet = false;
 	}
