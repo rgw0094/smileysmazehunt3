@@ -263,10 +263,12 @@ public:
 
 	bool toDrawImmunities;
 
+	void playHitSoundEffect();
+
 private:
 
 	void killEnemy(std::list<EnemyStruct>::iterator i);
-	void playHitSoundEffect();
+	
 
 };
 

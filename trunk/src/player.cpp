@@ -613,6 +613,8 @@ void Player::doAbility(float dt) {
 			if (!smh->projectileManager->frisbeeActive()) { //no frisbee out there, so throw a frisbee
 				smh->projectileManager->addFrisbee(x, y, 400.0, angles[facing]-.5*PI, frisbeePower > (MAX_FRISBEE_POWER/10.0) ? frisbeePower : 0.0);
 				chargingFrisbee = false;
+				//play sound
+				smh->soundManager->playSound("snd_Lick1");
 			} else { //already a frisbee, so just stop charging
 				chargingFrisbee = false;
 				frisbeePower = 0;

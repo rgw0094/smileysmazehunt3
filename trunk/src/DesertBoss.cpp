@@ -467,6 +467,9 @@ void DesertBoss::spawnCactlet() {
 						 cactletGridX*64 + 32,
 						 cactletGridY*64 + 32);
 
+	//Play a sound
+	smh->soundManager->playSound("snd_sillyPad");
+
 }
 
 
