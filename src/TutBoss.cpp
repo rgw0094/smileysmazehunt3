@@ -389,7 +389,11 @@ void TutBoss::enterState(int _state) {
 	if (state == TUTBOSS_OPENING) {
 		smh->soundManager->playSound("snd_TutCoffinOpen");
 	}
+	if (state == TUTBOSS_CLOSING) {
+		smh->soundManager->playSound("snd_TutCoffinOpen");
+	}
 }
+
 
 void TutBoss::doOnGround(float dt) {
 	if (smh->timePassedSince(timeEnteredState) >= TIME_TO_BE_ON_GROUND) {
@@ -571,6 +575,7 @@ void TutBoss::doTombOpen(float dt) {
 		mummyLaunchAngle += PI/2.0;
 		lastMummySpawnTime = smh->getGameTime();
 		numMummiesSpawned++;
+		smh->soundManager->playSound("snd_sillyPad");
 	}
 
 	if (smh->timePassedSince(timeEnteredState) >= TIME_TO_STAY_OPEN) {

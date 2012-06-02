@@ -240,8 +240,11 @@ bool DespairBoss::update(float dt) {
 	if (state != DESPAIRBOSS_STUNNED) {
 
 		//When Calypso is hit by lightning orbs his shield absorbs them.
-		shieldAlpha += smh->projectileManager->killProjectilesInCircle(x, y, 90, 
-			PROJECTILE_LIGHTNING_ORB) * 20.0;
+		if (smh->projectileManager->killProjectilesInCircle(x,y,90,PROJECTILE_LIGHTNING_ORB))
+		{
+			shieldAlpha += 20.0;
+			smh->enemyManager->playHitSoundEffect();
+		}
 
 		//The absorbed energy slowly dissipates
 		if (state == DESPAIRBOSS_BATTLE) shieldAlpha -= 2.5 * dt;
