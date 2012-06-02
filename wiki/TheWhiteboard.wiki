@@ -12,7 +12,6 @@
  * Bartli gets blocked by silly pads. Make it so she runs them over and makes them disappear
 
 === Sounds To Add ===
- * Cornwallis spines shooting (suggestion: machine gun sound that loops) (CC) (machine gun shot)
  * Calypso shooting fireball from hand (AA) (flameshoot/shot)
  * Calypso shooting ice from hand (BB) (magic shot thing)
  * Calypso being stunned (calypsostun)
