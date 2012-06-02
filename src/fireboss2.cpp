@@ -633,6 +633,9 @@ void FireBossTwo::addFireBall(float x, float y, float angle, float speed, bool h
 
 	//Add it to the list
 	fireBallList.push_back(newFireBall);
+
+	//Play a sound
+	smh->soundManager->playSound("snd_FlameShoot");
 }
 
 /**

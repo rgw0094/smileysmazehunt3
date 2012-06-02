@@ -669,6 +669,9 @@ void DespairBoss::updateProjectiles(float dt) {
 					smh->player->dealDamage(ICE_DAMAGE, false);
 					smh->setDebugText("Smiley hit by Calypso's ice");
 					smh->player->freeze(FREEZE_DURATION);
+
+					//Play a sound
+					smh->soundManager->playSound("snd_SmileyFrozen");
 						
 					//Don't delete the ice nova if it hits Smiley -- deleting it makes the nova look gay. We do need to inactivate the nova, though, so it doesn't deal amy more damage to Smiley (or else it will deal damage every frame and kill Smiley in < 1 second)
 					deleteProjectile = false;
