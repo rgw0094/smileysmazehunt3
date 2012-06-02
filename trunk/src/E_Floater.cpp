@@ -10,8 +10,8 @@ extern SMH *smh;
 /** 
  * Constructor
  */
-E_Floater::E_Floater(int id, int gridX, int gridY, int groupID) {
-
+E_Floater::E_Floater(int id, int gridX, int gridY, int groupID) 
+{
 	//Call parent init function
 	initEnemy(id, gridX, gridY, groupID);
 
@@ -23,7 +23,6 @@ E_Floater::E_Floater(int id, int gridX, int gridY, int groupID) {
 	shadowOffset = 25.0;
 	lastDirChange = 0.0;
 	dirChangeDelay = 0.0;
-
 }
 
 /**
