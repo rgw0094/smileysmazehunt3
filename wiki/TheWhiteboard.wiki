@@ -27,10 +27,10 @@
  * Bartli throwing candy (CC)
  * King Tut shooting lightning
  * King Tut firing beams of light
- * Barvinoid hovering
- * Barvinoid landing (DD)
+ * Barvinoid hovering FOUND
+ * Barvinoid landing (DD) FOUND
  * Barvinoid opening/closing mouth
- * Barvinoid releasing enemies from mouth
+ * Barvinoid releasing enemies from mouth FOUND
  * Barvinoid shooting from his eye
 
 
