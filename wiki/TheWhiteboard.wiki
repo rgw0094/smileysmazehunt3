@@ -19,6 +19,7 @@
  * Smiley getting frozen
  * Phyrebawz1 launching fire orbs (AA)
  * Phyrebawz2 launching fireballs (AA)
+ * Portly Penguin when he launches himself at you
 
 === Graphics To Do ===
 
