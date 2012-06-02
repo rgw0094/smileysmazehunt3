@@ -110,7 +110,7 @@ bool MiniMenu::update(float dt) {
 					smh->windowManager->openOptionsWindow();
 					return true;
 				case MINIMENU_YES:
-					smh->menu->open(MenuScreens::TITLE_SCREEN);
+					smh->menu->open(MenuScreens::TITLE_SCREEN, true);
 					smh->saveManager->saveFileInfo();
 					return false;
 				case MINIMENU_NO:

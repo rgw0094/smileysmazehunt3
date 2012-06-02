@@ -119,7 +119,7 @@ void SMH::init()
 
 		//Open the menu after everything is initialized so that the music doesn't start playing
 		//until the screen starts drawing.
-		menu->open(MenuScreens::TITLE_SCREEN);
+		menu->open(MenuScreens::TITLE_SCREEN, true);
 
 		log("-------Initialization Complete-------");
 	}
@@ -162,11 +162,6 @@ bool SMH::updateGame()
 		if (gameState == MENU) {
 
 			if (menu->update(dt)) return true;
-
-			if (hge->Input_KeyDown(HGEK_G))
-			{
-				menu->open(MenuScreens::CLOSING_CINEMATIC_SCREEN);
-			}
 
 		} else if (gameState == GAME) {
 

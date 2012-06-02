@@ -18,28 +18,27 @@ MainMenu::~MainMenu()
 /**
  * Closes the current screen and opens the specified one
  */
-void MainMenu::setScreen(int screen) {
-
-	if (currentScreen != MenuScreens::NO_SCREEN) {
+void MainMenu::setScreen(int screen) 
+{
+	if (currentScreen != MenuScreens::NO_SCREEN) 
+	{
 		delete menuScreen;
 	}
 
 	currentScreen = screen;
 
-	if (currentScreen == MenuScreens::TITLE_SCREEN) {
+	if (currentScreen == MenuScreens::TITLE_SCREEN)
 		menuScreen = new TitleScreen();
-	} else if (currentScreen == MenuScreens::OPTIONS_SCREEN) {
+	else if (currentScreen == MenuScreens::OPTIONS_SCREEN)
 		menuScreen = new OptionsScreen();
-	} else if (currentScreen == MenuScreens::LOAD_SCREEN) {
+	else if (currentScreen == MenuScreens::LOAD_SCREEN)
 		menuScreen = new SelectFileScreen();
-	} else if (currentScreen == MenuScreens::CREDITS_SCREEN) {
+	else if (currentScreen == MenuScreens::CREDITS_SCREEN)
 		menuScreen = new CreditsScreen();
-	} else if (currentScreen == MenuScreens::CINEMATIC_SCREEN) {
+	else if (currentScreen == MenuScreens::CINEMATIC_SCREEN)
 		menuScreen = new CinematicScreen();
-	} else if (currentScreen == MenuScreens::CLOSING_CINEMATIC_SCREEN) {
+	else if (currentScreen == MenuScreens::CLOSING_CINEMATIC_SCREEN)
 		menuScreen = new ClosingCinematicScreen();
-	}
-
 }
 
 /**
@@ -83,7 +82,6 @@ bool MainMenu::update(float dt) {
 
 	//Update the current screen
 	return menuScreen->update(dt, mouseX, mouseY);
-
 }
 
 /**
@@ -121,11 +119,15 @@ void MainMenu::draw(float dt) {
 /**
  * Opens the menu
  */
-void MainMenu::open(int screen) 
+void MainMenu::open(int screen, bool playMusic) 
 {
 	smh->soundManager->stopAbilityChannel();
 	smh->soundManager->stopEnvironmentChannel();
 	smh->enterGameState(MENU);
 	setScreen(screen);
-	smh->soundManager->playMusic("menuMusic");
+
+	if (playMusic)
+	{
+		smh->soundManager->playMusic("menuMusic");
+	}
 }

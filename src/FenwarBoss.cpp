@@ -367,7 +367,7 @@ void FenwarBoss::doDroppingSpidersState(float dt)
 		//move full distance he can
 		y += distanceToMoveY;
 	} else {
-		//he would reach and overshoot the platform this frame, so just make x = platformX
+		//he would reach and overshoot the platform this frame, so just make y = platformY
 		y = platformY;
 	}
 
@@ -433,7 +433,7 @@ bool FenwarBoss::doNearDeathState(float dt)
 	//transition to the cinematic
 	if (smh->player->getTongue()->testCollision(collisionBox))
 	{
-		smh->menu->open(MenuScreens::CLOSING_CINEMATIC_SCREEN);
+		smh->menu->open(MenuScreens::CLOSING_CINEMATIC_SCREEN, false);
 		return true;
 	}
 
