@@ -13,12 +13,14 @@
 === Sounds To Add ===
  * Cornwallis spines shooting (suggestion: machine gun sound that loops)
  * Calypso shooting fireball from hand (AA)
- * Calypso shooting ice from hand
+ * Calypso shooting ice from hand (BB)
  * Calypso being stunned
  * Smiley getting frozen
  * Phyrebawz1 launching fire orbs (AA)
  * Phyrebawz2 launching fireballs (AA)
  * Portly Penguin when he launches himself at you
+ * Portly Penguin when he hops out of the water
+ * Portly Penguin when he releases his freezing ray (BB)
 
 === Graphics To Do ===
 
