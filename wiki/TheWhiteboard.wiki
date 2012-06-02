@@ -29,7 +29,7 @@
  * King Tut firing beams of light
  * Barvinoid hovering FOUND
  * Barvinoid landing (DD) FOUND
- * Barvinoid opening/closing mouth
+ * Barvinoid opening/closing mouth FOUND
  * Barvinoid releasing enemies from mouth FOUND
  * Barvinoid shooting from his eye
 
