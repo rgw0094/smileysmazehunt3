@@ -165,6 +165,8 @@ ConservatoryBoss::ConservatoryBoss(int _gridX,int _gridY,int _groupID) {
 
 	//hopping stuff
 	hopY = 0.0;
+	inAir=false;
+	justLanded=false;
 
 	//grid of projectiles stuff
 	initGridOfProjectiles();
@@ -264,6 +266,9 @@ void ConservatoryBoss::addFloatingEye(float addX, float addY) {
 	theFloatingEyes.push_back(newFloatingEye);
 	
 	numFloatingEyes++;
+
+	//Play a sound
+	smh->soundManager->playSound("snd_BarvLaunchEnemy");
 }
 
 void ConservatoryBoss::updateFloatingEyes(float dt) {
@@ -735,6 +740,10 @@ void ConservatoryBoss::doEyeAttackState(float dt) {
 		timeStartedHop = smh->getGameTime(); //we can't just use timeEnteredState for this, since there are 2 states that hop, and I want them to use the same initial time
 		eyeFlashes[LEFT_EYE].eyeFlashing = eyeFlashes[RIGHT_EYE].eyeFlashing = false;
 		eyeFlashes[LEFT_EYE].timeStartedFlash = eyeFlashes[RIGHT_EYE].timeStartedFlash = smh->getGameTime();
+		
+		//These are used for triggering the sound effects related to hopping (HOVER effect and LANDING THUD)
+		inAir=false;
+		justLanded=false;
 	}
 
 	if (smh->timePassedSince(lastEyeAttackTime) >= eyeAttackInterval) {
@@ -787,6 +796,8 @@ void ConservatoryBoss::updateMouthAnim(float dt) {
 		smh->resources->GetAnimation("barvinoidMouth")->SetMode(HGEANIM_FWD | HGEANIM_NOLOOP);
 		smh->resources->GetAnimation("barvinoidMouth")->SetFrame(0);
 		smh->resources->GetAnimation("barvinoidMouth")->Play();
+
+		smh->soundManager->playSound("snd_BarvMouth");
 	}
 
 	//Opening, see if it's time to 'stay open'
@@ -811,6 +822,7 @@ void ConservatoryBoss::updateMouthAnim(float dt) {
 			mouthState = MOUTH_STATE_CLOSING;
 			smh->resources->GetAnimation("barvinoidMouth")->SetMode(HGEANIM_REV | HGEANIM_NOLOOP);
 			smh->resources->GetAnimation("barvinoidMouth")->Play();
+			smh->soundManager->playSound("snd_BarvMouth");
 		}
 	}
 
@@ -845,6 +857,9 @@ void ConservatoryBoss::updateEyeGlow(int eye) {
 
 		//shoot!
 		smh->projectileManager->addProjectile(x-eyeFlashes[eye].x,y-eyeFlashes[eye].y,COMET_SPEED,Util::getAngleBetween(x-eyeFlashes[eye].x,y-eyeFlashes[eye].y,smh->player->x,smh->player->y)+smh->randomFloat(-0.5,0.5),COMET_DAMAGE,true,true,PROJECTILE_BARV_COMET,true);
+
+		//Play a sound
+		smh->soundManager->playSound("snd_BarvShoot");
 	}
 
 	//make the eye flash
@@ -887,6 +902,7 @@ void ConservatoryBoss::doHoppingState(float dt) {
     //if we've hopped quite enough, then hop to center
 	if (smh->timePassedSince(timeEnteredState) >= HOP_TIME) {
 		enterState(BARVINOID_HOPPING_TO_EDGE);
+	
 	}
 
 	if (smh->player->isInvisible()) {
@@ -967,6 +983,13 @@ void ConservatoryBoss::doHop(float dt, float destinationX, float destinationY) {
 	}
 
 	if (hopY < 0.0) { //move toward destination if in the air
+
+		//check to see if the sound effect has been triggered
+		if (!inAir) {
+			inAir=true;
+			smh->soundManager->playSound("snd_BarvFloat");
+		}
+
 		if (x != destinationX || y != destinationY) {
 			float angleToDestination = Util::getAngleBetween(x,y,destinationX,destinationY);
 			
@@ -992,6 +1015,12 @@ void ConservatoryBoss::doHop(float dt, float destinationX, float destinationY) {
 				y += yDiff;
 			}
 		}
+	} else { //not in air
+		if (inAir) {
+			inAir=false;
+			smh->soundManager->playSound("snd_LandingThud");
+		}
+
 	}
 
 }
