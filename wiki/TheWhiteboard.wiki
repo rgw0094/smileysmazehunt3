@@ -44,6 +44,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Improved the rumble sound effect prior to Fenwar's battle||6/3/2012||ETI||
 ||Added sound effects to all of the bosses except Fenwar||6/3/2012||ETI||
 ||Made the menu music not start during the grotesque licking scene||6/2/12||RGW||
 ||Made the death effect a little QUICKER and when you hit enter it reloads your last save instead of going to the menu||6/2/12||RGW||
