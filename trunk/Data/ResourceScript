@@ -1922,6 +1922,26 @@ Sound snd_TutLightbeamDecreasing {
  resgroup=14
 }
 
+Sound snd_BarvFloat {
+ filename="BarvFloat.mp3"
+ resgroup=14
+}
+
+Sound snd_BarvMouth {
+ filename="BarvMouth.mp3"
+ resgroup=14
+}
+
+Sound snd_BarvLaunchEnemy {
+ filename="BarvLaunch.mp3"
+ resgroup=14
+}
+
+Sound snd_BarvShoot {
+ filename="BarvShoot.mp3"
+ resgroup=14
+}
+
 ;************************************************
 ;******** CORNWALLIS (Resource group 103 ********
 ;************************************************

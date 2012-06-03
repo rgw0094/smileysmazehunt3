@@ -94,6 +94,8 @@ public:
 	bool shouldDrawAfterSmiley;
 	bool startedComplainDialogue;
 	bool startedDeathDialogue;
+	bool inAir; //this is used to trigger the HOVERING sound effect
+	bool justLanded; //this is used to trigger the THUD sound effect
 
 	//These variables are used to implement a delay from the time he's hit by a floating eye to the time
 	//he complains about it. That way the explosion has time to be seen before the dialogue box comes up
