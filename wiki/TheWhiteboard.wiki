@@ -10,12 +10,10 @@
  * Bartli gets blocked by silly pads. Make it so she runs them over and makes them disappear
 
 === Sounds To Add ===
- * Barvinoid hovering FOUND
- * Barvinoid landing (DD) FOUND
- * Barvinoid opening/closing mouth FOUND
- * Barvinoid releasing enemies from mouth FOUND
- * Barvinoid shooting from his eye FOUND
-
+ * Barvinoid floating eye count-down beeps
+ * Barvinoid glowing eye flash beeps
+ * Barvinoid floating eye being hit
+ * Barvinoid floating eye launching at player
 
 === Graphics To Do ===
 
