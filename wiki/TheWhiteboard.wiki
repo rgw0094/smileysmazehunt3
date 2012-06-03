@@ -10,8 +10,6 @@
  * Bartli gets blocked by silly pads. Make it so she runs them over and makes them disappear
 
 === Sounds To Add ===
- * King Tut shooting lightning (laser_zap)
- * King Tut firing beams of light
  * Barvinoid hovering FOUND
  * Barvinoid landing (DD) FOUND
  * Barvinoid opening/closing mouth FOUND
