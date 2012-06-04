@@ -49,6 +49,9 @@ void FenwarBullets::update(float dt)
 			}
 
 			i = bulletList.erase(i);
+
+			//Play a sound
+			smh->soundManager->playSound("snd_FenwarYellowDotSplit");
 			continue;
 		}
 	}
