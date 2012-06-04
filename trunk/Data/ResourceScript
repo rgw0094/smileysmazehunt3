@@ -1942,6 +1942,21 @@ Sound snd_BarvShoot {
  resgroup=14
 }
 
+Sound snd_FenwarYellowDotSplit {
+ filename="FenYellowDots.mp3"
+ resgroup=14
+}
+
+Sound snd_FenwarOrbsSpin {
+ filename="FenOrbsSpin.mp3"
+ resgroup=14
+}
+
+Sound snd_FenwarOrbPop {
+ filename="FenOrbPop.mp3"
+ resgroup=14
+}
+
 ;************************************************
 ;******** CORNWALLIS (Resource group 103 ********
 ;************************************************

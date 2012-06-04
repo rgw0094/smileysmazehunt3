@@ -28,7 +28,7 @@
 
 #define FENWAR_ENEMY_DROP 91
 
-#define FENWAR_STUN_TIME 6.5
+#define FENWAR_STUN_TIME 7.5
 
 
 
@@ -326,11 +326,23 @@ void FenwarBoss::doBattleState(float dt)
 	if (orbManager->numOrbsAlive() == 0)
 	{
 		enterState(FenwarStates::STUNNED_AFTER_LOSING_ORBS);
+		//cause him to be knocked back a bit
+		toKnockback=true;
+		startKnockbackY = y;
 		
 	}
 }
 
 void FenwarBoss::doStunnedState(float dt) {
+	if (toKnockback) {
+		y -= 128*dt;
+		if (y <= startKnockbackY-64) {
+			y = startKnockbackY - 64;
+			toKnockback=false;
+		}
+	}
+			
+
 	if (smh->timePassedSince(timeEnteredState) < FENWAR_STUN_TIME) {
 		floatingYOffset -= 30* dt;
 		if (floatingYOffset < 0.0) floatingYOffset = 0.0;
@@ -608,8 +620,13 @@ void FenwarBoss::terraformArena()
 						} 
 						else if (Util::distance(platformLocations[k].x, platformLocations[k].y, i, j) <= 1) 
 						{
-							//Platform
-							smh->environment->specialTileManager->addTimedTile(i, j, platformTerrain, WALKABLE, 0, TERRAFORM_DURATION);
+							//Platform -- forget about this. Make them all hoverpads.
+							//smh->environment->specialTileManager->addTimedTile(i, j, platformTerrain, WALKABLE, 0, TERRAFORM_DURATION);
+							
+							
+							//Make them all hoverpads
+							smh->environment->specialTileManager->addTimedTile(i, j, platformTerrain, HOVER_PAD, 0, TERRAFORM_DURATION);
+							
 							isPlatform = true;
 							continue;
 						}

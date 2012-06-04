@@ -67,6 +67,10 @@ void FenwarOrbs::update(float dt)
 				smh->environment->addParticle("deathCloud", i->x, i->y);
 				delete i->collisionCircle;
 				i = orbList.erase(i);
+
+				//Play a sound
+				smh->soundManager->playSound("snd_FenwarOrbPop");
+
 				continue;
 			}
 		}
