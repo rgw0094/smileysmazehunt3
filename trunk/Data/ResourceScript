@@ -1343,7 +1343,7 @@ Sprite miniMapRedSquare {
 ;********************
 Sprite abilityBackground {
  texture=UserInterfaceTx
- rect=661,427,146,131
+ rect=661,427,238,80
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }

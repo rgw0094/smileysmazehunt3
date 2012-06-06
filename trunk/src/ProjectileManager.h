@@ -94,7 +94,6 @@ public:
 	void reflectProjectile(std::list<Projectile>::iterator projectile);
 	bool reflectProjectilesInBox(hgeRect *collisionBox, int type);
 	bool reflectProjectilesInCircle(float x, float y, float radius, int type);
-	bool frisbeeActive();
 	int getProjectileRadius(int id);
 	int killProjectilesInBox(hgeRect *collisionBox, int type);
 	int killProjectilesInBox(hgeRect *collisionBox, int type, bool killHostile, bool killNonhostile);
