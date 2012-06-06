@@ -434,12 +434,12 @@ const char* SmileyInput::getInputName(int whichInput) {
 		case INPUT_RIGHT: return "Right";
 		case INPUT_UP: return "Up";
 		case INPUT_DOWN: return "Down";
-		case INPUT_ATTACK: return "Attack/Select";
-		case INPUT_ABILITY1: return "Use Ability 1";
-		case INPUT_ABILITY2: return "Use Ability 2";
-		case INPUT_ABILITY3: return "Use Ability 3";
+		case INPUT_ATTACK: return "Attack";
+		case INPUT_ABILITY1: return "Ability 1";
+		case INPUT_ABILITY2: return "Ability 2";
+		case INPUT_ABILITY3: return "Ability 3";
 		case INPUT_AIM: return "Aim";
-		case INPUT_PAUSE: return "Inventory/Map";
+		case INPUT_PAUSE: return "Inventory";
 		default: return "Error";
 	}
 }
@@ -447,8 +447,8 @@ const char* SmileyInput::getInputName(int whichInput) {
 /**
  * Returns a description of the specified input. Used for the menu.
  */
-std::string SmileyInput::getInputDescription(int whichInput) {
-
+std::string SmileyInput::getInputDescription(int whichInput) 
+{
 	std::string description;
 
 	//Edit mode
