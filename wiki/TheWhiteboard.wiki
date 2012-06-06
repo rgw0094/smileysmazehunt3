@@ -1,4 +1,5 @@
 === Programming To Do ===
+ * New way to navigate between inventory/minimap/worldmap
  * The end credits have a bunch of things to fix: the Gayass Ghost is not in the game, buzzard has no wings, most of the enemies are looking left but would look better looking forward, Barvinoid is missing, Bartli/BrianFungus/Magnitogorsk are missing parts of their bodies.
  * Add the thud noises when you lick a boss.
  * Add new noises to the Fenwar battle and change boss music
@@ -18,6 +19,7 @@
 === Graphics To Do ===
 
  * Gems
+ * Ability hotkey bar. Feel free to make the spacing/dimensions different than the filler graphic!!!!
 
 === Bugs ===
  * If you're on ice and you go into a warp, the ice sound effect continues even though you're not on ice anymore. Example: Sessaria Snowplains 169,148
@@ -27,10 +29,6 @@
  * A spider dropping blimp randomly disappeared.  It was on its way down in its oscillations and disappeared on what seemed to be its lowest point if that has any relevance.  Also I was just about to lick it and may have just licked it before it went away.  I couldn't reproduce this after many (30 or so) tries.
 
 === Balance/Gameplay Issues ===
- * The current ability controls are CLUNKY. You have 3 buttons (previous, next, use ability) to use 3 abilities, so why not just make it stright forward and press 1,2,3 (or whatever the user picks) to use your 3 currently selected abilities? Doing this shouldn't allow the player to do anything they currently can't, it just makes it less of a pain in the DICK 
-  * If we do this we might want to add a DURATION LIMIT to the speed boots so that it's not optimal to just hold down the speed boot button the entire game 
-  * We'll need to have a new mechanism for switching between inventory screens if the Next/Previous buttons are gone. It could work like Zelda:OoT where there are left/right buttons that you can navigate your cursor over
-  * Jesus' sandals will have to become an activated ability instead of passive
  * Its kind of LAME that you have to buy one of each upgrade before progressing to the next TIER. We should just let them buy whatever they want, otherwise it defeats the purpose of having a shop at all instead of having the gems just directly buff your stats!!!
  * Tut is a bit too easy.  You can just mass flame breath him and kill him easily in 2 cycles.  I think that after you damage him a set amount (say like 25% or 20% of his total life) that he should close his casket up just to assure that the battle isn't trivial.  Also for Bartli we should do something similar.  I suggest that after she craps out a Bartlet that she immediately moves onto her next phase.
  * Likewise for Barvinoid, after you shoot all of his projectiles at him he just sits there for a while before moving.  Just make him move as soon as the projectiles have all been shot.
