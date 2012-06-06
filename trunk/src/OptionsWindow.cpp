@@ -93,20 +93,20 @@ bool OptionsWindow::update(float dt)
 	//Update input boxes
 	for (int i = 0; i < 10; i++)
 	{
-		x = windowX + 180;
-		y = windowY + 80 + i * 80.0;
+		x = windowX + 165;
+		y = windowY + 85 + i * 37.0;
 
 		//Listen for click to enable edit mode
 		inputBox->Set(x, y, x + 130.0, y + 30.0);
 		if (mousePressed && inputBox->TestPoint(mouseX, mouseY)) 
 		{
-			smh->input->setEditMode(currentInput);
+			smh->input->setEditMode(i);
 		}
 
 		//If the input is in edit mode, listen for the new input
-		if (smh->input->isEditModeEnabled(currentInput)) 
+		if (smh->input->isEditModeEnabled(i)) 
 		{
-			smh->input->listenForNewInput(currentInput);
+			smh->input->listenForNewInput(i);
 		}
 	}
 
