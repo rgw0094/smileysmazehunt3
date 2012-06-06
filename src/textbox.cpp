@@ -124,7 +124,7 @@ void TextBox::setAdvice(int _advice)
 
 	//AdvicePages
 	if (advice == AdviceTypes::ADVICE_INVENTORY)
-		numPages = 4;
+		numPages = 3;
 	else if (advice == AdviceTypes::ADVICE_FRISBEE)
 		numPages = 3;
 	else if (advice == AdviceTypes::ADVICE_SHOP)
@@ -176,8 +176,6 @@ void TextBox::draw(float dt)
 		paramString += "-";
 		paramString += Util::intToString(currentPage);
 		smh->resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, smh->gameData->getGameText(paramString.c_str()));
-
-	
 	} 
 	else if (textBoxType == TextBoxTypes::DIALOG_TYPE) 
 	{
@@ -417,7 +415,7 @@ std::string TextBox::getAbilityText(int ability) {
 
 	switch (ability) {
 		case CANE:
-			return "You got Bill Clinton's Cane! Equip it and hold Ability (" + smh->input->getInputDescription(INPUT_ABILITY) + ") for three seconds to receive the president's wisdom.";
+			return "You got Bill Clinton's Cane! Use it to receive the president's wisdom.";
 		case WATER_BOOTS:
 			return "You found Jesus' Sandals. You can now walk on Water!";
 		case FRISBEE:
@@ -449,9 +447,8 @@ std::string TextBox::getAdviceText(int advice, int page) {
 		case AdviceTypes::ADVICE_INVENTORY:
 			switch (page) {
 				case 1: return "You can access your inventory by pressing [" + smh->input->getInputDescription(INPUT_PAUSE) + "].";
-				case 2: return "In your inventory you can select up to three abilities that will be available in the ability wheel in the top left hand side of your screen. You can toggle which abilities appear there by pressing Attack (" + smh->input->getInputDescription(INPUT_ATTACK) + ")";
-				case 3: return "The ability in the big center circle will be the one activated when you press or hold the Ability button (" + smh->input->getInputDescription(INPUT_ABILITY) + ").";
-				case 4: return "You can cycle left and right through your abilities by pressing (" + smh->input->getInputDescription(INPUT_PREVIOUS_ABILITY) + ") and (" + smh->input->getInputDescription(INPUT_NEXT_ABILITY) + "). Remember that you can press Escape at any time to access the menu and change your controls!";
+				case 2: return "In your inventory you can select up to three abilities that will be available in the ability bar in the top left hand side of your screen. You can toggle which abilities appear there by pressing Attack (" + smh->input->getInputDescription(INPUT_ATTACK) + ")";
+				case 3: return "You can use the abilities assigned to the ability bar at any time by using the three ability buttons (" + smh->input->getInputDescription(INPUT_ABILITY1) + ", " + smh->input->getInputDescription(INPUT_ABILITY2) + ", " + smh->input->getInputDescription(INPUT_ABILITY3) + ").";
 			}
 		case AdviceTypes::ADVICE_SAVING:
 			return "To save your game you must simply lick one of the many lollipops strewn throughout our land.";
@@ -467,7 +464,7 @@ std::string TextBox::getAdviceText(int advice, int page) {
 			switch (page)
 			{
 				case 1: return "The frisbee can be used to stun enemies or to hit far away switches.";
-				case 2: return "To simply throw the frisbee to toggle a switch, tap the Ability button (" + smh->input->getInputDescription(INPUT_ABILITY) + ")";
+				case 2: return "To simply throw the frisbee to toggle a switch, tap the ability button.";
 				case 3: return "You can also charge up a powerful stun attack by holding the ability button before releasing it to launch the frisbee. The longer you charge up, the longer any enemies you hit will be stunned!";
 			}
 		case AdviceTypes::ADVICE_SHOP:

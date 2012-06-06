@@ -20,8 +20,8 @@ extern SMH *smh;
 /**
  * Constructor
  */
-SmileyInput::SmileyInput() {
-
+SmileyInput::SmileyInput() 
+{
 	g_pDI=NULL;
 	g_pJoystick=NULL;
 	useGamePad = false;
@@ -363,10 +363,10 @@ void SmileyInput::saveInputs() {
 	smh->hge->Ini_SetInt("Controls","up",inputs[INPUT_UP].code);
 	smh->hge->Ini_SetInt("Controls","down",inputs[INPUT_DOWN].code);
 	smh->hge->Ini_SetInt("Controls","attack",inputs[INPUT_ATTACK].code);
-	smh->hge->Ini_SetInt("Controls","ability",inputs[INPUT_ABILITY].code);
+	smh->hge->Ini_SetInt("Controls","ability1",inputs[INPUT_ABILITY1].code);
+	smh->hge->Ini_SetInt("Controls","ability2",inputs[INPUT_ABILITY2].code);
+	smh->hge->Ini_SetInt("Controls","ability3",inputs[INPUT_ABILITY3].code);
 	smh->hge->Ini_SetInt("Controls","aim",inputs[INPUT_AIM].code);
-	smh->hge->Ini_SetInt("Controls","next",inputs[INPUT_NEXT_ABILITY].code);
-	smh->hge->Ini_SetInt("Controls","previous",inputs[INPUT_PREVIOUS_ABILITY].code);
 	smh->hge->Ini_SetInt("Controls","exit",inputs[INPUT_PAUSE].code);
 
 	//Save device for each input
@@ -375,10 +375,10 @@ void SmileyInput::saveInputs() {
 	smh->hge->Ini_SetInt("Controls","upDevice",inputs[INPUT_UP].device);
 	smh->hge->Ini_SetInt("Controls","downDevice",inputs[INPUT_DOWN].device);
 	smh->hge->Ini_SetInt("Controls","attackDevice",inputs[INPUT_ATTACK].device);
-	smh->hge->Ini_SetInt("Controls","abilityDevice",inputs[INPUT_ABILITY].device);
+	smh->hge->Ini_SetInt("Controls","abilityDevice1",inputs[INPUT_ABILITY1].device);
+	smh->hge->Ini_SetInt("Controls","abilityDevice2",inputs[INPUT_ABILITY2].device);
+	smh->hge->Ini_SetInt("Controls","abilityDevice3",inputs[INPUT_ABILITY3].device);
 	smh->hge->Ini_SetInt("Controls","aimDevice",inputs[INPUT_AIM].device);
-	smh->hge->Ini_SetInt("Controls","nextDevice",inputs[INPUT_NEXT_ABILITY].device);
-	smh->hge->Ini_SetInt("Controls","previousDevice",inputs[INPUT_PREVIOUS_ABILITY].device);
 	smh->hge->Ini_SetInt("Controls","exitDevice",inputs[INPUT_PAUSE].device);
 
 }
@@ -395,10 +395,10 @@ void SmileyInput::loadInputs() {
 	inputs[INPUT_UP].code = smh->hge->Ini_GetInt("Controls","up",HGEK_UP);
 	inputs[INPUT_DOWN].code = smh->hge->Ini_GetInt("Controls","down",HGEK_DOWN);
 	inputs[INPUT_ATTACK].code = smh->hge->Ini_GetInt("Controls","attack",HGEK_SPACE);
-	inputs[INPUT_ABILITY].code = smh->hge->Ini_GetInt("Controls","ability",HGEK_CTRL);
+	inputs[INPUT_ABILITY1].code = smh->hge->Ini_GetInt("Controls","ability1",HGEK_1);
+	inputs[INPUT_ABILITY2].code = smh->hge->Ini_GetInt("Controls","ability2",HGEK_2);
+	inputs[INPUT_ABILITY3].code = smh->hge->Ini_GetInt("Controls","ability3",HGEK_3);
 	inputs[INPUT_AIM].code = smh->hge->Ini_GetInt("Controls","aim",HGEK_ALT);
-	inputs[INPUT_NEXT_ABILITY].code = smh->hge->Ini_GetInt("Controls","next",HGEK_X);
-	inputs[INPUT_PREVIOUS_ABILITY].code = smh->hge->Ini_GetInt("Controls","previous",HGEK_Z);
 	inputs[INPUT_PAUSE].code = smh->hge->Ini_GetInt("Controls","exit",HGEK_I);
 
 	//Load device for each input
@@ -407,10 +407,10 @@ void SmileyInput::loadInputs() {
 	inputs[INPUT_UP].device = smh->hge->Ini_GetInt("Controls","upDevice",DEVICE_KEYBOARD);
 	inputs[INPUT_DOWN].device = smh->hge->Ini_GetInt("Controls","downDevice",DEVICE_KEYBOARD);
 	inputs[INPUT_ATTACK].device = smh->hge->Ini_GetInt("Controls","attackDevice",DEVICE_KEYBOARD);
-	inputs[INPUT_ABILITY].device = smh->hge->Ini_GetInt("Controls","abilityDevice",DEVICE_KEYBOARD);
+	inputs[INPUT_ABILITY1].device = smh->hge->Ini_GetInt("Controls","abilityDevice1",DEVICE_KEYBOARD);
+	inputs[INPUT_ABILITY2].device = smh->hge->Ini_GetInt("Controls","abilityDevice2",DEVICE_KEYBOARD);
+	inputs[INPUT_ABILITY3].device = smh->hge->Ini_GetInt("Controls","abilityDevice3",DEVICE_KEYBOARD);
 	inputs[INPUT_AIM].device = smh->hge->Ini_GetInt("Controls","aimDevice",DEVICE_KEYBOARD);
-	inputs[INPUT_NEXT_ABILITY].device = smh->hge->Ini_GetInt("Controls","nextDevice",DEVICE_KEYBOARD);
-	inputs[INPUT_PREVIOUS_ABILITY].device = smh->hge->Ini_GetInt("Controls","previousDevice",DEVICE_KEYBOARD);
 	inputs[INPUT_PAUSE].device = smh->hge->Ini_GetInt("Controls","exitDevice",DEVICE_KEYBOARD);
 
 }
@@ -435,10 +435,10 @@ const char* SmileyInput::getInputName(int whichInput) {
 		case INPUT_UP: return "Up";
 		case INPUT_DOWN: return "Down";
 		case INPUT_ATTACK: return "Attack/Select";
-		case INPUT_ABILITY: return "Use Ability";
+		case INPUT_ABILITY1: return "Use Ability 1";
+		case INPUT_ABILITY2: return "Use Ability 2";
+		case INPUT_ABILITY3: return "Use Ability 3";
 		case INPUT_AIM: return "Aim";
-		case INPUT_PREVIOUS_ABILITY: return "Last Ability";
-		case INPUT_NEXT_ABILITY: return "Next Ability";
 		case INPUT_PAUSE: return "Inventory/Map";
 		default: return "Error";
 	}

@@ -108,18 +108,23 @@ void WindowManager::draw(float dt)
 void WindowManager::update(float dt) {
 
 	//Handle input for scrolling through game menu windows
-	if (gameMenuOpen) {
-		if (smh->input->keyPressed(INPUT_PREVIOUS_ABILITY)) {
+	if (gameMenuOpen) 
+	{
+		//TODO: new way to cycle through windows.
+		/*if (smh->input->keyPressed(INPUT_PREVIOUS_ABILITY)) 
+		{
 			currentMenuWindow--;
 			if (currentMenuWindow < 0) currentMenuWindow = NUM_MENU_WINDOWS-1;
 			openGameMenu(currentMenuWindow);
 			smh->soundManager->playSound("snd_ChangeMenu");
-		} else if (smh->input->keyPressed(INPUT_NEXT_ABILITY)) {
+		}
+		else if (smh->input->keyPressed(INPUT_NEXT_ABILITY)) 
+		{
 			currentMenuWindow++;
 			if (currentMenuWindow >= NUM_MENU_WINDOWS) currentMenuWindow = 0;
 			openGameMenu(currentMenuWindow);
 			smh->soundManager->playSound("snd_ChangeMenu");
-		}
+		}*/
 	}
 
 	//When the text box is open keep updating Smiley's tongue

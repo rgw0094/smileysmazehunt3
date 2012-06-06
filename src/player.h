@@ -140,6 +140,7 @@ private:
 	float graduallyMoveTargetX, graduallyMoveTargetY;
 
 	//Time variables
+	float sprintDuration;			//Remaining time that smiley can sprint. Slowly recharges.
 	float startedFlashing;
 	float startedKnockBack;
 	float startedSpringing;
@@ -209,17 +210,8 @@ private:
 //----------------------------------------------------------------
 //------------------ GUI -----------------------------------------
 //----------------------------------------------------------------
-struct AbilityStruct {
-	int ability, slot;
-	float x, y, scale;
-};
-
-struct AbilityPoint {
-	float x, y;
-};
-
-class GUI {
-
+class GUI 
+{
 public:
 
 	GUI();
@@ -229,25 +221,21 @@ public:
 	void draw();
 	void toggleAvailableAbility(int ability);
 	bool isAbilityAvailable(int ability);
-	int getSelectedAbility();
-	int numAvailableAbilities();
+	int getUsedAbility();
 	int getAbilityInSlot(int slot);
 	void setAbilityInSlot(int ability, int slot);
 	void resetAbilities();
 
 private:
 
-	void changeAbility(int direction);
-	float quarterSmileyize(float h);
-
-	AbilityStruct availableAbilities[3];
-	AbilityPoint abilityPoints[3];
+	int activeAbilities[3];
 };
 
 //----------------------------------------------------------------
 //------------------ WORM ----------------------------------------
 //----------------------------------------------------------------
-struct WormNode {
+struct WormNode 
+{
 	int x,y;
 	int dir;
 };

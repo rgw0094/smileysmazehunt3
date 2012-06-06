@@ -560,20 +560,6 @@ void ProjectileManager::reflectProjectile(std::list<Projectile>::iterator projec
 
 }
 
-
-/**
- * Returns whether or not there is currently a frisbee in the air
- */
-bool ProjectileManager::frisbeeActive() {
-	std::list<Projectile>::iterator i;
-	for (i = theProjectiles.begin(); i != theProjectiles.end(); i++) {
-		if (i->id == PROJECTILE_FRISBEE) {
-			return true;
-		}
-	}
-	return false;
-}
-
 int ProjectileManager::killProjectiles(int type) {
 	int num = 0;
 	for (std::list<Projectile>::iterator i = theProjectiles.begin(); i != theProjectiles.end(); i++) {

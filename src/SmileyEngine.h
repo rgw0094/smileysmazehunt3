@@ -385,10 +385,10 @@ private:
 #define INPUT_UP 2
 #define INPUT_DOWN 3
 #define INPUT_ATTACK 4
-#define INPUT_ABILITY 5
-#define INPUT_AIM 6
-#define INPUT_PREVIOUS_ABILITY 7
-#define INPUT_NEXT_ABILITY 8
+#define INPUT_AIM 5
+#define INPUT_ABILITY1 6
+#define INPUT_ABILITY2 7
+#define INPUT_ABILITY3 8
 #define INPUT_PAUSE 9
 
 //Codes for joystick
