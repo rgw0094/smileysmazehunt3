@@ -7,7 +7,6 @@
  * After picking up 1 mana pickup, your mana begins recharging instantly.  This is bad since then there is little incentive to ever pick up more than one since your mana will recharge anyways, and ends up giving you way too much mana.  Then running around owning everyone with orbs is too easy to do.
  * Ice hop should center Smiley on tile
  * After the boss fights are over, the bosses still damage you.  Also other external objects (flames in Phyrebawz2, projectiles in Barvinoid) will still exist and hurt you.
- * Add a little BLURB to the controls window to discretely let the user know they can use gamepads
  * Bartli gets blocked by silly pads. Make it so she runs them over and makes them disappear
 
 === Sounds To Add ===
@@ -46,6 +45,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Reorganized the controls window and added header text to let the user know they can use gamepads||6/4/12||RGW||
 ||Speirdyke doesn't give a SHIT. You can buy stuff in whatever order you want||6/4/12||RGW||
 ||REVAMPED the ability system. Replaced the ability wheel with a more sensible hotkey bar type thing||6/4/12||RGW||
 ||Improved the rumble sound effect prior to Fenwar's battle||6/3/2012||ETI||
