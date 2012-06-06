@@ -79,8 +79,8 @@ void Shop::draw(float dt) {
 /**
  * Called every frame to update the shop.
  */
-bool Shop::update(float dt) {
-
+bool Shop::update(float dt) 
+{
 	//Move selection left
 	if (smh->input->keyPressed(INPUT_LEFT)) {
 		if (currentSelection == 0) currentSelection = EXIT;
@@ -113,7 +113,6 @@ bool Shop::update(float dt) {
 
 void Shop::purchaseItem(int item) 
 {
-	//smh->saveManager->money += 20;
 	if (smh->saveManager->money < itemPrice(item) || !isInStock(item)) 
 	{
 		smh->soundManager->playSound("snd_Error");
@@ -142,13 +141,20 @@ void Shop::purchaseItem(int item)
  * Returns whether or not the specified item is in stock. We are only letting the player buy the next
  * level of upgrades if they have bought all of the items at the current level.
  */
-bool Shop::isInStock(int item) {
-	int currentLevel =min(min(smh->saveManager->numUpgrades[HEALTH], smh->saveManager->numUpgrades[MANA]), smh->saveManager->numUpgrades[DAMAGE]);
-	if (currentLevel == 14) {
+bool Shop::isInStock(int item) 
+{
+	//Fuck it! Let them buy whatever they want
+	return true;
+
+	/*int currentLevel = min(min(smh->saveManager->numUpgrades[HEALTH], smh->saveManager->numUpgrades[MANA]), smh->saveManager->numUpgrades[DAMAGE]);
+	if (currentLevel == 14) 
+	{
 		return false;
-	} else {
-		return smh->saveManager->numUpgrades[item] == currentLevel;
 	}
+	else 
+	{
+		return smh->saveManager->numUpgrades[item] == currentLevel;
+	}*/
 }
 
 /**
