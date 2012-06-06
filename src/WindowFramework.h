@@ -202,8 +202,8 @@ private:
 //----------------------------------------------------------------
 //------------------OPTIONS WINDOW--------------------------------
 //----------------------------------------------------------------
-class OptionsWindow : public BaseWindow {
-
+class OptionsWindow : public BaseWindow 
+{
 public:
 	OptionsWindow();
 	~OptionsWindow();
@@ -225,9 +225,7 @@ private:
 	hgeRect *inputBox;
 	Button *doneButton;
 	Slider *musicVolumeSlider, *soundVolumeSlider;
-	int currentInput;
 	float x, y, windowX, windowY;
-
 };
 
 //----------------------------------------------------------------
