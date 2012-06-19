@@ -85,6 +85,12 @@ void GUI::resetAbilities()
  */
 void GUI::toggleAvailableAbility(int ability) 
 {
+	//If player does not have the ability, play error sound
+	if (ability == NO_ABILITY) {
+		smh->soundManager->playSound("snd_Error");
+		return;
+	}
+
 	//If the ability is available, remove it
 	for (int i = 0; i < 3; i++) 
 	{
@@ -109,6 +115,47 @@ void GUI::toggleAvailableAbility(int ability)
 
 	//If we got here then there is no room for the ability!
 	smh->soundManager->playSound("snd_Error");
+}
+
+void GUI::abilityKeyPressedInInventoryScreen(int abilityNum,int ability) {
+	//First, if ability==NO_ABILITY, simply remove the ability
+	if (ability==NO_ABILITY) {
+		if (activeAbilities[abilityNum] == NO_ABILITY) {
+			smh->soundManager->playSound("snd_Error");
+		} else {
+			activeAbilities[abilityNum] = NO_ABILITY;
+			smh->soundManager->playSound("snd_AbilityDeSelect");
+		}
+		return;
+	}
+
+	//Now there are three cases:
+	  // 1) player does not have the ability equipped. simply replace slot with the selected ability
+	  // 2) player has ability equipped in a different slot. swap the two slots
+	  // 3) player has ability equipped in the same slot. remove the ability
+
+	if (isAbilityAvailable(ability)) { //the ability selected is already in use (case 2 or 3 above)
+		if (activeAbilities[abilityNum] == ability) { //equipped in the same slot (case 3 above)
+			activeAbilities[abilityNum] = NO_ABILITY;
+			smh->soundManager->playSound("snd_AbilityDeSelect");
+		} else { //equipped in a different slot (case 2 above). swap the abilities
+			//first find where the ability is
+			int abilityLocation=0;
+			if (activeAbilities[0] == ability) abilityLocation=0;
+			if (activeAbilities[1] == ability) abilityLocation=1;
+			if (activeAbilities[2] == ability) abilityLocation=2;
+
+			//now swap the abilities in location abilityNum and abilityLocation
+			int placeHolder=activeAbilities[abilityLocation];
+			activeAbilities[abilityLocation] = activeAbilities[abilityNum];
+			activeAbilities[abilityNum] = placeHolder;
+			smh->soundManager->playSound("snd_AbilitySelect");
+		}
+
+	} else { //the ability selected is not in use (case 1 above)
+		activeAbilities[abilityNum] = ability;
+		smh->soundManager->playSound("snd_AbilitySelect");
+	}
 }
 
 void GUI::update(float dt) 
