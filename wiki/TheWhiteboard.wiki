@@ -47,6 +47,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fixed arrow/ice glitch where Smiley would get stuck if arrow pushed him onto ice||6/19/12||ETI||
 ||Reorganized the controls window and added header text to let the user know they can use gamepads||6/4/12||RGW||
 ||Speirdyke doesn't give a SHIT. You can buy stuff in whatever order you want||6/4/12||RGW||
 ||REVAMPED the ability system. Replaced the ability wheel with a more sensible hotkey bar type thing||6/4/12||RGW||
