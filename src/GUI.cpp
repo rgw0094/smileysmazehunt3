@@ -30,18 +30,28 @@ void GUI::setAbilityInSlot(int ability, int slot)
  */
 int GUI::getUsedAbility()
 {
-	if (smh->input->keyDown(INPUT_ABILITY1) && activeAbilities[0] != NO_ABILITY)
-	{
-		return activeAbilities[0];
+	//First check ability 1 (the left-most slot)
+	if (activeAbilities[0] != NO_ABILITY) {
+		if ((smh->gameData->getAbilityInfo(activeAbilities[0]).type == ACTIVATED && smh->input->keyPressed(INPUT_ABILITY1)) ||
+			(smh->gameData->getAbilityInfo(activeAbilities[0]).type != ACTIVATED && smh->input->keyDown(INPUT_ABILITY1))) {
+			return activeAbilities[0];
+		}
 	}
-	else if (smh->input->keyDown(INPUT_ABILITY2) && activeAbilities[1] != NO_ABILITY)
-	{
-		return activeAbilities[1];
+	
+	if (activeAbilities[1] != NO_ABILITY) {
+		if ((smh->gameData->getAbilityInfo(activeAbilities[1]).type == ACTIVATED && smh->input->keyPressed(INPUT_ABILITY2)) ||
+			(smh->gameData->getAbilityInfo(activeAbilities[1]).type != ACTIVATED && smh->input->keyDown(INPUT_ABILITY2))) {
+			return activeAbilities[1];
+		}
 	}
-	else if (smh->input->keyDown(INPUT_ABILITY3) && activeAbilities[2] != NO_ABILITY)
-	{
-		return activeAbilities[2];
+
+	if (activeAbilities[2] != NO_ABILITY) {
+		if ((smh->gameData->getAbilityInfo(activeAbilities[2]).type == ACTIVATED && smh->input->keyPressed(INPUT_ABILITY3)) ||
+			(smh->gameData->getAbilityInfo(activeAbilities[2]).type != ACTIVATED && smh->input->keyDown(INPUT_ABILITY3))) {
+			return activeAbilities[2];
+		}
 	}
+
 	return NO_ABILITY;
 }
 

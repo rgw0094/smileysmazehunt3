@@ -1720,6 +1720,9 @@ bool Environment::isArrowAt(int x, int y) {
 	return (collision[x][y] >= UP_ARROW && collision[x][y] <= LEFT_ARROW);
 }
 
+bool Environment::isIceAt(int x, int y) {
+	return (collision[x][y] == ICE);
+}
 
 /**
  * Set a collision box for the speicifed collision type decalared in smiley.

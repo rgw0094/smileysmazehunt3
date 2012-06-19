@@ -52,6 +52,7 @@ public:
 	bool isInvisible();
 	bool isReflectingProjectiles();
 	bool isOnIce();
+	bool isOnArrow();
 	bool isShrunk();
 	bool isFlashing();
 	bool isSpringing();
@@ -86,6 +87,11 @@ public:
 	bool shrinkActive;
 	int startedFallingX;					//X position where the player started falling
 	int startedFallingY;					//Y position where the player started falling
+
+	float startedSlidingX, startedSlidingY;
+	float finishSlidingX, finishSlidingY;
+	int slideDir;
+	bool slidingOntoIce;
 
 	//Constants
 	float angles[8];
