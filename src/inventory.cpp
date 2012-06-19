@@ -190,8 +190,21 @@ bool Inventory::update(float dt) {
 		}
 	}
 
-	if (smh->input->keyPressed(INPUT_ATTACK) && smh->saveManager->hasAbility[cursorY*4 + cursorX]) {
-		smh->player->gui->toggleAvailableAbility(cursorY*4 + cursorX);
+	int abilitySelected = cursorY*4+cursorX;
+	if (!smh->saveManager->hasAbility[abilitySelected]) {
+		abilitySelected = NO_ABILITY;
+	}
+
+	if (smh->input->keyPressed(INPUT_ATTACK)) {
+		smh->player->gui->toggleAvailableAbility(abilitySelected);
+	}
+
+	if (smh->input->keyPressed(INPUT_ABILITY1)) {
+		smh->player->gui->abilityKeyPressedInInventoryScreen(0,abilitySelected);
+	}else if (smh->input->keyPressed(INPUT_ABILITY2)) {
+		smh->player->gui->abilityKeyPressedInInventoryScreen(1,abilitySelected);
+	} else if (smh->input->keyPressed(INPUT_ABILITY3)) {
+		smh->player->gui->abilityKeyPressedInInventoryScreen(2,abilitySelected);
 	}
 
 	return true;
