@@ -67,6 +67,7 @@ public:
 	bool isShallowWaterAt(int x, int y);
 	bool isReturnSpotAt(int x, int y);
 	bool isArrowAt(int x,int y);
+	bool isIceAt(int x,int y);
 	bool isSadSmileletFlowerAt(int x,int y);
 	void bombWall(int x,int y);
 	void setTerrainCollisionBox(hgeRect *box, int whatFor, int gridX, int gridY);

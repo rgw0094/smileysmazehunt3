@@ -141,9 +141,10 @@ void Player::update(float dt) {
 	//Movement stuff
 	setFacingDirection();
 	doFalling(dt);
+	doArrowPads(dt);
 	doIce(dt);
 	doSprings(dt);
-	doArrowPads(dt);
+	
 	doShrinkTunnels(dt);
 	updateVelocities(dt);
 	doMove(dt);
@@ -551,7 +552,7 @@ void Player::doAbility(float dt)
 
 	//Base requirements for being allowed to use an ability
 	bool canUseAbility = getMana() >= manaCost && !abilitiesLocked && !waterWalk && !falling && !springing && !frozen 
-		&& !drowning && !springing && hoveringYOffset == 0.0;
+		&& !drowning && hoveringYOffset == 0.0;
 	
 	/////////////// Hover ////////////////
 
@@ -864,7 +865,7 @@ void Player::doWarps() {
 	int id = smh->environment->ids[gridX][gridY];
 
 	//If the player is on a warp, move the player to the other warp of the same color
-	if (!springing && hoveringYOffset == 0.0f && !onWarp && (c == RED_WARP || c == GREEN_WARP || c == YELLOW_WARP || c == BLUE_WARP)) {
+	if (!springing && !iceSliding && !sliding && hoveringYOffset == 0.0f && !onWarp && (c == RED_WARP || c == GREEN_WARP || c == YELLOW_WARP || c == BLUE_WARP)) {
 		onWarp = true;
 
 		//Play the warp sound effect for non-invisible warps
@@ -918,7 +919,7 @@ void Player::doSprings(float dt) {
 	int collision = smh->environment->collision[gridX][gridY];
 
 	//Start springing
-	if (hoveringYOffset == 0.0f && !springing && (collision == SPRING_PAD || collision == SUPER_SPRING)) {
+	if (hoveringYOffset == 0.0f && !sliding && !iceSliding && !springing && (collision == SPRING_PAD || collision == SUPER_SPRING)) {
 		
 		bool superSpring = (collision == SUPER_SPRING);
 		
@@ -1073,48 +1074,119 @@ void Player::doArrowPads(float dt) {
 
 	//Start sliding
 	int arrowPad = smh->environment->collision[gridX][gridY];
-	if (!springing && hoveringYOffset == 0.0f && !sliding && (arrowPad == LEFT_ARROW || arrowPad == RIGHT_ARROW || arrowPad == UP_ARROW || arrowPad == DOWN_ARROW)) {
+	if (!springing && hoveringYOffset == 0.0f && !sliding && !iceSliding && (arrowPad == LEFT_ARROW || arrowPad == RIGHT_ARROW || arrowPad == UP_ARROW || arrowPad == DOWN_ARROW)) {
+		
+		//First set the start point and end points
 		startedSliding = smh->getGameTime();
-		sliding = true;
+		startedSlidingX = x;
+		startedSlidingY = y;
+		//The end points will be modified below according to arrow direction
+		finishSlidingX = float(gridX)*64.0f+32.0f;
+		finishSlidingY = float(gridY)*64.0f+32.0f;
+
 		dx = dy = 0;
-		if (arrowPad == LEFT_ARROW)	{
-			dx = -250;
-			timeToSlide = (64.0f + float(x) - (float(gridX)*64.0f+32.0f)) / 250.0f;
+		sliding=true;
+
+		//Now set the dx, dy, and modify the end point accordingly
+		switch (arrowPad) {
+			case LEFT_ARROW:
+				finishSlidingX -= 64.0f;
+				dx = -250;
+				slideDir = LEFT;
+				break;
+			case RIGHT_ARROW:
+				finishSlidingX += 64.0f;
+				dx = 250;
+				slideDir = RIGHT;
+				break;
+			case UP_ARROW:
+				finishSlidingY -= 64.0f;
+				dy = -250;
+				slideDir = UP;
+				break;
+			case DOWN_ARROW:
+				finishSlidingY += 64.0f;
+				dy = 250;
+				slideDir = DOWN;
+				break;
+		}; //end switch arrowPad
+
+		slidingOntoIce=false;
+
+		//If sliding onto ice, make slidingOntoIce true
+		if (smh->environment->collisionAt(finishSlidingX, finishSlidingY) == ICE) {
+			slidingOntoIce=true;
 		}
-		if (arrowPad == RIGHT_ARROW) {
-			dx = 250;
-			timeToSlide = (64.0f - float(x) + (float(gridX)*64.0f+32.0f)) / 250.0f;
-		}
-		if (arrowPad == UP_ARROW) {
-			dy = -250;
-			timeToSlide = (64.0f + float(y) - (float(gridY)*64.0f+32.0f)) / 250.0f;
-		}
-		if (arrowPad == DOWN_ARROW) {
-			dy = 250;
-			timeToSlide = (64.0f - float(y) + (float(gridY)*64.0f+32.0f)) / 250.0f;
-		}
+
 		return;
 	}
 
 	//Continue sliding - move towards the center of the square
+	float traveledProportion;
 	if (sliding) {
-		if (smh->environment->collision[gridX][gridY] == UP_ARROW || smh->environment->collision[gridX][gridY] == DOWN_ARROW) {
-			if (x < gridX*64+31) {
-				x += 80.0f*dt;
-			} else if (x > gridX*64+33) {
-				x -= 80.0f*dt;
-			}
-		} else if (smh->environment->collision[gridX][gridY] == LEFT_ARROW || smh->environment->collision[gridX][gridY] == RIGHT_ARROW) {
-			if (y < gridY*64+31) {
-				y += 80.0f*dt;
-			} else if (y > gridY*64+33) {
-				y -= 80.0f*dt;
-			}
-		}
-	}
+		//There's a gay glitch with the ice, so if Smiley is currently being slid onto
+		//ice, set "facing" to equal slideDir
+		if (slidingOntoIce) {facing=slideDir;}
 
-	//Stop sliding
-	if (springing || (sliding && smh->getGameTime() - timeToSlide > startedSliding)) sliding = false;
+		switch (slideDir) {
+			case UP:
+				traveledProportion = (startedSlidingY - y) / (startedSlidingY - finishSlidingY);
+				x = startedSlidingX + traveledProportion * (finishSlidingX - startedSlidingX);
+				if (smh->environment->collisionAt(x,y) == ICE) iceSliding=true;
+				break;
+			case DOWN:
+				traveledProportion = (y-startedSlidingY) / (finishSlidingY - startedSlidingY);
+				x = startedSlidingX + traveledProportion * (finishSlidingX - startedSlidingX);
+				if (smh->environment->collisionAt(x,y) == ICE) iceSliding=true;
+				break;
+			case LEFT:
+				traveledProportion = (startedSlidingX - x) / (startedSlidingX - finishSlidingX);
+				y = startedSlidingY + traveledProportion * (finishSlidingY - startedSlidingY);
+				if (smh->environment->collisionAt(x,y) == ICE) iceSliding=true;
+				break;
+			case RIGHT:
+				traveledProportion = (x-startedSlidingX) / (finishSlidingX - startedSlidingX);
+				y = startedSlidingY + traveledProportion * (finishSlidingY - startedSlidingY);
+				if (smh->environment->collisionAt(x,y) == ICE) iceSliding=true;
+				break;
+		}; //end switch slideDir
+	
+
+		//Stop sliding
+
+		switch (slideDir) {
+			case UP:
+				if (y <= finishSlidingY) {
+					x = finishSlidingX;
+					y = finishSlidingY;
+					sliding = false;
+				}
+				break;
+			case DOWN:
+				if (y >= finishSlidingY) {
+					x = finishSlidingX;
+					y = finishSlidingY;
+					sliding = false;
+				}
+				break;
+			case LEFT:
+				if (x <= finishSlidingX) {
+					x = finishSlidingX;
+					y = finishSlidingY;
+					sliding = false;
+				}
+				break;
+			case RIGHT:
+				if (x >= finishSlidingX) {
+					x = finishSlidingX;
+					y = finishSlidingY;
+					sliding = false;
+				}
+				break;
+		}; //end switch slideDir
+
+		
+	} //end if sliding
 }
 
 
@@ -1442,22 +1514,22 @@ void Player::updateVelocities(float dt)
 		//Move Left
 		if (smh->input->keyDown(INPUT_LEFT)) 
 		{
-			if (dx > -1*MOVE_SPEED && !sliding) dx -= accel*dt;
+			if (dx > -1*MOVE_SPEED && !sliding && !iceSliding) dx -= accel*dt;
 		}
 		//Move Right
 		if (smh->input->keyDown(INPUT_RIGHT)) 
 		{
-			if (dx < MOVE_SPEED && !sliding) dx += accel*dt;
+			if (dx < MOVE_SPEED && !sliding && !iceSliding) dx += accel*dt;
 		}
 		//Move Up
 		if (smh->input->keyDown(INPUT_UP)) 
 		{
-			if (dy > -1*MOVE_SPEED && !sliding) dy -= accel*dt;
+			if (dy > -1*MOVE_SPEED && !sliding && !iceSliding) dy -= accel*dt;
 		}
 		//Move Down
 		if (smh->input->keyDown(INPUT_DOWN)) 
 		{
-			if (dy < MOVE_SPEED && !sliding) dy += accel*dt;
+			if (dy < MOVE_SPEED && !sliding && !iceSliding) dy += accel*dt;
 		}
 	}
 }
@@ -1501,7 +1573,7 @@ void Player::setFacingDirection()
  */
 void Player::startPuzzleIce() {
 	//Start Puzzle Ice
-	if (!springing && hoveringYOffset == 0.0f && !iceSliding && smh->environment->collisionAt(x,y) == ICE) {
+	if (!springing && !sliding && hoveringYOffset == 0.0f && !iceSliding && smh->environment->collisionAt(x,y) == ICE) {
 		if (lastGridX < gridX) {
 			facing = RIGHT;
 			dx = MOVE_SPEED;
@@ -1530,7 +1602,7 @@ void Player::startPuzzleIce() {
 			needToIceHop=true;
 			timeStartedIceHop=smh->getGameTime();
 			smh->soundManager->playSound("snd_HopOntoIce");
-		} else { //there was no lastGridX or lastGridY, so let's go by "facing" (this happens when you jump onto ice)
+		} else { //there was no lastGridX or lastGridY, so let's go by "facing" (this happens when you jump or slide from arrow onto ice)
 			switch (facing) {
 			case RIGHT:
 				dx = MOVE_SPEED;
@@ -1559,6 +1631,7 @@ void Player::startPuzzleIce() {
 			};
 		}
 		iceSliding = true;
+		
 		smh->soundManager->playIceEffect("snd_SnowFootstep",true);
 	}
 }
@@ -1570,6 +1643,7 @@ void Player::doIce(float dt) {
 	
 	startPuzzleIce();
 	
+	/*
 	//Continue Puzzle Ice - slide towards the center of the square
 	if (iceSliding) {
 		if (facing == LEFT || facing == RIGHT) {		
@@ -1580,6 +1654,7 @@ void Player::doIce(float dt) {
 			if ((int)x % 64 > 32) x -= 30.0f*dt; 
 		}
 	}
+	*/
 
 	//Ice hop
 	if (needToIceHop) {
@@ -1594,9 +1669,10 @@ void Player::doIce(float dt) {
 		
 		//If the player is on a new special tile, stop sliding now. Otherwise only 
 		//stop once the player is in the middle of the square.
-		if (c == SPRING_PAD || c == SHRINK_TUNNEL_HORIZONTAL || c == SHRINK_TUNNEL_VERTICAL ||
-				c == UP_ARROW || c == DOWN_ARROW || c == LEFT_ARROW || c == RIGHT_ARROW ||
-				(facing == RIGHT && (int)x % 64 > 32) ||
+		//if (c == SPRING_PAD || c == SHRINK_TUNNEL_HORIZONTAL || c == SHRINK_TUNNEL_VERTICAL ||
+	//			c == UP_ARROW || c == DOWN_ARROW || c == LEFT_ARROW || c == RIGHT_ARROW ||
+//				c == RED_WARP || c == BLUE_WARP || c == YELLOW_WARP || c == GREEN_WARP ||
+		if (	(facing == RIGHT && (int)x % 64 > 32) ||
 				(facing == LEFT && (int)x % 64 < 32) ||
 				(facing == UP && (int)y % 64 < 32) ||
 				(facing == DOWN && (int)y % 64 > 32)) {
@@ -1605,6 +1681,10 @@ void Player::doIce(float dt) {
 			smh->soundManager->stopIceChannel();
 		}
 	}
+	
+	//for some reason the ice sound would keep playing after sliding into a warp,
+	//so just stop the sound if the player isn't on ice.
+    if (c != ICE) smh->soundManager->stopIceChannel();
 
 }
 
@@ -1991,6 +2071,10 @@ bool Player::isReflectingProjectiles() {
 
 bool Player::isOnIce() {
 	return iceSliding;
+}
+
+bool Player::isOnArrow() {
+	return sliding;
 }
 
 bool Player::isShrunk() {
