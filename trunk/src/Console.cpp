@@ -190,6 +190,7 @@ void Console::update(float dt) {
 		if (smh->hge->Input_GetKeyState(upKey) || smh->hge->Input_GetKeyState(downKey) || smh->hge->Input_GetKeyState(leftKey) || smh->hge->Input_GetKeyState(rightKey)) {
 			if (!debugMovePressed) {
 				debugMovePressed = true;
+				smh->player->resetSliding();
 				lastDebugMoveTime = smh->getGameTime();
 			}
 			if (smh->hge->Input_KeyDown(upKey) || (smh->timePassedSince(lastDebugMoveTime) > 0.5 && smh->hge->Input_GetKeyState(upKey))) yMove = -1;

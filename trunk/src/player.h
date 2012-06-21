@@ -67,6 +67,7 @@ public:
 	float getFireBreathDamage();
 	float getLightningOrbDamage();
 	bool isSmileyTouchingWater();
+	void resetSliding();
 
 	WormNode getWormNode(int num);
 	Tongue *getTongue();
