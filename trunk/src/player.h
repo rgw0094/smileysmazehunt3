@@ -91,6 +91,7 @@ public:
 	float startedSlidingX, startedSlidingY;
 	float finishSlidingX, finishSlidingY;
 	int slideDir;
+	float timeToSlideOnArrow;
 	bool slidingOntoIce;
 
 	//Constants

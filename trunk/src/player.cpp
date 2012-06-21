@@ -1086,27 +1086,31 @@ void Player::doArrowPads(float dt) {
 
 		dx = dy = 0;
 		sliding=true;
-
+		
 		//Now set the dx, dy, and modify the end point accordingly
 		switch (arrowPad) {
 			case LEFT_ARROW:
-				finishSlidingX -= 64.0f;
+				finishSlidingX -= 64.0f;				
 				dx = -250;
+				timeToSlideOnArrow = abs((x-finishSlidingX)/dx);
 				slideDir = LEFT;
 				break;
 			case RIGHT_ARROW:
 				finishSlidingX += 64.0f;
 				dx = 250;
+				timeToSlideOnArrow = abs((x-finishSlidingX)/dx);
 				slideDir = RIGHT;
 				break;
 			case UP_ARROW:
 				finishSlidingY -= 64.0f;
 				dy = -250;
 				slideDir = UP;
+				timeToSlideOnArrow = abs((y-finishSlidingY)/dy);
 				break;
 			case DOWN_ARROW:
 				finishSlidingY += 64.0f;
 				dy = 250;
+				timeToSlideOnArrow = abs((y-finishSlidingY)/dy);
 				slideDir = DOWN;
 				break;
 		}; //end switch arrowPad
@@ -1130,22 +1134,30 @@ void Player::doArrowPads(float dt) {
 
 		switch (slideDir) {
 			case UP:
-				traveledProportion = (startedSlidingY - y) / (startedSlidingY - finishSlidingY);
+				dy=-250;
+				traveledProportion = smh->timePassedSince(startedSliding) / timeToSlideOnArrow;
+				if (traveledProportion>1) traveledProportion=1;
 				x = startedSlidingX + traveledProportion * (finishSlidingX - startedSlidingX);
 				if (smh->environment->collisionAt(x,y) == ICE) iceSliding=true;
 				break;
 			case DOWN:
-				traveledProportion = (y-startedSlidingY) / (finishSlidingY - startedSlidingY);
+				dy=250;
+				traveledProportion = smh->timePassedSince(startedSliding) / timeToSlideOnArrow;
+				if (traveledProportion>1) traveledProportion=1;
 				x = startedSlidingX + traveledProportion * (finishSlidingX - startedSlidingX);
 				if (smh->environment->collisionAt(x,y) == ICE) iceSliding=true;
 				break;
 			case LEFT:
-				traveledProportion = (startedSlidingX - x) / (startedSlidingX - finishSlidingX);
+				dx=-250;
+				traveledProportion = smh->timePassedSince(startedSliding) / timeToSlideOnArrow;
+				if (traveledProportion>1) traveledProportion=1;
 				y = startedSlidingY + traveledProportion * (finishSlidingY - startedSlidingY);
 				if (smh->environment->collisionAt(x,y) == ICE) iceSliding=true;
 				break;
 			case RIGHT:
-				traveledProportion = (x-startedSlidingX) / (finishSlidingX - startedSlidingX);
+				dx=250;
+				traveledProportion = smh->timePassedSince(startedSliding) / timeToSlideOnArrow;
+				if (traveledProportion>1) traveledProportion=1;
 				y = startedSlidingY + traveledProportion * (finishSlidingY - startedSlidingY);
 				if (smh->environment->collisionAt(x,y) == ICE) iceSliding=true;
 				break;
