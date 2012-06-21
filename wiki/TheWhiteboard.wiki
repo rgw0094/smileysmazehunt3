@@ -47,6 +47,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Added tutorial text to inventory if no items are selected||6/20/12||ETI||
 ||Reworked Monocle man||6/20/12||ETI||
 ||Can now switch between minimap, world map, and inventory||6/20/12||ETI||
 ||Abilities can now be selected using their corresponding input button in the inventory screen||6/19/12||ETI||
