@@ -1538,7 +1538,7 @@ bool Environment::hitSigns(Tongue *tongue) {
 		for (int j = smh->player->gridY - 2; j <= smh->player->gridY + 2; j++) {
 			if (isInBounds(i,j) && collision[i][j] == SIGN) {
 				collisionBox->SetRadius(i*64+32,j*64+32,24);
-				if (tongue->testCollision(collisionBox)) {
+				if (tongue->testCollision(collisionBox) && !smh->player->isOnArrow() && !smh->player->isOnIce()) {
 					smh->windowManager->openSignTextBox(ids[i][j]);
 					return true;
 				}

@@ -173,3 +173,11 @@ void EnemyGroupManager::disableBlocks(int whichGroup) {
 		}
 	}
 }
+
+/**
+ * Returns whether the enemies in the group are all dead
+ */
+bool EnemyGroupManager::isGroupDead(int whichGroup) {
+	if (groups[whichGroup].triggeredYet && groups[whichGroup].numEnemies == 0) return true;
+	return false;
+}
