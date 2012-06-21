@@ -26,14 +26,14 @@ void PopupMessageManager::draw(float dt)
 
 		if (adviceManMessageActive) smh->resources->GetFont("inventoryFnt")->SetScale(0.8);
 		smh->resources->GetFont("inventoryFnt")->SetColor(ARGB(messageAlpha,255.0,255.0,255.0));
-		smh->resources->GetFont("inventoryFnt")->printf(512,710,HGETEXT_CENTER, message.c_str());
+		smh->resources->GetFont("inventoryFnt")->printf(540,710,HGETEXT_CENTER, message.c_str());
 		smh->resources->GetFont("inventoryFnt")->SetColor(ARGB(255.0,255.0,255.0,255.0));
 		if (adviceManMessageActive) smh->resources->GetFont("inventoryFnt")->SetScale(1.0);
 
 		if (adviceManMessageActive) 
 		{
 			smh->resources->GetSprite("adviceManDown")->SetColor(ARGB(messageAlpha, 255, 255, 255));
-			smh->resources->GetSprite("adviceManDown")->RenderEx(80.0, 725.0, 0.0, 0.8, 0.8);
+			smh->resources->GetSprite("adviceManDown")->RenderEx(40.0, 725.0, 0.0, 0.8, 0.8);
 			smh->resources->GetSprite("adviceManDown")->SetColor(ARGB(255, 255, 255, 255));
 		}
 	}
