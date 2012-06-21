@@ -1,5 +1,6 @@
 #include "SmileyEngine.h"
 #include "WindowFramework.h"
+#include "EnemyFramework.h"
 #include "player.h"
 #include "npcmanager.h"
 #include "WeaponParticle.h"
@@ -152,6 +153,11 @@ void TextBox::setSign(int signId)
 	paramString = "Sign";
 	paramString += Util::intToString(signId);
 	strcpy(text, smh->gameData->getGameText(paramString.c_str()));
+
+
+	//Shitty hard-coding here for Sign 44, the one talking about having to kill Snowfangs to
+	//proceed. If the Snowfangs are dead (enemy group 1), the text changes to "Good job."
+	if (signId==44 && smh->enemyGroupManager->isGroupDead(1)) strcpy(text,"Good job.");
 }
 
 
@@ -473,7 +479,7 @@ std::string TextBox::getAdviceText(int advice, int page) {
 			{
 				case 1: return "You can trade the gems that you find with Captain Speirdyke for upgrades. The captain can be found near his ship in Smiley Town.";
 				case 2: return "There are three gems types you can find. Red gems are worth one smiley dollar, yellow gems are worth 3 smiley dollars, and blue gems are worth 5 smiley dollars!";
-				case 3: return "If Speirdyke of out of stock for one type of upgrade, try buying the remaining available upgrades first.";
+				case 3: return "Try to balance your upgrades, rather than upgrading the same thing over and over!";
 			}
 		case AdviceTypes::ADVICE_BOMB:
 			switch (page)

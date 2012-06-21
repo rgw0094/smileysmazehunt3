@@ -716,7 +716,7 @@ void Player::doAbility(float dt)
 		}
 
 		//Summon Bill Clinton
-		if (usedAbility == CANE) 
+		if (usedAbility == CANE && !iceSliding && !slidingOntoIce && !sliding && !springing && !falling && !onWater) 
 		{
 			facing = DOWN;
 			mana -= manaCost;

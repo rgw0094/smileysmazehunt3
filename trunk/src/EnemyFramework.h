@@ -301,6 +301,7 @@ public:
 	void enableBlocks(int whichGroup);
 	void disableBlocks(int whichGroup);
 	void triggerGroup(int whichGroup);
+	bool isGroupDead(int whichGroup);
 
 	EnemyGroup groups[MAX_GROUPS];
 
