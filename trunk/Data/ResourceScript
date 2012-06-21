@@ -1425,6 +1425,12 @@ Sprite keyBackground {
  hotspot=0,0
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
+Sprite inventoryRightArrow {
+ texture=UserInterfaceTx
+ rect=735,508,109,65
+ hotspot=0,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
 
 ;***********************
 ;******** PLAYER *******
