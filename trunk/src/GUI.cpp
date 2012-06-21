@@ -69,6 +69,17 @@ bool GUI::isAbilityAvailable(int ability)
 }
 
 /**
+ * Returns whether all of the slots are empty or not
+ */
+bool GUI::areAbilitySlotsEmpty() {
+	for (int i=0; i<3; i++) {
+		if (activeAbilities[i] != NO_ABILITY) {return false;}
+	}
+
+	return true;
+}
+
+/**
  * Empties the ability action bar.
  */
 void GUI::resetAbilities() 

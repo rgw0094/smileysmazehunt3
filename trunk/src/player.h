@@ -227,6 +227,7 @@ public:
 	void draw();
 	void toggleAvailableAbility(int ability);
 	bool isAbilityAvailable(int ability);
+	bool areAbilitySlotsEmpty();
 	void abilityKeyPressedInInventoryScreen(int abilityNum, int ability);
 	int getUsedAbility();
 	int getAbilityInSlot(int slot);
