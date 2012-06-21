@@ -1,5 +1,4 @@
 === Programming To Do ===
- * Ice hop should center Smiley on ice
  * Make a leet effect to indicate cooldowns in the ability bar like in WoW/Diablo (and add a cooldown to frisbees)
  * Improve the appearance of the Right Arrow in the inventory screen
  * The end credits have a bunch of things to fix: the Gayass Ghost is not in the game, buzzard has no wings, most of the enemies are looking left but would look better looking forward, Barvinoid is missing, Bartli/BrianFungus/Magnitogorsk are missing parts of their bodies.
@@ -49,6 +48,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Ice hop centers Smiley on tile||6/20/12||ETI||
 ||Fixed bug where moving onto an arrow would cause you to stop if there was a block at the corner||6/20/12||ETI||
 ||Hard-coded a sign in Sessaria to say "Good job" when you kill the Snowfangs it refers to||6/20/12||ETI||
 ||Fixed bug where licking a sign when on ice causes you to stop||6/20/12||ETI||
