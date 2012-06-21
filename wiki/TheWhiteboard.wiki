@@ -50,7 +50,7 @@
 ===Done===
 ||Item||Date||Done By||
 ||Fixed bug where moving onto an arrow would cause you to stop if there was a block at the corner||6/20/12||ETI||
-||Hard-coded a sign in Sessaria to say "Good job" when you kill the Snowfangs it refers to||6/20||12||ETI||
+||Hard-coded a sign in Sessaria to say "Good job" when you kill the Snowfangs it refers to||6/20/12||ETI||
 ||Fixed bug where licking a sign when on ice causes you to stop||6/20/12||ETI||
 ||Fixed bug where sliding onto warp would make it so ice sound wouldn't stop||6/??/12||ETI||
 ||Fixed bug where using cane on ice would mess it up||6/20/12||ETI||
