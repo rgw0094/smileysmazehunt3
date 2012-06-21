@@ -26,7 +26,7 @@ void Console::draw(float dt) {
 
 	smh->drawScreenColor(Colors::BLACK, 75.0);
 
-	smh->resources->GetFont("consoleFnt")->printf(15, 5, HGETEXT_LEFT, "Console (Toggle with ~)");
+	smh->resources->GetFont("consoleFnt")->printf(15, 5, HGETEXT_LEFT, "Console (Toggle with ~ or F10)");
 
 	lineNum = 0;
 	write("Key   Effect             Toggled", NA);

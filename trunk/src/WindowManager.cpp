@@ -87,18 +87,35 @@ void WindowManager::draw(float dt)
 	if (gameMenuOpen) 
 	{
 		float flashingAlpha = 255.0;
-		float n = 0.6;
+		float n = 3.0;
 		float x = smh->getRealTime();
 		while (x > n) x -= n;
 		if (x < n/2.0) {
-			flashingAlpha = 255 * (x/(n/2.0));
+			flashingAlpha = 127.0 * (x/(n/2.0));
+			flashingAlpha += 128.0;
 		} else {
-			flashingAlpha = 255.0 - 255.0 * ((x - n/2.0)/(n/2.0));
+			flashingAlpha = 127.0 - 127.0 * ((x - n/2.0)/(n/2.0));
+			flashingAlpha += 128.0;
 		}
-		smh->resources->GetSprite("windowArrowLeft")->SetColor(ARGB(flashingAlpha, 255.0, 255.0, 255.0));
-		smh->resources->GetSprite("windowArrowRight")->SetColor(ARGB(flashingAlpha, 255.0, 255.0, 255.0));
-		smh->drawSprite("windowArrowLeft", 160, 384);
-		smh->drawSprite("windowArrowRight", 864, 384);
+		
+		
+		//smh->resources->GetSprite("windowArrowLeft")->SetColor(ARGB(flashingAlpha, 255.0, 255.0, 255.0));
+		//smh->resources->GetSprite("windowArrowRight")->SetColor(ARGB(flashingAlpha, 255.0, 255.0, 255.0));
+
+		//Right arrow (to signify you can switch screens)
+		smh->resources->GetSprite("inventoryRightArrow")->SetColor(ARGB(flashingAlpha, 255.0, 255.0, 255.0));
+		
+		smh->drawSprite("inventoryRightArrow",862,352);
+
+		std::string inputString = smh->input->getInputDescription(INPUT_ATTACK);
+							
+		smh->resources->GetFont("consoleFnt")->SetColor(ARGB(flashingAlpha,255.0,255.0,255.0));
+		smh->resources->GetFont("consoleFnt")->printf(916,374,HGETEXT_CENTER,inputString.c_str());
+		smh->resources->GetFont("consoleFnt")->SetColor(ARGB(255.0,255.0,255.0,255.0));
+		
+
+		//smh->drawSprite("windowArrowLeft", 160, 384);
+		//smh->drawSprite("windowArrowRight", 864, 384);
 	}
 }
 
@@ -118,13 +135,15 @@ void WindowManager::update(float dt) {
 			openGameMenu(currentMenuWindow);
 			smh->soundManager->playSound("snd_ChangeMenu");
 		}
-		else if (smh->input->keyPressed(INPUT_NEXT_ABILITY)) 
+		*/
+
+		if (smh->input->keyPressed(INPUT_ATTACK)) 
 		{
 			currentMenuWindow++;
 			if (currentMenuWindow >= NUM_MENU_WINDOWS) currentMenuWindow = 0;
 			openGameMenu(currentMenuWindow);
 			smh->soundManager->playSound("snd_ChangeMenu");
-		}*/
+		}
 	}
 
 	//When the text box is open keep updating Smiley's tongue

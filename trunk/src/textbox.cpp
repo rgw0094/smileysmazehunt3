@@ -124,7 +124,7 @@ void TextBox::setAdvice(int _advice)
 
 	//AdvicePages
 	if (advice == AdviceTypes::ADVICE_INVENTORY)
-		numPages = 3;
+		numPages = 4;
 	else if (advice == AdviceTypes::ADVICE_FRISBEE)
 		numPages = 3;
 	else if (advice == AdviceTypes::ADVICE_SHOP)
@@ -447,8 +447,9 @@ std::string TextBox::getAdviceText(int advice, int page) {
 		case AdviceTypes::ADVICE_INVENTORY:
 			switch (page) {
 				case 1: return "You can access your inventory by pressing [" + smh->input->getInputDescription(INPUT_PAUSE) + "].";
-				case 2: return "In your inventory you can select up to three abilities that will be available in the ability bar in the top left hand side of your screen. You can toggle which abilities appear there by pressing Attack (" + smh->input->getInputDescription(INPUT_ATTACK) + ")";
-				case 3: return "You can use the abilities assigned to the ability bar at any time by using the three ability buttons (" + smh->input->getInputDescription(INPUT_ABILITY1) + ", " + smh->input->getInputDescription(INPUT_ABILITY2) + ", " + smh->input->getInputDescription(INPUT_ABILITY3) + ").";
+				case 2: return "In your inventory you can select up to three abilities that will be available in the ability bar in the top left hand side of your screen.";
+				case 3: return "You can toggle which abilities appear there by pressing each corresponding ability button (" + smh->input->getInputDescription(INPUT_ABILITY1) + ", " + smh->input->getInputDescription(INPUT_ABILITY2) + ", " + smh->input->getInputDescription(INPUT_ABILITY3) + ").";
+				case 4: return "You can use the abilities assigned to the ability bar at any time by using these same ability buttons (" + smh->input->getInputDescription(INPUT_ABILITY1) + ", " + smh->input->getInputDescription(INPUT_ABILITY2) + ", " + smh->input->getInputDescription(INPUT_ABILITY3) + ").";
 			}
 		case AdviceTypes::ADVICE_SAVING:
 			return "To save your game you must simply lick one of the many lollipops strewn throughout our land.";

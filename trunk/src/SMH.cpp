@@ -166,7 +166,7 @@ bool SMH::updateGame()
 		} else if (gameState == GAME) {
 
 			//Update the console
-			if (smh->hge->Input_KeyDown(HGEK_GRAVE)) console->toggle();
+			if (smh->hge->Input_KeyDown(HGEK_GRAVE) || smh->hge->Input_KeyDown(HGEK_F10)) console->toggle();
 			console->update(dt);
 
 			//Toggle options/exit
