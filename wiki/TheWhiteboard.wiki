@@ -25,7 +25,6 @@
 
 === Bugs ===
  * If two lollipops are in view (ex: in Smolder Hollow), they will both rotate at double speed
- * If you're on ice and you go into a warp, the ice sound effect continues even though you're not on ice anymore. Example: Sessaria Snowplains 169,148
  * 119,156 at Tut: I got a timed switch to stay switched on the wrong side. I was hitting both of the switches in that area repeatedly and quickly when it happened. Update 8/26/09: Cannot reproduce this. Oh well -- if it happens in-game, the player is screwed.
  * Spikey guys can't move across spaces formerly consisting of the flame tiles that you put out with the ice breath (this occurs in the realm of despair)
  * When going from an arrow tile onto an ice tile, Smiley gets stuck until you try to move him.  I put a testing spot for this south of Smiley town.
@@ -50,6 +49,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fixed bug where sliding onto warp would make it so ice sound wouldn't stop||6/??/12||ETI||
 ||Fixed bug where using cane on ice would mess it up||6/20/12||ETI||
 ||Added tutorial text to inventory if no items are selected||6/20/12||ETI||
 ||Reworked Monocle man||6/20/12||ETI||
