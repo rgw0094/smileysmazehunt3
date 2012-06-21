@@ -2071,7 +2071,7 @@ Sound snd_FireCannonLaunch {
 ;**************************************************
 Sprite penguinBody {
  texture="Graphics/penguin.png"
- rect=0,0,128,128
+ rect=1,1,127,127
  hotspot=64,64
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=101
@@ -2079,7 +2079,7 @@ Sprite penguinBody {
 
 Sprite penguinSliding {
  texture="Graphics/penguin.png"
- rect=128,0,128,128
+ rect=129,1,127,127
  hotspot=64,64
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=101

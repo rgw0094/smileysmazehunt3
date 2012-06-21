@@ -1304,6 +1304,14 @@ bool Player::isSmileyTouchingWater() {
 	return false;
 }
 
+/*
+ * Resets sliding, icesliding, and slidingontoice
+ * This is called by the console when the user uses the numpad to move smiley one tile at a time
+ */
+void Player::resetSliding() {
+	sliding = iceSliding = slidingOntoIce = false;
+}
+
 void Player::setFacingStraight() {
 
 	//Simple cases
