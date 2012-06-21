@@ -116,14 +116,14 @@ void Player::reset() {
 	dx = dy = 0.0;
 	timeLastUsedMana = 0.0;
 	usingManaItem = false;
-
+	
 	//State variables
 	reflectionShieldActive = flashing = knockback = sliding = stunned = graduallyMoving =
 		onWarp = falling = breathingFire = inLava = inShallowWater = healing =
 		waterWalk = onWater = drowning = shrinkActive = sprinting = isHovering = 
 		cloaked = springing = iceSliding = frozen = slimed = chargingFrisbee = 
 		inShrinkTunnel = immobile = invincible = uber = abilitiesLocked = 
-		tongueLocked = jesusSoundPlaying = false;
+		tongueLocked = jesusSoundPlaying = iceSliding = needToIceCenter = false;
 }
 
 /**
@@ -1645,6 +1645,16 @@ void Player::startPuzzleIce() {
 		iceSliding = true;
 		
 		smh->soundManager->playIceEffect("snd_SnowFootstep",true);
+
+		// Set up the calculation which centers Smiley in 0.157 seconds
+		// (0.157 sec is the approximate amount of time spent in the ice hop, since
+		// Smiley hops at 20 radians/second up to a max of PI radians). PI / 20 is 0.157)
+		startIceTime = smh->getGameTime();
+		startIceX = x;
+		startIceY = y;
+		needToIceCenter = true;
+
+
 	}
 }
 
@@ -1673,6 +1683,29 @@ void Player::doIce(float dt) {
 		float sinAngle = smh->timePassedSince(timeStartedIceHop)*20.0;
 		iceHopOffset = 10.0*sin(sinAngle);
 		if (sinAngle>=3.14159) {iceHopOffset=0.0; needToIceHop=false;}
+	}
+
+	//Move Smiley toward center of tile in 0.157 seconds
+	//The reason for that is he ice hops at 20 radians per second (see above),
+	//to a maximum of pi. pi/20 = 0.157.
+	float diffX,diffY,traveledProportion;
+	if (needToIceCenter) {
+		switch (facing) {
+			case UP: case DOWN:
+				endIceX = gridX*64+32;
+				diffX = endIceX - startIceX;
+				traveledProportion = smh->timePassedSince(startIceTime)/0.157;
+				if (traveledProportion > 1) {traveledProportion = 1; needToIceCenter=false;}
+				x = startIceX + (diffX*traveledProportion);
+				break;
+			case LEFT: case RIGHT:
+				endIceY = gridY*64+32;
+				diffY = endIceY - startIceY;
+				traveledProportion = smh->timePassedSince(startIceTime)/0.157;
+				if (traveledProportion > 1) {traveledProportion = 1; needToIceCenter=false;}
+				y = startIceY + (diffY*traveledProportion);
+				break;
+		}
 	}
 
 	//Stop puzzle ice

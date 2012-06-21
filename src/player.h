@@ -88,6 +88,8 @@ public:
 	int startedFallingX;					//X position where the player started falling
 	int startedFallingY;					//Y position where the player started falling
 
+	bool needToIceCenter;
+
 	float startedSlidingX, startedSlidingY;
 	float finishSlidingX, finishSlidingY;
 	int slideDir;
@@ -178,6 +180,13 @@ private:
 	float timeToGraduallyMove;
 	float timeStoppedBreathingFire;
 	float timeLastUsedMana;
+	
+	//Stuff needed for the centering of Smiley during the "hop" onto ice
+	float startIceTime;
+	float startIceX;
+	float startIceY;
+	float endIceX;
+	float endIceY;
 
 	//Stuff for the "hop" onto ice
 	bool needToIceHop;
