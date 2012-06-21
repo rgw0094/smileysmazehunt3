@@ -66,6 +66,32 @@ void Inventory::draw(float dt)
 					smh->resources->GetSprite("selectedAbilityCheck")->SetColor(ARGB(smh->getFlashingAlpha(0.6), 255.0, 255.0, 255.0));
 					smh->resources->GetSprite("selectedAbilityCheck")->Render(drawX - 27.0, drawY + 23.0);
 				}
+
+							
+				//First check if they have at least one ability (will be either Cane (0) or Fire Breath (1))
+				//Also make sure they don't have the next ability, cause that means they already know how to
+				//select abilities!
+				if ((smh->saveManager->hasAbility[0] || smh->saveManager->hasAbility[1]) && !smh->saveManager->hasAbility[2]) {
+					//If the player has no abilities selected, tell them how to select them
+					if (smh->player->gui->areAbilitySlotsEmpty()) {
+						smh->resources->GetFont("description")->printf(INVENTORY_X_OFFSET+175, INVENTORY_Y_OFFSET+115, HGETEXT_CENTER | HGETEXT_TOP, "To use an ability, move it into");
+						smh->resources->GetFont("description")->printf(INVENTORY_X_OFFSET+175, INVENTORY_Y_OFFSET+145, HGETEXT_CENTER | HGETEXT_TOP, "an ability slot in the top left");
+						smh->resources->GetFont("description")->printf(INVENTORY_X_OFFSET+175, INVENTORY_Y_OFFSET+175, HGETEXT_CENTER | HGETEXT_TOP, "and select it by pressing the");
+						smh->resources->GetFont("description")->printf(INVENTORY_X_OFFSET+175, INVENTORY_Y_OFFSET+205, HGETEXT_CENTER | HGETEXT_TOP, "corresponding input key.");
+
+
+
+						std::string inputKeys;												
+						inputKeys = "Your input keys are: " + smh->input->getInputDescription(INPUT_ABILITY1) + ", " +
+							smh->input->getInputDescription(INPUT_ABILITY2) + ", and " +
+							smh->input->getInputDescription(INPUT_ABILITY3) + ".";
+                        //smh->resources->GetFont("description")->printf(512, 690, HGETEXT_CENTER, inputKeys.c_str());
+
+					}
+
+				}
+				
+				
 			}
 		}
 	}

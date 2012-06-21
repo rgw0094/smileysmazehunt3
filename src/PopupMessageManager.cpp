@@ -41,12 +41,15 @@ void PopupMessageManager::draw(float dt)
 
 void PopupMessageManager::update(float dt) 
 {
+	//Got rid of "Press N to view it Now" cause it's messy
+	/*
 	if (adviceManMessageActive && smh->hge->Input_KeyDown(HGEK_N)) 
 	{
 		smh->windowManager->openAdviceTextBox(advice);
 		timeMessageStarted = 0.0;
 		adviceManMessageActive=false;
 	}
+	*/
 }
 
 void PopupMessageManager::showFullHealth() 
@@ -64,7 +67,7 @@ void PopupMessageManager::showFullMana()
 }
 
 void PopupMessageManager::showNewAdvice(int _advice) {
-	message = "New advice is available from Monocle Man. Press N to view it now.";
+	message = "New advice is available from Monocle Man. Go see him near your house to view it.";
 	startMessage(5.5);
 	adviceManMessageActive = true;
 	advice = _advice;
