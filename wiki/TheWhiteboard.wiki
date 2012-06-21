@@ -24,7 +24,6 @@
  * Ability hotkey bar. Feel free to make the spacing/dimensions different than the filler graphic!!!!
 
 === Bugs ===
- * Moving onto an arrow, if there is a block at the corner, can halt your movement
  * If two lollipops are in view (ex: in Smolder Hollow), they will both rotate at double speed
  * 119,156 at Tut: I got a timed switch to stay switched on the wrong side. I was hitting both of the switches in that area repeatedly and quickly when it happened. Update 8/26/09: Cannot reproduce this. Oh well -- if it happens in-game, the player is screwed.
  * Spikey guys can't move across spaces formerly consisting of the flame tiles that you put out with the ice breath (this occurs in the realm of despair)
@@ -50,6 +49,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fixed bug where moving onto an arrow would cause you to stop if there was a block at the corner||6/20/12||ETI||
 ||Hard-coded a sign in Sessaria to say "Good job" when you kill the Snowfangs it refers to||6/20||12||ETI||
 ||Fixed bug where licking a sign when on ice causes you to stop||6/20/12||ETI||
 ||Fixed bug where sliding onto warp would make it so ice sound wouldn't stop||6/??/12||ETI||
