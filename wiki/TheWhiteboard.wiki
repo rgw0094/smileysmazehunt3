@@ -1,4 +1,5 @@
 === Programming To Do ===
+ * Ice hop should center Smiley on ice
  * Make a leet effect to indicate cooldowns in the ability bar like in WoW/Diablo (and add a cooldown to frisbees)
  * Improve the appearance of the Right Arrow in the inventory screen
  * The end credits have a bunch of things to fix: the Gayass Ghost is not in the game, buzzard has no wings, most of the enemies are looking left but would look better looking forward, Barvinoid is missing, Bartli/BrianFungus/Magnitogorsk are missing parts of their bodies.
@@ -6,7 +7,6 @@
  * Add new noises to the Fenwar battle and change boss music
  * Implement the goblin using a balloon instead of a clown head.
  * After picking up 1 mana pickup, your mana begins recharging instantly.  This is bad since then there is little incentive to ever pick up more than one since your mana will recharge anyways, and ends up giving you way too much mana.  Then running around owning everyone with orbs is too easy to do.
- * Ice hop should center Smiley on tile
  * After the boss fights are over, the bosses still damage you.  Also other external objects (flames in Phyrebawz2, projectiles in Barvinoid) will still exist and hurt you.
  * Bartli gets blocked by silly pads. Make it so she runs them over and makes them disappear
 
@@ -15,6 +15,8 @@
  * Barvinoid glowing eye flash beeps
  * Barvinoid floating eye being hit
  * Barvinoid floating eye launching at player
+ * Fenwar sounds
+ * Enemy block activation/deactivation
 
 === Graphics To Do ===
 
@@ -47,6 +49,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fixed bug where using cane on ice would mess it up||6/20/12||ETI||
 ||Added tutorial text to inventory if no items are selected||6/20/12||ETI||
 ||Reworked Monocle man||6/20/12||ETI||
 ||Can now switch between minimap, world map, and inventory||6/20/12||ETI||
