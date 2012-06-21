@@ -48,6 +48,8 @@
 
 ===Done===
 ||Item||Date||Done By||
+||When moving with the numpad in the console mode, ice and arrows no longer should screw you up||6/20/12||ETI||
+||Portly no longer has edge-of-sprite artifact||6/20/12||ETI||
 ||Ice hop centers Smiley on tile||6/20/12||ETI||
 ||Fixed bug where moving onto an arrow would cause you to stop if there was a block at the corner||6/20/12||ETI||
 ||Hard-coded a sign in Sessaria to say "Good job" when you kill the Snowfangs it refers to||6/20/12||ETI||
