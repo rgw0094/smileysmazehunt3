@@ -1609,6 +1609,17 @@ void Player::setFacingDirection()
  * Sets facing based on grid locations
  */
 void Player::setFacingBasedOnLastGrid() {
+	//First we have to update the previousGrid*Positions in case the player just changed grids on the previous frame
+	if (lastGridX != gridX || lastGridY != gridY) {
+		previousGridXPosition = lastGridX;
+		previousGridYPosition = lastGridY;
+	}
+
+	lastGridX = gridX;
+	lastGridY = gridY;
+
+
+	//Now we can set facing based on grid positions
 	if (previousGridXPosition < gridX) {
 		facing = RIGHT;			
 	} else if (previousGridXPosition > gridX) {
