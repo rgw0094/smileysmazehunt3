@@ -30,28 +30,22 @@ void GUI::setAbilityInSlot(int ability, int slot)
  */
 int GUI::getUsedAbility()
 {
-	//First check ability 1 (the left-most slot)
-	if (activeAbilities[0] != NO_ABILITY) {
-		if ((smh->gameData->getAbilityInfo(activeAbilities[0]).type == ACTIVATED && smh->input->keyPressed(INPUT_ABILITY1)) ||
-			(smh->gameData->getAbilityInfo(activeAbilities[0]).type != ACTIVATED && smh->input->keyDown(INPUT_ABILITY1))) {
-			return activeAbilities[0];
+	for (int i=0; i<3; i++) {
+		if (activeAbilities[i] != NO_ABILITY) {
+			if (smh->gameData->getAbilityInfo(activeAbilities[i]).type == ACTIVATED) {
+				if (abilityKeyCurrentFrame[i] && !abilityKeyPreviousFrame[i]) {
+					return activeAbilities[i];
+				}
+			}
+			
+			if (smh->gameData->getAbilityInfo(activeAbilities[i]).type == HOLD) {
+				if (abilityKeyCurrentFrame[i]) {
+					return activeAbilities[i];
+				}
+			}
 		}
 	}
 	
-	if (activeAbilities[1] != NO_ABILITY) {
-		if ((smh->gameData->getAbilityInfo(activeAbilities[1]).type == ACTIVATED && smh->input->keyPressed(INPUT_ABILITY2)) ||
-			(smh->gameData->getAbilityInfo(activeAbilities[1]).type != ACTIVATED && smh->input->keyDown(INPUT_ABILITY2))) {
-			return activeAbilities[1];
-		}
-	}
-
-	if (activeAbilities[2] != NO_ABILITY) {
-		if ((smh->gameData->getAbilityInfo(activeAbilities[2]).type == ACTIVATED && smh->input->keyPressed(INPUT_ABILITY3)) ||
-			(smh->gameData->getAbilityInfo(activeAbilities[2]).type != ACTIVATED && smh->input->keyDown(INPUT_ABILITY3))) {
-			return activeAbilities[2];
-		}
-	}
-
 	return NO_ABILITY;
 }
 
@@ -80,14 +74,16 @@ bool GUI::areAbilitySlotsEmpty() {
 }
 
 /**
- * Empties the ability action bar.
+ * Empties the ability action bar and resets the input keys.
  */
 void GUI::resetAbilities() 
 {
 	for (int i = 0; i < 3; i++) 
 	{
 		activeAbilities[i] = NO_ABILITY;
+		abilityKeyCurrentFrame[i] = abilityKeyPreviousFrame[i] = false;
 	}
+
 }
 
 /**
@@ -171,7 +167,10 @@ void GUI::abilityKeyPressedInInventoryScreen(int abilityNum,int ability) {
 
 void GUI::update(float dt) 
 {
-	//TODO: cooldown indicators!!
+	updateAbilityInputs();
+
+	
+
 
 	//TODO: do this somewhere else
 	//int collisionAtPlayer = smh->environment->collision[smh->player->gridX][smh->player->gridY];
@@ -181,7 +180,16 @@ void GUI::update(float dt)
 	//		//player is on a land tile, but touching water; bump him over and change abilities
 	//		changeAbility(dir);
 	//		smh->player->graduallyMoveTo(smh->player->gridX * 64.0 + 32.0, smh->player->gridY * 64.0 + 32.0, 500.0);
-	//} 
+	//}
+}
+
+void GUI::updateAbilityInputs() {
+
+	for (int i=0; i<3; i++) {
+		abilityKeyPreviousFrame[i] = abilityKeyCurrentFrame[i];
+		abilityKeyCurrentFrame[i] = smh->input->keyDown(i+INPUT_ABILITY1);
+	}	
+
 }
 
 void GUI::draw() 
@@ -229,6 +237,8 @@ void GUI::draw()
 	smh->resources->GetSprite("manabarBackgroundRightTip")->Render(drawX + 115 * manaBarSizeMultiplier - 2, drawY);
 
 
+	Ability curAbility;
+
 	//Draw abilities
 	smh->resources->GetSprite("abilityBackground")->Render(5.0, 5.0);
 	for (int i = 0; i < 3; i++) 
@@ -240,7 +250,20 @@ void GUI::draw()
 		{
 			smh->resources->GetAnimation("abilities")->SetFrame(activeAbilities[i]);
 			smh->resources->GetAnimation("abilities")->Render(x, y);
+
+			//Draw the cooldown timer
+			curAbility = smh->gameData->getAbilityInfo(activeAbilities[i]);
+			if (curAbility.coolDown != 0 && curAbility.timeLastUsed != 0 && smh->timePassedSince(curAbility.timeLastUsed) < curAbility.coolDown) {
+				float percentage = smh->timePassedSince(curAbility.timeLastUsed) / curAbility.coolDown;
+				int height = 80-int(percentage*80.0);
+				smh->resources->GetSprite("abilityCooldownCircle")->SetTextureRect(735,574+80-height,80,height,true);
+				float xCircle = int(i)*80.0 + 5.0;
+				smh->resources->GetSprite("abilityCooldownCircle")->Render(xCircle,5+80-height);		
+			}		
+	
 		}
+
+
 	}
 
 	//Draw keys

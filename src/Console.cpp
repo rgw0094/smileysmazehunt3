@@ -46,13 +46,10 @@ void Console::draw(float dt) {
 	write("NUM5  Move down 1 tile    ", NA);
 	write("NUM4  Move left 1 tile    ", NA);
 	write("NUM6  Move right 1 tile   ", NA);
-	write("",NA);
-	write("Arrow sliding:       ",smh->player->isOnArrow() ? YES : NO);
-	write("Ice sliding:         ",smh->player->isOnIce() ? YES : NO);
-	write("SlidingOntoIce:      ",smh->player->slidingOntoIce ? YES : NO);
-	write("On arrow:            ",smh->environment->isArrowAt(smh->player->gridX,smh->player->gridY) ? YES : NO);
-	write("On ice:              ",smh->environment->isIceAt(smh->player->gridX,smh->player->gridY) ? YES : NO);
-
+	write("",NA);	
+	smh->resources->GetFont("consoleFnt")->printf(15, 150 + lineNum*25, HGETEXT_LEFT, "Ability1: prev %i, cur %i", smh->player->gui->abilityKeyPreviousFrame[0],smh->player->gui->abilityKeyCurrentFrame[0]);
+	lineNum++;
+	
 	//Write the collision layer value of smiley's location
 	int playerX = smh->player->x;
 	int playerY = smh->player->y;

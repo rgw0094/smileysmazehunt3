@@ -241,9 +241,13 @@ public:
 	bool areAbilitySlotsEmpty();
 	void abilityKeyPressedInInventoryScreen(int abilityNum, int ability);
 	int getUsedAbility();
-	int getAbilityInSlot(int slot);
+	void updateAbilityInputs();
+    int getAbilityInSlot(int slot);
 	void setAbilityInSlot(int ability, int slot);
 	void resetAbilities();
+
+	bool abilityKeyCurrentFrame[3];
+	bool abilityKeyPreviousFrame[3];
 
 private:
 

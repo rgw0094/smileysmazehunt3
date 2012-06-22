@@ -479,6 +479,8 @@ struct Ability {
 	char description[128];
 	int manaCost;
 	int type;
+	float timeLastUsed;
+	float coolDown;
 };
 
 class GameData {
@@ -490,6 +492,7 @@ public:
 
 	EnemyInfo getEnemyInfo(int enemyID);
 	Ability getAbilityInfo(int abilityID);
+	void setTimeLastUsedAbility(int abilityID, float time);
 	std::list<EnemyName> getEnemyNames();
 	int getNumTotalGemsInArea(int area, int gemType);
 	const char *getGameText(const char *text);
