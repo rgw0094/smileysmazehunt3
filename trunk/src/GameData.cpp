@@ -115,6 +115,7 @@ void GameData::refreshAbilityData()
 		"Use to communicate telepathically with Bill Clinton. \n\nMana Cost: 10");
 	abilities[CANE].type = ACTIVATED;
 	abilities[CANE].manaCost = 10;
+	abilities[CANE].coolDown = 0;
 
 	//Jesus' Sandals
     strcpy(abilities[WATER_BOOTS].name, "Jesus' Sandals");
@@ -122,12 +123,15 @@ void GameData::refreshAbilityData()
 		"While equipped you gain the power of Jesus Christ. (That means you can walk on water)");
 	abilities[WATER_BOOTS].type = HOLD;
 	abilities[WATER_BOOTS].manaCost = 0;
+	abilities[WATER_BOOTS].coolDown = 0;
 
 	//Boots of 14
 	strcpy(abilities[SPRINT_BOOTS].name, "Speed Boots");
 	strcpy(abilities[SPRINT_BOOTS].description, "When activated you run 75% faster.");
 	abilities[SPRINT_BOOTS].type = ACTIVATED;
 	abilities[SPRINT_BOOTS].manaCost = 0;
+	abilities[SPRINT_BOOTS].coolDown = 10.0;
+	abilities[SPRINT_BOOTS].timeLastUsed = 0;
 
 	//Fire Breath
 	strcpy(abilities[FIRE_BREATH].name, "Fire Breath");
@@ -138,6 +142,7 @@ void GameData::refreshAbilityData()
 	strcat(abilities[FIRE_BREATH].description, " per second.");
 	abilities[FIRE_BREATH].type = HOLD;
 	abilities[FIRE_BREATH].manaCost = 15;
+	abilities[FIRE_BREATH].coolDown = 0;
 
 	//Ice Breath
 	strcpy(abilities[ICE_BREATH].name, "Ice Breath");
@@ -145,6 +150,8 @@ void GameData::refreshAbilityData()
 		"Unleashes an icy blast that can freeze enemies.\n\n\nMana Cost: 10");
 	abilities[ICE_BREATH].type = ACTIVATED;
 	abilities[ICE_BREATH].manaCost = 20;
+	abilities[ICE_BREATH].coolDown = 1.5;
+	abilities[ICE_BREATH].timeLastUsed = 0;
 
 	//Reflection Shield
 	strcpy(abilities[REFLECTION_SHIELD].name, "Reflection Shield");
@@ -152,6 +159,7 @@ void GameData::refreshAbilityData()
 		"Activate to deflect certain projectiles.\n\n\nMana Cost: 35/second");
 	abilities[REFLECTION_SHIELD].type = HOLD;
 	abilities[REFLECTION_SHIELD].manaCost = 15;
+	abilities[REFLECTION_SHIELD].coolDown = 0;
 
 	//Hover
 	strcpy(abilities[HOVER].name, "Hover");
@@ -159,6 +167,7 @@ void GameData::refreshAbilityData()
 		"Grants you the power to use hover pads.");
 	abilities[HOVER].type = HOLD;
 	abilities[HOVER].manaCost = 0;
+	abilities[HOVER].coolDown = 0;
 
 	//Lightning Orbs
 	strcpy(abilities[LIGHTNING_ORB].name, "Lightning Orbs");
@@ -168,12 +177,15 @@ void GameData::refreshAbilityData()
 	strcat(abilities[LIGHTNING_ORB].description, Util::intToString(smh->player->getLightningOrbDamage() * 100).c_str());
 	abilities[LIGHTNING_ORB].type = ACTIVATED;
 	abilities[LIGHTNING_ORB].manaCost = 5;
+	abilities[LIGHTNING_ORB].coolDown = 0.283;
+	abilities[LIGHTNING_ORB].timeLastUsed = 0;
 
 	//Shrink
 	strcpy(abilities[SHRINK].name, "Shrink");
 	strcpy(abilities[SHRINK].description, "When activated Smiley will shrink in size and be able to fit into smaller spaces.");
 	abilities[SHRINK].type = ACTIVATED;
 	abilities[SHRINK].manaCost = 0;
+	abilities[SHRINK].coolDown = 0;
 
 	//Silly Pad
 	strcpy(abilities[SILLY_PAD].name, "Silly Pad");
@@ -181,6 +193,7 @@ void GameData::refreshAbilityData()
 		"Places a Silly Pad. They are so silly that enemies can't even cross them!\n\nMana Cost: 5");
 	abilities[SILLY_PAD].type = ACTIVATED;
 	abilities[SILLY_PAD].manaCost = 5;
+	abilities[SILLY_PAD].coolDown = 0;
 
 	//King Tut's Mask
 	strcpy(abilities[TUTS_MASK].name, "Tut's Mask");
@@ -188,12 +201,22 @@ void GameData::refreshAbilityData()
 		"Grants the wearer the power of invisibility.\n\n\nMana Cost: 5/second");
 	abilities[TUTS_MASK].type = HOLD;
 	abilities[TUTS_MASK].manaCost = 5;
-
+	abilities[TUTS_MASK].coolDown = 0;
+	
 	//Frisbee
 	strcpy(abilities[FRISBEE].name, "Frisbee!?!?! K");
 	strcpy(abilities[FRISBEE].description, "Throws a frisbee that can stun enemies.");
-	abilities[FRISBEE].type = ACTIVATED;
+	abilities[FRISBEE].type = HOLD;
 	abilities[FRISBEE].manaCost = 0;
+	abilities[FRISBEE].coolDown = 1;
+	abilities[FRISBEE].timeLastUsed = 0;
+}
+
+/**
+ * Sets the time an ability was last used
+ */
+void GameData::setTimeLastUsedAbility(int abilityID, float time) {
+	abilities[abilityID].timeLastUsed = time;
 }
 
 ////////// Private functions //////////////////

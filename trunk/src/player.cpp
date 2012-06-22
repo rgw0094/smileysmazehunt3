@@ -121,10 +121,12 @@ void Player::reset() {
 	reflectionShieldActive = flashing = knockback = sliding = stunned = graduallyMoving =
 		onWarp = falling = breathingFire = inLava = inShallowWater = healing =
 		waterWalk = onWater = drowning = shrinkActive = sprinting = isHovering = 
-		cloaked = springing = iceSliding = frozen = slimed = chargingFrisbee = 
+		cloaked = springing = iceSliding = falling = onWater = frozen = slimed = chargingFrisbee = 
 		inShrinkTunnel = immobile = invincible = uber = abilitiesLocked = 
-		tongueLocked = jesusSoundPlaying = iceSliding = needToIceCenter = false;
+		tongueLocked = jesusSoundPlaying = needToIceCenter = slidingOntoIce = false;
+	
 }
+
 
 /**
  * Update the player object. The general flow of this method is that all movement related
@@ -650,7 +652,7 @@ void Player::doAbility(float dt)
 
 	//////////////  Frisbee /////////////////
 
-	if (canUseAbility && usedAbility == FRISBEE) 
+	if (canUseAbility && usedAbility == FRISBEE && smh->timePassedSince(smh->gameData->getAbilityInfo(FRISBEE).timeLastUsed) >= smh->gameData->getAbilityInfo(FRISBEE).coolDown) 
 	{
 		//Start charging frisbee
 		if (!chargingFrisbee) 
@@ -671,6 +673,7 @@ void Player::doAbility(float dt)
 			smh->soundManager->playSound("snd_Lick1");
 			frisbeePower = 0;
 			chargingFrisbee = false;
+			smh->gameData->setTimeLastUsedAbility(FRISBEE, smh->getGameTime());
 		}
 	}
 
@@ -706,11 +709,13 @@ void Player::doAbility(float dt)
 	if (canUseAbility) 
 	{
 		//Shoot lightning orbs
-		if (usedAbility == LIGHTNING_ORB && smh->timePassedSince(lastOrb) > smh->environment->getSwitchDelay()) 
+		if (usedAbility == LIGHTNING_ORB && smh->timePassedSince(smh->gameData->getAbilityInfo(LIGHTNING_ORB).timeLastUsed) >= smh->gameData->getAbilityInfo(LIGHTNING_ORB).coolDown) 
 		{
 			mana -= manaCost;
 			timeLastUsedMana = smh->getGameTime();
 			lastOrb = smh->getGameTime();
+			smh->gameData->setTimeLastUsedAbility(LIGHTNING_ORB, smh->getGameTime());
+
 			smh->soundManager->playSound("snd_LightningOrb");
 			smh->projectileManager->addProjectile(x, y, 700.0, angles[facing]-.5*PI, getLightningOrbDamage(), false, false,PROJECTILE_LIGHTNING_ORB, true);
 		}
@@ -734,12 +739,13 @@ void Player::doAbility(float dt)
 		}
 
 		//Start Ice Breath
-		if (usedAbility == ICE_BREATH && smh->timePassedSince(startedIceBreath) > 1.5) 
+		if (usedAbility == ICE_BREATH && smh->timePassedSince(smh->gameData->getAbilityInfo(ICE_BREATH).timeLastUsed) >= smh->gameData->getAbilityInfo(ICE_BREATH).coolDown) 
 		{
 			mana -= manaCost;
 			timeLastUsedMana = smh->getGameTime();
 			smh->soundManager->playSound("snd_iceBreath");
 			startedIceBreath = smh->getGameTime();
+			smh->gameData->setTimeLastUsedAbility(ICE_BREATH, smh->getGameTime());
 			iceBreathParticle->FireAt(smh->getScreenX(x) + mouthXOffset[facing], smh->getScreenY(y) + mouthYOffset[facing]);
 			breathingIce = true;
 		}
