@@ -46,6 +46,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fixed arrow-onto-spring glitch||6/22/12||ETI||
 ||Fixed some ability inputs (ex: cane, frisbee)||6/21/12||ETI||
 ||Added cooldown graphic||6/21/12||ETI||
 ||When moving with the numpad in the console mode, ice and arrows no longer should screw you up||6/20/12||ETI||
