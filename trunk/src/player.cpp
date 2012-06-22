@@ -235,8 +235,14 @@ void Player::updateGUI(float dt) {
 
 void Player::updateLocation() 
 {
+	if (lastGridX != gridX || lastGridY != gridY) {
+		previousGridXPosition = lastGridX;
+		previousGridYPosition = lastGridY;
+	}
+
 	lastGridX = gridX;
 	lastGridY = gridY;
+
 	if (smh->environment->collision[gridX][gridY] != ICE) {
 		lastNonIceGridX = gridX;
 		lastNonIceGridY = gridY;
@@ -632,7 +638,7 @@ void Player::doAbility(float dt)
 	
 	sprinting = canUseAbility && 
 				usedAbility == SPRINT_BOOTS && 
-				sprintDuration > dt &&
+				//sprintDuration > dt &&
 				smh->environment->collision[gridX][gridY] != LEFT_ARROW &&
 				smh->environment->collision[gridX][gridY] != RIGHT_ARROW &&
 				smh->environment->collision[gridX][gridY] != UP_ARROW &&
@@ -941,17 +947,22 @@ void Player::doSprings(float dt) {
 			smh->resources->GetAnimation("spring")->Play();
 		}
 		
-		//Set Smiley facing a straight direction(not diagonally)
-		setFacingStraight();
+
+		//Set Smiley facing the direction he's going
+		//This way, if an arrow pushes you onto a spring, and you're not facing
+		//the same direction you're moving, the spring still functions properly
+		setFacingBasedOnLastGrid();
 
 		//Determine how long smiley will have to spring to skip a square
 		int jumpGridDist = superSpring ? 4 : 2;
 		springVelocity = superSpring ? SPRING_VELOCITY * 1.5 : SPRING_VELOCITY;
 		int dist;
-		if (facing == LEFT) dist = x - ((gridX-jumpGridDist)*64+32);
-		else if (facing == RIGHT) dist = ((gridX+jumpGridDist)*64+32) - x;
-		else if (facing == DOWN) dist = (gridY+jumpGridDist)*64+32 - y;
-		else if (facing == UP) dist = y - ((gridY-jumpGridDist)*64+32);
+
+		springDirection = facing;
+		if (springDirection == LEFT) dist = x - ((gridX-jumpGridDist)*64+32);
+		else if (springDirection == RIGHT) dist = ((gridX+jumpGridDist)*64+32) - x;
+		else if (springDirection == DOWN) dist = (gridY+jumpGridDist)*64+32 - y;
+		else if (springDirection == UP) dist = y - ((gridY-jumpGridDist)*64+32);
 		springTime = float(dist)/springVelocity;
 
 	}
@@ -963,8 +974,8 @@ void Player::doSprings(float dt) {
 		springOffset =  sin(PI*(smh->timePassedSince(startedSpringing)/springTime))* (springVelocity / 4.0);
 		dx = dy = 0;
 
-		//Sprint left
-		if (facing == LEFT) {
+		//Spring left
+		if (springDirection == LEFT) {
 			x -= springVelocity * dt;
 			//Adjust the player to land in the middle of the square vertically
 			if (y < enteredSpringY*64+31) {
@@ -974,7 +985,7 @@ void Player::doSprings(float dt) {
 			}
 
 		//Spring right
-		} else if (facing == RIGHT) {
+		} else if (springDirection == RIGHT) {
 			x += springVelocity * dt;
 			//Adjust the player to land in the middle of the square vertically
 			if (y < enteredSpringY*64+31) {
@@ -984,7 +995,7 @@ void Player::doSprings(float dt) {
 			}
 
 		//Spring down
-		} else if (facing == DOWN) {
+		} else if (springDirection == DOWN) {
 			y += springVelocity*dt;
 			//Adjust the player to land in the center of the square horizontally
 			if (x < gridX*64+31) {
@@ -994,7 +1005,7 @@ void Player::doSprings(float dt) {
 			}
 
 		//Spring up
-		} else if (facing == UP) {
+		} else if (springDirection == UP) {
 			y -= springVelocity*dt;
 			//Adjust the player to land in the center of the square horizontally
 			if (x < gridX*64+31) {
@@ -1595,6 +1606,24 @@ void Player::setFacingDirection()
 }
 
 /**
+ * Sets facing based on grid locations
+ */
+void Player::setFacingBasedOnLastGrid() {
+	if (previousGridXPosition < gridX) {
+		facing = RIGHT;			
+	} else if (previousGridXPosition > gridX) {
+		facing = LEFT;			
+	} else if (previousGridYPosition < gridY) {
+		facing = DOWN;			
+	} else if (previousGridYPosition > gridY) {
+		facing = UP;			
+	} else {
+		//unknown!
+		smh->log("player::setFacingBasedOnLastGrid: could not set facing");
+	}
+}
+
+/**
  * Start puzzle ice
  */
 void Player::startPuzzleIce() {
@@ -1753,6 +1782,8 @@ void Player::doIce(float dt) {
 void Player::moveTo(int _gridX, int _gridY) {
 	gridX = min(max(0,_gridX), smh->environment->areaWidth-1);
 	gridY = min(max(0,_gridY), smh->environment->areaHeight-1);
+	lastGridX = previousGridXPosition = gridX;
+	lastGridY = previousGridYPosition = gridY;
 	x = gridX*64+32;
 	y = gridY*64+32;
 	dx = dy = 0.0;

@@ -81,7 +81,8 @@ public:
 	int baseX, baseY;						//The coordinate of the center of smiley's shadow
 	int baseGridX, baseGridY;				//The grid coordinate of the center of smiley's shadow
 	int gridX,gridY;						//Global grid coordinates
-	int lastGridX, lastGridY;
+	int lastGridX, lastGridY;				//Grid position of last FRAME
+	int previousGridXPosition, previousGridYPosition; //Grid position Smiley was last ON
 	int lastNonIceGridX, lastNonIceGridY;
 	float springOffset;
 	float hoveringYOffset;
@@ -127,6 +128,7 @@ private:
 	void doWater();
 	void setFacingStraight();
 	void setFacingDirection();
+	void setFacingBasedOnLastGrid();
 	void updateVelocities(float dt);
 	void doIce(float dt);
 	void startPuzzleIce();
@@ -141,6 +143,7 @@ private:
 	
 	float health, mana;
 	float springVelocity;
+	int springDirection;
 	int enteredWaterX, enteredWaterY;		//Grid position the player was on before entering water
 	int enteredSpringX, enteredSpringY;
 	bool usingManaItem;
