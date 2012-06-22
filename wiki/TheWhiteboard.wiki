@@ -1,5 +1,4 @@
 === Programming To Do ===
- * Make a leet effect to indicate cooldowns in the ability bar like in WoW/Diablo (and add a cooldown to frisbees)
  * Improve the appearance of the Right Arrow in the inventory screen
  * The end credits have a bunch of things to fix: the Gayass Ghost is not in the game, buzzard has no wings, most of the enemies are looking left but would look better looking forward, Barvinoid is missing, Bartli/BrianFungus/Magnitogorsk are missing parts of their bodies.
  * Add the thud noises when you lick a boss.
@@ -48,6 +47,8 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fixed some ability inputs (ex: cane, frisbee)||6/21/12||ETI||
+||Added cooldown graphic||6/21/12||ETI||
 ||When moving with the numpad in the console mode, ice and arrows no longer should screw you up||6/20/12||ETI||
 ||Portly no longer has edge-of-sprite artifact||6/20/12||ETI||
 ||Ice hop centers Smiley on tile||6/20/12||ETI||
