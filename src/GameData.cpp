@@ -127,8 +127,8 @@ void GameData::refreshAbilityData()
 
 	//Boots of 14
 	strcpy(abilities[SPRINT_BOOTS].name, "Speed Boots");
-	strcpy(abilities[SPRINT_BOOTS].description, "When activated you run 75% faster.");
-	abilities[SPRINT_BOOTS].type = ACTIVATED;
+	strcpy(abilities[SPRINT_BOOTS].description, "When used, you run 75% faster.");
+	abilities[SPRINT_BOOTS].type = HOLD;
 	abilities[SPRINT_BOOTS].manaCost = 0;
 	abilities[SPRINT_BOOTS].coolDown = 10.0;
 	abilities[SPRINT_BOOTS].timeLastUsed = 0;
