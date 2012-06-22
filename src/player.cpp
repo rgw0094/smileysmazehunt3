@@ -1234,6 +1234,8 @@ bool Player::canPass(int collision, bool applyCurrentAbilities)
 	if (applyCurrentAbilities && springing) 
 		return true;
 
+	if (uber) return true;
+
 	bool canPassWater = ((gui->getUsedAbility() == WATER_BOOTS && !drowning) || springing || isHovering || graduallyMoving) &&
 		smh->timePassedSince(timeStoppedBreathingFire) > 0.5;
 

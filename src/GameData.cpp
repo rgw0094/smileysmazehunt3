@@ -177,7 +177,7 @@ void GameData::refreshAbilityData()
 	strcat(abilities[LIGHTNING_ORB].description, Util::intToString(smh->player->getLightningOrbDamage() * 100).c_str());
 	abilities[LIGHTNING_ORB].type = ACTIVATED;
 	abilities[LIGHTNING_ORB].manaCost = 5;
-	abilities[LIGHTNING_ORB].coolDown = 0.283;
+	abilities[LIGHTNING_ORB].coolDown = 0.10;
 	abilities[LIGHTNING_ORB].timeLastUsed = 0;
 
 	//Shrink
