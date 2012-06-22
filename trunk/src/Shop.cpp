@@ -144,9 +144,9 @@ void Shop::purchaseItem(int item)
 bool Shop::isInStock(int item) 
 {
 	//Fuck it! Let them buy whatever they want
-	return true;
+	//return true;
 
-	/*int currentLevel = min(min(smh->saveManager->numUpgrades[HEALTH], smh->saveManager->numUpgrades[MANA]), smh->saveManager->numUpgrades[DAMAGE]);
+	int currentLevel = min(min(smh->saveManager->numUpgrades[HEALTH], smh->saveManager->numUpgrades[MANA]), smh->saveManager->numUpgrades[DAMAGE]);
 	if (currentLevel == 14) 
 	{
 		return false;
@@ -154,7 +154,7 @@ bool Shop::isInStock(int item)
 	else 
 	{
 		return smh->saveManager->numUpgrades[item] == currentLevel;
-	}*/
+	}
 }
 
 /**
