@@ -1311,6 +1311,7 @@ bool Player::canPass(int collision, bool applyCurrentAbilities)
 		case BOMB_PAD_DOWN: return true;
 		case FLAME: return true;
 		case FAKE_COLLISION: return true;
+		case WALK_BOMB_SPEED_PAD: return true;
 
 		default: return false;
 	}
