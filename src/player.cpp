@@ -265,7 +265,6 @@ bool Player::getJesusSound() {
 	return jesusSoundPlaying;
 }
 
-
 /**
  * Updates the sound of the holy choir
  * (starts it if you just walked onto water; stops it if you are off of water or you're drowning)

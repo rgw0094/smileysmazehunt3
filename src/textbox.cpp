@@ -133,7 +133,7 @@ void TextBox::setAdvice(int _advice)
 	else if (advice == AdviceTypes::ADVICE_MANA)
 		numPages = 4;
 	else if (advice == AdviceTypes::ADVICE_BOMB)
-		numPages = 4;
+		numPages = 5;
 	else if (advice == AdviceTypes::ADVICE_SMILELET)
 		numPages = 4;
 	else
@@ -498,6 +498,7 @@ std::string TextBox::getAdviceText(int advice, int page) {
 				case 2: return "Release a Walkin' Bomb by stepping on the tile with his face on it.";
 				case 3: return "The Walkin' Bomb will continue to walk until he encounters an obstacle, then will turn LEFT and will walk as far as he can once again.";
 				case 4: return "You can guide the Walkin' Bomb by placing Silly Pads in front of him. Remember that he turns LEFT! Then, when you're ready for him to explode, simply step within his red circle of vision.";
+				case 5: return "One last trick: the Walkin' Bomb moves more quickly if you are standing on a Silly Pad!";
 			}
 		case AdviceTypes::ADVICE_SMILELET:
 			switch (page)
