@@ -142,7 +142,7 @@ void E_BombGenerator::update(float dt) {
 		
 		//Modifier makes it so the Bomb walks faster when Smiley is on a silly pad
 		float modifier = 1.0;
-		if (smh->environment->specialTileManager->isSillyPadAt(smh->player->gridX,smh->player->gridY)) modifier = 2.0;
+		if (smh->environment->collision[smh->player->gridX][smh->player->gridY] == WALK_BOMB_SPEED_PAD) modifier = 2.0;
 		
 		switch(facing) {
 			case UP:
