@@ -50,6 +50,8 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fixed glitch with Portly's ice blocks after defeating him||6/22/12||ETI||
+||Made Jesus sandals sound actually work||6/22/12||ETI||
 ||Fixed arrow-onto-spring glitch||6/22/12||ETI||
 ||Fixed some ability inputs (ex: cane, frisbee)||6/21/12||ETI||
 ||Added cooldown graphic||6/21/12||ETI||
