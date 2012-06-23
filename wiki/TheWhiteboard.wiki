@@ -15,6 +15,9 @@
  * Barvinoid floating eye launching at player
  * Fenwar sounds
  * Enemy block activation/deactivation
+ * Portly Penguin: nova freezes smiley
+ * Walkin' Bomb released
+ * Step on Walkin' Bomb trigger
 
 === Graphics To Do ===
 
