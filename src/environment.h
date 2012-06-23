@@ -83,6 +83,7 @@ public:
 	void removeAllParticles();
 	void addParticle(const char* particle, float x, float y);
 	bool shouldEnvironmentDrawCollision(int collision);
+	void addSnowBlock(int gridX, int gridY);
 
 	void killSwitchTimer(int gridX, int gridY);
 	void updateSwitchTimers(float dt);

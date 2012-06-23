@@ -204,7 +204,17 @@ void TextBox::draw(float dt)
 		paramString += Util::intToString(textID);
 		paramString += "-";
 		paramString += Util::intToString(currentPage);
-		smh->resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, smh->gameData->getGameText(paramString.c_str()));
+
+		//Crappy hard-coding for Monocle Man's first speech, so that we can tell the player what button to push to go to the next screen
+		if (strcmp(paramString.c_str(),"NPC900-1") == 0) {
+			std::string monocleString;
+			monocleString = "Hey! You there! Press attack (";
+			monocleString += smh->input->getInputDescription(INPUT_ATTACK);
+			monocleString += ") to go to the next page!";
+			smh->resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, monocleString.c_str());
+		} else {
+			smh->resources->GetFont("textBoxDialogFnt")->printfb(x + 20, y + 90, 360, 205, HGETEXT_LEFT, smh->gameData->getGameText(paramString.c_str()));
+		}
 	} 
 	else if (textBoxType == TextBoxTypes::ABILITY_TYPE) 
 	{

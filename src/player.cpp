@@ -123,7 +123,7 @@ void Player::reset() {
 		waterWalk = onWater = drowning = shrinkActive = sprinting = isHovering = 
 		cloaked = springing = iceSliding = falling = onWater = frozen = slimed = chargingFrisbee = 
 		inShrinkTunnel = immobile = invincible = uber = abilitiesLocked = 
-		tongueLocked = jesusSoundPlaying = needToIceCenter = slidingOntoIce = false;
+		tongueLocked = jesusSoundPlaying = needToIceCenter = slidingOntoIce = jesusSoundPlaying = false;
 	
 }
 
@@ -261,6 +261,11 @@ void Player::updateLocation()
 	}
 }
 
+bool Player::getJesusSound() {
+	return jesusSoundPlaying;
+}
+
+
 /**
  * Updates the sound of the holy choir
  * (starts it if you just walked onto water; stops it if you are off of water or you're drowning)
@@ -269,13 +274,13 @@ void Player::updateJesusSound()
 {
 	if (!jesusSoundPlaying && waterWalk) 
 	{
-		smh->soundManager->playEnvironmentEffect("snd_Jesus", true);
+		smh->soundManager->playAbilityEffect("snd_Jesus", true);
 		jesusSoundPlaying = true;
 	}
 
 	if (jesusSoundPlaying && (!waterWalk || drowning)) 
 	{
-		smh->soundManager->stopEnvironmentChannel();
+		smh->soundManager->stopAbilityChannel();
 		jesusSoundPlaying = false;
 		if (smh->environment->isShallowWaterAt(gridX,gridY)) smh->soundManager->playEnvironmentEffect("snd_shallowWater",true);
 		if (smh->environment->collision[gridX][gridY] == WALK_LAVA) smh->soundManager->playEnvironmentEffect("snd_lava",true);
@@ -292,8 +297,13 @@ void Player::doMove(float dt) {
 	float yDist = dy * dt;
 
 	//Walk slower when shallow water and lava
-	if ((inShallowWater || inLava) && !springing && !waterWalk)
+	if ((inLava) && !springing && !waterWalk)
 	{
+		xDist *= 0.5;
+		yDist *= 0.5;
+	}
+
+	if ((inShallowWater && smh->player->gui->getUsedAbility() != WATER_BOOTS) && !springing && !waterWalk) {
 		xDist *= 0.5;
 		yDist *= 0.5;
 	}
@@ -403,6 +413,13 @@ void Player::drawJesusBeam()
 		smh->resources->GetSprite("jesusBeam")->SetColor(ARGB(jAlpha,255,255,255));
 		smh->resources->GetSprite("jesusBeam")->Render(smh->getScreenX(x),smh->getScreenY(y));
 	}
+}
+
+/**
+ * Returns waterwalk
+ */
+bool Player::getWaterWalk() {
+	return waterWalk;
 }
 
 /**
@@ -1420,6 +1437,7 @@ void Player::doWater()
 		smh->getGameTime() - JESUS_SANDLE_TIME > startedWaterWalk))
 	{
 		waterWalk = false;
+
 
 		//If smiley stopped water walking while mostly on land but still slightly overlapping water,
 		//nudge him onto the shore.

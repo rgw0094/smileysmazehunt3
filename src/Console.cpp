@@ -46,12 +46,15 @@ void Console::draw(float dt) {
 	write("NUM5  Move down 1 tile    ", NA);
 	write("NUM4  Move left 1 tile    ", NA);
 	write("NUM6  Move right 1 tile   ", NA);
+	write("Water walk                ", smh->player->getWaterWalk() ? YES : NO);
+	write("Jesus sound               ", smh->player->getJesusSound() ? YES : NO);
 	write("",NA);	
+	
 	smh->resources->GetFont("consoleFnt")->printf(15, 150 + lineNum*25, HGETEXT_LEFT, "     Grid: X %i, Y %i", smh->player->gridX,smh->player->gridY);
 	lineNum++;
-	smh->resources->GetFont("consoleFnt")->printf(15, 150 + lineNum*25, HGETEXT_LEFT, "Last Grid: X %i, Y %i", smh->player->previousGridXPosition,smh->player->previousGridYPosition);
-	lineNum++;
+
 	
+		
 	//Write the collision layer value of smiley's location
 	int playerX = smh->player->x;
 	int playerY = smh->player->y;

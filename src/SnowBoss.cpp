@@ -173,7 +173,11 @@ bool SnowBoss::update(float dt) {
 	if (smh->player->getTongue()->testCollision(collisionBoxes[0]) ||
 		smh->player->getTongue()->testCollision(collisionBoxes[1]) ||
 		smh->player->getTongue()->testCollision(collisionBoxes[2])) {
+			
 			smh->player->freeze(LICK_FREEZE_DURATION);
+			
+			//Play a sound
+			smh->soundManager->playSound("snd_SmileyFrozen");
 	}
 
 	//Check collision with Smiley
@@ -319,6 +323,7 @@ bool SnowBoss::update(float dt) {
 			if (health <= 0) {
 				smh->windowManager->openDialogueTextBox(-1, SNOWBOSS_DEFEATTEXT);
 				enterState(SNOWBOSS_PRE_DEATH);
+				finish();
 			}
 		}
 
@@ -372,7 +377,7 @@ bool SnowBoss::update(float dt) {
 	if (state==SNOWBOSS_PRE_DEATH) {
 		if (!smh->windowManager->isTextBoxOpen()) {
 			alpha=255;
-			enterState(SNOWBOSS_FADING);
+			enterState(SNOWBOSS_FADING);			
 		}
 	}
 
@@ -385,12 +390,11 @@ bool SnowBoss::update(float dt) {
 			smh->saveManager->killBoss(SNOW_BOSS);
 			smh->player->setHealth(smh->player->getMaxHealth());
 			smh->soundManager->playMusic("iceMusic");
+			
 		}
 		if (alpha < 0) {
 			alpha = 0;
-            
-			finish();
-			return true;
+            return true;
 		}
 	}
 
@@ -470,42 +474,45 @@ void SnowBoss::setUpIceBlocks() {
 }
 
 void SnowBoss::drawIceBlocks() {
-	for (int i=0;i<24;i++) {
-		smh->resources->GetSprite("penguinIceBlock")->SetColor(ARGB(iceBlocks[i].alpha,255,255,255));
-		smh->resources->GetSprite("penguinIceBlock")->Render(smh->getScreenX(iceBlocks[i].collisionBox->x1),smh->getScreenY(iceBlocks[i].collisionBox->y1));
+	if (state < SNOWBOSS_PRE_DEATH) {
+		for (int i=0;i<24;i++) {
+			smh->resources->GetSprite("penguinIceBlock")->SetColor(ARGB(iceBlocks[i].alpha,255,255,255));
+			smh->resources->GetSprite("penguinIceBlock")->Render(smh->getScreenX(iceBlocks[i].collisionBox->x1),smh->getScreenY(iceBlocks[i].collisionBox->y1));
+		}
+	} else {
+		smh->resources->GetSprite("penguinIceBlock")->SetColor(ARGB(255,255,255,255));
 	}
 }
 
 void SnowBoss::updateIceBlocks(float dt) { 
-	for (int i=0;i<24;i++) {
-		
-		//tests to see if smiley hit the block with fire breath
-		if (smh->player->fireBreathParticle->testCollision(iceBlocks[i].collisionBox)) {
-			iceBlocks[i].life -= ICE_BLOCK_DAMAGE_FROM_FIRE * dt;
+
+	if (state < SNOWBOSS_PRE_DEATH) {
+		for (int i=0;i<24;i++) {
+			
+			//tests to see if smiley hit the block with fire breath
+			if (smh->player->fireBreathParticle->testCollision(iceBlocks[i].collisionBox)) {
+				iceBlocks[i].life -= ICE_BLOCK_DAMAGE_FROM_FIRE * dt;
+			}
+
+			//tests to see if the ICE NOVA hit the ice block
+			if (iceNova->testCollision(iceBlocks[i].collisionBox) && !smh->player->collisionCircle->testBox(iceBlocks[i].collisionBox)) {
+				if (iceBlocks[i].life < 0) iceBlocks[i].life = 0;
+				iceBlocks[i].life+=ICE_BLOCK_LIFE_REGENERATE*dt;
+				if (iceBlocks[i].life > ICE_BLOCK_MAX_LIFE) iceBlocks[i].life = ICE_BLOCK_MAX_LIFE;
+			}
+			
+			//sets the alpha based on the life
+			iceBlocks[i].alpha=iceBlocks[i].life/ICE_BLOCK_MAX_LIFE*128 + 128;
+			if (iceBlocks[i].alpha > 255) iceBlocks[i].alpha = 255;
+			if (iceBlocks[i].life < 0) iceBlocks[i].alpha=0;
+
+			//sets the collision in theEnvironment based on the ice blocks
+			if (iceBlocks[i].life > 0) {
+				smh->environment->collision[iceBlocks[i].xGrid][iceBlocks[i].yGrid]=UNWALKABLE_PROJECTILE;
+			} else {
+				smh->environment->collision[iceBlocks[i].xGrid][iceBlocks[i].yGrid]=WALKABLE;
+			}
 		}
-
-		//tests to see if the ICE NOVA hit the ice block
-		if (iceNova->testCollision(iceBlocks[i].collisionBox) && !smh->player->collisionCircle->testBox(iceBlocks[i].collisionBox)) {
-			if (iceBlocks[i].life < 0) iceBlocks[i].life = 0;
-			iceBlocks[i].life+=ICE_BLOCK_LIFE_REGENERATE*dt;
-			if (iceBlocks[i].life > ICE_BLOCK_MAX_LIFE) iceBlocks[i].life = ICE_BLOCK_MAX_LIFE;
-		}
-		
-		
-
-		//sets the alpha based on the life
-		iceBlocks[i].alpha=iceBlocks[i].life/ICE_BLOCK_MAX_LIFE*128 + 128;
-		if (iceBlocks[i].alpha > 255) iceBlocks[i].alpha = 255;
-		if (iceBlocks[i].life < 0) iceBlocks[i].alpha=0;
-
-		//sets the collision in theEnvironment based on the ice blocks
-		if (iceBlocks[i].life > 0) {
-			smh->environment->collision[iceBlocks[i].xGrid][iceBlocks[i].yGrid]=UNWALKABLE_PROJECTILE;
-		} else {
-			smh->environment->collision[iceBlocks[i].xGrid][iceBlocks[i].yGrid]=WALKABLE;
-		}
-
-
 	}
 }
 
@@ -514,9 +521,13 @@ void SnowBoss::updateIceBlocks(float dt) {
  * ice blocks in the item layer so that they are drawn after his demise.
  */
 void SnowBoss::finish() {
-	for (int i = 0; i < 24; i++) {
-		if (iceBlocks[i].life > 0.0) {
-			smh->environment->collision[iceBlocks[i].xGrid][iceBlocks[i].yGrid] = FIRE_DESTROY;
-		}
-	}
+	smh->resources->GetSprite("penguinIceBlock")->SetColor(ARGB(255,255,255,255));
+	for (int i=0; i<24; i++) {
+			iceBlocks[i].alpha = 255;
+			if (iceBlocks[i].life <= 0.0) {
+				smh->environment->collision[iceBlocks[i].xGrid][iceBlocks[i].yGrid] = WALKABLE;
+			} else {
+				smh->environment->addSnowBlock(iceBlocks[i].xGrid,iceBlocks[i].yGrid);
+			}
+		}	
 }
