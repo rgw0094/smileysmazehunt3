@@ -51,7 +51,7 @@ Hint6Pages = "4"
 Hint6-1 = "Smiley.  Remember Lord Phyrebawz?  Fenwar's number one goon?"
 Hint6-2 = "Anyways, my all-knowing powers tell me that he's watching over your dear love while Fenwar goes shopping for new drapes!"
 Hint6-3 = "Now is your time to strike!  You must hurry!"
-Hint6-4 = "He has fled from Smolder Hollow into his true domain in Pools of the Dead."
+Hint6-4 = "He has fled from Smolder Hollow into his true domain in Pools of the Dead, just south of the Realm of Despair."
 
 Hint7Pages = "5"
 Hint7-1 = "Oh my God!  You got Jesus' Sandals!  Haha, get it?!"
@@ -245,7 +245,7 @@ NPC2-5 = "...Oh wait.  Where did that thing go?  Gosh darn it!  I must have misp
 
 NPC6Name = "Randeep"
 NPC6Pages = "2"
-NPC6-1 = "Stupid white people... They told me there is an oasis just northwest of here."
+NPC6-1 = "Stupid people... They told me there is an oasis just northwest of here."
 NPC6-2 = "I haven't seen it in 35 years of wandering the desert! Unless it's behind that green key door, I don't think it exists."
 
 NPC10Name = "Akil"
@@ -449,11 +449,10 @@ NPC161Name = "Lord Phyrebawz"
 NPC161Pages = "1"
 NPC161-1 = "I see you have gotten stronger since our last battle Smiley. Unfortunately for you, I remembered my vitamins this morning!"
 NPC162Name = "Lord Phyrebawz"
-NPC162Pages = "4"
+NPC162Pages = "3"
 NPC162-1 = "Gwwaaarrghhh (Dickens)."
-NPC162-2 = "At least after this defeat I'm not covered in slobber.  Well done."
-NPC162-3 = "I'm sure we will meet again, down below.  I know of your sinful ways, Smiley.  Jesus is not happy with you."
-NPC162-4 = "'Till then..."
+NPC162-2 = "At least after this defeat I'm not covered in slobber. Well done."
+NPC162-3 = "I'm sure we will meet again, down below. 'Til then..."
 
 
 ;Bartli
@@ -650,7 +649,7 @@ NPC250-10 = "Now I'm going to go cry."
 ;==============================================OTHER SHIT=====================================
 NPC900Name = "Monocle Man"
 NPC900Pages = "1"
-NPC900-1 = "Hey! You there! (Press attack to go to the next page!)"
+NPC900-1 = "Hey! You there! Press attack to go to the next page!"
 NPC901Name = "Monocle Man"
 NPC901Pages = "5"
 NPC901-1 = "Excuse me, I can't help but think that you are about to go on a great adventure."

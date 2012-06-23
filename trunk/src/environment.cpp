@@ -712,6 +712,12 @@ void Environment::draw(float dt) {
 
 }
 
+void Environment::addSnowBlock(int gridX, int gridY) {
+	collision[gridX][gridY] = FIRE_DESTROY;
+	specialTileManager->addIceBlock(gridX, gridY);
+
+}
+
 void Environment::drawPits(float dt) {
 
 	bool draw;
