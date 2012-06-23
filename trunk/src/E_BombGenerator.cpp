@@ -3,6 +3,7 @@
 #include "player.h"
 #include "environment.h"
 #include "ExplosionManager.h"
+#include "SpecialTileManager.h"
 
 extern SMH *smh;
 
@@ -138,18 +139,23 @@ void E_BombGenerator::update(float dt) {
 	}
 
 	if (bombState == BOMB_GENERATOR_BOMB_WALKING) {
+		
+		//Modifier makes it so the Bomb walks faster when Smiley is on a silly pad
+		float modifier = 1.0;
+		if (smh->environment->specialTileManager->isSillyPadAt(smh->player->gridX,smh->player->gridY)) modifier = 2.0;
+		
 		switch(facing) {
 			case UP:
-				bomb.y -= speed*dt;
+				bomb.y -= speed*dt*modifier;
 				break;
 			case DOWN:
-				bomb.y += speed*dt;
+				bomb.y += speed*dt*modifier;
 				break;
 			case LEFT:
-				bomb.x -= speed*dt;
+				bomb.x -= speed*dt*modifier;
 				break;
 			case RIGHT:
-				bomb.x += speed*dt;
+				bomb.x += speed*dt*modifier;
 				break;
 		}; //end switch facing
 
