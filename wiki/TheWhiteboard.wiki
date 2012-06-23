@@ -18,13 +18,16 @@
  * Portly Penguin: nova freezes smiley
  * Walkin' Bomb released
  * Step on Walkin' Bomb trigger
+ * Enemies frozen by ice breath
 
 === Graphics To Do ===
 
  * Gems
  * Ability hotkey bar. Feel free to make the spacing/dimensions different than the filler graphic!!!!
+ * Barns that are blocked off
 
 === Bugs ===
+ * When hoppers are frozen, the freeze graphic doesn't follow their hop if they had already begun it. Also, if they are hopping, the graphic draws beneath them.
  * If two lollipops are in view (ex: in Smolder Hollow), they will both rotate at double speed
  * 119,156 at Tut: I got a timed switch to stay switched on the wrong side. I was hitting both of the switches in that area repeatedly and quickly when it happened. Update 8/26/09: Cannot reproduce this. Oh well -- if it happens in-game, the player is screwed.
  * Spikey guys can't move across spaces formerly consisting of the flame tiles that you put out with the ice breath (this occurs in the realm of despair)
