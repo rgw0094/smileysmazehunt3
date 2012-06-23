@@ -121,6 +121,7 @@ Sign51 = "\n\nOnly the tiniest of tiny travellers may continue south to the Mile
 Sign61 = "Only with the legendary Speed Boots will you be able to run fast enough for this Timed Switch!"
 Sign62 = "\n\nThis EVIL CYLINDER is for later in your adventure."
 Sign63 = "\nRemember that EVIL CYLINDER from early in the adventure? That's what this timed switch activates!"
+Sign82 = "\nGet the dickens outter my house!\n\n-Abner Longfellow"
 
 ;SMHOLLOW.SMH
 Sign13 = "\n\n\nDangerous and deep pits ahead!  Beware!"
@@ -138,7 +139,7 @@ Sign46 = "\nTo the right: CERTAIN DEATH\n\nTo the left: save point"
 Sign47 = "\nThose who desire this green key must remain here forever.  Mwahahahah!\n\n-Fenwar"
 Sign48 = "\nThe purpose of this sign is to distract you from reaching the other side of that cylinder in time."
 Sign74 = "Population control:\n\nKill the red floating candies before attacking other enemies."
-Sign81 = "\nHint: A Walkin' Bomb moves more quickly when Smiley is standing on a Silly Pad!"
+Sign81 = "\nHint: A Walkin' Bomb moves more quickly when Smiley is standing on a Walkin' Bomb Speed Pad!"
 
 ;FOREST.SMH
 Sign19 = "You will never reach me without first striking the three dark switches I have hidden in my forest!\n\n-Garmborn, Lord of Treelets"
