@@ -27,6 +27,9 @@
  * Barns that are blocked off
 
 === Bugs ===
+ * If Smiley is on arrow, and evil wall gets him, he doesn't respawn correctly
+ * If SMiley is springing, and an evil wall gets him, he respawns springing
+ * Warp straight into spring into pit makes smiley continually respawn on the spring and eventually die
  * When hoppers are frozen, the freeze graphic doesn't follow their hop if they had already begun it. Also, if they are hopping, the graphic draws beneath them.
  * If two lollipops are in view (ex: in Smolder Hollow), they will both rotate at double speed
  * 119,156 at Tut: I got a timed switch to stay switched on the wrong side. I was hitting both of the switches in that area repeatedly and quickly when it happened. Update 8/26/09: Cannot reproduce this. Oh well -- if it happens in-game, the player is screwed.
