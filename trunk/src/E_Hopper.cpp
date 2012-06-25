@@ -38,7 +38,7 @@ void E_Hopper::update(float dt)
 {
 	if (stunned || frozen) timeStoppedHop = smh->getGameTime();
 
-	if (!hopping && smh->timePassedSince(timeStoppedHop) > 1.0) 
+	if (!hopping && smh->timePassedSince(timeStoppedHop) > 1.0 && !frozen && !stunned) 
 	{
 		//Start next hop
 		hopping = true;
@@ -85,7 +85,7 @@ void E_Hopper::update(float dt)
 	}
 
 	if (hopping)
-	{		
+	{
 		hopYOffset = (hopDistance / 3.0) * sin((smh->timePassedSince(timeStartedHop)/timeToHop) * PI);
 		projectileYOffset = hopYOffset;
 		collisionBox->SetRadius(x, y - hopYOffset, radius);
@@ -130,6 +130,14 @@ void E_Hopper::draw(float dt)
 		//Render the graphic
 		graphic[facing]->Render(screenX, screenY - hopYOffset);
 	}
+}
+
+/**
+ * Overrides BaseEnemy.drawFrozen for more specific funtionality.
+ * The frozen graphic should hover along with the floater.
+*/
+void E_Hopper::drawFrozen(float dt) {
+	smh->resources->GetSprite("iceBlock")->Render(screenX, screenY - hopYOffset);
 }
 
 void E_Hopper::drawAfterSmiley(float dt) {

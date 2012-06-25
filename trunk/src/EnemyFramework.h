@@ -797,6 +797,7 @@ public:
 	void drawAfterSmiley(float dt);
 	void update(float dt);
 	bool doTongueCollision(Tongue *tongue, float damage);
+	void drawFrozen(float dt);
 
 	bool hopping;
 	float timeStartedHop;
