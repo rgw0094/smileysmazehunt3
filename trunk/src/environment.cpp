@@ -606,7 +606,6 @@ void Environment::draw(float dt) {
 
 					//Save thing
 					} else if (theCollision == SAVE_SHRINE) {
-						smh->resources->GetAnimation("savePoint")->Update(dt);
 						smh->resources->GetAnimation("savePoint")->Render(drawX, drawY);
 
 					//Don't draw the EVIL WALL position and restart tiles
@@ -832,6 +831,7 @@ void Environment::update(float dt) {
 	smh->resources->GetAnimation("bunnySwitch")->Update(dt);
 	smh->resources->GetAnimation("shrinkTunnelSwitch")->Update(dt);
 	smh->resources->GetAnimation("mirrorSwitch")->Update(dt);
+	smh->resources->GetAnimation("savePoint")->Update(dt);
 	silverCylinder->Update(dt);
 	brownCylinder->Update(dt);
 	blueCylinder->Update(dt);
