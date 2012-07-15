@@ -1104,7 +1104,7 @@ Texture creditsCalypsoTx {
 }
 Sprite creditsCalypso {
  texture=creditsCalypsoTx
- rect=0,0,160,160
+ rect=0,1,160,159
  hotspot=80,80
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=11
@@ -1131,6 +1131,20 @@ Sprite creditsBartli {
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=11
 }
+Sprite creditsBartliArm {
+ texture=creditsBartliTx
+ rect=31,147,40,15
+ hotspot=39,7
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=106
+}
+Sprite creditsBartliLeg {
+ texture=creditsBartliTx
+ rect=5,143,17,26
+ hotspot=8,0
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=106
+}
 Texture creditsTutTx {
  filename="Graphics/tut.png"
  resgroup=11
@@ -1150,6 +1164,17 @@ Sprite creditsLovecraft {
  texture=creditsLovecraftTx
  rect=0,1,192,190
  hotspot=96,96
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+ resgroup=11
+}
+Texture creditsBarvinoidTx {
+ filename="Graphics/Barvinoid.png"
+ resgroup=11
+}
+Sprite creditsBarvinoid {
+ texture=creditsBarvinoidTx
+ rect=0,1,283,353
+ hotspot=141,176
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
  resgroup=11
 }

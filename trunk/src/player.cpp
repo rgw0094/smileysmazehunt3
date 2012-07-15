@@ -812,76 +812,73 @@ void Player::doAbility(float dt)
 	
 	////////////// Shrink //////////////
 
-	if (canUseAbility) 
+	//If you change abilities while shrunk you lose shrink
+	//if (shrinkActive) shrinkActive = (usedAbility == SHRINK);
+
+	//Shrinking
+	if (shrinkActive && shrinkScale > .5f) 
 	{
-		//If you change abilities while shrunk you lose shrink
-		if (shrinkActive) shrinkActive = (usedAbility == SHRINK);
+		shrinkScale -= 1.0f*dt;
+		if (shrinkScale < .5f) shrinkScale = .5f;
+	} 
+	else if (!shrinkActive && shrinkScale < 1.0f) 
+	{
+		//Unshrinking
+		shrinkScale += 1.0f*dt;
+		if (shrinkScale > 1.0f) shrinkScale = 1.0f;
 
-		//Shrinking
-		if (shrinkActive && shrinkScale > .5f) 
-		{
-			shrinkScale -= 1.0f*dt;
-			if (shrinkScale < .5f) shrinkScale = .5f;
-		} 
-		else if (!shrinkActive && shrinkScale < 1.0f) 
-		{
-			//Unshrinking
-			shrinkScale += 1.0f*dt;
-			if (shrinkScale > 1.0f) shrinkScale = 1.0f;
+		//While unshrinking push Smiley away from any adjacent walls
+		if (!canPass(smh->environment->collision[gridX-1][gridY]) && int(x) % 64 < radius)
+			x += radius - (int(x) % 64) + 1;
 
-			//While unshrinking push Smiley away from any adjacent walls
-			if (!canPass(smh->environment->collision[gridX-1][gridY]) && int(x) % 64 < radius)
+		if (!canPass(smh->environment->collision[gridX+1][gridY]) && int(x) % 64 > 64 - radius)
+			x -= radius - (64 - int(x) % 64) + 1;
+
+		if (!canPass(smh->environment->collision[gridX][gridY-1]) && int(y) % 64 < radius)
+			y += radius - (int(y) % 64) + 1;
+
+		if (!canPass(smh->environment->collision[gridX][gridY+1]) && int(y) % 64 > 64 - radius)
+			y -= radius - (64 - int(y) % 64) + 1;
+		
+		//Adjacent corners
+		//Up-Left
+		if (!canPass(smh->environment->collision[gridX-1][gridY-1])) 
+		{
+			if (int(x) % 64 < radius && int(y) % 64 < radius) 
+			{
 				x += radius - (int(x) % 64) + 1;
-
-			if (!canPass(smh->environment->collision[gridX+1][gridY]) && int(x) % 64 > 64 - radius)
-				x -= radius - (64 - int(x) % 64) + 1;
-
-			if (!canPass(smh->environment->collision[gridX][gridY-1]) && int(y) % 64 < radius)
 				y += radius - (int(y) % 64) + 1;
-
-			if (!canPass(smh->environment->collision[gridX][gridY+1]) && int(y) % 64 > 64 - radius)
-				y -= radius - (64 - int(y) % 64) + 1;
-			
-			//Adjacent corners
-			//Up-Left
-			if (!canPass(smh->environment->collision[gridX-1][gridY-1])) 
-			{
-				if (int(x) % 64 < radius && int(y) % 64 < radius) 
-				{
-					x += radius - (int(x) % 64) + 1;
-					y += radius - (int(y) % 64) + 1;
-				}
-			}
-			//Up-Right
-			if (!canPass(smh->environment->collision[gridX+1][gridY-1])) 
-			{
-				if (int(x) % 64 > 64 - radius && int(y) % 64 < radius) 
-				{
-					x -= radius - (64 - int(x) % 64) + 1;
-					y += radius - (int(y) % 64) + 1;
-				}
-			}
-			//Down-Left
-			if (!canPass(smh->environment->collision[gridX-1][gridY+1])) 
-			{
-				if (int(x) % 64 < radius && int(y) % 64 > 64 - radius) 
-				{
-					x += radius - (int(x) % 64) + 1;
-					y -= radius - (64 - int(y) % 64) + 1;
-				}
-			}
-			//Down-Right
-			if (!canPass(smh->environment->collision[gridX+1][gridY+1])) 
-			{
-				if (int(x) % 64 > 64 - radius && int(y) % 64 > 64 - radius) 
-				{
-					x -= radius - (64 - int(x) % 64) + 1;
-					y -= radius - (64 - int(y) % 64) + 1;
-				}
 			}
 		}
-		radius = DEFAULT_RADIUS * shrinkScale;
+		//Up-Right
+		if (!canPass(smh->environment->collision[gridX+1][gridY-1])) 
+		{
+			if (int(x) % 64 > 64 - radius && int(y) % 64 < radius) 
+			{
+				x -= radius - (64 - int(x) % 64) + 1;
+				y += radius - (int(y) % 64) + 1;
+			}
+		}
+		//Down-Left
+		if (!canPass(smh->environment->collision[gridX-1][gridY+1])) 
+		{
+			if (int(x) % 64 < radius && int(y) % 64 > 64 - radius) 
+			{
+				x += radius - (int(x) % 64) + 1;
+				y -= radius - (64 - int(y) % 64) + 1;
+			}
+		}
+		//Down-Right
+		if (!canPass(smh->environment->collision[gridX+1][gridY+1])) 
+		{
+			if (int(x) % 64 > 64 - radius && int(y) % 64 > 64 - radius) 
+			{
+				x -= radius - (64 - int(x) % 64) + 1;
+				y -= radius - (64 - int(y) % 64) + 1;
+			}
+		}
 	}
+	radius = DEFAULT_RADIUS * shrinkScale;
 }
 
 /**

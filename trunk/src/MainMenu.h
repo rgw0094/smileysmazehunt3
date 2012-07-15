@@ -172,14 +172,15 @@ private:
 //-------------------------------------------------------
 //------------------CREDITS SCREEN-----------------------
 //-------------------------------------------------------
-struct CreditsItem {
+struct CreditsItem 
+{
 	float x, y;
 	std::string name;
 	hgeSprite *graphic;
 };
 
-class CreditsScreen : public MenuScreen {
-
+class CreditsScreen : public MenuScreen 
+{
 public:
 
 	CreditsScreen();
@@ -192,6 +193,7 @@ public:
 private:
 
 	void init();
+	void drawCreditsItem(float x, float y, hgeSprite *graphic, std::string name);
 
 	std::list<CreditsItem> enemyList;
 	std::list<CreditsItem> bossList;
@@ -203,7 +205,6 @@ private:
 	float timeActive;
 	float endY;
 	bool resourcesCachedYet;
-
 };
 
 //-------------------------------------------------------
