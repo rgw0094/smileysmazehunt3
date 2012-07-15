@@ -1,7 +1,6 @@
 === Programming To Do ===
  * Allow the player to RESPEC their upgrades
  * Improve the appearance of the Right Arrow in the inventory screen
- * The end credits have a bunch of things to fix: the Gayass Ghost is not in the game, buzzard has no wings, most of the enemies are looking left but would look better looking forward, Barvinoid is missing, Bartli/BrianFungus/Magnitogorsk are missing parts of their bodies.
  * Add the thud noises when you lick a boss.
  * Add new noises to the Fenwar battle and change boss music
  * Implement the goblin using a balloon instead of a clown head.
@@ -56,6 +55,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Fixed credit screen issues||7/15/12||RGW||
 ||Made Walkin' Bombs walk faster when Smiley steps on special speed pads||6/22/12||ETI||
 ||Fixed glitch with Portly's ice blocks after defeating him||6/22/12||ETI||
 ||Made Jesus sandals sound actually work||6/22/12||ETI||
