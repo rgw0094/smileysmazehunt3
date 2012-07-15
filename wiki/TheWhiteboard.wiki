@@ -1,4 +1,5 @@
 === Programming To Do ===
+ * Allow the player to RESPEC their upgrades
  * Improve the appearance of the Right Arrow in the inventory screen
  * The end credits have a bunch of things to fix: the Gayass Ghost is not in the game, buzzard has no wings, most of the enemies are looking left but would look better looking forward, Barvinoid is missing, Bartli/BrianFungus/Magnitogorsk are missing parts of their bodies.
  * Add the thud noises when you lick a boss.
