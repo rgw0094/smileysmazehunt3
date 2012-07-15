@@ -70,6 +70,7 @@ numEnemies="103"
 3SWater=    "T"
 3Slime=     "T"
 3Chases=    "T"
+3NumFrames= "2"
 3HasRanged= "T"
 3Range=     "400"
 3Delay=     "2000"
@@ -214,6 +215,7 @@ numEnemies="103"
 
 ;Buzzard
 12Name=      "Boastful Buzzard"
+12OneGraphic="T"
 12GCol=      "3"
 12GRow=      "2"
 12EnemyType= "7"
@@ -228,6 +230,7 @@ numEnemies="103"
 
 ;SadShooter
 13Name=      "Sad Shooter"
+13OneGraphic="T"
 13GCol=      "12"
 13GRow=      "4"
 13EnemyType= "8"
@@ -787,7 +790,6 @@ numEnemies="103"
 43Mushrooms= "T"
 
 ;Ghost
-44Name=      "Gay Ass Ghost"
 44GCol=      "12"
 44GRow=      "6"
 44EnemyType= "13"
@@ -880,6 +882,7 @@ numEnemies="103"
 49ImmuneLightning="T"
 
 ;Protector
+50Name=      "Pernicious Protector"
 50GCol=      "14"
 50GRow=      "4"
 50OneGraphic="T"

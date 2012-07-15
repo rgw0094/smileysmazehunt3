@@ -62,8 +62,13 @@ void MainMenu::openLoadScreen(int file, bool fromLoadScreen) {
 /** 
  * Update the menu. Returns true if the program should exit.
  */
-bool MainMenu::update(float dt) {
-	
+bool MainMenu::update(float dt) 
+{
+	/*if (smh->input->keyDown(INPUT_ABILITY3))
+	{
+		setScreen(MenuScreens::CREDITS_SCREEN);
+	}*/
+
 	float mouseX = smh->input->getMouseX();
 	float mouseY = smh->input->getMouseY();
 
