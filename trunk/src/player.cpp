@@ -1406,7 +1406,6 @@ void Player::doItems()
 			gatheredItem = true;
 			//Play sound effect
 			smh->soundManager->playSound("snd_Mana");
-			timeLastUsedMana = smh->getGameTime() - MANA_REGEN_DELAY;
 		} else {
 			smh->popupMessageManager->showFullMana();
 		}
