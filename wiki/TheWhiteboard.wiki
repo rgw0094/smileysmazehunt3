@@ -1,4 +1,5 @@
 === Programming To Do ===
+ * Make an INSTALLER
  * Allow the player to RESPEC their upgrades
  * Improve the appearance of the Right Arrow in the inventory screen
  * Add the thud noises when you lick a boss.
