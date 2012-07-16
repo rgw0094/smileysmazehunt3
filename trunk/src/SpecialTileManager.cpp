@@ -411,30 +411,37 @@ void SpecialTileManager::drawFlames(float dt) {
 /**
  * Updates all flames that have been created.
  */
-void SpecialTileManager::updateFlames(float dt) {
+void SpecialTileManager::updateFlames(float dt) 
+{
 	std::list<Flame>::iterator i;
-	for(i = flameList.begin(); i != flameList.end(); i++) {
-
+	for(i = flameList.begin(); i != flameList.end(); i++) 
+	{
 		//Damage and knock the player back if they run into the fire
 		i->collisionBox->SetRadius(i->x, i->y, 20.0);
-		if (smh->player->collisionCircle->testBox(i->collisionBox)) {
+		if (smh->player->collisionCircle->testBox(i->collisionBox)) 
+		{
 			smh->player->dealDamageAndKnockback(1.0, true, true, 100.0, i->x, i->y); 
 			smh->setDebugText("Smiley hit by Flame tile");
 		}
 
 		//Flames are put out by ice breath. The flame isn't deleted yet so that
 		//the flame particle can animate to completion
-		if (i->timeFlamePutOut < 0.0 && smh->player->iceBreathParticle->testCollision(i->collisionBox)) {
+		if (i->timeFlamePutOut < 0.0 && smh->player->iceBreathParticle->testCollision(i->collisionBox)) 
+		{
 			i->timeFlamePutOut = smh->getGameTime();
 			i->particle->Stop();
 		}
 
 		//If the flame has been put out and is done animating, delete it
-		if (i->timeFlamePutOut > 0.0 && smh->timePassedSince(i->timeFlamePutOut) > 0.4) {
+		if (i->timeFlamePutOut > 0.0 && smh->timePassedSince(i->timeFlamePutOut) > 0.4) 
+		{
+			smh->environment->collision[Util::getGridX(i->x)][Util::getGridY(i->y)] = WALKABLE;
 			delete i->collisionBox;
 			delete i->particle;
 			i = flameList.erase(i);
-		} else {
+		}
+		else 
+		{
 			i->particle->Update(dt);
 		}
 	}
