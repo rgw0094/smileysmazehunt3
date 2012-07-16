@@ -38,16 +38,6 @@
  * Fenwar is way too easy.  We should make it so that he can throw bombs on the platform that he's on (to avoid being cheap and just standing next to him inside the orb ring.)  Like the above suggestions he should wake up from his stunned phase after a certain % of his life is taken away, because a fully powered up Smiley can easily win after 2 licking sessions.  Also maybe we could add some more things to dodge.  Some ideas I have:  Make the Fen-Eye's also shoot projectiles.  Make Fenwar shoot out circular nova flame attacks like Phyrebawz that you need to float over.  Crazy but perhaps lame idea: have him use all kinds of various attacks similar to old bosses (Cornwallis's spike spirals which you would now need to reflect, perhaps he could release batlets like Garmbourn, release heatseeking evil missiles like Barvinoid.)
  * The ending of the Pools of the Dead is terrible. There needs to be way fewer enemies, or perhaps make those enemies have significantly less health. It was taking me like 10 hits per enemy to kill them.
 
-=== Achievements to add ===
- * Bare Minimum: Defeat Cornwallis without killing any Cactlets on normal or higher
- * Can't Touch This: Defeat 50 enemies in a row without taking any damage
- * You Only Live Once: Beat the game on normal or higher without dying
- * Victory with an Asterisk: beat the game on easy or very easy difficulty
- * Friend of Smiley: beat the game on normal difficulty
- * Friends with Benefits: beat the game on hard difficulty
- * Smiley Master: beat the game on very hard difficulty
-
-
 ===Done===
 ||Item||Date||Done By||
 ||Flame tiles turn to WALKABLE tiles when the fire is put out||7/15/12||RGW||
