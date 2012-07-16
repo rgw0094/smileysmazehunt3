@@ -31,8 +31,6 @@
  * Warp straight into spring into pit makes smiley continually respawn on the spring and eventually die
  * When hoppers are frozen, the freeze graphic doesn't follow their hop if they had already begun it. Also, if they are hopping, the graphic draws beneath them.
  * 119,156 at Tut: I got a timed switch to stay switched on the wrong side. I was hitting both of the switches in that area repeatedly and quickly when it happened. Update 8/26/09: Cannot reproduce this. Oh well -- if it happens in-game, the player is screwed.
- * Spikey guys can't move across spaces formerly consisting of the flame tiles that you put out with the ice breath (this occurs in the realm of despair)
- * A spider dropping blimp randomly disappeared.  It was on its way down in its oscillations and disappeared on what seemed to be its lowest point if that has any relevance.  Also I was just about to lick it and may have just licked it before it went away.  I couldn't reproduce this after many (30 or so) tries.
 
 === Balance/Gameplay Issues ===
  * We may want to consider adding more save points to the later, more difficult levels.
@@ -53,6 +51,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Flame tiles turn to WALKABLE tiles when the fire is put out||7/15/12||RGW||
 ||Silly pads are no longer any match for Bartli's formidable girth||7/15/12||RGW||
 ||Fixed double-updating lollipop||7/15/12||RGW||
 ||Fixed credit screen issues||7/15/12||RGW||
