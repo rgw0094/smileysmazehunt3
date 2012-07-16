@@ -140,8 +140,8 @@ void CandyBoss::drawAfterSmiley(float dt) {
 	}
 }
 
-bool CandyBoss::update(float dt) {
-
+bool CandyBoss::update(float dt) 
+{
 	//When smiley triggers the boss' enemy blocks start his dialogue.
 	if (state == CANDY_STATE_INACTIVE && !startedIntroDialogue) {
 		if (smh->enemyGroupManager->groups[groupID].triggeredYet) {
@@ -156,6 +156,20 @@ bool CandyBoss::update(float dt) {
 	if (state == CANDY_STATE_INACTIVE && startedIntroDialogue && !smh->windowManager->isTextBoxOpen()) {
 		enterState(FIRST_STATE);
 		smh->soundManager->playMusic("bossMusic");
+	}
+
+	//Squash silly pads with Bartli's massive girth
+	if (!jumping)
+	{
+		gridX = Util::getGridX(x);
+		gridY = Util::getGridY(y);
+		for (int i = gridX-1; i < gridX + 1; i++)
+		{
+			for (int j = gridY-1; j < gridY + 1; j++)
+			{
+				smh->environment->destroySillyPad(i, j);
+			}
+		}
 	}
 
 	if (shrinking) 
@@ -445,11 +459,12 @@ void CandyBoss::updateLimbs(float dt)
  * Run state - Bartli runs around bouncing off the walls.
  */
 void CandyBoss::updateRun(float dt) 
-{
+{	
+	setCollisionBox(collisionBox, x, y);
+
 	//If bartli is stuck (this can happen if she jumps on the player right by the wall) then
 	//move her off the wall
-	setCollisionBox(collisionBox, x, y);
-	if (smh->environment->testCollision(collisionBox, canPass)) 
+	if (smh->environment->testCollision(collisionBox, canPass, true)) 
 	{
 		if (x - CANDY_WIDTH/2.0 < minX) x += CANDY_RUN_SPEED * speedMultiplier * dt;
 		if (x + CANDY_WIDTH/2.0> maxX) x -= CANDY_RUN_SPEED * speedMultiplier * dt;
@@ -463,18 +478,25 @@ void CandyBoss::updateRun(float dt)
 	setCollisionBox(futureCollisionBox, x + xDist, y + yDist);
 	
 	//When bartli hits a wall, bounce off it towards smiley
-	if (smh->environment->testCollision(futureCollisionBox, canPass)) {
-		if (Util::distance(x, y, smh->player->x, smh->player->y) < 50.0) {
+	if (smh->environment->testCollision(futureCollisionBox, canPass, true)) 
+	{
+		if (Util::distance(x, y, smh->player->x, smh->player->y) < 50.0) 
+		{
 			//If Smiley is standing next to a wall bartli can get stuck on him
 			angle += PI/2.0;
-		} else {
+		} 
+		else 
+		{
 			angle = Util::getAngleBetween(x, y, smh->player->x, smh->player->y) + smh->randomFloat(-PI/6.0, PI/6.0);
 			//Make sure the new angle won't result in running into a wall
-			while (!smh->environment->validPath(x, y, x + xDist * cos(angle), y + yDist * sin(angle), 28, canPass)) {
+			while (!smh->environment->validPath(x, y, x + xDist * cos(angle), y + yDist * sin(angle), 28, canPass)) 
+			{
 				angle += smh->randomFloat(-PI/6.0, PI/6.0);
 			}
 		}
-	} else {
+	} 
+	else 
+	{
 		x += xDist;
 		y += yDist;
 	}
