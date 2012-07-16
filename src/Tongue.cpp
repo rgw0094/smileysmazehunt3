@@ -62,32 +62,37 @@ void Tongue::startAttack() {
 
 }
 
-void Tongue::update(float dt) {
-
+void Tongue::update(float dt)
+{
 	if (!attacking) return;
 
 	//Hit Enemies
 	smh->enemyManager->tongueCollision(this, smh->player->getDamage());
 	
 	//Activate stuff - only one thing can be activated per attack
-	if (!hasActivatedSomething) {
+	if (!hasActivatedSomething) 
+	{
 		if (smh->environment->toggleSwitches(this) ||
 				smh->npcManager->talkToNPCs(this) ||
 				(!smh->windowManager->isOpenWindow() && smh->environment->hitSaveShrine(this)) ||
-				(!smh->windowManager->isTextBoxOpen() && smh->environment->hitSigns(this))) {
+				(!smh->windowManager->isTextBoxOpen() && smh->environment->hitSigns(this))) 
+		{
 			hasActivatedSomething = true;
 		}
 	}
 
-	if (tongueState == STATE_EXTENDING) {
+	if (tongueState == STATE_EXTENDING) 
+	{
 		smh->resources->GetAnimation("smileyTongue")->Update(dt);
 
 		//Once the tongue is fully extended enter swinging state
-		if (smh->resources->GetAnimation("smileyTongue")->GetFrame() >= NUM_FRAMES-1) {
+		if (smh->resources->GetAnimation("smileyTongue")->GetFrame() >= NUM_FRAMES-1) 
+		{
 			tongueState = STATE_SWINGING;
 		}
-
-	} else if (tongueState == STATE_SWINGING) {
+	} 
+	else if (tongueState == STATE_SWINGING) 
+	{
 		tongueOffsetAngle += 8.0 * PI * dt;
 
 		//When tongue finishes swinging, start retracting it
@@ -98,17 +103,16 @@ void Tongue::update(float dt) {
 			smh->resources->GetAnimation("smileyTongue")->Play();
 			tongueState = STATE_RETRACTING;
 		}
-
-	} else if (tongueState == STATE_RETRACTING) {
+	}
+	else if (tongueState == STATE_RETRACTING) 
+	{
 		smh->resources->GetAnimation("smileyTongue")->Update(dt);
 
 		//Once the tongue is fully retracted the attack is done
 		if (smh->resources->GetAnimation("smileyTongue")->GetFrame() < 1) {
 			attacking = false;
 		}
-
 	}
-
 }
 
 void Tongue::playSound() 
