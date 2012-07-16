@@ -168,28 +168,14 @@ void GUI::abilityKeyPressedInInventoryScreen(int abilityNum,int ability) {
 void GUI::update(float dt) 
 {
 	updateAbilityInputs();
-
-	
-
-
-	//TODO: do this somewhere else
-	//int collisionAtPlayer = smh->environment->collision[smh->player->gridX][smh->player->gridY];
-
-	//if (getSelectedAbility() == WATER_BOOTS && smh->player->isSmileyTouchingWater()) {
-	//	if (collisionAtPlayer != DEEP_WATER && collisionAtPlayer != GREEN_WATER) {
-	//		//player is on a land tile, but touching water; bump him over and change abilities
-	//		changeAbility(dir);
-	//		smh->player->graduallyMoveTo(smh->player->gridX * 64.0 + 32.0, smh->player->gridY * 64.0 + 32.0, 500.0);
-	//}
 }
 
-void GUI::updateAbilityInputs() {
-
+void GUI::updateAbilityInputs() 
+{
 	for (int i=0; i<3; i++) {
 		abilityKeyPreviousFrame[i] = abilityKeyCurrentFrame[i];
 		abilityKeyCurrentFrame[i] = smh->input->keyDown(i+INPUT_ABILITY1);
 	}	
-
 }
 
 void GUI::draw() 
@@ -244,7 +230,7 @@ void GUI::draw()
 	for (int i = 0; i < 3; i++) 
 	{
 		double y = 45.0;
-		double x = 45.0 + 79.0 * i;
+		double x = 45.0 + 80.0 * i;
 
 		if (activeAbilities[i] != NO_ABILITY) 
 		{
@@ -253,17 +239,15 @@ void GUI::draw()
 
 			//Draw the cooldown timer
 			curAbility = smh->gameData->getAbilityInfo(activeAbilities[i]);
-			if (curAbility.coolDown != 0 && curAbility.timeLastUsed != 0 && smh->timePassedSince(curAbility.timeLastUsed) < curAbility.coolDown) {
+			if (curAbility.coolDown != 0 && curAbility.timeLastUsed != 0 && smh->timePassedSince(curAbility.timeLastUsed) < curAbility.coolDown) 
+			{
 				float percentage = smh->timePassedSince(curAbility.timeLastUsed) / curAbility.coolDown;
 				int height = 80-int(percentage*80.0);
 				smh->resources->GetSprite("abilityCooldownCircle")->SetTextureRect(735,574+80-height,80,height,true);
 				float xCircle = int(i)*80.0 + 5.0;
 				smh->resources->GetSprite("abilityCooldownCircle")->Render(xCircle,5+80-height);		
 			}		
-	
 		}
-
-
 	}
 
 	//Draw keys
