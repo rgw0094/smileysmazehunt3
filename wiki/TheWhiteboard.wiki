@@ -6,7 +6,6 @@
  * Add new noises to the Fenwar battle and change boss music
  * Implement the goblin using a balloon instead of a clown head.
  * After the boss fights are over, the bosses still damage you.  Also other external objects (flames in Phyrebawz2, projectiles in Barvinoid) will still exist and hurt you.
- * Bartli gets blocked by silly pads. Make it so she runs them over and makes them disappear
 
 === Sounds To Add ===
  * Barvinoid floating eye count-down beeps
@@ -54,6 +53,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Silly pads are no longer any match for Bartli's formidable girth||7/15/12||RGW||
 ||Fixed double-updating lollipop||7/15/12||RGW||
 ||Fixed credit screen issues||7/15/12||RGW||
 ||Made Walkin' Bombs walk faster when Smiley steps on special speed pads||6/22/12||ETI||
