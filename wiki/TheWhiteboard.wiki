@@ -22,7 +22,6 @@
 === Graphics To Do ===
 
  * Gems
- * Ability hotkey bar. Feel free to make the spacing/dimensions different than the filler graphic!!!!
  * Barns that are blocked off
 
 === Bugs ===
