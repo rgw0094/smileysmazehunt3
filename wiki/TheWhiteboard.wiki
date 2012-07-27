@@ -40,6 +40,7 @@
 
 ===Done===
 ||Item||Date||Done By||
+||Reprogrammed Flailers||7/27/12||ETI||
 ||Flame tiles turn to WALKABLE tiles when the fire is put out||7/15/12||RGW||
 ||Silly pads are no longer any match for Bartli's formidable girth||7/15/12||RGW||
 ||Fixed double-updating lollipop||7/15/12||RGW||
