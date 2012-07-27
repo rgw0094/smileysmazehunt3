@@ -1994,6 +1994,11 @@ Sound snd_FenwarOrbPop {
  resgroup=14
 }
 
+Sound snd_flailSwoosh {
+ filename="Swoosh01.mp3"
+ resgroup=14
+}
+
 ;************************************************
 ;******** CORNWALLIS (Resource group 103 ********
 ;************************************************
