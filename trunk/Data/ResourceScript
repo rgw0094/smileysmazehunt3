@@ -1999,6 +1999,11 @@ Sound snd_flailSwoosh {
  resgroup=14
 }
 
+Sound snd_squish {
+ filename="NastySlimySquish.mp3"
+ resgroup=14
+ }
+
 ;************************************************
 ;******** CORNWALLIS (Resource group 103 ********
 ;************************************************
