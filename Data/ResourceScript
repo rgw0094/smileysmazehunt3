@@ -2750,6 +2750,12 @@ Sprite flailHead {
  hotspot=32,32
  blendmode=COLORMUL,ALPHABLEND,NOZWRITE
 }
+Sprite flailHeadRed {
+ texture=general
+ rect=0,896,64,64
+ hotspot=32,32
+ blendmode=COLORMUL,ALPHABLEND,NOZWRITE
+}
 Sprite stunStar {
  texture=general
  rect=64,16,10,10

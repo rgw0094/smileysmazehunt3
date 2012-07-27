@@ -668,15 +668,34 @@ private:
 	void updateFlail(float dt);
 	void startFlail();
 	void endFlail();
+    void doDragging(float dt);
+	void doFlailBackward();
+	void doFlailEllipse();
+	void doFlailReturn();
 
 	double flailX, flailY;
 	double flailDx, flailDy;
 	bool flailing, coolingDown;
 	double flailAngle;
-	double flailAngleVel;
 	double currentFlailLength;
 	bool canFlail;
+	
 	float timeStartedFlail;
+	float timeEndedFlail;
+
+	//ellipse equation stuff
+	//x(t) = acos(t)cos(theta) - bsin(t)sin(theta)
+	//y(t) = acos(t)sin(theta) + bsin(t)cos(theta)
+	double a,b,theta;
+	int flailState;
+
+	float timeForBackwardState, timeForFlailAttack;
+	float chanceOfDoubleAttack;
+	float xStartFlailBackward,yStartFlailBackward;		//these set where the flail was when the "backward" state was begun, and where to end
+	float xFinishFlailBackward,yFinishFlailBackward;	//the calculation for where the flail is during the backward attack is based on
+														//where it starts, where it ends, and proportionally how much time has passed
+
+	float xStartFlailReturn,yStartFlailReturn; //similar to starting flail backward, only the end point may change as the enemy moves
 
 };
 
