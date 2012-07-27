@@ -11,15 +11,17 @@ extern SMH *smh;
 #define NUM_CHAIN_LINKS 4.0
 #define FLAIL_RADIUS 14.0
 #define MAX_DRAG_LENGTH 75.0
-#define MAX_SPIN_LENGTH 150.0
-#define MAX_FLAIL_VELOCITY 5.0 * PI
+#define MAX_SPIN_LENGTH 200.0
 
-#define FLAIL_DURATION 3.0
-#define FLAIL_DELAY 4.5
+#define BACKWARD_DURATION 0.2
+#define FLAIL_DURATION 1.0
+#define RETURN_DURATION 0.3
+#define FLAIL_DELAY 3.0
 
-#define STATE_ACCEL 0
-#define STATE_FULLSPEED 1
-#define STATE_DECEL 2
+#define STATE_NOT_FLAILING 0
+#define STATE_BACKWARD 1
+#define STATE_ELLIPSE 2
+#define STATE_RETURN 3
 
 /**
  * Constructor
@@ -35,12 +37,23 @@ E_Flailer::E_Flailer(int id, int gridX, int gridY, int groupID) {
 	facing = DOWN;
 	flailX = x;
 	flailY = y;
-	flailDx = 0.0;
+	
+	flailDx = 0.0; //flailDx and Dy are used for springing the flail back to the enemy when he's not spinning it
 	flailDy = 0.0;
 	flailing = false;
-	coolingDown = false;
+	
 	canFlail = false;
 	timeStartedFlail = -10.0;
+	timeEndedFlail = -10.0;
+
+	//ellipse stuff
+	a = MAX_SPIN_LENGTH;
+	b = MAX_SPIN_LENGTH * 0.8;
+
+	timeForFlailAttack = FLAIL_DURATION;
+	chanceOfDoubleAttack = 0.3;
+
+	flailState = STATE_NOT_FLAILING;
 
 	//Framework values
 	chases = true;
@@ -115,90 +128,86 @@ void E_Flailer::updateFlail(float dt) {
 	
 	//If the flailer is frozen/stunned stop the flail
 	if ((frozen || stunned) && flailing) {
-		flailing = false;
-		coolingDown = true;
+		endFlail();
+		
 	}
 
 	//Periodically use the flail attack if the enemy is in range to attack
-	if (canFlail && !(frozen|| stunned)) {
-		if (smh->timePassedSince(timeStartedFlail) > FLAIL_DURATION + FLAIL_DELAY) {
-			timeStartedFlail = smh->getGameTime();
-			flailing = true;
-			flailAngleVel = 0.0;
-			flailAngle = Util::getAngleBetween(flailX, flailY, x, y) + PI; //WTD
+	if (canFlail && !(frozen|| stunned || flailing)) {
+		if (smh->timePassedSince(timeEndedFlail) > FLAIL_DURATION + FLAIL_DELAY) {
+			startFlail();
 		}
 	}
 
-	//Spinning flail
-	if (flailing) {
-
-		//Update angle
-		if (flailAngleVel < MAX_FLAIL_VELOCITY) flailAngleVel += 4.5 * PI * dt;
-		flailAngle += flailAngleVel * dt;
-
-		//Stretch chain to maximum
-		if (currentFlailLength < MAX_SPIN_LENGTH) currentFlailLength += 45.0 * dt;
-
-		//Update position based on angle
-		flailX = x + currentFlailLength * cos(flailAngle);
-		flailY = y + currentFlailLength * sin(flailAngle);
-
-		//Stop flailing after 2 seconds
-		if (smh->timePassedSince(timeStartedFlail) > FLAIL_DURATION) {
-			flailing = false;
-			coolingDown = true;
-		}
-
-	//Stopping flail
-	} else if (coolingDown) {
+	//Update flail based on state
+	switch (flailState) {
+		case STATE_NOT_FLAILING:
+			doDragging(dt);
+			break;
+		case STATE_BACKWARD:
+			doFlailBackward();
+			break;
+		case STATE_ELLIPSE:
+			doFlailEllipse();
+			break;
+		case STATE_RETURN:
+			doFlailReturn();
+			break;
+	};
 	
-		//Detract chain
-		if (currentFlailLength > 25.0) {
-			currentFlailLength -= 50.0 * dt;
-		} else {
-			coolingDown = false;
-		}
-		
-		//Stop spinning
-		flailAngle += 4.5 * PI * dt;
-		flailX = x + currentFlailLength * cos(flailAngle);
-		flailY = y + currentFlailLength * sin(flailAngle);
-
-	//Dragging flail
-	} else {
-
-		currentFlailLength = Util::distance(flailX, flailY, x, y);
-		flailAngle = Util::getAngleBetween(flailX, flailY, x, y);
-		float springConstant = 600.0;
-
-		//Drag flail behind the enemy.
-		if (currentFlailLength >= MAX_DRAG_LENGTH) {
-			flailDx += springConstant * cos(flailAngle) * dt;
-			flailDy += springConstant * sin(flailAngle) * dt;
-		} else {
-			if (flailDx > 0.0) flailDx -= springConstant * dt;
-			if (flailDx < 0.0) flailDx += springConstant * dt;
-			if (flailDy > 0.0) flailDy -= springConstant * dt;
-			if (flailDy < 0.0) flailDy += springConstant * dt;
-		}
-
-		flailX += flailDx * dt;
-		flailY += flailDy * dt;
-
-	}
-
-	//Check flail collision - it only hurts th player when it is swinging!
-	if (flailing || coolingDown) {
+	//Check flail collision - it only hurts the player when it is swinging!
+	if (flailing) {
 		if (Util::distance(flailX, flailY, smh->player->x, smh->player->y) <= FLAIL_RADIUS + smh->player->collisionCircle->radius) {	
 			smh->player->dealDamageAndKnockback(damage,true,100,flailX,flailY);
 			std::string debugText;
 			debugText = "Smiley hit by flail belonging to enemy type " + Util::intToString(id);
 			smh->setDebugText(debugText);
-			flailDx *= -1;
-			flailDy *= -1;
+			
 		}
 	}
 
+}
+
+/**
+ * startFlail: sets up the flail "Backward" state
+ */
+void E_Flailer::startFlail() {
+	if (flailing) return;
+
+	timeStartedFlail = smh->getGameTime();
+	flailing = true;	
+	theta = flailAngle = Util::getAngleBetween(x,y,smh->player->x,smh->player->y) + PI;
+
+	//calculate the start and finish positions of the backward attack
+	xStartFlailBackward = flailX;
+	yStartFlailBackward = flailY;
+
+	xFinishFlailBackward = x + a*cos(theta);
+	yFinishFlailBackward = y + a*sin(theta);
+
+	flailState = STATE_BACKWARD;
+
+	//the following gives a chance the the flail will rotate 2, or somtimes even 3, times
+	timeForFlailAttack = FLAIL_DURATION;
+	if (smh->randomFloat(0,1) < chanceOfDoubleAttack) {
+		timeForFlailAttack += FLAIL_DURATION;
+		if (smh->randomFloat(0,1) < chanceOfDoubleAttack) {
+			timeForFlailAttack += FLAIL_DURATION;
+		}
+	}
+		
+}
+
+/**
+ * endFlail: makes it so the enemy is no longer flailing
+ */
+void E_Flailer::endFlail() {
+	flailX = x;
+	flailY = y;
+	flailDx = flailDy = 0;
+	flailing = false;
+	flailState = STATE_NOT_FLAILING;
+	timeEndedFlail = smh->getGameTime();
 }
 
 
@@ -218,10 +227,104 @@ void E_Flailer::draw(float dt) {
 	}
 
 	//Draw flail head
-	smh->resources->GetSprite("flailHead")->Render(smh->getScreenX(flailX),smh->getScreenY(flailY));
+	if (flailing) {
+		smh->resources->GetSprite("flailHeadRed")->Render(smh->getScreenX(flailX),smh->getScreenY(flailY));
+	} else {
+		smh->resources->GetSprite("flailHead")->Render(smh->getScreenX(flailX),smh->getScreenY(flailY));
+	}
+}
+
+/*
+ * Drags the flail behind the enemy when he's not actively swinging it.
+ * This function also returns the flail to the enemy after he's done swinging it.
+ */
+
+void E_Flailer::doDragging(float dt) {
+
+	currentFlailLength = Util::distance(flailX, flailY, x, y);
+	flailAngle = Util::getAngleBetween(flailX, flailY, x, y);
+	float springConstant = 600.0;
+
+	//Drag flail behind the enemy.
+	if (currentFlailLength >= MAX_DRAG_LENGTH) {
+		flailDx += springConstant * cos(flailAngle) * dt;
+		flailDy += springConstant * sin(flailAngle) * dt;
+	} else {
+		if (flailDx > 0.0) flailDx -= springConstant * dt;
+		if (flailDx < 0.0) flailDx += springConstant * dt;
+		if (flailDy > 0.0) flailDy -= springConstant * dt;
+		if (flailDy < 0.0) flailDy += springConstant * dt;
+	}
+
+	flailX += flailDx * dt;
+	flailY += flailDy * dt;
 
 }
 
+/*
+ * doFlailBackward: moves the flail to its position behind the enemy, preparing for flailing
+ */
+void E_Flailer::doFlailBackward()
+{
+	float timeSinceStartedBackward = smh->timePassedSince(timeStartedFlail);
+	float proportion = timeSinceStartedBackward / BACKWARD_DURATION;
+	
+	if (proportion >= 1) { //Enter Ellipse state
+		flailState = STATE_ELLIPSE;
+		flailX = xFinishFlailBackward;
+		flailY = yFinishFlailBackward;
+		timeStartedFlail = smh->getGameTime();
+	}
+
+	flailX = xStartFlailBackward + proportion * (xFinishFlailBackward - xStartFlailBackward);
+	flailY = yStartFlailBackward + proportion * (yFinishFlailBackward - yStartFlailBackward);
+}
+
+/*
+ * doFlailEllipse: moves the flail in a tilted ellipse pattern
+ */
+void E_Flailer::doFlailEllipse()
+{
+	float timePassed = smh->timePassedSince(timeStartedFlail);
+	float t = timePassed / FLAIL_DURATION * 2*3.14159;
+	
+
+	//Move the flail according to this formula:
+		//a is major axis
+		//b is minor axis
+		//t is time
+		//theta is tilt of ellipse
+
+	//x(t) = acos(t)cos(theta) - bsin(t)sin(theta)
+	//y(t) = acos(t)sin(theta) + bsin(t)cos(theta)
+
+	flailX = x + (a * cos(t) * cos(theta) - b * sin(t) * sin(theta));
+	flailY = y + (a * cos(t) * sin(theta) + b * sin(t) * cos(theta));
+
+	if (timePassed > timeForFlailAttack) {
+		xStartFlailReturn = flailX;
+		yStartFlailReturn = flailY;
+		timeStartedFlail = smh->getGameTime();
+		flailState = STATE_RETURN;
+	}
+
+}
+
+/*
+ * doFlailReturn: moves the flail back to the enemy
+ */
+void E_Flailer::doFlailReturn()
+{
+	float timeSinceStartedReturn = smh->timePassedSince(timeStartedFlail);
+	float proportion = timeSinceStartedReturn / RETURN_DURATION;
+	
+	if (proportion >= 1) { //Enter Ellipse state
+		endFlail();
+	}
+
+	flailX = xStartFlailReturn + proportion * (x - xStartFlailReturn);
+	flailY = yStartFlailReturn + proportion * (y - yStartFlailReturn);
+}
 
 
 
