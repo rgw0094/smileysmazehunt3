@@ -53,8 +53,8 @@ extern SMH *smh;
 #define HEALTH 17.0
 #define COLLISION_DAMAGE 1.0
 #define TENTACLE_DAMAGE 0.25
-#define FIREBALL_DAMAGE 0.75
-#define CRUSHER_DAMAGE 0.5
+#define FIREBALL_DAMAGE 1.0
+#define CRUSHER_DAMAGE 0.75
 #define NUM_TENTACLE_HITS_REQUIRED 5
 #define EYE_ATTACK_DURATION 12.5
 #define WINDOW_TO_ATTACK 4.6
@@ -66,11 +66,11 @@ extern SMH *smh;
 #define CRUSHER_REMAIN_TIME 1.0
 
 LovecraftBoss::LovecraftBoss(int _gridX, int _gridY, int _groupID) {
-	
+	smh->log("lovecraft init");
 	x = _gridX * 64 + 64;
 	y = _gridY * 64 + 32;
 	groupID = _groupID;
-	health = maxHealth = HEALTH;
+	health = maxHealth = HEALTH/smh->gameData->getDifficultyModifier(smh->saveManager->difficulty);
 	aBooleanIndicatingThatTheLastEyeAttackWasFireForUseInForcingTheEyeAttacksToAlternateBetweenIceAndFire = false;
 
 	arenaCenterX = x;
@@ -92,6 +92,10 @@ LovecraftBoss::LovecraftBoss(int _gridX, int _gridY, int _groupID) {
 	fadeAlpha = 255.0;
 	startedIntroDialogue = false;
 	startedHealDialogue = false;
+
+	attackState.attackStarted = false;	
+	attackState.attackStartedTime = 0;
+	attackState.lastAttackTime =0;
 
 	bodyDistortionMesh = new hgeDistortionMesh(BODY_MESH_GRANULARITY, BODY_MESH_GRANULARITY);
 	bodyDistortionMesh->SetTexture(smh->resources->GetTexture("LovecraftTx"));
@@ -117,7 +121,7 @@ LovecraftBoss::~LovecraftBoss() {
 	
 	//Turn off any screen coloring
 	smh->setScreenColor(0, 0.0);
-
+	smh->hge->System_Log("125 setScreenColor 0,0");
 	delete bodyDistortionMesh;
 	delete eyeCollisionBox;
 	delete bodyCollisionBox;
@@ -265,7 +269,7 @@ void LovecraftBoss::drawEye(float dt) {
 
 bool LovecraftBoss::update(float dt) {
 
-	timeInState += dt;
+	timeInState = smh->timePassedSince(timeEnteredState);
 
 	if (smh->timePassedSince(timeStartedFlashing) > 0.7) {
 		flashing = false;
@@ -414,7 +418,8 @@ void LovecraftBoss::updateTentacles(float dt)
 				i = tentacleList.erase(i);
 				//If the bandaid tentacle has been hit enough times do a leet eye attack
 				if (numTentacleHits >= NUM_TENTACLE_HITS_REQUIRED) {
-					enterState(LS_EYE_ATTACK);
+					if (state != LS_EYE_ATTACK) enterState(LS_EYE_ATTACK);
+					
 				}
 			}
 		}
@@ -459,11 +464,16 @@ void LovecraftBoss::updateCrushers(float dt) {
 			float topY = i->y - 30.0;
 			float bottomY = i->y + 30.0;
 			
-			i->leftCollisionBox->Set(i->leftX, topY, i->leftX + i->size, bottomY);
-			i->rightCollisionBox->Set(i->rightX - i->size, topY, i->rightX, bottomY);
-			if (smh->player->collisionCircle->testBox(i->leftCollisionBox) || smh->player->collisionCircle->testBox(i->rightCollisionBox)) {
-				smh->player->dealDamage(CRUSHER_DAMAGE, true);
-			}
+			if (!i->hasHitSmiley) {
+				
+				i->leftCollisionBox->Set(i->leftX, topY, i->leftX + i->size, bottomY);
+				i->rightCollisionBox->Set(i->rightX - i->size, topY, i->rightX, bottomY);
+				if (smh->player->collisionCircle->testBox(i->leftCollisionBox) || smh->player->collisionCircle->testBox(i->rightCollisionBox)) {
+					smh->player->dealDamage(CRUSHER_DAMAGE, true);
+					i->hasHitSmiley = true;
+				}
+				
+			} //end if has not hit smiley
 		}
 	}
 }
@@ -485,7 +495,7 @@ void LovecraftBoss::updateFireballs(float dt) {
 	}
 }
 
-void LovecraftBoss::updateFireAttack(float dt) {
+void LovecraftBoss::updateFireAttack(float dt) {	
 	//Periodically spawn waves of fire balls
 	if (smh->timePassedSince(attackState.lastAttackTime) > 1.0) {
 		float offset = smh->randomFloat(0, 100);
@@ -509,8 +519,7 @@ void LovecraftBoss::updateFireAttack(float dt) {
 	}
 }
 
-void LovecraftBoss::updateIceAttack(float dt) {
-
+void LovecraftBoss::updateIceAttack(float dt) {	
 	//Periodically spawn new crushers
 	if (smh->timePassedSince(timeLastCrusherCreated) > crusherCreationDelay) {
 
@@ -533,7 +542,7 @@ void LovecraftBoss::updateIceAttack(float dt) {
 		//the player is standing near the top or bottom of the arena.
 		float range = bottomY - topY;
 		numToSpawn = min(numToSpawn, range / 150.0);
-		float speed = smh->randomFloat(560.0, 700.0);
+		float speed = smh->randomFloat(650.0, 750.0);
 
 		for (int i = 0; i < numToSpawn; i++) {
 			spawnCrusher(topY + i * (range / numToSpawn), speed);
@@ -591,7 +600,13 @@ void LovecraftBoss::doTentacleState(float dt) {
 		}
 	}
 
-	health += dt*HEAL_RATE;
+	if (smh->saveManager->difficulty == HARD || smh->saveManager->difficulty == VERY_HARD) {
+		health += dt*HEAL_RATE*1.3;
+	} else if (smh->saveManager->difficulty == VERY_EASY || smh->saveManager->difficulty == EASY) {
+		health += dt*HEAL_RATE*0.8;
+	} else {
+		health += dt*HEAL_RATE;
+	}
 	if (health > maxHealth) health = maxHealth;
 
 }
@@ -621,33 +636,39 @@ bool LovecraftBoss::doDeathState(float dt) {
 }
 
 void LovecraftBoss::doEyeAttackState(float dt) {
-	
+
+	float alpha;
 	//Determine what color to shade the screen during the attack
 	int screenColor;
 	if (strcmp(eyeStatus.type.c_str(), LIGHTNING_EYE) == 0) screenColor = Colors::YELLOW;
 	else if (strcmp(eyeStatus.type.c_str(), FIRE_EYE) == 0) screenColor = Colors::RED;
 	else if (strcmp(eyeStatus.type.c_str(), ICE_EYE) ==0) screenColor = Colors::BLUE;
 	else screenColor = Colors::BLACK; // just in case something went wrong with eyeStatus.type.c_str()
+	
+	//EVILK
+	//attackState.attackStarted=true;
+	//
 
 	if (!attackState.attackStarted) {
 		//Before starting the attack, shade the screen the appropriate color based on the attack
-		smh->setScreenColor(screenColor, smh->getScreenColorAlpha() + 60.0 * dt);
-		if (smh->getScreenColorAlpha() >= 60.0) {
-			smh->setScreenColor(screenColor, 60.0);
-			attackState.attackStarted = true;
+		alpha = smh->timePassedSince(timeEnteredState)*60;
+		smh->setScreenColor(screenColor, alpha);
+		if (alpha >= 60.0) {
+			smh->setScreenColor(screenColor, 60.0);			
+			attackState.attackStarted = true;			
 			attackState.attackStartedTime = smh->getGameTime();
 			attackState.lastAttackTime = smh->getGameTime();
-		}
-	} else {
-		if (timeInState < EYE_ATTACK_DURATION) {
+		}		
+	} else {		
+		if (smh->timePassedSince(timeEnteredState) < EYE_ATTACK_DURATION) {
 			if (strcmp(eyeStatus.type.c_str(), FIRE_EYE) == 0) {
 				updateFireAttack(dt);
 			} else if (strcmp(eyeStatus.type.c_str(), ICE_EYE) ==0) {
 				updateIceAttack(dt);
 			}
+			smh->setScreenColor(screenColor, 60.0);
 		} else {
-			//Fade out the screen shading after the attack is done
-			smh->setScreenColor(screenColor, smh->getScreenColorAlpha() - 60.0 * dt);
+			//The screen fades out by not having it being constantly set. Thus, allow the screen to fade back to normal
 		}
 	}
 
@@ -668,13 +689,17 @@ void LovecraftBoss::doEyeAttackState(float dt) {
 //~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
 
 void LovecraftBoss::enterState(int newState) {
+	//smh->hge->System_Log("Lovecraft enter state %d", newState);
+	
 	
 	if (state == LS_EYE_ATTACK) {
 		//Turn off any screen coloring when leaving the eye attack state.
 		smh->setScreenColor(0, 0.0);
+		smh->hge->System_Log("697 setScreenColor 0,0");
 	}
 	
 	timeInState = 0.0;
+	timeEnteredState = smh->getGameTime();
 	state = newState;
 
 	if (state == LS_TENTACLES) {
@@ -776,6 +801,7 @@ void LovecraftBoss::spawnCrusher(float y, float speed) {
 	newCrusher.timeCreated = smh->getGameTime();
 	newCrusher.extending = true;
 	newCrusher.timeExtended = 0.0;
+	newCrusher.hasHitSmiley = false;
 	crusherList.push_back(newCrusher);
 }
 

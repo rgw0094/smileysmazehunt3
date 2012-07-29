@@ -10,7 +10,7 @@ extern SMH *smh;
 
 #define NUM_CHAIN_LINKS 4.0
 #define FLAIL_RADIUS 14.0
-#define MAX_DRAG_LENGTH 75.0
+#define MAX_DRAG_LENGTH 50.0
 #define MAX_SPIN_LENGTH 200.0
 
 #define BACKWARD_DURATION 0.2
@@ -52,6 +52,8 @@ E_Flailer::E_Flailer(int id, int gridX, int gridY, int groupID) {
 
 	timeForFlailAttack = FLAIL_DURATION;
 	chanceOfDoubleAttack = 0.3;
+
+	numSwooshes=1;
 
 	flailState = STATE_NOT_FLAILING;
 
@@ -174,6 +176,8 @@ void E_Flailer::updateFlail(float dt) {
 void E_Flailer::startFlail() {
 	if (flailing) return;
 
+	numSwooshes = 1;
+	numSounds = 0;
 	timeStartedFlail = smh->getGameTime();
 	flailing = true;	
 	theta = flailAngle = Util::getAngleBetween(x,y,smh->player->x,smh->player->y) + PI;
@@ -191,11 +195,13 @@ void E_Flailer::startFlail() {
 	timeForFlailAttack = FLAIL_DURATION;
 	if (smh->randomFloat(0,1) < chanceOfDoubleAttack) {
 		timeForFlailAttack += FLAIL_DURATION;
+		numSwooshes++;
 		if (smh->randomFloat(0,1) < chanceOfDoubleAttack) {
 			timeForFlailAttack += FLAIL_DURATION;
+			numSwooshes++;
 		}
 	}
-		
+	
 }
 
 /**
@@ -288,8 +294,7 @@ void E_Flailer::doFlailEllipse()
 	float timePassed = smh->timePassedSince(timeStartedFlail);
 	float t = timePassed / FLAIL_DURATION * 2*3.14159;
 	
-
-	//Move the flail according to this formula:
+    //Move the flail according to this formula:
 		//a is major axis
 		//b is minor axis
 		//t is time
@@ -308,6 +313,16 @@ void E_Flailer::doFlailEllipse()
 		flailState = STATE_RETURN;
 	}
 
+	//Play a sound with every revolution
+	int numRevs = timePassed/FLAIL_DURATION;
+	if (numSounds <= numRevs && numSwooshes > numRevs) {
+		numSounds++;
+		
+		if ((abs(x - smh->player->x) <= 64*8) &&
+			(abs(y - smh->player->y) <= 64*6))
+		smh->soundManager->playSound("snd_flailSwoosh");
+	}
+	
 }
 
 /*
