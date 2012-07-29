@@ -89,6 +89,7 @@ void ExplosionManager::update(float dt) {
 
 void ExplosionManager::playSound()
 {
+
 	int r = smh->randomInt(0, 2);
 
 	if (r == 0)
@@ -112,7 +113,8 @@ void ExplosionManager::createExplosion(float x, float y, float size, float damag
 		throw new System::Exception("Illegal Argument: size must be between 0.0 and 1.0");
 	}
 	
-	playSound();
+	if (!slime)
+		playSound();
 
 	Explosion explosion;
 	explosion.x = x;

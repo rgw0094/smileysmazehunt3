@@ -697,6 +697,9 @@ private:
 
 	float xStartFlailReturn,yStartFlailReturn; //similar to starting flail backward, only the end point may change as the enemy moves
 
+	int numSwooshes;	
+	int numSounds;
+
 };
 
 /**
