@@ -2,10 +2,12 @@
  * Make an INSTALLER
  * Allow the player to RESPEC their upgrades
  * Improve the appearance of the Right Arrow in the inventory screen
- * Add the thud noises when you lick a boss.
  * Add new noises to the Fenwar battle and change boss music
  * Implement the goblin using a balloon instead of a clown head.
  * After the boss fights are over, the bosses still damage you.  Also other external objects (flames in Phyrebawz2, projectiles in Barvinoid) will still exist and hurt you.
+ * Improve the "Delete file" GUI (can still click on other buttons, not clear that there is now text to click on)
+ * Make it so the screen darkens appropriately during Calypso battle
+ * Make Barvinoid not suck ass
 
 === Sounds To Add ===
  * Barvinoid floating eye count-down beeps
