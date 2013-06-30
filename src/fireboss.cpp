@@ -91,12 +91,12 @@ void FireBoss::draw(float dt) {
 
 	//Draw FENWAR talking to the boss
 	if (showFenwar) {
-		smh->resources->GetAnimation("fenwar")->Render(smh->getScreenX(startX*64-120), smh->getScreenY(startY*64));
-		smh->resources->GetAnimation("fenwarFace")->Render(smh->getScreenX(startX*64-120), smh->getScreenY(startY*64));
+		smh->resources->GetAnimation("fenwar")->Render(smh->getScreenX(startX*64+190), smh->getScreenY(startY*64-30));
+		smh->resources->GetAnimation("fenwarFace")->Render(smh->getScreenX(startX*64+190), smh->getScreenY(startY*64+-30));
 	}
 
 	if (fenwarLeave) {
-		fenwarWarp->MoveTo(smh->getScreenX(startX*64-120), smh->getScreenY(startY*64),true);
+		fenwarWarp->MoveTo(smh->getScreenX(startX*64+190), smh->getScreenY(startY*64-30),true);
 		fenwarWarp->Update(dt);
 		fenwarWarp->Render();
 	}

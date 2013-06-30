@@ -11,7 +11,7 @@ extern SMH *smh;
 #define NUM_CHAIN_LINKS 4.0
 #define FLAIL_RADIUS 14.0
 #define MAX_DRAG_LENGTH 50.0
-#define MAX_SPIN_LENGTH 200.0
+#define MAX_SPIN_LENGTH 175.0
 
 #define BACKWARD_DURATION 0.2
 #define FLAIL_DURATION 1.0
