@@ -44,6 +44,9 @@ void EnemyManager::addEnemy(int id, int gridX, int gridY, float spawnHealthChanc
 	newEnemy.spawnHealthChance = spawnHealthChance;
 	newEnemy.spawnManaChance = spawnManaChance;
 
+	//EVILK
+	smh->hge->System_Log("Spawned enemy of type %d at location %d, %d", id,gridX,gridY);
+
 	switch (smh->gameData->getEnemyInfo(id).enemyType) {
 		
 		case ENEMY_EVIL_EYE:

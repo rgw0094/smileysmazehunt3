@@ -643,7 +643,7 @@ public:
 	void drawStunned(float dt);
 
 private:
-
+	bool firstFrame;
 	float angleCoefficient;
 	float angle, angleVel;
 	float lastDirChange;
@@ -843,7 +843,7 @@ public:
 
 private:
 	void spawnEnemy();
-	
+	bool firstFrame;
 	//Can spawn up to 3 enemy types
 	//The chance to spawn them is defined as 45%, 35%, 20%
 	int enemyTypeToSpawn1;
