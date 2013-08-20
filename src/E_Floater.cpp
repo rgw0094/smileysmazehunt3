@@ -23,6 +23,8 @@ E_Floater::E_Floater(int id, int gridX, int gridY, int groupID)
 	shadowOffset = 25.0;
 	lastDirChange = 0.0;
 	dirChangeDelay = 0.0;
+	angle = 0;
+	firstFrame = true;
 }
 
 /**
@@ -91,8 +93,12 @@ void E_Floater::update(float dt) {
 		setState(new ES_Wander(this));
 	}
 
-	move(dt);
-
+	//only move if it's not the first frame of life
+	if (firstFrame) {
+		firstFrame = false;
+	} else {
+        move(dt);
+	}
 }
 
 /**

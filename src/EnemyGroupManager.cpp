@@ -38,6 +38,8 @@ void EnemyGroupManager::addEnemy(int whichGroup)
 
 	groups[whichGroup].active = true;
 	groups[whichGroup].numEnemies++;
+
+	smh->hge->System_Log("Added to enemy group: %d", whichGroup);
 }
 
 /**
@@ -115,12 +117,14 @@ void EnemyGroupManager::triggerGroup(int whichGroup) {
 
 		groups[whichGroup].triggeredYet = true;
 
+		smh->log("Triggering group");
 		//Spawn enemies
 		for (int i = 0; i < smh->environment->areaWidth; i++) {
 			for (int j = 0; j < smh->environment->areaHeight; j++) {
 				if (smh->environment->enemyLayer[i][j] != -1 &&
 					smh->environment->ids[i][j] == ENEMYGROUP_ENEMY_POPUP &&
 					smh->environment->variable[i][j] == whichGroup) {
+						smh->log("---Adding enemy---");
 						smh->enemyManager->addEnemy(smh->environment->enemyLayer[i][j], i, j, 0.25, 0.25, whichGroup, false);
 						addEnemy(smh->environment->variable[i][j]);
 						smh->environment->addParticle("treeletSpawn", i*64+32, j*64+32);

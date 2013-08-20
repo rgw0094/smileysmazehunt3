@@ -39,6 +39,8 @@ E_Spawner::E_Spawner(int id, int gridX, int gridY, int groupID) {
 	shadowOffset = 25.0;
 	lastDirChange = 0.0;
 	dirChangeDelay = 0.0;
+	angle = 0;
+	firstFrame = true;
 }
 
 /**
@@ -131,7 +133,12 @@ void E_Spawner::update(float dt) {
 	//If just recently spawned an enemy, don't move for a little while.
 	if (smh->timePassedSince(timeOfLastSpawn) <= 0.8) {dx = dy = 0.0;}
 
-	move(dt);
+	//only move if it's not the first frame of life
+	if (firstFrame) {
+		firstFrame = false;
+	} else {
+        move(dt);
+	}
 }
 
 /**
@@ -160,7 +167,7 @@ void E_Spawner::spawnEnemy() {
 	debugText = "E_Spawner.cpp spawns enemy.";
 	smh->setDebugText(debugText);
 
-	smh->hge->System_Log("%d", groupID);
+	smh->hge->System_Log("Group ID program E_Spawner.cpp %d", groupID);
 }
 
 
