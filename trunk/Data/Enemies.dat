@@ -230,7 +230,7 @@ numEnemies="103"
 
 ;SadShooter
 13Name=      "Sad Shooter"
-13OneGraphic="T"
+13OneGraphic="F"
 13GCol=      "12"
 13GRow=      "4"
 13EnemyType= "8"
