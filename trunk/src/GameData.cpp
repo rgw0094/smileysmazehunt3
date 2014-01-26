@@ -208,7 +208,7 @@ void GameData::refreshAbilityData()
 	strcpy(abilities[FRISBEE].description, "Throws a frisbee that can stun enemies.");
 	abilities[FRISBEE].type = HOLD;
 	abilities[FRISBEE].manaCost = 0;
-	abilities[FRISBEE].coolDown = 1;
+	abilities[FRISBEE].coolDown = 0;
 	abilities[FRISBEE].timeLastUsed = 0;
 }
 

@@ -31,7 +31,7 @@ E_Gumdrop::E_Gumdrop(int id, int x, int y, int groupID) {
 	burrowState = GUMDROP_UNBURROWED;
 	lastAttackTime = -10.0;
 	facing = DOWN;
-
+	
 	burrowDistance = variable2;
 
 }
@@ -86,21 +86,20 @@ void E_Gumdrop::update(float dt) {
 			burrowState = GUMDROP_BURROWING;
 			burrowAnimation->SetMode(HGEANIM_FWD);
 			burrowAnimation->Play();
-		}
-	}
-
-	//Burrowing -> Burrowed
-	if (burrowState == GUMDROP_BURROWING) {
-		if (burrowAnimation->GetFrame() == 4) {
-			burrowState = GUMDROP_BURROWED;
-
+			
 			//While burrowed, the gumdrop is invincible
 			dealsCollisionDamage = false;
 			immuneToTongue = true;
 			immuneToFire = true;
 			immuneToLightning = true;
 			immuneToStun = true;
+		}
+	}
 
+	//Burrowing -> Burrowed
+	if (burrowState == GUMDROP_BURROWING) {
+		if (burrowAnimation->GetFrame() == 4) { //make it burrowed
+			burrowState = GUMDROP_BURROWED;
 		}
 	}
 

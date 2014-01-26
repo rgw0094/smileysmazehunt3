@@ -89,7 +89,7 @@ void E_Ghost::drawFrozen(float dt) {
  * Overrides BaseEnemy.drawStunned for more specific funtionality.
  * The stunned graphic should hover along with the floater.
  */
-void E_Ghost::drawStunned(float dt) {
+void E_Ghost::drawStunned(float dt, float percentage) {
 	for (int n = 0; n < NUM_STUN_STARS; n++) {
 		stunStarAngles[n] += 2.0* PI * dt;
 		smh->resources->GetSprite("stunStar")->Render(
