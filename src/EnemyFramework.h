@@ -123,7 +123,7 @@ public:
 
 	//Methods that can be overridden
 	virtual void drawFrozen(float dt);
-	virtual void drawStunned(float dt);
+	virtual void drawStunned(float dt, float percentage);
 	virtual void drawImmunities();
 	virtual void drawDebug();
 	virtual void hitWithProjectile(int projectileType);
@@ -458,7 +458,7 @@ private:
 	int burrowState;
 	float lastAttackTime;
 	int burrowDistance;
-
+	
 };
 
 /**
@@ -640,7 +640,7 @@ public:
 	void update(float dt);
 	void draw(float dt);
 	void drawFrozen(float dt);
-	void drawStunned(float dt);
+	void drawStunned(float dt, float percentage);
 
 private:
 	bool firstFrame;
@@ -761,7 +761,7 @@ public:
 	void update(float dt);
 	void draw(float dt);
 	void drawFrozen(float dt);
-	void drawStunned(float dt);
+	void drawStunned(float dt, float percentage);
 	
 private:
 

@@ -645,7 +645,9 @@ void BaseEnemy::baseDraw(float dt)
 	//Stunned enemy
 	if (stunned) 
 	{
-		drawStunned(dt);
+		float percentage = smh->timePassedSince(startedStun) / stunLength;
+		if (percentage > 1) percentage = 1;
+		drawStunned(dt, percentage);
 	}
 
 	//Draw health bar
@@ -697,9 +699,15 @@ void BaseEnemy::notifyOfDeath()
  * frame by the framework. If an enemy needs something more specific than the default
  * functionality then it should overwrite this method.
  */
-void BaseEnemy::drawStunned(float dt) {
-	for (int n = 0; n < NUM_STUN_STARS; n++) {
+void BaseEnemy::drawStunned(float dt, float percentage) {
+
+	int nToEnd = (1-percentage) * NUM_STUN_STARS + 1;
+	int n = 0;
+
+	for (n = 0; n < NUM_STUN_STARS; n++)
 		stunStarAngles[n] += 2.0* PI * dt;
+
+	for (n = 0; n < nToEnd; n++) {		
 		smh->resources->GetSprite("stunStar")->Render(
 		smh->getScreenX(x + cos(stunStarAngles[n])*25), 
 		smh->getScreenY(y + sin(stunStarAngles[n])*7) - 30.0);
